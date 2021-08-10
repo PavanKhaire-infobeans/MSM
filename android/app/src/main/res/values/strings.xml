@@ -1,3 +1,56 @@
 <resources>
-    <string name="app_name">MyStoriesMatter</string>
+    <string name="app_name">My Stories Matter</string>
+    <string name="splash_string">Relive your memories
+        Reunite with friends</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <item name="isLargeLayout" type="bool">false</item>
+    <string name="str_jumpto">Jump to...</string>
+    <string name="str_like">Like</string>
+    <string name="str_comment">Comment</string>
+    <string name="str_share">Share</string>
+    <string name="str_sent">Send</string>
+    <string name="str_post">Post</string>
+    <string name="str_add_to_memory">Add your memory</string>
+    <string name="str_comment_hint">Write a comment...</string>
+    <string name="str_Resetall">Reset all</string>
+    <string name="str_Filters">Filters</string>
+    <string name="str_Memories_from">Memories from</string>
+    <string name="all_years">All Years</string>
+    <string name="str_my_stories">My Stories Matter</string>
+    <string name="str_friend_cricles">Friend Circles</string>
+    <string name="str_internal_cues">Internal Cues</string>
+    <string name="college_years">College Years</string>
+    <string name="memories_by">Memories By</string>
+    <string name="str_Search_memories">Search memories</string>
+    <string name="str_Apply_Filters">Apply Filters</string>
+    <string name="str_jump">Jump</string>
+    <string name="str_cancel">Cancel</string>
+    <string name="server_error">Unable to process your request, please try again.</string>
+    <string name="str_loading">Loading..</string>
+    <string name="try_again">
+
+Try again
+</string>
+    <string name="please_make">
+
+You are not connected to the Internet. Please check your connection and try again.\n\n
+</string>
+
+    <string name="no_internet">
+
+You are not connected to the Internet. Please check your connection and try again.\n\n
+</string>
+    <string name="description">
+
+
+Description
+</string>
+    <string name="label_addtomemory">
+
+Add your memory
+</string>
+    <string name="memory_action">
+
+Memory Actions
+</string>
 </resources>

@@ -59,7 +59,11 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  return <SafeAreaView style={backgroundStyle}></SafeAreaView>;
+  return (
+    <SafeAreaView style={backgroundStyle}>
+      <Text style={{fontFamily: 'Rubik-Black'}}>hsdfghjdfgshj</Text>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({

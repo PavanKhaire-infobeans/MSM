@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MyStoriesMatter</string>
+	<string>My Stories Matter</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -36,20 +36,64 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDarkContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>FiraSansExtraCondensed-Black.ttf</string>
+		<string>FiraSansExtraCondensed-BlackItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Bold.ttf</string>
+		<string>FiraSansExtraCondensed-BoldItalic.ttf</string>
+		<string>FiraSansExtraCondensed-ExtraBold.ttf</string>
+		<string>FiraSansExtraCondensed-ExtraBoldItalic.ttf</string>
+		<string>FiraSansExtraCondensed-ExtraLight.ttf</string>
+		<string>FiraSansExtraCondensed-ExtraLightItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Light.ttf</string>
+		<string>FiraSansExtraCondensed-LightItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Medium.ttf</string>
+		<string>FiraSansExtraCondensed-MediumItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Regular.ttf</string>
+		<string>FiraSansExtraCondensed-RegularItalic.ttf</string>
+		<string>FiraSansExtraCondensed-SemiBold.ttf</string>
+		<string>FiraSansExtraCondensed-SemiBoldItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Thin.ttf</string>
+		<string>FiraSansExtraCondensed-ThinItalic.ttf</string>
+		<string>Proxima Nova Alt Bold.otf</string>
+		<string>Proxima Nova Alt Light.otf</string>
+		<string>Proxima Nova Alt Thin.otf</string>
+		<string>Proxima Nova Black.otf</string>
+		<string>Proxima Nova Bold.otf</string>
+		<string>Proxima Nova Extrabold.otf</string>
+		<string>Proxima Nova Thin.otf</string>
+		<string>ProximaNova-Regular.otf</string>
+		<string>Rubik-Black.ttf</string>
+		<string>Rubik-BlackItalic.ttf</string>
+		<string>Rubik-Bold.ttf</string>
+		<string>Rubik-BoldItalic.ttf</string>
+		<string>Rubik-Italic.ttf</string>
+		<string>Rubik-Light.ttf</string>
+		<string>Rubik-LightItalic.ttf</string>
+		<string>Rubik-Medium.ttf</string>
+		<string>Rubik-MediumItalic.ttf</string>
+		<string>Rubik-Regular.ttf</string>
+	</array>
 </dict>
 </plist>

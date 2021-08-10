@@ -11,9 +11,45 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1F762D8A0D234F0688090A1B /* FiraSansExtraCondensed-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F7D6DBBECA224DBBA6617343 /* FiraSansExtraCondensed-MediumItalic.ttf */; };
+		2BBD53DD620242DD8ED4A9D8 /* Rubik-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5DC8495231C47C6AD114190 /* Rubik-Black.ttf */; };
+		2E6181C75A914FFCBD12A790 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A09F9AD301D2446AAB001E2F /* Rubik-MediumItalic.ttf */; };
+		2E919F36F0404772BB228DA7 /* Proxima Nova Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6143A4A8BDAE42EF8EF0C28A /* Proxima Nova Thin.otf */; };
+		2FD2BD91197C4B358C75AC11 /* FiraSansExtraCondensed-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B0AB67E5E06491E9A4E8D7C /* FiraSansExtraCondensed-Black.ttf */; };
+		52A41F604CF1449991029F5B /* Proxima Nova Alt Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = FBF5DC8306B14FABB6F75188 /* Proxima Nova Alt Thin.otf */; };
 		5743A232F69FB31491FE75B1 /* libPods-MyStoriesMatter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A16AA9883191783D3F42E086 /* libPods-MyStoriesMatter.a */; };
+		5B431E76EFC044D29991265E /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E479CB630D794EB490570D39 /* Rubik-Italic.ttf */; };
+		634352E4BC954B53AD4E741D /* FiraSansExtraCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1801D0DF52E84F02A2E61287 /* FiraSansExtraCondensed-Bold.ttf */; };
+		643D686B8CF9416BA5829B1A /* FiraSansExtraCondensed-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFCDE4749F70408496F3B863 /* FiraSansExtraCondensed-SemiBoldItalic.ttf */; };
+		66230A6E938B4A3EADF3E84A /* FiraSansExtraCondensed-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 57B5CAA8ABAB477CBE3A6D59 /* FiraSansExtraCondensed-BoldItalic.ttf */; };
+		677B3BC4AB674E86ACDD2087 /* FiraSansExtraCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEAB63BC58344BEA9057729F /* FiraSansExtraCondensed-SemiBold.ttf */; };
+		6FD900B101B34D51B8B7247B /* FiraSansExtraCondensed-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E19B006E244C48BF99C61A0D /* FiraSansExtraCondensed-Thin.ttf */; };
+		741B89DB923C437481E8EC52 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D81689CA62E54804A46555E5 /* Rubik-Medium.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8542DF45132642E6867C108C /* Proxima Nova Alt Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7CB658F3D66B4869B8032D79 /* Proxima Nova Alt Bold.otf */; };
+		8AD4CD2633D34988817E3BBF /* FiraSansExtraCondensed-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD556BA483F1427C84FEF4BD /* FiraSansExtraCondensed-Medium.ttf */; };
+		8DA56307469C432684F95F7B /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4FA592E6C1E84ABDB7AF7230 /* Rubik-BoldItalic.ttf */; };
+		8E8E2DCEBE684B16908FE636 /* FiraSansExtraCondensed-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 906123C3482C4131BF1A83EC /* FiraSansExtraCondensed-ThinItalic.ttf */; };
+		90BFDE9795754CD88B5A6E23 /* FiraSansExtraCondensed-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D08A413A44444E991ED1953 /* FiraSansExtraCondensed-RegularItalic.ttf */; };
+		979DEC83E531414DBF76057F /* Proxima Nova Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EC402C2DFBC64DDEA36E84CF /* Proxima Nova Bold.otf */; };
+		9A8A9BFCCFEA451FBE6F45BE /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E499F81714240F98681D47C /* Rubik-BlackItalic.ttf */; };
+		AC55BCB67AEA49E483FA4BEA /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B0E0AFCBBF724C7E8F3CC1BD /* ProximaNova-Regular.otf */; };
+		ADB45D7D9CBF43F2B3CC3CB7 /* FiraSansExtraCondensed-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A94564C9EEAA42EE9B763A91 /* FiraSansExtraCondensed-LightItalic.ttf */; };
+		BA350F7A95C4454ABE8A3213 /* FiraSansExtraCondensed-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2166E40AADFE4E8C9333B65D /* FiraSansExtraCondensed-BlackItalic.ttf */; };
+		BB86B5139A3D43BF98884028 /* FiraSansExtraCondensed-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB40349042724D68B529DA16 /* FiraSansExtraCondensed-ExtraBold.ttf */; };
 		C7E82DC11EFB110EC5FDB9A4 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F6B92DD4639D6331414AC74 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a */; };
+		CB71CD8C7B42492EA66CBD07 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A228A1658C1249CABA42EE02 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf */; };
+		CCA36DD30AC84A01B085289D /* FiraSansExtraCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7A4A1E2BD5446028F747173 /* FiraSansExtraCondensed-Light.ttf */; };
+		CD865B0927994DC6BDAD940E /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48F59F6444574BAFB9B76291 /* Rubik-Bold.ttf */; };
+		D3D49985B4994DD8AE58F916 /* Proxima Nova Alt Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = A087C5E1B78843EA83011F00 /* Proxima Nova Alt Light.otf */; };
+		DC34A4B976834B8683B52B8B /* FiraSansExtraCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A90EE94275EB45AA961D8183 /* FiraSansExtraCondensed-Regular.ttf */; };
+		E33924C349E74858B9F2594A /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE534FFC9ADA4615A8890D3C /* Rubik-Regular.ttf */; };
+		E7ECA5EBF77D435AB82A01A0 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F78E7D8A6A74451F9A26DA3E /* Rubik-Light.ttf */; };
+		EAF8997B9CF04B6DA10755D2 /* Proxima Nova Extrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B5771B97A821466DB76C9576 /* Proxima Nova Extrabold.otf */; };
+		ECD26F5B8B474A7E8D0C9BB4 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E80278CF720B485DBF9C3471 /* Rubik-LightItalic.ttf */; };
+		EF94CF91CA0242BA889ADBF1 /* FiraSansExtraCondensed-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 91CCA985445B40C8A4A7B632 /* FiraSansExtraCondensed-ExtraLightItalic.ttf */; };
+		F873B98E7EB6427D806A1E75 /* FiraSansExtraCondensed-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932846CCD2B64F34BE85FF7F /* FiraSansExtraCondensed-ExtraLight.ttf */; };
+		FBEFA947EBBD42D7802FFD2E /* Proxima Nova Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 01CACD43A99B4404B3528645 /* Proxima Nova Black.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +66,7 @@
 		00E356EE1AD99517003FC87E /* MyStoriesMatterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyStoriesMatterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* MyStoriesMatterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyStoriesMatterTests.m; sourceTree = "<group>"; };
+		01CACD43A99B4404B3528645 /* Proxima Nova Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Black.otf"; path = "../assets/fonts/Proxima Nova Black.otf"; sourceTree = "<group>"; };
 		02FC1E2D33A614D12A5947DD /* Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* MyStoriesMatter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyStoriesMatter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = MyStoriesMatter/AppDelegate.h; sourceTree = "<group>"; };
@@ -37,13 +74,49 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MyStoriesMatter/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MyStoriesMatter/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MyStoriesMatter/main.m; sourceTree = "<group>"; };
+		1801D0DF52E84F02A2E61287 /* FiraSansExtraCondensed-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Bold.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Bold.ttf"; sourceTree = "<group>"; };
+		2166E40AADFE4E8C9333B65D /* FiraSansExtraCondensed-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-BlackItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-BlackItalic.ttf"; sourceTree = "<group>"; };
+		2D08A413A44444E991ED1953 /* FiraSansExtraCondensed-RegularItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-RegularItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-RegularItalic.ttf"; sourceTree = "<group>"; };
+		3E499F81714240F98681D47C /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BlackItalic.ttf"; path = "../assets/fonts/Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
+		48F59F6444574BAFB9B76291 /* Rubik-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Bold.ttf"; path = "../assets/fonts/Rubik-Bold.ttf"; sourceTree = "<group>"; };
+		4FA592E6C1E84ABDB7AF7230 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../assets/fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
+		57B5CAA8ABAB477CBE3A6D59 /* FiraSansExtraCondensed-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-BoldItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-BoldItalic.ttf"; sourceTree = "<group>"; };
+		6143A4A8BDAE42EF8EF0C28A /* Proxima Nova Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Thin.otf"; path = "../assets/fonts/Proxima Nova Thin.otf"; sourceTree = "<group>"; };
+		7B0AB67E5E06491E9A4E8D7C /* FiraSansExtraCondensed-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Black.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Black.ttf"; sourceTree = "<group>"; };
+		7CB658F3D66B4869B8032D79 /* Proxima Nova Alt Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Alt Bold.otf"; path = "../assets/fonts/Proxima Nova Alt Bold.otf"; sourceTree = "<group>"; };
 		7F6B92DD4639D6331414AC74 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyStoriesMatter-MyStoriesMatterTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MyStoriesMatter/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		906123C3482C4131BF1A83EC /* FiraSansExtraCondensed-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ThinItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ThinItalic.ttf"; sourceTree = "<group>"; };
+		91CCA985445B40C8A4A7B632 /* FiraSansExtraCondensed-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ExtraLightItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		932846CCD2B64F34BE85FF7F /* FiraSansExtraCondensed-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ExtraLight.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ExtraLight.ttf"; sourceTree = "<group>"; };
+		A087C5E1B78843EA83011F00 /* Proxima Nova Alt Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Alt Light.otf"; path = "../assets/fonts/Proxima Nova Alt Light.otf"; sourceTree = "<group>"; };
+		A09F9AD301D2446AAB001E2F /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-MediumItalic.ttf"; path = "../assets/fonts/Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
 		A16AA9883191783D3F42E086 /* libPods-MyStoriesMatter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyStoriesMatter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A228A1658C1249CABA42EE02 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ExtraBoldItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		A90EE94275EB45AA961D8183 /* FiraSansExtraCondensed-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Regular.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Regular.ttf"; sourceTree = "<group>"; };
+		A94564C9EEAA42EE9B763A91 /* FiraSansExtraCondensed-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-LightItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-LightItalic.ttf"; sourceTree = "<group>"; };
+		AB7B411126C275870095F4DB /* MyStoriesMatterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyStoriesMatterDebug.entitlements; path = MyStoriesMatter/MyStoriesMatterDebug.entitlements; sourceTree = "<group>"; };
+		B0E0AFCBBF724C7E8F3CC1BD /* ProximaNova-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Regular.otf"; path = "../assets/fonts/ProximaNova-Regular.otf"; sourceTree = "<group>"; };
+		B5771B97A821466DB76C9576 /* Proxima Nova Extrabold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Extrabold.otf"; path = "../assets/fonts/Proxima Nova Extrabold.otf"; sourceTree = "<group>"; };
 		C3E306E3352015293D027AB7 /* Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig"; sourceTree = "<group>"; };
+		CE534FFC9ADA4615A8890D3C /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
+		CEAB63BC58344BEA9057729F /* FiraSansExtraCondensed-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-SemiBold.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-SemiBold.ttf"; sourceTree = "<group>"; };
+		D7A4A1E2BD5446028F747173 /* FiraSansExtraCondensed-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Light.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Light.ttf"; sourceTree = "<group>"; };
+		D81689CA62E54804A46555E5 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
+		DD556BA483F1427C84FEF4BD /* FiraSansExtraCondensed-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Medium.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Medium.ttf"; sourceTree = "<group>"; };
+		E19B006E244C48BF99C61A0D /* FiraSansExtraCondensed-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Thin.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Thin.ttf"; sourceTree = "<group>"; };
+		E479CB630D794EB490570D39 /* Rubik-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic.ttf"; path = "../assets/fonts/Rubik-Italic.ttf"; sourceTree = "<group>"; };
 		E5700109C43A727AFBF06FB1 /* Pods-MyStoriesMatter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter.release.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter.release.xcconfig"; sourceTree = "<group>"; };
+		E5DC8495231C47C6AD114190 /* Rubik-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Black.ttf"; path = "../assets/fonts/Rubik-Black.ttf"; sourceTree = "<group>"; };
+		E80278CF720B485DBF9C3471 /* Rubik-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-LightItalic.ttf"; path = "../assets/fonts/Rubik-LightItalic.ttf"; sourceTree = "<group>"; };
+		EC402C2DFBC64DDEA36E84CF /* Proxima Nova Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Bold.otf"; path = "../assets/fonts/Proxima Nova Bold.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F78E7D8A6A74451F9A26DA3E /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../assets/fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
+		F7D6DBBECA224DBBA6617343 /* FiraSansExtraCondensed-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-MediumItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-MediumItalic.ttf"; sourceTree = "<group>"; };
 		F915D83E875734EB6C90260D /* Pods-MyStoriesMatter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter.debug.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter.debug.xcconfig"; sourceTree = "<group>"; };
+		FB40349042724D68B529DA16 /* FiraSansExtraCondensed-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ExtraBold.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ExtraBold.ttf"; sourceTree = "<group>"; };
+		FBF5DC8306B14FABB6F75188 /* Proxima Nova Alt Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Alt Thin.otf"; path = "../assets/fonts/Proxima Nova Alt Thin.otf"; sourceTree = "<group>"; };
+		FFCDE4749F70408496F3B863 /* FiraSansExtraCondensed-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-SemiBoldItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,9 +156,53 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		118A61147EF149EFA058599A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7B0AB67E5E06491E9A4E8D7C /* FiraSansExtraCondensed-Black.ttf */,
+				2166E40AADFE4E8C9333B65D /* FiraSansExtraCondensed-BlackItalic.ttf */,
+				1801D0DF52E84F02A2E61287 /* FiraSansExtraCondensed-Bold.ttf */,
+				57B5CAA8ABAB477CBE3A6D59 /* FiraSansExtraCondensed-BoldItalic.ttf */,
+				FB40349042724D68B529DA16 /* FiraSansExtraCondensed-ExtraBold.ttf */,
+				A228A1658C1249CABA42EE02 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf */,
+				932846CCD2B64F34BE85FF7F /* FiraSansExtraCondensed-ExtraLight.ttf */,
+				91CCA985445B40C8A4A7B632 /* FiraSansExtraCondensed-ExtraLightItalic.ttf */,
+				D7A4A1E2BD5446028F747173 /* FiraSansExtraCondensed-Light.ttf */,
+				A94564C9EEAA42EE9B763A91 /* FiraSansExtraCondensed-LightItalic.ttf */,
+				DD556BA483F1427C84FEF4BD /* FiraSansExtraCondensed-Medium.ttf */,
+				F7D6DBBECA224DBBA6617343 /* FiraSansExtraCondensed-MediumItalic.ttf */,
+				A90EE94275EB45AA961D8183 /* FiraSansExtraCondensed-Regular.ttf */,
+				2D08A413A44444E991ED1953 /* FiraSansExtraCondensed-RegularItalic.ttf */,
+				CEAB63BC58344BEA9057729F /* FiraSansExtraCondensed-SemiBold.ttf */,
+				FFCDE4749F70408496F3B863 /* FiraSansExtraCondensed-SemiBoldItalic.ttf */,
+				E19B006E244C48BF99C61A0D /* FiraSansExtraCondensed-Thin.ttf */,
+				906123C3482C4131BF1A83EC /* FiraSansExtraCondensed-ThinItalic.ttf */,
+				7CB658F3D66B4869B8032D79 /* Proxima Nova Alt Bold.otf */,
+				A087C5E1B78843EA83011F00 /* Proxima Nova Alt Light.otf */,
+				FBF5DC8306B14FABB6F75188 /* Proxima Nova Alt Thin.otf */,
+				01CACD43A99B4404B3528645 /* Proxima Nova Black.otf */,
+				EC402C2DFBC64DDEA36E84CF /* Proxima Nova Bold.otf */,
+				B5771B97A821466DB76C9576 /* Proxima Nova Extrabold.otf */,
+				6143A4A8BDAE42EF8EF0C28A /* Proxima Nova Thin.otf */,
+				B0E0AFCBBF724C7E8F3CC1BD /* ProximaNova-Regular.otf */,
+				E5DC8495231C47C6AD114190 /* Rubik-Black.ttf */,
+				3E499F81714240F98681D47C /* Rubik-BlackItalic.ttf */,
+				48F59F6444574BAFB9B76291 /* Rubik-Bold.ttf */,
+				4FA592E6C1E84ABDB7AF7230 /* Rubik-BoldItalic.ttf */,
+				E479CB630D794EB490570D39 /* Rubik-Italic.ttf */,
+				F78E7D8A6A74451F9A26DA3E /* Rubik-Light.ttf */,
+				E80278CF720B485DBF9C3471 /* Rubik-LightItalic.ttf */,
+				D81689CA62E54804A46555E5 /* Rubik-Medium.ttf */,
+				A09F9AD301D2446AAB001E2F /* Rubik-MediumItalic.ttf */,
+				CE534FFC9ADA4615A8890D3C /* Rubik-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* MyStoriesMatter */ = {
 			isa = PBXGroup;
 			children = (
+				AB7B411126C275870095F4DB /* MyStoriesMatterDebug.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -122,6 +239,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				C7C9008DEDE729A380C64500 /* Pods */,
+				118A61147EF149EFA058599A /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -244,6 +362,42 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				2FD2BD91197C4B358C75AC11 /* FiraSansExtraCondensed-Black.ttf in Resources */,
+				BA350F7A95C4454ABE8A3213 /* FiraSansExtraCondensed-BlackItalic.ttf in Resources */,
+				634352E4BC954B53AD4E741D /* FiraSansExtraCondensed-Bold.ttf in Resources */,
+				66230A6E938B4A3EADF3E84A /* FiraSansExtraCondensed-BoldItalic.ttf in Resources */,
+				BB86B5139A3D43BF98884028 /* FiraSansExtraCondensed-ExtraBold.ttf in Resources */,
+				CB71CD8C7B42492EA66CBD07 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf in Resources */,
+				F873B98E7EB6427D806A1E75 /* FiraSansExtraCondensed-ExtraLight.ttf in Resources */,
+				EF94CF91CA0242BA889ADBF1 /* FiraSansExtraCondensed-ExtraLightItalic.ttf in Resources */,
+				CCA36DD30AC84A01B085289D /* FiraSansExtraCondensed-Light.ttf in Resources */,
+				ADB45D7D9CBF43F2B3CC3CB7 /* FiraSansExtraCondensed-LightItalic.ttf in Resources */,
+				8AD4CD2633D34988817E3BBF /* FiraSansExtraCondensed-Medium.ttf in Resources */,
+				1F762D8A0D234F0688090A1B /* FiraSansExtraCondensed-MediumItalic.ttf in Resources */,
+				DC34A4B976834B8683B52B8B /* FiraSansExtraCondensed-Regular.ttf in Resources */,
+				90BFDE9795754CD88B5A6E23 /* FiraSansExtraCondensed-RegularItalic.ttf in Resources */,
+				677B3BC4AB674E86ACDD2087 /* FiraSansExtraCondensed-SemiBold.ttf in Resources */,
+				643D686B8CF9416BA5829B1A /* FiraSansExtraCondensed-SemiBoldItalic.ttf in Resources */,
+				6FD900B101B34D51B8B7247B /* FiraSansExtraCondensed-Thin.ttf in Resources */,
+				8E8E2DCEBE684B16908FE636 /* FiraSansExtraCondensed-ThinItalic.ttf in Resources */,
+				8542DF45132642E6867C108C /* Proxima Nova Alt Bold.otf in Resources */,
+				D3D49985B4994DD8AE58F916 /* Proxima Nova Alt Light.otf in Resources */,
+				52A41F604CF1449991029F5B /* Proxima Nova Alt Thin.otf in Resources */,
+				FBEFA947EBBD42D7802FFD2E /* Proxima Nova Black.otf in Resources */,
+				979DEC83E531414DBF76057F /* Proxima Nova Bold.otf in Resources */,
+				EAF8997B9CF04B6DA10755D2 /* Proxima Nova Extrabold.otf in Resources */,
+				2E919F36F0404772BB228DA7 /* Proxima Nova Thin.otf in Resources */,
+				AC55BCB67AEA49E483FA4BEA /* ProximaNova-Regular.otf in Resources */,
+				2BBD53DD620242DD8ED4A9D8 /* Rubik-Black.ttf in Resources */,
+				9A8A9BFCCFEA451FBE6F45BE /* Rubik-BlackItalic.ttf in Resources */,
+				CD865B0927994DC6BDAD940E /* Rubik-Bold.ttf in Resources */,
+				8DA56307469C432684F95F7B /* Rubik-BoldItalic.ttf in Resources */,
+				5B431E76EFC044D29991265E /* Rubik-Italic.ttf in Resources */,
+				E7ECA5EBF77D435AB82A01A0 /* Rubik-Light.ttf in Resources */,
+				ECD26F5B8B474A7E8D0C9BB4 /* Rubik-LightItalic.ttf in Resources */,
+				741B89DB923C437481E8EC52 /* Rubik-Medium.ttf in Resources */,
+				2E6181C75A914FFCBD12A790 /* Rubik-MediumItalic.ttf in Resources */,
+				E33924C349E74858B9F2594A /* Rubik-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,13 +637,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_ENTITLEMENTS = MyStoriesMatter/MyStoriesMatterDebug.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = BDV4D9G2U7;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MyStoriesMatter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -497,6 +655,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mystoriesmatter.mobileapp;
 				PRODUCT_NAME = MyStoriesMatter;
+				PROVISIONING_PROFILE_SPECIFIER = "My Stories Matter Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -509,12 +668,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = BDV4D9G2U7;
 				INFOPLIST_FILE = MyStoriesMatter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -522,6 +685,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mystoriesmatter.mobileapp;
 				PRODUCT_NAME = MyStoriesMatter;
+				PROVISIONING_PROFILE_SPECIFIER = "My Stories Matter Distribution";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
