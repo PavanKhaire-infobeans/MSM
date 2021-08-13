@@ -17,7 +17,10 @@ import {Actions} from 'react-native-router-flux';
 import Utility from '../../common/utility';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
-import {GoogleSignin, statusCodes} from 'react-native-google-signin';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import {SSOLogin, kSSOLogin} from '../../common/webservice/loginServices';
 import EventManager from '../../common/eventManager';
 import {NativeModules, NativeEventEmitter} from 'react-native';
