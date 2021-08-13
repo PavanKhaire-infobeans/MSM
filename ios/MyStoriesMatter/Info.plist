@@ -37,6 +37,12 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera permission to upload camera images</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The app needs Microphone to record audio on users demand</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs library permissions to select images for uploading</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
