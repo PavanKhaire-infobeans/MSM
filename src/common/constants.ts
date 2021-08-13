@@ -3,7 +3,7 @@ import { PixelRatio, Platform, Dimensions } from "react-native";
 import DeviceInfo from "react-native-device-info";
 import { kAdmin, isCueBackInstance } from "../views/registration/getInstancesSaga";
 import loaderHandler from "./component/busyindicator/LoaderHandler";
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //const punycode = require('punycode');
 export const keyObject = "object"
