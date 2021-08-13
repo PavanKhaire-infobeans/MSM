@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <!-- <color name="bgColor">#026D60</color>-->
-    <color name="bgColor">#94D6DB</color>
     <color name="colorTheme">#94D6DB</color>
-    <color name="colorLightTheme">#DFF3F4</color>
-    <!--<color name="colorTheme">#026D60</color>-->
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="year">#999999</color>
-    <color name="title">#373852</color>
-   <!-- /<color name="timeline_date">#595959</color>-->
 
-    <color name="bg_color">#DFDFDF</color>
-    <color name="black">#373852</color>
-    <color name="color_aaaaaa">#AAAAAA</color>
-    <color name="color_red">#DE1616</color>
-    <color name="color_media_bg">#F3F3F3</color>
-    <color name="hint_color">#595959</color>
-
-    <color name="timeline_date">#373852</color>
-    <color name="timeline_divider">#0D373852</color>
-    <color name="msm_bgColor">#94D6DB</color>
-    <color name="msm_txt_bold">#373852</color>
-    <color name="msm_txt_large">#207D89</color>
-    <color name="colorPrimaryDark">#94D6DB</color>
-    <color name="msm_txt_yellow">#DE8B00</color>
-    <color name="msm_txt_light">#50516B</color>
-    <color name="msm_txt">#373852</color>
-    <color name="msm_txt_">#207D89</color>
-    <color name="msm_strokeColor">#C0E7EA</color>
 </resources>
