@@ -84,6 +84,9 @@ import Splash from './views/splashscreen';
 import TipsAndTricks from './views/tipsAndTricks';
 import SplashScreen from 'react-native-splash-screen';
 // import firebase from "react-native-firebase";
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
 import DefaultPreference from 'react-native-default-preference';
 // import { Notification, NotificationOpen } from 'react-native-firebase';
 import {
@@ -377,8 +380,8 @@ class App extends React.Component {
     SplashScreen.hide();
     networkConnectivitySaga();
     this.loadSegmentAnalytics();
-    // this.checkPermission();
-    // this.createNotificationListeners();
+    this.checkPermission();
+    this.createNotificationListeners();
     if (Platform.OS == 'android') {
       this.backEvent = BackHandler.addEventListener(
         'hardwareBackPress',
@@ -388,7 +391,7 @@ class App extends React.Component {
   }
 
   async checkPermission() {
-    const enabled = await firebase.messaging().hasPermission();
+    const enabled = await messaging().hasPermission();
     if (enabled) {
       //    this.showAlert("Permission", "enabled")
       return await this.getToken();
@@ -404,12 +407,10 @@ class App extends React.Component {
     //         return true;
     //   } else {
     try {
-      firebase
-        .messaging()
+      messaging()
         .requestPermission()
         .then(() => {
-          firebase
-            .messaging()
+          messaging()
             .getToken()
             .then(fcmToken => {
               if (fcmToken) {
@@ -433,7 +434,7 @@ class App extends React.Component {
   //2
   async requestPermission() {
     try {
-      await firebase.messaging().requestPermission();
+      await messaging().requestPermission();
       // User has authorised
       return await this.getToken();
     } catch (error) {
@@ -448,42 +449,38 @@ class App extends React.Component {
     /*
      * Triggered when a particular notification has been received in foreground
      * */
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
-        const {data} = notification;
-        EventManager.callBack(kForegroundNotice, data);
-      });
+    this.notificationListener = messaging().onMessage(notification => {
+      const {data} = notification;
+      EventManager.callBack(kForegroundNotice, data);
+    });
 
     /*
      * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
      * */
-    this.notificationOpenedListener = firebase
-      .notifications()
-      .onNotificationOpened(notificationOpen => {
+    this.notificationOpenedListener = messaging().onNotificationOpenedApp(
+      notificationOpen => {
         // const { data  } = notificationOpen.notification;
-        const {data} = notificationOpen.notification;
+        const {data} = notificationOpen;
         Utility.notificationObject.hasNotification = true;
         Utility.notificationObject.data = data;
         // Utility.notificationObject.isBackgroundNotification = true;
         EventManager.callBack(kBackgroundNotice, data);
-      });
+      },
+    );
 
     /*
      * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
      * */
-    this.notificationOpen = await firebase
-      .notifications()
-      .getInitialNotification();
+    this.notificationOpen = await messaging().getInitialNotification();
     if (notificationOpen) {
-      const {data} = notificationOpen.notification;
+      const {data} = notificationOpen;
       Utility.notificationObject.hasNotification = true;
       Utility.notificationObject.data = data;
     }
     /*
      * Triggered for data only payload in foreground
      * */
-    this.messageListener = firebase.messaging().onMessage(message => {
+    this.messageListener = messaging().onMessage(message => {
       //   //process data message
       //   //console.log(JSON.stringify(message));
       //   this.showAlert("Alert", "message arrived");
