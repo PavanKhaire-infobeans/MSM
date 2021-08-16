@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>432679085801-mjequjjlktk88bvvgdrcbjr4bk5g5obd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.432679085801-mjequjjlktk88bvvgdrcbjr4bk5g5obd</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>432679085801-3sg3796v9nnaj0f8oa9gsnttie0vvd93.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA0x0MBTOrW9d32K4-LANU9vARDLwOlVS0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>432679085801</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mystoriesmatter.mobileapp</string>
+	<key>PROJECT_ID</key>
+	<string>cueback-1654c</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cueback-1654c.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:432679085801:ios:b27f496e842acc0ef3b278</string>
+	<key>DATABASE_URL</key>
+	<string>https://cueback-1654c.firebaseio.com</string>
+</dict>
+</plist>
