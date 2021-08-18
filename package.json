@@ -50,7 +50,7 @@
     "react-native-pager-view": "^5.4.0",
     "react-native-pdf": "^6.3.0",
     "react-native-permissions": "^3.0.5",
-    "react-native-reanimated": "^2.2.0",
+    "react-native-reanimated": "^1.13.3",
     "react-native-render-html": "^6.0.5",
     "react-native-router-flux": "^4.3.1",
     "react-native-safe-area-context": "^3.3.0",

@@ -1,0 +1,115 @@
+{
+  "project_info": {
+    "project_number": "432679085801",
+    "firebase_url": "https://cueback-1654c.firebaseio.com",
+    "project_id": "cueback-1654c",
+    "storage_bucket": "cueback-1654c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432679085801:android:157688d552c147eaf3b278",
+        "android_client_info": {
+          "package_name": "com.cueback.mobileapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "432679085801-jmlr0tt7mr4gm9f9utiqobjgmi2hi47g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cueback.mobileapp",
+            "certificate_hash": "1819956b1d873b08c18bb26f1051e29d6976dbb8"
+          }
+        },
+        {
+          "client_id": "432679085801-bdqlq00euocib01elpd2hgv4jebqt5me.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cueback.mobileapp",
+            "certificate_hash": "e6105ef7126973b1c5708dc51923d1940468b13b"
+          }
+        },
+        {
+          "client_id": "432679085801-tm2iabnlaf85h9oteafo7rc3h3auq8jf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsWCHf4cGz9hEFl9-AEfHj9uklByREbnI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "432679085801-tm2iabnlaf85h9oteafo7rc3h3auq8jf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "432679085801-mjequjjlktk88bvvgdrcbjr4bk5g5obd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mystoriesmatter.mobileapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432679085801:android:e3414ceb32f7c7d5f3b278",
+        "android_client_info": {
+          "package_name": "com.mystoriesmatter.mobileapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "432679085801-3sg3796v9nnaj0f8oa9gsnttie0vvd93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mystoriesmatter.mobileapp",
+            "certificate_hash": "e6105ef7126973b1c5708dc51923d1940468b13b"
+          }
+        },
+        {
+          "client_id": "432679085801-q8rbdgmjavad4ovcfqn4e0a047lpgqdc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mystoriesmatter.mobileapp",
+            "certificate_hash": "1819956b1d873b08c18bb26f1051e29d6976dbb8"
+          }
+        },
+        {
+          "client_id": "432679085801-tm2iabnlaf85h9oteafo7rc3h3auq8jf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsWCHf4cGz9hEFl9-AEfHj9uklByREbnI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "432679085801-tm2iabnlaf85h9oteafo7rc3h3auq8jf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "432679085801-mjequjjlktk88bvvgdrcbjr4bk5g5obd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mystoriesmatter.mobileapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
