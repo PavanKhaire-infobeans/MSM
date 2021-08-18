@@ -504,11 +504,11 @@ class App extends React.Component {
   };
 
   componentWillUnmount() {
-    // this.notificationListener();
-    // this.notificationOpenedListener();
-    // if (this.notificationOpen != null) {
-    //   this.notificationOpen();
-    // }
+    this.notificationListener();
+    this.notificationOpenedListener();
+    if (this.notificationOpen != null) {
+      this.notificationOpen();
+    }
     this.backEvent &&
       this.backEvent.removeListener() &&
       this.onTokenRefreshListener();
