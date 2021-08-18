@@ -28,7 +28,6 @@ import EventManager from '../../common/eventManager';
 import DefaultPreference from 'react-native-default-preference';
 import {constants} from 'buffer';
 import Utility from '../../common/utility';
-console.log(NativeModules, 'NativeModules.EventHandling');
 // export const eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);//commented native module issue
 
 type Props = {getUser: Function; user: UserData & {notLoggedIn: boolean}};
