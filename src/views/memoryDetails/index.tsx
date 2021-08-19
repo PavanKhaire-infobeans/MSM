@@ -1,8 +1,8 @@
 import React from 'react';
-import { SafeAreaView, FlatList, View, TouchableHighlight, TouchableOpacity, Image, StyleSheet, WebView, ImageBackground, ScrollView, Alert, TextInput, Keyboard, Dimensions, StatusBar, Platform, NativeModules ,DeviceEventEmitter, Animated} from "react-native";
+import { SafeAreaView, FlatList, View, TouchableHighlight, TouchableOpacity, Image, StyleSheet, ImageBackground, ScrollView, Alert, TextInput, Keyboard, Dimensions, StatusBar, Platform, NativeModules ,DeviceEventEmitter, Animated} from "react-native";
 import { GetMemoryDetails, GetAllComments, kMemoryDetailsFetched, kAllLikes, 
             GetAllLikes, Like, Unlike, kLiked, kUnliked, kComment, kAllComment, PostComment , DeleteComment, kDeleteComment, EditComment, kEditComment, kLikeOnComment, kUnlikeOnComment} from './detailsWebService';
-    
+import WebView from 'react-native-webview';
 import EventManager from '../../common/eventManager';
 import { ToastMessage, No_Internet_Warning } from '../../common/component/Toast';
 import { Colors, fontSize, getValue, decode_utf8, encode_utf8, NO_INTERNET, TimeStampMilliSeconds, getDetails, keyArray, MemoryActionKeys, keyInt, keyBoolean, keyString} from '../../common/constants';
