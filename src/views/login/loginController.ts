@@ -50,13 +50,12 @@ export interface LoginControllerProtocol {
 
 export class LoginController implements LoginControllerProtocol {
   view: LoginViewProtocol | any;
-  // ssoLoginCallBack: any;//commented native module issue
+  ssoLoginCallBack: any;
   appleLogin: any;
   readCallBack: any = true;
   arrayOFTime: any = [];
   appleSubscriber: any;
-  ssoLoginCallBack: EventManager;
-  //   eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);//commented native module issue
+  eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);
   constructor(view: LoginViewProtocol) {
     this.view = view;
     GoogleSignin.configure({
@@ -114,14 +113,10 @@ export class LoginController implements LoginControllerProtocol {
   }
 
   onClickAppleSignIn() {
-    this.appleSubscriber = EventManager.addListener(
+    this.appleSubscriber = this.eventEmitter.addListener(
       'ShowMemoryDetails',
       this.appleLoginCallBack.bind(this),
     );
-    // this.appleSubscriber = this.eventEmitter.addListener(
-    //   'ShowMemoryDetails',
-    //   this.appleLoginCallBack.bind(this),
-    // );//commented native module issue
     NativeModules.AppleSignIn.SSOLogin();
   }
 

@@ -49,7 +49,7 @@ import AudioPlayer, {
 } from '../../common/component/audio_player/audio_player';
 import MemoryDetails from '../memoryDetails';
 import {configurations} from '../../common/webservice/loginServices';
-// import { eventEmitter } from '../splashscreen';//commented native module issue
+// import {eventEmitter} from '../splashscreen';
 import Utility from '../../common/utility';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {MemoryDraftsDataModel} from '../myMemories/MemoryDrafts/memoryDraftsDataModel';

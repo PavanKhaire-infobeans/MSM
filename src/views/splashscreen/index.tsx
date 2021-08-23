@@ -28,7 +28,7 @@ import EventManager from '../../common/eventManager';
 import DefaultPreference from 'react-native-default-preference';
 import {constants} from 'buffer';
 import Utility from '../../common/utility';
-// export const eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);//commented native module issue
+export const eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);
 
 type Props = {getUser: Function; user: UserData & {notLoggedIn: boolean}};
 class Splash extends Component<Props> {
