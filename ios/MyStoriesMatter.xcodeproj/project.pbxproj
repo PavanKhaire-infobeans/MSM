@@ -33,6 +33,9 @@
 		90BFDE9795754CD88B5A6E23 /* FiraSansExtraCondensed-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D08A413A44444E991ED1953 /* FiraSansExtraCondensed-RegularItalic.ttf */; };
 		979DEC83E531414DBF76057F /* Proxima Nova Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EC402C2DFBC64DDEA36E84CF /* Proxima Nova Bold.otf */; };
 		9A8A9BFCCFEA451FBE6F45BE /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E499F81714240F98681D47C /* Rubik-BlackItalic.ttf */; };
+		AB7DF91E26D3916D00856C8F /* AppleSignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = AB7DF91726D3916D00856C8F /* AppleSignIn.m */; };
+		AB7DF92026D3916D00856C8F /* AppleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7DF91926D3916D00856C8F /* AppleSignIn.swift */; };
+		AB7DF92126D3916D00856C8F /* EventHandling.m in Sources */ = {isa = PBXBuildFile; fileRef = AB7DF91B26D3916D00856C8F /* EventHandling.m */; };
 		AB8C47DE26CA54A3009728E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB8C47DD26CA54A3009728E5 /* GoogleService-Info.plist */; };
 		AB907E1926C6664F000BDE27 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB907E1826C6664F000BDE27 /* File.swift */; };
 		AC55BCB67AEA49E483FA4BEA /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B0E0AFCBBF724C7E8F3CC1BD /* ProximaNova-Regular.otf */; };
@@ -100,6 +103,10 @@
 		A90EE94275EB45AA961D8183 /* FiraSansExtraCondensed-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Regular.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		A94564C9EEAA42EE9B763A91 /* FiraSansExtraCondensed-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-LightItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-LightItalic.ttf"; sourceTree = "<group>"; };
 		AB7B411126C275870095F4DB /* MyStoriesMatterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyStoriesMatterDebug.entitlements; path = MyStoriesMatter/MyStoriesMatterDebug.entitlements; sourceTree = "<group>"; };
+		AB7DF91626D3916D00856C8F /* EventHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventHandling.h; sourceTree = "<group>"; };
+		AB7DF91726D3916D00856C8F /* AppleSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppleSignIn.m; sourceTree = "<group>"; };
+		AB7DF91926D3916D00856C8F /* AppleSignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleSignIn.swift; sourceTree = "<group>"; };
+		AB7DF91B26D3916D00856C8F /* EventHandling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventHandling.m; sourceTree = "<group>"; };
 		AB8C47DD26CA54A3009728E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AB8C47E126CA7851009728E5 /* MyStoriesMatter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyStoriesMatter.entitlements; path = MyStoriesMatter/MyStoriesMatter.entitlements; sourceTree = "<group>"; };
 		AB907E1726C6664E000BDE27 /* MyStoriesMatter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyStoriesMatter-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -208,6 +215,7 @@
 		13B07FAE1A68108700A75B9A /* MyStoriesMatter */ = {
 			isa = PBXGroup;
 			children = (
+				AB7DF91526D3916D00856C8F /* NativeModuleBridge */,
 				AB8C47E126CA7851009728E5 /* MyStoriesMatter.entitlements */,
 				AB7B411126C275870095F4DB /* MyStoriesMatterDebug.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -263,6 +271,17 @@
 				00E356EE1AD99517003FC87E /* MyStoriesMatterTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AB7DF91526D3916D00856C8F /* NativeModuleBridge */ = {
+			isa = PBXGroup;
+			children = (
+				AB7DF91626D3916D00856C8F /* EventHandling.h */,
+				AB7DF91726D3916D00856C8F /* AppleSignIn.m */,
+				AB7DF91926D3916D00856C8F /* AppleSignIn.swift */,
+				AB7DF91B26D3916D00856C8F /* EventHandling.m */,
+			);
+			path = NativeModuleBridge;
 			sourceTree = "<group>";
 		};
 		C7C9008DEDE729A380C64500 /* Pods */ = {
@@ -589,8 +608,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB7DF92026D3916D00856C8F /* AppleSignIn.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				AB7DF92126D3916D00856C8F /* EventHandling.m in Sources */,
 				AB907E1926C6664F000BDE27 /* File.swift in Sources */,
+				AB7DF91E26D3916D00856C8F /* AppleSignIn.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
