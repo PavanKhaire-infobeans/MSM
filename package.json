@@ -65,6 +65,7 @@
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-webview": "^11.13.0",
+    "react-navigation": "^4.4.4",
     "react-redux": "^7.2.4",
     "react-timer-mixin": "^0.13.4",
     "redux": "^4.1.1",
