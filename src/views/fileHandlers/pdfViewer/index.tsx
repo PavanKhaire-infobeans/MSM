@@ -75,7 +75,7 @@ export default class PDFViewer extends React.Component<Props> {
           }}
           style={{flex: 1, width: Dimensions.get('window').width}}
         />
-        <View
+        {/* <View
           style={{
             backgroundColor: '#595959',
             height: 40,
@@ -90,7 +90,7 @@ export default class PDFViewer extends React.Component<Props> {
           <TouchableOpacity onPress={() => this.cancelAction()}>
             <Image source={close_white_} style={{padding: 15}} />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </SafeAreaView>
     );
   }

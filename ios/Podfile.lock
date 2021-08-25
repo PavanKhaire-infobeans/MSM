@@ -331,7 +331,7 @@ PODS:
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
   - React-jsinspector (0.64.2)
-  - react-native-background-upload (6.4.0):
+  - react-native-background-upload (6.2.0):
     - React
   - react-native-document-picker (3.5.4):
     - React
@@ -791,7 +791,7 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
-  react-native-background-upload: 2670e809ea733b397f6c7bf53557b022f048f078
+  react-native-background-upload: 2c64e040ba7be05c2a39cfe82fc308b404b33318
   react-native-document-picker: 4921045c5c6c78243010f784eae0a3f4b2af7799
   react-native-netinfo: e849fc21ca2f4128a5726c801a82fc6f4a6db50d
   react-native-pager-view: 54970cc27fdef14db2dcfedadb091d711e88065d
