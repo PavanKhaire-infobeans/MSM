@@ -196,7 +196,7 @@ const AppRouter = () => (
               height: 57,
               justifyContent: 'center',
               alignItems: 'center',
-              paddingBottom: 20,
+              paddingBottom: Platform.OS === 'android' ? 0 : 20,
               overflow: 'hidden',
             }}>
             <Stack title={TabItems.AllMemories} tabBarIcon={TabIcon}>

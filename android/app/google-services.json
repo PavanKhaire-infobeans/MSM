@@ -15,19 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "432679085801-jmlr0tt7mr4gm9f9utiqobjgmi2hi47g.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cueback.mobileapp",
-            "certificate_hash": "1819956b1d873b08c18bb26f1051e29d6976dbb8"
-          }
-        },
-        {
           "client_id": "432679085801-bdqlq00euocib01elpd2hgv4jebqt5me.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.cueback.mobileapp",
             "certificate_hash": "e6105ef7126973b1c5708dc51923d1940468b13b"
+          }
+        },
+        {
+          "client_id": "432679085801-jmlr0tt7mr4gm9f9utiqobjgmi2hi47g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cueback.mobileapp",
+            "certificate_hash": "1819956b1d873b08c18bb26f1051e29d6976dbb8"
           }
         },
         {
@@ -48,10 +48,10 @@
               "client_type": 3
             },
             {
-              "client_id": "432679085801-mjequjjlktk88bvvgdrcbjr4bk5g5obd.apps.googleusercontent.com",
+              "client_id": "432679085801-g1nfkmoibka4b55l4rsqb491n9egfjt3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.mystoriesmatter.mobileapp"
+                "bundle_id": "com.cueback.mobileapp"
               }
             }
           ]
@@ -72,6 +72,14 @@
           "android_info": {
             "package_name": "com.mystoriesmatter.mobileapp",
             "certificate_hash": "e6105ef7126973b1c5708dc51923d1940468b13b"
+          }
+        },
+        {
+          "client_id": "432679085801-54iul4794tr8ocpgi7oc1lh281hv0vlm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mystoriesmatter.mobileapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
@@ -100,10 +108,10 @@
               "client_type": 3
             },
             {
-              "client_id": "432679085801-mjequjjlktk88bvvgdrcbjr4bk5g5obd.apps.googleusercontent.com",
+              "client_id": "432679085801-g1nfkmoibka4b55l4rsqb491n9egfjt3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.mystoriesmatter.mobileapp"
+                "bundle_id": "com.cueback.mobileapp"
               }
             }
           ]
