@@ -377,7 +377,7 @@ class App extends React.Component {
   backEvent: EventManager;
   eventListener: EventManager;
   async componentDidMount() {
-    SplashScreen.hide();
+    setTimeout(() => SplashScreen.hide(), 2000);
     networkConnectivitySaga();
     this.loadSegmentAnalytics();
     this.checkPermission();
