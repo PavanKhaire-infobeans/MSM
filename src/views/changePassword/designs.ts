@@ -1,12 +1,12 @@
-import { StyleSheet, Platform } from 'react-native';
-import { Size, fontSize } from '../../common/constants';
+import {StyleSheet, Platform} from 'react-native';
+import {Size, fontSize} from '../../common/constants';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
 
   innerContainer: {
@@ -18,34 +18,33 @@ export const styles = StyleSheet.create({
 
   titleText: {
     ...fontSize(Size.byWidth(24)),
-    fontWeight: Platform.OS === "ios"? '600':'bold'
+    fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
   },
 
   loginContainer: {
     width: Size.byWidth(310),
-    alignItems: "center",
-    flexDirection: "column",
+    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'space-evenly',
   },
 
   communityBanner: {
     width: '100%',
     height: Size.byWidth(90),
-    marginTop: Size.byWidth(37)
+    marginTop: Size.byWidth(37),
   },
 
   forgotPasswordContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    width: '100%'
+    width: '100%',
   },
 
   forgotPassword: {
     width: 'auto',
     height: Size.byWidth(44),
-    alignItems: "flex-end",
-    justifyContent: "center",
-    backgroundColor: 'transparent'
-  }
-
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
 });

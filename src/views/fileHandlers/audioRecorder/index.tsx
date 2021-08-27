@@ -252,7 +252,7 @@ export default class CommonAudioRecorder extends React.Component<
         today.getSeconds()
       }.m4a`;
 
-      requestPermission('microphone').then((success) => {
+      requestPermission('microphone').then(success => {
         if (success) {
           let path = SoundRecorder.PATH_CACHE + `/${this.recording}`;
           var options: {[key: string]: any} = {
@@ -559,7 +559,8 @@ export default class CommonAudioRecorder extends React.Component<
                   this.state.audioState == 'recording'
                     ? Colors.NewRadColor
                     : this.state.audioState == 'playing'
-                    ? Colors.NewRadColor:Colors.ThemeColor,
+                    ? Colors.NewRadColor
+                    : Colors.ThemeColor,
                 height: Size.byWidth(153),
                 width: Size.byWidth(153),
                 borderRadius: Size.byWidth(153) / 2,
@@ -628,9 +629,14 @@ export default class CommonAudioRecorder extends React.Component<
                         }
                       : () => this.back()
                   }>
-                  <Text style={{...fontSize(24), color: this.state.audioState == 'recording' 
-                      ? Colors.NewYellowColor
-                      : '#595959'}}>
+                  <Text
+                    style={{
+                      ...fontSize(24),
+                      color:
+                        this.state.audioState == 'recording'
+                          ? Colors.NewYellowColor
+                          : '#595959',
+                    }}>
                     {this.state.audioState == 'recording' ||
                     this.state.audioState == 'record-pause'
                       ? 'Done'
