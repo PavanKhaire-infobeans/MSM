@@ -1,38 +1,48 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import React, {Component} from 'react';
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
-import { chevron_down } from '../../../images';
+import {chevron_down} from '../../../images';
 import Text from '../../../common/component/Text';
-import { Size, fontSize, Colors } from '../../constants';
-import { Actions } from 'react-native-router-flux';
-
+import {Size, fontSize, Colors} from '../../constants';
+import {Actions} from 'react-native-router-flux';
 
 const SECTIONS: [any] = [
   {
     title: 'What are MindPops?',
-    content: 'MindPops are inklings of memories that suddenly pop into your head. Quickly jot them down to write about later.',
-    link: 'Learn more ways to add MindPops >'
+    content:
+      'MindPops are inklings of memories that suddenly pop into your head. Quickly jot them down to write about later.',
+    link: 'Learn more ways to add MindPops >',
   },
 ];
 
 type Props = {
-  sectionData: [any],
-}
+  sectionData: [any];
+};
 
-export default class AccordionView extends Component<Props, { [x: string]: any }> {
-
-
-  state: { activeSections: number[], sectionData: any[] } = {
+export default class AccordionView extends Component<
+  Props,
+  {[x: string]: any}
+> {
+  state: {activeSections: number[]; sectionData: any[]} = {
     activeSections: [],
-    sectionData: SECTIONS
+    sectionData: SECTIONS,
   };
 
   componentWillReceiveProps(props: Props) {
-    this.setState({ sectionData: props.sectionData })
+    this.setState({sectionData: props.sectionData});
   }
 
-  _renderHeader = (section: { [s: string]: any }) => {
-    let imgStyle = (this.state.activeSections.length == 0) ? styles.chevronImageNormal : styles.chevronImage
+  _renderHeader = (section: {[s: string]: any}) => {
+    let imgStyle =
+      this.state.activeSections.length == 0
+        ? styles.chevronImageNormal
+        : styles.chevronImage;
     return (
       <View style={styles.headerContainer}>
         <Text style={fontSize(18)}> {section.title}</Text>
@@ -41,10 +51,12 @@ export default class AccordionView extends Component<Props, { [x: string]: any }
     );
   };
 
-  _renderContent = (section: { [s: string]: any }) => {
+  _renderContent = (section: {[s: string]: any}) => {
     return (
       <View style={styles.cellContainer}>
-        <Text numberofLines={0} style={fontSize(16)}>{section.content}</Text>
+        <Text numberofLines={0} style={fontSize(16)}>
+          {section.content}
+        </Text>
         {/*<TouchableOpacity onPress={() => Actions.tipsAndTricks()}>
           <Text numberofLines={0} style={{ fontSize: 16, color: Colors.ThemeColor }}>{section.link}</Text>
     </TouchableOpacity>*/}
@@ -53,7 +65,7 @@ export default class AccordionView extends Component<Props, { [x: string]: any }
   };
 
   _updateSections = (activeSections: [number]) => {
-    this.setState({ activeSections });
+    this.setState({activeSections});
   };
 
   render() {
@@ -78,11 +90,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: Colors.NewLightThemeColor,
     borderBottomWidth: 1,
-    elevation : 2,
+    elevation: 2,
     shadowOpacity: 1,
     shadowColor: Colors.NewLightThemeColor,
     shadowRadius: 2,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     paddingLeft: 12,
     paddingRight: 10,
     paddingBottom: 2,
@@ -97,10 +109,10 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D9D9D9',
     borderBottomWidth: 1,
     shadowOpacity: 1,
-    elevation : 2,
+    elevation: 2,
     shadowColor: '#D9D9D9',
     shadowRadius: 2,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     paddingLeft: 16,
     paddingRight: 16,
     paddingTop: 16,
@@ -109,10 +121,10 @@ const styles = StyleSheet.create({
   },
 
   chevronImage: {
-    transform: [{ rotate: '180deg' }]
+    transform: [{rotate: '180deg'}],
   },
 
   chevronImageNormal: {
-    transform: [{ rotate: '0deg' }]
-  }
-})
+    transform: [{rotate: '0deg'}],
+  },
+});

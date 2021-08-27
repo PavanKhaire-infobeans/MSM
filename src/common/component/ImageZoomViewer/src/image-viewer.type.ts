@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Image, ImageURISource, Text, View, ViewStyle } from 'react-native';
-import { simpleStyle } from './image-viewer.style';
+import {Image, ImageURISource, Text, View, ViewStyle} from 'react-native';
+import {simpleStyle} from './image-viewer.style';
 
 interface IOnMove {
   type: string;
@@ -54,7 +54,10 @@ export class Props {
   /**
    * Menu Context Values
    */
-  public menuContext?: any = { saveToLocal: 'save to the album', cancel: 'cancel' };
+  public menuContext?: any = {
+    saveToLocal: 'save to the album',
+    cancel: 'cancel',
+  };
 
   /**
    * 是否开启长按保存到本地的功能
@@ -101,9 +104,10 @@ export class Props {
   /**
    * 单击回调
    */
-  public onClick?: (close?: () => any, currentShowIndex?: number) => void = () => {
-    //
-  };
+  public onClick?: (close?: () => any, currentShowIndex?: number) => void =
+    () => {
+      //
+    };
 
   /**
    * 双击回调
@@ -127,35 +131,43 @@ export class Props {
   /**
    * 自定义头部
    */
-  public renderHeader?: (currentIndex?: number) => React.ReactElement<any> = () => {
-    return null as any;
-  };
+  public renderHeader?: (currentIndex?: number) => React.ReactElement<any> =
+    () => {
+      return null as any;
+    };
 
   /**
    * 自定义尾部
    */
-  public renderFooter?: (currentIndex: number) => React.ReactElement<any> = () => {
-    return null as any;
-  };
+  public renderFooter?: (currentIndex: number) => React.ReactElement<any> =
+    () => {
+      return null as any;
+    };
 
   /**
    * 自定义计时器
    */
-  public renderIndicator?: (currentIndex?: number, allSize?: number) => React.ReactElement<any> = (
+  public renderIndicator?: (
     currentIndex?: number,
-    allSize?: number
-  ) => {
+    allSize?: number,
+  ) => React.ReactElement<any> = (currentIndex?: number, allSize?: number) => {
     return React.createElement(
       View,
-      { style: simpleStyle.count },
-      React.createElement(Text, { style: simpleStyle.countText }, currentIndex + '/' + allSize)
+      {style: simpleStyle.count},
+      React.createElement(
+        Text,
+        {style: simpleStyle.countText},
+        currentIndex + '/' + allSize,
+      ),
     );
   };
 
   /**
    * Render image component
    */
-  public renderImage?: (props: any) => React.ReactElement<any> = (props: any) => {
+  public renderImage?: (props: any) => React.ReactElement<any> = (
+    props: any,
+  ) => {
     return React.createElement(Image, props);
   };
 
@@ -215,7 +227,7 @@ export class Props {
     //
   };
 
-  public menus?: ({ cancel, saveToLocal }: any) => React.ReactElement<any>;
+  public menus?: ({cancel, saveToLocal}: any) => React.ReactElement<any>;
 }
 
 export class State {

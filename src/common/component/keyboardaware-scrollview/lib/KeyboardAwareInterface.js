@@ -8,6 +8,6 @@ export interface KeyboardAwareInterface {
   scrollToFocusedInput: (
     reactNode: Object,
     extraHeight: number,
-    keyboardOpeningTime: number
-  ) => void
+    keyboardOpeningTime: number,
+  ) => void;
 }

@@ -1,6 +1,6 @@
 /* @flow */
 
-import { FlatList } from 'react-native'
-import listenToKeyboardEvents from './KeyboardAwareHOC'
+import {FlatList} from 'react-native';
+import listenToKeyboardEvents from './KeyboardAwareHOC';
 
-export default listenToKeyboardEvents(FlatList)
+export default listenToKeyboardEvents(FlatList);
