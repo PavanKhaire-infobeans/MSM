@@ -22,6 +22,7 @@
     "@react-native-google-signin/google-signin": "^6.0.1",
     "@react-navigation/core": "^3.7.9",
     "@segment/analytics-react-native": "^1.5.0",
+    "@types/react-native": "^0.64.13",
     "create-react-class": "^15.7.0",
     "fsevents": "^2.3.2",
     "i": "^0.3.6",
