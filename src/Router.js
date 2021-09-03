@@ -84,9 +84,9 @@ import Splash from './views/splashscreen';
 import TipsAndTricks from './views/tipsAndTricks';
 import SplashScreen from 'react-native-splash-screen';
 // import firebase from "react-native-firebase";
-// import messaging, {
-//   FirebaseMessagingTypes,
-// } from '@react-native-firebase/messaging';
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
 import DefaultPreference from 'react-native-default-preference';
 // import { Notification, NotificationOpen } from 'react-native-firebase';
 import {
@@ -380,7 +380,7 @@ class App extends React.Component {
     setTimeout(() => SplashScreen.hide(), 2000);
     networkConnectivitySaga();
     this.loadSegmentAnalytics();
-    // this.checkPermission();
+    this.checkPermission();
     this.createNotificationListeners();
     if (Platform.OS == 'android') {
       this.backEvent = BackHandler.addEventListener(
@@ -401,48 +401,48 @@ class App extends React.Component {
   }
 
   //3
-  // async getToken() {
-  //   // DefaultPreference.get('firebaseToken').then(value=>{
-  //   //   if(value && value.length > 0){
-  //   //         return true;
-  //   //   } else {
-  //   try {
-  //     messaging()
-  //       .requestPermission()
-  //       .then(() => {
-  //         messaging()
-  //           .getToken()
-  //           .then(fcmToken => {
-  //             if (fcmToken) {
-  //               DefaultPreference.set('firebaseToken', fcmToken).then(
-  //                 function () {},
-  //               );
-  //               return true;
-  //             }
-  //           });
-  //       })
-  //       .catch(error => {
-  //         //console.log("Error fetching token " + error)
-  //       });
-  //   } catch (error) {
-  //     //console.log("Error fetching token " + error)
-  //   }
-  //   // }
-  //   // })
-  // }
+  async getToken() {
+    // DefaultPreference.get('firebaseToken').then(value=>{
+    //   if(value && value.length > 0){
+    //         return true;
+    //   } else {
+    try {
+      messaging()
+        .requestPermission()
+        .then(() => {
+          messaging()
+            .getToken()
+            .then(fcmToken => {
+              if (fcmToken) {
+                DefaultPreference.set('firebaseToken', fcmToken).then(
+                  function () {},
+                );
+                return true;
+              }
+            });
+        })
+        .catch(error => {
+          //console.log("Error fetching token " + error)
+        });
+    } catch (error) {
+      //console.log("Error fetching token " + error)
+    }
+    // }
+    // })
+  }
 
   //2
-  // async requestPermission() {
-  //   try {
-  //     await messaging().requestPermission();
-  //     // User has authorised
-  //     return await this.getToken();
-  //   } catch (error) {
-  //     // User has rejected permissions
-  //     return false;
-  //     //console.log('permission rejected');
-  //   }
-  // }
+  async requestPermission() {
+    try {
+      await messaging().requestPermission();
+      // User has authorised
+      return await this.getToken();
+    } catch (error) {
+      // User has rejected permissions
+      return false;
+      //console.log('permission rejected');
+    }
+  }
 
   async createNotificationListeners() {
     // this.showAlert("Listener", "added")
