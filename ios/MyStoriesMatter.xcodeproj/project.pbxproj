@@ -693,6 +693,7 @@
 				DEVELOPMENT_TEAM = BDV4D9G2U7;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MyStoriesMatter/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -725,6 +726,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = BDV4D9G2U7;
 				INFOPLIST_FILE = MyStoriesMatter/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
