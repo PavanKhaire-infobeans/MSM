@@ -11,9 +11,50 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		5743A232F69FB31491FE75B1 /* libPods-MyStoriesMatter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A16AA9883191783D3F42E086 /* libPods-MyStoriesMatter.a */; };
+		1F762D8A0D234F0688090A1B /* FiraSansExtraCondensed-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F7D6DBBECA224DBBA6617343 /* FiraSansExtraCondensed-MediumItalic.ttf */; };
+		2BBD53DD620242DD8ED4A9D8 /* Rubik-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5DC8495231C47C6AD114190 /* Rubik-Black.ttf */; };
+		2E6181C75A914FFCBD12A790 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A09F9AD301D2446AAB001E2F /* Rubik-MediumItalic.ttf */; };
+		2E919F36F0404772BB228DA7 /* Proxima Nova Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6143A4A8BDAE42EF8EF0C28A /* Proxima Nova Thin.otf */; };
+		2FD2BD91197C4B358C75AC11 /* FiraSansExtraCondensed-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B0AB67E5E06491E9A4E8D7C /* FiraSansExtraCondensed-Black.ttf */; };
+		52A41F604CF1449991029F5B /* Proxima Nova Alt Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = FBF5DC8306B14FABB6F75188 /* Proxima Nova Alt Thin.otf */; };
+		5B431E76EFC044D29991265E /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E479CB630D794EB490570D39 /* Rubik-Italic.ttf */; };
+		634352E4BC954B53AD4E741D /* FiraSansExtraCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1801D0DF52E84F02A2E61287 /* FiraSansExtraCondensed-Bold.ttf */; };
+		643D686B8CF9416BA5829B1A /* FiraSansExtraCondensed-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFCDE4749F70408496F3B863 /* FiraSansExtraCondensed-SemiBoldItalic.ttf */; };
+		66230A6E938B4A3EADF3E84A /* FiraSansExtraCondensed-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 57B5CAA8ABAB477CBE3A6D59 /* FiraSansExtraCondensed-BoldItalic.ttf */; };
+		677B3BC4AB674E86ACDD2087 /* FiraSansExtraCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEAB63BC58344BEA9057729F /* FiraSansExtraCondensed-SemiBold.ttf */; };
+		6789380016F5CF972F73C1D7 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F54ED9E893FD3578557464F /* libPods-MyStoriesMatter-MyStoriesMatterTests.a */; };
+		6FD900B101B34D51B8B7247B /* FiraSansExtraCondensed-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E19B006E244C48BF99C61A0D /* FiraSansExtraCondensed-Thin.ttf */; };
+		741B89DB923C437481E8EC52 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D81689CA62E54804A46555E5 /* Rubik-Medium.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		C7E82DC11EFB110EC5FDB9A4 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F6B92DD4639D6331414AC74 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a */; };
+		8542DF45132642E6867C108C /* Proxima Nova Alt Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7CB658F3D66B4869B8032D79 /* Proxima Nova Alt Bold.otf */; };
+		8AD4CD2633D34988817E3BBF /* FiraSansExtraCondensed-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD556BA483F1427C84FEF4BD /* FiraSansExtraCondensed-Medium.ttf */; };
+		8DA56307469C432684F95F7B /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4FA592E6C1E84ABDB7AF7230 /* Rubik-BoldItalic.ttf */; };
+		8E8E2DCEBE684B16908FE636 /* FiraSansExtraCondensed-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 906123C3482C4131BF1A83EC /* FiraSansExtraCondensed-ThinItalic.ttf */; };
+		90BFDE9795754CD88B5A6E23 /* FiraSansExtraCondensed-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D08A413A44444E991ED1953 /* FiraSansExtraCondensed-RegularItalic.ttf */; };
+		979DEC83E531414DBF76057F /* Proxima Nova Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EC402C2DFBC64DDEA36E84CF /* Proxima Nova Bold.otf */; };
+		9A8A9BFCCFEA451FBE6F45BE /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E499F81714240F98681D47C /* Rubik-BlackItalic.ttf */; };
+		AB7DF91E26D3916D00856C8F /* AppleSignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = AB7DF91726D3916D00856C8F /* AppleSignIn.m */; };
+		AB7DF92026D3916D00856C8F /* AppleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7DF91926D3916D00856C8F /* AppleSignIn.swift */; };
+		AB7DF92126D3916D00856C8F /* EventHandling.m in Sources */ = {isa = PBXBuildFile; fileRef = AB7DF91B26D3916D00856C8F /* EventHandling.m */; };
+		AB8C47DE26CA54A3009728E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB8C47DD26CA54A3009728E5 /* GoogleService-Info.plist */; };
+		AB907E1926C6664F000BDE27 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB907E1826C6664F000BDE27 /* File.swift */; };
+		AC55BCB67AEA49E483FA4BEA /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B0E0AFCBBF724C7E8F3CC1BD /* ProximaNova-Regular.otf */; };
+		ADB45D7D9CBF43F2B3CC3CB7 /* FiraSansExtraCondensed-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A94564C9EEAA42EE9B763A91 /* FiraSansExtraCondensed-LightItalic.ttf */; };
+		BA350F7A95C4454ABE8A3213 /* FiraSansExtraCondensed-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2166E40AADFE4E8C9333B65D /* FiraSansExtraCondensed-BlackItalic.ttf */; };
+		BB86B5139A3D43BF98884028 /* FiraSansExtraCondensed-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB40349042724D68B529DA16 /* FiraSansExtraCondensed-ExtraBold.ttf */; };
+		CB71CD8C7B42492EA66CBD07 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A228A1658C1249CABA42EE02 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf */; };
+		CCA36DD30AC84A01B085289D /* FiraSansExtraCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7A4A1E2BD5446028F747173 /* FiraSansExtraCondensed-Light.ttf */; };
+		CD865B0927994DC6BDAD940E /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48F59F6444574BAFB9B76291 /* Rubik-Bold.ttf */; };
+		D3D49985B4994DD8AE58F916 /* Proxima Nova Alt Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = A087C5E1B78843EA83011F00 /* Proxima Nova Alt Light.otf */; };
+		DC34A4B976834B8683B52B8B /* FiraSansExtraCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A90EE94275EB45AA961D8183 /* FiraSansExtraCondensed-Regular.ttf */; };
+		E33924C349E74858B9F2594A /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE534FFC9ADA4615A8890D3C /* Rubik-Regular.ttf */; };
+		E7ECA5EBF77D435AB82A01A0 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F78E7D8A6A74451F9A26DA3E /* Rubik-Light.ttf */; };
+		EAF8997B9CF04B6DA10755D2 /* Proxima Nova Extrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B5771B97A821466DB76C9576 /* Proxima Nova Extrabold.otf */; };
+		ECD26F5B8B474A7E8D0C9BB4 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E80278CF720B485DBF9C3471 /* Rubik-LightItalic.ttf */; };
+		EF94CF91CA0242BA889ADBF1 /* FiraSansExtraCondensed-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 91CCA985445B40C8A4A7B632 /* FiraSansExtraCondensed-ExtraLightItalic.ttf */; };
+		F2E81B3E0D3D8396CF7E37B3 /* libPods-MyStoriesMatter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF37F16F585A4E12924343A0 /* libPods-MyStoriesMatter.a */; };
+		F873B98E7EB6427D806A1E75 /* FiraSansExtraCondensed-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932846CCD2B64F34BE85FF7F /* FiraSansExtraCondensed-ExtraLight.ttf */; };
+		FBEFA947EBBD42D7802FFD2E /* Proxima Nova Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 01CACD43A99B4404B3528645 /* Proxima Nova Black.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,20 +71,65 @@
 		00E356EE1AD99517003FC87E /* MyStoriesMatterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyStoriesMatterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* MyStoriesMatterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyStoriesMatterTests.m; sourceTree = "<group>"; };
-		02FC1E2D33A614D12A5947DD /* Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig"; sourceTree = "<group>"; };
+		01CACD43A99B4404B3528645 /* Proxima Nova Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Black.otf"; path = "../assets/fonts/Proxima Nova Black.otf"; sourceTree = "<group>"; };
+		0F54ED9E893FD3578557464F /* libPods-MyStoriesMatter-MyStoriesMatterTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyStoriesMatter-MyStoriesMatterTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* MyStoriesMatter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyStoriesMatter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = MyStoriesMatter/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = MyStoriesMatter/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MyStoriesMatter/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MyStoriesMatter/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MyStoriesMatter/main.m; sourceTree = "<group>"; };
-		7F6B92DD4639D6331414AC74 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyStoriesMatter-MyStoriesMatterTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1801D0DF52E84F02A2E61287 /* FiraSansExtraCondensed-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Bold.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Bold.ttf"; sourceTree = "<group>"; };
+		2166E40AADFE4E8C9333B65D /* FiraSansExtraCondensed-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-BlackItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-BlackItalic.ttf"; sourceTree = "<group>"; };
+		2B9AC47E9D7A2C7BF9CA47CC /* Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2D08A413A44444E991ED1953 /* FiraSansExtraCondensed-RegularItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-RegularItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-RegularItalic.ttf"; sourceTree = "<group>"; };
+		3E499F81714240F98681D47C /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BlackItalic.ttf"; path = "../assets/fonts/Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
+		48F59F6444574BAFB9B76291 /* Rubik-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Bold.ttf"; path = "../assets/fonts/Rubik-Bold.ttf"; sourceTree = "<group>"; };
+		4FA592E6C1E84ABDB7AF7230 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../assets/fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
+		5736C9AE5AB97EBA4FD4D035 /* Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig"; sourceTree = "<group>"; };
+		57B5CAA8ABAB477CBE3A6D59 /* FiraSansExtraCondensed-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-BoldItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-BoldItalic.ttf"; sourceTree = "<group>"; };
+		6143A4A8BDAE42EF8EF0C28A /* Proxima Nova Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Thin.otf"; path = "../assets/fonts/Proxima Nova Thin.otf"; sourceTree = "<group>"; };
+		66DA3B869D0C53F6766F5417 /* Pods-MyStoriesMatter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter.release.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter.release.xcconfig"; sourceTree = "<group>"; };
+		7B0AB67E5E06491E9A4E8D7C /* FiraSansExtraCondensed-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Black.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Black.ttf"; sourceTree = "<group>"; };
+		7CB658F3D66B4869B8032D79 /* Proxima Nova Alt Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Alt Bold.otf"; path = "../assets/fonts/Proxima Nova Alt Bold.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MyStoriesMatter/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A16AA9883191783D3F42E086 /* libPods-MyStoriesMatter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyStoriesMatter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C3E306E3352015293D027AB7 /* Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig"; sourceTree = "<group>"; };
-		E5700109C43A727AFBF06FB1 /* Pods-MyStoriesMatter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter.release.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter.release.xcconfig"; sourceTree = "<group>"; };
+		906123C3482C4131BF1A83EC /* FiraSansExtraCondensed-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ThinItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ThinItalic.ttf"; sourceTree = "<group>"; };
+		91CCA985445B40C8A4A7B632 /* FiraSansExtraCondensed-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ExtraLightItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		932846CCD2B64F34BE85FF7F /* FiraSansExtraCondensed-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ExtraLight.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ExtraLight.ttf"; sourceTree = "<group>"; };
+		93D91C564A191FC87F8C1939 /* Pods-MyStoriesMatter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter.debug.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter.debug.xcconfig"; sourceTree = "<group>"; };
+		A087C5E1B78843EA83011F00 /* Proxima Nova Alt Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Alt Light.otf"; path = "../assets/fonts/Proxima Nova Alt Light.otf"; sourceTree = "<group>"; };
+		A09F9AD301D2446AAB001E2F /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-MediumItalic.ttf"; path = "../assets/fonts/Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
+		A228A1658C1249CABA42EE02 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ExtraBoldItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		A90EE94275EB45AA961D8183 /* FiraSansExtraCondensed-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Regular.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Regular.ttf"; sourceTree = "<group>"; };
+		A94564C9EEAA42EE9B763A91 /* FiraSansExtraCondensed-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-LightItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-LightItalic.ttf"; sourceTree = "<group>"; };
+		AB7B411126C275870095F4DB /* MyStoriesMatterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyStoriesMatterDebug.entitlements; path = MyStoriesMatter/MyStoriesMatterDebug.entitlements; sourceTree = "<group>"; };
+		AB7DF91626D3916D00856C8F /* EventHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventHandling.h; sourceTree = "<group>"; };
+		AB7DF91726D3916D00856C8F /* AppleSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppleSignIn.m; sourceTree = "<group>"; };
+		AB7DF91926D3916D00856C8F /* AppleSignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleSignIn.swift; sourceTree = "<group>"; };
+		AB7DF91B26D3916D00856C8F /* EventHandling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventHandling.m; sourceTree = "<group>"; };
+		AB8C47DD26CA54A3009728E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AB8C47E126CA7851009728E5 /* MyStoriesMatter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyStoriesMatter.entitlements; path = MyStoriesMatter/MyStoriesMatter.entitlements; sourceTree = "<group>"; };
+		AB907E1726C6664E000BDE27 /* MyStoriesMatter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyStoriesMatter-Bridging-Header.h"; sourceTree = "<group>"; };
+		AB907E1826C6664F000BDE27 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		B0E0AFCBBF724C7E8F3CC1BD /* ProximaNova-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Regular.otf"; path = "../assets/fonts/ProximaNova-Regular.otf"; sourceTree = "<group>"; };
+		B5771B97A821466DB76C9576 /* Proxima Nova Extrabold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Extrabold.otf"; path = "../assets/fonts/Proxima Nova Extrabold.otf"; sourceTree = "<group>"; };
+		CE534FFC9ADA4615A8890D3C /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
+		CEAB63BC58344BEA9057729F /* FiraSansExtraCondensed-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-SemiBold.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-SemiBold.ttf"; sourceTree = "<group>"; };
+		D7A4A1E2BD5446028F747173 /* FiraSansExtraCondensed-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Light.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Light.ttf"; sourceTree = "<group>"; };
+		D81689CA62E54804A46555E5 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
+		DD556BA483F1427C84FEF4BD /* FiraSansExtraCondensed-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Medium.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Medium.ttf"; sourceTree = "<group>"; };
+		E19B006E244C48BF99C61A0D /* FiraSansExtraCondensed-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Thin.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Thin.ttf"; sourceTree = "<group>"; };
+		E479CB630D794EB490570D39 /* Rubik-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic.ttf"; path = "../assets/fonts/Rubik-Italic.ttf"; sourceTree = "<group>"; };
+		E5DC8495231C47C6AD114190 /* Rubik-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Black.ttf"; path = "../assets/fonts/Rubik-Black.ttf"; sourceTree = "<group>"; };
+		E80278CF720B485DBF9C3471 /* Rubik-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-LightItalic.ttf"; path = "../assets/fonts/Rubik-LightItalic.ttf"; sourceTree = "<group>"; };
+		EC402C2DFBC64DDEA36E84CF /* Proxima Nova Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Bold.otf"; path = "../assets/fonts/Proxima Nova Bold.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F915D83E875734EB6C90260D /* Pods-MyStoriesMatter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStoriesMatter.debug.xcconfig"; path = "Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter.debug.xcconfig"; sourceTree = "<group>"; };
+		EF37F16F585A4E12924343A0 /* libPods-MyStoriesMatter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyStoriesMatter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F78E7D8A6A74451F9A26DA3E /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../assets/fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
+		F7D6DBBECA224DBBA6617343 /* FiraSansExtraCondensed-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-MediumItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-MediumItalic.ttf"; sourceTree = "<group>"; };
+		FB40349042724D68B529DA16 /* FiraSansExtraCondensed-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ExtraBold.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ExtraBold.ttf"; sourceTree = "<group>"; };
+		FBF5DC8306B14FABB6F75188 /* Proxima Nova Alt Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Alt Thin.otf"; path = "../assets/fonts/Proxima Nova Alt Thin.otf"; sourceTree = "<group>"; };
+		FFCDE4749F70408496F3B863 /* FiraSansExtraCondensed-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-SemiBoldItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7E82DC11EFB110EC5FDB9A4 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a in Frameworks */,
+				6789380016F5CF972F73C1D7 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5743A232F69FB31491FE75B1 /* libPods-MyStoriesMatter.a in Frameworks */,
+				F2E81B3E0D3D8396CF7E37B3 /* libPods-MyStoriesMatter.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,15 +169,63 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		118A61147EF149EFA058599A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7B0AB67E5E06491E9A4E8D7C /* FiraSansExtraCondensed-Black.ttf */,
+				2166E40AADFE4E8C9333B65D /* FiraSansExtraCondensed-BlackItalic.ttf */,
+				1801D0DF52E84F02A2E61287 /* FiraSansExtraCondensed-Bold.ttf */,
+				57B5CAA8ABAB477CBE3A6D59 /* FiraSansExtraCondensed-BoldItalic.ttf */,
+				FB40349042724D68B529DA16 /* FiraSansExtraCondensed-ExtraBold.ttf */,
+				A228A1658C1249CABA42EE02 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf */,
+				932846CCD2B64F34BE85FF7F /* FiraSansExtraCondensed-ExtraLight.ttf */,
+				91CCA985445B40C8A4A7B632 /* FiraSansExtraCondensed-ExtraLightItalic.ttf */,
+				D7A4A1E2BD5446028F747173 /* FiraSansExtraCondensed-Light.ttf */,
+				A94564C9EEAA42EE9B763A91 /* FiraSansExtraCondensed-LightItalic.ttf */,
+				DD556BA483F1427C84FEF4BD /* FiraSansExtraCondensed-Medium.ttf */,
+				F7D6DBBECA224DBBA6617343 /* FiraSansExtraCondensed-MediumItalic.ttf */,
+				A90EE94275EB45AA961D8183 /* FiraSansExtraCondensed-Regular.ttf */,
+				2D08A413A44444E991ED1953 /* FiraSansExtraCondensed-RegularItalic.ttf */,
+				CEAB63BC58344BEA9057729F /* FiraSansExtraCondensed-SemiBold.ttf */,
+				FFCDE4749F70408496F3B863 /* FiraSansExtraCondensed-SemiBoldItalic.ttf */,
+				E19B006E244C48BF99C61A0D /* FiraSansExtraCondensed-Thin.ttf */,
+				906123C3482C4131BF1A83EC /* FiraSansExtraCondensed-ThinItalic.ttf */,
+				7CB658F3D66B4869B8032D79 /* Proxima Nova Alt Bold.otf */,
+				A087C5E1B78843EA83011F00 /* Proxima Nova Alt Light.otf */,
+				FBF5DC8306B14FABB6F75188 /* Proxima Nova Alt Thin.otf */,
+				01CACD43A99B4404B3528645 /* Proxima Nova Black.otf */,
+				EC402C2DFBC64DDEA36E84CF /* Proxima Nova Bold.otf */,
+				B5771B97A821466DB76C9576 /* Proxima Nova Extrabold.otf */,
+				6143A4A8BDAE42EF8EF0C28A /* Proxima Nova Thin.otf */,
+				B0E0AFCBBF724C7E8F3CC1BD /* ProximaNova-Regular.otf */,
+				E5DC8495231C47C6AD114190 /* Rubik-Black.ttf */,
+				3E499F81714240F98681D47C /* Rubik-BlackItalic.ttf */,
+				48F59F6444574BAFB9B76291 /* Rubik-Bold.ttf */,
+				4FA592E6C1E84ABDB7AF7230 /* Rubik-BoldItalic.ttf */,
+				E479CB630D794EB490570D39 /* Rubik-Italic.ttf */,
+				F78E7D8A6A74451F9A26DA3E /* Rubik-Light.ttf */,
+				E80278CF720B485DBF9C3471 /* Rubik-LightItalic.ttf */,
+				D81689CA62E54804A46555E5 /* Rubik-Medium.ttf */,
+				A09F9AD301D2446AAB001E2F /* Rubik-MediumItalic.ttf */,
+				CE534FFC9ADA4615A8890D3C /* Rubik-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* MyStoriesMatter */ = {
 			isa = PBXGroup;
 			children = (
+				AB7DF91526D3916D00856C8F /* NativeModuleBridge */,
+				AB8C47E126CA7851009728E5 /* MyStoriesMatter.entitlements */,
+				AB7B411126C275870095F4DB /* MyStoriesMatterDebug.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				AB907E1826C6664F000BDE27 /* File.swift */,
+				AB907E1726C6664E000BDE27 /* MyStoriesMatter-Bridging-Header.h */,
 			);
 			name = MyStoriesMatter;
 			sourceTree = "<group>";
@@ -100,8 +234,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				A16AA9883191783D3F42E086 /* libPods-MyStoriesMatter.a */,
-				7F6B92DD4639D6331414AC74 /* libPods-MyStoriesMatter-MyStoriesMatterTests.a */,
+				EF37F16F585A4E12924343A0 /* libPods-MyStoriesMatter.a */,
+				0F54ED9E893FD3578557464F /* libPods-MyStoriesMatter-MyStoriesMatterTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -116,12 +250,14 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				AB8C47DD26CA54A3009728E5 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* MyStoriesMatter */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* MyStoriesMatterTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				C7C9008DEDE729A380C64500 /* Pods */,
+				118A61147EF149EFA058599A /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -137,13 +273,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		AB7DF91526D3916D00856C8F /* NativeModuleBridge */ = {
+			isa = PBXGroup;
+			children = (
+				AB7DF91626D3916D00856C8F /* EventHandling.h */,
+				AB7DF91726D3916D00856C8F /* AppleSignIn.m */,
+				AB7DF91926D3916D00856C8F /* AppleSignIn.swift */,
+				AB7DF91B26D3916D00856C8F /* EventHandling.m */,
+			);
+			path = NativeModuleBridge;
+			sourceTree = "<group>";
+		};
 		C7C9008DEDE729A380C64500 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F915D83E875734EB6C90260D /* Pods-MyStoriesMatter.debug.xcconfig */,
-				E5700109C43A727AFBF06FB1 /* Pods-MyStoriesMatter.release.xcconfig */,
-				02FC1E2D33A614D12A5947DD /* Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig */,
-				C3E306E3352015293D027AB7 /* Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig */,
+				93D91C564A191FC87F8C1939 /* Pods-MyStoriesMatter.debug.xcconfig */,
+				66DA3B869D0C53F6766F5417 /* Pods-MyStoriesMatter.release.xcconfig */,
+				2B9AC47E9D7A2C7BF9CA47CC /* Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig */,
+				5736C9AE5AB97EBA4FD4D035 /* Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -155,12 +302,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MyStoriesMatterTests" */;
 			buildPhases = (
-				F0B3F21DCDE3FC07567703B2 /* [CP] Check Pods Manifest.lock */,
+				580EFDBC072F316D8B543DDE /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				308455BAE2E5D700A3D9952F /* [CP] Embed Pods Frameworks */,
-				ED372498D29B3A3C260AD0CA /* [CP] Copy Pods Resources */,
+				60D83833C494674904BC8312 /* [CP] Embed Pods Frameworks */,
+				F17286E46C104193860A173F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -176,14 +323,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MyStoriesMatter" */;
 			buildPhases = (
-				12CA1E7F96EEEF08633E71A4 /* [CP] Check Pods Manifest.lock */,
+				3E4A75FFD33C6AD1B3FAF3C1 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				7D3223871C48DFDC7B7A0F4A /* [CP] Embed Pods Frameworks */,
-				7330421326A6D490186A94F1 /* [CP] Copy Pods Resources */,
+				23459664F5112B5871E1690A /* [CP] Embed Pods Frameworks */,
+				07B5A5F7E5A9FBC02010A1CC /* [CP] Copy Pods Resources */,
+				2B68C856C052635D1828515B /* [CP-User] [RNFB] Core Configuration */,
 			);
 			buildRules = (
 			);
@@ -207,7 +355,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1250;
 					};
 				};
 			};
@@ -244,6 +392,43 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				2FD2BD91197C4B358C75AC11 /* FiraSansExtraCondensed-Black.ttf in Resources */,
+				BA350F7A95C4454ABE8A3213 /* FiraSansExtraCondensed-BlackItalic.ttf in Resources */,
+				634352E4BC954B53AD4E741D /* FiraSansExtraCondensed-Bold.ttf in Resources */,
+				66230A6E938B4A3EADF3E84A /* FiraSansExtraCondensed-BoldItalic.ttf in Resources */,
+				BB86B5139A3D43BF98884028 /* FiraSansExtraCondensed-ExtraBold.ttf in Resources */,
+				CB71CD8C7B42492EA66CBD07 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf in Resources */,
+				F873B98E7EB6427D806A1E75 /* FiraSansExtraCondensed-ExtraLight.ttf in Resources */,
+				EF94CF91CA0242BA889ADBF1 /* FiraSansExtraCondensed-ExtraLightItalic.ttf in Resources */,
+				CCA36DD30AC84A01B085289D /* FiraSansExtraCondensed-Light.ttf in Resources */,
+				ADB45D7D9CBF43F2B3CC3CB7 /* FiraSansExtraCondensed-LightItalic.ttf in Resources */,
+				8AD4CD2633D34988817E3BBF /* FiraSansExtraCondensed-Medium.ttf in Resources */,
+				1F762D8A0D234F0688090A1B /* FiraSansExtraCondensed-MediumItalic.ttf in Resources */,
+				DC34A4B976834B8683B52B8B /* FiraSansExtraCondensed-Regular.ttf in Resources */,
+				90BFDE9795754CD88B5A6E23 /* FiraSansExtraCondensed-RegularItalic.ttf in Resources */,
+				677B3BC4AB674E86ACDD2087 /* FiraSansExtraCondensed-SemiBold.ttf in Resources */,
+				643D686B8CF9416BA5829B1A /* FiraSansExtraCondensed-SemiBoldItalic.ttf in Resources */,
+				6FD900B101B34D51B8B7247B /* FiraSansExtraCondensed-Thin.ttf in Resources */,
+				8E8E2DCEBE684B16908FE636 /* FiraSansExtraCondensed-ThinItalic.ttf in Resources */,
+				8542DF45132642E6867C108C /* Proxima Nova Alt Bold.otf in Resources */,
+				D3D49985B4994DD8AE58F916 /* Proxima Nova Alt Light.otf in Resources */,
+				52A41F604CF1449991029F5B /* Proxima Nova Alt Thin.otf in Resources */,
+				FBEFA947EBBD42D7802FFD2E /* Proxima Nova Black.otf in Resources */,
+				979DEC83E531414DBF76057F /* Proxima Nova Bold.otf in Resources */,
+				EAF8997B9CF04B6DA10755D2 /* Proxima Nova Extrabold.otf in Resources */,
+				AB8C47DE26CA54A3009728E5 /* GoogleService-Info.plist in Resources */,
+				2E919F36F0404772BB228DA7 /* Proxima Nova Thin.otf in Resources */,
+				AC55BCB67AEA49E483FA4BEA /* ProximaNova-Regular.otf in Resources */,
+				2BBD53DD620242DD8ED4A9D8 /* Rubik-Black.ttf in Resources */,
+				9A8A9BFCCFEA451FBE6F45BE /* Rubik-BlackItalic.ttf in Resources */,
+				CD865B0927994DC6BDAD940E /* Rubik-Bold.ttf in Resources */,
+				8DA56307469C432684F95F7B /* Rubik-BoldItalic.ttf in Resources */,
+				5B431E76EFC044D29991265E /* Rubik-Italic.ttf in Resources */,
+				E7ECA5EBF77D435AB82A01A0 /* Rubik-Light.ttf in Resources */,
+				ECD26F5B8B474A7E8D0C9BB4 /* Rubik-LightItalic.ttf in Resources */,
+				741B89DB923C437481E8EC52 /* Rubik-Medium.ttf in Resources */,
+				2E6181C75A914FFCBD12A790 /* Rubik-MediumItalic.ttf in Resources */,
+				E33924C349E74858B9F2594A /* Rubik-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,7 +449,54 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		12CA1E7F96EEEF08633E71A4 /* [CP] Check Pods Manifest.lock */ = {
+		07B5A5F7E5A9FBC02010A1CC /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		23459664F5112B5871E1690A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2B68C856C052635D1828515B /* [CP-User] [RNFB] Core Configuration */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "[CP-User] [RNFB] Core Configuration";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\nset -e\n\n_MAX_LOOKUPS=2;\n_SEARCH_RESULT=''\n_RN_ROOT_EXISTS=''\n_CURRENT_LOOKUPS=1\n_JSON_ROOT=\"'react-native'\"\n_JSON_FILE_NAME='firebase.json'\n_JSON_OUTPUT_BASE64='e30=' # { }\n_CURRENT_SEARCH_DIR=${PROJECT_DIR}\n_PLIST_BUDDY=/usr/libexec/PlistBuddy\n_TARGET_PLIST=\"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n_DSYM_PLIST=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\n\n# plist arrays\n_PLIST_ENTRY_KEYS=()\n_PLIST_ENTRY_TYPES=()\n_PLIST_ENTRY_VALUES=()\n\nfunction setPlistValue {\n  echo \"info:      setting plist entry '$1' of type '$2' in file '$4'\"\n  ${_PLIST_BUDDY} -c \"Add :$1 $2 '$3'\" $4 || echo \"info:      '$1' already exists\"\n}\n\nfunction getFirebaseJsonKeyValue () {\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    ruby -e \"require 'rubygems';require 'json'; output=JSON.parse('$1'); puts output[$_JSON_ROOT]['$2']\"\n  else\n    echo \"\"\n  fi;\n}\n\nfunction jsonBoolToYesNo () {\n  if [[ $1 == \"false\" ]]; then\n    echo \"NO\"\n  elif [[ $1 == \"true\" ]]; then\n    echo \"YES\"\n  else echo \"NO\"\n  fi\n}\n\necho \"info: -> RNFB build script started\"\necho \"info: 1) Locating ${_JSON_FILE_NAME} file:\"\n\nif [[ -z ${_CURRENT_SEARCH_DIR} ]]; then\n  _CURRENT_SEARCH_DIR=$(pwd)\nfi;\n\nwhile true; do\n  _CURRENT_SEARCH_DIR=$(dirname \"$_CURRENT_SEARCH_DIR\")\n  if [[ \"$_CURRENT_SEARCH_DIR\" == \"/\" ]] || [[ ${_CURRENT_LOOKUPS} -gt ${_MAX_LOOKUPS} ]]; then break; fi;\n  echo \"info:      ($_CURRENT_LOOKUPS of $_MAX_LOOKUPS) Searching in '$_CURRENT_SEARCH_DIR' for a ${_JSON_FILE_NAME} file.\"\n  _SEARCH_RESULT=$(find \"$_CURRENT_SEARCH_DIR\" -maxdepth 2 -name ${_JSON_FILE_NAME} -print | head -n 1)\n  if [[ ${_SEARCH_RESULT} ]]; then\n    echo \"info:      ${_JSON_FILE_NAME} found at $_SEARCH_RESULT\"\n    break;\n  fi;\n  _CURRENT_LOOKUPS=$((_CURRENT_LOOKUPS+1))\ndone\n\nif [[ ${_SEARCH_RESULT} ]]; then\n  _JSON_OUTPUT_RAW=$(cat \"${_SEARCH_RESULT}\")\n  _RN_ROOT_EXISTS=$(ruby -e \"require 'rubygems';require 'json'; output=JSON.parse('$_JSON_OUTPUT_RAW'); puts output[$_JSON_ROOT]\" || echo '')\n\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    _JSON_OUTPUT_BASE64=$(python -c 'import json,sys,base64;print(base64.b64encode(json.dumps(json.loads(open('\"'${_SEARCH_RESULT}'\"').read())['${_JSON_ROOT}'])))' || echo \"e30=\")\n  fi\n\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n\n  # config.app_data_collection_default_enabled\n  _APP_DATA_COLLECTION_ENABLED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"app_data_collection_default_enabled\")\n  if [[ $_APP_DATA_COLLECTION_ENABLED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseDataCollectionDefaultEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_APP_DATA_COLLECTION_ENABLED\")\")\n  fi\n\n  # config.analytics_auto_collection_enabled\n  _ANALYTICS_AUTO_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_auto_collection_enabled\")\n  if [[ $_ANALYTICS_AUTO_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FIREBASE_ANALYTICS_COLLECTION_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AUTO_COLLECTION\")\")\n  fi\n\n  # config.analytics_collection_deactivated\n  _ANALYTICS_DEACTIVATED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_collection_deactivated\")\n  if [[ $_ANALYTICS_DEACTIVATED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FIREBASE_ANALYTICS_COLLECTION_DEACTIVATED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_DEACTIVATED\")\")\n  fi\n\n  # config.analytics_idfv_collection_enabled\n  _ANALYTICS_IDFV_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_idfv_collection_enabled\")\n  if [[ $_ANALYTICS_IDFV_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_IDFV_COLLECTION_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_IDFV_COLLECTION\")\")\n  fi\n\n  # config.analytics_default_allow_ad_personalization_signals\n  _ANALYTICS_PERSONALIZATION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_ad_personalization_signals\")\n  if [[ $_ANALYTICS_PERSONALIZATION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_PERSONALIZATION\")\")\n  fi\n\n  # config.perf_auto_collection_enabled\n  _PERF_AUTO_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"perf_auto_collection_enabled\")\n  if [[ $_PERF_AUTO_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"firebase_performance_collection_enabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_PERF_AUTO_COLLECTION\")\")\n  fi\n\n  # config.perf_collection_deactivated\n  _PERF_DEACTIVATED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"perf_collection_deactivated\")\n  if [[ $_PERF_DEACTIVATED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"firebase_performance_collection_deactivated\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_PERF_DEACTIVATED\")\")\n  fi\n\n  # config.messaging_auto_init_enabled\n  _MESSAGING_AUTO_INIT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"messaging_auto_init_enabled\")\n  if [[ $_MESSAGING_AUTO_INIT ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseMessagingAutoInitEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_MESSAGING_AUTO_INIT\")\")\n  fi\n\n  # config.in_app_messaging_auto_colllection_enabled\n  _FIAM_AUTO_INIT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"in_app_messaging_auto_collection_enabled\")\n  if [[ $_FIAM_AUTO_INIT ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseInAppMessagingAutomaticDataCollectionEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_FIAM_AUTO_INIT\")\")\n  fi\n\n  # config.app_check_token_auto_refresh\n  _APP_CHECK_TOKEN_AUTO_REFRESH=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"app_check_token_auto_refresh\")\n  if [[ $_APP_CHECK_TOKEN_AUTO_REFRESH ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseAppCheckTokenAutoRefreshEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_APP_CHECK_TOKEN_AUTO_REFRESH\")\")\n  fi\n\n  # config.crashlytics_disable_auto_disabler - undocumented for now - mainly for debugging, document if becomes useful\n  _CRASHLYTICS_AUTO_DISABLE_ENABLED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"crashlytics_disable_auto_disabler\")\n  if [[ $_CRASHLYTICS_AUTO_DISABLE_ENABLED == \"true\" ]]; then\n    echo \"Disabled Crashlytics auto disabler.\" # do nothing\n  else\n    _PLIST_ENTRY_KEYS+=(\"FirebaseCrashlyticsCollectionEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"NO\")\n  fi\nelse\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n  echo \"warning:   A firebase.json file was not found, whilst this file is optional it is recommended to include it to configure firebase services in React Native Firebase.\"\nfi;\n\necho \"info: 2) Injecting Info.plist entries: \"\n\n# Log out the keys we're adding\nfor i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n  echo \"    ->  $i) ${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\"\ndone\n\nfor plist in \"${_TARGET_PLIST}\" \"${_DSYM_PLIST}\" ; do\n  if [[ -f \"${plist}\" ]]; then\n\n    # paths with spaces break the call to setPlistValue. temporarily modify\n    # the shell internal field separator variable (IFS), which normally\n    # includes spaces, to consist only of line breaks\n    oldifs=$IFS\n    IFS=\"\n\"\n\n    for i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n      setPlistValue \"${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\" \"${plist}\"\n    done\n\n    # restore the original internal field separator value\n    IFS=$oldifs\n  else\n    echo \"warning:   A Info.plist build output file was not found (${plist})\"\n  fi\ndone\n\necho \"info: <- RNFB build script finished\"\n";
+		};
+		3E4A75FFD33C6AD1B3FAF3C1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -286,75 +518,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		308455BAE2E5D700A3D9952F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7330421326A6D490186A94F1 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7D3223871C48DFDC7B7A0F4A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter/Pods-MyStoriesMatter-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		ED372498D29B3A3C260AD0CA /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F0B3F21DCDE3FC07567703B2 /* [CP] Check Pods Manifest.lock */ = {
+		580EFDBC072F316D8B543DDE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -374,6 +538,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		60D83833C494674904BC8312 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F17286E46C104193860A173F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MyStoriesMatter-MyStoriesMatterTests/Pods-MyStoriesMatter-MyStoriesMatterTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -410,7 +608,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB7DF92026D3916D00856C8F /* AppleSignIn.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				AB7DF92126D3916D00856C8F /* EventHandling.m in Sources */,
+				AB907E1926C6664F000BDE27 /* File.swift in Sources */,
+				AB7DF91E26D3916D00856C8F /* AppleSignIn.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -428,8 +630,9 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 02FC1E2D33A614D12A5947DD /* Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig */;
+			baseConfigurationReference = 2B9AC47E9D7A2C7BF9CA47CC /* Pods-MyStoriesMatter-MyStoriesMatterTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -455,8 +658,9 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C3E306E3352015293D027AB7 /* Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig */;
+			baseConfigurationReference = 5736C9AE5AB97EBA4FD4D035 /* Pods-MyStoriesMatter-MyStoriesMatterTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = MyStoriesMatterTests/Info.plist;
@@ -479,17 +683,22 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F915D83E875734EB6C90260D /* Pods-MyStoriesMatter.debug.xcconfig */;
+			baseConfigurationReference = 93D91C564A191FC87F8C1939 /* Pods-MyStoriesMatter.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_ENTITLEMENTS = MyStoriesMatter/MyStoriesMatterDebug.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = BDV4D9G2U7;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MyStoriesMatter/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -497,6 +706,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mystoriesmatter.mobileapp;
 				PRODUCT_NAME = MyStoriesMatter;
+				PROVISIONING_PROFILE_SPECIFIER = "My Stories Matter Development";
+				SWIFT_OBJC_BRIDGING_HEADER = "MyStoriesMatter-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -505,16 +716,22 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E5700109C43A727AFBF06FB1 /* Pods-MyStoriesMatter.release.xcconfig */;
+			baseConfigurationReference = 66DA3B869D0C53F6766F5417 /* Pods-MyStoriesMatter.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_ENTITLEMENTS = MyStoriesMatter/MyStoriesMatter.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = BDV4D9G2U7;
 				INFOPLIST_FILE = MyStoriesMatter/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -522,6 +739,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mystoriesmatter.mobileapp;
 				PRODUCT_NAME = MyStoriesMatter;
+				PROVISIONING_PROFILE_SPECIFIER = "My Stories Matter Distribution";
+				SWIFT_OBJC_BRIDGING_HEADER = "MyStoriesMatter-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

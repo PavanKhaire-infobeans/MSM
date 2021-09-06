@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MyStoriesMatter</string>
+	<string>My Stories Matter</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,38 +17,132 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.432679085801-g1nfkmoibka4b55l4rsqb491n9egfjt3</string>
+				<string>com.googleusercontent.apps.432679085801-mjequjjlktk88bvvgdrcbjr4bk5g5obd</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>CFBundleURLSchemes</key>
+			<array/>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>localhost</key>
+			<key>admin.cueback.com</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.2</string>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSRequiresCertificateTransparency</key>
+				<false/>
+				<key>NSThirdPartyExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+				<key>NSThirdPartyExceptionMinimumTLSVersion</key>
+				<string>TLSv1.2</string>
+				<key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
 				<true/>
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera permission to upload camera images</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The app needs Microphone to record audio on users demand</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs library permissions to select images for uploading</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>FiraSansExtraCondensed-Black.ttf</string>
+		<string>FiraSansExtraCondensed-BlackItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Bold.ttf</string>
+		<string>FiraSansExtraCondensed-BoldItalic.ttf</string>
+		<string>FiraSansExtraCondensed-ExtraBold.ttf</string>
+		<string>FiraSansExtraCondensed-ExtraBoldItalic.ttf</string>
+		<string>FiraSansExtraCondensed-ExtraLight.ttf</string>
+		<string>FiraSansExtraCondensed-ExtraLightItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Light.ttf</string>
+		<string>FiraSansExtraCondensed-LightItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Medium.ttf</string>
+		<string>FiraSansExtraCondensed-MediumItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Regular.ttf</string>
+		<string>FiraSansExtraCondensed-RegularItalic.ttf</string>
+		<string>FiraSansExtraCondensed-SemiBold.ttf</string>
+		<string>FiraSansExtraCondensed-SemiBoldItalic.ttf</string>
+		<string>FiraSansExtraCondensed-Thin.ttf</string>
+		<string>FiraSansExtraCondensed-ThinItalic.ttf</string>
+		<string>Proxima Nova Alt Bold.otf</string>
+		<string>Proxima Nova Alt Light.otf</string>
+		<string>Proxima Nova Alt Thin.otf</string>
+		<string>Proxima Nova Black.otf</string>
+		<string>Proxima Nova Bold.otf</string>
+		<string>Proxima Nova Extrabold.otf</string>
+		<string>Proxima Nova Thin.otf</string>
+		<string>ProximaNova-Regular.otf</string>
+		<string>Rubik-Black.ttf</string>
+		<string>Rubik-BlackItalic.ttf</string>
+		<string>Rubik-Bold.ttf</string>
+		<string>Rubik-BoldItalic.ttf</string>
+		<string>Rubik-Italic.ttf</string>
+		<string>Rubik-Light.ttf</string>
+		<string>Rubik-LightItalic.ttf</string>
+		<string>Rubik-Medium.ttf</string>
+		<string>Rubik-MediumItalic.ttf</string>
+		<string>Rubik-Regular.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDarkContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
