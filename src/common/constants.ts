@@ -41,6 +41,7 @@ export const Colors = {
   ThemeColor: '#207D89',
   //ThemeColor: '#026D60',
   NewThemeColor: '#94D6DB',
+  Theme51D1FF: '#51D1FF',
   NewDarkThemeColor: '#31C7DB',
   NewLightThemeColor: '#F2F8F8',
   NewLight: 'rgba(148, 214, 219, 0.4)',
