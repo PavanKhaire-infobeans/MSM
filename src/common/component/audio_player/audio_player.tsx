@@ -438,6 +438,7 @@ export default class AudioPlayer extends React.Component<Props, State> {
         {this.state.playerShowing && (
           <TouchableOpacity
             style={{
+              elevation: 1,
               marginRight: 5,
               bottom: this.state.minimizedView ? 105 : 205,
               right: 0,
