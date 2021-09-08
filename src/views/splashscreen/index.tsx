@@ -82,8 +82,13 @@ class Splash extends Component<Props> {
         }}>
         <StatusBar
           barStyle={'dark-content'}
-          backgroundColor={Colors.NewThemeColor}
+          translucent
+          backgroundColor="transparent"
         />
+        {/* <StatusBar
+          barStyle={'dark-content'}
+          backgroundColor={Colors.Theme51D1FF}
+        /> */}
         <ImageBackground
           source={splash_bg}
           style={{flex: 1, width: '100%', height: '100%'}}>
