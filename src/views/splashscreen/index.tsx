@@ -80,6 +80,11 @@ class Splash extends Component<Props> {
           alignItems: 'center',
           backgroundColor: '#fff',
         }}>
+        <StatusBar
+          barStyle={'dark-content'}
+          translucent
+          backgroundColor="transparent"
+        />
         {/* <StatusBar
           barStyle={'dark-content'}
           backgroundColor={Colors.Theme51D1FF}
