@@ -45,6 +45,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="splash_bg" width="375" height="667"/>
+        <image name="splash_bg" width="375" height="812"/>
     </resources>
 </document>
