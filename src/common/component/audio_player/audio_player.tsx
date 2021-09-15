@@ -421,6 +421,7 @@ export default class AudioPlayer extends React.Component<Props, State> {
                   width: 80,
                   paddingTop: 10,
                   paddingBottom: 10,
+                  paddingRight: 10,
                   justifyContent: 'flex-end',
                   alignItems: 'flex-end',
                 }}>

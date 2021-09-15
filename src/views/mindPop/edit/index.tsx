@@ -82,7 +82,7 @@ import {MemoryDraftsDataModel} from '../../myMemories/MemoryDrafts/memoryDraftsD
 import {EditHeader} from '..';
 //@ts-ignore
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 const ScreenWidth = Dimensions.get('window').width;
 
 type MainItem = {[y: string]: string | Array<{[x: string]: any}>};
@@ -752,7 +752,185 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
   };
 
   toolbar = () => {
-    return (
+    return Platform.OS == 'android' ? (
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: '#F5F5F5',
+        }}>
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            backgroundColor: '#F3F3F3',
+            justifyContent:
+              this.props.navigation.state.routeName == 'mindPopEdit'
+                ? 'space-between'
+                : 'flex-end',
+            alignItems: 'center',
+            height: 50,
+            paddingLeft: 10,
+            paddingRight: 10,
+            paddingTop: 10,
+            paddingBottom: 10,
+            borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
+            borderTopWidth: 1,
+            ...(DeviceInfo.isTablet() &&
+            this.props.navigation.state.routeName == 'mindPopList'
+              ? {
+                  borderLeftColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
+                  borderLeftWidth: 1,
+                }
+              : {}),
+          }}>
+          {this.state.bottomToolbar > 0 && (
+            <TouchableHighlight
+              underlayColor={'#fffffffff'}
+              onPress={() => Keyboard.dismiss()}
+              style={{position: 'absolute', right: 16, top: -30}}>
+              <Image source={keyboard_hide} />
+            </TouchableHighlight>
+          )}
+          {this.props.navigation.state.routeName == 'mindPopEdit' ? (
+            <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+              {/* <TouchableOpacity
+							onPress={() => {this.cameraAttachmentPress()}}
+							style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
+							<Image source={camera} resizeMode="contain" />
+						</TouchableOpacity>
+						<TouchableOpacity
+							onPress={() => {this.audioAttachmentPress()}}
+							style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
+							<Image source={record} resizeMode="contain" />
+						</TouchableOpacity> */}
+
+              <TouchableOpacity
+                onPress={() => {
+                  Keyboard.dismiss();
+                  this.cameraAttachmentPress();
+                }}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 40,
+                  height: 40,
+                }}>
+                <Image source={camera} resizeMode="stretch" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  Keyboard.dismiss();
+                  this.audioAttachmentPress();
+                }}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 40,
+                  height: 40,
+                }}>
+                <Image source={record} resizeMode="stretch" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  Keyboard.dismiss();
+                  this.uploadAttachmentPress();
+                }}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 40,
+                  height: 40,
+                }}>
+                <Image source={icon_upload_file} resizeMode="stretch" />
+              </TouchableOpacity>
+            </View>
+          ) : null}
+          {this.state.id ? (
+            <React.Fragment>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                <TouchableOpacity
+                  onPress={() => this.convertToMemory(this.state.id)}>
+                  <Text
+                    style={{
+                      ...fontSize(18),
+                      marginLeft: 5,
+                      color: Colors.ThemeColor,
+                      ...(this.props.navigation.state.routeName == 'mindPopList'
+                        ? {}
+                        : {}),
+                    }}>
+                    Convert to Memory
+                  </Text>
+                </TouchableOpacity>
+                {this.isEdit ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      Keyboard.dismiss();
+                      Alert.alert(
+                        'Are you sure you want to delete this MindPop?',
+                        `You will lose all content${
+                          this.files.length > 0 ? ' and files attached.' : ''
+                        }.`,
+                        [
+                          {
+                            text: 'Yes',
+                            style: 'destructive',
+                            onPress: () => {
+                              //loaderHandler.showLoader("Deleting...");
+                              this.props.deleteMindPops({
+                                mindPopList: [{mindPopID: this.state.id}],
+                                configurationTimestamp: TimeStampMilliSeconds(),
+                              });
+                            },
+                          },
+                          {
+                            text: 'No',
+                            style: 'cancel',
+                            onPress: () => {},
+                          },
+                        ],
+                      );
+                    }}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 44,
+                      height: 44,
+                    }}>
+                    <Image source={rubbish} resizeMode="contain" />
+                  </TouchableOpacity>
+                ) : (
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'transparent',
+                      width: 44,
+                      height: 44,
+                    }}></View>
+                )}
+                {/* {this.state.bottomToolbar > 0 && <TouchableOpacity
+							onPress={() => Keyboard.dismiss()}
+							style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
+							<Image source={keyboard_hide} resizeMode="contain" />
+						</TouchableOpacity>  } */}
+              </View>
+            </React.Fragment>
+          ) : null}
+        </View>
+      </KeyboardAwareScrollView>
+    ) : (
       <KeyboardAccessory
         style={{
           backgroundColor: '#fff',
