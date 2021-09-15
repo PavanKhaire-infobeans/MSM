@@ -23,6 +23,7 @@ import Text from '../../common/component/Text';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 //@ts-ignore
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 type State = {[x: string]: any};
 type Props = {[x: string]: any};
@@ -99,7 +100,95 @@ export default class EtherPadEditing extends React.Component<Props, State> {
   };
 
   toolbar = () => {
-    return (
+    return Platform.OS == 'android' ? (
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: '#F5F5F5',
+        }}>
+        <View
+          style={{
+            width: '100%',
+            height: this.state.showWarningNote ? 130 : 44,
+          }}>
+          {this.state.showWarningNote && (
+            <View
+              style={{
+                backgroundColor: Colors.BtnBgColor,
+                width: '100%',
+                flex: 1,
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                padding: 15,
+                paddingRight: 0,
+              }}>
+              <Text
+                style={{
+                  flex: 1,
+                  color: '#fff',
+                  fontStyle: 'italic',
+                  ...fontSize(16),
+                }}>
+                Please note: All changes to the memory description will be saved
+                automatically.
+              </Text>
+              <TouchableOpacity
+                onPress={() => this.setState({showWarningNote: false})}
+                style={{
+                  width: 44,
+                  height: '100%',
+                  justifyContent: 'flex-start',
+                  alignItems: 'flex-start',
+                }}>
+                <Image source={close_white} resizeMode="contain" />
+              </TouchableOpacity>
+            </View>
+          )}
+          <View
+            style={{
+              width: '100%',
+              height: 44,
+              justifyContent: 'flex-end',
+              backgroundColor: Colors.NewLightThemeColor,
+              alignItems: 'flex-end',
+              padding: 10,
+              paddingRight: 0,
+              borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
+              borderTopWidth: 1,
+              borderLeftColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
+            }}>
+            <TouchableOpacity
+              onPress={() => this.props.inviteCollaboratorFlow()}
+              style={{
+                height: '100%',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  ...fontSize(16),
+                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  color: Colors.NewTitleColor,
+                  marginRight: 5,
+                }}>
+                Collaborate
+              </Text>
+              <Image
+                style={{width: 44}}
+                source={icon_collaborators}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAwareScrollView>
+    ) : (
       <KeyboardAccessory
         style={{
           backgroundColor: '#fff',

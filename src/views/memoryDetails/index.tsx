@@ -133,7 +133,6 @@ import MemoryActionsSheet, {
 } from '../../common/component/memoryActionsSheet';
 //@ts-ignore
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
 ];
@@ -1334,7 +1333,75 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   CommentBox = () => {
-    return (
+    return Platform.OS == 'android' ? (
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: '#F5F5F5',
+        }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingLeft: 10,
+          }}>
+          {/* <ImageBackground style={[style.avatar]} imageStyle={{ borderRadius: 20}} source={profile_placeholder}>
+                        <Image style={{height: 40, width: 40, borderRadius: 20, alignContent: "center"}} source={Account.selectedData().profileImage != "" ? {uri : Account.selectedData().profileImage} : profile_placeholder}/>                    
+                    </ImageBackground>   */}
+
+          <TextInput
+            ref={(ref: any) => (this._commentBoxRef = ref)}
+            style={{
+              ...fontSize(16),
+              flex: 1,
+              borderWidth: 1,
+              maxHeight: 100,
+              borderColor: Colors.TextColor,
+              margin: 8,
+              borderRadius: 5,
+              padding: 10,
+              paddingBottom: 8,
+              paddingTop: 8,
+              color: Colors.TextColor,
+            }}
+            value={this.state.commentValue}
+            onChangeText={text => this.setState({commentValue: text})}
+            returnKeyLabel={'Enter'}
+            onContentSizeChange={event => {
+              this.setState({height: event.nativeEvent.contentSize.height});
+            }}
+            placeholder={'Write a comment..'}
+            multiline={true}
+            placeholderTextColor={Colors.TextColor}></TextInput>
+
+          <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingRight: 10,
+            }}
+            onPress={() => this.postcomment()}>
+            <Image source={icon_send} />
+            <Text
+              style={{
+                fontSize: 12,
+                textAlign: 'center',
+                color: Colors.NewTitleColor,
+                padding: 1,
+              }}
+              autoCorrect={false}>
+              {'Post'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
+    ) : (
       <KeyboardAccessory
         style={{
           backgroundColor: '#ffffff',
@@ -1358,8 +1425,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
             paddingLeft: 10,
           }}>
           {/* <ImageBackground style={[style.avatar]} imageStyle={{ borderRadius: 20}} source={profile_placeholder}>
-                        <Image style={{height: 40, width: 40, borderRadius: 20, alignContent: "center"}} source={Account.selectedData().profileImage != "" ? {uri : Account.selectedData().profileImage} : profile_placeholder}/>                    
-                    </ImageBackground>   */}
+                            <Image style={{height: 40, width: 40, borderRadius: 20, alignContent: "center"}} source={Account.selectedData().profileImage != "" ? {uri : Account.selectedData().profileImage} : profile_placeholder}/>                    
+                        </ImageBackground>   */}
 
           <TextInput
             ref={(ref: any) => (this._commentBoxRef = ref)}

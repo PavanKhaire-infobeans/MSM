@@ -25,7 +25,7 @@ import AccessoryView from '../../common/component/accessoryView';
 import ActionSheet, {ActionSheetItem} from '../../common/component/actionSheet';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 // @ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Text from '../../common/component/Text';
 import {
   Colors,
@@ -908,7 +908,62 @@ class CreateMemory extends React.Component<Props> {
     });
   };
   toolbar = () => {
-    return (
+    return Platform.OS == 'android' ? (
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: '#F5F5F5',
+        }}>
+        <View
+          style={{
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            width: '100%',
+          }}>
+          <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+            <TouchableOpacity
+              onPress={() => {
+                CaptureImage(this.fileCallback);
+              }}
+              style={style.toolbarIcons}>
+              <Image source={camera} resizeMode="contain" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.audioAttachmentPress();
+              }}
+              style={style.toolbarIcons}>
+              <Image source={record} resizeMode="contain" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.uploadOption()}
+              style={style.toolbarIcons}>
+              <Image source={icon_upload_file} resizeMode="contain" />
+            </TouchableOpacity>
+          </View>
+          {this.props.editPublsihedMemory ? null : (
+            <TouchableOpacity
+              onPress={() => this.inviteCollaboratorFlow()}
+              style={[style.toolbarIcons, {flexDirection: 'row'}]}>
+              <Text
+                style={{
+                  ...fontSize(16),
+                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  color: Colors.NewTitleColor,
+                  marginRight: 5,
+                }}>
+                Collaborate
+              </Text>
+              <Image source={icon_collaborators} resizeMode="contain" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </KeyboardAwareScrollView>
+    ) : (
       <KeyboardAccessory
         style={{
           backgroundColor: '#fff',
@@ -968,54 +1023,54 @@ class CreateMemory extends React.Component<Props> {
           )}
         </View>
       </KeyboardAccessory>
-      // <AccessoryView
-      // 	style={{
-      // 		width: "100%",
-      // 		bottom: this.state.bottomToolbar,
-      // 		position: "absolute",
-      // 		height: 60,
-      // 		flexDirection: "row",
-      // 		backgroundColor: "#F3F3F3",
-      // 		justifyContent: "space-between",
-      // 		alignItems: "center",
-      // 		padding: 10,
-      // 		borderTopColor: "rgba(0.0, 0.0, 0.0, 0.25)",
-      // 		borderTopWidth: 1,
-      // 		borderLeftColor: "rgba(0.0, 0.0, 0.0, 0.25)",
-      // 	}}>
-      // 	<View style={{ justifyContent: "space-between", flexDirection: "row", width: "100%" }}>
-      // 		<View style={{ justifyContent: "flex-start", flexDirection: "row" }}>
-      // 			<TouchableOpacity
-      // 				onPress={() => {CaptureImage(this.fileCallback)}}
-      // 				style={style.toolbarIcons}>
-      // 	    		<Image source={camera} resizeMode="contain" />
-      // 			</TouchableOpacity>
-      // 			<TouchableOpacity
-      // 				onPress={() => {this.audioAttachmentPress()}}
-      // 				style={style.toolbarIcons}>
-      // 				<Image source={record} resizeMode="contain" />
-      // 			</TouchableOpacity>
-      // 			<TouchableOpacity
-      // 				onPress={() => this.uploadOption()}
-      // 				style={style.toolbarIcons}>
-      // 				<Image source={icon_upload_file} resizeMode="contain" />
-      // 			</TouchableOpacity>
-      // 		</View>
-      // 		{
-      // 				this.props.editPublsihedMemory?
-      // 					null
-      // 				:
-      // 					<TouchableOpacity
-      // 					onPress={() => this.inviteCollaboratorFlow()}
-      // 					style={[style.toolbarIcons, {flexDirection: "row"}]}>
-      // 					<Text style={{...fontSize(16), fontWeight:"500", color : Colors.ThemeColor, marginRight: 5}}>Collaborate</Text>
-      // 					<Image source={icon_collaborators} resizeMode="contain" />
-      // 					</TouchableOpacity>
-      // 			}
-
-      // 	</View>
-      // </AccessoryView>
     );
+    // <AccessoryView
+    // 	style={{
+    // 		width: "100%",
+    // 		bottom: this.state.bottomToolbar,
+    // 		position: "absolute",
+    // 		height: 60,
+    // 		flexDirection: "row",
+    // 		backgroundColor: "#F3F3F3",
+    // 		justifyContent: "space-between",
+    // 		alignItems: "center",
+    // 		padding: 10,
+    // 		borderTopColor: "rgba(0.0, 0.0, 0.0, 0.25)",
+    // 		borderTopWidth: 1,
+    // 		borderLeftColor: "rgba(0.0, 0.0, 0.0, 0.25)",
+    // 	}}>
+    // 	<View style={{ justifyContent: "space-between", flexDirection: "row", width: "100%" }}>
+    // 		<View style={{ justifyContent: "flex-start", flexDirection: "row" }}>
+    // 			<TouchableOpacity
+    // 				onPress={() => {CaptureImage(this.fileCallback)}}
+    // 				style={style.toolbarIcons}>
+    // 	    		<Image source={camera} resizeMode="contain" />
+    // 			</TouchableOpacity>
+    // 			<TouchableOpacity
+    // 				onPress={() => {this.audioAttachmentPress()}}
+    // 				style={style.toolbarIcons}>
+    // 				<Image source={record} resizeMode="contain" />
+    // 			</TouchableOpacity>
+    // 			<TouchableOpacity
+    // 				onPress={() => this.uploadOption()}
+    // 				style={style.toolbarIcons}>
+    // 				<Image source={icon_upload_file} resizeMode="contain" />
+    // 			</TouchableOpacity>
+    // 		</View>
+    // 		{
+    // 				this.props.editPublsihedMemory?
+    // 					null
+    // 				:
+    // 					<TouchableOpacity
+    // 					onPress={() => this.inviteCollaboratorFlow()}
+    // 					style={[style.toolbarIcons, {flexDirection: "row"}]}>
+    // 					<Text style={{...fontSize(16), fontWeight:"500", color : Colors.ThemeColor, marginRight: 5}}>Collaborate</Text>
+    // 					<Image source={icon_collaborators} resizeMode="contain" />
+    // 					</TouchableOpacity>
+    // 			}
+
+    // 	</View>
+    // </AccessoryView>
   };
 
   fileDescriptionClicked = (file: any) => {

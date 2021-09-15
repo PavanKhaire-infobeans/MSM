@@ -40,7 +40,7 @@ import {
   icon_send,
 } from '../../images';
 // @ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Text from '../../common/component/Text';
 import DeviceInfo from 'react-native-device-info';
 import {
@@ -516,7 +516,166 @@ export default class AddContentDetails extends React.Component {
   };
 
   toolbar = () => {
-    return (
+    return Platform.OS == 'android' ? (
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: '#F5F5F5',
+        }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: '100%',
+              minHeight: 40,
+              flexDirection: 'row',
+              backgroundColor: this.state.bottomBar.keyboardVisible
+                ? '#F3F3F3'
+                : '#FFF',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingLeft: 10,
+              paddingRight: 10,
+              borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
+              borderTopWidth: 1,
+            }}>
+            {!this.state.bottomBar.keyboardVisible ? (
+              <View
+                style={{
+                  width: '100%',
+                  height: 130,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                }}>
+                <TouchableHighlight
+                  onPress={() => this.cameraAttachmentPress()}>
+                  <View style={style.bottomRowView}>
+                    <Image
+                      style={{height: 35, resizeMode: 'contain', padding: 15}}
+                      source={icon_add_content_camera}
+                    />
+                    <Text
+                      style={{...fontSize(16), color: '#fff', paddingTop: 10}}>
+                      {'Photo/Scan'}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
+
+                <TouchableHighlight onPress={() => this.audioAttachmentPress()}>
+                  <View style={style.bottomRowView}>
+                    <Image
+                      style={{height: 35, resizeMode: 'contain'}}
+                      source={icon_add_content_audio}
+                    />
+                    <Text
+                      style={{...fontSize(16), color: '#fff', paddingTop: 10}}>
+                      {'Talk'}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
+
+                <TouchableHighlight
+                  onPress={() =>
+                    this._actionSheet && this._actionSheet.showSheet()
+                  }>
+                  <View style={style.bottomRowView}>
+                    <Image
+                      style={{height: 35, resizeMode: 'contain', padding: 15}}
+                      source={icon_add_content_upload}
+                    />
+                    <Text
+                      style={{...fontSize(16), color: '#fff', paddingTop: 10}}>
+                      {'Upload'}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
+              </View>
+            ) : (
+              <View
+                style={{
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                }}>
+                <View
+                  style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.cameraAttachmentPress();
+                    }}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 40,
+                      height: 40,
+                    }}>
+                    <Image source={camera} resizeMode="stretch" />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.audioAttachmentPress();
+                    }}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 40,
+                      height: 40,
+                    }}>
+                    <Image source={record} resizeMode="stretch" />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      Keyboard.dismiss();
+                      this._actionSheet && this._actionSheet.showSheet();
+                    }}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 40,
+                      height: 40,
+                    }}>
+                    <Image source={icon_upload_file} resizeMode="stretch" />
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    Keyboard.dismiss();
+                  }}
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 40,
+                    height: 40,
+                  }}>
+                  <Image
+                    source={keyboard_hide}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 25,
+                      height: 25,
+                    }}
+                    resizeMode="stretch"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </View>
+      </KeyboardAwareScrollView>
+    ) : (
       <KeyboardAccessory
         style={{
           backgroundColor: '#fff',
@@ -678,80 +837,80 @@ export default class AddContentDetails extends React.Component {
           </View>
         </View>
       </KeyboardAccessory>
-      // <KeyboardAccessory style={{backgroundColor: "#fff",
-      //                            position:"absolute",
-      //                            width: "100%",
-      //                            flexDirection: "row",
-      //                            justifyContent: "center",
-      //                            alignItems: "center", borderTopWidth: 1, borderBottomWidth: 1, borderColor: "rgba(0,0,0,0.4)"}}>
-      // <View
-      // 	style={{
-      // 		width: "100%",
-      // 		minHeight: 40,
-      // 		position: "absolute",
-      // 		flexDirection: "row",
-      // 		backgroundColor: this.state.bottomBar.keyboardVisible ? "#F3F3F3" : "#FFF",
-      // 		justifyContent: "space-between",
-      // 		alignItems: "center",
-      // 		paddingLeft: 10,
-      // 		paddingRight: 10,
-      // 		borderTopColor: "rgba(0.0, 0.0, 0.0, 0.25)",
-      // 		borderTopWidth: 1}}>
-
-      // 		{/* {this.state.bottomBar.keyboardVisible ?  */}
-      //         <View style={{ width:"100%", justifyContent: "space-between", flexDirection: "row" }}>
-      //             <View style={{ justifyContent: "flex-start", flexDirection: "row" }}>
-      //                 <TouchableOpacity
-      //                     onPress={() => {this.cameraAttachmentPress()}}
-      //                     style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
-      //                     <Image source={camera} resizeMode="contain" />
-      //                 </TouchableOpacity>
-
-      //                 <TouchableOpacity
-      //                     onPress={() => {this.audioAttachmentPress()}}
-      //                     style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
-      //                     <Image source={record} resizeMode="contain" />
-      //                 </TouchableOpacity>
-
-      //                 <TouchableOpacity
-      //                     onPress={() => { Keyboard.dismiss(); this._actionSheet && this._actionSheet.showSheet() }}
-      //                     style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
-      //                     <Image source={icon_upload_file} resizeMode="contain" />
-      //                 </TouchableOpacity>
-      //             </View>
-      //             <TouchableOpacity
-      //                     onPress={() => { Keyboard.dismiss();}}
-      //                     style={{ alignItems: "center", justifyContent: "center",  width: 44, height: 44 }}>
-      //                     <Image source={keyboard_hide} style={{ alignItems: "center", justifyContent: "center", width: 25, height: 25 }}resizeMode="contain" />
-      //             </TouchableOpacity>
-      //         </View>
-      //         {/* :
-      //         <View style={{width: "100%", height:140, alignItems:"center", flexDirection: "row", justifyContent: "space-around"}}>
-      //             <TouchableHighlight  onPress={()=> this.cameraAttachmentPress()}>
-      //                 <View style={style.bottomRowView}>
-      //                     <Image style={{height: 35, resizeMode: "contain", padding: 15}} source={icon_add_content_camera}/>
-      //                     <Text style={{...fontSize(16), color: "#fff", paddingTop: 10}}>{"Photo/Scan"}</Text>
-      //                 </View>
-      //             </TouchableHighlight>
-
-      //             <TouchableHighlight onPress={()=> this.audioAttachmentPress()}>
-      //                 <View style={style.bottomRowView}>
-      //                     <Image style={{height: 35, resizeMode: "contain"}} source={icon_add_content_audio}/>
-      //                     <Text style={{...fontSize(16), color: "#fff", paddingTop: 10}}>{"Talk"}</Text>
-      //                 </View>
-      //             </TouchableHighlight>
-
-      //             <TouchableHighlight  onPress={()=> this._actionSheet && this._actionSheet.showSheet()}>
-      //                 <View style={style.bottomRowView}>
-      //                     <Image style={{height: 35, resizeMode: "contain", padding: 15}} source={icon_add_content_upload}/>
-      //                     <Text style={{...fontSize(16), color: "#fff", paddingTop: 10}}>{"Upload"}</Text>
-      //                 </View>
-      //             </TouchableHighlight> */}
-      //         {/* </View>} */}
-
-      // </View>
-      // </KeyboardAccessory>
     );
+    // <KeyboardAccessory style={{backgroundColor: "#fff",
+    //                            position:"absolute",
+    //                            width: "100%",
+    //                            flexDirection: "row",
+    //                            justifyContent: "center",
+    //                            alignItems: "center", borderTopWidth: 1, borderBottomWidth: 1, borderColor: "rgba(0,0,0,0.4)"}}>
+    // <View
+    // 	style={{
+    // 		width: "100%",
+    // 		minHeight: 40,
+    // 		position: "absolute",
+    // 		flexDirection: "row",
+    // 		backgroundColor: this.state.bottomBar.keyboardVisible ? "#F3F3F3" : "#FFF",
+    // 		justifyContent: "space-between",
+    // 		alignItems: "center",
+    // 		paddingLeft: 10,
+    // 		paddingRight: 10,
+    // 		borderTopColor: "rgba(0.0, 0.0, 0.0, 0.25)",
+    // 		borderTopWidth: 1}}>
+
+    // 		{/* {this.state.bottomBar.keyboardVisible ?  */}
+    //         <View style={{ width:"100%", justifyContent: "space-between", flexDirection: "row" }}>
+    //             <View style={{ justifyContent: "flex-start", flexDirection: "row" }}>
+    //                 <TouchableOpacity
+    //                     onPress={() => {this.cameraAttachmentPress()}}
+    //                     style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
+    //                     <Image source={camera} resizeMode="contain" />
+    //                 </TouchableOpacity>
+
+    //                 <TouchableOpacity
+    //                     onPress={() => {this.audioAttachmentPress()}}
+    //                     style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
+    //                     <Image source={record} resizeMode="contain" />
+    //                 </TouchableOpacity>
+
+    //                 <TouchableOpacity
+    //                     onPress={() => { Keyboard.dismiss(); this._actionSheet && this._actionSheet.showSheet() }}
+    //                     style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
+    //                     <Image source={icon_upload_file} resizeMode="contain" />
+    //                 </TouchableOpacity>
+    //             </View>
+    //             <TouchableOpacity
+    //                     onPress={() => { Keyboard.dismiss();}}
+    //                     style={{ alignItems: "center", justifyContent: "center",  width: 44, height: 44 }}>
+    //                     <Image source={keyboard_hide} style={{ alignItems: "center", justifyContent: "center", width: 25, height: 25 }}resizeMode="contain" />
+    //             </TouchableOpacity>
+    //         </View>
+    //         {/* :
+    //         <View style={{width: "100%", height:140, alignItems:"center", flexDirection: "row", justifyContent: "space-around"}}>
+    //             <TouchableHighlight  onPress={()=> this.cameraAttachmentPress()}>
+    //                 <View style={style.bottomRowView}>
+    //                     <Image style={{height: 35, resizeMode: "contain", padding: 15}} source={icon_add_content_camera}/>
+    //                     <Text style={{...fontSize(16), color: "#fff", paddingTop: 10}}>{"Photo/Scan"}</Text>
+    //                 </View>
+    //             </TouchableHighlight>
+
+    //             <TouchableHighlight onPress={()=> this.audioAttachmentPress()}>
+    //                 <View style={style.bottomRowView}>
+    //                     <Image style={{height: 35, resizeMode: "contain"}} source={icon_add_content_audio}/>
+    //                     <Text style={{...fontSize(16), color: "#fff", paddingTop: 10}}>{"Talk"}</Text>
+    //                 </View>
+    //             </TouchableHighlight>
+
+    //             <TouchableHighlight  onPress={()=> this._actionSheet && this._actionSheet.showSheet()}>
+    //                 <View style={style.bottomRowView}>
+    //                     <Image style={{height: 35, resizeMode: "contain", padding: 15}} source={icon_add_content_upload}/>
+    //                     <Text style={{...fontSize(16), color: "#fff", paddingTop: 10}}>{"Upload"}</Text>
+    //                 </View>
+    //             </TouchableHighlight> */}
+    //         {/* </View>} */}
+
+    // </View>
+    // </KeyboardAccessory>
   };
 
   removeFile = (fid: any) => {
