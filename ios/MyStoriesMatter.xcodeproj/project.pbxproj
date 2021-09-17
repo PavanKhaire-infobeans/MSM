@@ -33,6 +33,7 @@
 		90BFDE9795754CD88B5A6E23 /* FiraSansExtraCondensed-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D08A413A44444E991ED1953 /* FiraSansExtraCondensed-RegularItalic.ttf */; };
 		979DEC83E531414DBF76057F /* Proxima Nova Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EC402C2DFBC64DDEA36E84CF /* Proxima Nova Bold.otf */; };
 		9A8A9BFCCFEA451FBE6F45BE /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E499F81714240F98681D47C /* Rubik-BlackItalic.ttf */; };
+		AB70DA9126F4690000B27DB3 /* complete.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AB70DA9026F4690000B27DB3 /* complete.mp3 */; };
 		AB7DF91E26D3916D00856C8F /* AppleSignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = AB7DF91726D3916D00856C8F /* AppleSignIn.m */; };
 		AB7DF92026D3916D00856C8F /* AppleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7DF91926D3916D00856C8F /* AppleSignIn.swift */; };
 		AB7DF92126D3916D00856C8F /* EventHandling.m in Sources */ = {isa = PBXBuildFile; fileRef = AB7DF91B26D3916D00856C8F /* EventHandling.m */; };
@@ -102,6 +103,7 @@
 		A228A1658C1249CABA42EE02 /* FiraSansExtraCondensed-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-ExtraBoldItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		A90EE94275EB45AA961D8183 /* FiraSansExtraCondensed-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-Regular.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		A94564C9EEAA42EE9B763A91 /* FiraSansExtraCondensed-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-LightItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-LightItalic.ttf"; sourceTree = "<group>"; };
+		AB70DA9026F4690000B27DB3 /* complete.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = complete.mp3; sourceTree = "<group>"; };
 		AB7B411126C275870095F4DB /* MyStoriesMatterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyStoriesMatterDebug.entitlements; path = MyStoriesMatter/MyStoriesMatterDebug.entitlements; sourceTree = "<group>"; };
 		AB7DF91626D3916D00856C8F /* EventHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventHandling.h; sourceTree = "<group>"; };
 		AB7DF91726D3916D00856C8F /* AppleSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppleSignIn.m; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				AB70DA9026F4690000B27DB3 /* complete.mp3 */,
 				AB8C47DD26CA54A3009728E5 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* MyStoriesMatter */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -401,6 +404,7 @@
 				F873B98E7EB6427D806A1E75 /* FiraSansExtraCondensed-ExtraLight.ttf in Resources */,
 				EF94CF91CA0242BA889ADBF1 /* FiraSansExtraCondensed-ExtraLightItalic.ttf in Resources */,
 				CCA36DD30AC84A01B085289D /* FiraSansExtraCondensed-Light.ttf in Resources */,
+				AB70DA9126F4690000B27DB3 /* complete.mp3 in Resources */,
 				ADB45D7D9CBF43F2B3CC3CB7 /* FiraSansExtraCondensed-LightItalic.ttf in Resources */,
 				8AD4CD2633D34988817E3BBF /* FiraSansExtraCondensed-Medium.ttf in Resources */,
 				1F762D8A0D234F0688090A1B /* FiraSansExtraCondensed-MediumItalic.ttf in Resources */,
