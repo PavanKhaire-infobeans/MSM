@@ -1,6 +1,6 @@
 import {takeLatest, put, call} from 'redux-saga/effects';
 import {GetInstances} from './reducer';
-import {getAllIntances} from '../../common/webservice/loginServices';
+import {getAllIntances as getAllInstances} from '../../common/webservice/loginServices';
 import {getValue, CueBackInsatance} from '../../common/constants';
 //import { AsyncStorage } from "react-native";
 
@@ -8,14 +8,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Utility from '../../common/utility';
 import {No_Internet_Warning} from '../../common/component/Toast';
 
-// export const kAdmin = 'https://admin.cueback.com'; //production
-//export const kAdmin = 'https://qa-admin.cueback.com';
-export const kAdmin = 'https://admin.cuebackqa.com';
-export const isCueBackInstance =
-  kAdmin == 'https://admin.cueback.com' ? true : false;
+// export const kAdmin: string = 'https://admin.cueback.com'; //production
+//export const kAdmin: string = 'https://qa-admin.cueback.com';
+export const kAdmin: string = 'https://admin.cuebackqa.com';
+const qaURL: string = 'https://admin.cueback.com';
+export const isCueBackInstance = (kAdmin == qaURL) ? true : false;
 const kStoreInstance = 'StoreInstanceData';
 function* webServiceCaller() {
-  return getAllIntances(`${kAdmin}`).then((resp: Response) => resp.json());
+  return getAllInstances(`${kAdmin}`).then((resp: Response) => resp.json());
 }
 
 function* fetchInstances() {
