@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.mystoriesmatter.mobileapp">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mystoriesmatter.mobileapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,15 +14,19 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-      android:usesCleartextTraffic="true"
-      android:name=".MainApplication"
-      android:allowBackup="true"
-      android:label="@string/app_name"
-      android:largeHeap="true"
-      android:hardwareAccelerated="false"
-      android:icon="@mipmap/ic_launcher"
-      android:theme="@style/AppTheme"
-      android:requestLegacyExternalStorage="true">
+        android:usesCleartextTraffic="true"
+        android:name=".MainApplication"
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true">
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
+
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme"
@@ -32,13 +37,47 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-      <activity
-        android:name=".MainActivity"
-        android:theme="@style/AppTheme"
-        android:label="@string/app_name"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
-        android:launchMode="singleTask"
-        android:windowSoftInputMode="adjustResize"
-        android:exported="true"/>
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/app_name"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
+
+            <!--            <intent-filter android:autoVerify="true">-->
+            <!--                <action android:name="android.intent.action.VIEW" />-->
+
+            <!--                <category android:name="android.intent.category.DEFAULT" />-->
+            <!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+            <!--                <data-->
+            <!--                    android:scheme="https"-->
+            <!--                    android:host="public.cuebackqa.com" />-->
+            <!--            </intent-filter>-->
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="mystoriesmatter.com" />
+            </intent-filter>
+
+        </activity>
     </application>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+    </queries>
 </manifest>

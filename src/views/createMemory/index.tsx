@@ -388,6 +388,7 @@ class CreateMemory extends React.Component<Props> {
         this.state.memoryDraftVisibility = true;
       }
     });
+    
     this.props.resetAll();
     let recentTag = {searchType: kRecentTags, searchTerm: ''};
     if (this.props.editMode) {
@@ -1910,9 +1911,14 @@ class CreateMemory extends React.Component<Props> {
         style: 'default',
         onPress: () => {
           EventManager.callBack(kReloadDraft);
-          this.setState({showMenu: false});
-          Keyboard.dismiss();
-          Actions.pop();
+          this.setState({showMenu: false},()=>{
+            Keyboard.dismiss();
+            if (this.props.deepLinkBackClick) {
+              Actions.dashBoard();
+            } else {
+              Actions.pop();            
+            }
+          });
         },
       },
     ]);

@@ -6,6 +6,7 @@ import {
   View,
   Alert,
   DeviceEventEmitter,
+  Linking
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -19,6 +20,7 @@ import {
   Tabs,
 } from 'react-native-router-flux';
 import {Provider} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Busyindicator from './common/component/busyindicator';
 import TabIcon, {TabItems} from './common/component/TabBarIcons';
 import {Colors} from './common/constants';
@@ -88,6 +90,7 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 import DefaultPreference from 'react-native-default-preference';
+import DeepLinking from 'react-native-deep-linking';
 // import { Notification, NotificationOpen } from 'react-native-firebase';
 import {
   kForegroundNotice,
@@ -189,9 +192,9 @@ const AppRouter = () => (
             showIcon={true}
             tabBarPosition="bottom"
             activeTintColor={Colors.ThemeColor}
-            tabBarOnPress={({navigation, defaultHandler}) =>
+            tabBarOnPress={({navigation, defaultHandler}) =>{
               navigateToParticular(navigation, defaultHandler)
-            }
+            }}
             tabBarStyle={{
               height: 57,
               justifyContent: 'center',
@@ -366,10 +369,14 @@ const AppRouter = () => (
 );
 
 function navigateToParticular(navigation, defaultHandler) {
-  if (navigation.state.routeName == 'key3') {
-    EventManager.callBack('addContentTabPressed');
-  } else {
-    defaultHandler();
+  try {
+    if (navigation.state.routeName == 'key3') {
+      EventManager.callBack('addContentTabPressed');
+    } else {
+      defaultHandler();
+    }
+  } catch (error) {
+    console.log("defaultHandler  > ",error)
   }
 }
 
@@ -503,7 +510,16 @@ class App extends React.Component {
     return false;
   };
 
+  handleUrl = ({ url }) => {
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        DeepLinking.evaluateUrl(url);
+      }
+    });
+  }
+ 
   componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleUrl);
     this.notificationListener();
     this.notificationOpenedListener();
     if (this.notificationOpen != null) {
@@ -512,7 +528,7 @@ class App extends React.Component {
     this.backEvent &&
       this.backEvent.removeListener() &&
       this.onTokenRefreshListener();
-  }
+    }
 
   async loadSegmentAnalytics() {
     await analytics.setup('UIejGdlPobXDuxYQC2YU19IBomGe5oQO', {

@@ -292,8 +292,8 @@ export default class MemoryListItem extends React.Component<Props, State> {
                         }}>
                         {this.props.item.item.title}
                       </TextNew>
-                      {this.props.item.item.dateWithLocation &&
-                        this.props.item.item.dateWithLocation.length != 0 && (
+                      {/* {this.props.item.item.dateWithLocation &&
+                        this.props.item.item.dateWithLocation.length != 0 && ( */}
                           <TextNew
                             numberOfLines={2}
                             style={{
@@ -306,11 +306,11 @@ export default class MemoryListItem extends React.Component<Props, State> {
                               marginLeft: 16,
                               marginRight: 16,
                             }}>
-                            {this.props.item.item.dateWithLocation}
+                            {this.props.item.item.dateWithLocation ? this.props.item.item.dateWithLocation : this.props.item.item.memory_date}
                             {this.props.listType != ListType.Published &&
-                            this.props.item.item.viewCount ? (
+                            this.props.item.item.viewCount > 0? (
                               <TextNew>
-                                {' | '}
+                                { ' | ' }
                                 {this.props.item.item.viewCount}{' '}
                                 {this.props.item.item.viewCount > 1
                                   ? 'views'
@@ -320,7 +320,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                               ''
                             )}
                           </TextNew>
-                        )}
+                        {/* )} */}
                       {
                         <View style={{paddingRight: 16, paddingLeft: 16}}>
                           <Border />

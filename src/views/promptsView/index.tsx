@@ -53,6 +53,7 @@ export default class PromptsView extends React.Component<State, Props> {
     loadMore: 0,
     items: [],
     loading: false,
+    prompt_count: 0 
   };
   memoryFromPrompt: EventManager;
   promptsListListener: EventManager;
@@ -73,15 +74,18 @@ export default class PromptsView extends React.Component<State, Props> {
       (fetched?: boolean, ifLoadMore?: boolean, fetchPromptsList?: any) => {
         if (fetched) {
           let values: {id: string; desc: any}[] = [];
-          this.setState({loadMore: fetchPromptsList.load_more});
-          this.setState({categoriesArray: fetchPromptsList.prompt_categories});
+          this.setState({ 
+                          loadMore: fetchPromptsList.load_more,
+                          categoriesArray: fetchPromptsList.prompt_categories
+                        });
           promptList = fetchPromptsList.memory_prompt_data;
-          this.setState({offsetVal: fetchPromptsList.prompt_offset});
+          this.setState({offsetVal: fetchPromptsList.prompt_offset, prompt_count : fetchPromptsList.prompt_count});
           promptList.forEach(element => {
             for (var key in element) {
               values.push({id: key, desc: element[key]});
             }
           });
+          ;
           if (ifLoadMore) {
             this.setState({
               items: this.state.items.concat(values),
@@ -114,9 +118,15 @@ export default class PromptsView extends React.Component<State, Props> {
   }
 
   componentDidMount() {
-    this.setState({loading: true});
-    console.log('on mounting', this.state.categoriesArray);
-    GetPrompts(this.state.categoriesArray, false, this.state.offsetVal);
+    if (this.props.fromDeepLinking) {
+      
+      this.convertToMemory(this.props.nid, this.props.title)
+    }
+    else{
+      this.setState({loading: true});
+      console.log('on mounting', this.state.categoriesArray);
+      GetPrompts(this.state.categoriesArray, false, this.state.offsetVal);  
+    }
   }
 
   loadMorePrompts() {
@@ -328,17 +338,19 @@ export default class PromptsView extends React.Component<State, Props> {
   }
   convertToMemory(id: any, title: any) {
     if (Utility.isInternetConnected) {
-      this.setState({selectedPrompt: parseInt(id)});
-      selectedIndex = id;
-      loaderHandler.showLoader('Creating Memory...');
-      let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
-      draftDetails.prompt_id = parseInt(id);
-      this.memoryFromPrompt = EventManager.addListener(
-        promptIdListener,
-        this.promptToMemoryCallBack,
-      );
-      CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
-      Keyboard.dismiss();
+      this.setState({selectedPrompt: parseInt(id)},()=>{
+        selectedIndex = id;
+        loaderHandler.showLoader('Creating Memory...');
+        let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
+        draftDetails.prompt_id = parseInt(id);
+        this.memoryFromPrompt = EventManager.addListener(
+          promptIdListener,
+          this.promptToMemoryCallBack,
+        );
+        CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
+        Keyboard.dismiss();
+      });
+      
     } else {
       No_Internet_Warning();
     }
@@ -350,6 +362,7 @@ export default class PromptsView extends React.Component<State, Props> {
       loaderHandler.hideLoader();
     }, 500);
     if (success) {
+      
       this.removeSelectedPrompt();
       Actions.push('createMemory', {
         editMode: true,

@@ -30,6 +30,11 @@ type items = {
     isTour? : boolean
 };
 
+type Props = {
+    fromDeepLink? : boolean,
+    deepLinkBackClick?: boolean
+};
+
 const People = "People";
 const BlockedUsers = "Blocked Users";
 const PrivacyPolicy = "Privacy Policy";
@@ -38,8 +43,14 @@ const Contact = "Contact Us";
 const About = "About My Stories Matter";
 const GuidedTour = "Guided Tour"
 
-export default class MoreOptions extends React.Component {
+export default class MoreOptions extends React.Component <Props>{
     
+    componentDidMount (){
+        if (this.props.fromDeepLink) {
+            this.segregateItemClick( About,true,false)
+        }
+    }
+
     Items : Array<items> = [
             // {title: People, showArrow : true, icon: icon_people, count : 0, key : People},
             // {title: Events, showArrow : true, icon: icon_events, count : 0, key : Events},
@@ -66,7 +77,7 @@ export default class MoreOptions extends React.Component {
                 default :     
             }
             url = url + '?no_header=1'
-            Actions.push("commonWebView", {url : url, title : identifier})
+            Actions.push("commonWebView", {url : url, title : identifier, deepLinkBackClick: this.props.deepLinkBackClick})
         } else if(isTour){
             DefaultPreference.set('hide_guide_tour', "false").then(function() {});
             Actions.push("dashboard", {setTimer : "false"});

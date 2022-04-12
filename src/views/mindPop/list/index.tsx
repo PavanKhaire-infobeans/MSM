@@ -104,7 +104,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 	uploadCompleted : EventManager;
 	convertToMemoryObject : any = {};
 	createMemoryListener : any;
-	constructor(props: { [x: string]: any; listMindPops: (payload: any) => void }) {
+	constructor(props: { [x: string]: any; listMindPops: (payload: any) => void; fromDeeplinking? :boolean; nid?: any; deepLinkBackClick?:boolean }) {
 		super(props);
 		this.eventSubs = DeviceEventEmitter.addListener("updateSelected", this._updateIndex);
 		this.createMemoryListener = EventManager.addListener("mindpopEditMemoryListener", this.createMemoryCallBack) 		
@@ -115,7 +115,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 			 loaderHandler.hideLoader();
 		}, 500);
 		if(success){				
-			Actions.replace("createMemory", {editMode : true, draftNid : draftDetails})	 
+			Actions.replace("createMemory", {editMode : true, draftNid : draftDetails, deepLinkBackClick: this.props.deepLinkBackClick})	 
 		}
 		else{
 			loaderHandler.hideLoader()
@@ -266,7 +266,9 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 				this.props.updateListCount(0);
 				// No_Internet_Warning();
 			}
-		} else if (nextProps.deleteStatus.completed) {
+
+		} 
+		else if (nextProps.deleteStatus.completed) {
 			LoaderHandler.hideLoader();
 			if (nextProps.deleteStatus.success) {
 				// var deletedIds: string[] = (getValue(nextProps, ["deleteStatus", "data", "reqData", "mindPopList"]) || []).map(
@@ -313,6 +315,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 							webserviceBeingCalled: false
 						},
 						() => {
+							
 							this.props.updateListCount(this._listItems().length);
 
 							this.setState({ selectedItems: [] }, () => {
@@ -336,6 +339,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 				ToastMessage(message, message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor);
 			}
 		}
+
 	}
 	componentDidMount() {
 		setTimeout(() => {
@@ -394,7 +398,11 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 
 	_cancelAction = () => {
 		Keyboard.dismiss();
-		Actions.pop();
+		if (this.props.deepLinkBackClick) {
+			Actions.dashBoard();
+		} else {
+			Actions.pop();			
+		}
 	};
 
 	_backAction = () => {
@@ -683,6 +691,10 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		var style = { height: 64, width: 64, borderRadius: 5 };
 		let ItemInProgress = MindPopsInProgress.indexOf(parseInt(data.item.id)) != -1 ? true : false;
 		if (data.section.title === "1") {
+
+			if (this.props.fromDeeplinking && (this.props.nid == data.item.id )) {
+				this.convertToMemory(data.item.id, decode_utf8(data.item.message), [])
+			}
 			return (
 				<View>
 				<View style={{opacity : ItemInProgress ? 0.3 : 1.0}}>

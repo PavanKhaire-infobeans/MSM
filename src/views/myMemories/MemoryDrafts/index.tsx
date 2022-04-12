@@ -125,7 +125,12 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   componentDidMount() {
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader();
-      GetMemoryDrafts('all', 'all', memoryDraftsArray.length);
+      if (this.props.decodedDataFromURL) {
+        this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
+      }
+      else{
+        GetMemoryDrafts('all', 'all', memoryDraftsArray.length);
+      }
     } else {
       No_Internet_Warning();
     }

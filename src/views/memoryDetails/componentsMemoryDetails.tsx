@@ -401,12 +401,13 @@ export const CollaboratorView = (props: {collaborators: any}) => {
 };
 
 export const UserDetails = (props: {
-  userDetails: any;
-  isExternalQueue: any;
-  shareDetails: any;
-  storyType: any;
-  onPressCallback?: any;
-  previewDraft?: any;
+  userDetails: any,
+  isExternalQueue: any,
+  shareDetails: any,
+  storyType: any,
+  onPressCallback?: any,
+  previewDraft?: any,
+  deepLinkBackClick?: boolean
 }) => {
   let showCueBackLogo =
     props.userDetails.name.toLowerCase().trim() == 'cueback' ||
@@ -429,7 +430,11 @@ export const UserDetails = (props: {
             style={{width: 60, alignItems: 'center', paddingTop: 10}}
             onPress={() => {
               Keyboard.dismiss();
-              Actions.pop();
+              if (props.deepLinkBackClick) {
+                Actions.dashBoard();
+              } else {
+                Actions.pop();
+              }
             }}>
             <Image source={props.isExternalQueue ? white_arrow : black_arrow} />
           </TouchableOpacity>

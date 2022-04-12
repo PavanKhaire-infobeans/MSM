@@ -261,7 +261,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   }
 
   commentCallback = () => {
-    Alert.alert('Test on draft');
+    // Alert.alert('Test on draft');
   };
 
   componentDidMount() {
@@ -277,7 +277,11 @@ export default class MemoryDetails extends React.Component<Props, State> {
       Keyboard.dismiss();
     } else {
       Keyboard.dismiss();
-      Actions.pop();
+      if (this.props.deepLinkBackClick) {
+        Actions.dashBoard();
+      } else {
+        Actions.pop();
+      }
     }
   };
 
@@ -2034,6 +2038,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                   ? true
                   : false
               }
+              deepLinkBackClick={this.props.deepLinkBackClick}
               storyType={this.storyType}
               onPressCallback={this.openMemoryActions}
               previewDraft={this.props.previewDraft}

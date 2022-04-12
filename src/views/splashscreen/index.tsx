@@ -7,6 +7,7 @@ import {
   NativeModules,
   Alert,
   DeviceEventEmitter,
+  Linking,
   ImageBackground,
 } from 'react-native';
 import Text from '../../common/component/Text';
@@ -16,7 +17,7 @@ import {
   msm_coloured_banner,
   splash_bg,
 } from '../../images';
-import {Storage, Colors, fontSize} from '../../common/constants';
+import {Storage, Colors, fontSize, decode_utf8} from '../../common/constants';
 import {Account} from '../../common/loginStore';
 import {Actions} from 'react-native-router-flux';
 import LoginStore, {UserData} from '../../common/loginStore/database';
@@ -26,13 +27,118 @@ import DeviceInfo from 'react-native-device-info';
 import EventManager from '../../common/eventManager';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
+import base64 from 'react-native-base64';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {constants} from 'buffer';
 import Utility from '../../common/utility';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
+import { CreateUpdateMemory, promptIdListener } from '../createMemory/createMemoryWebService';
+import { any } from 'prop-types';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import { GetPromptBYPromptId, GetPrompts, kGetPromptByID, kPromptsList } from '../myMemories/myMemoriesWebService';
 export const eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);
 
 type Props = {getUser: Function; user: UserData & {notLoggedIn: boolean}};
 class Splash extends Component<Props> {
-  componentWillMount() {
+
+      state = {
+        fromDeeplinking :false,
+        navigateToScreen :'',
+        decodedDataFromURL : '',
+        deeplinkMemoryType : '',
+        apiCalldoneOnce: false
+      }
+      memoryFromPrompt = null;
+      getPromptListener = null;
+
+  promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
+    this.memoryFromPrompt.removeListener();
+    // setTimeout(() => {
+    //   loaderHandler.hideLoader();
+    // }, 500);
+    if (success) {
+      Actions.push('createMemory', {
+        editMode: true,
+        draftNid: draftDetails,
+        isFromPrompt: true, 
+        deepLinkBackClick: true
+      });
+    } else {
+      loaderHandler.hideLoader();
+      ToastMessage(draftDetails);
+    }
+  };
+
+  async componentWillMount() {
+    const initialUrl = await Linking.getInitialURL().then(async(url) => {
+      if (url) {
+        if (Utility.isInternetConnected) { 
+            this.setState({
+              fromDeeplinking : true,
+            },()=>{
+              let splitUrl = url.split("/")
+              let urlreDirectTo = splitUrl && splitUrl[3];
+              if (urlreDirectTo && urlreDirectTo.includes("edit")) {
+                if (splitUrl[4].includes("prompt")) {
+                  this.setState({
+                    navigateToScreen :'PromptScreen',
+                    decodedDataFromURL: splitUrl[5] ? base64.decode(splitUrl[5]) :''
+                  })
+                }
+                else if(splitUrl[4].includes("mystory")){
+                  this.setState({
+                    navigateToScreen :'mystory',
+                    decodedDataFromURL: splitUrl[5] ? base64.decode(splitUrl[5]) :''
+                  })
+                }
+                else {
+                  // Actions.dashBoard();
+                }
+              }
+              else if (urlreDirectTo && (urlreDirectTo == 'memory')) {
+                let urlData = splitUrl[4] ? base64.decode(splitUrl[4]) : '';
+                let splitData = urlData != '' ? urlData.split("/") :'';
+                let idData = escape(splitData[1]).split('%')
+                this.setState({
+                  navigateToScreen :'memory',
+                  decodedDataFromURL: idData[0],
+                  deeplinkMemoryType: splitData[0],
+                })
+              }
+              else if (urlreDirectTo && urlreDirectTo.includes("memory_draft")) {
+                this.setState({
+                  navigateToScreen :'myMemories',
+                  decodedDataFromURL: splitUrl[4] ? true : false
+                })
+              }
+              else if (urlreDirectTo && urlreDirectTo.includes("email_request?a=")) {
+                // 
+                let tempurl = urlreDirectTo;
+                let getData = tempurl.replace("email_request?a=","")
+
+                this.setState({
+                  navigateToScreen :'PromptCreate',
+                  decodedDataFromURL: base64.decode(getData)
+                })
+              }
+              else if (urlreDirectTo && (urlreDirectTo == 'about')) {
+                this.setState({
+                  navigateToScreen :'about',
+                  decodedDataFromURL:''
+                })
+              }
+              else{
+                Actions.dashBoard();
+              }
+            });
+          }
+          else {
+            No_Internet_Warning();
+          }
+      }
+    }).catch(err => console.log('An error occurred'+ err));
+ 
     LoginStore.listAllAccounts().then((resp: any) => {
       let list = resp.rows.raw() as Array<UserData>;
       let obj = {};
@@ -54,7 +160,120 @@ class Splash extends Component<Props> {
     ) {
       Account.selectedData().values = nextProps.user;
       // Actions.reset("dashboardIndex")
-      Actions.dashBoard();
+      try {
+
+        if(this.state.fromDeeplinking){
+        
+          if ( !this.state.apiCalldoneOnce ) {
+            if (Utility.isInternetConnected) { 
+
+              if (this.state.navigateToScreen == 'mystory') {
+                this.setState({
+                  apiCalldoneOnce : true
+                },()=>Actions.replace("createMemory", {editMode : true, draftNid : this.state.decodedDataFromURL, deepLinkBackClick: true}))
+                    
+              }
+              else if (this.state.navigateToScreen == 'myMemories'){
+                this.setState({
+                  apiCalldoneOnce : true
+                },()=>Actions.replace("memoriesDrafts", {fromDeepLink : this.state.decodedDataFromURL, deepLinkBackClick: true }))
+                    
+              }
+              else if (this.state.navigateToScreen == 'memory'){
+                this.setState({
+                  apiCalldoneOnce : true
+                },()=>Actions.replace("memoryDetails", {editMode : false, nid : this.state.decodedDataFromURL,type: this.state.deeplinkMemoryType, deepLinkBackClick: true}))
+                    
+              }
+              else if (this.state.navigateToScreen == 'about'){
+                this.setState({
+                  apiCalldoneOnce : true
+                },()=>Actions.replace("moreOptions", {fromDeepLink : true , deepLinkBackClick: true}))
+                    
+              }
+              else if (this.state.navigateToScreen == 'PromptScreen') {
+                this.setState({
+                  apiCalldoneOnce : true
+                },()=>{
+                  GetPromptBYPromptId(this.state.decodedDataFromURL)
+                  this.getPromptListener = EventManager.addListener(
+                    kGetPromptByID,
+                    (success: boolean,fetchPrompt?: any) => {
+                      if (success && (fetchPrompt.type == 'prompts') && (fetchPrompt.status == '1')) {
+                        
+                        if (Utility.isInternetConnected) {
+                            loaderHandler.showLoader('Creating Memory...');
+                            let draftDetails: any = DefaultDetailsMemory(fetchPrompt.title);
+                            draftDetails.prompt_id = parseInt(this.state.decodedDataFromURL);
+                            this.memoryFromPrompt = EventManager.addListener(
+                              promptIdListener,
+                              this.promptToMemoryCallBack,
+                            );
+                            CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');  
+                          }
+                        else {
+                          No_Internet_Warning();
+                        }                  
+                      }
+                      else{
+                        Actions.dashBoard();
+                      }
+                    },
+                  );
+                })
+                
+              }
+              else if (this.state.navigateToScreen == "PromptCreate") {
+                this.setState({
+                  apiCalldoneOnce : true
+                },()=>{
+                  let splitArray = this.state.decodedDataFromURL.split("&&&");
+                  let id: any = splitArray[2], title: any = splitArray[4]; 
+                    if (Utility.isInternetConnected) {
+                      if (nextProps.user.userID == splitArray[1] ) {
+                        if (splitArray[3] && (splitArray[3] === 'writeprompt')) {
+                          loaderHandler.showLoader('Creating Memory...');
+                          let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
+                          draftDetails.prompt_id = parseInt(id);
+                          this.memoryFromPrompt = EventManager.addListener(
+                            promptIdListener,
+                            this.promptToMemoryCallBack,
+                          );
+                          CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');  
+                        }
+                        else if (splitArray[3] && (splitArray[3] === 'mindpopup')) {
+                          Actions.replace("mindPop", {nid : id, fromDeeplinking: true, deepLinkBackClick: true})
+                        }
+                        else{
+                          Actions.dashBoard();
+                        }
+                      }
+                      else{
+                        Actions.dashBoard();
+                      }
+                    } 
+                    else {
+                      No_Internet_Warning();
+                    }
+                })            
+              }
+              else Actions.dashBoard();  
+            }
+            else {
+              No_Internet_Warning();
+              Actions.prologue();
+            }
+          }
+          
+        }
+        else {
+          Actions.dashBoard();
+        }
+      } 
+      catch (error) {
+        console.log(error)
+      }
+     
     } else if (
       (nextProps.user.instanceID != 0 &&
         (nextProps.user.userAuthToken == null ||
@@ -63,8 +282,14 @@ class Splash extends Component<Props> {
     ) {
       DefaultPreference.get('hide_app_intro').then((value: any) => {
         if (value == 'true') {
-          Actions.prologue();
-        } else {
+          try {
+            Actions.prologue();
+          } 
+          catch (error) {
+            console.log(error)
+          }
+        } 
+        else {
           Actions.appIntro();
         }
       });

@@ -9,6 +9,7 @@ export const kAllLikes = 'allLikesDataFromPublished';
 export const kLiked = 'likedFromPublished';
 export const kUnliked = 'unlikedFromPublished';
 export const kPromptsList = 'promptsList';
+export const kGetPromptByID = 'getPromptByID';
 export const kHidePrompt = 'hidePrompt';
 export const kMemoryActionPerformed = 'MemoryActionPerformed';
 export const kMemoryActionPerformedPublished =
@@ -135,6 +136,7 @@ export const GetPublishedMemories = async (lastMemoryDate: any) => {
     );
   }
 };
+
 export const GetPublishedMemoryCollections = async (requestId: any) => {
   try {
     let data = await Storage.get('userData');
@@ -227,6 +229,7 @@ export const GetBlockedUsersAndMemory = async (type: any) => {
     );
   }
 };
+
 // export const GetActivities = async (offset: any) => {
 // 	try {
 // 		let data = await Storage.get('userData')
@@ -283,6 +286,7 @@ export const GetBlockedUsersAndMemory = async (type: any) => {
 // 		EventManager.callBack(kSeenData, false, index, "Unable to process your request. Please try again later");
 // 	}
 // };
+
 export const MemoryAction = async (
   type: any,
   nid: any,
@@ -398,12 +402,15 @@ export const MemoryAction = async (
     }
   }
 };
+
 export const GetPrompts = async (
   categories: any,
   loadMore: any,
   offsetValue: any,
 ) => {
   try {
+
+    console.log("categories: categories, ",categories)
     let data = await Storage.get('userData');
     let response = await MemoryService(
       `https://${Account.selectedData().instanceURL}/api/prompts/list`,
@@ -447,6 +454,55 @@ export const GetPrompts = async (
       kPromptsList,
       false,
       loadMore,
+      'Unable to process your request. Please try again later',
+    );
+  }
+};
+
+export const GetPromptBYPromptId = async (
+  nid: any,
+) => {
+  try {
+
+    let data = await Storage.get('userData');
+    let response = await MemoryService(
+      `https://${Account.selectedData().instanceURL}/api/get/nodedetails`,
+      [
+        {
+          'X-CSRF-TOKEN': data.userAuthToken,
+          'Content-Type': 'application/json',
+        },
+        {
+          "details" : {
+              "nid": nid    //"2042"
+          }                       
+      },
+      ],
+    )
+      .then((response: Response) => response.json())
+      .catch((err: Error) => {
+        Promise.reject(err);
+      });
+    if (response != undefined && response != null) {
+      console.log("ResponseMessage > ",JSON.stringify(response))
+      if (response.ResponseCode == 200) {
+        EventManager.callBack(
+          kGetPromptByID,
+          true,
+          response['NodeDetail'],
+        );
+      } else {
+        EventManager.callBack(
+          kGetPromptByID,
+          false,
+          response['ResponseMessage'],
+        );
+      }
+    }
+  } catch (err) {
+    EventManager.callBack(
+      kGetPromptByID,
+      false,
       'Unable to process your request. Please try again later',
     );
   }

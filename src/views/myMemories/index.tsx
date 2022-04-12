@@ -99,7 +99,7 @@ export default class MyMemoriesContainer extends React.Component<Props> {
               }}
               initialPage={1}>
               <PublishedMemory tabLabel={MyMemoriesTapBarOptions.published} />
-              <MemoryDrafts tabLabel={MyMemoriesTapBarOptions.drafts} />
+              <MemoryDrafts tabLabel={MyMemoriesTapBarOptions.drafts} fromDeepLink={this.props.fromDeepLink}/>
               <Activities tabLabel={MyMemoriesTapBarOptions.activity} />
             </ScrollableTabView>
           </View>

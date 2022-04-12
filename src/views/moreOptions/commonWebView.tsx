@@ -81,7 +81,11 @@ export default class CommonWebView extends React.Component<Props> {
                 heading={this.props.title}
                 cancelAction={() => {
                   Keyboard.dismiss();
-                  Actions.pop();
+                  if (this.props.deepLinkBackClick) {
+                    Actions.dashBoard();
+                  } else {
+                    Actions.pop();                    
+                  }
                 }}
               />
             </View>
