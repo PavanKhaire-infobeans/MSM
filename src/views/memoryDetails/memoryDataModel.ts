@@ -98,8 +98,8 @@ export class MemoryDataModel {
             case "only_me" :
             case "allfriends" :
             case "custom" : let share_count = getDetails(memoryDetails, ["share_count"], keyInt);
-                                                         this.shareOption.shareText = 'Shared with ' + share_count + (share_count > 1 ? " members": " member");
-                                                         this.shareOption.color = "#0077B2" ;
+                            this.shareOption.shareText = 'Shared with ' + share_count + (share_count > 1 ? " members": " member");
+                            this.shareOption.color = "#0077B2" ;
                     break;        
             case "cueback" : this.shareOption.shareText = 'Shared with Public';
                              this.shareOption.color = "#BE6767";

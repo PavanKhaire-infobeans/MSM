@@ -159,13 +159,14 @@ const ScrollableTabView = createReactClass({
     }
 
     const currentPage = this.state.currentPage;
-    this.updateSceneKeys({
+      this.updateSceneKeys({
       page: pageNumber,
       callback: this._onChangeTab.bind(this, currentPage, pageNumber),
     });
   },
 
   renderTabBar(props) {
+
     if (this.props.renderTabBar === false) {
       return null;
     } else if (this.props.renderTabBar) {
@@ -176,7 +177,10 @@ const ScrollableTabView = createReactClass({
   },
 
   updateSceneKeys({page, children = this.props.children, callback = () => {}}) {
-    let newKeys = this.newSceneKeys({
+      if (this.props?.currentScreen) {
+        this.props?.currentScreen(page); 
+      }
+      let newKeys = this.newSceneKeys({
       previousKeys: this.state.sceneKeys,
       currentPage: page,
       children,
@@ -343,7 +347,7 @@ const ScrollableTabView = createReactClass({
     }
 
     const currentPage = this.state.currentPage;
-    this.updateSceneKeys({
+      this.updateSceneKeys({
       page: localNextPage,
       callback: this._onChangeTab.bind(this, currentPage, localNextPage),
     });

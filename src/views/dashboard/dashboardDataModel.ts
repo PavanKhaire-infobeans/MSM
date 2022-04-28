@@ -26,6 +26,24 @@ export class DashboardDataModel {
             parsedMemory.nid = getDetails(element, ['nid'] , keyString); 
             parsedMemory.season = getDetails(element, ['season'] , keyString); 
             parsedMemory.share_count = getDetails(element, ['share_count'] , keyInt); 
+            parsedMemory.share_option_value = getDetails(element, ['share_option_value'] , keyString); 
+            switch(parsedMemory.share_option_value){
+                case "only_me" : parsedMemory.shareText = 'Shared only with me';
+                                 parsedMemory.color = "#50B660";
+                        break;
+                case "allfriends" || 'custom':
+                                parsedMemory.shareText = 'Shared with ' + parsedMemory.share_count + (parsedMemory.share_count > 1 ? " members": " member");
+                                parsedMemory.color = "#0077B2" ;
+                        break;        
+                case "cueback" : parsedMemory.shareText = 'Shared with Public';
+                                 parsedMemory.color = "#BE6767";
+                        break;
+                default :
+                        parsedMemory.shareText = 'Shared with ' + parsedMemory.share_count + (parsedMemory.share_count > 1 ? " members": " member");
+                        parsedMemory.color = "#0077B2" ;
+                        break; 
+
+            }
             parsedMemory.title = getDetails(element, ['title'] , keyString); 
             parsedMemory.type = getDetails(element, ['type'] , keyString); 
             parsedMemory.updated = getDetails(element, ['updated'] , keyString); 

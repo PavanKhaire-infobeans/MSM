@@ -11,7 +11,7 @@ const TextNew = (props: {[x: string]: any}) => {
   } else {
     nStyle = {...newProps.style};
   }
-  var style = {...nStyle, fontFamily: 'Rubik'};
+  var style = {...nStyle, fontFamily: nStyle.fontFamily ? nStyle.fontFamily : 'Inter'};//Rubik
   delete newProps.style;
   return React.createElement(Text, {...newProps, style});
 };

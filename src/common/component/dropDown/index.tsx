@@ -7,9 +7,9 @@ import {
   Picker,
 } from 'react-native';
 import Text from '../Text';
-import {Props, State} from './types';
-import {styles} from './design';
-import {Colors, fontSize} from '../../constants';
+import { Props, State } from './types';
+import { styles } from './design';
+import { Colors, fontSize } from '../../constants';
 
 const kTop = 19,
   kTopAnimated = 5;
@@ -22,7 +22,7 @@ export default class DropDownSelector extends React.Component<Props, State> {
     errorMessage: '',
     showError: false,
     value: '',
-    onOptionSelected: () => {},
+    onOptionSelected: () => { },
     viewID: 0,
     isRequired: false,
     inputViewStyle: styles.inputViewStyle,
@@ -36,7 +36,7 @@ export default class DropDownSelector extends React.Component<Props, State> {
     this.state = {
       sizeFnt: new Animated.Value(val.length > 0 ? 13 : kPlaceHolderFontSize),
       top: new Animated.Value(val.length > 0 ? kTopAnimated : kTop),
-      height: new Animated.Value(56),
+      height: new Animated.Value(100),
       opacity: new Animated.Value(0),
       animatedViewHeight: Platform.OS === 'ios' ? 16 : 26,
       showClearImage: false,
@@ -81,8 +81,8 @@ export default class DropDownSelector extends React.Component<Props, State> {
   render() {
     let selectedValue = this.props.selectedValue || '';
     return (
-      <View style={[this.props.style, {flexDirection: 'column'}]}>
-        <View style={{flex: 1, justifyContent: 'center', minWidth: 150}}>
+      <View style={[this.props.style, { flexDirection: 'column' }]}>
+        <View style={{ flex: 1, justifyContent: 'center', minWidth: 150 }}>
           <TouchableHighlight
             underlayColor="#cccccc3e"
             onPress={this.showPicker}>
@@ -91,35 +91,37 @@ export default class DropDownSelector extends React.Component<Props, State> {
                 height: this.state.height,
                 backgroundColor: this.props.isCuebackRegistration
                   ? '#fff'
-                  : Colors.NewLightCommentHeader,
+                  : Colors.unSelectedFilterbg,
                 flexDirection: 'row',
                 borderRadius: 8,
                 overflow: 'hidden',
+                alignItems: 'center',
                 borderWidth: 1,
                 borderColor: this.props.showError
                   ? Colors.NewRadColor
                   : this.props.isCuebackRegistration
-                  ? Colors.TextColor
-                  : 'transparent',
+                    ? Colors.TextColor
+                    : 'transparent',
               }}>
-              <View style={[this.props.inputViewStyle]}>
+              <View style={[this.props.inputViewStyle, { alignItems: 'center', justifyContent: 'center' }]}>
                 <Animated.Text
                   style={{
                     color: this.props.isCuebackRegistration
                       ? Colors.TextColor
                       : selectedValue.length > 0
-                      ? Colors.NewTitleColor
-                      : this.props.placeholderTextColor,
-                    ...fontSize(13),
-                    fontFamily: 'Rubik',
-                    position: 'absolute',
-                    top: kTopAnimated,
+                        ? Colors.TextColor
+                        : this.props.placeholderTextColor,
+                    ...fontSize(18),
+                    fontFamily: 'Inter',
+                    // position: 'absolute',
+                    textAlign: 'center',
+                    // top: kTopAnimated,
                     opacity: this.props.isCuebackRegistration ? 0.6 : 1,
-                    left: 8,
+                    // left: 8,
                   }}>
                   {this.props.placeholderText}
                   {this.props.isRequired ? (
-                    <Animated.Text style={{color: Colors.NewRadColor}}>
+                    <Animated.Text style={{ color: Colors.NewRadColor }}>
                       {' *'}
                     </Animated.Text>
                   ) : null}
@@ -127,23 +129,23 @@ export default class DropDownSelector extends React.Component<Props, State> {
                 <Text
                   style={[
                     {
-                      left: 0,
-                      fontFamily: 'Rubik',
-                      top: 12,
+                      // left: 0,
+                      fontFamily: 'Inter',
+                      // top: 12,
                       ...fontSize(18),
-                      height: '70%',
+                      // height: '70%',
                       color: this.props.isCuebackRegistration
                         ? Colors.TextColor
                         : Colors.TextColor,
                       lineHeight: 35,
                       letterSpacing: -0.1,
-                      paddingRight: 20,
+                      // paddingRight: 20,
                     },
                   ]}>
                   {selectedValue}
                 </Text>
               </View>
-              <View
+              {/* <View
                 style={{
                   position: 'absolute',
                   right: 15,
@@ -159,7 +161,7 @@ export default class DropDownSelector extends React.Component<Props, State> {
                     ? Colors.TextColor
                     : 'rgba(0, 0, 0, 0.54)',
                 }}
-              />
+              /> */}
             </Animated.View>
           </TouchableHighlight>
         </View>
@@ -170,7 +172,7 @@ export default class DropDownSelector extends React.Component<Props, State> {
             opacity: this.state.opacity,
             alignItems: 'flex-start',
           }}>
-          <View style={{minWidth: 140}}>
+          <View style={{ minWidth: 140 }}>
             <Text
               style={{
                 ...fontSize(11),

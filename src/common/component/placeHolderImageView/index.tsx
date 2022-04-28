@@ -67,7 +67,7 @@ export default class PlaceholderImageView extends Component<Props> {
         onError={() =>
           this.setState({
             showErrorImage: true,
-            resizeMode: this.props.profilePic ? 'stretch' : 'center',
+            resizeMode: 'center',
           })
         }
         resizeMode={
@@ -75,7 +75,8 @@ export default class PlaceholderImageView extends Component<Props> {
             ? this.state.resizeMode
             : this.props.profilePic
             ? 'stretch'
-            : 'contain'
+            : 
+            'contain'
         }
       />
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TouchableHighlight,
   Dimensions,
@@ -8,19 +8,23 @@ import {
   StyleSheet,
   Text,
   View,
+  FlatList,
+  Image,
 } from 'react-native';
 import TextNew from '../../common/component/Text';
-import {Colors, fontSize} from '../../common/constants';
+import { Colors, fontSize } from '../../common/constants';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import { action_close } from '../../images';
+import { chevronleft, year1930, year1940, year1950, year1960, year1970, year1980, year1990, year2000, year2010, year2020 } from './../../../app/images'
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 enum fieldType {
   to = 'To',
   from = 'From',
 }
-export default class JumpToScreen extends React.Component<Props> {
-  allMonths = [
+const JumpToScreen = (props: Props) => {
+  let allMonths = [
     'Jan',
     'Feb',
     'Mar',
@@ -34,269 +38,447 @@ export default class JumpToScreen extends React.Component<Props> {
     'Nov',
     'Dec',
   ];
-  months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-  monthsSecond = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  state = {
+  let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  let monthsSecond = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  let years = [
+    { year: "2020's", icon: year2020, value: 2020 },
+    { year: "2010's", icon: year2010, value: 2010 },
+    { year: "2000's", icon: year2000, value: 2000 },
+    { year: "1990's", icon: year1990, value: 1990 },
+    { year: "1980's", icon: year1980, value: 1980 },
+    { year: "1970's", icon: year1970, value: 1970 },
+    { year: "1960's", icon: year1960, value: 1960 },
+    { year: "1950's", icon: year1950, value: 1950 },
+    { year: "1940's", icon: year1940, value: 1940 },
+    { year: "1930's", icon: year1930, value: 1930 }
+  ];
+
+  const [state, setState] = useState({
     selectedMonths: [],
     selectedYear: 2020,
     selectedMonth: '',
-  };
-  constructor(props: Props) {
-    super(props);
-  }
+  });
+  const [selectedDecade, setSelectedDecade] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [yearArray, setyearArray] = useState(Array());
+  const [yearArrayDisplay, setyearArrayDisplay] = useState(Array());
+  const [backPress, setBackPress] = useState(true);
 
-  componentDidMount = () => {
-    var parts = this.props.memoryDate.split(' ');
-    let selectedMonths = [];
-    this.props.jumpToYears.forEach((element: any, index: any) => {
-      element.forEach((element1: any) => {
-        if (element1.year == parts[1]) {
-          this.setState({
-            selectedMonth: parts[0],
-            selectedYear: parseInt(parts[1]),
-            selectedMonths: element1.months,
-          });
-        }
-      });
+  useEffect(() => {
+    // var parts = props.memoryDate.split(' ');
+    let allYears = [], tempyearArr = [], yearArrayTemp = [...yearArray];
+    props.jumpToYears?.forEach((element: any, index: any) => {
+      allYears = allYears.concat(element)
     });
-  };
 
-  checkVisibility = (index: any) => {
+    allYears.forEach((element: any, index: any) => {
+
+      yearArrayTemp.map((item) => {
+        if (item.name == element.year) {
+          item.disabled = false
+          tempyearArr.push(item);
+        }
+      })
+    });
+
+    yearArrayTemp.map((item) => {
+      tempyearArr.forEach((element: any, index: any) => {
+        if (item.name == element.name) {
+          item.disabled = false
+        }
+      })
+    });
+
+    setyearArrayDisplay(yearArrayTemp);
+  }, [yearArray])
+
+  const checkVisibility = (index: any) => {
     let years: any = [];
-    let yearsAtIndex = this.props.jumpToYears[index];
+    let yearsAtIndex = props.jumpToYears[index];
     yearsAtIndex.forEach((element: any) => {
       years.push(element.year);
     });
-    return years.indexOf(this.state.selectedYear) >= 0;
+    return years.indexOf(state.selectedYear) >= 0;
   };
 
-  selectYear = (selectedObj: any) => {
-    if (selectedObj.year != this.state.selectedYear) {
+  const selectYear = (selectedObj: any) => {
+    if (selectedObj.year != state.selectedYear) {
       let selectedMonth = '';
-      this.allMonths.forEach((element: any) => {
+      allMonths.forEach((element: any) => {
         if (selectedObj.months.indexOf(element) >= 0 && selectedMonth == '') {
           selectedMonth = element;
         }
       });
-      this.setState({
+      setState(prevState => ({
+        ...prevState,
         selectedYear: selectedObj.year,
         selectedMonths: selectedObj.months,
         selectedMonth: selectedMonth,
-      });
+      }));
     }
   };
 
-  jumpToClicked = () => {
-    if (this.state.selectedMonth != '' && this.state.selectedMonth.length > 0) {
-      let index = this.allMonths.indexOf(this.state.selectedMonth) + 1;
-      let month = (index < 10 ? '0' : '') + index;
-      this.props.jumpToClick(this.state.selectedYear, month);
+  const jumpToClicked = (selectedYear) => {
+    // if (state.selectedMonth != '' && state.selectedMonth.length > 0) {
+    //   let index = allMonths.indexOf(state.selectedMonth) + 1;
+    //   let month = (index < 10 ? '0' : '') + index;
+      props.jumpToClick(selectedYear, '');//month
       loaderHandler.showLoader();
-      this.props.closeAction();
-    }
+      props.closeAction();
+    // }
   };
 
-  render() {
-    return (
-      <SafeAreaView style={{height: '100%', width: '100%'}}>
-        <StatusBar
-          barStyle={'dark-content'}
-          backgroundColor={Colors.NewThemeColor}
-        />
-        <View
-          style={{
-            height: '30%',
-            width: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-          }}
-          onStartShouldSetResponder={() => true}
-          onResponderStart={() => this.props.closeAction()}
-        />
-        <View style={{height: '70%', width: '100%', backgroundColor: '#fff'}}>
-          <ScrollView style={{paddingTop: 16, paddingBottom: 16}}>
-            <View>
-              {this.props.jumpToYears.map((obj: any, index: any) => {
-                return (
-                  <View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        paddingBottom: 16,
-                        justifyContent: 'space-around',
-                      }}>
-                      {obj.map((obj1: any, index1: any) => {
-                        return (
-                          <TouchableHighlight
-                            onPress={() => this.selectYear(obj1)}
-                            underlayColor={'none'}
+  return (
+    <View style={{ height: '100%', width: '100%', paddingTop: 20 }}>
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={Colors.NewThemeColor}
+      />
+      <NavigationHeaderSafeArea
+        // heading={'Filters'}
+        height="120"
+        heading={''}
+        padding={20}
+        showCommunity={false}
+        cancelAction={() => props.closeAction()}
+        showRightText={false}
+        isWhite={true}
+        backIcon={action_close}
+      />
+
+      {/* <View
+        style={{
+          height: '30%',
+          width: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        }}
+        onStartShouldSetResponder={() => true}
+        onResponderStart={() => this.props.closeAction()}
+      /> */}
+      <View style={{ height: '100%', width: '100%', backgroundColor: '#ffffff' }}>
+        <ScrollView>
+
+          <View>
+            {/* {props.jumpToYears.map((obj: any, index: any) => {
+              return ( */}
+            <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ height: 10 }}></View>
+              <View style={{ width: '90%' }} >
+                <Text
+                  style={[
+                    styles.filterText,
+                    {
+                      textAlign: 'left'
+                    },
+                  ]}>
+                  {'When would you like to jump to?'}
+                </Text>
+                {
+                  backPress ?
+                    null
+                    :
+                    <TouchableHighlight
+                      underlayColor={'none'}
+                      onPress={() => {
+                        setBackPress(true);
+                      }}
+                      style={{ flex: 1, flexDirection: 'row', padding: 10, alignItems: 'center', marginLeft: -10 }}>
+                      <>
+                        <Image source={chevronleft} />
+                        <Text
+                          style={[
+                            styles.filterText, { fontWeight: '500' }
+                          ]}>
+                          {'Back'}
+                        </Text>
+                      </>
+
+                    </TouchableHighlight>
+                }
+
+              </View>
+              {
+                backPress ?
+                  <FlatList
+                    data={years}
+                    keyExtractor={(_, index: number) => `${index}`}
+                    numColumns={2}
+                    ItemSeparatorComponent={() => { return (<View style={{ height: 10, width: 10 }} />) }}
+                    renderItem={(item: any) => (
+                      <TouchableHighlight
+                        underlayColor={'none'}
+                        onPress={() => {
+                          setSelectedDecade(item?.item?.year);
+                          setBackPress(false);
+                          let tempYearArr = [];
+                          for (let index = 0; index < 10; index++) {
+                            let currentYear = new Date().getFullYear();
+                            if ((item?.item?.value + index) <= currentYear) {
+                              tempYearArr.push(item?.item?.value + index);                              
+                            }
+                          }
+                          tempYearArr = tempYearArr.reverse()
+                          tempYearArr = tempYearArr.map((item) => { return ({ name: item }) });
+                          setyearArray(tempYearArr);
+                          setyearArrayDisplay(tempYearArr);
+                        }}
+                        style={[
+                          styles.newFilterItem,
+                          {
+                            borderWidth: item.item.year == selectedDecade ? 1 : 0
+                          },
+                        ]}>
+                        <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+
+                          <Image
+                            source={item.item.icon}
+                            style={{
+                              resizeMode: 'contain',
+                              alignSelf: 'center',
+                              justifyContent: 'center',
+                            }}></Image>
+
+                          <View style={{ height: 10 }}></View>
+
+                          <Text
                             style={[
-                              styles.filterItem,
+                              styles.filterText,
                               {
-                                backgroundColor:
-                                  this.state.selectedYear == obj1.year
-                                    ? 'black'
-                                    : 'transparent',
+                                color: Colors.TextColor,
                               },
                             ]}>
-                            <Text
-                              style={[
-                                styles.filterText,
-                                {
-                                  color:
-                                    this.state.selectedYear == obj1.year
-                                      ? 'white'
-                                      : Colors.TextColor,
-                                },
-                              ]}>
-                              {obj1.year}
-                            </Text>
-                          </TouchableHighlight>
-                        );
-                      })}
-                    </View>
-                    {this.checkVisibility(index) && (
+                            {item.item.year}
+                          </Text>
+
+                        </View>
+                      </TouchableHighlight>
+                    )}
+                  />
+                  :
+                  <FlatList
+                    data={yearArrayDisplay}
+                    keyExtractor={(_, index: number) => `${index}`}
+                    numColumns={2}
+                    ItemSeparatorComponent={() => { return (<View style={{ height: 10, width: 10 }} />) }}
+                    renderItem={(item: any) => {
+                      return(
+                      <TouchableHighlight
+                        underlayColor={'none'}
+                        onPress={() => {
+                          setSelectedYear(item?.item.name);
+                          setTimeout(() => {
+                            jumpToClicked(item?.item.name)
+                          }, 200);
+                        }}
+                        // disabled={item.item.disabled == undefined ? true :item.item.disabled}
+                        style={[
+                          styles.newFilterItem,
+                          {
+                            // borderWidth: item.item.disabled == undefined ? 0 : 2,
+                            // borderColor: item.item.disabled ? 'transparent' : item.item.name == selectedYear ? Colors.decadeFilterBorder : Colors.bottomTabColor,
+                            borderWidth: 2,
+                            borderColor: item.item.name == selectedYear ? Colors.decadeFilterBorder : Colors.bottomTabColor,
+                            height: Dimensions.get('window').height * 0.09,
+                            backgroundColor: Colors.white
+                          },
+                        ]}>
+                        <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+
+                          <Text
+                            style={[
+                              styles.filterText,
+                              {
+                                color: Colors.TextColor,
+                              },
+                            ]}>
+                            {item.item.name}
+                          </Text>
+
+                        </View>
+                      </TouchableHighlight>
+                    )}}
+                  />
+              }
+
+              {/* <View
+                    style={{
+                      flexDirection: 'row',
+                      paddingBottom: 16,
+                      justifyContent: 'space-around',
+                    }}>
+                    {obj.map((obj1: any, index1: any) => {
+                      return (
+                        <TouchableHighlight
+                          onPress={() => this.selectYear(obj1)}
+                          underlayColor={'none'}
+                          style={[
+                            styles.filterItem,
+                            {
+                              backgroundColor:
+                                this.state.selectedYear == obj1.year
+                                  ? 'black'
+                                  : 'transparent',
+                            },
+                          ]}>
+                          <Text
+                            style={[
+                              styles.filterText,
+                              {
+                                color:
+                                  this.state.selectedYear == obj1.year
+                                    ? 'white'
+                                    : Colors.TextColor,
+                              },
+                            ]}>
+                            {obj1.year}
+                          </Text>
+                        </TouchableHighlight>
+                      );
+                    })}
+                  </View>
+                  {this.checkVisibility(index) && (
+                    <View
+                      style={{
+                        margin: 16,
+                        marginTop: 0,
+                        flex: 1,
+                        backgroundColor: Colors.NewLight,
+                        padding: 16,
+                        borderRadius: 5,
+                      }}>
                       <View
                         style={{
-                          margin: 16,
-                          marginTop: 0,
-                          flex: 1,
-                          backgroundColor: Colors.NewLight,
-                          padding: 16,
-                          borderRadius: 5,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
                         }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                          }}>
-                          {this.months.map((obj: any, index: any) => {
-                            return (
-                              <TouchableHighlight
-                                onPress={() =>
-                                  this.setState({selectedMonth: obj})
-                                }
-                                disabled={
+                        {this.months.map((obj: any, index: any) => {
+                          return (
+                            <TouchableHighlight
+                              onPress={() =>
+                                this.setState({selectedMonth: obj})
+                              }
+                              disabled={
+                                this.state.selectedMonths.indexOf(obj) < 0
+                              }
+                              underlayColor={'none'}
+                              style={{
+                                flex: 1,
+                                padding: 5,
+                                backgroundColor:
+                                  this.state.selectedMonth == obj
+                                    ? 'black'
+                                    : 'transparent',
+                                borderRadius: 5,
+                                opacity:
                                   this.state.selectedMonths.indexOf(obj) < 0
-                                }
-                                underlayColor={'none'}
-                                style={{
-                                  flex: 1,
-                                  padding: 5,
-                                  backgroundColor:
-                                    this.state.selectedMonth == obj
-                                      ? 'black'
-                                      : 'transparent',
-                                  borderRadius: 5,
-                                  opacity:
-                                    this.state.selectedMonths.indexOf(obj) < 0
-                                      ? 0.5
-                                      : 1,
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}>
-                                <Text
-                                  style={[
-                                    styles.monthsText,
-                                    {
-                                      color:
-                                        this.state.selectedMonth == obj
-                                          ? 'white'
-                                          : Colors.TextColor,
-                                    },
-                                  ]}>
-                                  {obj}
-                                </Text>
-                              </TouchableHighlight>
-                            );
-                          })}
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            paddingTop: 10,
-                            justifyContent: 'space-between',
-                          }}>
-                          {this.monthsSecond.map((obj: any, index: any) => {
-                            return (
-                              <TouchableHighlight
-                                onPress={() =>
-                                  this.setState({selectedMonth: obj})
-                                }
-                                disabled={
-                                  this.state.selectedMonths.indexOf(obj) < 0
-                                }
-                                underlayColor={'none'}
-                                style={{
-                                  flex: 1,
-                                  padding: 5,
-                                  backgroundColor:
-                                    this.state.selectedMonth == obj
-                                      ? 'black'
-                                      : 'transparent',
-                                  borderRadius: 5,
-                                  opacity:
-                                    this.state.selectedMonths.indexOf(obj) < 0
-                                      ? 0.5
-                                      : 1,
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}>
-                                <Text
-                                  style={[
-                                    styles.monthsText,
-                                    {
-                                      color:
-                                        this.state.selectedMonth == obj
-                                          ? 'white'
-                                          : Colors.TextColor,
-                                    },
-                                  ]}>
-                                  {obj}
-                                </Text>
-                              </TouchableHighlight>
-                            );
-                          })}
-                        </View>
+                                    ? 0.5
+                                    : 1,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}>
+                              <Text
+                                style={[
+                                  styles.monthsText,
+                                  {
+                                    color:
+                                      this.state.selectedMonth == obj
+                                        ? 'white'
+                                        : Colors.TextColor,
+                                  },
+                                ]}>
+                                {obj}
+                              </Text>
+                            </TouchableHighlight>
+                          );
+                        })}
                       </View>
-                    )}
-                  </View>
-                );
-              })}
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          paddingTop: 10,
+                          justifyContent: 'space-between',
+                        }}>
+                        {this.monthsSecond.map((obj: any, index: any) => {
+                          return (
+                            <TouchableHighlight
+                              onPress={() =>
+                                this.setState({selectedMonth: obj})
+                              }
+                              disabled={
+                                this.state.selectedMonths.indexOf(obj) < 0
+                              }
+                              underlayColor={'none'}
+                              style={{
+                                flex: 1,
+                                padding: 5,
+                                backgroundColor:
+                                  this.state.selectedMonth == obj
+                                    ? 'black'
+                                    : 'transparent',
+                                borderRadius: 5,
+                                opacity:
+                                  this.state.selectedMonths.indexOf(obj) < 0
+                                    ? 0.5
+                                    : 1,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}>
+                              <Text
+                                style={[
+                                  styles.monthsText,
+                                  {
+                                    color:
+                                      this.state.selectedMonth == obj
+                                        ? 'white'
+                                        : Colors.TextColor,
+                                  },
+                                ]}>
+                                {obj}
+                              </Text>
+                            </TouchableHighlight>
+                          );
+                        })}
+                      </View>
+                    </View>
+                  )} */}
             </View>
-          </ScrollView>
-          <View style={styles.bottomView}>
-            <TouchableHighlight
-              underlayColor={'none'}
-              onPress={() => this.jumpToClicked()}>
-              <View
-                style={{
-                  backgroundColor: Colors.ThemeColor,
-                  width: 100,
-                  padding: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 20,
-                }}>
-                <TextNew
-                  style={{fontWeight: '400', ...fontSize(16), color: '#fff'}}>
-                  Jump
-                </TextNew>
-              </View>
-            </TouchableHighlight>
+            {/* );
+            })} */}
           </View>
-          <View
-            style={{
-              height: 50,
-              position: 'absolute',
-              bottom: -50,
-              width: '100%',
-              backgroundColor: 'white',
-            }}
-          />
-        </View>
-      </SafeAreaView>
-    );
-  }
+        </ScrollView>
+        {/* <View style={styles.bottomView}>
+          <TouchableHighlight
+            underlayColor={'none'}
+            onPress={() => jumpToClicked()}>
+            <View
+              style={{
+                backgroundColor: Colors.ThemeColor,
+                width: 100,
+                padding: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 20,
+              }}>
+              <TextNew
+                style={{ fontWeight: '400', ...fontSize(16), color: '#fff' }}>
+                Jump
+              </TextNew>
+            </View>
+          </TouchableHighlight>
+        </View> */}
+        <View
+          style={{
+            height: 50,
+            position: 'absolute',
+            bottom: -50,
+            width: '100%',
+            backgroundColor: 'white',
+          }}
+        />
+      </View>
+    </View>
+  );
+
 }
 
 const styles = StyleSheet.create({
@@ -308,7 +490,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     width: '100%',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 4,
     shadowRadius: 2,
     elevation: 5,
@@ -321,6 +503,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#000',
   },
-  filterText: {...fontSize(18), color: 'white'},
-  monthsText: {...fontSize(16), color: 'white'},
+  newFilterItem: {
+    width: Dimensions.get('window').width * 0.42,
+    height: Dimensions.get('window').height * 0.15,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+    backgroundColor: Colors.unSelectedFilterbg,
+    borderColor: Colors.decadeFilterBorder,
+  },
+  filterText: { ...fontSize(19), fontFamily: 'Inter', fontWeight: '400', lineHeight: 23, color: Colors.bordercolor },
+  monthsText: { ...fontSize(16), color: 'white' },
 });
+export default JumpToScreen;

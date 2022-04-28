@@ -88,6 +88,7 @@ import MemoryActionsSheet, {
 import {ListType} from '../../dashboard/dashboardReducer';
 import MemoryListItem from '../../../common/component/memoryListItem';
 import * as Animatable from 'react-native-animatable';
+import { block, flag, flagandroid, personxmark, redstar, report } from '../../../../app/images';
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
 ];
@@ -831,7 +832,7 @@ export const MemoryActionsList = (item: any) => {
         memoryActions.push({
           index: i,
           text: item.actions_on_memory[value],
-          image: block_user,
+          image: Platform.OS == 'ios' ? personxmark :block,
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.blockUserKey,
@@ -843,7 +844,7 @@ export const MemoryActionsList = (item: any) => {
         memoryActions.push({
           index: i,
           text: item.actions_on_memory[value],
-          image: report_user,
+          image: Platform.OS == 'ios' ? flagandroid : flag,
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.reportMemoryKey,
@@ -854,7 +855,7 @@ export const MemoryActionsList = (item: any) => {
         memoryActions.push({
           index: i,
           text: item.actions_on_memory[value],
-          image: block_and_report,
+          image: Platform.OS == 'ios' ? redstar : report,
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.blockAndReportKey,

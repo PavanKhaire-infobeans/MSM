@@ -601,7 +601,7 @@ export default class BottomPicker extends React.Component<Props, State> {
                           (!this.state.isMultiSelect &&
                             this.state.selectedValues.length > 0 &&
                             this.state.selectedValues[0] == data.key)
-                            ? `${Colors.ThemeColor}23`
+                            ? `${Colors.unSelectedFilterbg}23`
                             : '#fff',
                       }}>
                       {this.state.isMultiSelect && (

@@ -17,6 +17,7 @@ import {
   prompts_selected,
   prompts_nonselected,
 } from '../../images';
+import { book } from '../../../app/images';
 import {fontSize, Colors} from '../constants';
 import EventManager from '../eventManager';
 import {EventEmitter} from 'events';
@@ -30,6 +31,11 @@ export enum TabItems {
   Prompts = 'Prompts',
   //Notifications = "Notifications",
   MoreOptions = 'More Options',
+}
+
+export enum NewTabItems {
+  Read = 'Read',
+  Write = 'Write',
 }
 
 const style = EStyleSheet.create({
@@ -63,7 +69,7 @@ export default class TabIcon extends React.Component<{[x: string]: any}> {
     // var textColor = "#000000ff"
     var textColor = 'rgba(0.216, 0.22, 0.322, 0.75)';
     let paddingTop = 0;
-    let font = this.screenSize.width <= 320 ? 12 : 14;
+    let font = this.screenSize.width <= 320 ? 17 : 19;
     switch (this.props.title || this.title) {
       case TabItems.AllMemories:
         if (this.props.focused) {
@@ -127,58 +133,96 @@ export default class TabIcon extends React.Component<{[x: string]: any}> {
         }
         break;
 
+      case NewTabItems.Read:
+      if (this.props.focused) {
+        img = all_memories_selected;
+        textColor = Colors.TextColor;
+      } else {
+        img = all_memories_unselected;
+      }
+      break;
+
+    case NewTabItems.Write:
+      if (this.props.focused) {
+        img = my_memories_selected;
+        textColor = Colors.TextColor;
+      } else {
+        img = my_memories_unselected;
+      }
+      break;
+
       default:
         break;
     }
 
     return (
-      <View style={{width: '100%', paddingTop: 1, paddingBottom: 1}}>
+      <View style={{width: '100%',backgroundColor: Colors.bottomTabColor,
+          borderTopLeftRadius: this.props.title == 'Read' ? 8 : 0,
+          borderBottomLeftRadius: this.props.title == 'Read' ? 8 : 0,
+          borderTopRightRadius: this.props.title == 'Write' ? 8 : 0,
+          borderBottomRightRadius: this.props.title == 'Write' ? 8 : 0, borderWidth:0}}>
+        
         <View
           style={{
-            width: '100%',
+            
             alignItems: 'center',
             paddingTop: paddingTop,
-            borderRadius: this.props.title == TabItems.AddContent ? 7 : 0,
-            backgroundColor:
-              this.props.title == TabItems.AddContent
-                ? Colors.NewDarkThemeColor
-                : '#fff',
-            height: '100%',
+            // backgroundColor:
+            //   this.props.title == TabItems.AddContent
+            //     ? Colors.NewDarkThemeColor
+            //     : '#fff',
+            height: 45,
+            borderRadius:8,
+            borderWidth: this.props.focused ? 1 : 0,
+            borderBottomColor:this.props.focused ? 'black' :'transparent',
+            zIndex:99,
+            backgroundColor:this.props.focused ? Colors.white :Colors.bottomTabColor,
             justifyContent: 'center',
+            flexDirection:'row'
           }}>
           {/* <Text style={{fontFamily : "Rubik", ...fontSize(10), paddingTop: 5+paddingTop, color : textColor, textTransform: 'uppercase', marginBottom : Platform.OS == "android" ? 0 : -10}}>{this.props.title}</Text> */}
           {/* {this.state.isNotification && <View style={{width: 12, height: 12, borderRadius : 6, backgroundColor : Colors.ErrorColor, position: "absolute", right : 5, top : 5}}></View>} */}
-          <View
+          {/* <View
             style={{
               position: 'absolute',
               top: '20%',
               right: '20%',
-              backgroundColor: '#fff',
+              backgroundColor: Colors.newBagroundColor,
+            // backgroundColor: '#fff',
               height: 30,
               width: 50,
-            }}></View>
-          <Image source={img} />
+            }}></View> */}
+          {/* <Image source={img} /> */}
           {this.props.title != TabItems.AddContent && (
-            <Text
+            <>
+             <Text
               style={{
                 fontFamily: 'FiraSansExtraCondensed-Regular',
                 ...fontSize(font),
-                paddingTop: 2 + paddingTop,
+                // paddingTop: 2 + paddingTop,
                 color: textColor,
-                marginBottom: Platform.OS == 'android' ? 0 : -10,
-                paddingBottom: 1,
+                marginRight:3,
+                // marginBottom: Platform.OS == 'android' ? 0 : -10,
+                // paddingBottom: 1,
               }}>
               {this.props.title}
             </Text>
+            {
+              this.props.focused ? 
+              <Image source={ this.props.title == 'Write' ? book : book }/>
+              :
+              null
+            }
+            </>
           )}
         </View>
-        <View
+        {/* <View
           style={{
             height: 100,
             position: 'absolute',
             bottom: -100,
             width: '100%',
-          }}></View>
+          }}></View> */}
       </View>
     );
   }

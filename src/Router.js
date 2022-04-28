@@ -8,7 +8,7 @@ import {
   DeviceEventEmitter,
   Linking
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+import DeviceInfo, { hasNotch } from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {
   ActionConst,
@@ -22,7 +22,7 @@ import {
 import {Provider} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Busyindicator from './common/component/busyindicator';
-import TabIcon, {TabItems} from './common/component/TabBarIcons';
+import TabIcon, {NewTabItems, TabItems} from './common/component/TabBarIcons';
 import {Colors} from './common/constants';
 import EventManager from './common/eventManager';
 import Utility, {networkConnectivitySaga} from './common/utility';
@@ -56,6 +56,11 @@ import PDFViewer from './views/fileHandlers/pdfViewer';
 import AddContentView from './views/addContent';
 import CommonAudioRecorder from './views/fileHandlers/audioRecorder';
 
+//new routes
+import NewMemoryDetails from './../app/views/memoryDetails';
+import NewCustomListView from './../app/views/memoryDetails/customListView';
+import NewFilesDetail from './../app/views/memoryDetails/fileDetails';
+
 import Menu from './views/menu';
 import {
   EditHeader,
@@ -69,7 +74,7 @@ import MoreOptions from './views/moreOptions';
 import BlockedUsers from './views/moreOptions/blockedUsers';
 import CommonWebView from './views/moreOptions/commonWebView';
 import MyAccount from './views/myAccount';
-import MyMemoriesContainer from './views/myMemories';
+// import MyMemoriesContainer from './views/myMemories';
 //import AllMemoriesContainer from "./views/newDashboard"
 import NotificationView from './views/notificationView';
 import NotificationListing from './views/notificationView/notificationListing';
@@ -196,16 +201,26 @@ const AppRouter = () => (
               navigateToParticular(navigation, defaultHandler)
             }}
             tabBarStyle={{
-              height: 57,
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingBottom: Platform.OS === 'android' ? 0 : 20,
-              overflow: 'hidden',
+              height: 60,
+              // paddingHorizontal:20,
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              paddingBottom: Platform.OS === 'android' ? 0 : hasNotch() ?  40 : 15,
+              // overflow: 'hidden',
+              width:'85%',
+              borderRadius:8,
+              borderWidth:0,
+              borderColor:'transparent',
+              // padding:5,
+              alignSelf:'center'
             }}>
-            <Stack title={TabItems.AllMemories} tabBarIcon={TabIcon}>
+            <Stack title={NewTabItems.Read} tabBarIcon={TabIcon}>
               <Scene hideNavBar key="dashboard" component={DashboardIndex} />
             </Stack>
-            <Stack title={TabItems.MyMemories} tabBarIcon={TabIcon}>
+            <Stack title={NewTabItems.Write} tabBarIcon={TabIcon}>
+              <Scene hideNavBar key="dashboard" component={DashboardIndex} />
+            </Stack>
+            {/* <Stack title={TabItems.MyMemories} tabBarIcon={TabIcon}>
               <Scene
                 hideNavBar
                 key="memoriesDrafts"
@@ -228,13 +243,13 @@ const AppRouter = () => (
                 title={TabItems.Prompts}
                 component={PromptsView}
               />
-            </Stack>
+            </Stack> */}
             {/* <Stack title={TabItems.Notifications} tabBarIcon={TabIcon}>
                             <Scene hideNavBar key="notificationView" title={TabItems.Notifications} component={NotificationView} />
                         </Stack> */}
-            <Stack title={TabItems.MoreOptions} tabBarIcon={TabIcon}>
+            {/* <Stack title={TabItems.MoreOptions} tabBarIcon={TabIcon}>
               <Scene key="moreOptions" hideNavBar component={MoreOptions} />
-            </Stack>
+            </Stack> */}
           </Tabs>
         </Scene>
         {/* <Scene key="dashboardIndex" type={ActionConst.RESET} hideNavBar component={DashboadIndex}/> */}
@@ -295,6 +310,15 @@ const AppRouter = () => (
         hideNavBar
         component={CustomListView}
       />
+      
+      <Scene key="newmemoryDetails" hideNavBar component={NewMemoryDetails} />
+      <Scene
+        key="newcustomListMemoryDetails"
+        hideNavBar
+        component={NewCustomListView}
+      />
+      <Scene key="newfileDetails" hideNavBar component={NewFilesDetail} />
+
       <Scene key="blockedUsers" hideNavBar component={BlockedUsers} />
       <Scene key="fileDetails" hideNavBar component={FilesDetail} />
       <Scene key="imageViewer" hideNavBar component={ImageViewer} />
@@ -543,10 +567,10 @@ class App extends React.Component {
     console.disableYellowBox = true;
     return (
       <Provider store={store}>
-        <View style={{flex: 1}}>
+        {/* <View style={{flex: 1}}> */}
           <AppRouter />
           <Busyindicator overlayColor={Colors.ThemeColor} />
-        </View>
+        {/* </View> */}
       </Provider>
     );
   }

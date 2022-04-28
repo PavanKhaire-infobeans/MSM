@@ -1,3 +1,4 @@
+import {calender,clock,ontimelineClickclock,timelinecalendar} from './../../../../app/images'
 const React = require('react');
 const { ViewPropTypes } = ReactNative = require('react-native');
 const PropTypes = require('prop-types');
@@ -7,6 +8,7 @@ const {
   Text,
   View,
   Animated,
+  Image
 } = ReactNative;
 const Button = require('./Button');
 
@@ -49,7 +51,13 @@ const DefaultTabBar = createReactClass({
       onPress={() => onPressHandler(page)}
     >
       <View style={[styles.tab, this.props.tabStyle, ]}>
-        <Text style={[{color: textColor, fontWeight, }, textStyle, ]}>
+        {
+          name == 'Recent' && isTabActive ? 
+          <Image style={{height:32,width:32}} source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : isTabActive ?  timelinecalendar: calender}/>
+          :
+          <Image source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : isTabActive ?  timelinecalendar: calender}/>
+        }
+        <Text style={[{color: textColor, fontWeight, fontfamily: 'Inter', fontSize:19, lineHeight:24 }, textStyle, ]}>
           {name}
         </Text>
       </View>
@@ -72,7 +80,7 @@ const DefaultTabBar = createReactClass({
       outputRange: [0,  containerWidth / numberOfTabs],
     });
     return (
-      <View style={[styles.tabs, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
+      <View style={[styles.tabs, {backgroundColor: this.props.backgroundColor,height:80, borderTopWidth:1,borderBottomWidth:0,borderTopColor:'#E2E4E9' }, this.props.style, ]}>
         {this.props.tabs.map((name, page) => {
           const isTabActive = this.props.activeTab === page;
           const renderTab = this.props.renderTab || this.renderTab;
@@ -105,11 +113,11 @@ const styles = StyleSheet.create({
     height: 40,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    borderWidth: 1,
+    borderWidth: 0,
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    borderColor: '#ccc',
+    borderColor: '#ffffff',
   },
 });
 

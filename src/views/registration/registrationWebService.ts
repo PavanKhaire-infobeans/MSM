@@ -95,7 +95,7 @@ export const submitRegistration = async (registrationData: any) => {
   try {
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader('Requesting...');
-      console.log(registrationData);
+      console.log("registrationData : "+JSON.stringify(registrationData));
       let resp: {
         ResponseCode: number;
         ResponseMessage: string;

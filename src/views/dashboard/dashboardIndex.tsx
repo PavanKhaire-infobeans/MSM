@@ -5,9 +5,10 @@ import { kNotificationIndicator, TabItems } from '../../common/component/TabBarI
 import { Colors, decode_utf8, fontSize, getDetails, Storage } from '../../common/constants';
 import Utility from '../../common/utility';
 import { configurations } from '../../common/webservice/loginServices';
-import { GET_FILTERS_DATA, GET_FILTERS_DATA_TIMELINE, GET_MEMORY_LIST, ListType, MEMORY_ACTIONS_DASHBOARD } from './dashboardReducer';
+import { ACTIVE_TAB_ON_DASHBOARD, GET_FILTERS_DATA, GET_FILTERS_DATA_TIMELINE, GET_MEMORY_LIST, ListType, MEMORY_ACTIONS_DASHBOARD } from './dashboardReducer';
 import FilterScreen from './filtersScreen';
 import NavigationBar from './NavigationBar';
+import NewNavigationBar from '../../../app/components/NewNavigationBar';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore
@@ -53,7 +54,7 @@ class DashboardIndex extends React.Component<Props>{
         appTourVisibility: false
 	};
     memoryFromPrompt: EventManager;
-	
+	screen = '';
 	constructor(props: Props) {
         super(props);     
         this.FetchConfigurations();  
@@ -212,31 +213,46 @@ class DashboardIndex extends React.Component<Props>{
         }
     }
     
-    onFilterClick=(screen : any)=>{
-        this.setState({currentScreen : screen})        
-        Actions.push("filtersScreen", {currentScreen : screen});
+    componentDidUpdate(prevProps, prevState) { 
+
+    } 
+
+    onFilterClick=()=>{
+        this.setState({currentScreen : this.screen},()=>{
+            Actions.push("filtersScreen", {currentScreen : this.screen});
+        })    
     }
     render() {
 		return (
                 <View style={{flex: 1}}>
                     <SafeAreaView style={{width: "100%", flex: 0, backgroundColor : Colors.NewThemeColor}}/>                   
-                    <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>    
+                    <SafeAreaView  style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>    
                         <View style={{flex: 1}}> 
-                            <NavigationBar title={TabItems.AllMemories}/>
-                            <StatusBar barStyle={'dark-content'} backgroundColor={Colors.NewThemeColor} /> 
+                            {/* <NavigationBar title={TabItems.AllMemories}/> */}
+                            <NewNavigationBar 
+                                isWhite={true} filterClick={()=> this.onFilterClick()} 
+                                title={ this.props.filterName ? this.props.filterName :TabItems.AllMemories}
+                                showRight={ this.screen == ListType.Timeline ? true :false}
+                            />
+                            <StatusBar barStyle={'dark-content'} backgroundColor='#ffffff' /> 
                             <ScrollableTabView
                                 ref={(ref: any) => { this.scrollableTabView = ref; }}
                                 style= {{width: "100%"}}
                                 scrollEnabled={Platform.OS == 'ios' ? true : false}
                                 locked = {Platform.OS == 'ios' ? false : true}
-                                initialPage = {1}
-                                tabBarBackgroundColor = {Colors.NewThemeColor}
+                                initialPage = {0}
+                                currentScreen ={(screenName:any) =>{ 
+                                    this.screen = ((screenName == 0) ? ListType.Recent : ListType.Timeline) 
+                                    this.props.setCurrentTabActions((screenName == 0) ? ListType.Recent : ListType.Timeline);
+                                }}
+                                tabBarBackgroundColor = {Colors.white}
+                                tabBarPosition="bottom"
                                 tabBarTextStyle= {{...fontSize(16), fontFamily: 'Rubik'}}
                                 tabBarActiveTextColor = {Colors.TextColor}
-                                tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
-                                tabBarUnderlineStyle={{backgroundColor: Colors.TextColor,height:2}} >
-                                <Timeline tabLabel= {'Timeline'} filterClick={()=> this.onFilterClick.bind(this)}/>
+                                // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
+                                tabBarUnderlineStyle={{backgroundColor: Colors.white,height:2}} >
                                 <Recent tabLabel= {'Recent'} filterClick={()=> this.onFilterClick.bind(this)}/>
+                                <Timeline tabLabel= {'Timeline'} filterClick={()=> this.onFilterClick.bind(this)}/>
                             </ScrollableTabView> 
                             {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
                         </View>
@@ -313,22 +329,22 @@ class DashboardIndex extends React.Component<Props>{
 }
 
 export const filterView=(onClick : any, screen : any)=>{
-    return <TouchableHighlight onPress={()=> onClick(screen)} underlayColor={'transparent'} style={{width: '100%', height: 40, backgroundColor : '#fff', borderBottomWidth: 0.5, borderBottomColor : '#dedede'}}>
+    return (
+            <TouchableHighlight onPress={()=> onClick(screen)} underlayColor={'transparent'} style={{width: '100%', height: 40, backgroundColor : '#fff', borderBottomWidth: 0.5, borderBottomColor : '#dedede'}}>
                 <View style={{width : '100%', flex: 1, flexDirection : 'row', justifyContent : 'space-between', alignItems: 'center', paddingRight: 16, paddingLeft: 16}}>
                     <TextNew style={{...fontSize(16)}}>Filters</TextNew>
                     <Image source={filter_icon}></Image>
                 </View>
             </TouchableHighlight>
-}
-const style = StyleSheet.create({
-	
-})
+        )
+};
 
 const mapState = (state: any) => {
 	return {
         filterDataTimeLine : state.dashboardReducer.filterDataTimeline,
         filterDataRecent : state.dashboardReducer.filterDataRecent,
-        loadingRecent : state.dashboardReducer.loadingRecent
+        loadingRecent : state.dashboardReducer.loadingRecent,
+        filterName : state.dashboardReducer.filterName,
     }
 };
 
@@ -337,7 +353,8 @@ const mapDispatch = (dispatch: Function) => {
         fetchFiltersData : (payload: any) => dispatch({type: GET_FILTERS_DATA, payload: payload}),	
         fetchFiltersDataTimeline : (payload: any) => dispatch({type: GET_FILTERS_DATA_TIMELINE, payload: payload}),	
         fetchMemoryList : (payload : any) => dispatch({type: GET_MEMORY_LIST, payload : payload}),
-        sendMemoryActions: (payload : any) => dispatch({type: MEMORY_ACTIONS_DASHBOARD, payload : payload})
+        sendMemoryActions: (payload : any) => dispatch({type: MEMORY_ACTIONS_DASHBOARD, payload : payload}),
+        setCurrentTabActions: (payload : any) => dispatch({type: ACTIVE_TAB_ON_DASHBOARD, payload : payload})
 	};
 };
 

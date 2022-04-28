@@ -44,7 +44,7 @@ import {
   itemSelectedCheckMark,
 } from '../../../images';
 import {Account} from '../../../common/loginStore';
-import {styles} from '../../../common/component/multipleDropDownView/design';
+import {styles} from '../../../common/component/multipleDropDownView/styles';
 import {setFlagsFromString} from 'v8';
 import {
   kDeleteDraft,

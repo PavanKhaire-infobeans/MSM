@@ -40,7 +40,7 @@ export const Colors = {
   ErrorColor: '#DD4040',
   ThemeColor: '#207D89',
   //ThemeColor: '#026D60',
-  NewThemeColor: '#94D6DB',
+  NewThemeColor: '#ffffff',//'#94D6DB',
   Theme51D1FF: '#51D1FF',
   NewDarkThemeColor: '#31C7DB',
   NewLightThemeColor: '#F2F8F8',
@@ -61,6 +61,18 @@ export const Colors = {
   filterBG: '#EDF4F4',
   dullText: 'rgba(81, 82, 108, 0.75)',
   selectedFilter: '#BCDDE0',
+  white: '#ffffff',
+  newBagroundColor:'#C4C8D4',
+  bordercolor:'#0B0C0F',
+  timeLinebackground:'#F3F5F7',
+  newTextColor:'#4C5367',
+  newDescTextColor: '#2E313E',
+  selectedFilterbg: 'rgba(173, 135, 0, 0.07)',
+  unSelectedFilterbg: 'rgba(6, 36, 81, 0.07)',
+  filterborder:'#4D3C00',
+  bottomTabColor:'#E2E4E9',
+  actionBg :'rgba(237, 237, 237, 0.8)',
+  decadeFilterBorder:'#052747'
 };
 export const MyMemoriesTapBarOptions = {
   published: 'Published',
@@ -160,6 +172,9 @@ export const Size = (() => {
   };
 })();
 
+export const deviceHasNotch =() =>{
+  return DeviceInfo.hasNotch()
+}
 export const fontSize = (size: number): {fontSize: number} => {
   if (Platform.OS == 'android') {
     size > 0 ? size : (size = 15);

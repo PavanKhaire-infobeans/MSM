@@ -4,7 +4,7 @@ import {fontSize} from '../../constants';
 export const styles = StyleSheet.create({
   inputViewStyle: {
     flex: 1,
-    height: 50,
+    height: 100,
     backgroundColor: 'transparent',
     borderWidth: 0.3,
     borderColor: 'transparent',

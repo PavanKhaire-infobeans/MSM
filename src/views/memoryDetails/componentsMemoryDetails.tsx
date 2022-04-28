@@ -897,15 +897,16 @@ export const LikeCommentShare = (props: {
         <Animatable.View
           style={{
             flexDirection: 'row',
-            alignItems: 'center',
+            alignItems: 'center',justifyContent:'center',
+            height:40,width:40,borderRadius:20,backgroundColor:Colors.timeLinebackground,
             transform: [{translateX: PublishedMemory.shakeAnimation}],
           }}>
           <Image
             source={props.icon}
-            style={{padding: 1, marginRight: 3}}
+            style={{padding: 1,}}
             resizeMode="contain"
           />
-          <Text
+          {/* <Text
             style={{
               ...fontSize(16),
               fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
@@ -913,16 +914,16 @@ export const LikeCommentShare = (props: {
               color: Colors.NewTitleColor,
             }}>
             {props.name}
-          </Text>
+          </Text> */}
         </Animatable.View>
       ) : (
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'center',height:40,width:40,borderRadius:20,backgroundColor:Colors.timeLinebackground,}}>
           <Image
             source={props.icon}
-            style={{padding: 1, marginRight: 3}}
+            style={{padding: 1}}
             resizeMode="contain"
           />
-          <Text
+          {/* <Text
             style={{
               ...fontSize(16),
               fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
@@ -930,7 +931,7 @@ export const LikeCommentShare = (props: {
               color: Colors.NewTitleColor,
             }}>
             {props.name}
-          </Text>
+          </Text> */}
         </View>
       )}
     </View>

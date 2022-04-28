@@ -18,6 +18,7 @@ import MessageDialogue from '../messageDialogue';
 import {Actions} from 'react-native-router-flux';
 import TextNew from '../Text';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import { parse } from '@babel/core';
 const options = {
   enableVibrateFallback: true,
   ignoreAndroidSystemSettings: false,
@@ -134,7 +135,7 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
             style={[styles.leftButtonTouchableContainer]}
             onPress={() => this.props.cancelAction()}>
             <Image
-              style={{height: 28, width: 28}}
+              style={{marginLeft:15}}
               resizeMode="center"
               source={
                 this.props.backIcon
@@ -144,6 +145,12 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
                   : close_white
               }
             />
+            {
+              this.props.backIcon
+              ? 
+              <Text> Cancel </Text>
+              : null
+            }
           </TouchableOpacity>
         ) : (
           <View style={{height: 10, width: 15}}></View>
@@ -245,7 +252,6 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
   _hide = () => {
     this.messageRef && this.messageRef._hide();
   };
-
   render() {
     let accData = Account.tempData();
     let url =
@@ -253,7 +259,7 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
         ? 'calpoly.cueback.com'
         : accData.instanceURL;
     return (
-      <View>
+      <View >
         {this.props.isRegisteration ? (
           <View
             style={{
@@ -291,10 +297,11 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
             style={{
               flexDirection: 'row',
               width: '100%',
-              height: this.props.height == 0 ? this.props.height : 54,
+              height: this.props.height == 0 ? this.props.height : this.props.padding ? parseInt(this.props.padding)+60 : 60,
               justifyContent: 'space-between',
               borderBottomWidth: this.props.isWhite ? 2 : 0,
               borderBottomColor: 'rgba(0, 0, 0, 0.24)',
+              // padding: this.props.padding ? this.props.padding : 0,
               backgroundColor:
                 this.props.isWhite || this.props.isRegisteration
                   ? '#fff'

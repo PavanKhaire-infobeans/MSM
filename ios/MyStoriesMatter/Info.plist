@@ -129,6 +129,23 @@
 		<string>Rubik-Medium.ttf</string>
 		<string>Rubik-MediumItalic.ttf</string>
 		<string>Rubik-Regular.ttf</string>
+		<string>Inter-Black.ttf</string>
+		<string>Inter-Bold.ttf</string>
+		<string>Inter-ExtraBold.ttf</string>
+		<string>Inter-ExtraLight.ttf</string>
+		<string>Inter-Light.ttf</string>
+		<string>Inter-Medium.ttf</string>
+		<string>Inter-Regular.ttf</string>
+		<string>Inter-SemiBold.ttf</string>
+		<string>Inter-Thin.ttf</string>
+		<string>Lora-BoldItalic.ttf</string>
+		<string>Lora-SemiBoldItalic.ttf</string>
+		<string>Lora-MediumItalic.ttf</string>
+		<string>Lora-Italic.ttf</string>
+		<string>Lora-Bold.ttf</string>
+		<string>Lora-SemiBold.ttf</string>
+		<string>Lora-Medium.ttf</string>
+		<string>Lora-Regular.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
