@@ -644,7 +644,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                 styles.boxShadow,
               ]}>
               <TouchableHighlight
-                underlayColor={'#ffffff00'}
+                underlayColor={Colors.touchableunderlayColor}
                 style={{flex: 1, justifyContent: 'center'}}
                 onPress={() => {
                   _onShowMemoryDetails(item);
@@ -1080,7 +1080,8 @@ export const RenderLikeAndCommentSection = (
 
 export const _onShowMemoryDetails = (item: any) => {
   if (Utility.isInternetConnected) {
-    Actions.jump('memoryDetails', {nid: item.nid, type: item.type});
+    Actions.jump('newmemoryDetails', { nid: item.nid, type: item.type, height: 80 });
+    // Actions.jump('memoryDetails', {nid: item.nid, type: item.type});
   } else {
     No_Internet_Warning();
   }

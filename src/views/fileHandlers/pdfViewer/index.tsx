@@ -20,6 +20,7 @@ import {close_white, close_white_, profile_placeholder} from '../../../images';
 import DeviceInfo from 'react-native-device-info';
 import {Colors, decode_utf8} from '../../../common/constants';
 import Pdf from 'react-native-pdf';
+import Utility from '../../../common/utility';
 type Props = {[x: string]: any};
 type State = {[x: string]: any};
 export default class PDFViewer extends React.Component<Props> {
@@ -37,7 +38,7 @@ export default class PDFViewer extends React.Component<Props> {
 
   render() {
     let filePath = this.props.file.url
-      ? this.props.file.url
+      ? unescape(this.props.file.url)
       : this.props.file.filePath;
     if (filePath.indexOf('file://') > -1) {
       filePath = decode_utf8(filePath);
@@ -49,8 +50,8 @@ export default class PDFViewer extends React.Component<Props> {
     // }
 
     return (
-      <SafeAreaView style={{flex: 1, width: '100%', backgroundColor: '#000'}}>
-        <StatusBar barStyle={'dark-content'} />
+      <SafeAreaView style={{flex: 1, width: '100%', backgroundColor: Colors.timeLinebackground}}>
+        <StatusBar barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
         {/* <WebView 
                         automaticallyAdjustContentInsets={false}
                         source={{uri: 'http://docs.google.com/gview?embedded=true&url='+filePath}}

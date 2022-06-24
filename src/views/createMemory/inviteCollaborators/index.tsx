@@ -428,7 +428,7 @@ class InviteCollaborators extends React.Component<Props, State> {
               }
             />
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             {this.props.collaborators.length > 0 ? (

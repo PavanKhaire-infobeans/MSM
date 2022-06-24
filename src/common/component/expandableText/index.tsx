@@ -4,28 +4,7 @@ import Text from '../../component/Text';
 //@ts-ignore
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {Size, Colors, fontSize} from '../../constants';
-
-//80B762
-const styles = EStyleSheet.create({
-  $buttonColor: Colors.ThemeColor,
-  $buttonTextColor: '#ffffff',
-  $buttonUnderlayColor: '#01B732',
-  button: {
-    marginTop: Size.byWidth(32),
-    width: '100%',
-    height: Size.byWidth(48),
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: Size.byWidth(32),
-    backgroundColor: '$buttonColor',
-  },
-
-  text: {
-    color: '$buttonTextColor',
-    ...fontSize(Size.byWidth(18)),
-    textAlign: 'center',
-  },
-});
+import styles from './styles'
 
 type Props = {
   text: string;

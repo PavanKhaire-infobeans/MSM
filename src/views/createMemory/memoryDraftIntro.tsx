@@ -15,6 +15,7 @@ import Carousel, {Pagination} from 'react-native-snap-carousel';
 import TextNew from '../../common/component/Text';
 import {Colors, fontSize} from '../../common/constants';
 import {arrow2, arrow5, arrow6, arrow7, close_guide_tour} from '../../images';
+import Styles from './styles';
 
 export default class MemoryDraftIntro extends React.Component<Props> {
   _carousal: any;
@@ -123,25 +124,16 @@ export default class MemoryDraftIntro extends React.Component<Props> {
     }).start();
   };
 
-  componentDidMount() {}
-
   renderAppIntro = (item: any) => {
     let index = item.index;
     return (
       <Animated.View
-        style={{
-          opacity: this.state.fadeIn,
-          flex: 1,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: 0,
-        }}>
+        style={[Styles.animatedContainer,{ opacity: this.state.fadeIn }]}>
         {this.state.currentIndex == index && (
-          <View style={{flex: 1, width: '100%'}}>
+          <View style={[Styles.fullWidth,Styles.fullFlex]}>
             {index != this.memoryDraftIntro.length - 1 && (
               <TouchableOpacity
-                style={{height: 50, left: '87%', zIndex: 999, top: 10}}
+                style={Styles.closeGuidButtonStyle}
                 onPress={() => this.props.cancelMemoryDraftTour()}>
                 <Image source={close_guide_tour} />
               </TouchableOpacity>
@@ -152,39 +144,27 @@ export default class MemoryDraftIntro extends React.Component<Props> {
             </View>
             <View style={this.viewStyle[index]}>
               <TextNew
-                style={{...fontSize(24), color: 'white', fontWeight: '500'}}>
+                style={Styles.guideTitleTextStyle}>
                 {item.item.title}
               </TextNew>
               <TextNew
-                style={{
-                  ...fontSize(20),
-                  color: 'white',
-                  fontWeight: '400',
-                  marginTop: 5,
-                }}>
+                style={Styles.guideDescTextStyle}>
                 {item.item.desc}
               </TextNew>
-              <View style={{flexDirection: 'row', marginTop: 10}}>
+              <View style={Styles.createMemoryIntroStyle}>
                 {this.circleStyles.map((obj: any, index1: any) => {
                   return (
                     <View
-                      style={{
-                        height: 5,
-                        borderRadius: 1,
-                        width: 16,
-                        marginRight: 5,
-                        backgroundColor:
-                          index1 <= index
-                            ? 'white'
-                            : 'rgba(144, 144, 144, 0.85)',
-                      }}
+                      style={[Styles.createMemoryIntroContainerStyle,{
+                        backgroundColor: index1 <= index ? Colors.white : Colors.brownrgba,
+                      }]}
                     />
                   );
                 })}
               </View>
-              <View style={{flexDirection: 'row', marginTop: 5}}>
+              <View style={Styles.prevContainer}>
                 <TouchableHighlight
-                  underlayColor={'transparent'}
+                  underlayColor={Colors.transparent}
                   onPress={() => {
                     if (index != 0) {
                       // this.fadeOut();
@@ -194,30 +174,21 @@ export default class MemoryDraftIntro extends React.Component<Props> {
                       this._carousal.snapToPrev();
                     }
                   }}
-                  style={{paddingVertical: 20}}>
+                  style={Styles.paddingVerticalStyle}>
                   <View
-                    style={{
-                      backgroundColor: 'white',
-                      width: 80,
-                      paddingVertical: 10,
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
+                    style={Styles.prevBtnContainer}>
                     <TextNew
-                      style={{
-                        ...fontSize(18),
-                        color: index == 0 ? '#c4c4c4' : Colors.NewYellowColor,
-                        fontWeight: '500',
-                      }}>
+                      style={[Styles.textStyle18Weight500,{
+                        color: index == 0 ? Colors.newBagroundColor : Colors.NewYellowColor,
+                      }]}>
                       Prev
                     </TextNew>
                   </View>
                 </TouchableHighlight>
 
                 <TouchableHighlight
-                  underlayColor={'transparent'}
-                  style={{paddingVertical: 20, marginLeft: 20}}
+                  underlayColor={Colors.transparent}
+                  style={Styles.memoryDraftIntroButnStyle}
                   onPress={() => {
                     if (index != this.memoryDraftIntro.length - 1) {
                       // this.fadeOut();
@@ -230,23 +201,10 @@ export default class MemoryDraftIntro extends React.Component<Props> {
                     }
                   }}>
                   <View
-                    style={{
-                      backgroundColor: Colors.NewYellowColor,
-                      width: 80,
-                      paddingVertical: 10,
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
+                    style={Styles.doneBtnContainer}>
                     <TextNew
-                      style={{
-                        ...fontSize(18),
-                        color: 'white',
-                        fontWeight: '500',
-                      }}>
-                      {index != this.memoryDraftIntro.length - 1
-                        ? 'Next'
-                        : 'Done'}
+                      style={Styles.doneBtnTextStyle}>
+                      {index != this.memoryDraftIntro.length - 1 ? 'Next' : 'Done'}
                     </TextNew>
                   </View>
                 </TouchableHighlight>
@@ -261,7 +219,7 @@ export default class MemoryDraftIntro extends React.Component<Props> {
     return (
       <Modal transparent>
         <SafeAreaView
-          style={{width: '100%', height: '100%', overflow: 'hidden'}}>
+          style={Styles.memoryDraftContainer}>
           <Carousel
             ref={(c: any) => {
               this._carousal = c;

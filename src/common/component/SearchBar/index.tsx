@@ -1,4 +1,4 @@
-import React, {RefObject} from 'react';
+import React, { RefObject } from 'react';
 import {
   TextInput,
   View,
@@ -12,11 +12,11 @@ import {
   ImageStyle,
 } from 'react-native';
 import Text from '../Text';
-import DeviceInfo from 'react-native-device-info';
-import {searchIcon, icon_close_black} from '../../../images';
-import {fontSize} from '../../constants';
+import searchStyle from './styles';
+import { searchIcon, icon_close_black } from '../../../images';
+import { Colors, fontFamily, fontSize } from '../../constants';
 
-type Props = {[x: string]: any; placeholder: string};
+type Props = { [x: string]: any; placeholder: string };
 export default class SearchBar extends React.Component<Props> {
   inputField: RefObject<TextInput> = React.createRef<TextInput>();
   state = {
@@ -29,12 +29,12 @@ export default class SearchBar extends React.Component<Props> {
 
   componentWillReceiveProps(props: Props) {
     if (this.props.value != props.value && props.value != this.state.value) {
-      this.setState({value: props.value || ''});
+      this.setState({ value: props.value || '' });
     }
   }
 
   componentDidMount() {
-    this.setState({isFocused: this.inputField.current.isFocused()});
+    this.setState({ isFocused: this.inputField.current.isFocused() });
   }
 
   constructor(props: Props) {
@@ -47,7 +47,7 @@ export default class SearchBar extends React.Component<Props> {
 
   static defaultProps = {
     placeholder: 'Search',
-    onFocus: () => {},
+    onFocus: () => { },
   };
 
   render() {
@@ -71,7 +71,7 @@ export default class SearchBar extends React.Component<Props> {
       <View
         style={[
           searchStyle.parent,
-          {backgroundColor: this.props.barTintColor, flexDirection: 'row'},
+          { backgroundColor: this.props.barTintColor, flexDirection: 'row' },
           this.props.style || {},
         ]}>
         <View
@@ -80,7 +80,7 @@ export default class SearchBar extends React.Component<Props> {
             {
               backgroundColor: this.props.textFieldBackgroundColor,
               borderRadius: borderRadius ? 20 : 8,
-              borderColor: borderRadius ? '#CCCCCC' : null,
+              borderColor: borderRadius ? Colors.bordercolor : null,
               borderWidth: borderRadius ? 1 : null,
             },
           ]}>
@@ -95,8 +95,7 @@ export default class SearchBar extends React.Component<Props> {
                 searchStyle.placeholder,
                 {
                   opacity: this.state.value.length > 0 ? 0 : 1,
-                  ...fontSize(16),
-                  lineHeight: 20,
+                  
                 },
               ]}>
               {this.props.placeholder}
@@ -176,7 +175,7 @@ export default class SearchBar extends React.Component<Props> {
 
   clearField() {
     this.inputField.current.clear();
-    this.setState({value: ''});
+    this.setState({ value: '' });
     if (this.props.onClearField) {
       this.props.onClearField();
     }
@@ -193,7 +192,7 @@ export default class SearchBar extends React.Component<Props> {
             style={searchStyle.clearButton}>
             <Image
               source={icon_close_black}
-              style={{width: 18, height: 18}}
+              // style={{width: 18, height: 18}}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -210,12 +209,7 @@ export default class SearchBar extends React.Component<Props> {
             onPress={() => {
               this.cancelPressed();
             }}
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginLeft: 8,
-            }}>
+            style={searchStyle.buttonTextStyle}>
             <Text style={searchStyle.cancel}>Cancel</Text>
           </TouchableOpacity>
         );
@@ -225,73 +219,3 @@ export default class SearchBar extends React.Component<Props> {
   }
 }
 
-const searchStyle = StyleSheet.create({
-  parent: {
-    height: 48,
-    paddingRight: 5,
-    paddingLeft: 5,
-    paddingTop: 4,
-    paddingBottom: 4,
-    shadowColor: '#000000',
-    backgroundColor: 'white',
-    borderBottomWidth: 0.3,
-    borderBottomColor: 'transparent',
-  },
-  baseFlex: {
-    borderRadius: 8,
-    flex: 6,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  inputView: {
-    width: '100%',
-    height: '100%',
-    paddingLeft: 15,
-    flexDirection: 'row',
-  },
-  clearButton: {
-    height: '100%',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 0.5,
-  },
-  inputStyle: {
-    flex: 9,
-    height: 38,
-    marginLeft: 28,
-    ...fontSize(16),
-    lineHeight: 20,
-    color: 'black',
-    backgroundColor: 'transparent',
-  },
-  placeholder: {
-    color: 'rgba(85, 85, 85, 0.75)',
-    marginLeft: 12,
-  },
-  imageParent: {
-    height: '100%',
-    paddingLeft: 9,
-    paddingRight: 9,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorStyle: {
-    position: 'absolute',
-    color: 'red',
-    ...fontSize(10),
-    height: 12,
-    bottom: 3,
-    right: 2,
-  },
-  imageStyle: {
-    width: 24,
-    height: 24,
-  },
-  cancel: {
-    color: 'gray',
-    ...fontSize(DeviceInfo.isTablet() ? 12 : 13),
-  },
-});

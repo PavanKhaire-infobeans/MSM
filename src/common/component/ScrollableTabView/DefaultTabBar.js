@@ -1,4 +1,5 @@
-import {calender,clock,ontimelineClickclock,timelinecalendar} from './../../../../app/images'
+import { Colors, fontFamily } from '../../constants';
+import { bottomcalendar, calender, clock, editOff, editOn, newMemory, ontimelineClickclock, promptOn, promptsOff, timelinecalendar } from './../../../../app/images'
 const React = require('react');
 const { ViewPropTypes } = ReactNative = require('react-native');
 const PropTypes = require('prop-types');
@@ -28,8 +29,8 @@ const DefaultTabBar = createReactClass({
 
   getDefaultProps() {
     return {
-      activeTextColor: 'navy',
-      inactiveTextColor: 'black',
+      activeTextColor: Colors.black,
+      inactiveTextColor: Colors.black,
       backgroundColor: null,
     };
   },
@@ -39,25 +40,32 @@ const DefaultTabBar = createReactClass({
 
   renderTab(name, page, isTabActive, onPressHandler) {
     const { activeTextColor, inactiveTextColor, textStyle, } = this.props;
-    const textColor = isTabActive ? activeTextColor : inactiveTextColor;
-    const fontWeight = isTabActive ? Platform.OS === "ios"? '500':'bold' : 'normal';
+    const textColor = isTabActive ? Colors.bordercolor : Colors.newTextColor;
+    const fontWeight = isTabActive ? '700' : '400';
 
     return <Button
-      style={{flex: 1, }}
+      style={{ flex: 1, }}
       key={name}
       accessible={true}
       accessibilityLabel={name}
       accessibilityTraits='button'
       onPress={() => onPressHandler(page)}
     >
-      <View style={[styles.tab, this.props.tabStyle, ]}>
+      <View style={[styles.tab, this.props.tabStyle,]}>
         {
-          name == 'Recent' && isTabActive ? 
-          <Image style={{height:32,width:32}} source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : isTabActive ?  timelinecalendar: calender}/>
-          :
-          <Image source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : isTabActive ?  timelinecalendar: calender}/>
+          name == 'Recent' && isTabActive ?
+            <Image style={{ height: 32, width: 32 }} source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : isTabActive ? timelinecalendar : bottomcalendar} />
+            :
+            name == 'Edit' && isTabActive ?
+              <Image source={editOn} />
+              :
+              name == 'Prompts' && isTabActive ?
+              <Image source={promptOn} />
+              :
+              <Image  style={name == 'New' ?{ height: 56, width: 56 ,shadowOpacity: 0.05, shadowColor: '(46, 49, 62, 1)', shadowRadius: 9, shadowOffset: { width: -2, height: 2 }}:{}} source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : name == 'Edit' ? editOff : name == 'Prompts' ? promptsOff : name == 'New' ? newMemory : isTabActive ? timelinecalendar : bottomcalendar} />
         }
-        <Text style={[{color: textColor, fontWeight, fontfamily: 'Inter', fontSize:19, lineHeight:24 }, textStyle, ]}>
+        <View style={{ height: 8 }} />
+        <Text style={[{ color: textColor, fontWeight, fontFamily: fontFamily.Inter, fontSize: 19, lineHeight: 24 },]}>
           {name}
         </Text>
       </View>
@@ -77,10 +85,10 @@ const DefaultTabBar = createReactClass({
 
     const translateX = this.props.scrollValue.interpolate({
       inputRange: [0, 1],
-      outputRange: [0,  containerWidth / numberOfTabs],
+      outputRange: [0, containerWidth / numberOfTabs],
     });
     return (
-      <View style={[styles.tabs, {backgroundColor: this.props.backgroundColor,height:80, borderTopWidth:1,borderBottomWidth:0,borderTopColor:'#E2E4E9' }, this.props.style, ]}>
+      <View style={[styles.tabs, this.props.style, { backgroundColor: this.props.backgroundColor, }]}>
         {this.props.tabs.map((name, page) => {
           const isTabActive = this.props.activeTab === page;
           const renderTab = this.props.renderTab || this.renderTab;
@@ -110,14 +118,20 @@ const styles = StyleSheet.create({
     paddingBottom: 7,
   },
   tabs: {
-    height: 40,
+    height: 100,
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderWidth: 0,
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
+    paddingTop: 10,
     borderColor: '#ffffff',
+    width: '90%',
+    alignSelf: 'center',
+    borderTopWidth: 1,
+    borderBottomWidth: 0,
+    // borderTopColor: '#E2E4E9'
   },
 });
 

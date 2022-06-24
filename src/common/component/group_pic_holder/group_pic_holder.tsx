@@ -20,6 +20,7 @@ import {Url} from 'url';
 import {Account} from '../../loginStore';
 import PlaceholderImageView from '../placeHolderImageView';
 import Utility from '../../utility';
+import styles from './styles';
 
 type Props = {items: any};
 export default class GroupPicHolder extends Component<Props> {
@@ -28,17 +29,10 @@ export default class GroupPicHolder extends Component<Props> {
       let uri = Utility.getFileURLFromPublicURL(this.props.items[index].uri);
       return (
         <View
-          style={{
-            height: 20,
-            width: 20,
-            borderRadius: 10,
-            marginRight: 3,
-            backgroundColor: '#fff',
-            overflow: 'hidden',
-          }}>
+          style={styles.mainContainer}>
           <PlaceholderImageView
             uri={uri}
-            style={{height: 20, width: 20, borderRadius: 10, marginRight: 3}}
+            style={styles.placeholderStyle}
             profilePic={true}
           />
         </View>
@@ -46,15 +40,7 @@ export default class GroupPicHolder extends Component<Props> {
     } else {
       return (
         <View
-          style={{
-            height: 20,
-            width: 20,
-            borderRadius: 10,
-            marginRight: 3,
-            backgroundColor: '#fff',
-            borderColor: 'rgba(0,0,0,0.1)',
-            borderWidth: 1,
-          }}
+          style={styles.emptyContainer}
         />
       );
     }

@@ -1,9 +1,10 @@
-import {Dimensions} from 'react-native';
+import {Dimensions, Appearance} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import {call, take, cancelled} from 'redux-saga/effects';
 import {eventChannel} from 'redux-saga';
 import {Account} from './loginStore';
 import {constant} from '../common/constants';
+import DeviceInfo from 'react-native-device-info';
 import DefaultPreference from 'react-native-default-preference';
 import {MemoryActionKeys} from '../common/constants';
 
@@ -42,6 +43,8 @@ export default class Utility {
     isBackgroundNotification: false,
   };
   static isInternetConnected: boolean = false;
+  static currentTheme: string = '';
+  static fontScale: any = 1;
   static publicURL = '';
   static unreadNotification: any = {};
   static tabRefDash: any = null;
@@ -331,6 +334,13 @@ export default class Utility {
     return value * (Dimensions.get('window').width / constant.deviceWidth);
   };
 
+  static getDeviceWidth = () =>{
+    return Dimensions.get('window').width;
+  }
+  static getDeviceHeight = () =>{
+    return Dimensions.get('window').height;
+  }
+
   static heightRatio = (value: any) => {
     return value * (Dimensions.get('window').height / constant.deviceHeight);
   };
@@ -357,6 +367,19 @@ export function* networkConnectivitySaga() {
             channel.close();
         }
     }*/
+}
+
+export function themechanges(data:string) {
+  Utility.currentTheme = data;
+  let theme = Appearance.addChangeListener((listener) =>{
+    Utility.currentTheme = listener.colorScheme;
+  }) 
+}
+
+export function getFontScale() {
+   DeviceInfo.getFontScale().then((fontScale) => {
+    Utility.fontScale = fontScale;
+  });
 }
 
 /*export function createNetworkChangeChannel() {

@@ -18,7 +18,7 @@ import {
 import ImageZoom from 'react-native-image-pan-zoom';
 import styles from './image-viewer.style';
 import {IImageInfo, IImageSize, Props, State} from './image-viewer.type';
-
+import stylesnew from './styles'
 export default class ImageViewer extends React.Component<Props, State> {
   public static defaultProps = new Props();
   public state = new State();
@@ -211,8 +211,8 @@ export default class ImageViewer extends React.Component<Props, State> {
       () => {
         try {
           const data = (Image as any).resolveAssetSource(image.props.source);
-          imageStatus.width = data.width;
-          imageStatus.height = data.height;
+          imageStatus.width = data.width?data.width:'';
+          imageStatus.height = data.height?data.height:'';
           imageStatus.status = 'success';
           saveImageSize();
         } catch (newError) {
@@ -760,11 +760,9 @@ export default class ImageViewer extends React.Component<Props, State> {
     return (
       <View
         onLayout={this.handleLayout}
-        style={{
-          flex: 1,
-          overflow: 'hidden',
+        style={[stylesnew.overlayStyle,{
           ...this.props.style,
-        }}>
+        }]}>
         {childs}
       </View>
     );

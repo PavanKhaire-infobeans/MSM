@@ -106,7 +106,7 @@ class NotificationView extends React.Component<Props> {
             <NavigationBar title={'Notifications'} showClose={true} />
             {/* <NavigationBar title={TabItems.Notifications}/> */}
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <FlatList

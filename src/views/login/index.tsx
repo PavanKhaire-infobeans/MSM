@@ -4,7 +4,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   TextInput,
-  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
   DeviceEventEmitter,
   Keyboard,
   Animated,
@@ -15,34 +15,39 @@ import {
   TouchableHighlight,
   Alert,
   Platform,
+  ImageBackground,
+  TouchableWithoutFeedback,
+  KeyboardType,
+  KeyboardEvent,
+  ScrollView,
 } from 'react-native';
 import Text from '../../common/component/Text';
 import CommunityBanner from '../../common/component/community/communityBanner';
-import {styles} from './designs';
-import {SubmitButton} from '../../common/component/button';
+import { styles } from './designs';
+import { SubmitButton } from '../../common/component/button';
 import {
   LoginControllerProtocol,
   LoginController,
   LoginViewProtocol,
   Props,
 } from './loginController';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   LoginState,
   LoginServiceStatus,
   LoginInstanceStatus,
 } from './loginReducer';
 import TextField from '../../common/component/textField';
-import {Size, Colors, fontSize} from '../../common/constants';
-import {LoginStore, Account} from '../../common/loginStore';
-import {UserData} from '../../common/loginStore/database';
-import {Actions} from 'react-native-router-flux';
-import {UserAccount} from '../menu/reducer';
+import { Size, Colors, fontSize, fontFamily, CommonTextStyles } from '../../common/constants';
+import { LoginStore, Account } from '../../common/loginStore';
+import { UserData } from '../../common/loginStore/database';
+import { Actions } from 'react-native-router-flux';
+import { UserAccount } from '../menu/reducer';
 //@ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
 import GetFormData from '../registration/getFormData';
 import Utility from '../../common/utility';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import DeviceInfo from 'react-native-device-info';
 import CommonInstanceListsSelection, {
@@ -51,12 +56,16 @@ import CommonInstanceListsSelection, {
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {checkbox_active, checkbox, google_icon, apple_icon} from '../../images';
+import { checkbox_active, checkbox, google_icon, apple_icon } from '../../images';
 // @ts-ignore
 import ToggleSwitch from 'toggle-switch-react-native';
 import EventManager from '../../common/eventManager';
-import {RESET_ON_LOGIN} from '../dashboard/dashboardReducer';
+import { RESET_ON_LOGIN, SET_KEYBOARD_HEIGHT } from '../dashboard/dashboardReducer';
+import { arrowRightCircle, loginBack, Rectangle } from '../../../app/images';
 export const kRegSignUp = 'Registration SignUp';
+import LinearGradient from 'react-native-linear-gradient';
+import Styles from './styles';
+import MessageDialogue from '../../common/component/messageDialogue';
 export enum loginType {
   googleLogin = 'Google',
   appleLogin = 'Apple',
@@ -76,10 +85,11 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 
   //Flag to check if user had already logged in
   dataWasStored?: string = null;
+  keyheightsKey: number;
 
   //User state
   state = {
-    _isRemeberMe: true,
+    _isRemeberMe: false,
     username: '',
     password: '',
     userNameError: {
@@ -95,7 +105,30 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     isVisible: false,
     instanceData: [],
     isDisabledAccount: false,
+    keyboardHeight: 0
   };
+
+  moveOnYAxis = new Animated.Value(0);
+
+  startMoveOnYAxis = () => {
+    Animated.timing(this.moveOnYAxis, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  startMoveDownYAxis = () => {
+    Animated.timing(this.moveOnYAxis, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  messageRef: any;
+  keyboardDidShowListener: any;
+  keyboardDidHideListener: any;
 
   navBar: NavigationHeaderSafeArea = null;
   /**
@@ -143,7 +176,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     Alert.alert(JSON.stringify(test));
   }
   loginToSelected = (selectedCommunity: any) => {
-    const {username, password} = this.state;
+    const { username, password } = this.state;
     DefaultPreference.get('firebaseToken').then(
       (value: any) => {
         this.props.loginServiceCall({
@@ -164,6 +197,17 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       },
     );
   };
+
+  _show = (message: any, color: any) => {
+    this.messageRef && this.messageRef._show({ message: message, color: color })
+    setTimeout(() => {
+      this.messageRef && this.messageRef._hide();
+    }, 4000);
+  }
+
+  _hide = () => {
+    this.messageRef && this.messageRef._hide();
+  }
 
   componentDidMount() {
     LoginStore.listAllAccounts()
@@ -188,6 +232,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       .catch((err: Error) => {
         //console.log(err);
       });
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
 
   updateState(state: object, showErrorMessage?: boolean, msgObject?: string) {
@@ -197,29 +243,75 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     }
   }
 
+  _keyboardDidShow = (e) => {
+    try {
+      const { height, screenX, screenY, width } = e.endCoordinates
+      // console.log(height)
+
+      if (height) {
+        // alert( e.endCoordinates.height)
+        // this.keyheightsKey = (height);
+        // this.props.updateKeyboardHeight(height)
+        this.setState({
+          keyboardHeight: height
+        }, () => this.startMoveOnYAxis())
+      }
+
+    } catch (error) {
+      console.warn(error)
+
+    }
+  }
+  _keyboardDidHide = () => {
+    this.setState({
+      keyboardHeight: 0
+    }, () => this.startMoveDownYAxis())
+  }
+
   showErrorMessage = (show: boolean, message?: string) => {
     let height = 0;
     if (show) {
-      height = 70;
-      this.props.navBar._show(message, Colors.ErrorColor);
+      // height = 70;
+      this.messageRef._show(message, Colors.ErrorColor);
+      setTimeout(() => {
+        this.messageRef && this.messageRef._hide();
+      }, 4000);
+      Alert.alert(message)
     } else {
-      this.props.navBar._hide();
+      this.messageRef._hide();
     }
-    this.updateState({errorViewHeight: height});
+    this.updateState({ errorViewHeight: height });
   };
 
   componentWillUnmount() {
-    this.setState({_isRemeberMe: true});
+    this.setState({ _isRemeberMe: false });
     this.showErrorMessage(false);
+    Keyboard.removeAllListeners(this.keyboardDidShowListener)
+    Keyboard.removeAllListeners(this.keyboardDidHideListener)
   }
 
   selectedCommunity: Account = new Account();
 
   render() {
+    // let keyboardHeight = this.state.keyboardHeight
+    const yVal = this.moveOnYAxis.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [0, -(this.state.keyboardHeight*0.8), -(this.state.keyboardHeight*0.8)],
+    });
+
+    const animStyle = {
+      transform: [
+        {
+          translateY: yVal,
+        },
+      ],
+    };
+
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={{flex: 1, alignItems: 'center'}}>
-          <Modal
+      <View style={styles.container} onTouchStart={() => { Keyboard.dismiss() }}>
+        <ImageBackground source={Rectangle} resizeMode='cover' style={{ flex: 1, height: '100%', width: '100%', alignItems: 'center' }}>
+
+          {/* <Modal
             animationType={'slide'}
             transparent={false}
             visible={this.state.isVisible}
@@ -239,7 +331,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
               }
               isDisabledAccount={this.state.isDisabledAccount}
             />
-          </Modal>
+          </Modal> */}
           {/*<NavigationHeaderSafeArea height={0} ref={(ref)=> this.navBar = ref} showCommunity={false} cancelAction={()=> Actions.pop()} 
                                       showRightText={true} isWhite={false}/>	*/}
           {/* <TouchableWithoutFeedback
@@ -247,59 +339,117 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 					onPress={() => {
 						Keyboard.dismiss();
 					}}> */}
-          <View style={styles.innerContainer}>
-            <View style={styles.loginContainer}>
-              <KeyboardAwareScrollView
-                onScroll={() => Keyboard.dismiss()}
-                keyboardShouldPersistTaps={'handled'}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                style={{
-                  width: Dimensions.get('window').width,
-                  height: '100%',
-                  padding: 15,
-                }}>
+
+          <LinearGradient
+            // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+            // locations={[0, 0.6]}
+            colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.6)']}
+            style={{ height: '100%', width: '100%' }}>
+            <SafeAreaView>
+              <MessageDialogue ref={(ref: any) => this.messageRef = ref} />
+              <View
+              // onScroll={() => { Keyboard.dismiss() }}
+              >
+
+                <View style={{ height: 77, width: Utility.getDeviceWidth() - 48, flexDirection: 'row', justifyContent: 'space-between', marginLeft: 24, marginTop: 68 }}>
+                  <TouchableWithoutFeedback onPress={() => Actions.pop()}><Image source={loginBack} /></TouchableWithoutFeedback>
+                  <Text style={{ fontWeight: '500', ...fontSize(31), lineHeight: 45, fontFamily: fontFamily.Lora, color: Colors.bordercolor, textAlign: 'center' }}>Login</Text>
+                  <View style={{ width: 40 }} />
+                </View>
+
+                <View style={Styles.separatorHeightStyle16} />
+
                 {/** Commuity banner UI */}
                 {/* <View style={styles.communityBanner}>
 									<CommunityBanner communityInfo={this.selectedCommunity} />
 								</View> */}
-                <TextField
-                  errorMessage={this.state.userNameError.text}
-                  showError={this.state.userNameError.error}
-                  reference={ref => (this._usernameField = ref)}
-                  onSubmitEditing={() => {
-                    this._passwordField && this._passwordField.focus();
-                  }}
-                  value={this.state.username}
-                  placeholder="Email Address"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  onChange={(text: any) =>
-                    this.controller.onTextChange('username', text)
-                  }
-                />
-                <TextField
-                  passwordToggle={true}
-                  errorMessage={this.state.passwordError.text}
-                  showError={this.state.passwordError.error}
-                  reference={ref => (this._passwordField = ref)}
-                  value={this.state.password}
-                  placeholder="Password"
-                  secureTextEntry={true}
-                  onSubmitEditing={this.controller.onClick.bind(
-                    this.controller,
-                  )}
-                  returnKeyType="go"
-                  onChange={(text: any) =>
-                    this.controller.onTextChange('password', text)
-                  }
-                />
+                <View style={{ height: Utility.getDeviceHeight() * 0.65, justifyContent: 'space-between' }}>
+
+                  <View style={{ width: Utility.getDeviceWidth() - 48, marginLeft: 24 }}>
+
+                    <Text style={[CommonTextStyles.fontWeight500Size13Inter, { marginBottom: 4, marginLeft: 8, color: Colors.newTextColor }]}>
+                      EMAIL OR USERNAME
+                    </Text>
+
+                    <TextField
+                      errorMessage={this.state.userNameError.text}
+                      showError={this.state.userNameError.error}
+                      reference={ref => (this._usernameField = ref)}
+                      onSubmitEditing={() => {
+                        this._passwordField && this._passwordField.focus();
+                      }}
+                      value={this.state.username}
+                      placeholder="Email or username..."
+                      keyboardType="email-address"
+                      returnKeyType="next"
+                      onChange={(text: any) =>
+                        this.controller.onTextChange('username', text)
+                      }
+                    />
+                    {/* <View style={Styles.separatorHeightStyle16} /> */}
+                    <Text style={[CommonTextStyles.fontWeight500Size13Inter, { marginBottom: 4, paddingLeft: 8, color: Colors.newTextColor }]}>
+                      PASSWORD
+                    </Text>
+                    <TextField
+                      passwordToggle={true}
+                      errorMessage={this.state.passwordError.text}
+                      showError={this.state.passwordError.error}
+                      reference={ref => (this._passwordField = ref)}
+                      value={this.state.password}
+                      placeholder="Password..."
+                      secureTextEntry={true}
+                      onSubmitEditing={this.controller.onClick.bind(
+                        this.controller,
+                      )}
+                      returnKeyType="go"
+                      onChange={(text: any) =>
+                        this.controller.onTextChange('password', text)
+                      }
+                    />
+                    <View style={{height:10}}/>
+                  </View>
+
+                  {/* <View
+                  // behavior={Platform.OS === "ios" ? "padding" : "height"}
+                  // keyboardVerticalOffset={60}
+                  style={{
+                    width: Utility.getDeviceWidth() - 48,
+                    marginLeft: 24,
+                    height: 380 - this.state.keyboardHeight
+                  }}> */}
+                  <Animated.View style={[{
+                    // height: 380,
+                    // padding: 24,
+                    // flex: 1,
+                    width: Utility.getDeviceWidth() - 48,
+                    marginLeft: 24,
+                    // backgroundColor: 'red',
+                    justifyContent: "flex-end"
+                  }, animStyle]} >
+
+                    <TouchableWithoutFeedback
+                      // disabled={this.state.username != '' && this.state.password != ''}
+                      onPress={this.controller.onClick.bind(this.controller)}
+                    >
+                      <View style={[Styles.loginSSOButtonStyle, {
+                        backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 0.5, flexDirection: 'row'
+                      }]}>
+                        <Text style={[CommonTextStyles.fontWeight400Size19Inter, { color: Colors.white, marginRight: 9.67 }]}>
+                          Login
+                        </Text>
+                        <Image source={arrowRightCircle} />
+
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </Animated.View>
+
+                </View>
                 {/** Sign In section */}
-                <TouchableHighlight
+                {/* <TouchableHighlight
                   underlayColor={'#ffffffff'}
                   style={styles.forgotPassword}
                   onPress={() =>
-                    this.setState({_isRemeberMe: !this.state._isRemeberMe})
+                    this.setState({ _isRemeberMe: !this.state._isRemeberMe })
                   }>
                   <View
                     style={[
@@ -310,7 +460,6 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                         justifyContent: 'space-between',
                       },
                     ]}>
-                    {/* <Image source={this.state._isRemeberMe ? checkbox_active : checkbox} style={{height: 14, width: 14}}></Image> */}
                     <Text
                       style={{
                         fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
@@ -329,22 +478,15 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                       }}
                       size="medium"
                       onToggle={(isOn: any) => {
-                        this.setState({_isRemeberMe: isOn});
+                        this.setState({ _isRemeberMe: isOn });
                       }}
                     />
                   </View>
                 </TouchableHighlight>
-                <SubmitButton
-                  style={{
-                    backgroundColor: Colors.NewTitleColor,
-                    ...fontSize(22),
-                  }}
-                  text="Login"
-                  onPress={this.controller.onClick.bind(this.controller)}
-                />
+                */}
 
                 {/** Forgot Passwrod button */}
-                <View style={styles.forgotPasswordContainer}>
+                {/* <View style={styles.forgotPasswordContainer}>
                   <TouchableOpacity
                     style={styles.forgotPassword}
                     onPress={() => {
@@ -360,96 +502,18 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                       Forgot Password?
                     </Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
 
-                {Platform.OS == 'ios' &&
-                  (Platform.Version >= 13 || Platform.Version >= '13') && (
-                    <TouchableHighlight
-                      underlayColor={'#ffffff99'}
-                      onPress={this.controller.onClickAppleSignIn.bind(
-                        this.controller,
-                      )}>
-                      <View
-                        style={{
-                          marginTop: Size.byWidth(16),
-                          width: '100%',
-                          borderWidth: 1,
-                          borderColor: '#7c7c7c',
-                          height: Size.byHeight(42),
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          flexDirection: 'row',
-                          borderRadius: Size.byWidth(5),
-                          backgroundColor: '#fff',
-                        }}>
-                        <Image
-                          source={apple_icon}
-                          style={{tintColor: '#5c5c5c'}}
-                        />
-                        <Text
-                          style={{
-                            marginLeft: 10,
-                            color: Colors.TextColor,
-                            fontWeight: Platform.OS === 'ios' ? '400' : 'bold',
-                            ...fontSize(20),
-                          }}>
-                          Sign in with Apple
-                        </Text>
-                      </View>
-                    </TouchableHighlight>
-                  )}
 
-                <TouchableHighlight
-                  underlayColor={'#ffffff99'}
-                  onPress={this.controller.onClickGoogleSignIn.bind(
-                    this.controller,
-                  )}>
-                  <View
-                    style={{
-                      marginTop: Size.byWidth(16),
-                      width: '100%',
-                      borderWidth: 1,
-                      borderColor: '#7c7c7c',
-                      height: Size.byHeight(42),
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexDirection: 'row',
-                      borderRadius: Size.byWidth(5),
-                      backgroundColor: '#fff',
-                    }}>
-                    <Image source={google_icon} />
-                    <Text
-                      style={{
-                        marginLeft: 10,
-                        color: Colors.TextColor,
-                        fontWeight: Platform.OS === 'ios' ? '400' : 'bold',
-                        ...fontSize(20),
-                      }}>
-                      Sign in with Google
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-                {/** Join now UI */}
-                {/* <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: Size.byWidth(32) }}>
-									<Text style={{ alignContent: "center", ...fontSize(Size.byWidth(18)) }}>{"Not a member? "}</Text>
-									<TouchableOpacity
-										style={styles.forgotPassword}
-										onPress={() => {
-											if(Utility.isInternetConnected)	{
-												new GetFormData().callService("replace")
-											} else{
-												No_Internet_Warning()
-											}
-										}}>
-										<Text style={{ fontWeight: "600", color: Colors.ThemeColor, ...fontSize(Size.byWidth(18)) }}>Join now</Text>
-									</TouchableOpacity>
-								</View> */}
-              </KeyboardAwareScrollView>
-            </View>
-          </View>
+                {/* </View> */}
+              </View>
+              {/* </View> */}
+              {/* </View> */}
+            </SafeAreaView>
+          </LinearGradient>
           {/* </TouchableWithoutFeedback> */}
-        </View>
-      </SafeAreaView>
+        </ImageBackground>
+      </View>
     );
   }
 }
@@ -458,8 +522,9 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
  * Redux Map State
  * @param state
  */
-const mapState = (state: {loginStatus: LoginState}) => ({
+const mapState = (state: { loginStatus: LoginState, dashboardReducer }) => ({
   loginStatus: state.loginStatus,
+  keyboardHeight: state.dashboardReducer.keyBoardHeight
 });
 
 /**
@@ -468,12 +533,13 @@ const mapState = (state: {loginStatus: LoginState}) => ({
  */
 const mapDispatch = (dispatch: Function) => ({
   loginServiceCall: (params: object) =>
-    dispatch({type: LoginServiceStatus.RequestStarted, payload: params}),
+    dispatch({ type: LoginServiceStatus.RequestStarted, payload: params }),
   fetchLoginAccounts: (params: object) =>
-    dispatch({type: LoginInstanceStatus.RequestStarted, payload: params}),
-  setUser: (payload: UserData) => dispatch({type: UserAccount.Store, payload}),
-  clean: () => dispatch({type: LoginServiceStatus.Ended}),
-  clearDashboard: () => dispatch({type: RESET_ON_LOGIN}),
+    dispatch({ type: LoginInstanceStatus.RequestStarted, payload: params }),
+  setUser: (payload: UserData) => dispatch({ type: UserAccount.Store, payload }),
+  clean: () => dispatch({ type: LoginServiceStatus.Ended }),
+  clearDashboard: () => dispatch({ type: RESET_ON_LOGIN }),
+  updateKeyboardHeight: (params: number) => dispatch({ type: SET_KEYBOARD_HEIGHT, payload: params }),
 });
 
 export default connect(mapState, mapDispatch)(Login);

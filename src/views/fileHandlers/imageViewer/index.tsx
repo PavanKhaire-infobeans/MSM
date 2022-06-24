@@ -33,6 +33,7 @@ import ImageViewerWithZoom from '../../../common/component/ImageZoomViewer/src/i
 import {Modal} from 'react-native';
 //@ts-ignore
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Utility from '../../../common/utility';
 type Props = {[x: string]: any};
 type State = {[x: string]: any};
 
@@ -184,7 +185,7 @@ export default class ImageViewer extends React.Component<Props> {
                         style={{top: 0, position:"absolute", backgroundColor:"red", height: "100%", width:"100%"}}
                       />                             */}
             {/* <Modal visible={true} transparent={true}> */}
-            <StatusBar barStyle={'dark-content'} />
+            <StatusBar barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
 
             <ImageViewerWithZoom
               style={{marginBottom: 10, backgroundColor: 'transparent'}}

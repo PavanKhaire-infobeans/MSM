@@ -7,6 +7,7 @@ import {backBtn, navBarCrossIconWhite, mindpopBarIcon} from '../../../images';
 import {connect} from 'react-redux';
 import {Colors, fontSize} from '../../../common/constants';
 import NavigationHeader from '../../../common/component/navigationHeader';
+import { Actions } from 'react-native-router-flux';
 
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
@@ -93,7 +94,8 @@ class MindPopNavigationBar extends React.Component<{[x: string]: any}> {
       <TouchableOpacity
         style={[styles.leftButtonTouchableContainer]}
         testID={testID.leftButtons.menu}
-        onPress={() => action()}>
+        onPress={() => Actions.dashBoard()}>
+{/* action() */}
         <Image
           style={{height: 28, width: 28}}
           resizeMode="center"

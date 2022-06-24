@@ -218,7 +218,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
               saveValues={this.saveValue}
             />
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <TouchableHighlight

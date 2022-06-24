@@ -25,6 +25,7 @@ import NavigationBarForEdit from '../../common/component/navigationBarForEdit';
 import {Actions} from 'react-native-router-flux';
 import {Colors, fontSize} from '../../common/constants';
 import {kImage, kAudio, kPDF} from './componentsMemoryDetails';
+import Utility from '../../common/utility';
 
 type Props = {[x: string]: any};
 export default class FilesDetail extends React.Component<Props> {
@@ -59,7 +60,7 @@ export default class FilesDetail extends React.Component<Props> {
         />
         <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <ScrollView>

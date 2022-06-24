@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   View,
@@ -11,15 +11,17 @@ import {
   Alert,
   Keyboard,
   ActivityIndicator,
-  RefreshControl,
+  ImageBackground,
   TouchableHighlight,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
+import LinearGradient from 'react-native-linear-gradient';
+import { Actions } from 'react-native-router-flux';
+import { plus, sampleimage } from '../../../app/images';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {TabItems} from '../../common/component/TabBarIcons';
+import { TabItems } from '../../common/component/TabBarIcons';
 import TextNew from '../../common/component/Text';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
-import {Colors, decode_utf8, fontSize} from '../../common/constants';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import { Colors, decode_utf8, fontFamily, fontSize } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import {
@@ -33,7 +35,7 @@ import {
   CreateUpdateMemory,
   promptIdListener,
 } from '../createMemory/createMemoryWebService';
-import {DefaultDetailsMemory} from '../createMemory/dataHelper';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
 import NavigationBar from '../dashboard/NavigationBar';
 import edit from '../mindPop/edit';
 import {
@@ -42,9 +44,11 @@ import {
   kHidePrompt,
   HidePrompt,
 } from '../myMemories/myMemoriesWebService';
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 var promptList: any[] = [];
+var promptCategoriesArray: any[] = [];
+
 var selectedIndex = '';
 export default class PromptsView extends React.Component<State, Props> {
   state: State = {
@@ -53,7 +57,7 @@ export default class PromptsView extends React.Component<State, Props> {
     loadMore: 0,
     items: [],
     loading: false,
-    prompt_count: 0 
+    prompt_count: 0
   };
   memoryFromPrompt: EventManager;
   promptsListListener: EventManager;
@@ -66,37 +70,87 @@ export default class PromptsView extends React.Component<State, Props> {
     this.scrollFlatlistListener = EventManager.addListener(
       'scrollFlatlist',
       () => {
-        this.flatListRef.scrollToOffset({offset: 0, animated: false});
+        this.flatListRef.scrollToOffset({ offset: 0, animated: false });
       },
     );
     this.promptsListListener = EventManager.addListener(
       kPromptsList,
       (fetched?: boolean, ifLoadMore?: boolean, fetchPromptsList?: any) => {
         if (fetched) {
-          let values: {id: string; desc: any}[] = [];
-          this.setState({ 
-                          loadMore: fetchPromptsList.load_more,
-                          categoriesArray: fetchPromptsList.prompt_categories
-                        });
+
+          // console.log("data: ",JSON.stringify(fetchPromptsList))
+
+          debugger;
+          let values: { id: string; desc: any, prompt_category?: any, prompt_image?: any }[] = [];
+          // this.setState({
+          //   loadMore: fetchPromptsList.load_more,
+          //   categoriesArray: fetchPromptsList.prompt_categories
+          // });
+          if (fetchPromptsList.prompt_categories && Object.keys(fetchPromptsList.prompt_categories).length) {
+
+            promptCategoriesArray = Object.values(fetchPromptsList.prompt_categories);
+
+          }
+
           promptList = fetchPromptsList.memory_prompt_data;
-          this.setState({offsetVal: fetchPromptsList.prompt_offset, prompt_count : fetchPromptsList.prompt_count});
-          promptList.forEach(element => {
-            for (var key in element) {
-              values.push({id: key, desc: element[key]});
-            }
-          });
-          ;
+          // this.setState({ offsetVal: fetchPromptsList.prompt_offset, prompt_count: fetchPromptsList.prompt_count });
+          let promptWithCategory: any[] = fetchPromptsList.memory_prompt_data_detail, promptWithCategoryValues: any = [];
+
+          if (promptWithCategory && promptWithCategory.length) {
+            // promptWithCategoryValues = Object.values(fetchPromptsList.memory_prompt_data_detail);
+
+            promptWithCategory.forEach((element, index) => {
+              let categoriesArray: any = [];
+
+              for (var key in element) {
+                if (element[key]['prompt_category'] && element[key]['prompt_category'].length) {
+                  element[key]['prompt_category'].forEach(promptCategory => {
+                    let selectedCategory = (promptCategoriesArray.filter((item) => item.value == promptCategory));
+                    if (selectedCategory.length) {
+                      categoriesArray = [...categoriesArray, ...selectedCategory];
+                    }
+                  });
+                }
+                values.push({ id: key, desc: element[key]['title'], prompt_category: categoriesArray, prompt_image: element[key]['prompt_image'] });
+              }
+            });
+          }
+          // console.log("data >> ", JSON.stringify(values));
+
+          // promptList.forEach(element => {
+          //   for (var key in element) {
+          //     values.push({ id: key, desc: element[key] });
+          //   }
+          // });
+
           if (ifLoadMore) {
             this.setState({
               items: this.state.items.concat(values),
+              loadMore: fetchPromptsList.load_more,
+              categoriesArray: fetchPromptsList.prompt_categories,
+              offsetVal: fetchPromptsList.prompt_offset,
+              prompt_count: fetchPromptsList.prompt_count
+            }, () => {
+              // console.log("loadmore: ",JSON.stringify(this.state.items))
             });
-          } else {
-            this.setState({items: values});
+
           }
-          this.setState({loading: false});
+          else {
+            this.setState({
+              items: values,
+              loadMore: fetchPromptsList.load_more,
+              categoriesArray: fetchPromptsList.prompt_categories,
+              offsetVal: fetchPromptsList.prompt_offset,
+              prompt_count: fetchPromptsList.prompt_count
+            }, () => {
+              // console.log("data: ",JSON.stringify(this.state.items))
+            });
+          }
+          this.setState({ loading: false });
           loaderHandler.hideLoader();
-        } else {
-          this.setState({loading: false});
+        }
+        else {
+          this.setState({ loading: false });
           loaderHandler.hideLoader();
         }
       },
@@ -108,7 +162,7 @@ export default class PromptsView extends React.Component<State, Props> {
         if (fetched) {
           var array = [...this.state.items]; // make a separate copy of the array
           const filteredItems = array.filter(item => item.id !== promptId);
-          this.setState({items: filteredItems});
+          this.setState({ items: filteredItems });
           loaderHandler.hideLoader();
         } else {
           loaderHandler.hideLoader();
@@ -119,13 +173,13 @@ export default class PromptsView extends React.Component<State, Props> {
 
   componentDidMount() {
     if (this.props.fromDeepLinking) {
-      
+
       this.convertToMemory(this.props.nid, this.props.title)
     }
-    else{
-      this.setState({loading: true});
+    else {
+      this.setState({ loading: true });
       console.log('on mounting', this.state.categoriesArray);
-      GetPrompts(this.state.categoriesArray, false, this.state.offsetVal);  
+      GetPrompts(this.state.categoriesArray, false, this.state.offsetVal);
     }
   }
 
@@ -143,7 +197,7 @@ export default class PromptsView extends React.Component<State, Props> {
     //it will show indicator at the bottom of the list when data is loading otherwise it returns null
     if (this.state.loadMore == 0) return null;
     return (
-      <View style={{width: '100%', height: 40, marginTop: 20}}>
+      <View style={{ width: '100%', height: 40, marginTop: 20 }}>
         <ActivityIndicator color={'white'} />
       </View>
     );
@@ -151,22 +205,22 @@ export default class PromptsView extends React.Component<State, Props> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <SafeAreaView
           style={{
             width: '100%',
             flex: 0,
-            backgroundColor: Colors.NewThemeColor,
+            backgroundColor: Colors.timeLinebackground,
           }}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1, backgroundColor: Colors.NewThemeColor}}>
-            <NavigationBar title={TabItems.Prompts} />
+        <SafeAreaView style={{ width: '100%', flex: 1, backgroundColor: Colors.timeLinebackground }}>
+          <View style={{ flex: 1, backgroundColor: Colors.NewThemeColor }}>
+            {/* <NavigationBar title={TabItems.Prompts} /> */}
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
-            {!this.state.loading && (
+            {/* {!this.state.loading && (
               <View
                 style={{
                   borderTopColor: '#fff',
@@ -212,7 +266,7 @@ export default class PromptsView extends React.Component<State, Props> {
                   </View>
                 </TouchableOpacity>
               </View>
-            )}
+            )} */}
             <FlatList
               ref={ref => {
                 this.flatListRef = ref;
@@ -224,24 +278,29 @@ export default class PromptsView extends React.Component<State, Props> {
               }}
               maxToRenderPerBatch={50}
               removeClippedSubviews={true}
+              ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
               keyExtractor={(_, index: number) => `${index}`}
-              style={{width: '100%', backgroundColor: Colors.NewThemeColor}}
+              style={{ width: '100%', backgroundColor: Colors.timeLinebackground }}
               renderItem={(item: any) => {
                 return (
-                  <View
-                    style={{
-                      margin: 10,
-                      width: '90%',
-                      borderRadius: 15,
-                      backgroundColor: '#FFFFFD',
-                      height: 200,
-                      borderWidth: 0,
-                      justifyContent: 'space-between',
-                      alignSelf: 'center',
-                      shadowOpacity: 0.2,
-                      elevation: 0.2,
-                    }}>
-                    <View>
+                  <>
+                    <View style={{ height: item?.index == 0 ? 16 : 0 }} />
+                    <View
+                      style={{
+                        // margin: 10,
+                        width: Utility.getDeviceWidth() - 48,
+                        borderRadius: 24,
+                        backgroundColor: Colors.white,
+                        height: 350,
+                        flex: 1,
+                        shadowColor: '#073562',
+                        shadowOffset: { height: 1, width: 0 },
+                        borderWidth: 0,
+                        alignSelf: 'center',
+                        shadowOpacity: 0.2,
+                        elevation: 0.2,
+                      }}>
+                      {/* <View>
                       <TouchableOpacity
                         underlayColor={'transparent'}
                         onPress={() => this.hidePrompt(item.item.id)}
@@ -252,52 +311,112 @@ export default class PromptsView extends React.Component<State, Props> {
                         }}>
                         <Image source={close_big}></Image>
                       </TouchableOpacity>
-                    </View>
-                    <View style={{flex: 1}}>
-                      <TextNew
-                        numberOfLines={3}
+                    </View> */}
+                      <View style={{ flex: 2, borderTopLeftRadius: 24, borderTopRightRadius: 24, }}>
+                        <ImageBackground borderTopLeftRadius={24} borderTopRightRadius={24} source={item.item.prompt_image ? {uri:item.item.prompt_image} : sampleimage} resizeMode='cover' style={{ flex: 2, height: '100%', width: '100%', borderTopLeftRadius: 24, borderTopRightRadius: 24, alignItems: 'center' }}>
+                          <LinearGradient
+                            // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+                            // locations={[0, 0.6]}
+                            colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
+                            style={{ height: '100%', width: '100%', borderTopLeftRadius: 24, borderTopRightRadius: 24 }}>
+                          </LinearGradient>
+                        </ImageBackground>
+                      </View>
+                      <View
                         style={{
-                          ...fontSize(21),
-                          color: '#373852',
-                          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                          marginLeft: 20,
-                          flex: 1,
-                          marginRight: 20,
-                          marginBottom: 16,
-                          textAlign: 'center',
-                          paddingTop: 15,
+                          flex: 3,
+                          justifyContent: 'space-between',
+                          alignContent: 'space-between'
                         }}>
-                        {item.item.desc}
-                      </TextNew>
-                    </View>
-                    <View>
-                      <TouchableOpacity
-                        onPress={() =>
-                          this.convertToMemory(item.item.id, item.item.desc)
-                        }>
-                        <View
+
+
+                        {item.item.prompt_category && item.item.prompt_category.length ?
+                          item.item.prompt_category.length === 1 ?
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                lineHeight: 14,
+                                marginBottom: 22,
+                                fontFamily: fontFamily.Inter,
+                                fontWeight: '500',
+                                color: Colors.newTextColor,
+                                textAlign: 'center',
+                              }}>
+                              {item.item.prompt_category[0].label}
+                            </Text>
+                            :
+                            item.item.prompt_category.map((category, categoryIndex) => (
+                              <Text
+                                style={{
+                                  fontSize: 14,
+                                  lineHeight: 14,
+                                  marginBottom: 22,
+                                  fontFamily: fontFamily.Inter,
+                                  fontWeight: '500',
+                                  color: Colors.newTextColor,
+                                  textAlign: 'center',
+                                }}>
+                                {category.label} {categoryIndex + 1 != item.item.prompt_category.length ? ',' : null}
+                              </Text>
+                            ))
+                          :
+                          null
+                        }
+
+                        <TextNew
+                          numberOfLines={3}
                           style={{
-                            flexDirection: 'row',
-                            backgroundColor: '#4EB79E',
-                            padding: 16,
-                            justifyContent: 'center',
-                            borderBottomLeftRadius: 15,
-                            borderBottomRightRadius: 15,
+                            fontSize: 22,
+                            lineHeight: 27.5,
+                            color: Colors.newDescTextColor,
+                            fontWeight: '600',
+                            // marginLeft: 20,
+                            flex: 1,
+                            // marginRight: 20,
+                            // marginBottom: 16,
+                            fontFamily: fontFamily.Lora,
+                            textAlign: 'center',
+                            paddingHorizontal: 15,
                           }}>
-                          <Image source={edit_prompt}></Image>
-                          <TextNew
-                            style={{
-                              ...fontSize(18),
-                              marginLeft: 5,
-                              fontWeight: '400',
-                              color: '#FDFDFD',
-                            }}>
-                            Add your Memory
-                          </TextNew>
+                          {item.item.desc}
+                        </TextNew>
+                        <View>
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.convertToMemory(item.item.id, item.item.desc)
+                            }>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                backgroundColor: Colors.timeLinebackground,
+                                marginHorizontal: 16,
+                                marginBottom: 24,
+                                height: 40,
+                                borderColor: Colors.bottomTabColor,
+                                borderWidth: 1,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 1000,
+                              }}>
+                              <Image source={plus}></Image>
+                              <TextNew
+                                style={{
+                                  fontSize: 14,
+                                  lineHeight: 17,
+                                  marginLeft: 5,
+                                  fontWeight: '500',
+                                  fontFamily: fontFamily.Inter,
+                                  color: Colors.newDescTextColor,
+                                }}>
+                                Answer Prompt
+                              </TextNew>
+                            </View>
+                          </TouchableOpacity>
                         </View>
-                      </TouchableOpacity>
+                      </View>
+
                     </View>
-                  </View>
+                  </>
                 );
               }}
               ListFooterComponent={this.renderFooter.bind(this)}
@@ -315,15 +434,16 @@ export default class PromptsView extends React.Component<State, Props> {
                 }}>
                 {this.state.loading ? (
                   <ActivityIndicator
-                    color={Colors.ThemeColor}
+                    color={Colors.newTextColor}
                     size="large"
-                    style={{flex: 1, justifyContent: 'center'}}
+                    style={{ flex: 1, justifyContent: 'center' }}
                   />
                 ) : (
                   <Text
                     style={{
                       ...fontSize(16),
-                      color: Colors.dullText,
+                      fontFamily: fontFamily.Inter,
+                      color: Colors.newDescTextColor,
                       textAlign: 'center',
                     }}>
                     There are no prompts to display at this moment
@@ -338,7 +458,7 @@ export default class PromptsView extends React.Component<State, Props> {
   }
   convertToMemory(id: any, title: any) {
     if (Utility.isInternetConnected) {
-      this.setState({selectedPrompt: parseInt(id)},()=>{
+      this.setState({ selectedPrompt: parseInt(id) }, () => {
         selectedIndex = id;
         loaderHandler.showLoader('Creating Memory...');
         let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
@@ -350,7 +470,7 @@ export default class PromptsView extends React.Component<State, Props> {
         CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
         Keyboard.dismiss();
       });
-      
+
     } else {
       No_Internet_Warning();
     }
@@ -362,7 +482,7 @@ export default class PromptsView extends React.Component<State, Props> {
       loaderHandler.hideLoader();
     }, 500);
     if (success) {
-      
+
       this.removeSelectedPrompt();
       Actions.push('createMemory', {
         editMode: true,
@@ -378,7 +498,7 @@ export default class PromptsView extends React.Component<State, Props> {
   removeSelectedPrompt() {
     var array = [...this.state.items]; // make a separate copy of the array
     const filteredItems = array.filter(item => item.id !== selectedIndex);
-    this.setState({items: filteredItems});
+    this.setState({ items: filteredItems });
   }
 
   hidePrompt(promptId: any) {
@@ -398,7 +518,7 @@ export default class PromptsView extends React.Component<State, Props> {
       {
         text: 'Cancel',
         style: 'cancel',
-        onPress: () => {},
+        onPress: () => { },
       },
     ]);
   }

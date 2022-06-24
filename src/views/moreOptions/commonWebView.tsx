@@ -23,6 +23,7 @@ import Text from '../../common/component/Text';
 import NavigationBar from '../dashboard/NavigationBar';
 import {TabItems} from '../../common/component/TabBarIcons';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import Utility from '../../common/utility';
 type Props = {[x: string]: any};
 
 export default class CommonWebView extends React.Component<Props> {
@@ -56,7 +57,7 @@ export default class CommonWebView extends React.Component<Props> {
         <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
           <View style={{flex: 1}}>
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             {/* <NavigationBar title={TabItems.AllMemories}/>             */}

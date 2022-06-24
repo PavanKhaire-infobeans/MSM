@@ -1,7 +1,7 @@
-import {kPublish, MonthObj} from '.';
-import {getValue, decode_utf8} from '../../common/constants';
-import {Account} from '../../common/loginStore';
-import {get} from 'http';
+import { kPublish, MonthObj } from '.';
+import { getValue, decode_utf8 } from '../../common/constants';
+import { Account } from '../../common/loginStore';
+import { get } from 'http';
 import collection from './collection';
 
 export const DefaultDetailsMemory = (title: any) => {
@@ -28,15 +28,39 @@ export const DefaultDetailsMemory = (title: any) => {
   return draftDetails;
 };
 
+export const DefaultDetailsWithoutTitleMemory = (title: any) => {
+  let description = title;
+  title = title.replace(/\n/g, ' ');
+  description = description.replace(/\n/g, '<br>');
+  if (title.length > 150) {
+    title = title.substring(0, 150);
+  }
+  let draftDetails = {
+    title: "my memory",
+    description: description,
+    memory_date: {
+      year: new Date().getFullYear(),
+      month:
+        MonthObj.month[new Date().getMonth() + MonthObj.serverMonthsCount].tid,
+      day: new Date().getDate(),
+    },
+    location: {
+      description: '',
+      reference: '',
+    },
+  };
+  return draftDetails;
+};
+
 export class CreateMemoryHelper {
   getDateOptions(fieldName: any, year: any) {
     let actions: Array<any> = [];
     if (fieldName == 'year') {
-      actions.push({key: 'Year*', text: 'Year*'});
+      // actions.push({ key: 'Year*', text: 'Year*' });
       let minYear = 1917;
       let lastYear = new Date().getFullYear();
       for (let i = lastYear; i >= minYear; i--) {
-        actions.push({key: i, text: i.toString()});
+        actions.push({ key: i, text: i.toString() });
       }
     } else if (fieldName == 'month') {
       if (parseInt(year) == new Date().getFullYear()) {
@@ -46,14 +70,14 @@ export class CreateMemoryHelper {
             let index = i;
             index - MonthObj.serverMonthsCount <= currentMonth
               ? actions.push({
-                  key: MonthObj.month[i].tid,
-                  text: MonthObj.month[i].name,
-                })
+                key: MonthObj.month[i].tid,
+                text: MonthObj.month[i].name,
+              })
               : actions.push({
-                  key: MonthObj.month[i].tid,
-                  text: MonthObj.month[i].name,
-                  disabled: true,
-                });
+                key: MonthObj.month[i].tid,
+                text: MonthObj.month[i].name,
+                disabled: true,
+              });
           } else {
             actions.push({
               key: MonthObj.month[i].tid,
@@ -63,11 +87,11 @@ export class CreateMemoryHelper {
         }
       } else {
         MonthObj.month.forEach((element: any) => {
-          actions.push({key: element.tid, text: element.name});
+          actions.push({ key: element.tid, text: element.name });
         });
       }
     } else if (fieldName == 'day') {
-      actions.push({key: 'Day', text: 'Day'});
+      actions.push({ key: 'Day', text: 'Day' });
       let min = 1;
       let max = 31;
       let limit = 31;
@@ -90,15 +114,15 @@ export class CreateMemoryHelper {
       if (
         year == new Date().getFullYear() &&
         MonthObj.selectedIndex ==
-          new Date().getMonth() + MonthObj.serverMonthsCount
+        new Date().getMonth() + MonthObj.serverMonthsCount
       ) {
         limit = new Date().getDate();
       }
       for (let i = min; i <= max; i++) {
         if (i > limit) {
-          actions.push({key: i, text: i.toString(), disabled: true});
+          actions.push({ key: i, text: i.toString(), disabled: true });
         } else {
-          actions.push({key: i, text: i.toString()});
+          actions.push({ key: i, text: i.toString() });
         }
       }
     }
@@ -121,11 +145,16 @@ export const DefaultCreateMemoryObj = (
   if (isOwner) {
     details = {
       title: decode_utf8(initialState.title.trim()),
-      memory_date: {
+      memory_date: initialState.date && initialState.date.year ? {
         year: initialState.date.year,
         month: initialState.date.month,
         day: initialState.date.day != 'Day' ? initialState.date.day : undefined,
-      },
+      } : undefined,
+      // {
+      //   year: initialState.date.year,
+      //   month: initialState.date.month,
+      //   day: initialState.date.day != 'Day' ? initialState.date.day : undefined,
+      // },
       location: initialState.location,
       nid: initialState.nid,
       share_option: initialState.shareOption,
@@ -141,10 +170,10 @@ export const DefaultCreateMemoryObj = (
         let tid = element.tid ? element.tid : element.nid;
         collection_tid.push(tid);
       });
-      details = {...details, collection_tid: collection_tid};
+      details = { ...details, collection_tid: collection_tid };
     }
     if (key == kPublish) {
-      details = {...details, action: kPublish};
+      details = { ...details, action: kPublish };
     }
     if (initialState.tags) {
       details = {
@@ -182,20 +211,20 @@ export const DefaultCreateMemoryObj = (
       }
     }
 
-    if (MonthObj.selectedIndex <= MonthObj.serverMonthsCount - 1) {
-      details.memory_date = {
-        ...details.memory_date,
-        season: MonthObj.month[MonthObj.selectedIndex].tid,
-      };
-    } else {
-      details.memory_date = {
-        ...details.memory_date,
-        month: MonthObj.month[MonthObj.selectedIndex].tid,
-        day: initialState.date.day != 'Day' ? initialState.date.day : undefined,
-      };
-    }
+    // if (MonthObj.selectedIndex <= MonthObj.serverMonthsCount - 1) {
+    //   details.memory_date = {
+    //     ...details.memory_date,
+    //     season: MonthObj.month[MonthObj.selectedIndex].tid,
+    //   };
+    // } else {
+    //   details.memory_date = {
+    //     ...details.memory_date,
+    //     month: MonthObj.month[MonthObj.selectedIndex].tid,
+    //     day: initialState.date.day != 'Day' ? initialState.date.day : undefined,
+    //   };
+    // }
   } else {
-    details = {description: description, nid: initialState.nid};
+    details = { description: description, nid: initialState.nid };
   }
   return details;
 };

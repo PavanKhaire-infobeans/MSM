@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import {
   Animated,
   EventSubscription,
@@ -8,34 +8,33 @@ import {
   Easing,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-export default class AccessoryView extends Component<
-  {style: ViewStyle},
-  {bottom: Animated.Value}
-> {
-  state = {
+
+const AccessoryView = (props: any)=>{
+  let state = {
     bottom: new Animated.Value(0),
   };
 
-  showSubscription?: EventSubscription = null;
-  hideSubscription?: EventSubscription = null;
+  let showSubscription: EventSubscription = null;
+  let hideSubscription: EventSubscription = null;
 
-  componentWillMount(): void {
-    this.showSubscription = Keyboard.addListener(
+  useEffect(()=>{
+    showSubscription = Keyboard.addListener(
       'keyboardWillShow',
-      this._onShow,
+      _onShow,
     );
-    this.hideSubscription = Keyboard.addListener(
+    hideSubscription = Keyboard.addListener(
       'keyboardWillHide',
-      this._onHide,
+      _onHide,
     );
-  }
 
-  componentWillUnmount(): void {
-    this.showSubscription.remove();
-    this.hideSubscription.remove();
-  }
+      return ()=>{
+        showSubscription.remove();
+        hideSubscription.remove();
+      }
 
-  _onShow = (event: {
+  },[]);
+
+  const _onShow = (event: {
     endCoordinates: {
       height: number;
       width: number;
@@ -43,7 +42,7 @@ export default class AccessoryView extends Component<
       screenY: number;
     };
   }) => {
-    Animated.timing(this.state.bottom, {
+    Animated.timing(state.bottom, {
       toValue:
         event.endCoordinates.height -
         (Platform.OS == 'ios' && DeviceInfo.hasNotch() ? 35 : 0),
@@ -52,22 +51,22 @@ export default class AccessoryView extends Component<
     }).start();
   };
 
-  _onHide = () => {
-    Animated.timing(this.state.bottom, {
+  const _onHide = () => {
+    Animated.timing(state.bottom, {
       toValue: 0,
       duration: 0,
     }).start();
   };
 
-  render() {
     return (
       <Animated.View
         style={[
-          {position: 'absolute', bottom: this.state.bottom},
-          this.props.style,
+          {position: 'absolute', bottom: state.bottom},
+          props.style,
         ]}>
-        {this.props.children}
+        {props.children}
       </Animated.View>
     );
-  }
 }
+
+export default AccessoryView;

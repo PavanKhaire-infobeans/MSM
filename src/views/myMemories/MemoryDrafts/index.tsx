@@ -316,7 +316,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           backgroundColor: 'black',
         }}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
         <View style={style.draftOptionsView}>

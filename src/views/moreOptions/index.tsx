@@ -18,6 +18,7 @@ import NavigationBar from '../dashboard/NavigationBar';
 import { TabItems } from '../../common/component/TabBarIcons';
 import { GetBlockedUsersAndMemory, kBlockedUsers } from '../myMemories/myMemoriesWebService';
 import DefaultPreference from 'react-native-default-preference';
+import Utility from '../../common/utility';
 
 type items = {
     title : string,
@@ -93,7 +94,7 @@ export default class MoreOptions extends React.Component <Props>{
                 <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>    
                 <View style={{flex: 1}}>
                 <NavigationBar title={"More Options"}/>
-            <StatusBar barStyle={'dark-content'} backgroundColor={Colors.NewThemeColor} />
+            <StatusBar barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} backgroundColor={Colors.NewThemeColor} />
                 <FlatList
                     data={this.Items}
                     keyExtractor={(_, index: number) => `${index}`}

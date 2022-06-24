@@ -321,7 +321,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
               backIcon={backBlkBtn}
             />
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewDarkThemeColor}
             />
             {(this.props.type == ListType.Login ||

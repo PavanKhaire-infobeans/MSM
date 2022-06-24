@@ -5,34 +5,16 @@ import {connect} from 'react-redux';
 
 import {rubbish} from '../../../../images';
 import {Colors, fontSize} from '../../../constants';
+import styles from './styles';
 
 class SelectionStatusBar extends Component<{[x: string]: any}> {
   render() {
     return (
       <View
-        style={{
-          width: '100%',
-          height: 53,
-          flexDirection: 'row',
-          backgroundColor: '#F3F3F3',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingLeft: 10,
-          paddingRight: 10,
-          borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
-          borderTopWidth: 1,
-        }}>
+        style={styles.container}>
         <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 26,
-            paddingLeft: 10,
-            paddingRight: 10,
-            backgroundColor: 'white',
-            borderRadius: 13,
-          }}>
-          <Text style={{...fontSize(16), color: '#909090'}}>
+          style={styles.subContainer}>
+          <Text style={styles.countTextStyle}>
             {this.props.selectedItemCount} Selected
           </Text>
         </View>

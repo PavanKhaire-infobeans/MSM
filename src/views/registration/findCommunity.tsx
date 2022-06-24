@@ -164,7 +164,7 @@ class FindCommunity extends Component<FindProps, State> {
       <SafeAreaView
         style={{flex: 1, alignItems: 'center', backgroundColor: '#fff'}}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
         {/* <TouchableHighlight onPress={() => Keyboard.dismiss()} underlayColor="#fff" style={{ width: "100%", flex: 1, alignItems: "center" }}> */}

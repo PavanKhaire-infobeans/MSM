@@ -118,7 +118,7 @@ class ForgotPassword extends React.Component<Props> {
             backIcon={backBlkBtn}
           />
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewDarkThemeColor}
           />
           <KeyboardAwareScrollView
@@ -290,6 +290,8 @@ class ForgotPassword extends React.Component<Props> {
       let response = await loginInstanceRequest(`${kAdmin}`, params)
         .then((response: Response) => response.json())
         .catch((err: any) => console.log(err));
+
+        console.log("response of instance is: ",JSON.stringify(response))
       if (response.ResponseCode == 200) {
         if (response.Response.length > 1) {
           Actions.push('commonInstanceListsSelection', {

@@ -8,7 +8,7 @@ import {
   View,
   FlatList,
   Dimensions,
-  StyleSheet,
+  Share,
   Image,
   TouchableHighlight,
   TouchableOpacity,
@@ -17,12 +17,14 @@ import {
   Keyboard,
   Platform,
   Animated,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   Colors,
   fontSize,
   encode_utf8,
   MemoryActionKeys,
+  fontFamily,
 } from './../../../../src/common/constants';
 import {
   GetPublishedMemories,
@@ -38,6 +40,7 @@ import {
 } from '../myMemoriesWebService';
 import { Like, Unlike, GetAllLikes } from '../../memoryDetails/detailsWebService';
 import DeviceInfo from 'react-native-device-info';
+import SelectDropdown from './../../../../src/common/component/SelectDropDown';
 
 import Utility from './../../../../src/common/utility';
 import {
@@ -81,11 +84,8 @@ import AudioPlayer, {
   kPrevious,
   kClosed,
 } from './../../../../src/common/component/audio_player/audio_player';
-import { any, element } from 'prop-types';
-import { type } from 'os';
-// import { ListType } from '../../dashboard/dashboardReducer';
 import MemoryListItem from './../../../components/memoryListItem';
-import * as Animatable from 'react-native-animatable';
+import styles from './styles';
 import { ListType } from '../../../../src/views/dashboard/dashboardReducer';
 import MemoryActionsSheet, { MemoryActionsSheetItem } from '../../../components/memoryActionsSheet';
 
@@ -101,6 +101,7 @@ var loadingDataFromServer = true;
 export const kPublishedMemoryUpdated = 'publishedMemoryUpdated';
 export default class PublishedMemory extends React.Component<Props, State> {
   _actionSheet: any | MemoryActionsSheet = null;
+  dropDown: any | MemoryActionsSheet = null;
   publishedMemoryListener: EventManager;
   publishedMemoryDataModel: PublishedMemoryDataModel;
   likeListener: EventManager;
@@ -188,12 +189,14 @@ export default class PublishedMemory extends React.Component<Props, State> {
     });
     this.setState({});
   };
+
   onRefresh = () => {
     this.setState({
       isRefreshing: true,
     });
     GetPublishedMemories('');
   };
+
   handleLoadMore = () => {
     // let draftCount = this.memoryDraftsDataModel.getMemoryDraftsCount();
     let draftCount = this.publishedMemoryDataModel.getMemoriesCount();
@@ -376,16 +379,11 @@ export default class PublishedMemory extends React.Component<Props, State> {
     return (
       <View style={{ flex: 1 }}>
         <SafeAreaView
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-          }}>
-          <View style={{ height: '100%', width: '100%' }}>
+          style={styles.container}>
+          <View style={styles.flatlistContainer}>
             <FlatList
               data={publishedMemoriesArray}
-              style={{ width: '100%', backgroundColor: Colors.NewThemeColor }}
+              style={styles.flatlistStyle}
               extraData={this.state}
               keyExtractor={(_, index: number) => `${index}`}
               onScroll={() => {
@@ -421,28 +419,16 @@ export default class PublishedMemory extends React.Component<Props, State> {
             />
             {publishedMemoriesArray.length == 0 && (
               <View
-                style={{
-                  position: 'absolute',
-                  height: '100%',
-                  width: '100%',
-                  alignContent: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'white',
-                  padding: 16,
-                }}>
+                style={styles.emptyContainer}>
                 {loadingDataFromServer ? (
                   <ActivityIndicator
                     color={Colors.ThemeColor}
                     size="large"
-                    style={{ flex: 1, justifyContent: 'center' }}
+                  // style={{ flex: 1, justifyContent: 'center' }}
                   />
                 ) : (
                   <Text
-                    style={{
-                      ...fontSize(18),
-                      color: '#909090',
-                      textAlign: 'center',
-                    }}>
+                    style={styles.noMemoriedTextStyle}>
                     There are no memories available to display at this moment
                   </Text>
                 )}
@@ -483,19 +469,15 @@ export default class PublishedMemory extends React.Component<Props, State> {
     //it will show indicator at the bottom of the list when data is loading otherwise it returns null
     if (!this.state.loading) return null;
     return (
-      <View style={{ width: '100%', height: 50 }}>
-        <ActivityIndicator color = '#000000' />
+      <View style={styles.footerStyle}>
+        <ActivityIndicator color='#000000' />
       </View>
     );
   };
   renderSeparator = () => {
     return (
       <View
-        style={{
-          height: 1,
-          width: '100%',
-          backgroundColor: '#CED0CE',
-        }}
+        style={styles.separator}
       />
     );
   };
@@ -519,12 +501,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     if (item.audios.length > 0) {
       return (
         <View
-          style={{
-            justifyContent: 'space-around',
-            flexDirection: 'row',
-            margin: 16,
-            marginTop: 0,
-          }}>
+          style={styles.audioContainer}>
           <View
             style={[
               {
@@ -644,7 +621,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                 styles.boxShadow,
               ]}>
               <TouchableHighlight
-                underlayColor={'#ffffff00'}
+                underlayColor={Colors.touchableunderlayColor}
                 style={{ flex: 1, justifyContent: 'center' }}
                 onPress={() => {
                   _onShowMemoryDetails(item);
@@ -657,7 +634,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                   }}>
                   {'+'}
                   {item.audios.length - 1}
-                  {'\n more'}
+                  {' audios'}
                 </Text>
               </TouchableHighlight>
             </View>
@@ -764,6 +741,35 @@ const _onEditMemory = (nid: any) => {
   }
 };
 
+const _onShareMemory = async (url: any) => {
+  try {
+    setTimeout(async () => {
+      const result: any = await Share.share({
+        message:
+          'Share the Memory',
+        url: url,
+        title: 'Share'
+      })
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+      else {
+        // alert(JSON.stringify(result))
+      }
+    }, 1000);
+
+  } catch (error) {
+    // alert(error.message);
+  }
+}
+
 export const onActionItemClicked = (index: number, data: any): void => {
   //console.log(data);
   switch (data.actionType) {
@@ -774,6 +780,9 @@ export const onActionItemClicked = (index: number, data: any): void => {
       _onEditMemory(data.nid);
       break;
     case MemoryActionKeys.cancelActionKey:
+      break;
+    case MemoryActionKeys.shareActionKey:
+      _onShareMemory(data.memory_url);
       break;
     default:
       if (Utility.isInternetConnected) {
@@ -933,7 +942,7 @@ export const renderSeparator = () => {
 export const CommentBox = (item: any) => {
   return (
     <TouchableHighlight
-      underlayColor={'#ffffff00'}
+      underlayColor={Colors.touchableunderlayColor}
       style={{
         minHeight: 60,
         maxHeight: 300,
@@ -979,20 +988,22 @@ export const CommentBox = (item: any) => {
           Write a comment..
         </Text>
 
-        <TouchableOpacity
-          style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Image source={icon_send} />
-          <Text
-            style={{
-              fontSize: 12,
-              textAlign: 'center',
-              color: Colors.ThemeColor,
-              padding: 1,
-            }}
-            autoCorrect={false}>
-            {'Post'}
-          </Text>
-        </TouchableOpacity>
+        <TouchableWithoutFeedback >
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Image source={icon_send} />
+            <Text
+              style={{
+                fontSize: 12,
+                textAlign: 'center',
+                color: Colors.ThemeColor,
+                padding: 1,
+              }}
+              autoCorrect={false}>
+              {'Post'}
+            </Text>
+          </View>
+
+        </TouchableWithoutFeedback>
       </View>
     </TouchableHighlight>
   );
@@ -1029,7 +1040,7 @@ export const RenderLikeAndCommentSection = (
           marginBottom: 5,
         }}>
         <TouchableHighlight
-          underlayColor={'#ffffff00'}
+          underlayColor={Colors.touchableunderlayColor}
           style={{
             flexDirection: 'row',
             flex: 1,
@@ -1050,7 +1061,7 @@ export const RenderLikeAndCommentSection = (
           />
         </TouchableHighlight>
         {/* <TouchableHighlight
-          underlayColor={'#ffffff00'}
+          underlayColor={Colors.touchableunderlayColor}
           style={{
             flexDirection: 'row',
             flex: 1,
@@ -1078,13 +1089,13 @@ export const RenderLikeAndCommentSection = (
   );
 };
 
-export const _onShowMemoryDetails = (item: any, fromPage?:any) => {
+export const _onShowMemoryDetails = (item: any, fromPage?: any) => {
   if (Utility.isInternetConnected) {
-    if (fromPage == 'Recent') {
-      Actions.jump('newmemoryDetails', { nid: item.nid, type: item.type, height: 80 });
-    } else {
-      Actions.jump('memoryDetails', { nid: item.nid, type: item.type });
-    }
+    // if (fromPage == 'Recent') {
+    Actions.jump('newmemoryDetails', { nid: item.nid, type: item.type, height: 80 });
+    // } else {
+    //   Actions.jump('memoryDetails', { nid: item.nid, type: item.type });
+    // }
   } else {
     No_Internet_Warning();
   }
@@ -1134,104 +1145,204 @@ export const _onOpenImages = (items: any, index: any) => {
   }
 };
 
+const MemoryActionsListArray = (item: any) => {
+  var i = 0;
+  let memoryActions = [];
+  memoryActions.push(
+    {
+      text: "Share memory",
+      // image: add_icon_small,
+      nid: item.nid,
+      memory_url: item.memory_url,
+      memoryType: item.type,
+      actionType: MemoryActionKeys.shareActionKey,
+      uid: item.user_details.uid,
+    }
+  );
+  for (var value in item.actions_on_memory) {
+    i += 1;
+    switch (value) {
+      case MemoryActionKeys.addToCollection:
+        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(
+        //   {
+        //     index: i,
+        //     text: item.actions_on_memory[value],
+        //     // image: add_icon_small,
+        //     nid: item.nid,
+        //     memoryType: item.type,
+        //     actionType: MemoryActionKeys.addToCollection,
+        //     uid: item.user_details.uid,
+        //   }
+        // );
+        break;
+      case MemoryActionKeys.blockUserKey:
+        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push({
+        //   index: i,
+        //   text: item.actions_on_memory[value],
+        //   // image: Platform.OS == 'ios' ? personxmark :block,
+        //   nid: item.nid,
+        //   memoryType: item.type,
+        //   actionType: MemoryActionKeys.blockUserKey,
+        //   uid: item.user_details.uid,
+        //   isDestructive: 1,
+        // });
+        break;
+      case MemoryActionKeys.reportMemoryKey:
+        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push({
+        //   index: i,
+        //   text: item.actions_on_memory[value],
+        //   // image: Platform.OS == 'ios' ? flagandroid : flag,
+        //   nid: item.nid,
+        //   memoryType: item.type,
+        //   actionType: MemoryActionKeys.reportMemoryKey,
+        //   isDestructive: 1,
+        // });
+        break;
+      case MemoryActionKeys.blockAndReportKey:
+        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push({
+        //   index: i,
+        //   text: item.actions_on_memory[value],
+        //   // image: Platform.OS == 'ios' ? redstar : report,
+        //   nid: item.nid,
+        //   memoryType: item.type,
+        //   actionType: MemoryActionKeys.blockAndReportKey,
+        //   uid: item.user_details.uid,
+        //   isDestructive: 1,
+        // });
+        break;
+      case MemoryActionKeys.editMemoryKey:
+        // memoryActions.push(item.actions_on_memory[value])
+        memoryActions.push({
+          index: i,
+          text: item.actions_on_memory[value],
+          // image: edit_memory,
+          nid: item.nid,
+          memoryType: item.type,
+          actionType: MemoryActionKeys.editMemoryKey,
+        });
+        break;
+      case MemoryActionKeys.deleteMemoryKey:
+        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push({
+        //   index: i,
+        //   text: item.actions_on_memory[value],
+        //   // image: delete_memory,
+        //   nid: item.nid,
+        //   memoryType: item.type,
+        //   actionType: MemoryActionKeys.deleteMemoryKey,
+        // });
+        break;
+      case MemoryActionKeys.moveToDraftKey:
+        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push({
+        //   index: i,
+        //   text: item.actions_on_memory[value],
+        //   // image: move_to_draft,
+        //   nid: item.nid,
+        //   memoryType: item.type,
+        //   actionType: MemoryActionKeys.moveToDraftKey,
+        // });
+        break;
+      case MemoryActionKeys.removeMeFromThisPostKey:
+        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push({
+        //   index: i,
+        //   text: item.actions_on_memory[value],
+        //   // image: remove_me_from_this_post,
+        //   nid: item.nid,
+        //   memoryType: item.type,
+        //   actionType: MemoryActionKeys.removeMeFromThisPostKey,
+        // });
+        break;
+      case MemoryActionKeys.blockMemoryKey:
+        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push({
+        //   index: i,
+        //   text: item.actions_on_memory[value],
+        //   // image: block_memory,
+        //   nid: item.nid,
+        //   memoryType: item.type,
+        //   actionType: MemoryActionKeys.blockMemoryKey,
+        // });
+        break;
+    }
+  }
+  return memoryActions;
+};
+
 export const MemoryBasicDetails = (
   userDetails: any,
   item: any,
-  openMemoryActions: any,
-  listType: any,
+  openMemoryActions?: any,
+  listType?: any,
 ) => {
   //.userProfilePic
-  // console.log(JSON.stringify())
   return (
-    <View
-      style={{
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        padding: 5,
-        paddingVertical: 10
-      }}>
-      <View style={{ flexDirection: 'row', paddingLeft: 14 }}>
-        <Image
-          source={
-            userDetails.userProfilePic && userDetails.userProfilePic != '' ? { uri: userDetails.userProfilePic } : profile_placeholder
-          }
-          style={{ height: 40, width: 40, borderRadius: 20 }}></Image>
-        <View style={{ padding: 5, paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
-          <View>
-            <Text
-              style={{
-                ...fontSize(17),
-                fontFamily: 'Rubik',
-                color: Colors.TextColor,
-                lineHeight: 20,
-                fontWeight: '500'
-              }}>
-              {/* {'By '} */}
+    <TouchableWithoutFeedback onPress={() => {
+      if (Utility.isInternetConnected) {
+        Actions.jump('newmemoryDetails', { nid: item.nid, type: item.type, height: 80 });
+      } else {
+        No_Internet_Warning();
+      }
+    }}>
+      <View
+        style={styles.authorNameContainer}>
+        <View style={styles.flexRow}>
+          <Image
+            style={styles.userImageStyle}
+            source={
+              userDetails.userProfilePic && userDetails.userProfilePic != '' ? { uri: userDetails.userProfilePic } : profile_placeholder
+            }
+          ></Image>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 8 }}>
+            <View>
               <Text
-                style={{
-                  color: Colors.newTextColor,
-                  // fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                  lineHeight: 20,
-                  fontWeight: '500'
-                }}>
+                style={styles.userNameTextStyle}>
                 {userDetails.name}
               </Text>
-            </Text>
-            {listType == ListType.Published && (
-              <Text
-                style={{
-                  ...fontSize(14),
-                  fontFamily: 'Rubik',
-                  color: Colors.TextColor,
-                  lineHeight: 20,
-                  fontWeight: '500'
-                }}>
-                {Utility.timeDuration('' + item.created, 'M d, Y')}
-                {item.viewCount > 0 && (
-                  <Text>
-                    {' | '}
-                    {item.viewCount}
-                    {item.viewCount > 1 ? ' views' : ' view'}
-                  </Text>
-                )}
-              </Text>
-            )}
+
+            </View>
           </View>
         </View>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            // openMemoryActions(item);
+          }}>
+          <View style={styles.moreoptionStyle}>
+            <SelectDropdown
+              // ref={this.dropDownRef}
+              dropdownStyle={{ borderRadius: 12 }}
+              rowTextStyle={{ textAlign: 'left', fontSize: 17, fontWeight: '400', color: Colors.black, paddingLeft: 16 }}
+              dropdownOverlayColor={Colors.blacknewrgb}
+              rowStyle={{ backgroundColor: '#c4c4c4', height: 44, borderBottomColor: '#939396', borderBottomWidth: 0.5 }}
+              buttonStyle={{ backgroundColor: Colors.white, width: 40 }}
+              data={MemoryActionsListArray(item)}
+              onSelect={(selectedItem, index) => {
+                onActionItemClicked(index, selectedItem)
+              }}
+              renderCustomizedButtonChild={() => <Image style={{ alignSelf: 'flex-end' }} source={moreoptions} />}
+            />
+            {/* <Image source={moreoptions} /> */}
+            {/* <Image source={greenDotsButton} /> */}
+          </View>
+        </TouchableWithoutFeedback>
       </View>
-      <TouchableOpacity
-        style={{
-          padding: 16,
-          height: '100%',
-          maxHeight: 70,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        onPress={() => {
-          openMemoryActions(item);
-        }}>
-        <Image source={moreoptions} />
-        {/* <Image source={greenDotsButton} /> */}
-      </TouchableOpacity>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 export const MediaView = (item: any, audioView: any) => {
   let memoryDetail = item.item;
+
   return (
     <View>
       {memoryDetail.images && memoryDetail.images.length > 0 ? (
         <View
-          style={{
-            marginBottom: 16,
-            marginTop: 0,
-            height: 200,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-          }}>
+          style={styles.imageContainer}>
           {/* <TouchableHighlight
             underlayColor={'#ffffff'}
             style={{ flex: 1 }}
@@ -1254,55 +1365,48 @@ export const MediaView = (item: any, audioView: any) => {
 
           {
             memoryDetail.images.length > 0 && (
-              <View style={{ flex: 1, backgroundColor: Colors.timeLinebackground }}>
+              <View style={{ flex: 1 }}>
                 <TouchableHighlight
-                  underlayColor={'#ffffff00'}
-                  style={{ flex: 1 }}
+                  underlayColor={Colors.touchableunderlayColor}
+                  style={styles.fullFlex}
                   onPress={() => {
                     // memoryDetail.images.length > 2
                     //   ? _onShowMemoryDetails(memoryDetail) : 
                     _onOpenImages(memoryDetail.images, 0);
                   }}>
-                  <View style={{ flex: 1 }}>
-                    <PlaceholderImageView
-                      style={{ flex: 1, marginLeft: 2 }}
-                      uri={Utility.getFileURLFromPublicURL(
-                        memoryDetail.images[0].thumbnail_url,
-                      )}
-                      resizeMode={'contain'}
-                    />
+                  <View style={[styles.fullFlex]}>
+                    <ImageBackground style={{ height: '100%', width: '100%', backgroundColor: '#edeef1', opacity: 0.1, position: 'absolute' }} blurRadius={5} resizeMode='stretch' source={{ uri: Utility.getFileURLFromPublicURL(memoryDetail.images[0].thumbnail_url) }} />
+                    <View style={[styles.fullFlex, { position: 'relative' }]}>
+                      <PlaceholderImageView
+                        style={styles.fullFlex}
+                        uri={Utility.getFileURLFromPublicURL(
+                          memoryDetail.images[0].thumbnail_url,
+                        )}
+                        resizeMode={'contain'}
+                      />
 
-                    {memoryDetail.images.length > 1 && (
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                          // height: '100%',
-                          // width: '100%',
-                          padding: 5,
-                          position: 'absolute',
-                          bottom: 20,
-                          right: 20,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                        onPress={() => {
-                          memoryDetail.images.length > 1
-                            ? _onShowMemoryDetails(memoryDetail) :
-                            _onOpenImages(memoryDetail.images, 0);
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: '#fff',
-                            ...fontSize(15),
-                            textAlign: 'center',
-                          }}>
-                          {'+'}
-                          {memoryDetail.images.length - 1}
-                          {/* {'\n more'} */}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
+                      {memoryDetail.images.length > 1 && (
+                        <TouchableWithoutFeedback
+                          onPress={() => {
+                            memoryDetail.images.length > 1
+                              ? _onShowMemoryDetails(memoryDetail) :
+                              _onOpenImages(memoryDetail.images, 0);
+                          }}
+                        >
+                          <View style={styles.moreImagesContainer}>
+                            <Text
+                              style={styles.moreImageTextStyle}>
+                              {'+'}
+                              {memoryDetail.images.length - 1}
+                              {" images"}
+                              {/* {'\n more'} */}
+                            </Text>
+                          </View>
+                        </TouchableWithoutFeedback>
+                      )}
+                    </View>
+                    {/* </ImageBackground> */}
+
                   </View>
                 </TouchableHighlight>
               </View>
@@ -1316,39 +1420,13 @@ export const MediaView = (item: any, audioView: any) => {
       {audioView(memoryDetail)}
       {memoryDetail.pdf && memoryDetail.pdf.length > 0 ? (
         <View
-          style={{
-            margin: 16,
-            marginTop: 0,
-            height: 117,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-          }}>
-          {/* <TouchableHighlight
-            underlayColor={'#ffffff00'}
-            style={{
-              backgroundColor: Colors.NewLightThemeColor,
-              flex: 1,
-              marginRight: 2,
-              height: '100%',
-            }}
-            onPress={() => {
-              _onOpenPdfs(memoryDetail.pdf[0].url);
-            }}>
-            <PlaceholderImageView
-              style={{ height: '100%', width: '100%' }}
-              //   style={{backgroundColor : "#F3F3F3", flex: 1, marginRight: 2, height: "100%"}}
-              openPDF={true}
-              uri={Utility.getFileURLFromPublicURL(
-                memoryDetail.pdf[0].pdf_image_url,
-              )}
-              resizeMode={'contain'}
-            />
-          </TouchableHighlight> */}
+          style={styles.imageContainer}>
+
           {memoryDetail.pdf.length > 0 && (
-            <View style={{ flex: 1, backgroundColor: Colors.NewLightThemeColor }}>
+            <View style={{ flex: 1, backgroundColor: Colors.timeLinebackground }}>
               <TouchableHighlight
-                underlayColor={'#ffffff00'}
-                style={{ flex: 1 }}
+                underlayColor={Colors.touchableunderlayColor}
+                style={styles.fullFlex}
                 onPress={() => {
                   // memoryDetail.pdf.length > 2
                   //   ? _onShowMemoryDetails(memoryDetail): 
@@ -1356,42 +1434,32 @@ export const MediaView = (item: any, audioView: any) => {
                 }}>
                 <View>
                   <PlaceholderImageView
-                    style={{ flex: 1, marginLeft: 2, height: '100%' }}
+                    style={styles.fullHeight}
                     openPDF={true}
-                    uri={Utility.getFileURLFromPublicURL(
-                      memoryDetail.pdf[0].pdf_image_url,
-                    )}
+                    uri={memoryDetail.pdf[0].pdf_image_url
+                    }
                     resizeMode={'contain'}
                   />
                   {memoryDetail.pdf.length > 1 && (
-                    <TouchableOpacity
+                    <TouchableWithoutFeedback
                       onPress={() => {
                         memoryDetail.pdf.length > 1
                           ? _onShowMemoryDetails(memoryDetail) :
                           _onOpenPdfs(memoryDetail.pdf[0].url);
                       }}
-                      style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                        // height: '100%',
-                        // width: '100%',
-                        position: 'absolute',
-                        // top: 0,
-                        bottom: 20,
-                        right: 20,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <Text
-                        style={{
-                          color: '#fff',
-                          ...fontSize(15),
-                          textAlign: 'center',
-                        }}>
-                        {'+'}
-                        {memoryDetail.pdf.length - 1}
-                        {/* {'\n more'} */}
-                      </Text>
-                    </TouchableOpacity>
+                    >
+                      <View style={styles.moreImagesContainer}>
+                        <Text
+                          style={styles.moreImageTextStyle}>
+                          {'+'}
+                          {memoryDetail.pdf.length - 1}
+                          {" documents"}
+
+                          {/* {'\n more'} */}
+                        </Text>
+                      </View>
+
+                    </TouchableWithoutFeedback>
                   )}
                 </View>
               </TouchableHighlight>
@@ -1402,40 +1470,3 @@ export const MediaView = (item: any, audioView: any) => {
     </View>
   );
 };
-const styles = StyleSheet.create({
-  normalText: {
-    ...fontSize(16),
-    fontWeight: 'normal',
-    color: '#595959',
-    marginBottom: 10,
-  },
-  avatar: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    alignContent: 'center',
-  },
-  boxShadow: {
-    shadowOpacity: 1,
-    shadowColor: '#D9D9D9',
-    shadowRadius: 2,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  sideMenu: {
-    paddingTop: 15,
-    bottom: 0,
-    left: 0,
-    backgroundColor: '#fff',
-    minHeight: 50,
-    width: '100%',
-    position: 'absolute',
-    borderRadius: 5,
-    shadowOpacity: 1,
-    elevation: 1,
-    borderWidth: 0.5,
-    borderColor: 'rgba(0,0,0, 0.5)',
-    shadowColor: '#CACACA',
-    shadowRadius: 2,
-    shadowOffset: { width: 0, height: 2 },
-  },
-});

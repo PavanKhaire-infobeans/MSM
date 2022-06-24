@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import styles from './styles';
 type Props = {
   onDateSelection: Function;
   onCancel: Function;
@@ -39,7 +40,7 @@ export default class DateTimePickerView extends Component<Props> {
   };
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.container}>
         <DateTimePicker
           isVisible={this.props.isVisible}
           onConfirm={this._handleDatePicked}

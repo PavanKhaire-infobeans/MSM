@@ -55,6 +55,7 @@ import {ToastMessage} from '../../../common/component/Toast';
 import {getUserCount} from '../dataHelper';
 import NavigationHeader from '../../../common/component/navigationHeader';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import Utility from '../../../common/utility';
 export const kWhoCanSeeThisMemory = 'whoCanSeeThisMemoryScreen';
 type State = {[x: string]: any};
 type Props = {
@@ -220,7 +221,7 @@ class WhoCanSee extends React.Component<Props, State> {
         />
         <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.ThemeColor}
           />
           <View style={{flex: 1}}>

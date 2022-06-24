@@ -343,7 +343,7 @@ class NotificationListing extends React.Component<Props> {
                 alignItems: 'center',
               }}>
               <StatusBar
-                barStyle={'dark-content'}
+                barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
                 backgroundColor={Colors.NewThemeColor}
               />
               {/* <SafeAreaView style={{ width : "100%", flex: 1,  alignItems: "center" }}>                 */}

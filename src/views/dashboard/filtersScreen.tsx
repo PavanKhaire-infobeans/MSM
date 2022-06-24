@@ -39,6 +39,8 @@ import BottomPicker, {
 import EventManager from '../../common/eventManager';
 import { ScrollView } from 'react-native-gesture-handler';
 import { lock, users, globe, usercheck } from './../../../app/images'
+import Utility from '../../common/utility';
+import styles from './styles';
 
 type Props = { [x: string]: any };
 type State = { [x: string]: any };
@@ -187,8 +189,8 @@ const FilterScreen = (props: Props) => {
   }, [])
 
   const applyFilters = (filters) => {
-    Account.selectedData().end_year = state.toDate;
-    Account.selectedData().start_year = state.fromDate;
+    // Account.selectedData().end_year = state.toDate;
+    // Account.selectedData().start_year = state.fromDate;
     props.setFilterData(
       props.currentScreen == ListType.Recent
         ? SET_RECENT_FILTERS
@@ -231,14 +233,8 @@ const FilterScreen = (props: Props) => {
 
   return (
     <View
-      style={{
-        height: Dimensions.get('window').height,
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-      }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      style={styles.filterContainerStyle}>
+      <SafeAreaView style={styles.SafeAreaViewContainerStyle}>
         <NavigationHeaderSafeArea
           // heading={'Filters'}
           height="80"
@@ -250,15 +246,15 @@ const FilterScreen = (props: Props) => {
           backIcon={action_close}
         />
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
-        <ScrollView style={{ flex: 1, marginBottom: 30 }}>
-          <View style={{ justifyContent: 'space-between' }}>
+        <ScrollView style={[styles.fullFlex,{ marginBottom: 30 }]}>
+          <View style={styles.justifyContentSpaceBetween}>
             <View>
               {props.currentScreen == ListType.Timeline && (
                 <View style={{ padding: 16 }}>
-                  <TextNew style={{ fontWeight: '500', fontFamily: 'Inter', color: Colors.newTextColor, ...fontSize(18) }}>
+                  <TextNew style={styles.font18Weight500}>
                     Memories from
                   </TextNew>
                   <MultipleDropDownSelector
@@ -272,7 +268,7 @@ const FilterScreen = (props: Props) => {
                   />
                 </View>
               )}
-              <View style={{ justifyContent: 'space-evenly', alignItems: 'center' }}>
+              <View style={styles.justifyContentSpaceevenAlignCenter}>
                 {/* <TouchableHighlight
                     underlayColor={'none'}
                     onPress={() =>
@@ -304,7 +300,7 @@ const FilterScreen = (props: Props) => {
                 {state.mystoriesVisibility && (
                   <View>
                     {state.filters && state.filters.mystories && (
-                      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                      <View style={styles.flexWrapFlexRow}>
                         <TouchableHighlight
                           underlayColor={'none'}
                           onPress={() => {
@@ -319,15 +315,12 @@ const FilterScreen = (props: Props) => {
                           style={[
                             styles.filterItem,
                             {
-                              backgroundColor:
-                                state.filters.allSelected.value == 1
-                                  ? Colors.selectedFilterbg
-                                  : Colors.unSelectedFilterbg,
+                              backgroundColor: state.filters.allSelected.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                               borderColor: Colors.filterborder,
                               borderWidth: state.filters.allSelected.value == 1 ? 1 : 0
                             },
                           ]}>
-                          <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                          <View style={styles.justifyContentCenterAlignCenter}>
                             <Image
                               source={
                                 // state.filters.allSelected.value == 1
@@ -335,23 +328,17 @@ const FilterScreen = (props: Props) => {
                                 // plus
                                 globe
                               }
+                              resizeMode='contain'
                               style={{
-                                // width: 15,
-                                // height: 15,
-                                resizeMode: 'contain',
                                 alignSelf: 'center',
                                 justifyContent: 'center',
-                                // marginRight: 5,
                                 marginBottom: 5,
-                              }}></Image>
+                              }}/>
                             <Text
                               style={[
                                 styles.filterText,
                                 {
-                                  color:
-                                    state.filters.allSelected.value == 1
-                                      ? Colors.TextColor
-                                      : Colors.TextColor,
+                                  color: Colors.TextColor,
                                 },
                               ]}>
                               {state.filters.allSelected.name}
@@ -377,36 +364,23 @@ const FilterScreen = (props: Props) => {
                                 style={[
                                   styles.filterItem,
                                   {
-                                    backgroundColor:
-                                      value.value == 1
-                                        ? Colors.selectedFilterbg
-                                        : Colors.unSelectedFilterbg,
+                                    backgroundColor: value.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                                     borderColor: Colors.filterborder,
                                     borderWidth: value.value == 1 ? 1 : 0
                                   },
                                 ]}>
-                                <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={styles.justifyContentCenterAlignCenter}>
 
                                   <Image
                                     source={value.name == 'Me' ? lock : value.name == 'My Friends' ? usercheck : value.name == 'Non Friends' ? users : value.name == 'Close Friends' ? users : globe}
                                     // source={value.value == 1 ? check : plus}
-                                    style={{
-                                      // width: 15,
-                                      // height: 15,
-                                      resizeMode: 'contain',
-                                      alignSelf: 'center',
-                                      justifyContent: 'center',
-                                      // marginRight: 5,
-                                      marginBottom: 5,
-                                    }}></Image>
+                                    resizeMode='contain'
+                                    style={[styles.justifyContentCenterAlignCenter,{ marginBottom: 5,}]}/>
                                   <Text
                                     style={[
                                       styles.filterText,
                                       {
-                                        color:
-                                          value.value == 1
-                                            ? Colors.TextColor
-                                            : Colors.TextColor,
+                                        color: Colors.TextColor,
                                       },
                                     ]}>
                                     {value.name}
@@ -433,39 +407,25 @@ const FilterScreen = (props: Props) => {
                               styles.filterItem,
                               {
                                 backgroundColor:
-                                  state.filters.cueSelected.value == 1
-                                    ? Colors.selectedFilterbg
-                                    : Colors.unSelectedFilterbg,
+                                  state.filters.cueSelected.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                                 borderColor: Colors.filterborder,
                                 borderWidth: state.filters.cueSelected.value == 1 ? 1 : 0
                               },
                             ]}>
-                            <View style={{ flexDirection: 'column' }}>
+                            <View >
                               <Image
                                 source={
                                   state.filters.cueSelected.value == 1
                                     ? globe
                                     : globe
                                 }
-                                style={{
-                                  // width: 15,
-                                  // height: 15,
-                                  resizeMode: 'contain',
-                                  alignSelf: 'center',
-                                  justifyContent: 'center',
-                                  // marginRight: 5,
-                                  marginBottom: 5,
-                                }}
-                              ></Image>
+                                resizeMode='contain'
+                                style={[styles.justifyContentCenterAlignCenter,{ marginBottom: 5,}]}/>
                               <Text
                                 style={[
                                   styles.filterText,
                                   {
-                                    color:
-                                      state.filters.cueSelected.value ==
-                                        1
-                                        ? Colors.TextColor
-                                        : Colors.TextColor,
+                                    color: Colors.TextColor,
                                     textAlign: 'center'
                                   },
                                 ]}>
@@ -507,7 +467,7 @@ const FilterScreen = (props: Props) => {
                     </View>
                   </TouchableHighlight> */}
                 {state.friendCircleVisibility && (
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                  <View style={styles.flexWrapFlexRow}>
                     {state.filters &&
                       state.filters.mystories &&
                       state.filters.mystories.groups &&
@@ -528,10 +488,7 @@ const FilterScreen = (props: Props) => {
                               style={[
                                 styles.filterItem,
                                 {
-                                  backgroundColor:
-                                    obj.value == 1
-                                      ? Colors.selectedFilterbg
-                                      : Colors.unSelectedFilterbg,
+                                  backgroundColor: obj.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                                   borderColor: Colors.filterborder,
                                   borderWidth: obj.value == 1 ? 1 : 0
                                 },
@@ -540,24 +497,13 @@ const FilterScreen = (props: Props) => {
                                 <Image
                                   source={(obj.name == 'Close Friends') || (obj.name == 'New Friends') ? users : globe}
                                   // source={obj.value == 1 ? check : plus}
-
-                                  style={{
-                                    // width: 15,
-                                    // height: 15,
-                                    resizeMode: 'contain',
-                                    alignSelf: 'center',
-                                    justifyContent: 'center',
-                                    // marginRight: 5,
-                                    marginBottom: 5,
-                                  }}></Image>
+                                  resizeMode='contain'
+                                  style={[styles.justifyContentCenterAlignCenter,{ marginBottom: 5,}]}/>
                                 <Text
                                   style={[
                                     styles.filterText,
                                     {
-                                      color:
-                                        obj.value == 1
-                                          ? Colors.TextColor
-                                          : Colors.TextColor,
+                                      color: Colors.TextColor,
                                       textAlign: 'center'
                                     },
                                   ]}>
@@ -602,7 +548,7 @@ const FilterScreen = (props: Props) => {
                     </TouchableHighlight> */}
 
                   {state.externalCueVisibility && (
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                    <View style={styles.flexWrapFlexRow}>
                       {state.filters &&
                         state.filters.external_cues &&
                         state.filters.external_cues.categories.map(
@@ -623,10 +569,7 @@ const FilterScreen = (props: Props) => {
                                 style={[
                                   styles.filterItem,
                                   {
-                                    backgroundColor:
-                                      obj.value == 1
-                                        ? Colors.selectedFilterbg
-                                        : Colors.unSelectedFilterbg,
+                                    backgroundColor: obj.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                                     borderColor: Colors.filterborder,
                                     borderWidth: obj.value == 1 ? 1 : 0
                                   },
@@ -647,10 +590,7 @@ const FilterScreen = (props: Props) => {
                                     style={[
                                       styles.filterText,
                                       {
-                                        color:
-                                          obj.value == 1
-                                            ? Colors.TextColor
-                                            : Colors.TextColor,
+                                        color: Colors.TextColor,
                                       },
                                     ]}>
                                     {obj.name}
@@ -708,60 +648,6 @@ const FilterScreen = (props: Props) => {
   );
 
 }
-
-const styles = StyleSheet.create({
-  filterHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.NewLightCommentHeader,
-    padding: 16,
-  },
-  filterHeaderText: {
-    ...fontSize(19),
-    padding: 10,
-    fontWeight: '400',
-    fontFamily: 'Inter',
-    color: Colors.TextColor,
-  },
-  filterItem: {
-    // margin: 10,
-    marginLeft: '5%',
-    // marginRight:'2%',
-    marginTop: '2%',
-    marginBottom: '2%',
-    padding: 12,
-    // paddingBottom: 7,
-    // paddingTop: 7,
-    height: 100,
-    borderRadius: 5,
-    width: '42%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  filterText: {
-    ...fontSize(19),
-    fontWeight: '400',
-    // fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
-    paddingLeft: 2,
-    paddingTop: 2,
-    paddingBottom: 5,
-    paddingRight: 5,
-    fontFamily: 'Inter'
-  },
-  bottomView: {
-    height: Platform.OS == 'ios' ? 70 : 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTopWidth: 0.5,
-    borderColor: '#fff',
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 4,
-    shadowRadius: 2,
-    elevation: 15,
-  },
-});
 
 const mapState = (state: any) => {
   return {

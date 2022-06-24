@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BackHandler,
   Platform,
@@ -6,7 +6,10 @@ import {
   View,
   Alert,
   DeviceEventEmitter,
-  Linking
+  Linking,
+  useWindowDimensions,
+  Image,
+  Appearance
 } from 'react-native';
 import DeviceInfo, { hasNotch } from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -19,13 +22,13 @@ import {
   Stack,
   Tabs,
 } from 'react-native-router-flux';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Busyindicator from './common/component/busyindicator';
-import TabIcon, {NewTabItems, TabItems} from './common/component/TabBarIcons';
-import {Colors} from './common/constants';
+import TabIcon, { NewTabItems, TabItems } from './common/component/TabBarIcons';
+import { Colors, constant } from './common/constants';
 import EventManager from './common/eventManager';
-import Utility, {networkConnectivitySaga} from './common/utility';
+import Utility, { networkConnectivitySaga, themechanges, getFontScale } from './common/utility';
 import store from './common/reducer/reducers';
 
 import CreateMemory from './views/createMemory';
@@ -101,11 +104,12 @@ import {
   kForegroundNotice,
   kBackgroundNotice,
 } from './views/notificationView/notificationServices';
-import {kNotificationIndicator} from './common/component/TabBarIcons';
+import { kNotificationIndicator } from './common/component/TabBarIcons';
 import AppIntro from './views/appIntro';
 import analytics from '@segment/analytics-react-native';
 import loaderHandler from './common/component/busyindicator/LoaderHandler';
 import DashboardIndex from './views/dashboard/dashboardIndex';
+import WriteTabs from './views/writeTabs';
 import FilterScreen from './views/dashboard/filtersScreen';
 import PromptsView from './views/promptsView';
 import TopicsFilter from './views/promptsView/topicsFilter';
@@ -114,8 +118,9 @@ EStyleSheet.build();
 if (Text.defaultProps == null) Text.defaultProps = {};
 
 Text.defaultProps.allowFontScaling = false;
+
 const AppRouter = () => (
-  <Router>
+  <Router sceneStyle={{backgroundColor: Colors.white}}>
     <Scene key="root">
       {/* <Scene key="animatedAppIntro" type={ActionConst.RESET} hideNavBar component={AnimatedAppIntro} /> */}
       <Scene
@@ -197,28 +202,31 @@ const AppRouter = () => (
             showIcon={true}
             tabBarPosition="bottom"
             activeTintColor={Colors.ThemeColor}
-            tabBarOnPress={({navigation, defaultHandler}) =>{
+            tabBarOnPress={({ navigation, defaultHandler }) => {
               navigateToParticular(navigation, defaultHandler)
             }}
             tabBarStyle={{
-              height: 60,
+              height: 40,
               // paddingHorizontal:20,
               justifyContent: 'flex-start',
               alignItems: 'flex-start',
-              paddingBottom: Platform.OS === 'android' ? 0 : hasNotch() ?  40 : 15,
+              backgroundColor: Colors.white,
+              borderWidth:1,
+              borderTopWidth:3,
+              borderTopColor:'white',
+              paddingBottom: Platform.OS === 'android' ? 0 : 25,
               // overflow: 'hidden',
-              width:'85%',
-              borderRadius:8,
-              borderWidth:0,
-              borderColor:'transparent',
+              width: '94%',
+              borderRadius: 12,
+              borderColor: 'white',
               // padding:5,
-              alignSelf:'center'
+              alignSelf: 'center'
             }}>
             <Stack title={NewTabItems.Read} tabBarIcon={TabIcon}>
               <Scene hideNavBar key="dashboard" component={DashboardIndex} />
             </Stack>
             <Stack title={NewTabItems.Write} tabBarIcon={TabIcon}>
-              <Scene hideNavBar key="dashboard" component={DashboardIndex} />
+              <Scene hideNavBar key="writeTabs" component={WriteTabs} />
             </Stack>
             {/* <Stack title={TabItems.MyMemories} tabBarIcon={TabIcon}>
               <Scene
@@ -310,7 +318,7 @@ const AppRouter = () => (
         hideNavBar
         component={CustomListView}
       />
-      
+
       <Scene key="newmemoryDetails" hideNavBar component={NewMemoryDetails} />
       <Scene
         key="newcustomListMemoryDetails"
@@ -394,45 +402,89 @@ const AppRouter = () => (
 
 function navigateToParticular(navigation, defaultHandler) {
   try {
-    if (navigation.state.routeName == 'key3') {
-      EventManager.callBack('addContentTabPressed');
-    } else {
+    // if (navigation.state.routeName == 'key3') {
+    //   EventManager.callBack('addContentTabPressed');
+    // } else {
       defaultHandler();
-    }
+    // }
   } catch (error) {
-    console.log("defaultHandler  > ",error)
+    console.log("defaultHandler  > ", error)
   }
 }
 
-class App extends React.Component {
-  backEvent: EventManager;
-  eventListener: EventManager;
-  async componentDidMount() {
+const App = (props) => {
+  let backEvent: EventManager;
+  let eventListener: EventManager;
+
+  // alert(useWindowDimensions().fontScale)
+
+   /*
+     * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+     * */
+   const notificationOpenedListener = messaging().onNotificationOpenedApp(
+    notificationOpen => {
+      // const { data  } = notificationOpen.notification;
+      const { data } = notificationOpen;
+      Utility.notificationObject.hasNotification = true;
+      Utility.notificationObject.data = data;
+      // Utility.notificationObject.isBackgroundNotification = true;
+      EventManager.callBack(kBackgroundNotice, data);
+    },
+  );
+
+  useEffect(() => {
     setTimeout(() => SplashScreen.hide(), 500);
     networkConnectivitySaga();
-    this.loadSegmentAnalytics();
-    this.checkPermission();
-    this.createNotificationListeners();
+    loadSegmentAnalytics();
+    checkPermission();
+    getFontScale();
+    createNotificationListeners();
     if (Platform.OS == 'android') {
-      this.backEvent = BackHandler.addEventListener(
+      backEvent = BackHandler.addEventListener(
         'hardwareBackPress',
-        this._backPressAnd,
+        _backPressAnd,
       );
     }
-  }
+    themechanges(Appearance.getColorScheme());
 
-  async checkPermission() {
+    return () => {
+      Linking.removeEventListener('url', handleUrl);
+      notificationListener();
+      notificationOpenedListener();
+      if (notificationOpen != null) {
+        notificationOpen();
+      }
+      backEvent &&
+        backEvent.removeListener() &&
+        onTokenRefreshListener();
+    }
+  }, [])
+  // async componentDidMount() {
+  //   setTimeout(() => SplashScreen.hide(), 500);
+  //   networkConnectivitySaga();
+  //   loadSegmentAnalytics();
+  //   checkPermission();
+  //   createNotificationListeners();
+  //   if (Platform.OS == 'android') {
+  //     backEvent = BackHandler.addEventListener(
+  //       'hardwareBackPress',
+  //       _backPressAnd,
+  //     );
+  //   }
+  // }
+
+  const checkPermission = async () => {
     const enabled = await messaging().hasPermission();
     if (enabled) {
-      //    this.showAlert("Permission", "enabled")
-      return await this.getToken();
+      //    showAlert("Permission", "enabled")
+      return await getToken();
     } else {
-      this.requestPermission();
+      requestPermission();
     }
   }
 
   //3
-  async getToken() {
+  const getToken = async () => {
     // DefaultPreference.get('firebaseToken').then(value=>{
     //   if(value && value.length > 0){
     //         return true;
@@ -446,7 +498,7 @@ class App extends React.Component {
             .then(fcmToken => {
               if (fcmToken) {
                 DefaultPreference.set('firebaseToken', fcmToken).then(
-                  function () {},
+                  function () { },
                 );
                 return true;
               }
@@ -463,11 +515,11 @@ class App extends React.Component {
   }
 
   //2
-  async requestPermission() {
+  const requestPermission = async () => {
     try {
       await messaging().requestPermission();
       // User has authorised
-      return await this.getToken();
+      return await getToken();
     } catch (error) {
       // User has rejected permissions
       return false;
@@ -475,57 +527,43 @@ class App extends React.Component {
     }
   }
 
-  async createNotificationListeners() {
-    // this.showAlert("Listener", "added")
+  const createNotificationListeners = async () => {
+    // showAlert("Listener", "added")
     /*
      * Triggered when a particular notification has been received in foreground
      * */
-    this.notificationListener = messaging().onMessage(notification => {
-      const {data} = notification;
+    notificationListener = messaging().onMessage(notification => {
+      const { data } = notification;
       EventManager.callBack(kForegroundNotice, data);
     });
 
     /*
-     * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
-     * */
-    this.notificationOpenedListener = messaging().onNotificationOpenedApp(
-      notificationOpen => {
-        // const { data  } = notificationOpen.notification;
-        const {data} = notificationOpen;
-        Utility.notificationObject.hasNotification = true;
-        Utility.notificationObject.data = data;
-        // Utility.notificationObject.isBackgroundNotification = true;
-        EventManager.callBack(kBackgroundNotice, data);
-      },
-    );
-
-    /*
      * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
      * */
-    this.notificationOpen = await messaging().getInitialNotification();
+    notificationOpen = await messaging().getInitialNotification();
     if (notificationOpen) {
-      const {data} = notificationOpen;
+      const { data } = notificationOpen;
       Utility.notificationObject.hasNotification = true;
       Utility.notificationObject.data = data;
     }
     /*
      * Triggered for data only payload in foreground
      * */
-    this.messageListener = messaging().onMessage(message => {
+    messageListener = messaging().onMessage(message => {
       //   //process data message
       //   //console.log(JSON.stringify(message));
-      //   this.showAlert("Alert", "message arrived");
+      //   showAlert("Alert", "message arrived");
     });
   }
 
-  showAlert(title, body) {
-    Alert.alert(title, body, [{text: 'OK', onPress: () => {}}], {
+  const showAlert = (title, body) => {
+    Alert.alert(title, body, [{ text: 'OK', onPress: () => { } }], {
       cancelable: false,
     });
   }
 
   //Back event handler
-  _backPressAnd = () => {
+  const _backPressAnd = () => {
     loaderHandler.hideLoader();
     if (Actions.currentScene == 'mindPopEdit') {
       EventManager.callBack('hardwareBackPress', true);
@@ -534,27 +572,27 @@ class App extends React.Component {
     return false;
   };
 
-  handleUrl = ({ url }) => {
+  const handleUrl = ({ url }) => {
     Linking.canOpenURL(url).then((supported) => {
       if (supported) {
         DeepLinking.evaluateUrl(url);
       }
     });
   }
- 
-  componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleUrl);
-    this.notificationListener();
-    this.notificationOpenedListener();
-    if (this.notificationOpen != null) {
-      this.notificationOpen();
-    }
-    this.backEvent &&
-      this.backEvent.removeListener() &&
-      this.onTokenRefreshListener();
-    }
 
-  async loadSegmentAnalytics() {
+  // componentWillUnmount() {
+  //   Linking.removeEventListener('url', handleUrl);
+  //   notificationListener();
+  //   notificationOpenedListener();
+  //   if (notificationOpen != null) {
+  //     notificationOpen();
+  //   }
+  //   backEvent &&
+  //     backEvent.removeListener() &&
+  //     onTokenRefreshListener();
+  //   }
+
+  const loadSegmentAnalytics = async () => {
     await analytics.setup('UIejGdlPobXDuxYQC2YU19IBomGe5oQO', {
       // Record screen views automatically!
       recordScreenViews: true,
@@ -562,17 +600,16 @@ class App extends React.Component {
       trackAppLifecycleEvents: true,
     });
   }
+  
+  console.disableYellowBox = true;
+  return (
+    <Provider store={store}>
+      {/* <View style={{flex: 1}}> */}
+      <AppRouter />
+      <Busyindicator overlayColor={Colors.ThemeColor} />
+      {/* </View> */}
+    </Provider>
+  );
 
-  render() {
-    console.disableYellowBox = true;
-    return (
-      <Provider store={store}>
-        {/* <View style={{flex: 1}}> */}
-          <AppRouter />
-          <Busyindicator overlayColor={Colors.ThemeColor} />
-        {/* </View> */}
-      </Provider>
-    );
-  }
 }
 export default App;

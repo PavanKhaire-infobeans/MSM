@@ -742,7 +742,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
             alignItems: 'center',
             backgroundColor: '#fff',
           }}>
-          <StatusBar barStyle={'dark-content'} />
+          <StatusBar barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
           <NavigationHeaderSafeArea
             isWhite={true}
             rightText="Save"

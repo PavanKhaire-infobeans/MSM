@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Stories Matter</string>
+    <string name="app_name">My Stories Matter Dev</string>
     <string name="splash_string">Relive your memories
         Reunite with friends</string>
     <string name="asset_statements" translatable="false">[{ \"include\": \"https://mystoriesmatter.com/.well-known/assetlinks.json\" }]</string>

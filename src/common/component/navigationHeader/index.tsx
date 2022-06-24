@@ -22,22 +22,10 @@ export default class NavigationHeader extends Component<{
           this.props.style,
           {
             backgroundColor: this.props.backgroundColor,
-            paddingTop: this.props.removePadding
-              ? Platform.OS == 'ios'
-                ? DeviceInfo.hasNotch()
-                  ? 35
-                  : 20
-                : 0
-              : 0,
-            height:
-              54 +
-              (this.props.removePadding
-                ? 0
-                : Platform.OS == 'ios'
-                ? DeviceInfo.hasNotch()
-                  ? 37
-                  : 22
-                : 0),
+            paddingTop: this.props.removePadding ? Platform.OS == 'ios'
+                ? DeviceInfo.hasNotch() ? 35 : 20 : 0 : 0,
+            height: 54 + (this.props.removePadding ? 0 : Platform.OS == 'ios'
+                ? DeviceInfo.hasNotch() ? 37 : 22 : 0),
             flexDirection: 'row',
           },
         ]}>

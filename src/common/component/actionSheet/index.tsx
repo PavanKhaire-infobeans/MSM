@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import {
   View,
   Image,
@@ -8,11 +8,15 @@ import {
   TouchableOpacity,
   Keyboard,
   Platform,
+  TouchableWithoutFeedback,
+  Modal,
 } from 'react-native';
-import {fontSize, Colors} from '../../constants';
-import {Actions} from 'react-native-router-flux';
+import { fontSize, Colors } from '../../constants';
+import { Actions } from 'react-native-router-flux';
 import TextNew from '../Text';
-const {height} = Dimensions.get('window');
+import styles from './styles';
+
+const { height } = Dimensions.get('window');
 
 export type ActionSheetItem = {
   index: number;
@@ -32,85 +36,131 @@ type Props = {
   width: string | number;
   popToAddContent?: boolean;
 };
-type State = {bottom: any; hidden: boolean};
+type State = { bottom: any; hidden: boolean };
 
-export default class ActionSheet extends React.Component<Props, State> {
-  static defaultProps: Props = {
-    actions: [],
-    width: '100%',
-  };
+const ActionSheet = forwardRef((props: Props, ref: any) => {
 
-  state: State = {
+  const [state, setState] = useState({
     bottom: new Animated.Value(-height),
     hidden: true,
+  });
+  const [showModal, setShowModal] = useState(true);
+
+  const showSheet = () => {
+    setState(prevState =>
+    ({
+      ...prevState,
+      hidden: false
+    }))
+
+    Animated.timing(state.bottom, {
+      toValue: 0,
+      duration: 200,
+    }).start();
   };
 
-  showSheet = () => {
-    this.setState({hidden: false}, () => {
-      Animated.timing(this.state.bottom, {
-        toValue: 0,
-        duration: 200,
-      }).start();
-    });
-  };
-
-  hideSheet = () => {
-    Animated.timing(this.state.bottom, {
+  const hideSheet = () => {
+    Animated.timing(state.bottom, {
       toValue: -height,
       duration: 200,
     }).start(() => {
       setTimeout(() => {
-        this.setState({hidden: true});
+        setState(prevState =>
+        ({
+          ...prevState,
+          hidden: true
+        }))
       }, 20);
     });
   };
 
-  render() {
-    if (this.state.hidden || this.props.actions.length == 0) {
-      return <View style={{height: 0, width: 0}} />;
-    } else {
-      return (
+
+  useImperativeHandle(ref,
+    () => ({
+      showSheet: () => {
+        setState(prevState =>
+        ({
+          ...prevState,
+          hidden: false
+        }))
+
+        Animated.timing(state.bottom, {
+          toValue: 0,
+          duration: 200,
+        }).start();
+      },
+      hideSheet: () => {
+        Animated.timing(state.bottom, {
+          toValue: -height,
+          duration: 200,
+        }).start(() => {
+          setTimeout(() => {
+            setState(prevState =>
+            ({
+              ...prevState,
+              hidden: true
+            }))
+          }, 20);
+        });
+      }
+
+    }));
+
+  if (state.hidden || props.actions.length == 0) {
+    return <View style={{ height: 0, width: 0 }} />;
+  }
+  else {
+    return (
+      <Modal
+        animationType="none"
+        transparent={true}
+        // onRequestClose={() => { setShowModal(false)}}
+        style={{ backgroundColor: Colors.blacknewrgb, flex: 1 }}
+        visible={true}//showModal
+      >
         <View
-          style={{
-            position: 'absolute',
-            backgroundColor: '#00000045',
-            width: '100%',
-            height: '100%',
-            alignItems: 'center',
-            top: 0,
-          }}>
+          style={styles.container}>
           <Animated.View
-            style={{
-              backgroundColor: 'white',
-              maxWidth: 768,
-              width: this.props.width,
-              position: 'absolute',
-              bottom: this.state.bottom,
-              paddingBottom: 15,
-            }}>
+            style={[styles.cellContainer, { width: props.width, bottom: state.bottom, borderRadius: 13 }]}>
+
             <View>
-              {this.props.title && this.props.title.length > 0 ? (
+              {props.title && props.title.length > 0 ? (
                 <TextNew
-                  style={{
-                    color: '#595959',
-                    paddingTop: 15,
-                    paddingStart: 24,
-                    height: 56,
-                    ...fontSize(18),
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                  }}>
-                  {this.props.title}
+                  style={styles.textTitle}>
+                  {props.title}
                 </TextNew>
               ) : (
                 <View></View>
               )}
 
               <FlatList
-                data={this.props.actions}
+                data={props.actions}
                 keyExtractor={(_, index: number) => `${index}`}
+                scrollEnabled={false}
+                style={{ borderRadius: 13 }}
                 onScroll={() => {
                   Keyboard.dismiss();
                 }}
+                ListHeaderComponent={() => (
+                  <View
+                    style={[styles.listContainer, {
+                      borderTopLeftRadius: 13,
+                      borderTopRightRadius: 13,
+                      borderBottomColor: Colors.a5a5a7,
+                      height: 42,
+                      borderBottomWidth: 1
+                    }]}>
+                    {/* <Image source={data.image} resizeMode="contain" /> */}
+                    <TextNew
+                      style={[styles.listText, {
+                        color: Colors.c3c3c3,
+                        ...fontSize(13),
+                        textAlign: 'center'
+                      }]}>
+                      {props.actions && props.actions.length && props.actions[0] && props.actions[0].text.includes('Yes,') ? `Are you done writing this memory?` : `Save for later?`}
+                    </TextNew>
+                  </View>
+                )}
                 ItemSeparatorComponent={({
                   leadingItem,
                 }: {
@@ -119,62 +169,62 @@ export default class ActionSheet extends React.Component<Props, State> {
                 }) => {
                   return (
                     <View
-                      style={{
-                        height: 1,
-                        backgroundColor:
-                          leadingItem.index == this.props.actions.length - 2
-                            ? 'rgba(0.35, 0.35, 0.35, 0.2)'
-                            : 'white',
-                      }}
+                      style={[styles.flatlistContainer, {
+                        backgroundColor: leadingItem.index == props.actions.length - 2 ? Colors.transparent : Colors.blacknewrgb,
+                        height: leadingItem.index == props.actions.length - 2 ? 8 : 0
+                      }]}
                     />
                   );
                 }}
-                renderItem={({item: data}: {item: ActionSheetItem}) => {
+                renderItem={({ item: data }: { item: ActionSheetItem }) => {
                   return (
-                    <TouchableOpacity
+                    <TouchableWithoutFeedback
                       onPress={() => {
-                        this.props.memoryActions
-                          ? this.props.onActionClick &&
-                            this.props.onActionClick(data.index, data)
-                          : this.props.onActionClick &&
-                            this.props.onActionClick(data.index);
-                        this.hideSheet();
+                        props.memoryActions ? props.onActionClick && props.onActionClick(data.index, data)
+                          : props.onActionClick && props.onActionClick(data.index);
+                        hideSheet();
                         Keyboard.dismiss();
-                        {
-                          this.props.popToAddContent &&
-                            Actions.popTo('addContent');
-                        }
+                        // {
+                        //   props.popToAddContent &&
+                        //     Actions.popTo('addContent');
+                        // }
+                        // setShowModal(false)
                       }}>
                       <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          padding: 10,
-                          paddingStart: 24,
-                          height: 56,
-                        }}>
-                        <Image source={data.image} resizeMode="contain" />
+                        style={[styles.listContainer, {
+                          borderRadius: data.text.toLowerCase().includes('cancel') ? 13 : 0,
+                          borderBottomColor: Colors.a5a5a7,
+                          borderBottomWidth: 1,
+                          borderBottomLeftRadius: data.index == props.actions.length - 2 ? 13 : 0,
+                          borderBottomRightRadius: data.index == props.actions.length - 2 ? 13 : 0,
+                          backgroundColor: data.text.toLowerCase().includes('cancel') ? Colors.white : Colors.e0e0e0
+                        }]}>
+                        {/* <Image source={data.image} resizeMode="contain" /> */}
                         <TextNew
-                          style={{
-                            color:
-                              data.isDestructive == 1
-                                ? Colors.NewRadColor
-                                : 'black',
-                            marginLeft: 24,
-                            ...fontSize(18),
-                          }}>
+                          style={[styles.listText, {
+                            color: data.text.includes('No,') ? Colors.systemRed : Colors.systemBlue,
+                            fontWeight: data.index == props.actions.length - 1 ? '600' : '400',
+                            textAlign: 'center'
+                          }]}>
                           {data.text}
                         </TextNew>
                       </View>
-                    </TouchableOpacity>
+                    </TouchableWithoutFeedback>
                   );
                 }}
               />
             </View>
           </Animated.View>
-          {/* <View style={{height: 50, width:"100%", backgroundColor: "#fff", bottom: -50, position:"absolute"}}></View> */}
         </View>
-      );
-    }
+      </Modal>
+    );
   }
-}
+
+});
+
+ActionSheet.defaultProps = {
+  actions: [],
+  width: '100%',
+};
+
+export default ActionSheet;

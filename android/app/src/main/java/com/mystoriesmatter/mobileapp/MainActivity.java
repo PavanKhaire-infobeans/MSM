@@ -1,4 +1,4 @@
-package com.mystoriesmatter.mobileapp;
+package com.cueback;
 
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;

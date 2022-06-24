@@ -1,13 +1,14 @@
-import {Account} from '../../../common/loginStore';
+import { Account } from '../../../common/loginStore';
 import {
   getValue,
   getDetails,
   keyInt,
   keyArray,
   TimeStampMilliSeconds,
+  keyString,
 } from '../../../common/constants';
 import Utility from '../../../common/utility';
-import {months} from '../../createMemory';
+import { months } from '../../createMemory';
 var memoryDraftsArray: any[] = [];
 var data_count = 0;
 export class MemoryDraftsDataModel {
@@ -110,7 +111,7 @@ export class MemoryDraftsDataModel {
     const regex = /(<([^>]+)>)/gi;
     let description = getDetails(draftDetails, ['description']);
     description = description.replace(regex, '');
-    let date: any = {year: 'Year*', month: 'Month*', day: 'Day'}; // memory_date, season
+    let date: any = { year: 'Year*', month: 'Month*', day: 'Day' }; // memory_date, season
     let season = getDetails(draftDetails, ['season']).trim();
     let memoryDate = new Date(
       parseInt(getDetails(draftDetails, ['memory_date'])) * 1000,
@@ -125,7 +126,7 @@ export class MemoryDraftsDataModel {
     }
     let tags = getDetails(draftDetails, ['memory_tags']).map(
       (element: any, index: any) => {
-        return {tid: TimeStampMilliSeconds() + index, name: element};
+        return { tid: TimeStampMilliSeconds() + index, name: element };
       },
     );
     let shareOption =
@@ -134,15 +135,15 @@ export class MemoryDraftsDataModel {
         : 'allfriends';
     let images: any = [];
     getDetails(draftDetails, ['images'], keyArray).forEach((element: any) => {
-      images.push({...element, type: 'images'});
+      images.push({ ...element, type: 'images' });
     });
     let audios: any = [];
     getDetails(draftDetails, ['audios'], keyArray).forEach((element: any) => {
-      audios.push({...element, type: 'audios'});
+      audios.push({ ...element, type: 'audios' });
     });
     let pdf: any = [];
     getDetails(draftDetails, ['pdf'], keyArray).forEach((element: any) => {
-      pdf.push({...element, type: 'files'});
+      pdf.push({ ...element, type: 'files' });
     });
     let whoElseWhereThere = getDetails(
       draftDetails,
@@ -176,9 +177,11 @@ export class MemoryDraftsDataModel {
       title: getDetails(draftDetails, ['title']),
       description: description,
       date: date,
+      memoryDate,
+      memory_date: getDetails(draftDetails, ['memory_date'], keyString),
       locationList: [],
       taggedCount: taggedCount,
-      location: {description: getDetails(draftDetails, ['location'])},
+      location: { description: getDetails(draftDetails, ['location']) },
       tags: tags,
       recentTags: [],
       whoElseWhereThere: whoElseWhereThere,

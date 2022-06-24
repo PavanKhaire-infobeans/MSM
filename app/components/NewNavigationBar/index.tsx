@@ -9,6 +9,7 @@ import {
   ImageBackground,
   DeviceEventEmitter,
   Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Text from '../../../src/common/component/Text';
 import React, { useEffect, useState } from 'react';
@@ -105,10 +106,10 @@ const NavigationBar = (props: Props) => {
     // let isPublicInstance: any = Account.selectedData().is_public_site;
     return (
       <View style={styles.titleContainer} testID={testID.title.text}>
-        <TouchableOpacity onPress={props.filterClick} style={{ height: '65%', width: '90%', alignSelf: 'center', padding: 5, paddingHorizontal: 10, justifyContent: 'space-between', borderRadius: 12, alignItems: 'center', flexDirection: 'row', borderWidth: 1, borderColor: Colors.bordercolor }}>
+        {/* <TouchableOpacity onPress={props.filterClick} style={styles.filterContainer}>
           <Text style={styles.titleText}>{props.title}</Text>
           <Image source={chevrondown}></Image>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   }
@@ -123,31 +124,27 @@ const NavigationBar = (props: Props) => {
   };
 
   const _renderRight = () => {
-    // let imageUrl = Account.selectedData().profileImage;
-    // var loadProfileImage = true;
-    // if (imageUrl === '') {
-    //   loadProfileImage = false;
-    // } else if (imageUrl.indexOf('public://') !== -1) {
-    //   loadProfileImage = false;
-    // }
+
     return (
-      <View style={{ flex: 1.5, justifyContent: 'center', marginRight: 5 }}>
+      <View style={styles.rightContainer}>
         {
           props.currentTabName == ListType.Timeline ?
-            <TouchableOpacity
+            <TouchableWithoutFeedback
               onPress={() => {
                 props.showJumpto(true);
                 // _mindPopAction();
               }}
-              style={styles.rightButtonsTouchable}
+
               testID={testID.rightButtons.mindpop}>
-              <Image
-                style={styles.rightButtonsBackgroundImage}
-                source={jumptocalendar}
-                resizeMode="contain"
-              />
-              <Text style={styles.cancleText}>{'Jump to Year'}</Text>
-            </TouchableOpacity>
+              <View style={styles.rightButtonsTouchable}>
+                <Image
+                  source={jumptocalendar}
+                  resizeMode="contain"
+                />
+                <View style={{ height: 4 }} />
+                <Text style={styles.cancleText}>{'Jump to Year'}</Text>
+              </View>
+            </TouchableWithoutFeedback>
             :
             null
         }
@@ -184,42 +181,37 @@ const NavigationBar = (props: Props) => {
   let isPublicInstance: any = Account.selectedData().is_public_site;
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        width: '100%',
-        height: 65,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor,
-        borderBottomWidth: 2,
-        borderBottomColor: Colors.bottomTabColor
-      }}>
-      <TouchableOpacity
-        style={styles.leftButtonTouchableContainer}
+      style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
+      <TouchableWithoutFeedback
         testID={testID.leftButtons.menu}
         onPress={() => {
-          showClose ? _closeAction() : Actions.drawerOpen();
+          Actions.push('myAccount');
+          // showClose ? _closeAction() : Actions.drawerOpen();
         }}>
-        {showClose ? (
-          <View style={styles.closeButton}>
-            <View >
-              <Image source={close_white} />
+        <View style={styles.leftButtonTouchableContainer}>
+          {showClose ? (
+            <View style={styles.closeButton}>
+              <View >
+                <Image source={close_white} />
+              </View>
+              <View >
+                <Text style={styles.cancleText}>Cancle</Text>
+              </View>
             </View>
-            <View >
-              <Text style={styles.cancleText}>Cancle</Text>
+          ) : (
+            <View style={styles.closeButton}>
+              <View style={styles.marginBottom} >
+                <Image source={user} />
+              </View>
+              {/* <View style={{ height: 20 }} /> */}
+              <View >
+                <Text style={styles.cancleText}>Profile</Text>
+              </View>
             </View>
-          </View>
-        ) : (
-          <View style={styles.closeButton}>
-            <View >
-              <Image source={user} />
-            </View>
-            <View >
-              <Text style={styles.cancleText}>Profile</Text>
-            </View>
-          </View>
-        )}
-      </TouchableOpacity>
+          )}
+        </View>
+
+      </TouchableWithoutFeedback>
       {_renderMiddle()}
       {_renderRight()}
     </View>

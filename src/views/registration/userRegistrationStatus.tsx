@@ -9,6 +9,7 @@ import {SubmitButton} from '../../common/component/button';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import {backBlkBtn} from '../../images';
 import {loginDrawerRef} from './prologue';
+import Utility from '../../common/utility';
 
 export default class UserRegistrationStatus extends Component<{
   userDetails: any;
@@ -41,7 +42,7 @@ export default class UserRegistrationStatus extends Component<{
             backIcon={backBlkBtn}
           />
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           {this.props.isAlreadyRegistered ? (

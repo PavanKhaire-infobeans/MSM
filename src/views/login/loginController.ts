@@ -250,7 +250,7 @@ export class LoginController implements LoginControllerProtocol {
         },
       );
     } else {
-      this.view.props.navBar._show(NO_INTERNET, Colors.WarningColor);
+      this.view._show(NO_INTERNET, Colors.WarningColor);
     }
   }
 
@@ -352,7 +352,7 @@ export class LoginController implements LoginControllerProtocol {
       siteDetails.site_logo_url || siteDetails.InstanceImageURL;
     let site_name = siteDetails.site_name || siteDetails.InstanceName;
     let instanceData = siteDetails.id || element.Response.site_id;
-    console.log('Details');
+
     this.view.selectedCommunity.values = {
       email: username,
       userAuthToken,
@@ -477,7 +477,7 @@ export class LoginController implements LoginControllerProtocol {
               //console.log(err);
             });
         } else {
-          this.view.props.navBar._show(NO_INTERNET, Colors.WarningColor);
+          this.view._show(NO_INTERNET, Colors.WarningColor);
         }
       } else {
         var msg: {message: string; ResponseMessage: string} = getValue(

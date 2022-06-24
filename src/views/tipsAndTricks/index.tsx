@@ -12,6 +12,7 @@ import Text from '../../common/component/Text';
 import {Actions} from 'react-native-router-flux';
 import {backBtn} from '../../images';
 import {Colors, fontSize} from '../../common/constants';
+import Utility from '../../common/utility';
 
 export default class TipsAndTricks extends React.Component<{[x: string]: any}> {
   static navigationOptions = ({
@@ -76,7 +77,7 @@ export default class TipsAndTricks extends React.Component<{[x: string]: any}> {
           backgroundColor: Colors.NewThemeColor,
         }}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewDarkThemeColor}
         />
       </SafeAreaView>

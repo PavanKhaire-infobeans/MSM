@@ -434,6 +434,7 @@ export const GetPrompts = async (
       });
     if (response != undefined && response != null) {
       if (response.ResponseCode == 200) {
+        // console.log("kPromptsList :",JSON.stringify(response))
         EventManager.callBack(
           kPromptsList,
           true,

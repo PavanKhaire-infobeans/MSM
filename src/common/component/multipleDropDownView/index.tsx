@@ -52,15 +52,14 @@ const MultipleDropDownSelector = (props: Props) => {
   //   }
   // }
 
-  const showPicker = () => { };
   return (
     <View
       style={[
         props.style,
-        { justifyContent: 'flex-start', flexDirection: 'column' },
+        styles.mainContainer,
       ]}>
-      <View style={{ minWidth: 180, flexDirection: 'row', marginBottom: 5 }}>
-        <Text style={{ lineHeight: 26, fontSize: 18, color: '#6B6B6B' }}>
+      <View style={styles.placeholderContainer}>
+        <Text style={styles.placeholderTextStyle}>
           {props.placeholderText}
         </Text>
         {props.isRequired ? (
@@ -69,12 +68,7 @@ const MultipleDropDownSelector = (props: Props) => {
       </View>
 
       <View
-        style={{
-          height: 100,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
+        style={styles.dropDownContainer}>
         <DropDownSelector
           value={[props.view1Value]}
           placeholderText={props.view1Title}
@@ -94,22 +88,10 @@ const MultipleDropDownSelector = (props: Props) => {
       </View>
 
       <Animated.View
-        style={{
-          width: '100%',
-          height: props.animatedViewHeight,
-          opacity: state.opacity,
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-        }}>
-        <View style={{ minWidth: 180 }}>
+        style={[styles.animatedViewContainer,{ height: props.animatedViewHeight, opacity: state.opacity,}]}>
+        <View style={styles.minWidth}>
           <Text
-            style={{
-              ...fontSize(11),
-              color: Colors.ErrorColor,
-              marginTop: 1,
-              lineHeight: 13,
-              letterSpacing: -0.1,
-            }}>
+            style={styles.errormessageTextStyle}>
             {`*${props.errorMessage}`}
           </Text>
         </View>

@@ -8,16 +8,16 @@ import {
 import ImageCropPicker, {
   Image as PickerImage,
 } from 'react-native-image-crop-picker';
-import {TempFile} from '../../../views/mindPop/edit';
-import {FileType} from '../../database/mindPopStore/mindPopStore';
-import {ToastMessage} from '../Toast';
+import { TempFile } from '../../../views/mindPop/edit';
+import { FileType } from '../../database/mindPopStore/mindPopStore';
+import { ToastMessage } from '../Toast';
 //@ts-ignore
 import DocumentPicker from 'react-native-document-picker';
-import {Alert, Platform} from 'react-native';
-import {Account} from '../../loginStore';
+import { Alert, Platform } from 'react-native';
+import { Account } from '../../loginStore';
 import Utility from '../../utility';
 import RNFetchBlob from 'rn-fetch-blob';
-import {Console} from 'console';
+import { Console } from 'console';
 let options = {
   multiple: true,
   mediaType: 'photo',
@@ -94,7 +94,9 @@ export const CaptureImage = (callback: any) => {
           callback(tempfilesArr);
           return tempfilesArr;
         })
-        .catch(e => {});
+        .catch(e => {
+          console.log("error in camera", e)
+        });
     }
   });
 };
@@ -281,47 +283,87 @@ export const PickPDF = async (callback: any) => {
   });
 };
 
-export const PickImage = (callback: any) => {
-  requestPermission('photo').then(success => {
-    console.log('PickImage: ', success);
+export const PickImage = async(callback: any) => {
+  requestPermission('photo').then(async (success) => {
+  //   console.log('PickImage: ', success);
     if (success) {
-      ImageCropPicker.openPicker(options)
-        .then(response => {
-          //console.log(response, typeof response);
-          var tempfiles: TempFile[] = (response as Array<PickerImage>).map(
-            obj => {
-              let path =
-                obj.path.indexOf('file://') != -1
-                  ? obj.path
-                  : 'file://' + obj.path;
-              let fid = GenerateRandomID();
-              let TempFile = {
-                fid: fid,
-                filePath: path,
-                thumb_uri: path,
-                isLocal: true,
-                type: `${FileType[FileType.image]}s`,
-                status: TempFileStatus.needsToUpload,
-                userId: Account.selectedData().userID,
-                file_title: '',
-                file_description: '',
-                userName:
-                  Account.selectedData().firstName +
-                  ' ' +
-                  Account.selectedData().lastName,
-                date: Utility.dateObjectToDefaultFormat(new Date()),
-              };
-              return TempFile;
-            },
-          );
-          if (tempfiles.length > 5) {
-            tempfiles.splice(5, tempfiles.length - 1);
-            ToastMessage('Maximum 5 photos can be selected', Colors.ErrorColor);
-          }
-          callback(tempfiles);
-          return tempfiles;
-        })
-        .catch(e => {});
+
+      try {
+        const res = await DocumentPicker.pick({
+          type: [DocumentPicker.types.images],
+        });
+        console.log('res : ' + JSON.stringify(res));
+        if (res) {
+          let path =
+            res.uri.indexOf('file://') != -1 ? res.uri : 'file://' + res.uri;
+          let fid = GenerateRandomID();
+          var tempfile: TempFile = {
+            fid: fid,
+            filePath: path,
+            thumb_uri: path,
+            isLocal: true,
+            type: `${FileType[FileType.image]}s`,
+            status: TempFileStatus.needsToUpload,
+            filename: res.name,
+            userId: Account.selectedData().userID,
+            file_title: '',
+            file_description: '',
+            userName:
+              Account.selectedData().firstName +
+              ' ' +
+              Account.selectedData().lastName,
+            date: Utility.dateObjectToDefaultFormat(new Date()),
+          };
+          callback([tempfile]);
+        }
+      } catch (err) {
+        //Handling any exception (If any)
+        if (DocumentPicker.isCancel(err)) {
+          //If user canceled the document selection
+          console.log('Canceled from single doc picker');
+        } else {
+          //For Unknown Error
+          console.log('Unknown Error: ' + JSON.stringify(err));
+          throw err;
+        }
+      }
+      // ImageCropPicker.openPicker(options)
+      //   .then(response => {
+      //     //console.log(response, typeof response);
+      //     var tempfiles: TempFile[] = (response as Array<PickerImage>).map(
+      //       obj => {
+      //         let path =
+      //           obj.path.indexOf('file://') != -1
+      //             ? obj.path
+      //             : 'file://' + obj.path;
+      //         let fid = GenerateRandomID();
+      //         let TempFile = {
+      //           fid: fid,
+      //           filePath: path,
+      //           thumb_uri: path,
+      //           isLocal: true,
+      //           type: `${FileType[FileType.image]}s`,
+      //           status: TempFileStatus.needsToUpload,
+      //           userId: Account.selectedData().userID,
+      //           file_title: '',
+      //           file_description: '',
+      //           userName:
+      //             Account.selectedData().firstName +
+      //             ' ' +
+      //             Account.selectedData().lastName,
+      //           date: Utility.dateObjectToDefaultFormat(new Date()),
+      //         };
+      //         return TempFile;
+      //       },
+      //     );
+      //     if (tempfiles.length > 5) {
+      //       tempfiles.splice(5, tempfiles.length - 1);
+      //       ToastMessage('Maximum 5 photos can be selected', Colors.ErrorColor);
+      //     }
+      //     callback(tempfiles);
+      //     return tempfiles;
+      //   })
+      //   .catch(e => {});
     }
   });
 };

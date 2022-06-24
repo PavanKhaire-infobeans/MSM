@@ -37,9 +37,10 @@ import { any } from 'prop-types';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import { GetPromptBYPromptId, GetPrompts, kGetPromptByID, kPromptsList } from '../myMemories/myMemoriesWebService';
+import { GET_FILTERS_DATA_TIMELINE, ListType } from '../dashboard/dashboardReducer';
 export const eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);
 
-type Props = {getUser: Function; user: UserData & {notLoggedIn: boolean}};
+type Props = {getUser: Function; user: UserData & {notLoggedIn: boolean}; fetchFiltersDataTimeline:Function};
 class Splash extends Component<Props> {
 
       state = {
@@ -160,6 +161,7 @@ class Splash extends Component<Props> {
     ) {
       Account.selectedData().values = nextProps.user;
       // Actions.reset("dashboardIndex")
+      this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
       try {
 
         if(this.state.fromDeeplinking){
@@ -269,6 +271,7 @@ class Splash extends Component<Props> {
         else {
           Actions.dashBoard();
         }
+
       } 
       catch (error) {
         console.log(error)
@@ -306,7 +309,7 @@ class Splash extends Component<Props> {
           backgroundColor: '#fff',
         }}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           translucent
           backgroundColor="transparent"
         />
@@ -345,6 +348,7 @@ const mapState = (state: {[x: string]: any}): {user: UserData} => ({
 });
 const mapDispatch = (dispatch: Function) => ({
   getUser: () => dispatch({type: UserAccount.Get}),
+  fetchFiltersDataTimeline: (payload: any) => dispatch({ type: GET_FILTERS_DATA_TIMELINE, payload: payload }),
 });
 
 export default connect(mapState, mapDispatch)(Splash);

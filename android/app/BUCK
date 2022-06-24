@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.mystoriesmatter.mobileapp",
+    package = "com.cueback",
 )
 
 android_resource(
     name = "res",
-    package = "com.mystoriesmatter.mobileapp",
+    package = "com.cueback",
     res = "src/main/res",
 )
 

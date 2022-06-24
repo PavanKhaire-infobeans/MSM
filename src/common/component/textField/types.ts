@@ -32,6 +32,7 @@ export type Props = {
   autoFocus?: boolean;
   isCuebackRegistration?: boolean;
   showStrength?: boolean;
+  keyBoardHeight?: (e: number) => void;
 };
 
 export type State = {
@@ -47,4 +48,6 @@ export type State = {
   numericValue: any;
   passwordStrength: any;
   showPasswordStrength?: boolean;
+  inputFocused?: boolean;
+  value:string;
 };

@@ -12,6 +12,7 @@ import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {Props} from '../login/loginController';
 import TextNew from '../../common/component/Text';
 import {SubmitButton} from '../../common/component/button';
+import styles from './styles';
 export default class CreateMemoryIntro extends React.Component<Props> {
   _carousal: any;
   state = {
@@ -65,18 +66,18 @@ export default class CreateMemoryIntro extends React.Component<Props> {
     let index = item.index;
     return (
       <View
-        style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+        style={styles.createMemoryIntroContainer}>
         <TextNew
-          style={{...fontSize(18), fontWeight: '700', textAlign: 'center'}}>
+          style={styles.textStyle18Weight700}>
           {this.createMemoryIntro[index].title}
         </TextNew>
         <TextNew
-          style={{...fontSize(18), fontWeight: '400', textAlign: 'center'}}>
+          style={styles.textStyle18Weight400}>
           {this.createMemoryIntro[index].desc}
         </TextNew>
         <Image
           source={this.createMemoryIntro[index].imageSrc}
-          style={{margin: 20}}
+          style={styles.margin20}
         />
       </View>
     );
@@ -85,21 +86,9 @@ export default class CreateMemoryIntro extends React.Component<Props> {
     return (
       <Modal transparent>
         <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={styles.containerMemoIntro}>
           <View
-            style={{
-              width: '90%',
-              borderRadius: 5,
-              backgroundColor: 'white',
-              padding: 20,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            style={styles.subContainerMemoIntro}>
             <Carousel
               ref={(c: any) => {
                 this._carousal = c;
@@ -130,34 +119,21 @@ export default class CreateMemoryIntro extends React.Component<Props> {
                 this.setState({scrolling: true, fadeIn: new Animated.Value(1)})
               }
             />
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={styles.createMemoryIntroStyle}>
               {this.createMemoryIntro.map((obj: any, index1: any) => {
                 return (
                   <View
-                    style={{
-                      height: 5,
-                      borderRadius: 1,
-                      width: 16,
-                      marginRight: 5,
-                      backgroundColor:
-                        index1 <= this.state.currentIndex
-                          ? '#207D89'
-                          : '#C4C4C4',
-                    }}
+                    style={[styles.createMemoryIntroContainerStyle,{
+                      backgroundColor: index1 <= this.state.currentIndex ? Colors.BtnBgColor : Colors.newBagroundColor,
+                    }]}
                   />
                 );
               })}
             </View>
             <SubmitButton
-              style={{
-                width: '90%',
-                backgroundColor: Colors.ThemeColor,
-                ...fontSize(22),
-              }}
+              style={styles.submitBtnStyle}
               text={
-                this.state.currentIndex != this.createMemoryIntro.length - 1
-                  ? 'Close'
-                  : 'Finish'
+                this.state.currentIndex != this.createMemoryIntro.length - 1 ? 'Close': 'Finish'
               }
               onPress={() => this.props.cancelMemoryIntro()}
             />

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Text from '../Text';
 import { Props, State } from './types';
-import { styles } from './design';
+import { styles } from './styles';
 import { Colors, fontSize } from '../../constants';
 
 const kTop = 19,
@@ -82,66 +82,40 @@ export default class DropDownSelector extends React.Component<Props, State> {
     let selectedValue = this.props.selectedValue || '';
     return (
       <View style={[this.props.style, { flexDirection: 'column' }]}>
-        <View style={{ flex: 1, justifyContent: 'center', minWidth: 150 }}>
+        <View style={styles.textContainer}>
           <TouchableHighlight
             underlayColor="#cccccc3e"
             onPress={this.showPicker}>
             <Animated.View
-              style={{
+              style={[styles.innerView, {
+                backgroundColor: this.props.isCuebackRegistration ? '#fff' : Colors.unSelectedFilterbg,
                 height: this.state.height,
-                backgroundColor: this.props.isCuebackRegistration
-                  ? '#fff'
-                  : Colors.unSelectedFilterbg,
-                flexDirection: 'row',
-                borderRadius: 8,
-                overflow: 'hidden',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor: this.props.showError
-                  ? Colors.NewRadColor
-                  : this.props.isCuebackRegistration
-                    ? Colors.TextColor
-                    : 'transparent',
-              }}>
-              <View style={[this.props.inputViewStyle, { alignItems: 'center', justifyContent: 'center' }]}>
+                borderColor: this.props.showError ? Colors.NewRadColor : this.props.isCuebackRegistration
+                  ? Colors.TextColor : 'transparent',
+              }]}>
+              <View style={[this.props.inputViewStyle, styles.animatedtextContainer]}>
+
                 <Animated.Text
-                  style={{
-                    color: this.props.isCuebackRegistration
-                      ? Colors.TextColor
-                      : selectedValue.length > 0
-                        ? Colors.TextColor
-                        : this.props.placeholderTextColor,
-                    ...fontSize(18),
-                    fontFamily: 'Inter',
-                    // position: 'absolute',
-                    textAlign: 'center',
-                    // top: kTopAnimated,
+                  style={[styles.animatedtextStyle, {
+                    color: this.props.isCuebackRegistration ? Colors.TextColor : selectedValue.length > 0
+                      ? Colors.TextColor : this.props.placeholderTextColor,
                     opacity: this.props.isCuebackRegistration ? 0.6 : 1,
-                    // left: 8,
-                  }}>
+                  }]}>
+
                   {this.props.placeholderText}
-                  {this.props.isRequired ? (
-                    <Animated.Text style={{ color: Colors.NewRadColor }}>
-                      {' *'}
-                    </Animated.Text>
-                  ) : null}
+
+                  {
+                    this.props.isRequired ?
+                      <Animated.Text style={{ color: Colors.NewRadColor }}>
+                        {' *'}
+                      </Animated.Text>
+                      :
+                      null
+                  }
+
                 </Animated.Text>
                 <Text
-                  style={[
-                    {
-                      // left: 0,
-                      fontFamily: 'Inter',
-                      // top: 12,
-                      ...fontSize(18),
-                      // height: '70%',
-                      color: this.props.isCuebackRegistration
-                        ? Colors.TextColor
-                        : Colors.TextColor,
-                      lineHeight: 35,
-                      letterSpacing: -0.1,
-                      // paddingRight: 20,
-                    },
-                  ]}>
+                  style={[styles.starStyle, { color: this.props.isCuebackRegistration ? Colors.TextColor : Colors.TextColor, }]}>
                   {selectedValue}
                 </Text>
               </View>
@@ -166,21 +140,14 @@ export default class DropDownSelector extends React.Component<Props, State> {
           </TouchableHighlight>
         </View>
         <Animated.View
-          style={{
-            width: '100%',
-            height: this.props.animatedViewHeight,
-            opacity: this.state.opacity,
-            alignItems: 'flex-start',
-          }}>
-          <View style={{ minWidth: 140 }}>
+          style={[
+            styles.errorMessageContainer, {
+              height: this.props.animatedViewHeight,
+              opacity: this.state.opacity,
+            }]}>
+          <View style={styles.minWidth}>
             <Text
-              style={{
-                ...fontSize(11),
-                color: Colors.NewRadColor,
-                marginTop: 1,
-                lineHeight: 13,
-                letterSpacing: -0.1,
-              }}>
+              style={styles.errorTextStyle}>
               {`*${this.props.errorMessage}`}
             </Text>
           </View>

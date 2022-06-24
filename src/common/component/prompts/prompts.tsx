@@ -8,10 +8,10 @@ import {
 } from 'react-native';
 import Text from '../Text';
 //@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
 import {Size, Colors, fontSize} from '../../constants';
 //@ts-ignore
 import Carousel, {Pagination} from 'react-native-snap-carousel';
+import styles from './styles';
 type Props = {
   data: any;
   onAddToMemory?: (activeIndex: any) => void;
@@ -61,18 +61,8 @@ export default class Prompts extends React.Component<Props, State> {
       <Pagination
         dotsLength={this.props.data.length}
         activeDotIndex={activeSlide}
-        containerStyle={{
-          backgroundColor: 'transparent',
-          marginTop: -35,
-          marginBottom: -15,
-        }}
-        dotStyle={{
-          width: 10,
-          height: 10,
-          borderRadius: 5,
-          marginHorizontal: -5,
-          backgroundColor: '#fff',
-        }}
+        containerStyle={styles.paginationContainerStyle}
+        dotStyle={styles.dotStyle}
         inactiveDotOpacity={0.4}
         inactiveDotScale={0.7}
       />
@@ -88,21 +78,9 @@ export default class Prompts extends React.Component<Props, State> {
           extraData={this.state}
           renderItem={(item: any) => (
             <View
-              style={{
-                width: '100%',
-                padding: 16,
-                paddingTop: 0,
-                alignItems: 'center',
-                height: 100,
-                justifyContent: 'center',
-              }}>
+              style={styles.carouselContainer}>
               <Text
-                style={{
-                  margin: 1,
-                  textAlign: 'center',
-                  ...fontSize(22),
-                  color: '#fff',
-                }}
+                style={styles.promptTextStyle}
                 numberOfLines={3}>
                 {item.item?.prompt_title}
               </Text>
@@ -129,17 +107,8 @@ export default class Prompts extends React.Component<Props, State> {
             }
           }}>
           <View
-            style={{
-              width: 200,
-              padding: 10,
-              borderRadius: 50,
-              borderColor: '#fff',
-              borderWidth: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              alignSelf: 'center',
-            }}>
-            <Text style={{...fontSize(18), color: '#fff', fontWeight: '400'}}>
+            style={styles.buttonContainer}>
+            <Text style={styles.buttonTextColor}>
               Add your memory
             </Text>
           </View>

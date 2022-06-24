@@ -62,7 +62,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:432679085801:android:e3414ceb32f7c7d5f3b278",
         "android_client_info": {
-          "package_name": "com.mystoriesmatter.mobileapp"
+          "package_name": "com.cueback"
         }
       },
       "oauth_client": [
@@ -70,7 +70,7 @@
           "client_id": "432679085801-3sg3796v9nnaj0f8oa9gsnttie0vvd93.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mystoriesmatter.mobileapp",
+            "package_name": "com.cueback",
             "certificate_hash": "e6105ef7126973b1c5708dc51923d1940468b13b"
           }
         },
@@ -78,7 +78,7 @@
           "client_id": "432679085801-54iul4794tr8ocpgi7oc1lh281hv0vlm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mystoriesmatter.mobileapp",
+            "package_name": "com.cueback",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
@@ -86,7 +86,7 @@
           "client_id": "432679085801-q8rbdgmjavad4ovcfqn4e0a047lpgqdc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mystoriesmatter.mobileapp",
+            "package_name": "com.cueback",
             "certificate_hash": "1819956b1d873b08c18bb26f1051e29d6976dbb8"
           }
         },

@@ -17,17 +17,17 @@ import {
   Alert,
 } from 'react-native';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 // @ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
-import {Colors, fontSize} from '../../common/constants';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
+import { Colors, fontSize } from '../../common/constants';
 import NavigationThemeBar from '../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import {pdf_icon, add_icon_small, edit_icon, action_close} from '../../images';
-import {connect} from 'react-redux';
+import { pdf_icon, add_icon_small, edit_icon, action_close } from '../../images';
+import { connect } from 'react-redux';
 import TextNew from '../../common/component/Text';
 import SearchBar from '../../common/component/SearchBar';
-import {kTags, kWhoElseWhereThere} from './publish';
-import {MemoryTags} from '../memoryDetails/componentsMemoryDetails';
+import { kTags, kWhoElseWhereThere } from './publish';
+import { MemoryTags } from '../memoryDetails/componentsMemoryDetails';
 import {
   SaveMemoryTagsList,
   SaveWhoElseWhereThere,
@@ -43,10 +43,10 @@ import {
 import EventManager from '../../common/eventManager';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import Utility from '../../common/utility';
-import DeviceInfo from 'react-native-device-info';
+import style from './styles';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 
-type State = {[x: string]: any};
+type State = { [x: string]: any };
 type Props = {
   tag: string;
   title: string;
@@ -141,7 +141,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
   addToList = (item: any) => {
     let refList = this.state.referenceList;
     let found = false;
-    this.setState({errorView: false});
+    this.setState({ errorView: false });
     if (this.state.isMemoryTags)
       found = refList.some(
         (element: any) => element.tid === item.tid || element.name == item.name,
@@ -150,7 +150,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
 
     if (!found) {
       refList.push(item);
-      this.setState({referenceList: refList});
+      this.setState({ referenceList: refList });
     }
 
     let searchList = this.props.searchList;
@@ -197,7 +197,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
           }}>
           {this.state.isMemoryTags ? (
             <Text
-              style={{...fontSize(16), fontWeight: 'normal', color: '#595959'}}>
+              style={{ ...fontSize(16), fontWeight: 'normal', color: '#595959' }}>
               {item.item.name}
             </Text>
           ) : (
@@ -222,7 +222,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
             </View>
           ) : (
             <TouchableHighlight
-              style={{padding: 15}}
+              style={{ padding: 15 }}
               underlayColor={'#ffffff22'}
               onPress={() => this.removeFromList(item.item)}>
               <Image source={action_close}></Image>
@@ -235,30 +235,19 @@ class CommonListCreateMemory extends React.Component<Props, State> {
 
   userList = (item: any) => {
     return (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={style.searchContainer}>
         {item.uid != -1 && (
           <View
-            style={{
-              height: 40,
-              width: 40,
-              borderRadius: 20,
-              marginRight: 20,
-              overflow: 'hidden',
-            }}>
+            style={style.placeholderImageViewStyle}>
             <PlaceholderImageView
               uri={Utility.getFileURLFromPublicURL(item.uri)}
-              style={{
-                height: 40,
-                width: 40,
-                marginRight: 20,
-                alignContent: 'center',
-              }}
+              style={[style.placeholderImageStyleMargin, { alignContent: 'center' }]}
               resizeMode={'contain'}
               profilePic={true}
             />
           </View>
         )}
-        <Text style={{...fontSize(16), fontWeight: 'normal', color: '#595959'}}>
+        <Text style={style.normalText}>
           {item.field_first_name_value + ' ' + item.field_last_name_value}
         </Text>
       </View>
@@ -267,22 +256,10 @@ class CommonListCreateMemory extends React.Component<Props, State> {
   renderTagsItem = (item: any) => {
     return (
       <TouchableHighlight
-        underlayColor={'#ffffff33'}
+        underlayColor={Colors.underlay33OpacityColor}
         onPress={() => this.addToList(item.item)}
-        style={{
-          paddingRight: 10,
-          paddingLeft: 10,
-          paddingBottom: 0,
-          borderWidth: 1,
-          borderRadius: 20,
-          paddingTop: 5,
-          marginRight: 10,
-          justifyContent: 'center',
-          marginBottom: 0,
-          alignItems: 'center',
-          borderColor: '#595959',
-        }}>
-        <Text style={[style.normalText, {...fontSize(14), marginBottom: 5}]}>
+        style={style.tagContainerStyle}>
+        <Text style={[style.normalText, { ...fontSize(14), marginBottom: 5 }]}>
           {item.item.name}
         </Text>
       </TouchableHighlight>
@@ -294,17 +271,13 @@ class CommonListCreateMemory extends React.Component<Props, State> {
       <View>
         {this.props.recentTags.length > 0 ? (
           <View
-            style={{
-              height: 50,
-              borderBottomWidth: 1,
-              borderBottomColor: 'rgba(0, 0, 0, 0.2)',
-            }}>
+            style={style.memoryTagContainer}>
             <FlatList
               horizontal
               keyExtractor={(_, index: number) => `${index}`}
               showsHorizontalScrollIndicator={false}
               data={this.props.recentTags}
-              style={{padding: 10}}
+              style={style.padding15}
               renderItem={(item: any) => this.renderTagsItem(item)}
             />
           </View>
@@ -315,29 +288,25 @@ class CommonListCreateMemory extends React.Component<Props, State> {
 
   onChangeText = (text: any) => {
     if (text.trim().length > 0) {
-      this.setState({showSearchList: true});
+      this.setState({ showSearchList: true });
     } else {
-      this.setState({showSearchList: false});
+      this.setState({ showSearchList: false });
     }
     if (this.state.isMemoryTags) {
-      this.props.memoryTagsSearch({searchType: kSearchTags, searchTerm: text});
+      this.props.memoryTagsSearch({ searchType: kSearchTags, searchTerm: text });
     } else {
-      this.props.userSearch({searchType: kUsers, searchTerm: text});
+      this.props.userSearch({ searchType: kUsers, searchTerm: text });
     }
   };
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={style.fullFlex}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={style.emptySafeAreaStyle}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1}} onStartShouldSetResponder={() => false}>
+        <SafeAreaView style={style.SafeAreaViewContainerStyle}>
+          <View style={style.fullFlex} onStartShouldSetResponder={() => false}>
             <NavigationHeaderSafeArea
               heading={this.props.title}
               showCommunity={false}
@@ -348,23 +317,15 @@ class CommonListCreateMemory extends React.Component<Props, State> {
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <SearchBar
               ref={this.searchBar}
-              style={{
-                height: 50,
-                padding: 10,
-                alignItems: 'center',
-                borderBottomWidth: 1,
-                backgroundColor: '#F3F3F3',
-                width: '100%',
-                retainFocus: true,
-                borderBottomColor: this.state.errorView
-                  ? Colors.ErrorColor
-                  : Colors.TextColor,
-              }}
+              style={[style.commonFriendSerachStyle, {
+                backgroundColor: Colors.SerachbarColor,
+                borderBottomColor: this.state.errorView ? Colors.ErrorColor : Colors.TextColor,
+              }]}
               placeholder={this.props.placeholder}
               onSearchButtonPress={(text: string) => {
                 this.onChangeText(text);
@@ -382,18 +343,14 @@ class CommonListCreateMemory extends React.Component<Props, State> {
               this.memoryTags()}
             {this.state.errorView && (
               <Text
-                style={{
-                  ...fontSize(12),
-                  paddingLeft: 10,
-                  color: Colors.ErrorColor,
-                }}>
+                style={style.selectFriendTextStyle}>
                 *Please select some friends
               </Text>
             )}
             {this.props.searchList.length == 0 && (
               <FlatList
                 extraData={this.state}
-                style={{width: '100%'}}
+                style={style.fullWidth}
                 keyExtractor={(_, index: number) => `${index}`}
                 onScroll={() => {
                   Keyboard.dismiss();
@@ -409,7 +366,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
               <FlatList
                 extraData={this.state}
                 keyExtractor={(_, index: number) => `${index}`}
-                style={{width: '100%', backgroundColor: '#fff', flex: 1}}
+                style={style.SafeAreaViewContainerStyle}
                 keyboardShouldPersistTaps={'handled'}
                 onScroll={() => {
                   Keyboard.dismiss();
@@ -419,8 +376,9 @@ class CommonListCreateMemory extends React.Component<Props, State> {
                 renderItem={(item: any) => this.renderRow(item, true)}
               />
             )}
-            <View style={{width: '100%', height: this.state.bottomView}}></View>
-            <View style={{height: 1, width: '100%'}}></View>
+
+            <View style={[style.fullWidth, { height: this.state.bottomView }]}></View>
+            <View style={style.smallSeparator}></View>
           </View>
         </SafeAreaView>
       </View>
@@ -428,15 +386,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
   }
 }
 
-const style = StyleSheet.create({
-  normalText: {
-    ...fontSize(16),
-    fontWeight: 'normal',
-    color: '#595959',
-    marginBottom: 10,
-  },
-});
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     recentTags: state.MemoryInitials.recentTags,
     searchList: state.MemoryInitials.searchList,
@@ -448,18 +398,18 @@ const mapDispatch = (dispatch: Function) => {
     recentTagsSearch: () =>
       dispatch({
         type: MemoryTagsAPI,
-        payload: {searchType: kRecentTags, searchTerm: ''},
+        payload: { searchType: kRecentTags, searchTerm: '' },
       }),
     memoryTagsSearch: (payload: any) =>
-      dispatch({type: MemoryTagsAPI, payload: payload}),
+      dispatch({ type: MemoryTagsAPI, payload: payload }),
     userSearch: (payload: any) =>
-      dispatch({type: UserSearchAPI, payload: payload}),
+      dispatch({ type: UserSearchAPI, payload: payload }),
     setMemoryTags: (payload: any) =>
-      dispatch({type: SaveMemoryTagsList, payload: payload}),
+      dispatch({ type: SaveMemoryTagsList, payload: payload }),
     setWhoElseWhereThere: (payload: any) =>
-      dispatch({type: SaveWhoElseWhereThere, payload: payload}),
+      dispatch({ type: SaveWhoElseWhereThere, payload: payload }),
     saveSearchList: (payload: any) =>
-      dispatch({type: SaveSearchList, payload: payload}),
+      dispatch({ type: SaveSearchList, payload: payload }),
   };
 };
 

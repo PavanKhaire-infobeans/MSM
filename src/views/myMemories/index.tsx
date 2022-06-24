@@ -22,6 +22,9 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import Activities from './Activities';
 import NavigationBar from '../dashboard/NavigationBar';
 import {TabItems} from '../../common/component/TabBarIcons';
+import Utility from '../../common/utility';
+import CustomAlert from '../../common/component/customeAlert';
+import { ListType } from '../dashboard/dashboardReducer';
 type Props = {[x: string]: any};
 
 const FirstRoute = () => (
@@ -49,8 +52,6 @@ export default class MyMemoriesContainer extends React.Component<Props> {
     );
   }
 
-  componentDidMount() {}
-
   componentWillReceiveProps() {
     if (this.props.isFromMenu) {
       setTimeout(() => this.scrollableTabView.goToPage(1), 300);
@@ -59,6 +60,67 @@ export default class MyMemoriesContainer extends React.Component<Props> {
 
   _onBack = () => {
     loaderHandler.hideLoader();
+  };
+
+  showMemoryActionAlert = (title, message) => {
+    return (
+      <CustomAlert
+        modalVisible={true}
+        // setModalVisible={setModalVisible}
+        title={title}
+        message={message}
+        android={{
+          container: {
+            backgroundColor: '#ffffff'
+          },
+          title: {
+            color: Colors.black,
+            fontFamily: "SF Pro Text",
+            fontSize: 17,
+            fontWeight: '600',
+            lineHeight: 22
+          },
+          message: {
+            color: Colors.black,
+            // fontFamily: fontFamily.Inter,
+            fontSize: 16,
+            fontWeight: '500',
+          },
+        }}
+        ios={{
+          container: {
+            backgroundColor: '#D3D3D3'
+          },
+          title: {
+            color: Colors.black,
+            // fontFamily: fontFamily.Inter,
+            lineHeight: 22,
+            fontSize: 17,
+            fontWeight: '600',
+          },
+          message: {
+            color: Colors.black,
+            // fontFamily: fontFamily.Inter,
+            fontSize: 13,
+            lineHeight: 18,
+            fontWeight: '400',
+          },
+        }}
+        buttons={[
+          {
+            text: 'Great!',
+            func: () => {
+
+            },
+            styles: {
+              lineHeight: 22,
+              fontSize: 17,
+              fontWeight: '600',
+            }
+          }
+        ]}
+      />
+    );
   };
 
   render() {
@@ -78,12 +140,12 @@ export default class MyMemoriesContainer extends React.Component<Props> {
             backgroundColor: '#fff',
           }}>
           <View style={{flex: 1}}>
-            <NavigationBar title={TabItems.MyMemories} />
+            {/* <NavigationBar title={TabItems.MyMemories} /> */}
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
-            <ScrollableTabView
+            {/* <ScrollableTabView
               ref={(ref: any) => {
                 this.scrollableTabView = ref;
               }}
@@ -97,11 +159,11 @@ export default class MyMemoriesContainer extends React.Component<Props> {
                 backgroundColor: Colors.TextColor,
                 height: 2,
               }}
-              initialPage={1}>
-              <PublishedMemory tabLabel={MyMemoriesTapBarOptions.published} />
+              initialPage={1}> */}
+              {/* <PublishedMemory tabLabel={MyMemoriesTapBarOptions.published} /> */}
               <MemoryDrafts tabLabel={MyMemoriesTapBarOptions.drafts} fromDeepLink={this.props.fromDeepLink}/>
-              <Activities tabLabel={MyMemoriesTapBarOptions.activity} />
-            </ScrollableTabView>
+              {/* <Activities tabLabel={MyMemoriesTapBarOptions.activity} /> */}
+            {/* </ScrollableTabView> */}
           </View>
         </SafeAreaView>
       </View>

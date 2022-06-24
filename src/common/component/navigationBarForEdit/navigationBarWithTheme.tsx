@@ -5,6 +5,7 @@ import NavigationHeader from '../navigationHeader';
 import ProfileEditHeader from '../profileEditHeader';
 import ThemeHeader from '../profileEditHeader/themeHeader';
 import {Colors} from '../../constants';
+import Utility from '../../utility';
 
 class NavigationThemeBar extends React.Component<{[x: string]: any}> {
   render() {
@@ -14,10 +15,10 @@ class NavigationThemeBar extends React.Component<{[x: string]: any}> {
         backgroundColor={this.props.backgroundColor}
         style={{
           borderBottomWidth: this.props.hideBottomSeparator ? 0 : 2,
-          borderBottomColor: 'rgba(0, 0, 0, 0.24)',
+          borderBottomColor: Colors.backrgba,
         }}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
         <ThemeHeader

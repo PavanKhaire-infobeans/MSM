@@ -1,17 +1,7 @@
 import React from 'react';
 import {
-  View,
   Image,
-  Animated,
   Dimensions,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-  Keyboard,
-  Platform,
-  StatusBar,
-  DeviceEventEmitter,
-  TouchableHighlight,
 } from 'react-native';
 import Text from '../Text';
 import DeviceInfo from 'react-native-device-info';
@@ -20,6 +10,7 @@ const {height} = Dimensions.get('screen');
 import ImageZoom from 'react-native-image-pan-zoom';
 //@ts-ignore
 import Carousel from 'react-native-snap-carousel';
+import styles from './styles';
 
 export type ActionSheetItem = {
   key: any;
@@ -42,7 +33,7 @@ export default class ImageViewer extends React.Component<Props> {
       imageWidth={200}
       imageHeight={200}>
       <Image
-        style={{width: 200, height: 200}}
+        style={styles.imageStyle}
         source={{
           uri: 'http://v1.qzone.cc/avatar/201407/07/00/24/53b9782c444ca987.jpg!200x200.jpg',
         }}

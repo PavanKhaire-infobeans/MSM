@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, View, Platform, Text, Dimensions, Alert} from 'react-native';
+import { Image, View, Platform, Text, Dimensions, Alert } from 'react-native';
 //@ts-ignore
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {
@@ -17,12 +17,11 @@ import {
   prompts_selected,
   prompts_nonselected,
 } from '../../images';
-import { book } from '../../../app/images';
-import {fontSize, Colors} from '../constants';
+import { book, write } from '../../../app/images';
+import { fontSize, Colors, constant, fontFamily } from '../constants';
 import EventManager from '../eventManager';
-import {EventEmitter} from 'events';
-import Utility from '../utility';
-import {Account} from '../loginStore';
+import style from './styles';
+import { Account } from '../loginStore';
 
 export enum TabItems {
   AllMemories = 'All Memories',
@@ -38,16 +37,8 @@ export enum NewTabItems {
   Write = 'Write',
 }
 
-const style = EStyleSheet.create({
-  buttonStyle: {
-    fontFamily: 'Rubik',
-    textAlign: 'center',
-    ...fontSize(12),
-  },
-});
-
 export const kNotificationIndicator = 'notificationIndicators';
-export default class TabIcon extends React.Component<{[x: string]: any}> {
+export default class TabIcon extends React.Component<{ [x: string]: any }> {
   eventListener: EventManager;
   screenSize = Dimensions.get('screen');
   title = 'Notifications';
@@ -67,9 +58,9 @@ export default class TabIcon extends React.Component<{[x: string]: any}> {
       ? all_memories_selected
       : all_memories_unselected;
     // var textColor = "#000000ff"
-    var textColor = 'rgba(0.216, 0.22, 0.322, 0.75)';
+    var textColor = Colors.bordercolor;
     let paddingTop = 0;
-    let font = this.screenSize.width <= 320 ? 17 : 19;
+    let font = 19;
     switch (this.props.title || this.title) {
       case TabItems.AllMemories:
         if (this.props.focused) {
@@ -106,23 +97,6 @@ export default class TabIcon extends React.Component<{[x: string]: any}> {
         }
         break;
 
-      // case TabItems.Notifications:
-      //     paddingTop = -2
-      //     if(this.props.focused ){
-      //       img = notification_selected;
-      //       console.log("Unread notifications this account : ", Utility.unreadNotification[this.key])
-      //       if(Utility.unreadNotification[this.key] > 0){
-      //         img = notification_selected_active;
-      //       }
-      //       textColor = Colors.TextColor;
-      //     } else{
-      //       img = notification_unselected;
-      //       if(Utility.unreadNotification[this.key] > 0){
-      //         img = notification_unselected_active;
-      //       }
-      //     }
-      //     break;
-
       case TabItems.MoreOptions:
         paddingTop = 2;
         if (this.props.focused) {
@@ -134,85 +108,57 @@ export default class TabIcon extends React.Component<{[x: string]: any}> {
         break;
 
       case NewTabItems.Read:
-      if (this.props.focused) {
-        img = all_memories_selected;
-        textColor = Colors.TextColor;
-      } else {
-        img = all_memories_unselected;
-      }
-      break;
+        if (this.props.focused) {
+          img = all_memories_selected;
+          textColor = Colors.TextColor;
+        } else {
+          img = all_memories_unselected;
+        }
+        break;
 
-    case NewTabItems.Write:
-      if (this.props.focused) {
-        img = my_memories_selected;
-        textColor = Colors.TextColor;
-      } else {
-        img = my_memories_unselected;
-      }
-      break;
+      case NewTabItems.Write:
+        if (this.props.focused) {
+          img = my_memories_selected;
+          textColor = Colors.TextColor;
+        } else {
+          img = my_memories_unselected;
+        }
+        break;
 
       default:
         break;
     }
 
     return (
-      <View style={{width: '100%',backgroundColor: Colors.bottomTabColor,
-          borderTopLeftRadius: this.props.title == 'Read' ? 8 : 0,
-          borderBottomLeftRadius: this.props.title == 'Read' ? 8 : 0,
-          borderTopRightRadius: this.props.title == 'Write' ? 8 : 0,
-          borderBottomRightRadius: this.props.title == 'Write' ? 8 : 0, borderWidth:0}}>
-        
+      <View style={[style.container,{
+        borderTopLeftRadius: this.props.title == 'Read' ? 14 : 0,
+        borderBottomLeftRadius: this.props.title == 'Read' ? 14 : 0,
+        borderTopRightRadius: this.props.title == 'Write' ? 14 : 0,
+        borderBottomRightRadius: this.props.title == 'Write' ? 14 : 0,
+      }]}>
+
         <View
-          style={{
-            
-            alignItems: 'center',
-            paddingTop: paddingTop,
-            // backgroundColor:
-            //   this.props.title == TabItems.AddContent
-            //     ? Colors.NewDarkThemeColor
-            //     : '#fff',
-            height: 45,
-            borderRadius:8,
+          style={[style.subContainer,{
             borderWidth: this.props.focused ? 1 : 0,
-            borderBottomColor:this.props.focused ? 'black' :'transparent',
-            zIndex:99,
-            backgroundColor:this.props.focused ? Colors.white :Colors.bottomTabColor,
-            justifyContent: 'center',
-            flexDirection:'row'
-          }}>
-          {/* <Text style={{fontFamily : "Rubik", ...fontSize(10), paddingTop: 5+paddingTop, color : textColor, textTransform: 'uppercase', marginBottom : Platform.OS == "android" ? 0 : -10}}>{this.props.title}</Text> */}
-          {/* {this.state.isNotification && <View style={{width: 12, height: 12, borderRadius : 6, backgroundColor : Colors.ErrorColor, position: "absolute", right : 5, top : 5}}></View>} */}
-          {/* <View
-            style={{
-              position: 'absolute',
-              top: '20%',
-              right: '20%',
-              backgroundColor: Colors.newBagroundColor,
-            // backgroundColor: '#fff',
-              height: 30,
-              width: 50,
-            }}></View> */}
-          {/* <Image source={img} /> */}
+            borderBottomColor: this.props.focused ? Colors.bordercolor : Colors.transparent,
+            backgroundColor: this.props.focused ? Colors.white : Colors.bottomTabColor,
+          }]}>
+
           {this.props.title != TabItems.AddContent && (
             <>
-             <Text
-              style={{
-                fontFamily: 'FiraSansExtraCondensed-Regular',
-                ...fontSize(font),
-                // paddingTop: 2 + paddingTop,
-                color: textColor,
-                marginRight:3,
-                // marginBottom: Platform.OS == 'android' ? 0 : -10,
-                // paddingBottom: 1,
-              }}>
-              {this.props.title}
-            </Text>
-            {
-              this.props.focused ? 
-              <Image source={ this.props.title == 'Write' ? book : book }/>
-              :
-              null
-            }
+              <Text
+                style={[style.titleTextStyle,{
+                  ...fontSize(font),
+                  color: this.props.focused ? Colors.bordercolor : Colors.newTextColor,
+                }]}>
+                {this.props.title}
+              </Text>
+              {
+                this.props.focused ?
+                  <Image source={this.props.title == 'Write' ? write : book} />
+                  :
+                  null
+              }
             </>
           )}
         </View>

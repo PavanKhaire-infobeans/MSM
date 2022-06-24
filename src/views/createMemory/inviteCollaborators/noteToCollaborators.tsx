@@ -66,6 +66,7 @@ import {ToastMessage} from '../../../common/component/Toast';
 import {kCollaborators} from '../publish';
 import {getCommaSeparatedArray} from '../dataHelper';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import Utility from '../../../common/utility';
 
 type State = {[x: string]: any};
 type Props = {
@@ -204,7 +205,7 @@ class NotesToCollaborators extends React.Component<Props, State> {
               saveValues={this.inviteCollaborate.bind(this)}
             />
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.ThemeColor}
             />
             <View

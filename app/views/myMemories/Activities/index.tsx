@@ -8,13 +8,12 @@ import {
   TouchableOpacity,
   Image,
   StatusBar,
-  TouchableHighlight,
-  ImageBackground,
   RefreshControl,
   ActivityIndicator,
   Alert,
   Platform,
   Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   ToastMessage,
@@ -27,23 +26,19 @@ import {
   DraftType,
   DraftActions,
   NO_INTERNET,
+  fontFamily,
 } from './../../../../src/common/constants';
 import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
 import Utility from './../../../../src/common/utility';
 import EventManager from './../../../../src/common/eventManager';
 import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
-import {Actions} from 'react-native-router-flux';
-// import {
-//   GetActivities,
-//   kActivities,
-//   kActivityListener,
-// } from '../../notificationView/notificationServices';
-// import {NotificationDataModel} from '../../notificationView/notificationDataModel';
+import { Actions } from 'react-native-router-flux';
 import { GetActivities, kActivities, kActivityListener } from '../../../../src/views/notificationView/notificationServices';
 import { NotificationDataModel } from '../../../../src/views/notificationView/notificationDataModel';
+import styles from './styles';
 
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 export default class Activities extends React.Component<Props, State> {
   activitiesListener: EventManager;
@@ -88,16 +83,16 @@ export default class Activities extends React.Component<Props, State> {
       }
     });
     activityList = details.concat(activityList).slice(0);
-    this.setState({activityList: activityList});
+    this.setState({ activityList: activityList });
   };
 
   populateActivities = (success: any, activities: any) => {
     if (success) {
       let activityList = activities.data
         ? new NotificationDataModel().getNotificationDetails(
-            activities.data,
-            true,
-          )
+          activities.data,
+          true,
+        )
         : [];
       activityList = this.state.isLoadMore
         ? this.state.activityList.concat(activityList).slice(0)
@@ -121,7 +116,7 @@ export default class Activities extends React.Component<Props, State> {
   };
 
   getActivities = (isReferesh: any, isLoadMore: any) => {
-    this.setState({isRefreshing: isReferesh, isLoadMore: isLoadMore});
+    this.setState({ isRefreshing: isReferesh, isLoadMore: isLoadMore });
     let initialOffset = this.state.activityList.length;
     if (Utility.isInternetConnected) {
       if (!isReferesh && !isLoadMore) loaderHandler.showLoader();
@@ -129,7 +124,7 @@ export default class Activities extends React.Component<Props, State> {
         initialOffset = 0;
       }
       GetActivities(
-        {type: 'activities', limit: 20, offset: initialOffset},
+        { type: 'activities', limit: 20, offset: initialOffset },
         kActivities,
       );
     } else {
@@ -142,132 +137,70 @@ export default class Activities extends React.Component<Props, State> {
     item = item.item;
     return (
       <View
-        style={{
-          padding: 15,
-          borderTopWidth: 7,
-          borderBottomWidth: 0.5,
-          borderColor: Colors.NewThemeColor,
-          backgroundColor: '#fff',
-          width: '100%',
-        }}>
+        style={styles.activityViewStyle}>
+
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'space-between',
-          }}>
-          <View
-            style={{
-              height: 40,
-              width: 40,
-              borderRadius: 20,
-              marginRight: 20,
-              overflow: 'hidden',
-            }}>
-            <PlaceholderImageView
-              uri={item.userProfile ? item.userProfile : ''}
-              borderRadius={20}
-              style={{
-                height: 40,
-                width: 40,
-                marginRight: 20,
-                borderRadius: Platform.OS === 'android' ? 40 : 20,
-                backgroundColor: '#E3E3E3',
-              }}
-              profilePic={true}
-            />
-            {item.userCount > 1 && (
-              <View
-                style={{
-                  position: 'absolute',
-                  height: 40,
-                  width: 40,
-                  borderRadius: 20,
-                  marginRight: 20,
-                  overflow: 'hidden',
-                  backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    ...fontSize(18),
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                    color: '#fff',
-                  }}>
-                  {'+'}
-                  {item.userCount - 1}
-                </Text>
-              </View>
-            )}
-          </View>
-          <View style={{flex: 1}}>
-            <Text
-              style={{
-                color: Colors.NewTitleColor,
-                ...fontSize(18),
-                paddingRight: 10,
-                textAlign: 'left',
-              }}>
-              {item.displayName}{' '}
-              <Text style={{color: Colors.TextColor}}>
-                {item.descriptionText}
-              </Text>{' '}
-              '{item.title}'
-            </Text>
-            <Text
-              style={{
-                ...fontSize(14),
-                color: Colors.TextColor,
-                paddingTop: 10,
-                paddingBottom: 15,
-                fontStyle: 'italic',
-              }}>
-              {item.date}
-            </Text>
-            {item.isJoinInvite &&
+          style={styles.authorContainer}>
+          <PlaceholderImageView
+            uri={item.userProfile ? item.userProfile : ''}
+            borderRadius={21}
+            style={styles.authorImageStyle}
+            profilePic={true}
+          />
+          {item.userCount > 1 && (
+            <View
+              style={styles.activityUserCountStyle}>
+              <Text
+                style={styles.activityUserCountTextStyle}>
+                {'+'}
+                {item.userCount - 1}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.fullFlex}>
+          <Text
+            style={styles.displayNameTextStyle}>
+            {item.displayName}{' '}
+            <Text style={{ color: Colors.TextColor }}>
+              {item.descriptionText}
+            </Text>{' '}
+            '{item.title}'
+          </Text>
+          <Text
+            style={styles.dateTextStyle}>
+            {item.date}
+          </Text>
+          {item.isJoinInvite &&
             item.noteToCollaborator &&
             item.noteToCollaborator.length > 0 ? (
-              <Text
-                style={{
-                  ...fontSize(16),
-                  color: Colors.TextColor,
-                  paddingBottom: 15,
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                  fontStyle: 'italic',
-                }}>
-                Notes to collaborators:{' '}
-                <Text style={{fontWeight: 'normal'}}>
-                  {item.noteToCollaborator}
-                </Text>
+            <Text
+              style={styles.notesToCollabrationTextStyle}>
+              Notes to collaborators:{' '}
+              <Text style={{ fontWeight: 'normal' }}>
+                {item.noteToCollaborator}
               </Text>
-            ) : null}
-            {item.isDisabled ? (
-              <Text style={{color: Colors.ErrorColor, ...fontSize(16)}}>
-                {item.errorMsg}
-              </Text>
-            ) : (
-              <TouchableOpacity
-                onPress={() => this.redirectActivities(item, index)}
-                style={{
-                  alignSelf: 'baseline',
-                  paddingRight: 30,
-                  paddingLeft: 34,
-                  backgroundColor: Colors.BtnBgColor,
-                  height: 30,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 17,
-                }}>
-                <Text style={{color: '#fff', ...fontSize(18)}}>
+            </Text>
+          ) : null}
+          {item.isDisabled ? (
+            <Text style={styles.errorTextStyle}>
+              {item.errorMsg}
+            </Text>
+          ) : (
+            <TouchableWithoutFeedback
+              onPress={() => this.redirectActivities(item, index)}
+            >
+              <View style={styles.openMemoryButtonStyle}>
+                <Text style={styles.buttonTextStyle}>
                   Open Memory
                 </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-          {/* <Image source={item.seenFlag == 0 ? memory_unread : memory_read} /> */}
+                
+              </View>
+            </TouchableWithoutFeedback>
+          )}
         </View>
+
       </View>
     );
   };
@@ -275,8 +208,8 @@ export default class Activities extends React.Component<Props, State> {
   renderFooter = () => {
     if (!this.state.isLoadMore) return null;
     return (
-      <View style={{width: '100%', height: 50}}>
-        <ActivityIndicator color = '#000' />
+      <View style={styles.activityIndicatorContainer}>
+        <ActivityIndicator color={Colors.black} />
       </View>
     );
   };
@@ -288,9 +221,9 @@ export default class Activities extends React.Component<Props, State> {
         (item.notificationType.indexOf('collaboration') != -1 ||
           item.notificationType.indexOf('new_edits') != -1)
       ) {
-        Actions.push('createMemory', {editMode: true, draftNid: item.nid});
+        Actions.push('createMemory', { editMode: true, draftNid: item.nid });
       } else {
-        Actions.push('memoryDetails', {nid: item.nid, type: 'my_stories'});
+        Actions.push('memoryDetails', { nid: item.nid, type: 'my_stories' });
       }
     } else {
       No_Internet_Warning();
@@ -307,14 +240,14 @@ export default class Activities extends React.Component<Props, State> {
   };
   render() {
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.ThemeColor}
         />
         <FlatList
           data={this.state.activityList}
-          style={{width: '100%', backgroundColor: '#fff'}}
+          style={styles.flatlistStyle}
           keyExtractor={(_, index: number) => `${index}`}
           extraData={this.state}
           onScroll={() => {
@@ -344,26 +277,10 @@ export default class Activities extends React.Component<Props, State> {
         />
         {this.state.count == 0 && !this.state.loadingDataFromServer ? (
           <View
-            style={{
-              flex: 1,
-              width: '100%',
-              height: '100%',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'whitw',
-              alignSelf: 'center',
-              top: 0,
-              position: 'absolute',
-            }}
+            style={styles.noActivityCOntainerStyle}
             pointerEvents="none">
             <Text
-              style={{
-                ...fontSize(18),
-                color: '#909090',
-                textAlign: 'center',
-                paddingLeft: 16,
-                paddingRight: 16,
-              }}>
+              style={styles.noActivityTextStyle}>
               There are no activities to display at this moment.
             </Text>
           </View>

@@ -24,16 +24,17 @@ import {
 } from './../../../src/images';
 // import NavigationBar from '../dashboard/NavigationBar';
 import NavigationBarForEdit from './../../../src/common/component/navigationBarForEdit';
-import {Actions} from 'react-native-router-flux';
-import {Colors, fontSize, Size} from './../../../src/common/constants';
+import { Actions } from 'react-native-router-flux';
+import { Colors, fontSize, Size } from './../../../src/common/constants';
 import Utility from './../../../src/common/utility';
-import {Account} from './../../../src/common/loginStore';
+import { Account } from './../../../src/common/loginStore';
 import NavigationHeaderSafeArea from './../../../src/common/component/profileEditHeader/navigationHeaderSafeArea';
+import styles from './styles';
 
-type Props = {[x: string]: any};
+type Props = { [x: string]: any };
 export default class CustomListView extends React.Component<Props> {
   componentDidMount() {
-    this.setState({itemList: this.props.itemList});
+    this.setState({ itemList: this.props.itemList });
   }
 
   cancelAction = () => {
@@ -46,81 +47,54 @@ export default class CustomListView extends React.Component<Props> {
       item.item.uid == Account.selectedData().userID
         ? 'You'
         : item.item.field_first_name_value +
-          ' ' +
-          item.item.field_last_name_value;
+        ' ' +
+        item.item.field_last_name_value;
     return (
       <TouchableHighlight
         underlayColor={'#cccccc3e'}
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          borderBottomColor: '#d3d3d3',
-          borderBottomWidth: 1,
-          paddingBottom: 15,
-          paddingTop: 15,
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            flex: 1,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <ImageBackground
-              source={profile_placeholder}
-              style={{height: 50, width: 50}}
-              imageStyle={{borderRadius: 25}}>
-              <Image
-                source={
-                  item.item.uri && item.item.uri != ''
-                    ? {uri: Utility.getFileURLFromPublicURL(item.item.uri)}
-                    : profile_placeholder
-                }
-                style={{height: 50, width: 50, borderRadius: 25}}></Image>
-            </ImageBackground>
-            <Text
-              style={{
-                marginLeft: 10,
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                lineHeight: 20,
-                fontSize: 16,
-                color: Colors.TextColor,
-                backgroundColor: item.item.backgroundColor,
-              }}>
-              {name}
-            </Text>
-          </View>
-          {this.props.showUnblock && (
-            <TouchableHighlight
-              underlayColor={'#ffffff33'}
-              style={{
-                padding: 16,
-                paddingTop: 7,
-                paddingBottom: 7,
-                borderRadius: 20,
-                backgroundColor: Colors.NewTitleColor,
-              }}
-              onPress={() => this.props.onClick(item.item.uid)}>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                }}>
-                Unblock
-              </Text>
-            </TouchableHighlight>
-          )}
+        style={styles.renderCommentViewContainer}>
+
+        <View style={styles.renderCommentSubViewContainer}>
+          <ImageBackground
+            source={profile_placeholder}
+            style={styles.imagebgStyle}
+            imageStyle={styles.imagebgStyleImageStyle}>
+            <Image
+              source={
+                item.item.uri && item.item.uri != ''
+                  ? { uri: Utility.getFileURLFromPublicURL(item.item.uri) }
+                  : profile_placeholder
+              }
+              style={styles.imagebgStyleInnerImageStyle}></Image>
+          </ImageBackground>
+          <Text
+            style={[styles.userNameTextStyle,{
+              backgroundColor: item.item.backgroundColor,
+            }]}>
+            {name}
+          </Text>
         </View>
+
+        {this.props.showUnblock && (
+          <TouchableHighlight
+            underlayColor={'#ffffff33'}
+            style={styles.unblockContainer}
+            onPress={() => this.props.onClick(item.item.uid)}>
+            <Text
+              style={styles.unblockTextStyle}>
+              Unblock
+            </Text>
+          </TouchableHighlight>
+        )}
+
       </TouchableHighlight>
     );
   };
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
-        <View style={{flex: 1}}>
+      <SafeAreaView style={styles.customlistviewMainContainer}>
+        <View>
           <NavigationHeaderSafeArea
             heading={this.props.heading}
             showCommunity={false}
@@ -131,7 +105,7 @@ export default class CustomListView extends React.Component<Props> {
           />
 
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <FlatList
@@ -142,31 +116,16 @@ export default class CustomListView extends React.Component<Props> {
             keyExtractor={(_, index: number) => `${index}`}
             ListEmptyComponent={() => (
               <View
-                style={{
-                  height: 120,
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
+                style={styles.customlistviewMainContainerFlatlistTextContainer}>
                 {this.props.loadingCompleted && (
                   <Text
-                    style={{
-                      fontStyle: 'normal',
-                      ...fontSize(Size.byWidth(16)),
-                      color: 'black',
-                      textAlign: 'center',
-                    }}>
+                    style={styles.customlistviewMainContainerFlatlistTextStyle}>
                     {this.props.blankText}
                   </Text>
                 )}
               </View>
             )}
-            style={{
-              padding: 15,
-              paddingTop: 0,
-              marginBottom: 15,
-              backgroundColor: '#fff',
-            }}
+            style={styles.customlistviewMainContainerFlatlistStyle}
             renderItem={(item: any) => this.renderCommentView(item)}
           />
         </View>

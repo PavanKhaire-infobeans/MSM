@@ -9,6 +9,7 @@ import {
   Modal,
   Keyboard,
   Platform,
+  TouchableWithoutFeedback,
 } from 'react-native';
 // import {fontSize, Colors} from '../../constants';
 import { Actions } from 'react-native-router-flux';
@@ -17,7 +18,8 @@ import Utility from './../../../src/common/utility';
 import { No_Internet_Warning } from './../../../src/common/component/Toast';
 import { blackStar, redstar } from './../../images'
 import TextNew from '../../../src/common/component/Text';
-import { Colors, fontSize } from '../../../src/common/constants';
+import { Colors, fontFamily, fontSize } from '../../../src/common/constants';
+import styles from './styles';
 const { height } = Dimensions.get('window');
 
 export type MemoryActionsSheetItem = {
@@ -29,13 +31,14 @@ export type MemoryActionsSheetItem = {
   memoryType?: any;
   actionType?: any;
   uid?: any;
+  memory_url?: any;
 };
 
 type Props = {
   actions: Array<MemoryActionsSheetItem>;
   memoryActions?: boolean;
   title?: any;
-  onActionClick?: (index: number, data?: any) => void;
+  onActionClick?: (index: number, data?: any, memory_url?: any) => void;
   width: string | number;
   popToAddContent?: boolean;
 };
@@ -84,51 +87,25 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
   }
   render() {
     if (this.state.hidden || this.props.actions.length == 0) {
-      return <View style={{ height: 0, width: 0 }} />;
+      return <View style={styles.hiddenView} />;
     } else {
       let actions = this.props.actions.sort((a: any, b: any) => (b.isDestructive - a.isDestructive)).reverse();
 
       return (
         <Modal transparent >
           <View
-            style={{
-              position: 'absolute',
-              // backgroundColor: '#00000045',
-              width: Dimensions.get('window').width * 1,
-              // width: '100%',
-              height: '100%',
-              alignItems: 'center',
-              top: 0,
-              // right:20,
-              flexDirection: 'row'
-            }}
+            style={styles.container}
             onStartShouldSetResponder={() => true}
             onResponderStart={() => this.hideSheet()}>
-            <TouchableOpacity style={{
-              width: Dimensions.get('window').width * 0.4,
-              height: '100%',
-
-            }}
+            <TouchableWithoutFeedback style={styles.ActionView}
               onPress={() => this.hideSheet()}
             >
-
-            </TouchableOpacity>
+              <View style={styles.ActionView}/>
+            </TouchableWithoutFeedback>
 
             <Animated.View
-              style={{
-                backgroundColor: Colors.actionBg,
-                maxWidth: 768,
-                marginRight: 20,
-                // width: this.props.width,
-                width: Dimensions.get('window').width * 0.6,
-                position: 'absolute',
-                alignSelf: 'center',
-                bottom: this.state.bottom,
-                marginBottom: Dimensions.get('window').height * 0.6,
-                borderRadius: 20,
-                right: 0
-                // borderTopRightRadius: 10,
-              }}>
+
+              style={[styles.AnimatedContainer, { bottom: this.state.bottom, }]}>
               <View>
                 {/* <TextNew
                   style={{
@@ -151,7 +128,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                   onScroll={() => {
                     Keyboard.dismiss();
                   }}
-                  style={{ borderRadius: 10, borderWidth: 1, borderColor: Colors.actionBg }}
+                  style={styles.flatListStyle}
                   // ItemSeparatorComponent={({ leadingItem }: { highlighted: boolean, leadingItem: MemoryActionsSheetItem }) => {
                   //     return (<View style={{ height: 1, backgroundColor: (leadingItem.index == (this.props.actions.length - 1)) ? 'rgba(0.35, 0.35, 0.35, 0.2)' : 'white' }} />)
                   // }}
@@ -164,13 +141,13 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                       <>
                         {this.firstpart == false && data.isDestructive == 1 ? this.doSome() : null}
 
-                        <TouchableOpacity
+                        <TouchableWithoutFeedback
                           onPress={() => {
                             this.props.memoryActions
                               ? this.props.onActionClick &&
-                              this.props.onActionClick(data.index, data)
+                              this.props.onActionClick(data.index, data , data.memory_url)
                               : this.props.onActionClick &&
-                              this.props.onActionClick(data.index);
+                              this.props.onActionClick(data.index, data , data.memory_url);
                             this.hideSheet();
                             Keyboard.dismiss();
 
@@ -180,38 +157,19 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                             }
                           }}>
                           <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              // justifyContent: 'space-between',
-                              padding: 10,
-                              paddingStart: 10,
-                              // paddingStart: 24,
-                              paddingRight: 20,
-                              backgroundColor: Colors.actionBg,
-                              height: 44,
-                              borderBottomWidth: 0.5,
-                              borderBottomColor: 'rgba(60, 60, 67, 0.36)',
+                            style={[styles.flatlistContainer,{
                               borderTopLeftRadius: data.index == 1 ? 10 : 0,
                               borderTopRightRadius: data.index == 1 ? 10 : 0,
-                              borderBottomLeftRadius: data.index == 4 ? 10 : 0,
-                              borderBottomRightRadius: data.index == 4 ? 10 : 0,
-                            }}>
+                            }]}>
 
                             {
                               Platform.OS == 'android' ?
                                 <View
-                                  style={{
-                                    height: '100%',
-                                    // width: 21,
-                                    overflow: 'visible',
-                                    marginLeft:20,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
+                                  style={[styles.ioSContainer,{
                                     borderTopLeftRadius: data.index == 0 ? 10 : 0,
                                     borderTopRightRadius: data.index == 0 ? 10 : 0,
-                                  }}>
-                                  <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" />
+                                    }]}>
+                                  {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
                                   {/* <Image source={ data.isDestructive == 1 ? redstar : blackStar } resizeMode="contain" /> */}
                                 </View>
                                 :
@@ -220,41 +178,25 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
 
 
                             <TextNew
-                              style={{
-                                color:
-                                  data.isDestructive == 1
-                                    ? Colors.NewRadColor
-                                    : 'black',
-                                marginLeft: 20,
-                                ...fontSize(17),
-                                fontWeight: '400',
-                                lineHeight: 22,
-                                letterSpacing: -0.4,
-                              }}>
+                              style={styles.textStyle}>
                               {data.text}
                             </TextNew>
 
                             {
                               Platform.OS == 'ios' ?
                                 <View
-                                  style={{
-                                    height: '100%',
-                                    overflow: 'visible',
-                                    alignItems: 'center',
-                                    position:'absolute',
-                                    right:25,
-                                    justifyContent: 'center',
+                                  style={[styles.iosTextStyle,{
                                     borderTopLeftRadius: data.index == 0 ? 10 : 0,
                                     borderTopRightRadius: data.index == 0 ? 10 : 0,
-                                  }}>
-                                  <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" />
+                                  }]}>
+                                  {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
                                 </View>
                                 :
                                 null
                             }
 
                           </View>
-                        </TouchableOpacity>
+                        </TouchableWithoutFeedback>
                       </>
                     );
                   }}

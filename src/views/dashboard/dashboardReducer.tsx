@@ -1,5 +1,6 @@
 import { loginRequest, loginInstanceRequest } from '../../common/webservice/loginServices';
 import { takeLatest, put, call, all, delay, join } from "redux-saga/effects";
+import DefaultPreference from 'react-native-default-preference';
 import { kAdmin } from '../registration/getInstancesSaga';
 import WebserviceCall from '../../common/webservice/webservice';
 import { MemoryActionKeys, Storage } from '../../common/constants';
@@ -27,6 +28,7 @@ export const ACTIVE_TAB_ON_DASHBOARD = "ACTIVE_TAB_ON_DASHBOARD";
 export const JUMP_TO_VIEW_SHOW = "JUMP_TO_VIEW_SHOW";
 export const JUMP_TO_FROM_DATE = "JUMP_TO_FROM_DATE";
 export const JUMP_TO_TO_DATE = "JUMP_TO_TO_DATE";
+export const SET_KEYBOARD_HEIGHT = "SET_KEYBOARD_HEIGHT";
 export enum ListType {
     Recent = "feed",
     Timeline = "timeline",
@@ -55,6 +57,7 @@ type StateType = {
     currentTabName: string;
     fromDate: string;
     toDate: string;
+    keyBoardHeight: number;
 };
 
 export type DashboardState = object | StateType
@@ -74,6 +77,9 @@ export const dashboardReducer = (state: DashboardState = {}, action: PayLoad): D
         case SET_RECENT_FILTERS: newState = { ...newState, filterDataRecent: action.payload }
             break;
         case SET_FILTERS_NAME: newState = { ...newState, filterName: action.payload }
+            break;
+        case SET_KEYBOARD_HEIGHT: newState = { ...newState, keyBoardHeight: action.payload }
+            alert("d")
             break;
         case ACTIVE_TAB_ON_DASHBOARD: newState = { ...newState, currentTabName: action.payload }
             break;
@@ -137,6 +143,7 @@ export const dashboardReducer = (state: DashboardState = {}, action: PayLoad): D
             loadingRecent: action.payload.isLoading
         }
             break;
+
         case RESET_ON_LOGIN: newState = {
             ...newState,
             recentList: [],
@@ -220,9 +227,19 @@ function* getFiltersTimeLine(action: any) {
         const responseBody = yield call(async function () {
             return await request;
         });
+
         if (responseBody.ResponseCode == 200) {
             responseBody.Details.allSelected = { name: 'All', id: 'all', value: 1 }
             responseBody.Details.cueSelected = { name: 'My Stories Matter', id: 'msm', value: 1 };
+
+            if (responseBody.Details && responseBody.Details.timeline_years) {
+
+                DefaultPreference.set('timeline_years', JSON.stringify(responseBody.Details.timeline_years)).then(function () {
+                });
+                Account.selectedData().start_year = responseBody.Details.timeline_years.start_year;
+                Account.selectedData().end_year = responseBody.Details.timeline_years.end_year;
+            }
+
             yield put({ type: SET_TIMELINE_FILTERS, payload: responseBody.Details })
         }
     } catch (err) {
@@ -275,6 +292,7 @@ function* getMemoryList(action: any) {
             return await request;
         });
         if (responseBody.ResponseCode == 200) {
+            // console.log("recent data : ",JSON.stringify(responseBody.Details.data))
             responseBody.Details.data = DashboardDataModel.getConvertedData(responseBody.Details.data);
             responseBody.Details.isLoadMore = action.payload.isLoadMore;
             if (responseBody.Details.api_random_prompt_data && responseBody.Details.api_random_prompt_data.length && responseBody.Details.api_random_prompt_data.length > 0) {
@@ -316,10 +334,12 @@ function* getTimelineList(action: any) {
         //     },
         //     "randomPrompts": 0
         //   }
-        console.log("getCallerObject ,", JSON.stringify(obj));
+        // console.log("responseBody ,", JSON.stringify(responseBody));
 
         if (responseBody.ResponseCode == 200) {
+            // console.log("Time line data : ",JSON.stringify(responseBody))
             responseBody.Details.data = DashboardDataModel.getConvertedData(responseBody.Details.data);
+            // console.log("responseBody ,", JSON.stringify(responseBody.Details.data));
             responseBody.Details.isLoadMore = action.payload.isLoadMore;
             responseBody.Details.isLoading = action.payload.isLoading;
             responseBody.Details.isRefresh = action.payload.isRefresh;
@@ -343,6 +363,16 @@ const getCallerObject = (action: any) => {
         }
     }
     promptPagination
+
+    let start_Year = Account.selectedData().start_year != '' ? Account.selectedData().start_year : ''; let end_year = Account.selectedData().end_year != '' ? Account.selectedData().end_year : new Date().getFullYear();
+    DefaultPreference.get('timeline_years').then((value: any) => {
+        if (value) {
+            value = JSON.parse(value);
+            start_Year = value.start_year;
+            end_year = value.end_year;
+        }
+    });
+
     let obj: any = {
         "type": action.payload.type,
         "configurationTimestamp": "0",
@@ -350,8 +380,8 @@ const getCallerObject = (action: any) => {
             "prompt_pagination": promptPagination,
             "length": action.payload.isLoading ? 5 : 10,
             "searchString": "",
-            "timeline_start_year": Account.selectedData().start_year,
-            "timeline_end_year": Account.selectedData().end_year,
+            "timeline_start_year": start_Year,
+            "timeline_end_year": end_year,
             "year_option": "my_years"
         },
         "randomPrompts": (action.payload.type == ListType.Recent && !action.payload.isLoading) ? 1 : 0

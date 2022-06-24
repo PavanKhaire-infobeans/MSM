@@ -18,6 +18,7 @@ import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/n
 import TextNew from '../../common/component/Text';
 import {Colors, fontSize} from '../../common/constants';
 import EventManager from '../../common/eventManager';
+import Utility from '../../common/utility';
 import {action_close, check, plus, topics_filter} from '../../images';
 import {GetPrompts} from '../myMemories/myMemoriesWebService';
 
@@ -104,7 +105,7 @@ export default class TopicsFilter extends React.Component<State, Props> {
             backIcon={action_close}
           />
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <ScrollView style={{flex: 1, marginBottom: 30}}>

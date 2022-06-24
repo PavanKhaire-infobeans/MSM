@@ -9,10 +9,10 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import Text from '../Text';
-import {Props, State} from './types';
-import {styles} from './design';
-import {visibility, visibility_off} from '../../../images';
-import {Colors, fontSize} from '../../constants';
+import { Props, State } from './types';
+import { styles } from './styles';
+import { visibility, visibility_off } from '../../../images';
+import { Colors, fontFamily, fontSize } from '../../constants';
 
 const kTop = 19,
   kTopAnimated = 5;
@@ -35,7 +35,7 @@ export default class TextField extends React.Component<Props, State> {
   static defaultProps = {
     value: '',
     secureTextEntry: false,
-    placeholderTextColor: 'gray',
+    placeholderTextColor: Colors.newTextColor,
     placeholder: 'Enter the value',
     errorMessage: 'Text entered is invalid',
     showError: false,
@@ -47,9 +47,10 @@ export default class TextField extends React.Component<Props, State> {
     autoFocus: false,
     passwordToggle: false,
     isRequired: false,
-    onSubmitEditing: () => {},
+    onSubmitEditing: () => { },
     isCuebackRegistration: false,
     showStrength: false,
+    inputFocused: false
   };
   constructor(props: Props) {
     super(props);
@@ -68,6 +69,8 @@ export default class TextField extends React.Component<Props, State> {
       numericValue: 0,
       passwordStrength: PasswordStrength.weak,
       showPasswordStrength: false,
+      inputFocused: false,
+      value: ''
     };
   }
 
@@ -95,6 +98,7 @@ export default class TextField extends React.Component<Props, State> {
   onBlur = () => {
     this.setState({
       showClearImage: false,
+      inputFocused: false
     });
     this.isBlurred = true;
     if (this.props.value.length == 0) {
@@ -124,6 +128,7 @@ export default class TextField extends React.Component<Props, State> {
     ]).start();
     this.isBlurred = false;
     this.setState({
+      inputFocused: true,
       showClearImage: this.props.value.length != 0,
     });
   };
@@ -134,9 +139,9 @@ export default class TextField extends React.Component<Props, State> {
       text.trim().length > 0 &&
       !this.state.showPasswordStrength
     ) {
-      this.setState({showPasswordStrength: true});
+      this.setState({ showPasswordStrength: true });
     } else if (this.props.showStrength && text.trim().length == 0) {
-      this.setState({showPasswordStrength: false});
+      this.setState({ showPasswordStrength: false });
     }
 
     if (this.props.showStrength) {
@@ -145,222 +150,214 @@ export default class TextField extends React.Component<Props, State> {
       rgularExp.containsSmallLetters.test(text.trim()) ? count++ : count;
       rgularExp.containsCapitalLetters.test(text.trim()) ? count++ : count;
       // rgularExp.containsSpecialCharacters.test(text.trim()) ?  count++ : count;
-      this.setState({passwordStrength: count});
+      this.setState({ passwordStrength: count });
     }
-    this.props.onChange(text);
+
+    this.setState({
+      value: text
+    }, () => this.props.onChange(text));
+
   };
 
   render() {
+    let { value } = this.state;
+    if (this.state.showPassword) {
+      value = value //.replace(/./g, "*");
+    }
+    let defaultValue = this.props.value;
+    if (defaultValue) {
+      value = this.props.value //.replace(/./g, "*")
+    }
     return (
       <View
-        style={[this.props.style, {flexDirection: 'column', marginBottom: 5}]}>
-        <View style={{flex: 1, justifyContent: 'center', width: '100%'}}>
-          <Animated.View
-            style={{
+        style={[this.props.style, styles.container]}>
+        <View style={[styles.subContainer, this.props.secureTextEntry ? { flexDirection: 'row' } : {}]}>
+          {/* <Animated.View
+            style={[{
               height: this.state.height,
-              backgroundColor: this.props.isCuebackRegistration
-                ? '#fff'
-                : Colors.NewLightCommentHeader,
-              flexDirection: 'row',
-              borderRadius: 8,
-              overflow: 'hidden',
-              borderWidth: 1,
-              borderColor: this.props.showError
-                ? 'red'
-                : this.props.isCuebackRegistration
-                ? Colors.TextColor
-                : 'transparent',
-            }}>
-            <View style={[this.props.inputViewStyle, {}]}>
-              <Animated.Text
-                style={{
-                  color: this.props.isCuebackRegistration
-                    ? Colors.TextColor
-                    : !this.isBlurred || this.props.value.length > 0
-                    ? Colors.NewTitleColor
-                    : this.props.placeholderTextColor,
-                  ...fontSize(this.state.sizeFnt),
-                  fontFamily: 'Rubik',
-                  position: 'absolute',
+              backgroundColor: this.props.isCuebackRegistration ? Colors.white : Colors.NewLightCommentHeader,
+              borderColor: this.props.showError ? 'red' : this.props.isCuebackRegistration ? Colors.TextColor : 'transparent',
+            }, styles.animatedView]}> */}
+
+          <View style={[this.props.inputViewStyle,
+          this.state.inputFocused ? {
+            borderColor: "#0B0C0F",
+            borderWidth: 2,
+            shadowColor: Colors.black,
+            shadowOffset: { width: 2, height: 3 },
+            shadowOpacity: 0.2,
+            shadowRadius: 3.22,
+          }
+            :
+            // this.props.secureTextEntry ? { width: '90%' } :
+            {}
+          ]}>
+
+            {/* <Animated.Text
+                style={[{
+                  color: this.props.isCuebackRegistration ? Colors.TextColor : !this.isBlurred || this.props.value.length > 0
+                    ? Colors.NewTitleColor : this.props.placeholderTextColor,
                   top: this.state.top,
-                  left: 8,
+                  ...fontSize(this.state.sizeFnt),
                   opacity: this.props.isCuebackRegistration ? 0.6 : 1,
-                }}>
+                }, styles.animatedTextStyle]}>
                 {this.props.placeholder}
                 {this.props.isRequired ? (
-                  <Animated.Text style={{color: Colors.NewRadColor}}>
+                  <Animated.Text style={{ color: Colors.NewRadColor }}>
                     {' *'}
                   </Animated.Text>
                 ) : null}
-              </Animated.Text>
-
-              <TextInput
-                returnKeyType={this.props.returnKeyType}
-                keyboardType={
-                  this.props.keyboardType == 'numeric'
-                    ? 'numeric'
-                    : this.props.keyboardType == 'email-address'
-                    ? 'email-address'
-                    : this.props.keyboardType == 'phone-pad'
-                    ? 'phone-pad'
-                    : 'ascii-capable'
-                }
-                autoCapitalize={'none'}
-                autoCorrect={false}
-                onSubmitEditing={this.props.onSubmitEditing}
-                blurOnSubmit={this.props.blurOnSubmit}
-                maxLength={this.props.maxLength}
-                secureTextEntry={
-                  this.state.showPassword ? this.props.secureTextEntry : false
-                }
-                onChangeText={(text: any) => this.onTextChange(text)}
-                style={[
-                  this.props.inputTextStyle,
-                  {
-                    color: this.props.isCuebackRegistration
-                      ? Colors.TextColor
-                      : Colors.TextColor,
-                    backgroundColor: 'transparent',
-                    left: this.state.leftTextInput,
-                    ...(!this.state.showPassword ? {fontFamily: 'Rubik'} : {}),
-                  },
-                ]}
-                numberOfLines={1}
-                onFocus={this.onFocus}
-                multiline={false}
-                defaultValue={this.props.value}
-                clearButtonMode={this.props.clearButtonMode}
-                selectionColor={'darkgray'}
-                spellCheck={false}
-                onEndEditing={this.props.onEndEditing}
-                underlineColorAndroid="transparent"
-                onBlur={this.onBlur}
-                ref={this.props.reference}
-                autoFocus={this.props.autoFocus}
-              />
-            </View>
-            {this.props.passwordToggle ? (
-              <View
-                style={{
-                  width: Platform.OS == 'ios' ? 50 : 70,
-                  height: '100%',
+              </Animated.Text> */}
+            {
+              // this.state.showPassword && this.props.secureTextEntry ?
+              <View style={[
+                this.props.inputTextStyle,
+                styles.textInputStyle,
+                {
+                  left: this.state.leftTextInput,
                   justifyContent: 'center',
-                  alignItems: 'center',
-                  paddingBottom: 5,
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({showPassword: !this.state.showPassword});
-                  }}
-                  style={{
-                    zIndex: 99999,
-                    padding: 5,
-                    paddingTop: 10,
-                    paddingRight: 8,
-                    width: Platform.OS == 'ios' ? 50 : 70,
-                    height: 60,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    style={{
-                      tintColor: this.props.isCuebackRegistration
-                        ? Colors.TextColor
-                        : Colors.TextColor,
-                    }}
-                    source={
-                      this.state.showPassword ? visibility_off : visibility
-                    }
-                  />
-                </TouchableOpacity>
+                  flexGrow: 0,
+                  flexWrap: 'nowrap'
+                },
+              ]}>
+                <TextInput
+                  returnKeyType={this.props.returnKeyType}
+                  keyboardType={
+                    this.props.keyboardType == 'numeric'
+                      ? 'numeric'
+                      : this.props.keyboardType == 'number-pad'
+                        ? 'number-pad'
+                        : this.props.keyboardType == 'email-address'
+                          ? 'email-address'
+                          : this.props.keyboardType == 'phone-pad'
+                            ? 'phone-pad'
+                            : 'ascii-capable'
+                  }
+                  placeholderTextColor={Colors.newTextColor}
+                  autoCapitalize={'none'}
+                  autoCorrect={false}
+                  placeholder={this.props.placeholder}
+                  onSubmitEditing={this.props.onSubmitEditing}
+                  blurOnSubmit={this.props.blurOnSubmit}
+                  maxLength={this.props.maxLength}
+                  secureTextEntry={
+                    this.state.showPassword ? this.props.secureTextEntry : false
+                  }
+                  onChangeText={(text: any) => this.onTextChange(text)}
+                  style={[
+                    this.props.inputTextStyle,
+                    {
+                      left: this.state.leftTextInput,
+                    },
+                    styles.textInputStyle,
+                  ]}
+                  numberOfLines={1}
+                  onFocus={this.onFocus}
+                  multiline={false}
+                  value={value}
+                  defaultValue={defaultValue}
+                  clearButtonMode={this.props.clearButtonMode}
+                  selectionColor={Colors.darkGray}
+                  spellCheck={false}
+                  onEndEditing={this.props.onEndEditing}
+                  underlineColorAndroid={Colors.transparent}
+                  onBlur={this.onBlur}
+                  ref={this.props.reference}
+                  autoFocus={this.props.autoFocus}
+                />
+                {/* <Animated.Text style={{ color: Colors.black, ...fontSize(19) }}>
+                    {value.replace(/./g, "*")}
+                  </Animated.Text> */}
               </View>
-            ) : this.state.showClearImage ? (
+              // :
+            }
+
+          </View>
+
+          {this.props.secureTextEntry ? this.props.passwordToggle ? (
+            <View
+              style={[styles.passwordToggleContainer, this.props.secureTextEntry ? { width: '10%', position: 'absolute', right: 5, top:8 } : { width: 0 }]}>
               <TouchableOpacity
-                onPress={this.props.onPressClear}
-                style={{
-                  padding: 5,
-                  right: 0,
-                  top: this.props.inputFieldForPayment ? 3 : 2,
-                  position: 'absolute',
-                  marginRight: 3,
-                }}>
+                onPress={() => {
+                  this.setState({ showPassword: !this.state.showPassword });
+                }}
+                style={styles.visiblalityButtonContainer}>
                 <Image
-                  source={require('../../../images/cross/cross_icon.png')}
-                  style={{
-                    justifyContent: 'center',
-                    width: 1,
-                    height: 1,
-                  }}
+                  style={styles.imageStyle}
+                  source={
+                    this.state.showPassword ? visibility_off : visibility
+                  }
                 />
               </TouchableOpacity>
-            ) : null}
-          </Animated.View>
+            </View>
+          )
+            :
+            this.state.showClearImage ? (
+
+              <TouchableOpacity
+                onPress={this.props.onPressClear}
+                style={[styles.crossContainer, this.props.secureTextEntry ? { width: '10%', position: 'absolute', right: 5, top:3 } : { width: 0 }]}>
+                <Image
+                  source={require('../../../images/cross/cross_icon.png')}
+                  style={styles.crossImageStyle}
+                />
+              </TouchableOpacity>
+            )
+              :
+              null
+            :
+            null
+          }
+          {/* </Animated.View> */}
+
         </View>
-        {this.state.showPasswordStrength && (
-          <View style={{marginLeft: 10}}>
-            <View style={{flexDirection: 'row', marginTop: 8, marginBottom: 2}}>
+
+        {/* {this.state.showPasswordStrength && (
+          <View style={styles.marginLeftImg}>
+            <View style={styles.passwordStrengthContainer}>
               {Array(this.state.passwordStrength)
                 .fill(this.state.passwordStrength)
                 .map(() => {
                   return (
                     <View
-                      style={{
-                        backgroundColor:
-                          this.state.passwordStrength > 2
-                            ? Colors.passwordStrong
-                            : this.state.passwordStrength > 1
-                            ? Colors.passwordMedium
-                            : Colors.passwordWeak,
-                        width: '31%',
-                        height: 2,
-                        marginRight: '2%',
-                        borderRadius: 19,
-                      }}
+                      style={[styles.passwordArrayStyle, {
+                        backgroundColor: this.state.passwordStrength > 2 ? Colors.passwordStrong
+                          : this.state.passwordStrength > 1 ? Colors.passwordMedium : Colors.passwordWeak,
+                      }]}
                     />
                   );
                 })}
             </View>
+
             <Text
-              style={{
-                ...fontSize(14),
-                color: this.props.isCuebackRegistration
-                  ? Colors.TextColor
-                  : Colors.TextColor,
-                marginTop: 5,
-                lineHeight: 13,
-              }}>
+              style={[styles.passwordStrengthTextStyle, { color: this.props.isCuebackRegistration ? Colors.TextColor : Colors.TextColor, }]}>
               Password Strength :{' '}
               <Text
-                style={{fontWeight: Platform.OS === 'ios' ? '500' : 'bold'}}>
+                style={styles.passwordTextStyle}>
                 {this.state.passwordStrength > 2
                   ? PasswordStrength.strong
                   : this.state.passwordStrength > 1
-                  ? PasswordStrength.medium
-                  : PasswordStrength.weak}
+                    ? PasswordStrength.medium
+                    : PasswordStrength.weak}
               </Text>
             </Text>
+
           </View>
-        )}
+        )} */}
+
         <Animated.View
-          style={{
-            width: '100%',
+          style={[styles.animatedViewStyle, {
             height: this.props.animatedViewHeight,
             opacity: this.state.opacity,
-            alignItems: 'flex-start',
-          }}>
-          <View style={{minWidth: 180}}>
+          }]}>
+          <View style={styles.minWidth}>
             <Text
-              style={{
-                ...fontSize(11),
-                color: 'red',
-                marginTop: 1,
-                lineHeight: 13,
-                letterSpacing: -0.1,
-              }}>
+              style={styles.errorTextStyle}>
               {`*${this.props.errorMessage}`}
             </Text>
           </View>
         </Animated.View>
+
       </View>
     );
   }

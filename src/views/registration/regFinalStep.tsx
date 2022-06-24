@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SafeAreaView, View, StatusBar, Keyboard} from 'react-native';
+import {SafeAreaView, View, StatusBar, Keyboard, ScrollView} from 'react-native';
 import Text from '../../common/component/Text';
 import {connect} from 'react-redux';
 import InstanceView from './instanceView';
@@ -13,6 +13,7 @@ import {Actions} from 'react-native-router-flux';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import {backBlkBtn} from '../../images';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import Utility from '../../common/utility';
 
 export class RegFinalStep extends Component {
   navBar: NavigationHeaderSafeArea;
@@ -45,6 +46,9 @@ export class RegFinalStep extends Component {
       },
     },
   };
+  componentDidMount =()=>{
+    Keyboard.dismiss()
+  }
   render() {
     let accData = Account.tempData();
     return (
@@ -56,17 +60,18 @@ export class RegFinalStep extends Component {
             ref={ref => (this.navBar = ref)}
           />
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
-          <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="always"
-            keyboardDismissMode="s"
+          <ScrollView
+            // keyboardShouldPersistTaps="always"
+            // keyboardDismissMode="s"
             style={{
               width: '100%',
               height: '100%',
               backgroundColor: 'transparent',
             }}
+            onScroll={()=>{Keyboard.dismiss()}}
             contentContainerStyle={{alignItems: 'center'}}
             bounces={false}>
             <View style={{width: 310, paddingBottom: 40}}>
@@ -198,7 +203,7 @@ export class RegFinalStep extends Component {
                 onPress={() => {}}
               />
             </View>
-          </KeyboardAwareScrollView>
+          </ScrollView>
         </View>
       </SafeAreaView>
     );

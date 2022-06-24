@@ -1,8 +1,8 @@
-import {takeLatest} from 'redux-saga';
-import {decode_utf8} from '../../common/constants';
-import {kPublish} from '.';
-import {getCommaSeparatedArray} from './dataHelper';
-import {Alert} from 'react-native';
+import { takeLatest } from 'redux-saga';
+import { decode_utf8 } from '../../common/constants';
+import { kPublish } from '.';
+import { getCommaSeparatedArray } from './dataHelper';
+import { Alert } from 'react-native';
 
 export const ResetLocation = 'resetLocation';
 export const LocationListUpdated = 'locationListUpdated';
@@ -17,18 +17,20 @@ export const SaveCollection = 'saveCollection';
 export const SaveShareOption = 'saveShareOptions';
 export const SaveCollaborators = 'saveCollaborators';
 export const SaveNid = 'saveNid';
+export const showCustomAlert = 'showCustomAlert';
+export const showCustomAlertData = 'showCustomAlertData';
 export const SaveAttachedFile = 'saveAttachedFile';
 export const SaveWhoCanSeeIds = 'saveWhoCanSeeIds';
 export const SaveCollaboratorNotes = 'saveCollaboratorsNotes';
 export const SaveDescription = 'saveDescription';
 export const EditContent = 'editContent';
 
-type Payload = {type: string; payload: any};
+type Payload = { type: string; payload: any };
 
 const initialState: any = {
   title: '',
   description: '',
-  date: {year: '', month: '', day: ''},
+  date: { year: '', month: '', day: '' },
   locationList: [],
   location: {},
   tags: [],
@@ -45,10 +47,12 @@ const initialState: any = {
   nid: 0,
   notesToCollaborators: '',
   deleteFiles: [],
+  showAlert: false,
+  showAlertData: { },
 };
 
 export const MemoryInitials = (state = initialState, action: Payload) => {
-  let newState: any = {...state};
+  let newState: any = { ...state };
   switch (action.type) {
     case ResetLocation:
       newState.locationList = [];
@@ -64,11 +68,12 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       break;
     case MemoryInitialsUpdate:
       newState.title = action.payload.title;
-      newState.date = {
-        year: action.payload.memory_date.year,
-        month: action.payload.memory_date.month,
-        day: action.payload.memory_date.day,
-      };
+      newState.date = action.payload.memory_date;
+      // {
+      //   year: action.payload.memory_date.year,
+      //   month: action.payload.memory_date.month,
+      //   day: action.payload.memory_date.day,
+      // };
       newState.location = action.payload.location;
       newState.files = action.payload.files;
       break;
@@ -113,6 +118,13 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       break;
     case EditContent:
       newState = action.payload;
+      break;
+    case showCustomAlert:
+      newState.showAlert = action.payload;
+      break;
+    case showCustomAlertData:
+      newState.showAlertData = action.payload;
+      console.log("custom Alert:", newState.showAlert)
       break;
   }
   return newState;

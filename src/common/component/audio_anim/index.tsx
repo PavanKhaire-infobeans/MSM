@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Animated, View} from 'react-native';
 
+import Styles from './styles';
 const duration = 44;
 const multiPlier = 1.96;
-class Animator extends React.Component<{}> {
-  views: Array<string> = [
+const Animator =(props:any)=> {
+  let views: Array<string> = [
     'first',
     'second',
     'third',
@@ -13,11 +14,12 @@ class Animator extends React.Component<{}> {
     'sixth',
     'seventh',
   ];
-  isUnmounted: boolean = false;
-  state: {
-    direction: {[x: string]: 'up' | 'down'};
-    anim: {[x: string]: Animated.Value};
-  } = {
+  let isUnmounted: boolean = false;
+  // state: {
+  //   direction: {[x: string]: 'up' | 'down'};
+  //   anim: {[x: string]: Animated.Value};
+  // }
+  const [state, setState] = useState({
     direction: {
       first: 'up',
       second: 'up',
@@ -36,20 +38,17 @@ class Animator extends React.Component<{}> {
       sixth: new Animated.Value(Math.pow(multiPlier, 3)),
       seventh: new Animated.Value(Math.pow(multiPlier, 2)),
     },
-  };
+  });
 
-  powerOf = (value: number, times: number = 1): number => {
+  const powerOf = (value: number, times: number = 1): number => {
     if (value !== Math.pow(multiPlier, times)) {
-      return this.powerOf(value, times + 1);
+      return powerOf(value, times + 1);
     }
     return times;
   };
 
-  getNext(
-    value: Animated.Value,
-    direction: string,
-  ): {value: number; direction: string} {
-    var power = this.powerOf((value as any)._value);
+  const getNext = ( value: Animated.Value, direction: string ): {value: number; direction: string} => {
+    var power = powerOf((value as any)._value);
     power = direction == 'up' ? power + 1 : power - 1;
     let val = Math.pow(multiPlier, power);
     return {
@@ -63,64 +62,66 @@ class Animator extends React.Component<{}> {
     };
   }
 
-  play() {
-    if (this.isUnmounted) return;
+  const play = () => {
+    if (isUnmounted) return;
     var value: {[x: string]: {value: number; direction: string}} = {};
-    let {anim, direction} = {...this.state};
-    for (let it of this.views) {
-      value[it] = this.getNext(anim[it] as Animated.Value, direction[it]);
+    let {anim, direction} = {...state};
+    for (let it of views) {
+      value[it] = getNext(anim[it] as Animated.Value, direction[it]);
     }
     Animated.parallel([
-      Animated.timing(this.state.anim.first, {
+      Animated.timing(state.anim.first, {
         toValue: value.first.value,
         duration,
       }),
-      Animated.timing(this.state.anim.second, {
+      Animated.timing(state.anim.second, {
         toValue: value.second.value,
         duration,
       }),
-      Animated.timing(this.state.anim.third, {
+      Animated.timing(state.anim.third, {
         toValue: value.third.value,
         duration,
       }),
-      Animated.timing(this.state.anim.fourth, {
+      Animated.timing(state.anim.fourth, {
         toValue: value.fourth.value,
         duration,
       }),
-      Animated.timing(this.state.anim.fifth, {
+      Animated.timing(state.anim.fifth, {
         toValue: value.fifth.value,
         duration,
       }),
-      Animated.timing(this.state.anim.sixth, {
+      Animated.timing(state.anim.sixth, {
         toValue: value.sixth.value,
         duration,
       }),
-      Animated.timing(this.state.anim.seventh, {
+      Animated.timing(state.anim.seventh, {
         toValue: value.seventh.value,
         duration,
       }),
     ]).start(_ => {
-      var direction: {[x: string]: string} = {...this.state.direction};
+      var direction: {[x: string]: string} = {...state.direction};
       for (let key in value) {
         direction[key] = value[key].direction;
       }
-      this.setState({direction}, () =>
+      setState(prev => ({
+          ...prev,
+          direction: direction
+      }));
         setTimeout(() => {
-          this.play();
-        }, duration),
-      );
+          play();
+        }, duration)
     });
   }
 
-  componentDidMount() {
-    this.play();
-  }
+  useEffect(()=>{
+    play();
 
-  componentWillUnmount() {
-    this.isUnmounted = true;
-  }
+    return()=>{
+      isUnmounted = true;
+    }
+  },[])
 
-  render() {
+
     return (
       <View
         style={{
@@ -132,99 +133,49 @@ class Animator extends React.Component<{}> {
         }}>
         <Animated.View
           style={{
-            height: this.state.anim.first,
+            height: state.anim.first,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.second,
+            height: state.anim.second,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.third,
+            height: state.anim.third,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.fourth,
+            height: state.anim.fourth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.fifth,
+            height: state.anim.fifth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.sixth,
+            height: state.anim.sixth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.seventh,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-
-        <Animated.View
-          style={{
-            height: this.state.anim.first,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.second,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.third,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.fourth,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.fifth,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.sixth,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.seventh,
+            height: state.anim.seventh,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
@@ -232,99 +183,49 @@ class Animator extends React.Component<{}> {
 
         <Animated.View
           style={{
-            height: this.state.anim.first,
+            height: state.anim.first,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.second,
+            height: state.anim.second,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.third,
+            height: state.anim.third,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.fourth,
+            height: state.anim.fourth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.fifth,
+            height: state.anim.fifth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.sixth,
+            height: state.anim.sixth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.seventh,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-
-        <Animated.View
-          style={{
-            height: this.state.anim.first,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.second,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.third,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.fourth,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.fifth,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.sixth,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.seventh,
+            height: state.anim.seventh,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
@@ -332,99 +233,49 @@ class Animator extends React.Component<{}> {
 
         <Animated.View
           style={{
-            height: this.state.anim.first,
+            height: state.anim.first,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.second,
+            height: state.anim.second,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.third,
+            height: state.anim.third,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.fourth,
+            height: state.anim.fourth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.fifth,
+            height: state.anim.fifth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.sixth,
+            height: state.anim.sixth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.seventh,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-
-        <Animated.View
-          style={{
-            height: this.state.anim.first,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.second,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.third,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.fourth,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.fifth,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.sixth,
-            width: 3,
-            borderRadius: 20,
-            backgroundColor: 'darkgray',
-          }}></Animated.View>
-        <Animated.View
-          style={{
-            height: this.state.anim.seventh,
+            height: state.anim.seventh,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
@@ -432,75 +283,225 @@ class Animator extends React.Component<{}> {
 
         <Animated.View
           style={{
-            height: this.state.anim.first,
+            height: state.anim.first,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.second,
+            height: state.anim.second,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.third,
+            height: state.anim.third,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.fourth,
+            height: state.anim.fourth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.fifth,
+            height: state.anim.fifth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.sixth,
+            height: state.anim.sixth,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
         <Animated.View
           style={{
-            height: this.state.anim.seventh,
+            height: state.anim.seventh,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+
+        <Animated.View
+          style={{
+            height: state.anim.first,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.second,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.third,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.fourth,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.fifth,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.sixth,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.seventh,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+
+        <Animated.View
+          style={{
+            height: state.anim.first,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.second,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.third,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.fourth,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.fifth,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.sixth,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.seventh,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+
+        <Animated.View
+          style={{
+            height: state.anim.first,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.second,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.third,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.fourth,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.fifth,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.sixth,
+            width: 3,
+            borderRadius: 20,
+            backgroundColor: 'darkgray',
+          }}></Animated.View>
+        <Animated.View
+          style={{
+            height: state.anim.seventh,
             width: 3,
             borderRadius: 20,
             backgroundColor: 'darkgray',
           }}></Animated.View>
       </View>
     );
-  }
 }
 
-export default class MainView extends React.Component<{
+interface Props{
   style: any;
   play: boolean;
-}> {
-  render() {
-    if (this.props.play) {
+};
+
+const MainView = (props : Props) => {
+    if (props.play) {
       return (
         <View
           style={[
-            this.props.style,
-            {flexDirection: 'row', justifyContent: 'space-evenly'},
+            props.style,Styles.container
           ]}>
           <Animator />
         </View>
       );
     } else {
-      return <View style={this.props.style} />;
+      return <View style={props.style} />;
     }
-  }
 }
+
+export default MainView;

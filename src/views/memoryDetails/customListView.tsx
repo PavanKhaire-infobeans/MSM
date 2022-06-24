@@ -131,7 +131,7 @@ export default class CustomListView extends React.Component<Props> {
           />
 
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <FlatList

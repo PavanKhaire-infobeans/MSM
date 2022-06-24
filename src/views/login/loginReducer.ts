@@ -2,9 +2,9 @@ import {
   loginRequest,
   loginInstanceRequest,
 } from '../../common/webservice/loginServices';
-import {takeLatest, put, call, all} from 'redux-saga/effects';
-import {Account} from '../../common/loginStore';
-import {kAdmin} from '../registration/getInstancesSaga';
+import { takeLatest, put, call, all } from 'redux-saga/effects';
+import { Account } from '../../common/loginStore';
+import { kAdmin } from '../registration/getInstancesSaga';
 
 export enum LoginServiceStatus {
   RequestStarted = 'LoginRequestStarted',
@@ -137,7 +137,7 @@ export const loginStatus = (
         instanceData: null,
       };
     default:
-      return {...state};
+      return { ...state };
   }
 };
 
@@ -146,6 +146,8 @@ export const loginStatus = (
  * @param params
  */
 function* fetchRequest(params: any) {
+  console.log("params is : ", JSON.stringify(params))
+
   return loginRequest(`${kAdmin}`, params)
     .then((response: Response) => response.json())
     .catch((err: any) => err);
@@ -171,13 +173,13 @@ function* loginInstanceService(...action: any[]) {
     var responseBody = yield call(async function () {
       return await request;
     });
-    //console.log("Response is : ", responseBody)
     if (responseBody.json) {
-      //console.log("Response is : ", responseBody.json())
       responseBody = yield call(async function () {
         return await responseBody.json();
       });
     }
+
+    console.log("resp insts :",JSON.stringify(responseBody))
     if (responseBody.ResponseCode !== 200) {
       yield put({
         type: LoginInstanceStatus.RequestFailed,
@@ -190,8 +192,8 @@ function* loginInstanceService(...action: any[]) {
       payload: responseBody,
     });
   } catch (err) {
-    //console.log("Login Service Error: ", err);
-    yield put({type: LoginInstanceStatus.RequestFailed, payload: err});
+    console.log("Login Service Error: ", err);
+    yield put({ type: LoginInstanceStatus.RequestFailed, payload: err });
   }
 }
 
@@ -205,9 +207,7 @@ function* loginService(...action: any[]) {
     var responseBody = yield call(async function () {
       return await request;
     });
-    //console.log("Response is : ", responseBody)
     if (responseBody.json) {
-      //console.log("Response is : ", responseBody.json())
       responseBody = yield call(async function () {
         return await responseBody.json();
       });
@@ -219,10 +219,10 @@ function* loginService(...action: any[]) {
       });
       return;
     }
-    yield put({type: LoginServiceStatus.RequestSuccess, payload: responseBody});
+    yield put({ type: LoginServiceStatus.RequestSuccess, payload: responseBody });
   } catch (err) {
     //console.log("Login Service Error: ", err);
-    yield put({type: LoginServiceStatus.RequestFailed, payload: err});
+    yield put({ type: LoginServiceStatus.RequestFailed, payload: err });
   }
 }
 

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {SubmitButton} from '../../common/component/button';
 import EventManager from '../../common/eventManager';
-import {styles} from './designs';
+import {styles} from './styles';
 //@ts-ignore
 import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
 import TextField from '../../common/component/textField';
@@ -244,7 +244,7 @@ export default class ChangePassword extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={{flex: 1, width: '100%'}}></View>
+        <View style={styles.fullFlex}></View>
         <NavigationHeaderSafeArea
           ref={ref => (this.navBar = ref)}
           heading={'Change Password'}
@@ -254,13 +254,13 @@ export default class ChangePassword extends React.Component {
           isWhite={true}
         />
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
         <KeyboardAwareScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          style={{width: '100%', height: '100%', padding: 16}}>
+          style={styles.scrollViewContainerStyle}>
           <TextField
             passwordToggle={true}
             errorMessage={this.state.currentPasswordError.text}

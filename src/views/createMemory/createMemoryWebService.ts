@@ -5,13 +5,13 @@ import {
   uploadTask,
   TimeStampMilliSeconds,
 } from '../../common/constants';
-import {Account} from '../../common/loginStore';
-import {MemoryService} from '../../common/webservice/memoryServices';
+import { Account } from '../../common/loginStore';
+import { MemoryService } from '../../common/webservice/memoryServices';
 import EventManager from '../../common/eventManager';
-import {TempFile} from '../mindPop/edit';
-import {CollaboratorsAction} from './inviteCollaborators';
+import { TempFile } from '../mindPop/edit';
+import { CollaboratorsAction } from './inviteCollaborators';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {Alert} from 'react-native';
+import { Alert } from 'react-native';
 
 export const kCollectionMemories = 'CollectionMemories';
 export const kCollectionUpdated = 'CollectionUpdated';
@@ -40,7 +40,7 @@ export const CreateUpdateMemory = async (
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {details: params},
+        { details: params },
       ],
     )
       .then((response: Response) => response.json())
@@ -48,6 +48,7 @@ export const CreateUpdateMemory = async (
         Promise.reject(err);
       });
 
+    // console.warn("daaaaa :" + JSON.stringify(response));
     if (response.ResponseCode == 200) {
       //	Alert.alert("parseInt(getValue(response))"+ JSON.stringify(response));
       let id = parseInt(getValue(response, ['Status'])) || 0;
@@ -61,21 +62,45 @@ export const CreateUpdateMemory = async (
         EventManager.callBack(listener, false, 'Could not save MindPop');
         return;
       }
+      debugger
 
       if (filesToUpload.length > 0) {
-        await uploadAttachments(id, filesToUpload);
-        loaderHandler.hideLoader();
-        EventManager.callBack(listener, true, id, padDetails, key);
-      } else {
-        loaderHandler.hideLoader();
-        EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
+        let datareturn = await uploadAttachments(id, filesToUpload, listener, true, id, padDetails, key);
+        debugger
+
+        if (listener == 'addContentCreateMemory') {
+          loaderHandler.hideLoader();
+          EventManager.callBack(listener, true, id, padDetails, key);
+        }
+        else {
+          return response;
+        }
+
+      }
+      else {
+        if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener" || listener == promptIdListener) {
+          loaderHandler.hideLoader();
+          EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
+        }
+        else {
+          return response;
+        }
       }
     } else {
-      loaderHandler.hideLoader();
-      EventManager.callBack(listener, false, response['ResponseMessage']);
+      if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener" || listener == promptIdListener) {
+        loaderHandler.hideLoader();
+        EventManager.callBack(listener, false, response['ResponseMessage']);
+      }
+      else {
+        return response;
+      }
+      // loaderHandler.hideLoader();
+      // console.warn(" err daaaaa :", JSON.stringify(response));
+      // EventManager.callBack(listener, false, response['ResponseMessage']);
     }
   } catch (err) {
     loaderHandler.hideLoader();
+    // console.warn(" errr daaaaa :", JSON.stringify(err));
     EventManager.callBack(listener, false, 'Unable to create memory!!');
   }
 };
@@ -84,8 +109,7 @@ export const GetDraftsDetails = async (nid: any) => {
   try {
     let data = await Storage.get('userData');
     let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/mystory/edit_memory_values`,
       [
         {
@@ -128,8 +152,7 @@ export const GetCollectionDetails = async (memoryId: any) => {
   try {
     let data = await Storage.get('userData');
     let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/collection/list_collection_memories`,
       [
         {
@@ -175,15 +198,14 @@ export const UpdateAttachments = async (
   try {
     let data = await Storage.get('userData');
     let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/mystory/edit_delete_file`,
       [
         {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {details: {nid: nid, type: 'my_stories', file_details: fileDetails}},
+        { details: { nid: nid, type: 'my_stories', file_details: fileDetails } },
       ],
     )
       .then((response: Response) => response.json())
@@ -218,7 +240,7 @@ export const UpdateMemoryCollection = async (
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {details: params},
+        { details: params },
       ],
     )
       .then((response: Response) => response.json())
@@ -324,7 +346,7 @@ export const CollaboratorActionAPI = async (params: any) => {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0', details: params},
+        { configurationTimestamp: '0', details: params },
       ],
     )
       .then((response: any) => response.json())
@@ -347,7 +369,7 @@ export const CollaboratorActionAPI = async (params: any) => {
   }
 };
 
-async function uploadAttachments(memoryId: number, files: TempFile[]) {
+async function uploadAttachments(memoryId: number, files: TempFile[], listener: string, res: boolean, id: any, padDetails: any, key: any) {
   return new Promise((resolve, reject) => {
     asyncGen(function* () {
       try {
@@ -356,7 +378,14 @@ async function uploadAttachments(memoryId: number, files: TempFile[]) {
           let rsp = yield uploadFile(memoryId, fl);
           resp.push(rsp);
         }
-        resolve(resp);
+        if (files.length == resp.length) {
+          resolve(resp);
+        }
+        debugger
+        console.log("files resp :",JSON.stringify(resp))
+        loaderHandler.showLoader('Loading...');
+        // loaderHandler.hideLoader();
+        // EventManager.callBack(listener, res, id, padDetails, key);
       } catch (err) {
         //console.log("Error in uploading files: ", err)
         reject(err);
@@ -370,13 +399,12 @@ async function uploadFile(memoryId: number, file: TempFile) {
   // if (Platform.OS == "android") {
   filePath = filePath.replace('file://', '');
   // }
-  let options: {[x: string]: any} = {
-    url: `https://${
-      Account.selectedData().instanceURL
-    }/api/mystory/file_upload`,
+  let options: { [x: string]: any } = {
+    url: `https://${Account.selectedData().instanceURL
+      }/api/mystory/file_upload`,
     path: filePath,
     method: 'POST',
-    ...(file.type == 'audios' ? {name: file.filename} : {}),
+    ...(file.type == 'audios' ? { name: file.filename } : {}),
     field: file.type == 'images' ? 'image' : file.type,
     type: 'multipart',
     headers: {
@@ -401,8 +429,9 @@ async function uploadFile(memoryId: number, file: TempFile) {
   return new Promise((resolve, reject) => {
     uploadTask(
       (data: any) => {
-        //console.log("After upload", data);
         let response = JSON.parse(data.responseBody);
+        console.log("After upload", JSON.stringify(response));
+
         if (response.ResponseCode == '200') {
           resolve(response);
         } else {

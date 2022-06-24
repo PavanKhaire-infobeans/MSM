@@ -14,6 +14,7 @@ import {
   Colors,
   MyMemoriesTapBarOptions,
   fontSize,
+  fontFamily,
 } from './../../../src/common/constants';
 import MemoryDrafts from './MemoryDrafts/index';
 import PublishedMemory from './PublishedMemory/index';
@@ -23,14 +24,10 @@ import Activities from './Activities';
 // import NavigationBar from '../dashboard/NavigationBar';
 import {TabItems} from './../../../src/common/component/TabBarIcons';
 import NavigationBar from '../../../src/views/dashboard/NavigationBar';
-type Props = {[x: string]: any};
+import Utility from '../../../src/common/utility';
+import styles from './styles';
 
-const FirstRoute = () => (
-  <View style={[styles.scene, {backgroundColor: '#ff4081'}]} />
-);
-const SecondRoute = () => (
-  <View style={[styles.scene, {backgroundColor: '#673ab7'}]} />
-);
+type Props = {[x: string]: any};
 
 export default class MyMemoriesContainer extends React.Component<Props> {
   backListner: any;
@@ -64,24 +61,13 @@ export default class MyMemoriesContainer extends React.Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.scene}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
-        />
-        <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 111111111111111,
-            backgroundColor: '#fff',
-          }}>
-          <View style={{flex: 1}}>
+          style={styles.container}>
+          <View style={styles.scene}>
             <NavigationBar title={TabItems.MyMemories} />
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <ScrollableTabView
@@ -91,13 +77,10 @@ export default class MyMemoriesContainer extends React.Component<Props> {
               style={{width: '100%'}}
               locked={Platform.OS == 'ios' ? false : true}
               tabBarBackgroundColor={Colors.NewThemeColor}
-              tabBarTextStyle={{...fontSize(16), fontFamily: 'Rubik'}}
-              tabBarActiveTextColor={Colors.TextColor}
-              tabBarInactiveTextColor="rgba(0.216, 0.22, 0.322, 0.75)"
-              tabBarUnderlineStyle={{
-                backgroundColor: Colors.TextColor,
-                height: 2,
-              }}
+              tabBarTextStyle={{...fontSize(16), fontFamily: fontFamily.Inter}}
+              tabBarActiveTextColor={Colors.newTextColor}
+              tabBarInactiveTextColor={Colors.backColorWith75OPacity}
+              tabBarUnderlineStyle={styles.tabBarUnderlineStyle}
               initialPage={1}>
               <PublishedMemory tabLabel={MyMemoriesTapBarOptions.published} />
               <MemoryDrafts tabLabel={MyMemoriesTapBarOptions.drafts} fromDeepLink={this.props.fromDeepLink}/>
@@ -109,8 +92,4 @@ export default class MyMemoriesContainer extends React.Component<Props> {
     );
   }
 }
-const styles = StyleSheet.create({
-  scene: {
-    flex: 1,
-  },
-});
+

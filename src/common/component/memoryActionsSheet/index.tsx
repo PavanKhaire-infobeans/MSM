@@ -8,14 +8,15 @@ import {
   TouchableOpacity,
   Modal,
   Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import {fontSize, Colors} from '../../constants';
-import {Actions} from 'react-native-router-flux';
+import { fontSize, Colors } from '../../constants';
+import { Actions } from 'react-native-router-flux';
 import TextNew from '../Text';
 import Utility from '../../../common/utility';
-import {No_Internet_Warning} from '../../../common/component/Toast';
-
-const {height} = Dimensions.get('window');
+import { No_Internet_Warning } from '../../../common/component/Toast';
+import styles from './styles';
+const { height } = Dimensions.get('window');
 
 export type MemoryActionsSheetItem = {
   index: number;
@@ -36,7 +37,7 @@ type Props = {
   width: string | number;
   popToAddContent?: boolean;
 };
-type State = {bottom: any; hidden: boolean};
+type State = { bottom: any; hidden: boolean };
 
 export default class MemoryActionsSheet extends React.Component<Props, State> {
   static defaultProps: Props = {
@@ -51,7 +52,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
 
   showSheet = () => {
     if (Utility.isInternetConnected) {
-      this.setState({hidden: false}, () => {
+      this.setState({ hidden: false }, () => {
         Animated.timing(this.state.bottom, {
           toValue: 0,
           duration: 200,
@@ -68,47 +69,29 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
       duration: 50,
     }).start(() => {
       setTimeout(() => {
-        this.setState({hidden: true});
+        this.setState({ hidden: true });
       }, 20);
     });
   };
 
   render() {
     if (this.state.hidden || this.props.actions.length == 0) {
-      return <View style={{height: 0, width: 0}} />;
+      return <View style={styles.hiddenView} />;
     } else {
       return (
         <Modal transparent>
           <View
-            style={{
-              position: 'absolute',
-              backgroundColor: '#00000045',
-              width: '100%',
-              height: '100%',
-              alignItems: 'center',
-              top: 0,
-            }}
+            style={styles.container}
             onStartShouldSetResponder={() => true}
             onResponderStart={() => this.hideSheet()}>
             <Animated.View
-              style={{
-                backgroundColor: 'white',
-                maxWidth: 768,
+              style={[styles.animatedContainer, {
                 width: this.props.width,
-                position: 'absolute',
                 bottom: this.state.bottom,
-                paddingBottom: 15,
-              }}>
+              }]}>
               <View>
                 <TextNew
-                  style={{
-                    color: Colors.TextColor,
-                    paddingTop: 15,
-                    paddingStart: 24,
-                    height: 56,
-                    ...fontSize(18),
-                    fontWeight: 'bold',
-                  }}>
+                  style={styles.memoryActionsText}>
                   Memory Actions
                 </TextNew>
                 {/* {this.props.title && this.props.title.length > 0 ?                          
@@ -130,58 +113,37 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                     item: MemoryActionsSheetItem;
                   }) => {
                     return (
-                      <TouchableOpacity
+                      <TouchableWithoutFeedback
                         onPress={() => {
-                          this.props.memoryActions
-                            ? this.props.onActionClick &&
-                              this.props.onActionClick(data.index, data)
-                            : this.props.onActionClick &&
-                              this.props.onActionClick(data.index);
+                          this.props.memoryActions ? this.props.onActionClick && this.props.onActionClick(data.index, data)
+                            : this.props.onActionClick && this.props.onActionClick(data.index);
                           this.hideSheet();
                           Keyboard.dismiss();
-
                           {
                             this.props.popToAddContent &&
                               Actions.popTo('addContent');
                           }
                         }}>
                         <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            padding: 10,
-                            paddingStart: 24,
-                            height: 56,
-                          }}>
+                          style={styles.subView}>
                           <View
-                            style={{
-                              height: '100%',
-                              width: 21,
-                              overflow: 'visible',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                            }}>
+                            style={styles.imageStyle}>
                             <Image source={data.image} resizeMode="contain" />
                           </View>
                           <TextNew
-                            style={{
-                              color:
-                                data.isDestructive == 1
-                                  ? Colors.NewRadColor
-                                  : 'black',
-                              marginLeft: 20,
-                              ...fontSize(18),
-                            }}>
+                            style={[styles.textStyle,{
+                              color: data.isDestructive == 1 ? Colors.NewRadColor : Colors.black,
+                             
+                            }]}>
                             {data.text}
                           </TextNew>
                         </View>
-                      </TouchableOpacity>
+                      </TouchableWithoutFeedback>
                     );
                   }}
                 />
               </View>
             </Animated.View>
-            {/* <View style={{height: 50, width:"100%", backgroundColor: "#fff", bottom: -50, position:"absolute"}}></View> */}
           </View>
         </Modal>
       );

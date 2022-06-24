@@ -19,6 +19,8 @@ import NavigationThemeBar from '../../common/component/navigationBarForEdit/navi
 import {pdf_icon} from '../../images';
 import EventManager from '../../common/eventManager';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import Utility from '../../common/utility';
+import Styles from './styles';
 
 type State = {[x: string]: any};
 type Props = {[x: string]: any};
@@ -70,8 +72,6 @@ export default class FileDescription extends React.Component<Props, State> {
     }
   }
 
-  componentWillUnmount() {}
-
   _keyboardDidShow = (e: any) => {
     this.setState({
       supportView: e.endCoordinates.height - 30,
@@ -92,10 +92,7 @@ export default class FileDescription extends React.Component<Props, State> {
       Keyboard.dismiss();
       Actions.pop();
     } else {
-      <StatusBar
-        barStyle={'dark-content'}
-        backgroundColor={Colors.ThemeColor}
-      />;
+      
       Alert.alert('Save changes?', `Do you want to save your changes?`, [
         {
           text: 'No',
@@ -122,31 +119,14 @@ export default class FileDescription extends React.Component<Props, State> {
       case 'images':
         return (
           <View
-            style={{
-              width: '100%',
-              height: 200,
-              backgroundColor: Colors.NewLightThemeColor,
-            }}>
+            style={Styles.fileHolderContainer}>
             <View
-              style={{
-                width: '100%',
-                height: 200,
-                position: 'absolute',
-                top: 0,
-                backgroundColor: '#cccccc99',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+              style={Styles.fileHolderSubContainer}>
               <Image
                 source={{
                   uri: file.filePath ? file.filePath : file.thumbnail_url,
                 }}
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  resizeMode: 'contain',
-                  backgroundColor: 'transparent',
-                }}
+                style={Styles.placeholderImageStyle}
               />
             </View>
           </View>
@@ -155,29 +135,17 @@ export default class FileDescription extends React.Component<Props, State> {
       case 'files':
         return (
           <View
-            style={{
-              width: '100%',
-              height: 200,
-              backgroundColor: Colors.NewLightThemeColor,
-            }}>
+            style={Styles.fileHolderContainer}>
             <View
-              style={{
-                width: '100%',
-                height: 200,
-                position: 'absolute',
-                top: 0,
-                backgroundColor: '#cccccc99',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+              style={Styles.fileHolderSubContainer}>
               <Image
                 source={pdf_icon}
                 resizeMode={'contain'}
-                style={{backgroundColor: 'transparent'}}
+                style={{backgroundColor: Colors.transparent}}
               />
               <Image
                 source={pdf_icon}
-                style={{position: 'absolute', bottom: 5, right: 5}}></Image>
+                style={Styles.pdfIconImageStyle}></Image>
             </View>
           </View>
         );
@@ -185,52 +153,22 @@ export default class FileDescription extends React.Component<Props, State> {
       case 'audios':
         return (
           <View
-            style={{
-              width: '100%',
-              height: 90,
-              justifyContent: 'flex-start',
-              flexDirection: 'row',
-              alignItems: 'center',
-              backgroundColor: Colors.NewLightThemeColor,
-            }}>
+            style={Styles.audioContainer}>
             <TouchableOpacity
               onPress={() => {}}
-              style={{
-                width: 55,
-                height: 55,
-                marginLeft: 15,
-                backgroundColor: Colors.ThemeColor,
-                borderRadius: 30,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+              style={Styles.playButtonContainer}>
               <View
-                style={{
-                  height: 24,
-                  width: 24,
-                  marginLeft: 10,
-                  borderLeftColor: 'white',
-                  borderLeftWidth: 18,
-                  borderTopColor: 'transparent',
-                  borderTopWidth: 12,
-                  borderBottomColor: 'transparent',
-                  borderBottomWidth: 12,
-                }}
+                style={Styles.playStyle}
               />
             </TouchableOpacity>
             <View style={{marginLeft: 10}}>
               <Text
-                style={{
-                  ...fontSize(16),
-                  color: '#000',
-                  marginBottom: 5,
-                  paddingRight: 80,
-                }}
+                style={[Styles.fileNameTextStyle,{ paddingRight: 80 }]}
                 numberOfLines={1}
                 ellipsizeMode="tail">
                 {file.title ? file.title : file.filename ? file.filename : ''}
               </Text>
-              <Text style={{...fontSize(16), color: '#000'}}>
+              <Text style={Styles.durationTextStyle}>
                 {file.duration}
               </Text>
             </View>
@@ -257,16 +195,12 @@ export default class FileDescription extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={Styles.fullFlex}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={Styles.emptySafeAreaStyle}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1}}>
+        <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
+          <View style={Styles.fullFlex}>
             <NavigationHeaderSafeArea
               heading={'Add Details'}
               cancelAction={() => this.cancelAction()}
@@ -275,25 +209,16 @@ export default class FileDescription extends React.Component<Props, State> {
               saveValues={this.saveValue}
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
-            <StatusBar
-              barStyle={'dark-content'}
+            {/* <StatusBar
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.ThemeColor}
-            />
+            /> */}
             {this.renderFileView()}
-            <View style={{padding: 15, flex: 1}}>
+            <View style={[Styles.padding15,Styles.fullFlex]}>
               <TextInput
-                style={{
-                  ...fontSize(16),
-                  height: 50,
-                  textAlignVertical: 'top',
-                  borderBottomColor: 'rgba(0,0,0,0.2)',
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                  maxHeight: 70,
-                  paddingBottom: 10,
-                  borderBottomWidth: 0.5,
-                }}
+                style={Styles.titleTextInputStyle}
                 placeholder="Enter title here..."
-                placeholderTextColor="#909090"
+                placeholderTextColor={Colors.darkGray}
                 multiline={true}
                 numberOfLines={5}
                 value={this.state.file_title}
@@ -302,13 +227,9 @@ export default class FileDescription extends React.Component<Props, State> {
                 }></TextInput>
 
               <TextInput
-                style={{
-                  minHeight: 40,
-                  ...fontSize(16),
-                  textAlignVertical: 'top',
-                }}
+                style={Styles.descTextInputStyle}
                 placeholder="Enter description..."
-                placeholderTextColor="#909090"
+                placeholderTextColor={Colors.darkGray}
                 onChangeText={(text: any) => this.setState({description: text})}
                 value={this.state.description}
                 onScroll={() => {}}
@@ -316,7 +237,7 @@ export default class FileDescription extends React.Component<Props, State> {
             </View>
             {Platform.OS == 'ios' && (
               <View
-                style={{width: '100%', height: this.state.supportView}}></View>
+                style={[ Styles.fullWidth,{height: this.state.supportView}]}></View>
             )}
           </View>
         </SafeAreaView>

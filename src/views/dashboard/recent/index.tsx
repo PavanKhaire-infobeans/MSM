@@ -1,11 +1,11 @@
-import React, {useRef, useState ,useEffect} from 'react';
-import { SafeAreaView, FlatList, TouchableHighlight, StyleSheet , View, StatusBar, Keyboard, RefreshControl, Text, ActivityIndicator, Image, Alert, Platform} from "react-native";
+import React, { useRef, useState, useEffect } from 'react';
+import { SafeAreaView, FlatList, TouchableHighlight, StyleSheet, View, StatusBar, Keyboard, RefreshControl, Text, ActivityIndicator, Image, Alert, Platform, TouchableOpacity } from "react-native";
 import { connect } from 'react-redux';
 import AudioPlayer, { kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious } from '../../../common/component/audio_player/audio_player';
 import MemoryActionsSheet, { MemoryActionsSheetItem } from './../../../../app/components/memoryActionsSheet';
 // import MemoryActionsSheet, { MemoryActionsSheetItem } from '../../../common/component/memoryActionsSheet';
 import { No_Internet_Warning, ToastMessage } from '../../../common/component/Toast';
-import { Colors, decode_utf8, fontSize, MemoryActionKeys } from '../../../common/constants';
+import { Colors, decode_utf8, fontFamily, fontSize, MemoryActionKeys } from '../../../common/constants';
 import Utility from '../../../common/utility';
 import { block_and_report, block_memory, block_user, cancelActions, delete_memory, edit_memory, filter_icon, move_to_draft, remove_me_from_this_post, report_user } from '../../../images';
 import { _onShowMemoryDetails, renderSeparator, onActionItemClicked, MemoryActionsList } from '../../myMemories/PublishedMemory';
@@ -23,17 +23,19 @@ import { DefaultDetailsMemory } from '../../createMemory/dataHelper';
 import { CreateUpdateMemory, promptIdListener } from '../../createMemory/createMemoryWebService';
 import EventManager from '../../../common/eventManager';
 
-
 import styles from './styles';
-type State={[x: string] : any};
-type Props={[x: string] : any};
+import { moreoptions } from '../../../../app/images';
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
 
-const Recent = (props :Props) =>{
+const Recent = (props: Props) => {
 
     let _actionSheet = useRef(null);
-    let audioPlayer = useRef(null);
+    const audioPlayer = useRef(null);
+    const flatListRef = useRef(null);
+
     let memoryFromPrompt: EventManager;
 
     const [state, setState] = useState({
@@ -51,33 +53,36 @@ const Recent = (props :Props) =>{
         animateValue: null,
         animateType: null
     })
+
+    const [scrolling, setScrolling] = useState(false)
     
-    let selectedPrompt : any = {};
+    let selectedPrompt: any = {};
     let memoryUpdateListener: EventManager;
 
-    useEffect(()=>{
-        memoryUpdateListener = EventManager.addListener("memoryUpdateRecentListener", ()=>{
-            props.fetchMemoryList({type: ListType.Recent, isLoading : true});
-         });     
-         props.fetchMemoryList({type: ListType.Recent, isLoading : true});
-    },[])
+    useEffect(() => {
+        memoryUpdateListener = EventManager.addListener("memoryUpdateRecentListener", () => {
+            props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+        });
+        props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
+    }, [])
+  
     const onRefresh = () => {
-        props.fetchMemoryList({type: ListType.Recent, isLoading : true});
-       // this.props.fetchMemoryList({type: ListType.Recent, isRefresh : true, filters : this.props.filters});
+        props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+        // this.props.fetchMemoryList({type: ListType.Recent, isRefresh : true, filters : this.props.filters});
     }
 
-    const handleLoadMore = () => {  
+    const handleLoadMore = () => {
         if (props.recentList.length > 0 && props.recentList.length < props.totalCount) {
             if (!props.isLoadMore) {
                 let memoryDetails;
-                if (props.recentList[props.recentList.length - 1].active_prompts){
+                if (props.recentList[props.recentList.length - 1].active_prompts) {
                     memoryDetails = props.recentList[props.recentList.length - 2];  //prompts   
-                }else{
+                } else {
                     memoryDetails = props.recentList[props.recentList.length - 1];
                 }
                 // if(props.totalCount > 5)
-                props.fetchMemoryList({type: ListType.Recent, isLoadMore : true, lastMemoryDate : memoryDetails.updated, filters : props.filters});
+                props.fetchMemoryList({ type: ListType.Recent, isLoadMore: true, lastMemoryDate: memoryDetails.memoryDate, filters: props.filters });
             }
         }
     };
@@ -91,118 +96,122 @@ const Recent = (props :Props) =>{
         MemoryActions = MemoryActionsList(item);
         // let cancelButtonIndex = MemoryActions.length
         // MemoryActions.push({index: cancelButtonIndex, text: "Cancel", image: cancelActions, actionType: MemoryActionKeys.cancelActionKey })
-        _actionSheet && _actionSheet.current && _actionSheet.current.showSheet()
-        setState(prevState => ({
-            ...prevState,
-            showMemoryActions: true
-        }));
+        // _actionSheet && _actionSheet.current && _actionSheet.current.showSheet()
+        // setState(prevState => ({
+        //     ...prevState,
+        //     showMemoryActions: true
+        // }));
     }
-    
+
     const audioView = (item: any) => {
         if (item.audios.length > 0) {
-            return <View style={{ justifyContent: "space-around", flexDirection: "row", margin: 16, marginTop: 0}}>
-                <View style={[{ flex: 1, elevation: 2, backgroundColor: Colors.AudioViewBg , borderColor: Colors.AudioViewBorderColor, borderWidth: 2, borderRadius: 10}, styles.boxShadow]}>
-                    {(item.audios[0].url && item.audios[0].url != "") &&
-                            <View style={{ width: "100%", paddingTop: 10, paddingBottom: 10, justifyContent: "flex-start", flexDirection: "row", alignItems: "center" }}  onStartShouldSetResponder={() => true} onResponderStart={()=> togglePlayPause(item)}>
-                                <View style={{ width: 55, height: 55, marginLeft: 15, backgroundColor: "#fff", borderRadius: 30, borderWidth: 4, borderColor: Colors.AudioViewBorderColor, justifyContent: "center", alignItems: "center" }}>
+            // console.log("AudioSV :",JSON.stringify(item.audios))
+            return (
+                <View style={styles.audioContainer}>
+                    <View style={[styles.boxShadow]}>
+                        {(item.audios[0].url && item.audios[0].url != "") &&
+                            <View style={styles.audioSubContainer} onStartShouldSetResponder={() => true} onResponderStart={() => togglePlayPause(item)}>
+                                <View style={styles.playPauseContainer}>
                                     {state.audioFile.fid == item.audios[0].fid && state.audioFile.isPlaying ?
-                                        <View style={{ height: 20, width: 16, justifyContent: "space-between", flexDirection: "row" }}>
-                                            <View style={{ backgroundColor: Colors.AudioViewBorderColor, flex: 1, width: 5 }} />
-                                            <View style={{ backgroundColor: "transparent", flex: 1, width: 2 }} />
-                                            <View style={{ backgroundColor: Colors.AudioViewBorderColor, flex: 1, width: 5 }} />
+                                        <View style={styles.pauseContainer}>
+                                            <View style={styles.column} />
+                                            <View style={styles.columnTransparent} />
+                                            <View style={styles.column} />
                                         </View>
-                                        : <View style={{
-                                            height: 24, width: 24, marginLeft: 10,
-                                            borderLeftColor: Colors.AudioViewBorderColor, borderLeftWidth: 18,
-                                            borderTopColor: "transparent", borderTopWidth: 12,
-                                            borderBottomColor: "transparent", borderBottomWidth: 12
-                                        }} />
+                                        : <View style={styles.playbutton} />
                                     }
                                 </View>
-                                <View style={{ marginLeft: 10 }}>
-                                    <Text style={[styles.normalText, { color: "#000", marginBottom: 5, paddingRight: 80 }]} numberOfLines={1} ellipsizeMode='tail'>{item.audios[0].title ? item.audios[0].title : item.audios[0].filename ? item.audios[0].filename : ""}</Text>
-                                    <Text style={[styles.normalText, { color: "#000" }]}>{item.audios[0].duration}</Text>
+                                <View style={styles.marginLeft10}>
+                                    <Text style={[styles.normalText, styles.filenamecontainer]} numberOfLines={1} ellipsizeMode='tail'>{item.audios[0].title ? item.audios[0].title : item.audios[0].filename ? item.audios[0].filename : ""}</Text>
+                                    <Text style={[styles.normalText]}>{item.audios[0].duration}</Text>
                                 </View>
                             </View>
-                    }
-                </View>
-                {item.audios.length > 1 ?
-                    <View style={[{ width: 56, marginLeft: 7, elevation: 2, backgroundColor: Colors.AudioViewBg , borderColor: Colors.AudioViewBorderColor, borderWidth: 2, borderRadius: 10}, styles.boxShadow]}>
-                        <TouchableHighlight underlayColor={"#ffffff00"}
-                            style={{ flex: 1, justifyContent: "center" }}
-                            onPress={
-                                () => {
-                                    _onShowMemoryDetails(item)
-                                }
-                            }
-                        >
-                            <Text style={{ color: Colors.TextColor, ...fontSize(14), textAlign: "center" }}>{"+"}{item.audios.length - 1}{"\n more"}</Text>
-                        </TouchableHighlight>
+                        }
                     </View>
-                    : null
-                }
+                    {item.audios.length > 1 ?
+                        <TouchableOpacity
+                            onPress={() => {
+                                _onShowMemoryDetails(item)
+                            }}
+                            style={styles.buttonContainer}>
+                            <Text
+                                style={styles.moreTextStyle}>
+                                {'+'}
+                                {item.audios.length - 1}
+                            </Text>
+                        </TouchableOpacity>
+                        // <View style={[{ width: 56, marginLeft: 7, elevation: 2, backgroundColor: Colors.AudioViewBg, borderColor: Colors.AudioViewBorderColor, borderWidth: 2, borderRadius: 10 }, styles.boxShadow]}>
+                        //     <TouchableHighlight underlayColor={Colors.touchableunderlayColor}
+                        //         style={{ flex: 1, justifyContent: "center" }}
+                        //         onPress={
+                        //             () => {
+                        //                 _onShowMemoryDetails(item)
+                        //             }
+                        //         }
+                        //     >
+                        //         <Text style={{ color: Colors.TextColor, ...fontSize(14), textAlign: "center" }}>{"+"}{item.audios.length - 1}{"\n more"}</Text>
+                        //     </TouchableHighlight>
+                        // </View>
+                        : null
+                    }
 
-            </View>
-
+                </View>
+            );
         }
-
-    }
+    };
 
     const togglePlayPause = (item: any) => {
         if (item.audios[0].fid == state.audioFile.index) {
-              audioPlayer.current.tooglePlayPause();
-          } else {
-              _onOpenAudios(item);
-         }
-  
-    }  
+            audioPlayer.current.tooglePlayPause();
+        } else {
+            _onOpenAudios(item);
+        }
+    }
 
     const renderFooter = () => {
         //it will show indicator at the bottom of the list when data is loading otherwise it returns null
         if (!props.loadmore) return null;
         return (
-            <View style={{ width: "100%", height: 40, marginTop: 20 }}>
+            <View style={styles.activityContainer}>
                 <ActivityIndicator
                     color={Colors.newTextColor}
                 />
             </View>
         );
     };
-    
+
     const _onOpenAudios = (item: any) => {
-          if (Utility.isInternetConnected) {
-              let playing = state.audioFile.isPlaying;
-              let fid = state.audioFile.fid;
-              if (item.audios[0].fid == fid) {
-                  playing = !playing;
-              } else {
-                  playing = true;
-              }
-              let audioFile = {
-                  index: 0, isPlaying: playing, file: [item.audios[0]],
-                  memoryTitle: item.title, by: item.name, fid: item.audios[0].fid, nid: item.nid
-              }
+        if (Utility.isInternetConnected) {
+            let playing = state.audioFile.isPlaying;
+            let fid = state.audioFile.fid;
+            if (item.audios[0].fid == fid) {
+                playing = !playing;
+            } else {
+                playing = true;
+            }
+            let audioFile = {
+                index: 0, isPlaying: playing, file: [item.audios[0]],
+                memoryTitle: item.title, by: item.name, fid: item.audios[0].fid, nid: item.nid
+            }
             setState(prevState => ({
                 ...prevState,
                 audioFile: audioFile
             }));
 
-            //   this.setState({
-            //       audioFile: audioFile
-            //   }, () => {
-                  if (item.audios[0].fid == fid) {
-                      audioPlayer.current.tooglePlayPause();
-                  } else {
-                      audioPlayer.current.showPlayer(0);
-                  }
-            //   }
-            //   )
-          }else{
-              No_Internet_Warning();
-          }
-      }
+            setTimeout(() => {
+                if (item.audios[0].fid == fid) {
+                    audioPlayer.current.tooglePlayPause();
+                } else {
+                    audioPlayer.current.showPlayer(0);
+                }
+            }, 1000);
 
-      const _onCloseAudios = (event: Event) => {
+        } else {
+            No_Internet_Warning();
+        }
+    }
+
+    const _onCloseAudios = (event: Event) => {
         try {
             audioPlayer.current.hidePlayer();
         } catch (error) {
@@ -211,8 +220,8 @@ const Recent = (props :Props) =>{
     }
 
     const like = (item: any) => {
-        console.log("item on like:",item);
-        
+        console.log("item on like:", item);
+
         setState(prevState => ({
             ...prevState,
             animateValue: item.index
@@ -227,13 +236,15 @@ const Recent = (props :Props) =>{
                 item.item.isLikedByUser = 1;
                 item.item.noOfLikes = item.item.noOfLikes + 1;
             }
-        } 
+        }
         else {
             No_Internet_Warning();
         }
     }
 
     const playerCallback = (event: any) => {
+
+        console.log("playerCallback :", event)
         let audioFile = state.audioFile;
         switch (event) {
             case kEnded: audioFile.isPlaying = false;
@@ -257,38 +268,38 @@ const Recent = (props :Props) =>{
             ...prevState,
             audioFile: audioFile
         }));
-        
+
     }
-    
-    const promptToMemoryCallBack=(success : boolean, draftDetails : any)=>{
+
+    const promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
         memoryFromPrompt.removeListener();
         setTimeout(() => {
             loaderHandler.hideLoader();
         }, 500);
-        if(success){	
+        if (success) {
             props.removePrompt(selectedPrompt);
-            Actions.push("createMemory", {editMode : true, draftNid : draftDetails, isFromPrompt: true})      
+            Actions.push("createMemory", { editMode: true, draftNid: draftDetails, isFromPrompt: true })
         }
-        else{
-        loaderHandler.hideLoader()
-                ToastMessage(draftDetails);
+        else {
+            loaderHandler.hideLoader()
+            ToastMessage(draftDetails);
         }
     }
 
-    const _onAddProptToMemoryAction=(firstIndex: any, secondIndex: any)=>{    
+    const _onAddProptToMemoryAction = (firstIndex: any, secondIndex: any) => {
 
-        if(Utility.isInternetConnected){	
+        if (Utility.isInternetConnected) {
             let data = props.recentList[firstIndex].active_prompts[secondIndex];
             selectedPrompt.firstIndex = firstIndex;
             selectedPrompt.secondIndex = secondIndex;
-            loaderHandler.showLoader("Creating Memory...");			
-            let draftDetails : any = DefaultDetailsMemory(decode_utf8(data.prompt_title.trim()));						
-            draftDetails.prompt_id = parseInt(data.prompt_id);             
-            memoryFromPrompt = EventManager.addListener(promptIdListener, promptToMemoryCallBack)        
-            CreateUpdateMemory(draftDetails, [], promptIdListener, "save")   
+            loaderHandler.showLoader("Creating Memory...");
+            let draftDetails: any = DefaultDetailsMemory(decode_utf8(data.prompt_title.trim()));
+            draftDetails.prompt_id = parseInt(data.prompt_id);
+            memoryFromPrompt = EventManager.addListener(promptIdListener, promptToMemoryCallBack)
+            CreateUpdateMemory(draftDetails, [], promptIdListener, "save")
             Keyboard.dismiss();
-        } 
-        else{
+        }
+        else {
             No_Internet_Warning();
         }
 
@@ -296,58 +307,78 @@ const Recent = (props :Props) =>{
 
     return (
         <View style={{ flex: 1 }}>
-            <SafeAreaView style={{ flex: 1, alignItems: "center", justifyContent: 'center', height: '100%', backgroundColor:Colors.timeLinebackground }}>
-                <View style={{ height: "100%", width: "100%", backgroundColor: Colors.timeLinebackground  }}>
+            <SafeAreaView style={styles.container}>
+                <View style={styles.subcontainer}>
                     {/* {filterView(props.filterClick(ListType.Recent), ListType.Recent)} */}
-                    <View style={{height:10}}/>
+                    {
+                        !scrolling ?
+                        <View style={styles.renderSeparator} />
+                        :
+                        null
+                    }
                     <FlatList
                         data={props.recentList}
-                        style={{ width: '90%',alignSelf:'center' }}
+                        // ref={flatListRef}
+                        style={styles.flatlistStyle}
                         extraData={state}
-                        onScroll={()=>{Keyboard.dismiss()}}
-                        renderItem={(item: any) =>(
+                        onScroll={(e) => {
+                            debugger;
+                            if (e?.nativeEvent?.contentOffset?.y && (e?.nativeEvent?.contentOffset?.y > 9)) {
+                                setScrolling(true)
+                            }
+                            if (e?.nativeEvent?.contentOffset?.y && (e?.nativeEvent?.contentOffset?.y < 9)) {
+                                setScrolling(false)
+                            }
+                            Keyboard.dismiss()
+                        }}
+                        // on = {(viewableItems) => {
+                        //     console.log("viewableItems < ",JSON.stringify(viewableItems))
+                        // }}
+                        renderItem={(item: any) => (
                             <MemoryListItem
                                 item={item}
                                 animate={state.animateValue}
                                 previousItem={null}
                                 like={like}
-                                listType={ListType.Recent} 
+                                listType={ListType.Recent}
                                 audioView={audioView}
                                 openMemoryActions={openMemoryActions}
-                                addMemoryFromPrompt={(firstIndex:any, secondIndex: any)=> 
-                                    _onAddProptToMemoryAction(firstIndex, secondIndex)                                        
+                                MemoryActions={MemoryActions}
+                                addMemoryFromPrompt={(firstIndex: any, secondIndex: any) =>
+                                    _onAddProptToMemoryAction(firstIndex, secondIndex)
                                 }
                             />
-                            )}
+                        )}
                         // maxToRenderPerBatch={50}
                         indicatorStyle='white'
                         removeClippedSubviews={true}
                         refreshControl={
                             <RefreshControl
-                                colors={[Platform.OS === "android" ? Colors.newTextColor: Colors.newTextColor]}
-                                tintColor={Platform.OS === "android" ? Colors.newTextColor: Colors.newTextColor}
+                                colors={[Platform.OS === "android" ? Colors.newTextColor : Colors.newTextColor]}
+                                tintColor={Platform.OS === "android" ? Colors.newTextColor : Colors.newTextColor}
                                 refreshing={props.refresh}
                                 onRefresh={onRefresh}
                             />
                         }
                         keyExtractor={(_, index: number) => `${index}`}
-                        ItemSeparatorComponent={()=><View style={{height:10,width:20}}/>}
+                        ItemSeparatorComponent={() => <View style={styles.renderSeparator} />}
                         ListFooterComponent={renderFooter}
                         onEndReachedThreshold={0.4}
                         onEndReached={handleLoadMore}
                     />
                     {
                         props.recentList.length == 0 &&
-                        <View style={{position: 'absolute', top : 40 ,height : '100%', width: '100%', alignContent: 'center', justifyContent: 'center', backgroundColor: 'white'}}>
+                        <View style={styles.noItemContainer}>
                             {
                                 props.loading ?
-                                <ActivityIndicator color={Colors.newTextColor}    
-                                        size="large"                    
-                                        style={{flex: 1, justifyContent : "center"}}/> 
-                                : 
-                                <Text style={{...fontSize(16), color : Colors.dullText, textAlign: 'center'}}>
-                                    There are no memories or cues to display at this moment. Check your filter settings and try again
-                                </Text>
+                                    <ActivityIndicator color={Colors.newTextColor}
+                                        size="large"
+                                        style={styles.activityContainerStyle}
+                                    />
+                                    :
+                                    <Text style={styles.noItemTextStyle}>
+                                        There are no memories or cues to display at this moment. Check your filter settings and try again
+                                    </Text>
                             }
                         </View>
                     }
@@ -359,7 +390,7 @@ const Recent = (props :Props) =>{
                 ref={_actionSheet}
                 width={DeviceInfo.isTablet() ? "65%" : "100%"}
                 actions={MemoryActions}
-                memoryActions = {true}
+                memoryActions={true}
                 onActionClick={onActionItemClicked}
             />
 
@@ -370,25 +401,25 @@ const Recent = (props :Props) =>{
 }
 
 const mapState = (state: any) => {
-	return {
-        recentList : state.dashboardReducer.recentList,
-        loading : state.dashboardReducer.loadingRecent,
+    return {
+        recentList: state.dashboardReducer.recentList,
+        loading: state.dashboardReducer.loadingRecent,
         loadmore: state.dashboardReducer.loadMoreRecent,
         refresh: state.dashboardReducer.refreshRecent,
-        totalCount : state.dashboardReducer.recentCount,
-        filters : state.dashboardReducer.filterDataRecent,
-        active_prompts : state.dashboardReducer.active_prompts,
+        totalCount: state.dashboardReducer.recentCount,
+        filters: state.dashboardReducer.filterDataRecent,
+        active_prompts: state.dashboardReducer.active_prompts,
     }
 };
 
 const mapDispatch = (dispatch: Function) => {
-	return {
-        fetchMemoryList : (payload : any) => dispatch({type: GET_MEMORY_LIST, payload : payload}),
-        removePrompt: (payload: any) => dispatch({type: REMOVE_PROMPT, payload : payload})
-	};
+    return {
+        fetchMemoryList: (payload: any) => dispatch({ type: GET_MEMORY_LIST, payload: payload }),
+        removePrompt: (payload: any) => dispatch({ type: REMOVE_PROMPT, payload: payload })
+    };
 };
 
 export default connect(
-	mapState,
-	mapDispatch
+    mapState,
+    mapDispatch
 )(Recent);

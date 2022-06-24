@@ -29,6 +29,7 @@ import {
 import {kLogoutPressed} from '../../views/menu';
 import {kProfilePicUpdated} from '../profile/profileDataModel';
 import NavigationBar from '../dashboard/NavigationBar';
+import Utility from '../../common/utility';
 type items = {
   title: string;
   showArrow: boolean;
@@ -167,7 +168,7 @@ export default class MyAccount extends React.Component {
           <View style={{flex: 1}}>
             <NavigationBar title={'My Account'} showClose={true} />
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <View

@@ -50,6 +50,8 @@ import { createNew } from "../../createMemory";
 import { MemoryDraftsDataModel } from "../../myMemories/MemoryDrafts/memoryDraftsDataModel";
 import MindPopIntro from "./mindPopIntro";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import CustomAlert from "../../../common/component/customeAlert";
+import { showCustomAlert } from "../../createMemory/reducer";
 
 export type ListItem = {
 	id: string;
@@ -71,9 +73,9 @@ export type ListItem = {
 type Section = { title: string; data: Array<ListItem> };
 type SectionItems = Array<Section>;
 const options = {
-    enableVibrateFallback: true,
-    ignoreAndroidSystemSettings: false
-  };
+	enableVibrateFallback: true,
+	ignoreAndroidSystemSettings: false
+};
 const buttonWidth = Size.byWidth(106);
 class MindPopList extends React.Component<{ listMindPops: (payload: any) => void;[x: string]: any }> {
 	state: {
@@ -83,9 +85,9 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		totalItems: number;
 		selectedIndex: number;
 		lastFetchedIndex: number;
-		webserviceBeingCalled: boolean;		
-		mindPopInProgress : number;
-		mindPopIntroVisibility : any;
+		webserviceBeingCalled: boolean;
+		mindPopInProgress: number;
+		mindPopIntroVisibility: any;
 	} = {
 			selectedItems: [],
 			totalItems: 0,
@@ -94,39 +96,39 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 			selectedIndex: 0,
 			lastFetchedIndex: 0,
 			webserviceBeingCalled: false,
-			mindPopInProgress : 0,
-			mindPopIntroVisibility : false
+			mindPopInProgress: 0,
+			mindPopIntroVisibility: false
 		};
 	searchKeyword: string = "";
 	eventSubs: EmitterSubscription;
 	listRef = React.createRef<SwipeListView>();
 	createNew: boolean = false;
-	uploadCompleted : EventManager;
-	convertToMemoryObject : any = {};
-	createMemoryListener : any;
-	constructor(props: { [x: string]: any; listMindPops: (payload: any) => void; fromDeeplinking? :boolean; nid?: any; deepLinkBackClick?:boolean }) {
+	uploadCompleted: EventManager;
+	convertToMemoryObject: any = {};
+	createMemoryListener: any;
+	constructor(props: { [x: string]: any; listMindPops: (payload: any) => void; fromDeeplinking?: boolean; nid?: any; deepLinkBackClick?: boolean }) {
 		super(props);
 		this.eventSubs = DeviceEventEmitter.addListener("updateSelected", this._updateIndex);
-		this.createMemoryListener = EventManager.addListener("mindpopEditMemoryListener", this.createMemoryCallBack) 		
+		this.createMemoryListener = EventManager.addListener("mindpopEditMemoryListener", this.createMemoryCallBack)
 	}
 
-	createMemoryCallBack=(success : boolean, draftDetails : any)=>{		
+	createMemoryCallBack = (success: boolean, draftDetails: any) => {
 		setTimeout(() => {
-			 loaderHandler.hideLoader();
+			loaderHandler.hideLoader();
 		}, 500);
-		if(success){				
-			Actions.replace("createMemory", {editMode : true, draftNid : draftDetails, deepLinkBackClick: this.props.deepLinkBackClick})	 
+		if (success) {
+			Actions.replace("createMemory", { editMode: true, draftNid: draftDetails, deepLinkBackClick: this.props.deepLinkBackClick })
 		}
-		else{
+		else {
 			loaderHandler.hideLoader()
-            ToastMessage(draftDetails);
-        }
+			ToastMessage(draftDetails);
+		}
 	}
 
-	mindPopUploadCompleted=(success?: any, mindPopID? : any)=>{
-		try{			
-			this.setState({}, 
-				()=>{
+	mindPopUploadCompleted = (success?: any, mindPopID?: any) => {
+		try {
+			this.setState({},
+				() => {
 					this.props.listMindPops({
 						searchTerm: {
 							start: 0,
@@ -135,10 +137,10 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 						},
 						configurationTimestamp: TimeStampMilliSeconds(),
 						lastSyncTimeStamp: "0"
-					});		
+					});
 				}
 			)
-		} catch (e){
+		} catch (e) {
 
 		}
 	}
@@ -157,7 +159,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		});
 		return objects ? [...objects.data] : [];
 	};
-	
+
 	_parseDatabaseResult(queryResult: any): ListItem[] {
 		let rows = queryResult.rows.raw(); // shallow copy of rows Array
 		let fetchedItems: ListItem[] = rows.map((row: any) => ({
@@ -267,7 +269,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 				// No_Internet_Warning();
 			}
 
-		} 
+		}
 		else if (nextProps.deleteStatus.completed) {
 			LoaderHandler.hideLoader();
 			if (nextProps.deleteStatus.success) {
@@ -315,7 +317,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 							webserviceBeingCalled: false
 						},
 						() => {
-							
+
 							this.props.updateListCount(this._listItems().length);
 
 							this.setState({ selectedItems: [] }, () => {
@@ -326,11 +328,13 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 						}
 					);
 				}
-				if(this.convertToMemoryObject.callForCreateMemory){
+				if (this.convertToMemoryObject.callForCreateMemory) {
 					this.convertToMemoryObject.callForCreateMemory = false;
-					Actions.push("createMemory",  { attachments : this.convertToMemoryObject.attachments, 
-							id : this.convertToMemoryObject.nid, textTitle: this.convertToMemoryObject.details.title, 
-							memoryDate: this.convertToMemoryObject.details.memory_date, type : createNew})            	
+					Actions.push("createMemory", {
+						attachments: this.convertToMemoryObject.attachments,
+						id: this.convertToMemoryObject.nid, textTitle: this.convertToMemoryObject.details.title,
+						memoryDate: this.convertToMemoryObject.details.memory_date, type: createNew
+					})
 				}
 			} else {
 				this.props.deleteMindPopsCallEnd();
@@ -343,19 +347,19 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 	}
 	componentDidMount() {
 		setTimeout(() => {
-            DefaultPreference.get('hide_mindpop_intro').then((value: any) => {
-                if(value=='true'){
-                   this.setState({mindPopIntroVisibility : false});
-                } else {
-					if(this.state.listSectionItems.length == 0){
-						this.setState({mindPopIntroVisibility : false});
-					}else{
-						this.setState({mindPopIntroVisibility : true});
+			DefaultPreference.get('hide_mindpop_intro').then((value: any) => {
+				if (value == 'true') {
+					this.setState({ mindPopIntroVisibility: false });
+				} else {
+					if (this.state.listSectionItems.length == 0) {
+						this.setState({ mindPopIntroVisibility: false });
+					} else {
+						this.setState({ mindPopIntroVisibility: true });
 					}
 
-                }
-            });
-        }, 2000);
+				}
+			});
+		}, 2000);
 	}
 
 	componentWillMount() {
@@ -370,13 +374,14 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 			cancelAction: this._cancelAction,
 			clearAllAction: this._clearAllSelection
 		});
-		if(this.props.actionWrite || this.props.actionRecord || this.props.actionImageUpload){
+		if (this.props.actionWrite || this.props.actionRecord || this.props.actionImageUpload) {
 			this.createNewMindPop(true);
 		}
 	}
 
 	componentWillUnmount() {
 		//Reset states..
+		this.props.showAlertCall(false);
 		this.props.updateSelectionState(false);
 		this.props.updateListCount(0);
 		this.props.updateSelectedItemCount(0);
@@ -401,7 +406,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		if (this.props.deepLinkBackClick) {
 			Actions.dashBoard();
 		} else {
-			Actions.pop();			
+			Actions.pop();
 		}
 	};
 
@@ -513,7 +518,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		});
 	}
 
-	_deleteMindPopAction(selectedItems: string[]) {		
+	_deleteMindPopAction(selectedItems: string[]) {
 		Alert.alert(`Delete attachment?`, `You wish to delete ${selectedItems.length > 1 ? "selected" : "this"} MindPop${selectedItems.length > 1 ? "s" : ""}?`, [
 			{
 				text: "Delete",
@@ -531,7 +536,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		]);
 	}
 
-	deleteMindpop=(selectedItems : any)=>{
+	deleteMindpop = (selectedItems: any) => {
 		var requstBodyObj = selectedItems.map((id: any) => {
 			return { mindPopID: id };
 		});
@@ -542,59 +547,126 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 	}
 	private _empty = () => (
 		<View style={{ height: 300, width: 300, backgroundColor: "transparent", alignItems: "center", alignSelf: "center" }}>
-			<Text style={{ color: "black", ...fontSize(18), marginTop: 41, fontWeight: Platform.OS === "ios"? '600':'bold' }}>No Results Found</Text>
-			<Text style={{ color: "#1c1c1c", ...fontSize(18), lineHeight: 26, marginTop: 16, textAlign: "center" }}>{`We couldn't find any results for '${
-							this.searchKeyword}'. Try searching for something else`}</Text>
+			<Text style={{ color: "black", ...fontSize(18), marginTop: 41, fontWeight: Platform.OS === "ios" ? '600' : 'bold' }}>No Results Found</Text>
+			<Text style={{ color: "#1c1c1c", ...fontSize(18), lineHeight: 26, marginTop: 16, textAlign: "center" }}>{`We couldn't find any results for '${this.searchKeyword}'. Try searching for something else`}</Text>
 		</View>
 	);
 
 	render() {
 		return (
-			<View style={{flex: 1}}>
-			<SafeAreaView style={{width: "100%", flex: 0, backgroundColor : Colors.NewThemeColor}}/>                   
-				<SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>    
-				<View style={{flex: 1}}>
-				{DeviceInfo.isTablet() ? <MindPopIPadNavigationBar
-					selectAction={this.props.selectAction}
-					selectAllAction={this.props.selectAllAction}
-					backAction={this.props.backAction}
-					updateList={this.props.updateList}
-					cancelAction={this.props.cancelAction}
-					clearAllAction={this.props.clearAllAction}/>: 
-				<MindPopNavigationBar selectAction={this.props.selectAction}
-									  selectAllAction={this.props.selectAllAction}
-									  backAction={this.props.backAction}
-									  updateList={this.props.updateList}
-									  cancelAction={this.props.cancelAction}
-									  clearAllAction={this.props.clearAllAction}
-			/>}
-			{/* <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}> */}
-				{this.getListView()}
-				{this.state.selectedItems.length > 0 ? (
-					<SelectionStatusBar
-						onPress={() => {
-							this._deleteMindPopAction(this.state.selectedItems);
-						}}
-					/>
-				) : null}
-				</View>
-			</SafeAreaView>
-			{this.state.mindPopIntroVisibility && <MindPopIntro cancelMindPopIntro={()=> 
-                       {this.setState({mindPopIntroVisibility : false});
-                         DefaultPreference.set('hide_mindpop_intro', "true").then(function() {}) }
-                        }></MindPopIntro>}
+			<View style={{ flex: 1 }}>
+				<SafeAreaView style={{ width: "100%", flex: 0, backgroundColor: Colors.NewThemeColor }} />
+				<SafeAreaView style={{ width: "100%", flex: 1, backgroundColor: "#fff" }}>
+					<View style={{ flex: 1 }}>
+						{
+							this.props.showAlert && this.props.showAlertData?.title ?
+								<CustomAlert
+									// modalVisible={this.state.showCustomAlert}
+									modalVisible={this.props.showAlert}
+									// setModalVisible={setModalVisible}
+									title={this.props.showAlertData?.title}
+									message={this.props.showAlertData?.desc}
+									android={{
+										container: {
+											backgroundColor: '#ffffff'
+										},
+										title: {
+											color: Colors.black,
+											fontFamily: "SF Pro Text",
+											fontSize: 17,
+											fontWeight: '600',
+											lineHeight: 22
+										},
+										message: {
+											color: Colors.black,
+											fontFamily: "SF Pro Text",
+											// fontFamily: fontFamily.Inter,
+											fontSize: 16,
+											fontWeight: '500',
+										},
+									}}
+									ios={{
+										container: {
+											backgroundColor: '#D3D3D3'
+										},
+										title: {
+											color: Colors.black,
+											// fontFamily: fontFamily.Inter,
+											lineHeight: 22,
+											fontSize: 17,
+											fontWeight: '600',
+										},
+										message: {
+											color: Colors.black,
+											// fontFamily: fontFamily.Inter,
+											fontSize: 13,
+											lineHeight: 18,
+											fontWeight: '400',
+										},
+									}}
+									buttons={[
+										{
+											text: 'Great!',
+											func: () => {
+												this.props.showAlertCall(false);
+											},
+											styles: {
+												lineHeight: 22,
+												fontSize: 17,
+												fontWeight: '600',
+											}
+										}
+									]}
+								/>
+								:
+								null
+						}
+						{DeviceInfo.isTablet() ? <MindPopIPadNavigationBar
+							selectAction={this.props.selectAction}
+							selectAllAction={this.props.selectAllAction}
+							backAction={() => Actions.writeTabs()}
+							// backAction={this.props.backAction}
+							updateList={this.props.updateList}
+							// cancelAction={this.props.cancelAction}
+							cancelAction={() => Actions.dashboard()}
+							clearAllAction={this.props.clearAllAction} /> :
+							<MindPopNavigationBar selectAction={this.props.selectAction}
+								selectAllAction={this.props.selectAllAction}
+								backAction={() => Actions.dashboard()}
+								cancelAction={() => Actions.dashboard()}
+								// backAction={this.props.backAction}
+								updateList={this.props.updateList}
+								// cancelAction={this.props.cancelAction}
+								clearAllAction={this.props.clearAllAction}
+							/>}
+						{/* <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}> */}
+						{this.getListView()}
+						{this.state.selectedItems.length > 0 ? (
+							<SelectionStatusBar
+								onPress={() => {
+									this._deleteMindPopAction(this.state.selectedItems);
+								}}
+							/>
+						) : null}
+					</View>
+				</SafeAreaView>
+				{this.state.mindPopIntroVisibility && <MindPopIntro cancelMindPopIntro={() => {
+					this.setState({ mindPopIntroVisibility: false });
+					DefaultPreference.set('hide_mindpop_intro', "true").then(function () { })
+				}
+				}></MindPopIntro>}
 			</View>
 		);
 	}
 
-	convertToMemory=(id : any, content : any, filesToUpload  : [])=>{
-		if(Utility.isInternetConnected){
-			loaderHandler.showLoader("Loading...")			
-			let draftDetails : any = DefaultDetailsMemory(content);						
+	convertToMemory = (id: any, content: any, filesToUpload: []) => {
+		if (Utility.isInternetConnected) {
+			loaderHandler.showLoader("Loading...")
+			let draftDetails: any = DefaultDetailsMemory(content);
 			draftDetails.mindpop_id = id;
-			MindPopStore._deleteMindPops([parseInt(id)])            
+			MindPopStore._deleteMindPops([parseInt(id)])
 			CreateUpdateMemory(draftDetails, filesToUpload, "mindpopEditMemoryListener", "save");
-		} else{
+		} else {
 			ToastMessage(NO_INTERNET);
 		}
 	}
@@ -604,16 +676,16 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		if (data.section.title === "1") {
 			return (
 				ItemInProgress ? null : <View style={styles.rowBack}>
-				<TouchableOpacity
-					style={[styles.backRightBtn, styles.backRightBtnLeft]}
-					onPress={() => {
-						this._deleteMindPopAction([data.item.id]);
-					}}>
-					<Image source={mindPopListCell_DeleteIcon_White}/>
-					<Text style={styles.backTextWhite}>Delete</Text>
-				</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.backRightBtn, styles.backRightBtnLeft]}
+						onPress={() => {
+							this._deleteMindPopAction([data.item.id]);
+						}}>
+						<Image source={mindPopListCell_DeleteIcon_White} />
+						<Text style={styles.backTextWhite}>Delete</Text>
+					</TouchableOpacity>
 
-				{/*
+					{/*
 				<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]}
 					onPress={_ => {
 						//console.log("Convert To memory pressed");
@@ -622,7 +694,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 					<Text style={styles.backTextWhite}>Convert to memory</Text>
 				</TouchableOpacity>*/}
 
-				{/* <TouchableOpacity
+					{/* <TouchableOpacity
 					style={[styles.backRightBtn, styles.backRightBtnRight]}
 					onPress={() => {
 						this._editAction(rowMap, data);
@@ -630,7 +702,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 					<Image source={mindPopListCell_EditIcon} />
 					<Text style={styles.backTextWhite}>Edit</Text>
 				</TouchableOpacity> */}
-			</View>
+				</View>
 			);
 		} else {
 			return null;
@@ -667,7 +739,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		return placeHolder;
 	}
 
-	fetchAndPushMindPop= async (data: any)=>{	
+	fetchAndPushMindPop = async (data: any) => {
 		// loaderHandler.showLoader("Loading...")
 		// let value : any = await MindPopStore._getMindPopAttachments(data.id);
 		// let medias: MindPopAttachment[] = value.rows.raw();
@@ -692,95 +764,97 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		let ItemInProgress = MindPopsInProgress.indexOf(parseInt(data.item.id)) != -1 ? true : false;
 		if (data.section.title === "1") {
 
-			if (this.props.fromDeeplinking && (this.props.nid == data.item.id )) {
+			if (this.props.fromDeeplinking && (this.props.nid == data.item.id)) {
 				this.convertToMemory(data.item.id, decode_utf8(data.item.message), [])
 			}
 			return (
-				<View>
-				<View style={{opacity : ItemInProgress ? 0.3 : 1.0}}>
-				<TouchableWithoutFeedback
-					style={{ flex: 1 }}
-					disabled={ItemInProgress}
-					onPress={() => {
-						if (DeviceInfo.isTablet()) {
-							if (this.props.isSelectingItem) {
-								this._selectRow(data.item);
-							} else {
-								this.setState({ selectedIndex: data.index });
-								this.props.editMode(data.item);
-							}
-						} else {
-							this.props.isSelectingItem ? this._selectRow(data.item) : this._editAction(item, data, true);
-						}
-					}}>
-					<View style={styles.rowFront}>
-						{this.props.isSelectingItem && (
-							<View
-							style={{
-								width: selectionCellWidth,
-								backgroundColor: "transparent",
-								justifyContent: "center",
-								alignItems: "center"
+				<View key={data?.item?.id}>
+					<View style={{ opacity: ItemInProgress ? 0.3 : 1.0 }}>
+						<TouchableWithoutFeedback
+							style={{ flex: 1 }}
+							disabled={ItemInProgress}
+							onPress={() => {
+								if (DeviceInfo.isTablet()) {
+									if (this.props.isSelectingItem) {
+										this._selectRow(data.item);
+									} else {
+										this.setState({ selectedIndex: data.index });
+										this.props.editMode(data.item);
+									}
+								} else {
+									this.props.isSelectingItem ? this._selectRow(data.item) : this._editAction(item, data, true);
+								}
 							}}>
-								<Image source={isSelected ? cell_selected : cell_unselected} style={{ height: 24, width: 24 }} />
-							</View>
-						)}
-
-						<View
-							style={{
-								width: frontCellWidth,
-								backgroundColor: DeviceInfo.isTablet() ? (this.state.selectedIndex == data.index ? "#E6F0EF" : "#fff") : "#fff",
-								borderColor: "#DCDCDC",
-								borderWidth: 2,
-								borderTopWidth: 1,
-								borderRadius: 5
-							}}>
-							<View
-								style={{
-									width: "100%",
-									padding: 16,
-									flexDirection: "row",
-									flex: 1,
-									justifyContent: "space-between"
-								}}>
-								<View style={{ flex: 1, marginLeft: 5 }}>
-									<Text ellipsizeMode="tail" numberOfLines={4} style={{ color: Colors.TextColor, ...fontSize(18), fontWeight: "400" }}>
-										{decode_utf8(data.item.message)}
-									</Text>
-								</View>
+							<View style={styles.rowFront}>
+								{this.props.isSelectingItem && (
+									<View
+										style={{
+											width: selectionCellWidth,
+											backgroundColor: "transparent",
+											justifyContent: "center",
+											alignItems: "center"
+										}}>
+										<Image source={isSelected ? cell_selected : cell_unselected} style={{ height: 24, width: 24 }} />
+									</View>
+								)}
 
 								<View
 									style={{
-										height: 64,
-										width: 64,
-										borderRadius: 5,
-										justifyContent: "center",
-										alignItems: "center",
-										backgroundColor: "#F3F3F3"
+										width: frontCellWidth,
+										backgroundColor: DeviceInfo.isTablet() ? (this.state.selectedIndex == data.index ? "#E6F0EF" : "#fff") : "#fff",
+										borderColor: "#DCDCDC",
+										borderWidth: 2,
+										borderTopWidth: 1,
+										borderRadius: 5
 									}}>
-									<Image style={style} resizeMode={"contain"} source={isURL ? { uri: placeHolder } : placeHolder} />
+									<View
+										style={{
+											width: "100%",
+											padding: 16,
+											flexDirection: "row",
+											flex: 1,
+											justifyContent: "space-between"
+										}}>
+										<View style={{ flex: 1, marginLeft: 5 }}>
+											<Text ellipsizeMode="tail" numberOfLines={4} style={{ color: Colors.TextColor, ...fontSize(18), fontWeight: "400" }}>
+												{decode_utf8(data.item.message)}
+											</Text>
+										</View>
+
+										<View
+											style={{
+												height: 64,
+												width: 64,
+												borderRadius: 5,
+												justifyContent: "center",
+												alignItems: "center",
+												backgroundColor: "#F3F3F3"
+											}}>
+											<Image style={style} resizeMode={"contain"} source={isURL ? { uri: placeHolder } : placeHolder} />
+										</View>
+									</View>
 								</View>
+								{!this.props.isSelectingItem &&
+									<TouchableOpacity onPress={() => this.convertToMemory(data.item.id, decode_utf8(data.item.message), [])}
+										style={{
+											height: 50, width: "100%", backgroundColor: Colors.NewLightThemeColor, position: "absolute", bottom: 0, borderColor: "#DCDCDC",
+											borderWidth: 2,
+											borderTopWidth: 1,
+											borderBottomWidth: 2,
+											justifyContent: "center",
+											borderBottomRadius: 5
+										}}>
+										<Text style={{
+											fontWeight: Platform.OS === "ios" ? '500' : 'bold',
+											...fontSize(18),
+											color: Colors.NewTitleColor,
+											paddingLeft: 15
+										}}>{"Convert to Memory"}</Text>
+									</TouchableOpacity>}
 							</View>
-						</View>
-						{!this.props.isSelectingItem && 
-						<TouchableOpacity onPress={()=> this.convertToMemory(data.item.id, decode_utf8(data.item.message), [])}
-									style={{height:50, width:"100%", backgroundColor : Colors.NewLightThemeColor, position:"absolute", bottom: 0, borderColor: "#DCDCDC",
-									borderWidth: 2,
-									borderTopWidth: 1,
-									borderBottomWidth: 2,
-									justifyContent:"center",
-									borderBottomRadius: 5}}>
-							<Text style={{
-								fontWeight: Platform.OS === "ios"? '500':'bold',
-								...fontSize(18),
-								color: Colors.NewTitleColor,
-								paddingLeft: 15
-							}}>{"Convert to Memory"}</Text>
-						</TouchableOpacity>}
+						</TouchableWithoutFeedback>
 					</View>
-					</TouchableWithoutFeedback>					
-					</View>
-					{ItemInProgress && <Text style={{position:"absolute", width: "100%", textAlign : "center", top: "50%"}}>{"Files are being uploaded..."}</Text>}
+					{ItemInProgress && <Text style={{ position: "absolute", width: "100%", textAlign: "center", top: "50%" }}>{"Files are being uploaded..."}</Text>}
 				</View>
 			);
 		} else {
@@ -808,13 +882,13 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		/>
 	);
 
-	createNewMindPop=(fromNavBar?: boolean)=>{
+	createNewMindPop = (fromNavBar?: boolean) => {
 		this.createNew = true;
 		this.props.cleanEdit();
-		if(fromNavBar){
+		if (fromNavBar) {
 			loaderHandler.showLoader("Loading...");
-			Actions.mindPopEdit({ updateList: this.updateList, actionImageUpload : this.props.actionImageUpload ,actionRecord :  this.props.actionRecord, actionWrite : this.props.actionWrite});
-		} else{
+			Actions.mindPopEdit({ updateList: this.updateList, actionImageUpload: this.props.actionImageUpload, actionRecord: this.props.actionRecord, actionWrite: this.props.actionWrite });
+		} else {
 			Actions.mindPopEdit({ updateList: this.updateList });
 		}
 	}
@@ -914,7 +988,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 						onChangeText={(text: string) => {
 							this.searchKeyword = text.trim();
 						}}
-						onBlur={()=>{
+						onBlur={() => {
 							Keyboard.dismiss();
 						}}
 					/>
@@ -925,33 +999,33 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 					) : this.state.webserviceBeingCalled ? (
 						<View style={{ height: 0, width: 0 }} />
 					) : (
-								<EmptyView resetEdit={this.props.resetEdit} updateList={this.updateList} />
-							)
+						<EmptyView resetEdit={this.props.resetEdit} updateList={this.updateList} />
+					)
 				) : (
-						<SwipeListView
-							ref={this.listRef}
-							onRowOpen={(rowKey, rowMap) => {
-								ReactNativeHapticFeedback.trigger("impactMedium", options);
-							}}
-							style = {{backgroundColor: Colors.NewThemeColor}}
-							useSectionList
-							maxToRenderPerBatch={50}
-                            removeClippedSubviews={true}
-							sections={this.state.listSectionItems}
-							renderItem={this._renderFrontCell}
-							renderHiddenItem={this.props.isSelectingItem ? null : this._renderBackHiddenCell}
-							disableRightSwipe={true}
-							rightOpenValue={-(buttonWidth * 1) - 8}
-							stopRightSwipe={-(buttonWidth * 1) - 8}
-							stopLeftSwipe={0}
-							closeOnRowBeginSwipe={true}
-							previewRowKey={"-1"}
-							extraData={this.state}
-							onScroll={()=>{Keyboard.dismiss()}}
-							keyExtractor={this._keyExtractor}
-							onEndReached={this._LoadMoreData}
-						/>
-					)}
+					<SwipeListView
+						ref={this.listRef}
+						onRowOpen={(rowKey, rowMap) => {
+							ReactNativeHapticFeedback.trigger("impactMedium", options);
+						}}
+						style={{ backgroundColor: Colors.NewThemeColor }}
+						useSectionList
+						maxToRenderPerBatch={50}
+						removeClippedSubviews={true}
+						sections={this.state.listSectionItems}
+						renderItem={this._renderFrontCell}
+						renderHiddenItem={this.props.isSelectingItem ? null : this._renderBackHiddenCell}
+						disableRightSwipe={true}
+						rightOpenValue={-(buttonWidth * 1) - 8}
+						stopRightSwipe={-(buttonWidth * 1) - 8}
+						stopLeftSwipe={0}
+						closeOnRowBeginSwipe={true}
+						previewRowKey={"-1"}
+						extraData={this.state}
+						onScroll={() => { Keyboard.dismiss() }}
+						keyExtractor={this._keyExtractor}
+						onEndReached={this._LoadMoreData}
+					/>
+				)}
 			</View>
 		);
 	}
@@ -981,7 +1055,7 @@ const styles = EStyleSheet.create({
 	backTextWhite: {
 		color: "#FFF",
 		...fontSize(17),
-		fontWeight: Platform.OS === "ios"? '500':'bold',
+		fontWeight: Platform.OS === "ios" ? '500' : 'bold',
 		padding: 12,
 		textAlign: "center"
 	},
@@ -1042,6 +1116,8 @@ const mapState = (state: { [x: string]: any }) => ({
 	list: state.getMindPop,
 	deleteStatus: state.deleteMindPop,
 	isSelectingItem: state.mindPopListSelectionStatus,
+	showAlert: state.MemoryInitials.showAlert,
+	showAlertData: state.MemoryInitials.showAlertData,
 	listItem: state.mindPopEditMode.selectedMindPop
 });
 
@@ -1056,6 +1132,7 @@ const mapDispatch = (dispatch: Function) => {
 		updateListCount: (payload: number) => dispatch({ type: MindPopListCount, payload }),
 		updateSelectedItemCount: (payload: number) => dispatch({ type: MindPopSelectedItemCount, payload }),
 		deleteMindPops: (payload: any) => dispatch({ type: DeleteMindPopOperation.RequestStarted, payload }),
+		showAlertCall: (payload: any) => dispatch({ type: showCustomAlert, payload: payload }),
 		deleteMindPopsCallEnd: () => dispatch({ type: DeleteMindPopOperation.RequestEnded })
 	};
 };

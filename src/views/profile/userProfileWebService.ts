@@ -114,8 +114,8 @@ export const UpdateFormValues = (state: any, editableFields: any) => {
 
           let startE = value2.split('-');
           startE = startE[0];
-          Account.selectedData().start_year = startD;
-          Account.selectedData().end_year = startE;
+          // Account.selectedData().start_year = startD;
+          // Account.selectedData().end_year = startE;
           break;
         case 'options_buttons':
           let keys = Object.keys(value);

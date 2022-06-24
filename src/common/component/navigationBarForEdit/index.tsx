@@ -4,18 +4,19 @@ import React from 'react';
 import NavigationHeader from '../navigationHeader';
 import ProfileEditHeader from '../profileEditHeader';
 import {Colors} from '../../constants';
+import Utility from '../../utility';
 
 class NavigationBarForEdit extends React.Component<{[x: string]: any}> {
   render() {
     return (
       <NavigationHeader
-        backgroundColor="#fff"
+        backgroundColor={Colors.white}
         style={{
           borderBottomWidth: 2,
-          borderBottomColor: 'rgba(0, 0, 0, 0.24)',
+          borderBottomColor: Colors.backrgba,
         }}>
         <StatusBar
-          barStyle={Platform.OS === 'ios' ? 'dark-content' : 'Dark-content'}
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
         <ProfileEditHeader

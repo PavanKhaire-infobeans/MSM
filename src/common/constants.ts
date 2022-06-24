@@ -1,5 +1,5 @@
-import {GetMemoryDrafts} from '../views/myMemories/myMemoriesWebService';
-import {PixelRatio, Platform, Dimensions} from 'react-native';
+import { GetMemoryDrafts } from '../views/myMemories/myMemoriesWebService';
+import { PixelRatio, Platform, Dimensions, Appearance } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import {
   kAdmin,
@@ -7,6 +7,7 @@ import {
 } from '../views/registration/getInstancesSaga';
 import loaderHandler from './component/busyindicator/LoaderHandler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+const Permissions = require('react-native-permissions').default;
 
 //const punycode = require('punycode');
 export const keyObject = 'object';
@@ -14,6 +15,11 @@ export const keyString = 'string';
 export const keyArray = 'array';
 export const keyInt = 'int';
 export const keyBoolean = 'boolean';
+export const fontFamily = {
+  Inter: 'Inter',
+  Lora: 'Lora',
+  // SFPro:"SFPro-Regular"
+};
 
 export function testEmail(email: string) {
   return /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(
@@ -31,6 +37,16 @@ export function validFileName(fileName: string) {
   return /^([A-Za-z0-9 ])+$/.test(fileName);
 }
 
+export function validBirthYear(date: string) {
+  if (date && (parseInt(date) > new Date().getFullYear())) {
+    return true;
+  }
+  else if (date && (parseInt(date) < (new Date().getFullYear() - 100))) {
+    return true;
+  }
+  else return false;
+}
+
 var lastSavedSize: number = 0;
 const DEFAULT = {
   WIDTH: 375,
@@ -40,39 +56,77 @@ export const Colors = {
   ErrorColor: '#DD4040',
   ThemeColor: '#207D89',
   //ThemeColor: '#026D60',
-  NewThemeColor: '#ffffff',//'#94D6DB',
+  redBlack: '#BE6767',
+  blue: '#0077B2',
+  // darkGray:'#595959',
+  lightSkyBlue: '#C0E7EA',
+  green: '#50B660',
+  blacknew: '#222222',
+  blacknewrgb: 'rgba(34,34,34,0.7)',
+  overlayOpacityColor: '#ffffff22',
+  underlay33OpacityColor: '#ffffff33',
+  underlayBlackOpacityColor: '#00000011',
+  redgray: '#A3A3A3',
+  NewThemeColor: Appearance.getColorScheme() == 'light' ? '#ffffff' : '#2E313E',//'#94D6DB',
   Theme51D1FF: '#51D1FF',
   NewDarkThemeColor: '#31C7DB',
   NewLightThemeColor: '#F2F8F8',
+  memoryTitlePlaceholderColor: "#838688",
+  grayWithGradientColor: '#cccccc99',
   NewLight: 'rgba(148, 214, 219, 0.4)',
+  brownrgba: 'rgba(144, 144, 144, 0.85)',
   NewLightCommentHeader: '#DFF3F4',
   NewYellowColor: '#DE8B00',
   NewTitleColor: '#207D89',
-  TextColor: '#373852',
+  TextColor: Appearance.getColorScheme() == 'light' ? '#373852' : '#ffffff',
   AudioViewBg: '#F8D5DA',
   AudioViewBorderColor: '#EB8898',
   BtnBgColor: '#207D89',
+  brown: 'rgba(85, 85, 85, 0.75)',
   NewRadColor: '#DD4040',
+  systemRed: "#FF3B30",
   ThemeLight: '#169D8C',
   WarningColor: '#FF0000',
   passwordWeak: '#FF4D4D',
   passwordMedium: '#FFC700',
   passwordStrong: '#60F048',
+  lightGreen: '#D4E9E6',
   filterBG: '#EDF4F4',
+  grayColor: '#d3d3d3',
   dullText: 'rgba(81, 82, 108, 0.75)',
+  colorBlack: 'rgba(0,0,0,0.1)',
+  colorBlackOpacity7: 'rgba(0,0,0,0.7)',
+  iosShadowColor: 'rgba(46, 49, 62, 0.05)',
+  colorBlackOpacity5: 'rgba(0,0,0,0.5)',
+  backrgba: 'rgba(0, 0, 0, 0.25)',
+  backColorWith75OPacity: "rgba(0.216, 0.22, 0.322, 0.75)",
   selectedFilter: '#BCDDE0',
-  white: '#ffffff',
-  newBagroundColor:'#C4C8D4',
-  bordercolor:'#0B0C0F',
-  timeLinebackground:'#F3F5F7',
-  newTextColor:'#4C5367',
-  newDescTextColor: '#2E313E',
+  white: Appearance.getColorScheme() == 'light' ? '#ffffff' : '#2E313E',
+  newBagroundColor: '#C4C8D4',
+  lightGray: '#CED0CE',
+  f5f5f5: '#F5F5F5',
+  e0e0e0: '#e0e0e0',
+  bordercolor: Appearance.getColorScheme() == 'light' ? '#0B0C0F' : '#ffffff',
+  timeLinebackground: Appearance.getColorScheme() == 'light' ? '#F3F5F7' : "#2E313E",
+  newTextColor: Appearance.getColorScheme() == 'light' ? '#4C5367' : '#ffffff',
+  newDescTextColor: Appearance.getColorScheme() == 'light' ? '#2E313E' : '#ffffff',
   selectedFilterbg: 'rgba(173, 135, 0, 0.07)',
   unSelectedFilterbg: 'rgba(6, 36, 81, 0.07)',
-  filterborder:'#4D3C00',
-  bottomTabColor:'#E2E4E9',
-  actionBg :'rgba(237, 237, 237, 0.8)',
-  decadeFilterBorder:'#052747'
+  filterborder: '#4D3C00',
+  bottomTabColor: Appearance.getColorScheme() == 'light' ? '#E2E4E9' : '#ffffff',
+  actionBg: 'rgba(237, 237, 237, 0.8)',
+  decadeFilterBorder: '#052747',
+  actionlistSeparater: 'rgba(0.35, 0.35, 0.35, 0.2)',
+  black: Appearance.getColorScheme() == 'light' ? '#000000' : '#ffffff',
+  darkGray: '#909090',
+  c3c3c3: '#3c3c3c',
+  a5a5a7: '#a5a5a7',
+  underlayColor: '#00000000',
+  systemBlue: "#007AFF",
+  touchableunderlayColor: '#ffffff00',
+  SerachbarColor: '#F3F3F3',
+  moreViewBg: 'rgba(11, 12, 15, 0.6)',
+  transparent: 'transparent'
 };
 export const MyMemoriesTapBarOptions = {
   published: 'Published',
@@ -137,6 +191,7 @@ export const MemoryActionKeys = {
   blockMemoryKey: 'block_memory',
   blockUserKey: 'block_user',
   cancelActionKey: 'cancelActions',
+  shareActionKey: 'shareActions',
   reportMemoryKey: 'report_memory',
   blockAndReportKey: 'block_user_report_memory',
   unblockUserKey: 'unblock_user',
@@ -157,7 +212,7 @@ export const TimeStampMilliSeconds = () => {
   return `${new Date().getTime() / 1000}`.split('.')[0];
 };
 export const Size = (() => {
-  const {width: myWidth, height: myHeight} = Dimensions.get('window');
+  const { width: myWidth, height: myHeight } = Dimensions.get('window');
   return {
     byHeight: (height: number) => {
       return DeviceInfo.isTablet() || Platform.OS == 'android'
@@ -172,17 +227,17 @@ export const Size = (() => {
   };
 })();
 
-export const deviceHasNotch =() =>{
+export const deviceHasNotch = () => {
   return DeviceInfo.hasNotch()
 }
-export const fontSize = (size: number): {fontSize: number} => {
+export const fontSize = (size: number): { fontSize: number } => {
   if (Platform.OS == 'android') {
     size > 0 ? size : (size = 15);
     let fontSize =
       PixelRatio.getPixelSizeForLayoutSize(size) / PixelRatio.get();
-    return {fontSize};
+    return { fontSize };
   }
-  return {fontSize: size};
+  return { fontSize: size };
 };
 
 export const ERROR_MESSAGE = 'Something went wrong, Please try again later';
@@ -196,7 +251,7 @@ export const ShareOptions: any = {
   cueback: 'All members',
 };
 export function uploadTask(
-  success: (data: {[x: string]: any}) => void,
+  success: (data: { [x: string]: any }) => void,
   failure: (error: any) => void,
 ): (options: object) => void {
   const UploadManager = require('react-native-background-upload').default;
@@ -205,6 +260,8 @@ export function uploadTask(
   return function (options: object): void {
     try {
       asyncGen(function* () {
+
+        // console.log("File Upload payload:",JSON.stringify(options));
         loaderHandler.showLoader('Uploading..');
         try {
           let uploadId = yield UploadManager.startUpload(options);
@@ -218,7 +275,7 @@ export function uploadTask(
               uploadId,
               (...data: any[]) => {
                 hideLoaderWithTimeOut();
-                failure({message: 'Upload cancelled', uploadId, data});
+                failure({ message: 'Upload cancelled', uploadId, data });
               },
             );
             UploadManager.addListener('completed', uploadId, (data: any) => {
@@ -261,7 +318,7 @@ export const asyncGen = (
 
 export const GetFileType = {
   getStatus: (key: string) => {
-    var values: {[x: string]: number} = {
+    var values: { [x: string]: number } = {
       image: 2,
       audio: 3,
       file: 4,
@@ -282,9 +339,8 @@ export const Storage = (() => {
   return {
     save: async (path: string, value: any) => {
       try {
-        let storeVal = `${typeof value}:=:${
-          typeof value == 'string' ? value : JSON.stringify(value)
-        }`;
+        let storeVal = `${typeof value}:=:${typeof value == 'string' ? value : JSON.stringify(value)
+          }`;
         await AsyncStorage.setItem(path, storeVal);
       } catch (err) {
         //console.log(err);
@@ -313,7 +369,7 @@ export const Storage = (() => {
     },
     deleteAll: async () => {
       try {
-        await AsyncStorage.clear((err: Error) => {});
+        await AsyncStorage.clear((err: Error) => { });
       } catch (err) {
         //console.log(err);
       }
@@ -323,27 +379,27 @@ export const Storage = (() => {
 
 export const CueBackInsatance = isCueBackInstance
   ? {
-      InstanceID: '2001',
-      InstanceName: 'My Stories Matter',
-      InstanceURL: 'mystoriesmatter.com',
-      InstanceImageURL:
-        'https://admin.cueback.com/sites/default/files/my-stories-matter.png',
-      is_fake: 0,
-    }
+    InstanceID: '2001',
+    InstanceName: 'My Stories Matter',
+    InstanceURL: 'mystoriesmatter.com',
+    InstanceImageURL:
+      'https://admin.cueback.com/sites/default/files/my-stories-matter.png',
+    is_fake: 0,
+  }
   : {
-      InstanceID: '2002',
-      InstanceName: 'QA Public',
-      //InstanceURL: "qa-public.cueback.com",
-      InstanceURL: 'public.cuebackqa.com',
-      InstanceImageURL: null,
-      is_fake: 0,
-    };
+    InstanceID: '2002',
+    InstanceName: 'QA Public',
+    //InstanceURL: "qa-public.cueback.com",
+    InstanceURL: 'public.cuebackqa.com',
+    InstanceImageURL: null,
+    is_fake: 0,
+  };
 export const constant = {
   deviceWidth: 375,
   deviceHeight: 667,
   iPhone5Height: 568,
 };
-export const getValue = (obj: {[x: string]: any}, path: Array<string>): any => {
+export const getValue = (obj: { [x: string]: any }, path: Array<string>): any => {
   if (obj && typeof obj == 'object') {
     if (path.length == 1) {
       return obj[path[0]];
@@ -400,54 +456,99 @@ export function decode_utf8(s: string): string {
   return decodedString;
 }
 
+export const CommonTextStyles = {
+  fontWeight400Size19Inter: {
+    fontWeight: '400',
+    ...fontSize(19),
+    fontFamily: fontFamily.Inter
+  },
+  fontWeight500Size13Inter: {
+    fontWeight: '500',
+    ...fontSize(13),
+    fontFamily: fontFamily.Inter,
+    lineHeight: 16
+  },
+};
 /*export const requestPermission = async (type: string): Promise<boolean> => {
-	type PermissionState = "authorized" | "denied" | "restricted" | "undetermined";
-	const Permissions = require('react-native-permissions').default;
-	const { Alert } = require('react-native');
-	var permission: PermissionState = "undetermined";
-	try {
-		permission = await Permissions.request(type);
-		if (permission != "authorized") {
-			permission = await Permissions.check(type);
-			if (permission != "authorized") {
-				Alert.alert("Change settings", "", [
-					{
-						text: "Cancel",
-						style: "cancel",
-						onPress: null
-					},
-					{
-						text: "Open Settings",
-						style: "default",
-						onPress: () => {
-							Permissions.openSettings();
-						}
-					}
-				]);
-				return false;
-			}
-		}
-		return permission == "authorized";
-	} catch (error) {
-		//console.log(error);
-		return false;
-	}
+  type PermissionState = "authorized" | "denied" | "restricted" | "undetermined";
+  const Permissions = require('react-native-permissions').default;
+  const { Alert } = require('react-native');
+  var permission: PermissionState = "undetermined";
+  try {
+    permission = await Permissions.request(type);
+    if (permission != "authorized") {
+      permission = await Permissions.check(type);
+      if (permission != "authorized") {
+        Alert.alert("Change settings", "", [
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: null
+          },
+          {
+            text: "Open Settings",
+            style: "default",
+            onPress: () => {
+              Permissions.openSettings();
+            }
+          }
+        ]);
+        return false;
+      }
+    }
+    return permission == "authorized";
+  } catch (error) {
+    //console.log(error);
+    return false;
+  }
 }; */
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import Utility from './utility';
 
+const checkPermissionFor = (data) => {
+  check(data)
+    .then((result) => {
+      switch (result) {
+        // case RESULTS.UNAVAILABLE:
+        //   console.log('This feature is not available (on this device / in this context)');
+        //   break;
+        case RESULTS.DENIED:
+          Permissions.openSettings();
+          // console.log('The permission has not been requested / is denied but requestable');
+          // return false;
+          break;
+        case RESULTS.LIMITED:
+          Permissions.openSettings();
+          // return false;
+          console.log('The permission is limited: some actions are possible');
+          break;
+        case RESULTS.GRANTED:
+          console.log('The permission is granted');
+          break;
+        case RESULTS.BLOCKED:
+          Permissions.openSettings();
+          return false;
+          console.log('The permission is denied and not requestable anymore');
+          break;
+      }
+    })
+    .catch((error) => {
+      // …
+    });
+}
 /*export const requestPermission = async (type: string): Promise<boolean> => {
-	type PermissionStatus = 'unavailable' | 'denied' | 'blocked' | 'granted';
+  type PermissionStatus = 'unavailable' | 'denied' | 'blocked' | 'granted';
 	
-	String test = check(PERMISSIONS.IOS.CAMERA);
-	try{
-	request(PERMISSIONS.IOS.CAMERA).then((result) => {
-		
-		return true;
+  String test = check(PERMISSIONS.IOS.CAMERA);
+  try{
+  request(PERMISSIONS.IOS.CAMERA).then((result) => {
+  	
+    return true;
 
-	  });
-	}catch{
-		return false;
-	}
+    });
+  }catch{
+    return false;
+  }
 	
 }*/
 
@@ -457,8 +558,7 @@ export const requestPermission = async (type: string): Promise<boolean> => {
     | 'denied'
     | 'restricted'
     | 'undetermined';
-  const Permissions = require('react-native-permissions').default;
-  const {Alert} = require('react-native');
+  const { Alert } = require('react-native');
   //var permission: PermissionState = "undetermined";
   try {
     var permissionType;
@@ -470,7 +570,8 @@ export const requestPermission = async (type: string): Promise<boolean> => {
         permissionType = PERMISSIONS.IOS.MICROPHONE;
       else if (type === 'storage')
         permissionType = PERMISSIONS.IOS.MEDIA_LIBRARY;
-    } else {
+    }
+    else {
       if (type === 'camera') permissionType = PERMISSIONS.ANDROID.CAMERA;
       else if (type === 'photo')
         permissionType = PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
@@ -490,30 +591,38 @@ export const requestPermission = async (type: string): Promise<boolean> => {
       if (result === 'granted') return true;
       else return false;
     });
-    return test;
 
+    if (!test) {
+      checkPermissionFor(Platform.select({
+        android: permissionType,
+        ios: permissionType,
+      }));
+    }
+    else {
+      return test;
+    }
     /*permission = await Permissions.request(type);
-		if (permission != "authorized") {
-		
-			permission = await Permissions.check(type);
-			if (permission != "authorized") {
-				Alert.alert("Change settings", "", [
-					{
-						text: "Cancel",
-						style: "cancel",
-						onPress: null
-					},
-					{
-						text: "Open Settings",
-						style: "default",
-						onPress: () => {
-							Permissions.openSettings();
-						}
-					}
-				]);
-				return false;
-			}
-		}*/
+    if (permission != "authorized") {
+  	
+      permission = await Permissions.check(type);
+      if (permission != "authorized") {
+        Alert.alert("Change settings", "", [
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: null
+          },
+          {
+            text: "Open Settings",
+            style: "default",
+            onPress: () => {
+              Permissions.openSettings();
+            }
+          }
+        ]);
+        return false;
+      }
+    }*/
     //return permission == "authorized";
   } catch (error) {
     //console.log(error);

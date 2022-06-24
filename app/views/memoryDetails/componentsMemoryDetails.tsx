@@ -14,6 +14,8 @@ import {
   Alert,
   Keyboard,
   Animated,
+  Share,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import {
@@ -22,6 +24,8 @@ import {
   decode_utf8,
   NO_INTERNET,
   constant,
+  MemoryActionKeys,
+  fontFamily,
 } from './../../../src/common/constants';
 import Utility from './../../../src/common/utility';
 import PlaceholderImageView from './../../../src/common/component/placeHolderImageView';
@@ -40,7 +44,7 @@ import {
   blue_head_icon,
 } from './../../../src/images';
 
-import { calendarsmall, globesmall, heart, moreoptions, share, shareAndroid, shareiOS } from './../../images'
+import { calendarsmall, editbutton, globesmall, heart, moreoptions, pen, share, shareAndroid, sharebutton, shareiOS } from './../../images'
 // import NavigationHeader from '../../common/component/navigationHeader';
 import DeviceInfo from 'react-native-device-info';
 import { ToastMessage, No_Internet_Warning } from './../../../src/common/component/Toast';
@@ -52,6 +56,7 @@ import * as Animatable from 'react-native-animatable';
 import EventManager from './../../../src/common/eventManager';
 import { getUserName } from '../../../src/views/createMemory/dataHelper';
 import PublishedMemory from '../../../src/views/myMemories/PublishedMemory';
+import Styles from './styles';
 export const kImage = 'image';
 export const kAudio = 'audio';
 export const kPDF = 'pdf';
@@ -60,7 +65,7 @@ const style = StyleSheet.create({
   normalText: {
     ...fontSize(16),
     fontWeight: 'normal',
-    color: Colors.TextColor,
+    color: Colors.newTextColor,
     marginBottom: 10,
   },
   boxShadow: {
@@ -87,23 +92,11 @@ export const MemoryCollections = (props: {
     <View
       style={[
         style.boxShadow,
-        {
-          elevation: 2,
-          backgroundColor: Colors.NewThemeColor,
-          width: '100%',
-          paddingBottom: 10,
-          marginTop: 5,
-        },
+        Styles.MemoryCollectionsContainer,
       ]}>
-      <View style={{ padding: 15, paddingTop: 5 }}>
+      <View style={Styles.MemoryCollectionsContainerSub}>
         <Text
-          style={{
-            ...fontSize(16),
-            marginTop: 5,
-            marginBottom: 7,
-            lineHeight: 20,
-            color: Colors.TextColor,
-          }}>
+          style={Styles.otherMemoryTextStyle}>
           {'Other Memories from the collection'}
         </Text>
         {/* {props.collectionList.length > 1 ? */}
@@ -115,53 +108,27 @@ export const MemoryCollections = (props: {
               underlayColor={'none'}
               onPress={() => props.changeIndex(item.index)}>
               <View
-                style={{
-                  padding: 5,
-                  paddingRight: 16,
-                  paddingLeft: 16,
-                  borderRadius: 5,
+                style={[Styles.collectionListContainer, {
                   backgroundColor:
                     item.index == props.selectedCollectionIndex
                       ? Colors.ThemeColor
                       : 'transparent',
-                }}>
+                }]}>
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
+                  style={Styles.collectionListContainerSub}>
                   <Text
-                    style={{
-                      ...fontSize(18),
-                      lineHeight: 20,
-                      color: 'white',
-                      fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                      marginBottom: 2,
-                    }}>
+                    style={Styles.collectionNameTextStyle}>
                     {item.item.name}
                   </Text>
                   <View
-                    style={{
-                      padding: 1,
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      marginLeft: 16,
-                      marginBottom: 1,
-                      borderRadius: 15,
-                      borderColor: 'white',
-                      borderWidth: 1,
-                    }}>
+                    style={Styles.memoryLengthContainer}>
                     <Text
-                      style={{
-                        ...fontSize(14),
-                        color: 'white',
-                        fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                      }}>
+                      style={Styles.memorylengthTextStyle}>
                       {item.item.memories.length}
                     </Text>
                   </View>
                 </View>
-                <Text style={{ ...fontSize(14), color: Colors.NewThemeColor }}>
+                <Text style={Styles.byTextStyle}>
                   {'By '}
                   {Account.selectedData().userID ==
                     props.collectionList[props.selectedCollectionIndex].user.uid
@@ -173,10 +140,7 @@ export const MemoryCollections = (props: {
             </TouchableHighlight>
           )}
         />
-        {/* : 
-                        <Text style={{...fontSize(18), lineHeight: 20, color: Colors.TextColor, fontWeight: Platform.OS === "ios"? '500':'bold' , marginBottom:2}}>{props.collectionList[props.selectedCollectionIndex].name}</Text> 
-                        } */}
-        {/* */}
+
       </View>
       <Carousel
         data={props.collectionList[props.selectedCollectionIndex].memories}
@@ -190,42 +154,23 @@ export const MemoryCollections = (props: {
               })
             }>
             <View
-              style={{ width: '100%', backgroundColor: '#fff', borderRadius: 5 }}>
+              style={Styles.carouselContainer}>
               <View
-                style={{
-                  backgroundColor: '#F3F3F3',
-                  width: '100%',
-                  flex: 1,
-                  borderTopLeftRadius: 5,
-                  borderTopRightRadius: 5,
-                }}>
+                style={Styles.carouselContainerSub}>
                 <PlaceholderImageView
-                  style={{ width: '100%', height: 150 }}
+                  style={Styles.PlaceholderImageView}
                   uri={Utility.getFileURLFromPublicURL(item.item.uri)}
                   resizeMode={'contain'}
                 />
               </View>
 
               <Text
-                style={{
-                  ...fontSize(24),
-                  color: Colors.TextColor,
-                  paddingRight: 15,
-                  paddingLeft: 15,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                }}
+                style={Styles.titleTextStyle}
                 numberOfLines={1}>
                 {item.item.title}
               </Text>
               <Text
-                style={{
-                  ...fontSize(16),
-                  color: Colors.TextColor,
-                  padding: 15,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                }}
+                style={Styles.locationTextStyle}
                 numberOfLines={1}>
                 {item.item.date}
                 {', '}
@@ -233,26 +178,16 @@ export const MemoryCollections = (props: {
               </Text>
               <Border />
               <View
-                style={{
-                  padding: 15,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                  flexDirection: 'row',
-                }}>
+                style={Styles.likeCommentContainer}>
                 <Text
-                  style={{
-                    ...fontSize(16),
-                    color: Colors.NewTitleColor,
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                    marginRight: 20,
-                  }}>
+                  style={Styles.likeTextStyle}>
                   {item.item.likeCount > 0
                     ? item.item.likeCount > 1
                       ? item.item.likeCount + ' Likes'
                       : item.item.likeCount + ' Like'
                     : ''}
                 </Text>
-                <Text style={{ ...fontSize(16), color: Colors.TextColor }}>
+                <Text style={Styles.commentTextStyle}>
                   {item.item.commentCount > 0
                     ? item.item.commentCount > 1
                       ? item.item.commentCount + ' Comments'
@@ -262,14 +197,7 @@ export const MemoryCollections = (props: {
               </View>
 
               <Text
-                style={{
-                  ...fontSize(16),
-                  color: Colors.NewTitleColor,
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                  padding: 15,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                }}>
+                style={Styles.whoelseTextStyle}>
                 {item.item.youWhereThere
                   ? item.item.whoElseWasThere.length > 0
                     ? 'You and '
@@ -285,7 +213,7 @@ export const MemoryCollections = (props: {
                       ? ''
                       : ' other '
                   : ''}
-                <Text style={{ ...fontSize(16), color: Colors.TextColor }}>
+                <Text style={Styles.whoelseSubTextStyle}>
                   {item.item.whoElseWasThere.length > 0 ||
                     item.item.youWhereThere
                     ? item.item.whoElseWasThere.length > 1
@@ -304,19 +232,16 @@ export const MemoryCollections = (props: {
   );
 };
 
-export const Border = (props: { paddingTop?: any; padding?: any }) => {
+export const Border = (props: { paddingTop?: any; padding?: any; paddingLeft?: any; width?: any }) => {
   return (
     <View
-      style={{
-        width: '100%',
-        height: 1,
-        backgroundColor: 'rgba(55, 56, 82, 0.2)',
-        marginBottom: 5,
-        opacity: 0.4,
+      style={[Styles.borderStyle, {
+        width: props.width ? props.width : '100%',
         marginTop: props.paddingTop ? props.paddingTop : 0,
         marginRight: props.padding ? props.padding : 0,
         marginLeft: props.padding ? props.padding : 0,
-      }}
+        paddingLeft: props.paddingLeft ? props.paddingLeft : 0
+      }]}
     />
   );
 };
@@ -340,18 +265,7 @@ export const MemoryTags = (props: { memoryTags: any; onPressCallback?: any }) =>
               props.onPressCallback();
             }
           }}
-          style={{
-            paddingRight: 10,
-            paddingLeft: 10,
-            paddingBottom: 5,
-            borderWidth: 1,
-            borderRadius: 20,
-            paddingTop: 5,
-            marginRight: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderColor: Colors.TextColor,
-          }}>
+          style={Styles.MemoryTagsContainer}>
           <Text style={[style.normalText, { ...fontSize(14), marginBottom: 0 }]}>
             {item.item.name ? item.item.name : item.item}
           </Text>
@@ -371,32 +285,19 @@ export const CollaboratorView = (props: { collaborators: any }) => {
       keyExtractor={(_, index: number) => `${index}`}
       renderItem={(item: any) => (
         <View
-          style={{
-            flexDirection: 'row',
-            paddingTop: 5,
-            marginRight: 15,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={Styles.CollaboratorViewContainer}>
           <ImageBackground
             source={profile_placeholder}
-            style={{ height: 40, width: 40 }}
-            imageStyle={{ borderRadius: 20 }}>
+            style={Styles.CollaboratorImageBackgroundStyle}
+            imageStyle={Styles.CollaboratorImageStyle}>
             <Image
               source={
                 item.item.uri != '' ? { uri: item.item.uri } : profile_placeholder
               }
-              style={{ height: 40, width: 40, borderRadius: 20 }}></Image>
+              style={Styles.CollaboratorProfileImageStyle}></Image>
           </ImageBackground>
           <Text
-            style={{
-              lineHeight: 20,
-              fontSize: 16,
-              marginLeft: 5,
-              color: Colors.TextColor,
-              backgroundColor: item.item.backgroundColor,
-              padding: 5,
-            }}>
+            style={Styles.CollaboratorNameTextStyle}>
             {item.item.name}
           </Text>
         </View>
@@ -423,152 +324,98 @@ export const UserDetails = (props: {
         : false;
   return (
     <View
-      style={{
-        width: '100%',
-        justifyContent: 'space-between',
-        backgroundColor: props.isExternalQueue ? Colors.ThemeColor : '#fff',
-        padding: 10,
-        flexDirection: 'row',
-      }}>
-      <View style={{ flexDirection: 'column', width: '100%' }}>
-        <View style={{ flexDirection: 'row' }}>
-          {showCueBackLogo ? (
-            // showCueBackLogo ? props.isExternalQueue ? white_head_icon: blue_head_icon :
-            <View
-              style={{
-                // height: props.isExternalQueue ? 50 : 40,
-                // width: 40,
-                alignItems: 'center',
-                paddingBottom: props.isExternalQueue ? 10 : 0,
-                justifyContent: 'center',
-              }}>
-              <Image
-                style={{
-                  height: 35,
-                  width: 40,
-                  resizeMode: 'contain',
-                  marginRight: 10,
-                }}
-                source={
-                  props.isExternalQueue ? white_head_icon : blue_head_icon
-                }
-              />
-            </View>
-          ) : (
-            <ImageBackground
-              style={[style.avatar, { marginRight: 10 }]}
-              imageStyle={{ borderRadius: 20 }}
-              source={profile_placeholder}>
-              <Image
-                style={{ height: 40, width: 40, borderRadius: 20 }}
-                source={
-                  props.userDetails.isProfileAvailable
-                    ? { uri: props.userDetails.userProfilePic }
-                    : props.userDetails.userProfilePic
-                }
-              />
-            </ImageBackground>
-          )}
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              // paddingBottom: props.isExternalQueue ? 10 : 0,
-            }}>
-            <View style={{ justifyContent: 'center' }}>
-              {/* <Text
-                style={{
-                  ...fontSize(16),
-                  color: props.isExternalQueue ? '#fff' : Colors.TextColor,
-                }}>
-                {'By '} */}
-              <Text
-                style={{
-                  color: Colors.newTextColor,
-                  fontWeight: '500',
-                  fontFamily: 'Inter',
-                  ...(fontSize(17)),
-                  lineHeight: 18,
-                  marginTop: -10
-                }}>
-                {props.userDetails.name}
-              </Text>
-              {/* </Text> */}
-              {/* {!props.isExternalQueue && (
-                <Text
-                  style={{
-                    ...fontSize(16),
-                    color: props.isExternalQueue ? '#fff' : Colors.TextColor,
-                  }}>
-                  <Text>
-                    {props.userDetails.createdOn}
-                    {props.userDetails.viewCount > 0 && (
-                      <Text>
-                        {' | '}
-                        {props.userDetails.viewCount}
-                        {props.userDetails.viewCount > 1 ? ' views' : ' view'}
-                      </Text>
-                    )}
-                  </Text>
-                </Text>
-              )} */}
-              {/* <View style={{width: '100%'}}>
-                {props.shareDetails.available && (
-                  <View
-                    style={{
-                      height: 20,
-                      paddingRight: 10,
-                      paddingLeft: 10,
-                      marginTop: 2,
-                      alignSelf: 'baseline',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: props.shareDetails.color,
-                      borderRadius: 10,
-                    }}>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        color: '#fff',
-                        ...fontSize(12),
-                        borderRadius: 5,
-                      }}>
-                      {props.shareDetails.shareText}
-                    </Text>
-                  </View>
-                )}
-              </View> */}
-            </View>
-            {props.previewDraft && props.previewDraft == true ? null : (
-              <TouchableOpacity
-                style={{
-                  padding: 16,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                onPress={() => {
-                  if (
-                    props.onPressCallback != undefined &&
-                    props.onPressCallback != null
-                  ) {
-                    props.onPressCallback();
-                  }
-                }}>
-                <Image source={moreoptions}></Image>
-              </TouchableOpacity>
-            )}
+      style={Styles.userDetailsContainer}>
+      <View style={Styles.userDetailsSubContainer}>
+        {showCueBackLogo ? (
+          // showCueBackLogo ? props.isExternalQueue ? white_head_icon: blue_head_icon :
+          <View>
+            <Image
+              style={Styles.userImageStyle}
+              source={
+                props.isExternalQueue ? white_head_icon : blue_head_icon
+              }
+            />
           </View>
+        ) : (
+          <ImageBackground
+            style={[style.avatar]}
+            imageStyle={{ borderRadius: 21 }}
+            source={profile_placeholder}>
+            <Image
+              style={Styles.userImageStyle}
+              source={
+                props.userDetails.isProfileAvailable
+                  ? { uri: props.userDetails.userProfilePic }
+                  : props.userDetails.userProfilePic
+              }
+            />
+          </ImageBackground>
+        )}
+        <View
+          style={Styles.userNameContainer}>
+
+          <Text
+            style={Styles.userDetailsNameTextStyle}>
+            {props.userDetails.name}
+          </Text>
+
+          {/* {props.previewDraft && props.previewDraft == true ? null : (
+            <TouchableOpacity
+              style={{
+                padding: 16,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                // if (
+                //   props.onPressCallback != undefined &&
+                //   props.onPressCallback != null
+                // ) {
+                //   props.onPressCallback();
+                // }
+              }}>
+               <Image source={moreoptions}></Image> 
+            </TouchableOpacity>
+          )} */}
         </View>
-        <Border paddingTop={5} padding={15} />
       </View>
+      {/* <Border paddingTop={5} padding={15} /> */}
       <StatusBar
-        barStyle={'dark-content'}
-        backgroundColor={props.isExternalQueue ? Colors.ThemeColor : '#fff'}
+        barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+        backgroundColor={props.isExternalQueue ? Colors.ThemeColor : Colors.white}
       />
     </View>
   );
 };
+
+const _onShareMemory = async (url: any) => {
+  try {
+    setTimeout(async () => {
+      const result: any = await Share.share({
+        message:
+          'Share the Memory',
+        url: url,
+        title: 'Share'
+      })
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+      else {
+        // alert(JSON.stringify(result))
+      }
+    }, 1000);
+
+  } catch (error) {
+    // alert(error.message);
+  }
+}
 
 export const ShowSharedaetilsDetails = (props: {
   userDetails: any,
@@ -578,7 +425,9 @@ export const ShowSharedaetilsDetails = (props: {
   onPressCallback?: any,
   previewDraft?: any,
   deepLinkBackClick?: boolean,
-  renderLikeView?: any
+  renderLikeView?: any,
+  memoryDetails?: any,
+  onActionItemClicked?: any
 }) => {
   let showCueBackLogo =
     props.userDetails.name.toLowerCase().trim() == 'cueback' ||
@@ -589,91 +438,37 @@ export const ShowSharedaetilsDetails = (props: {
         : false;
   return (
     <View
-      style={{
-        width: '100%', flex: 1,
-        justifyContent: 'space-between',
-        backgroundColor: props.isExternalQueue ? Colors.ThemeColor : '#fff',
-        padding: 10,
-        flexDirection: 'row',
-      }}>
-      <View style={{ flex: 1, flexDirection: 'column', width: '100%' }}>
+      style={Styles.ShowSharedaetilsDetailsContainer}>
 
-        {props.shareDetails.available && (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              width: '100%',
-              alignItems: 'center'
-            }}>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center'
-              }}>
-              <Image style={{ marginTop: -2 }} source={globesmall}></Image>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: Colors.newTextColor,
-                  ...fontSize(14),
-                  borderRadius: 5,
-                  fontWeight: '500',
-                  lineHeight: 14,
-                  marginRight: 5,
-                  marginLeft: 5
-                }}>
-                {props.shareDetails.shareText}
-              </Text>
+      {props.shareDetails.available && (
+        <View
+          style={Styles.ShowSharedaetilsDetailsContainerSub}>
+          <TouchableWithoutFeedback
+            onPress={() => { _onShareMemory(props.memoryDetails.memory_url) }}
+          >
+            <View style={[Styles.ShareContainer, { backgroundColor: Colors.timeLinebackground, borderColor: Colors.bottomTabColor, }]}>
+              <Text style={Styles.shareTextStyle}>Share</Text>
+              <Image source={share}></Image>
             </View>
+          </TouchableWithoutFeedback>
 
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center'
-              }}>
-              <Image style={{ marginTop: -5 }} source={calendarsmall}></Image>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: Colors.newTextColor,
-                  ...fontSize(14),
-                  borderRadius: 5,
-                  fontWeight: '500',
-                  lineHeight: 14,
-                  marginRight: 5,
-                  marginLeft: 5
-                }}>
-                {props.userDetails.createdOn}
-              </Text>
-            </View>
+          <View style={Styles.widthSeparator} />
+          {
+            props.userDetails.name == 'You' ?
+              <TouchableWithoutFeedback
+                onPress={() => props.onActionItemClicked({ nid: props.memoryDetails.nid, actionType: MemoryActionKeys.editMemoryKey })}
+              >
+                <View style={[Styles.ShareContainer, { backgroundColor: Colors.decadeFilterBorder, borderColor: Colors.decadeFilterBorder }]}>
+                  <Text style={[Styles.shareTextStyle, { color: Colors.white }]}>Edit</Text>
+                  <Image source={pen}></Image>
+                </View>
+              </TouchableWithoutFeedback>
+              :
+              <View style={Styles.shareWidthStyle} />
+          }
+        </View>
+      )}
 
-            <View
-              style={{
-                flex: 0.7,
-                flexDirection: 'row',
-                justifyContent: 'space-evenly'
-              }}>
-              <TouchableOpacity
-                style={{
-                  justifyContent: 'center', alignItems: 'center'
-                }}>
-                <Image source={Platform.OS == 'ios' ? shareiOS : shareAndroid}></Image>
-              </TouchableOpacity>
-
-              {/* Render Likes view */}
-              {props.renderLikeView}
-
-
-            </View>
-          </View>
-        )}
-
-        <Border paddingTop={20} padding={15} />
-      </View>
     </View>
   );
 };
@@ -685,7 +480,7 @@ export const FilesView = (props: {
 }) => {
   if (props.files.length > 0)
     return (
-      <View style={{ marginBottom: 10 }}>
+      <View style={Styles.marginBottomStyle}>
         {props.type == kImage &&
           props.files.map((file: any) => {
             return <CommonImageView file={file} files={props.files} />;
@@ -706,7 +501,7 @@ export const CarousalFilesView = (props: {
 }) => {
   if (props.files.length > 0)
     return (
-      <View style={{ marginBottom: 10 }}>
+      <View style={[Styles.marginBottomStyle, { height: 220 }]}>
         {props.type == kImage && props.files ?
           <Carousel
             data={props.files}
@@ -716,9 +511,6 @@ export const CarousalFilesView = (props: {
             sliderWidth={Dimensions.get('window').width}
             itemWidth={Dimensions.get('window').width}
           />
-          // props.files.map((file: any) => {
-          //   return <CommonImageView file={file} files={props.files} />;
-          // })
           :
           null
         }
@@ -731,9 +523,6 @@ export const CarousalFilesView = (props: {
             sliderWidth={Dimensions.get('window').width}
             itemWidth={Dimensions.get('window').width}
           />
-          // props.files.map((file: any) => {
-          //   return <CommonPDFView file={file} files={props.files} />;
-          // })
           :
           null
         }
@@ -746,16 +535,10 @@ export const CommonPDFView = (props: { file: any; files: any }) => {
   return (
     <View
       style={[
-        {
-          elevation: 2,
-          backgroundColor: Colors.NewLightThemeColor,
-          marginBottom: 15,
-          borderWidth: 1,
-          borderColor: '#D3D3D3',
-        },
+        Styles.commonPDFContainer,
         style.boxShadow,
       ]}>
-      <TouchableOpacity
+      <TouchableWithoutFeedback
         onPress={() => {
           if (Utility.isInternetConnected) {
             Actions.push('pdfViewer', { file: props.file });
@@ -767,17 +550,9 @@ export const CommonPDFView = (props: { file: any; files: any }) => {
           <ImageBackground
             source={null}
             resizeMode="stretch"
-            style={{ width: '100%', height: 190, backgroundColor: '#fff' }}>
+            style={Styles.commonPDFContainerImagebgStyle}>
             <View
-              style={{
-                width: '100%',
-                height: 190,
-                position: 'absolute',
-                top: 0,
-                backgroundColor: '#fff',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+              style={Styles.commonPDFContainerImagebgViewStyle}>
               <Image
                 source={
                   props.file.pdf_image_url
@@ -785,23 +560,18 @@ export const CommonPDFView = (props: { file: any; files: any }) => {
                     : pdf_icon
                 }
                 defaultSource={pdf_icon}
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  resizeMode: 'center',
-                  backgroundColor: 'transparent',
-                }}
+                style={Styles.commonPDFImageStyle}
               />
 
               <Image
                 source={pdf_icon}
-                style={{ bottom: 10, right: 10, position: 'absolute' }}
+                style={Styles.pdficonStyle}
               />
             </View>
           </ImageBackground>
           <TitleAndDescription file={props.file} type={kPDF} />
         </View>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -810,16 +580,10 @@ export const CommonImageView = (props: { file: any; files: any; showDesc?: boole
   let currentIndex = props.files.indexOf(props.file);
   return (
     <View
-      style={[
-        {
-          backgroundColor: Colors.NewLightThemeColor,
-          marginBottom: 15,
-          width: '100%',
-          elevation: 2,
-        },
-        style.boxShadow,
+      style={[Styles.CommonImageViewContainer,
+      style.boxShadow,
       ]}>
-      <TouchableOpacity
+      <TouchableWithoutFeedback
         onPress={() => {
           if (Utility.isInternetConnected) {
             Actions.push('imageViewer', {
@@ -832,19 +596,12 @@ export const CommonImageView = (props: { file: any; files: any; showDesc?: boole
         }}>
         <View>
           <View
-            style={{
-              width: '100%',
-              height: 185,
-              backgroundColor: Colors.NewLightThemeColor,
-            }}>
+            style={Styles.PlaceholderImageViewContainer}>
             <PlaceholderImageView
-              style={{ width: '100%', height: '100%' }}
+              style={Styles.placeholderStyle}
               uri={
-                props.file.thumbnail_url
-                  ? props.file.thumbnail_url
-                  : props.file.url
-                    ? props.file.url
-                    : props.file.filePath
+                props.file.thumbnail_url ? props.file.thumbnail_url : props.file.url
+                  ? props.file.url : props.file.filePath
               }
               resizeMode={'contain'}
             />
@@ -856,7 +613,7 @@ export const CommonImageView = (props: { file: any; files: any; showDesc?: boole
               <TitleAndDescription file={props.file} type={kImage} />
           }
         </View>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -869,58 +626,40 @@ export const TitleAndDescription = (props: { file: any; type: any }) => {
     ? props.file.file_description.replace(/["']/g, "\\'").toString()
     : '';
   return (
-    <View style={{ width: '100%' }}>
+    <View style={Styles.memoryDetailAvailable}>
       {fileTitle.length > 0 || fileDescription.length > 0 ? (
         <View
-          style={{ backgroundColor: 'transparent', padding: 15, paddingTop: 10 }}>
+          style={Styles.TitleAndDescriptionContainer}>
           <View>
             {fileTitle.length > 0 && (
               <Text
-                style={{
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                  ...fontSize(18),
-                  color: Colors.TextColor,
-                }}>
+                style={Styles.fileNameTextStyle}>
                 {fileTitle}
               </Text>
             )}
 
             {fileDescription.length > 0 && (
               <Text
-                style={{ ...fontSize(16), marginTop: 5, color: Colors.TextColor }}
+                style={Styles.fileDescriptionTextStyle}
                 numberOfLines={3}>
                 {fileDescription}
               </Text>
             )}
             <View
-              style={{
-                justifyContent: 'space-between',
-                width: '100%',
-                flexDirection: 'row',
-                paddingTop: 5,
-              }}>
+              style={Styles.descriptionContainerStyles}>
               {Utility.getNumberOfLines(
                 fileDescription,
                 16,
                 Dimensions.get('window').width - 70,
               ) > 3 && (
                   <Text
-                    style={{
-                      ...fontSize(16),
-                      fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                      color: Colors.NewYellowColor,
-                    }}>
+                    style={Styles.seemoreTextStyle}>
                     {'See more'}
                   </Text>
                 )}
               <Text></Text>
               <Text
-                style={{
-                  textAlign: 'right',
-                  ...fontSize(16),
-                  fontStyle: 'italic',
-                  color: Colors.TextColor,
-                }}>
+                style={Styles.fileDescTextStyle}>
                 {'By: '}
                 {getUserName(props.file)}
               </Text>
@@ -928,14 +667,9 @@ export const TitleAndDescription = (props: { file: any; type: any }) => {
           </View>
         </View>
       ) : (
-        <View style={{ justifyContent: 'flex-end', width: '100%', padding: 15 }}>
+        <View style={Styles.DescriptionStyles}>
           <Text
-            style={{
-              textAlign: 'right',
-              ...fontSize(16),
-              fontStyle: 'italic',
-              color: Colors.TextColor,
-            }}>
+            style={Styles.fileDescTextStyle}>
             {'By: '}
             {getUserName(props.file)}
           </Text>
@@ -952,19 +686,13 @@ export const LikeView = (props: {
   onPress?: () => void;
 }) => {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+    <View style={Styles.LikeViewContainer}>
       <Image source={props.icon} style={{ padding: 1 }} resizeMode="contain" />
       <TouchableHighlight
-        underlayColor={'#ffffffff'}
+        underlayColor={Colors.touchableunderlayColor}
         onPress={() => props.onPress()}>
         <Text
-          style={{
-            ...fontSize(16),
-            marginLeft: 5,
-            fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-            flex: 1,
-            color: Colors.NewTitleColor,
-          }}>
+          style={Styles.LikeViewTextStyle}>
           {props.name}
         </Text>
       </TouchableHighlight>
@@ -1013,12 +741,9 @@ export const LikeCommentShare = (props: {
     <View>
       {props.animate == localId && props.animateType == 'like' ? (
         <Animatable.View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center', justifyContent: 'center',
-            height: 40, width: 40, borderRadius: 20, backgroundColor: Colors.timeLinebackground,
+          style={[Styles.LikeCommentShareContainer, {
             transform: [{ translateX: PublishedMemory.shakeAnimation }],
-          }}>
+          }]}>
           <Image
             source={props.icon}
             style={{ padding: 1, }}
@@ -1035,7 +760,7 @@ export const LikeCommentShare = (props: {
           </Text> */}
         </Animatable.View>
       ) : (
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, width: 40, borderRadius: 20, backgroundColor: Colors.timeLinebackground, }}>
+        <View style={Styles.LikeCommentShareContainer}>
           <Image
             source={props.icon}
             style={{ padding: 1 }}
@@ -1060,44 +785,10 @@ export const TitleAndValue = (props: { title: string; description: string }) => 
   return (
     <View style={{ flex: 1 }}>
       <Text
-        style={{
-          ...fontSize(18),
-          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-        }}>
+        style={[Styles.titleandValueTextStyle, { color: Colors.newTextColor }]}>
         {props.title}
       </Text>
-      <Text style={{ ...fontSize(18) }}>{props.description}</Text>
-    </View>
-  );
-};
-export const FilterIcon = (props: {
-  name: string;
-  icon: any;
-  flexDirection?: string;
-}) => {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%',
-        height: 48,
-        paddingHorizontal: 16,
-      }}>
-      <Text
-        style={{
-          ...fontSize(18),
-          fontWeight: 'normal',
-          color: Colors.ThemeColor,
-        }}>
-        {props.name}
-      </Text>
-      <Image
-        source={props.icon}
-        style={{ marginRight: 5, padding: 1 }}
-        resizeMode="contain"
-      />
+      <Text style={[Styles.titleandValueTextStyle, { color: Colors.bordercolor }]}>{props.description}</Text>
     </View>
   );
 };

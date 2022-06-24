@@ -1,11 +1,11 @@
-import {Platform, Alert, DeviceEventEmitter} from 'react-native';
+import { Platform, Alert, DeviceEventEmitter } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import {Actions} from 'react-native-router-flux';
-import {Storage, NO_INTERNET, Colors} from '../constants';
+import { Actions } from 'react-native-router-flux';
+import { Storage, NO_INTERNET, Colors } from '../constants';
 import Utility from '../utility';
 import loaderHandler from '../component/busyindicator/LoaderHandler';
-import {LoginStore, Account, UserData} from '../loginStore';
-import {ToastMessage} from '../component/Toast';
+import { LoginStore, Account, UserData } from '../loginStore';
+import { ToastMessage } from '../component/Toast';
 
 export const logoutMethod = () => {
   Storage.delete('userData');
@@ -39,7 +39,7 @@ export function logout() {
   Alert.alert('', 'Your session is timed out\nPlease login again', [
     {
       text: 'Ok',
-      onPress: () => {},
+      onPress: () => { },
     },
   ]);
   logoutFlow();
@@ -52,7 +52,7 @@ function logoutFlow() {
       let accounts = list.filter((it: UserData) => it.userAuthToken != '');
       if (accounts.length > 0) {
         let user: UserData = accounts[accounts.length - 1];
-        DeviceEventEmitter.emit('logout', {accounts, user});
+        DeviceEventEmitter.emit('logout', { accounts, user });
       } else {
         if (Actions.currentScene !== 'login') {
           Actions.replace('prologue');
@@ -71,7 +71,7 @@ const WebserviceCall = (function () {
     adminPath: '/cuebackadmin',
     path: '/cueback',
     getRequest: (url: string, headers: object): Promise<Response> => {
-      //console.log("URL : " + url, "\nMethod : GET\n", "Headers", JSON.stringify(headers));
+      console.log("URL : " + url, "\nMethod : GET\n", "Headers", JSON.stringify(headers));
 
       if (!Utility.isInternetConnected) {
         // return Promise.reject(new Error(NO_INTERNET));
@@ -86,7 +86,7 @@ const WebserviceCall = (function () {
         },
       })
         .then((resp: Response) => {
-          //console.log(resp.headers);
+          console.log("resp.headers :", resp.headers);
           let rsp = resp.clone();
           return rsp
             .json()
@@ -97,7 +97,10 @@ const WebserviceCall = (function () {
                 value.ResponseCode == 401
               ) {
                 loaderHandler.hideLoader();
+                console.log("resp value :", JSON.stringify(value));
+
                 if (value.responseMessage == 'Authentication token expired.') {
+                  console.log("Authentication token expired :", JSON.stringify(value));
                   logout();
                 }
                 return Promise.reject(resp);
@@ -128,7 +131,7 @@ const WebserviceCall = (function () {
           deviceDetail: {
             ModelName: DeviceInfo.getModel(),
             OSVersion: DeviceInfo.getSystemVersion(),
-            PlatformName: Platform.select({ios: 'iOS', android: 'Android'}),
+            PlatformName: Platform.select({ ios: 'iOS', android: 'Android' }),
             AppVersion: DeviceInfo.getVersion(),
             DeviceId: DeviceInfo.getUniqueId(),
           },
@@ -152,31 +155,39 @@ const WebserviceCall = (function () {
         .then((resp: any) => {
           let rsp = resp.clone();
           console.log(JSON.stringify(resp, null, 4));
-          console.log('Response is : ', resp);
+          console.log("headers another :", JSON.stringify(headers), url);
           return rsp
             .json()
             .then((value: any): any => {
-              console.log(
-                'request : received  ' + url,
-                new Date().toTimeString(),
-              );
-              if (
-                value.ResponseCode == 405 ||
-                value.ResponseCode == 402 ||
-                value.ResponseCode == 401
-              ) {
-                loaderHandler.hideLoader();
-                //TODO: Consult Web team and get unique ResponseCode of invalid session.
+              try {
+                console.log(
+                  'request : received  ' + url,
+                  new Date().toTimeString(),
+                  JSON.stringify(request)
+                );
+                // console.log('Response is : ', value);
                 if (
-                  value.ResponseMessage == 'Authentication token expired.' ||
-                  value.ResponseMessage == 'Invalid authentication token.'
+                  value.ResponseCode == 405 ||
+                  value.ResponseCode == 402 ||
+                  value.ResponseCode == 401
                 ) {
-                  ToastMessage('', '', true);
-                  logout();
-                } //5461
-                return Promise.reject(Error(value.ResponseMessage));
+                  loaderHandler.hideLoader();
+                  //TODO: Consult Web team and get unique ResponseCode of invalid session.
+                  console.log("Authentication token expired another :", JSON.stringify(value), url);
+                  if (
+                    value.ResponseMessage == 'Authentication token expired.' ||
+                    value.ResponseMessage == 'Invalid authentication token.'
+                  ) {
+                    ToastMessage('', '', true);
+                    logout();
+                  } //5461
+                  return Promise.reject(Error(value.ResponseMessage));
+                }
+                return resp;
+              } catch (error) {
+                console.error("reeee : ", error)
               }
-              return resp;
+
             })
             .catch((err: Error) => {
               console.log('Error is : ', err);

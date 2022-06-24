@@ -307,7 +307,7 @@ export default class Activities extends React.Component<Props, State> {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.ThemeColor}
         />
         <FlatList

@@ -1,8 +1,8 @@
 import React from 'react';
-import { DeviceEventEmitter,TouchableHighlight , Image, SafeAreaView, StatusBar, StyleSheet, View, Alert, Platform } from 'react-native';
+import { DeviceEventEmitter, TouchableHighlight, Image, SafeAreaView, StatusBar, StyleSheet, View, Alert, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { kNotificationIndicator, TabItems } from '../../common/component/TabBarIcons';
-import { Colors, decode_utf8, fontSize, getDetails, Storage } from '../../common/constants';
+import { Colors, decode_utf8, fontFamily, fontSize, getDetails, Storage } from '../../common/constants';
 import Utility from '../../common/utility';
 import { configurations } from '../../common/webservice/loginServices';
 import { ACTIVE_TAB_ON_DASHBOARD, GET_FILTERS_DATA, GET_FILTERS_DATA_TIMELINE, GET_MEMORY_LIST, ListType, MEMORY_ACTIONS_DASHBOARD } from './dashboardReducer';
@@ -31,165 +31,173 @@ import AppGuidedTour from './appGuidedTour';
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { DefaultDetailsMemory } from '../createMemory/dataHelper';
 import { CreateUpdateMemory, promptIdListener } from '../createMemory/createMemoryWebService';
- 
+import Styles from './styles';
+import CustomAlert from '../../common/component/customeAlert';
+import { showCustomAlert } from '../createMemory/reducer';
+
 const options = {
-  enableVibrateFallback: true,
-  ignoreAndroidSystemSettings: false
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false
 };
-type Props={[x: string] : any}
+type Props = { [x: string]: any }
 
 class DashboardIndex extends React.Component<Props>{
-    notificationListener : EventManager;
-    foregroundNotification : EventManager;
-    backgroundNotification : EventManager;
-    scrollableTabView : any;
+    notificationListener: EventManager;
+    foregroundNotification: EventManager;
+    backgroundNotification: EventManager;
+    scrollableTabView: any;
     eventManager: EventManager;
     memoryActionsListener: EventManager;
-    notificationModel : NotificationDataModel;
-    eventListener : EventManager;
-    state = {		
-        filterScreenVisibility : false,
-        jumpToVisibility : false,
-        currentScreen : ListType.Recent,
+    notificationModel: NotificationDataModel;
+    eventListener: EventManager;
+    state = {
+        filterScreenVisibility: false,
+        jumpToVisibility: false,
+        currentScreen: ListType.Recent,
         appTourVisibility: false
-	};
+    };
     memoryFromPrompt: EventManager;
-	screen = '';
-	constructor(props: Props) {
-        super(props);     
-        this.FetchConfigurations();  
+    screen = '';
+    constructor(props: Props) {
+        super(props);
+        this.FetchConfigurations();
         this.notificationModel = new NotificationDataModel();
-    }	
-        
-    navigateToAddContent =()=>{
+    }
+
+    navigateToAddContent = () => {
         ReactNativeHapticFeedback.trigger("notificationSuccess", options);
         Actions.push("addContent");
     }
-    
-    componentDidMount=()=>{
-        this.eventManager = EventManager.addListener("addContentTabPressed", this.navigateToAddContent);			
+
+    componentDidMount = () => {
+        this.eventManager = EventManager.addListener("addContentTabPressed", this.navigateToAddContent);
         this.notificationListener = EventManager.addListener(kGetInvidualNotification, this.notificationCallback);
         this.foregroundNotification = EventManager.addListener(kForegroundNotice, this.foregroundNotificationCallback);
-        this.backgroundNotification = EventManager.addListener(kBackgroundNotice, this.checkNotificationAvailiability);        
-        this.eventListener = EventManager.addListener(kNotificationIndicator, this.changeNotification) 
+        this.backgroundNotification = EventManager.addListener(kBackgroundNotice, this.checkNotificationAvailiability);
+        this.eventListener = EventManager.addListener(kNotificationIndicator, this.changeNotification)
         this.memoryActionsListener = EventManager.addListener(kMemoryActionPerformedOnDashboard, this.memoryActionCallBack)
-        this.props.fetchFiltersData({type : ListType.Recent});
-        this.props.fetchFiltersDataTimeline({type : ListType.Timeline});  
-        if(this.props.setTimer == "false"){
+        this.props.fetchFiltersData({ type: ListType.Recent });
+        this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
+        if (this.props.setTimer == "false") {
             this.state.appTourVisibility = true;
-        }else {
+        } else {
             setTimeout(() => {
                 DefaultPreference.get('hide_guide_tour').then((value: any) => {
-                    if(value=='true'){
+                    if (value == 'true') {
                         this.state.appTourVisibility = false;
                     } else {
                         this.state.appTourVisibility = true;
                     }
                 });
-            }, 2000); 
+            }, 2000);
         }
     }
 
-    changeNotification=()=>{
+    changeNotification = () => {
         Actions.refresh('root')
     }
 
-    foregroundNotificationCallback=(details : any)=>{
-        if(Utility.isInternetConnected){
-            let key = Account.selectedData().instanceID+"_"+Account.selectedData().userID;
+    foregroundNotificationCallback = (details: any) => {
+        if (Utility.isInternetConnected) {
+            let key = Account.selectedData().instanceID + "_" + Account.selectedData().userID;
             Utility.unreadNotification[key] = Utility.unreadNotification[key]++;
             setTimeout(() => {
-               EventManager.callBack(kNotificationIndicator);  
+                EventManager.callBack(kNotificationIndicator);
             }, 2000);
             Utility.notificationObject.isBackgroundNotification = false;
-            GetActivities({ "notification_params": {
-                "nid": details.nid,
-                "notification_id": details.notification_id
-            }}, kGetInvidualNotification);     
+            GetActivities({
+                "notification_params": {
+                    "nid": details.nid,
+                    "notification_id": details.notification_id
+                }
+            }, kGetInvidualNotification);
         } else {
             No_Internet_Warning();
         }
     }
 
-    checkNotificationAvailiability(){
-            if(Utility.notificationObject.hasNotification){    
-                if(Utility.isInternetConnected){        
+    checkNotificationAvailiability() {
+        if (Utility.notificationObject.hasNotification) {
+            if (Utility.isInternetConnected) {
                 Utility.notificationObject.hasNotification = false;
                 Utility.notificationObject.isBackgroundNotification = true;
                 loaderHandler.showLoader();
-                GetActivities({ "notification_params": {
-                                    "nid": Utility.notificationObject.data.nid,
-                                    "notification_id": Utility.notificationObject.data.notification_id
-                                }}, kGetInvidualNotification);           
-            
-                             } else{
+                GetActivities({
+                    "notification_params": {
+                        "nid": Utility.notificationObject.data.nid,
+                        "notification_id": Utility.notificationObject.data.notification_id
+                    }
+                }, kGetInvidualNotification);
+
+            } else {
                 No_Internet_Warning();
             }
         }
-        
+
     }
 
-    notificationCallback=(success : any, details : any)=>{
+    notificationCallback = (success: any, details: any) => {
         loaderHandler.hideLoader();
-        if(success && Utility.isInternetConnected){         
+        if (success && Utility.isInternetConnected) {
             details = this.notificationModel.getNotificationDetails(details.data, false)[0];
-           // console.log("Final data:",details);
-            if(Utility.notificationObject.isBackgroundNotification){
-                SetSeenActivity({"ids" : details.ids}, 0)                
-                if(details.status==0 && (details.notificationType.indexOf("collaboration")!= -1 || details.notificationType.indexOf("new_edits") != -1)){
-                    Actions.push("createMemory", {editMode : true, draftNid : details.nid})    
-                }else{
-                    if(details.notificationType === "prompt_of_the_week_email" && details.type ==='prompts') {
+            // console.log("Final data:",details);
+            if (Utility.notificationObject.isBackgroundNotification) {
+                SetSeenActivity({ "ids": details.ids }, 0)
+                if (details.status == 0 && (details.notificationType.indexOf("collaboration") != -1 || details.notificationType.indexOf("new_edits") != -1)) {
+                    Actions.push("createMemory", { editMode: true, draftNid: details.nid })
+                } else {
+                    if (details.notificationType === "prompt_of_the_week_email" && details.type === 'prompts') {
                         //handle prompts to memory here
-                        this.convertToMemory(details.nid,details.title);
+                        this.convertToMemory(details.nid, details.title);
                     } else {
-                    Actions.push("memoryDetails", {"nid": details.nid, "type": details.type})
+                        Actions.push("memoryDetails", { "nid": details.nid, "type": details.type })
                     }
                 }
             } else {
                 //console.log("foreground",details);
-                if( details.notificationType !== "prompt_of_the_week_email" && details.type !=='prompts'){
-                EventManager.callBack(kForegroundNotificationListener, details);          
-                if(this.notificationModel.isPartOfActivity(details)){
-                    EventManager.callBack(kActivityListener, [details]);
+                if (details.notificationType !== "prompt_of_the_week_email" && details.type !== 'prompts') {
+                    EventManager.callBack(kForegroundNotificationListener, details);
+                    if (this.notificationModel.isPartOfActivity(details)) {
+                        EventManager.callBack(kActivityListener, [details]);
+                    }
                 }
-            }      
             }
-        } else if(!Utility.isInternetConnected){
+        } else if (!Utility.isInternetConnected) {
             No_Internet_Warning();
         }
     }
 
-    convertToMemory(id: any, title : any) {
-       if(Utility.isInternetConnected){	
-             loaderHandler.showLoader("Creating Memory...");		
-             let draftDetails : any = DefaultDetailsMemory(decode_utf8(title.trim()));						
-             draftDetails.prompt_id = parseInt(id);    
-             this.memoryFromPrompt = EventManager.addListener(promptIdListener, this.promptToMemoryCallBack);        
-             CreateUpdateMemory(draftDetails, [], promptIdListener, "save");
-         } else{
-             No_Internet_Warning();
-         }
-     }
- 
-     promptToMemoryCallBack=(success : boolean, draftDetails : any)=>{
-         setTimeout(() => {
-             loaderHandler.hideLoader();
-         }, 500);
-         if(success){	
-             Actions.push("createMemory", {editMode : true, draftNid : draftDetails, isFromPrompt: true})      
-         }
-         else{
+    convertToMemory(id: any, title: any) {
+        if (Utility.isInternetConnected) {
+            loaderHandler.showLoader("Creating Memory...");
+            let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
+            draftDetails.prompt_id = parseInt(id);
+            this.memoryFromPrompt = EventManager.addListener(promptIdListener, this.promptToMemoryCallBack);
+            CreateUpdateMemory(draftDetails, [], promptIdListener, "save");
+        } else {
+            No_Internet_Warning();
+        }
+    }
+
+    promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
+        setTimeout(() => {
+            loaderHandler.hideLoader();
+        }, 500);
+        if (success) {
+            Actions.push("createMemory", { editMode: true, draftNid: draftDetails, isFromPrompt: true })
+        }
+        else {
             loaderHandler.hideLoader()
-             ToastMessage(draftDetails);
-         }
-     }
-    
-    componentWillUnmount=()=>{
+            ToastMessage(draftDetails);
+        }
+    }
+
+    componentWillUnmount = () => {
+        this.props.showAlertCall(false);
         this.eventManager.removeListener();
     }
 
-    memoryActionCallBack = (fetched: boolean, responseMessage: any, nid?: any, type?: any, uid? : any) => {
+    memoryActionCallBack = (fetched: boolean, responseMessage: any, nid?: any, type?: any, uid?: any) => {
         loaderHandler.hideLoader();
         if (fetched) {
             // if (type == MemoryActionKeys.removeMeFromThisPostKey){
@@ -206,159 +214,227 @@ class DashboardIndex extends React.Component<Props>{
             //     publishedMemoriesArray = publishedMemoriesArray.filter((element: any) => element.nid != nid)
             // }
             // this.publishedMemoryDataModel.updatePublishedMemories(publishedMemoriesArray)
-            this.props.sendMemoryActions({nid, type, uid})
+            this.props.sendMemoryActions({ nid, type, uid })
             this.setState({});
         } else {
             ToastMessage(responseMessage, Colors.ErrorColor);
         }
     }
-    
-    componentDidUpdate(prevProps, prevState) { 
 
-    } 
+    componentDidUpdate(prevProps, prevState) {
 
-    onFilterClick=()=>{
-        this.setState({currentScreen : this.screen},()=>{
-            Actions.push("filtersScreen", {currentScreen : this.screen});
-        })    
+    }
+
+    onFilterClick = () => {
+        this.setState({ currentScreen: this.screen }, () => {
+            Actions.push("filtersScreen", { currentScreen: this.screen });
+        })
     }
     render() {
-		return (
-                <View style={{flex: 1}}>
-                    <SafeAreaView style={{width: "100%", flex: 0, backgroundColor : Colors.NewThemeColor}}/>                   
-                    <SafeAreaView  style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>    
-                        <View style={{flex: 1}}> 
-                            {/* <NavigationBar title={TabItems.AllMemories}/> */}
-                            <NewNavigationBar 
-                                isWhite={true} filterClick={()=> this.onFilterClick()} 
-                                title={ this.props.filterName ? this.props.filterName :TabItems.AllMemories}
-                                showRight={ this.screen == ListType.Timeline ? true :false}
-                            />
-                            <StatusBar barStyle={'dark-content'} backgroundColor='#ffffff' /> 
-                            <ScrollableTabView
-                                ref={(ref: any) => { this.scrollableTabView = ref; }}
-                                style= {{width: "100%"}}
-                                scrollEnabled={Platform.OS == 'ios' ? true : false}
-                                locked = {Platform.OS == 'ios' ? false : true}
-                                initialPage = {0}
-                                currentScreen ={(screenName:any) =>{ 
-                                    this.screen = ((screenName == 0) ? ListType.Recent : ListType.Timeline) 
-                                    this.props.setCurrentTabActions((screenName == 0) ? ListType.Recent : ListType.Timeline);
-                                }}
-                                tabBarBackgroundColor = {Colors.white}
-                                tabBarPosition="bottom"
-                                tabBarTextStyle= {{...fontSize(16), fontFamily: 'Rubik'}}
-                                tabBarActiveTextColor = {Colors.TextColor}
-                                // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
-                                tabBarUnderlineStyle={{backgroundColor: Colors.white,height:2}} >
-                                <Recent tabLabel= {'Recent'} filterClick={()=> this.onFilterClick.bind(this)}/>
-                                <Timeline tabLabel= {'Timeline'} filterClick={()=> this.onFilterClick.bind(this)}/>
-                            </ScrollableTabView> 
-                            {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
-                        </View>
-                    </SafeAreaView>    
-                    {this.state.appTourVisibility && <AppGuidedTour cancelAppTour={()=> 
-                       { this.setState({appTourVisibility : false});
-                         DefaultPreference.set('hide_guide_tour', "true").then(function() {}) }
-                        }/>}
-                </View> );
-    }	
-    
+        return (
+            <View style={Styles.fullFlex}>
+                <SafeAreaView style={Styles.emptySafeAreaStyle} />
+                <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
+                    <View style={Styles.fullFlex}>
+                        {/* <NavigationBar title={TabItems.AllMemories}/> */}
+                        {
+                            this.props.showAlert && this.props.showAlertData?.title ?
+                                <CustomAlert
+                                    // modalVisible={this.state.showCustomAlert}
+                                    modalVisible={this.props.showAlert}
+                                    // setModalVisible={setModalVisible}
+                                    title={this.props.showAlertData?.title}
+                                    message={this.props.showAlertData?.desc}
+                                    android={{
+                                        container: {
+                                            backgroundColor: '#ffffff'
+                                        },
+                                        title: {
+                                            color: Colors.black,
+                                            fontFamily: "SF Pro Text",
+                                            fontSize: 17,
+                                            fontWeight: '600',
+                                            lineHeight: 22
+                                        },
+                                        message: {
+                                            color: Colors.black,
+                                            fontFamily: "SF Pro Text",
+                                            // fontFamily: fontFamily.Inter,
+                                            fontSize: 16,
+                                            fontWeight: '500',
+                                        },
+                                    }}
+                                    ios={{
+                                        container: {
+                                            backgroundColor: '#D3D3D3'
+                                        },
+                                        title: {
+                                            color: Colors.black,
+                                            // fontFamily: fontFamily.Inter,
+                                            lineHeight: 22,
+                                            fontSize: 17,
+                                            fontWeight: '600',
+                                        },
+                                        message: {
+                                            color: Colors.black,
+                                            // fontFamily: fontFamily.Inter,
+                                            fontSize: 13,
+                                            lineHeight: 18,
+                                            fontWeight: '400',
+                                        },
+                                    }}
+                                    buttons={[
+                                        {
+                                            text: 'Great!',
+                                            func: () => {
+                                                this.props.showAlertCall(false);
+                                            },
+                                            styles: {
+                                                lineHeight: 22,
+                                                fontSize: 17,
+                                                fontWeight: '600',
+                                            }
+                                        }
+                                    ]}
+                                />
+                                :
+                                null
+                        }
+                        <NewNavigationBar
+                            isWhite={true} filterClick={() => this.onFilterClick()}
+                            title={this.props.filterName ? this.props.filterName : TabItems.AllMemories}
+                            showRight={this.screen == ListType.Timeline ? true : false}
+                        />
+                        <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} backgroundColor='#ffffff' />
+                        <ScrollableTabView
+                            ref={(ref: any) => { this.scrollableTabView = ref; }}
+                            style={Styles.fullWidth}
+                            scrollEnabled={Platform.OS == 'ios' ? true : false}
+                            locked={Platform.OS == 'ios' ? false : true}
+                            initialPage={0}
+                            currentScreen={(screenName: any) => {
+                                this.screen = ((screenName == 0) ? ListType.Recent : ListType.Timeline)
+                                this.props.setCurrentTabActions((screenName == 0) ? ListType.Recent : ListType.Timeline);
+                            }}
+                            tabBarBackgroundColor={Colors.white}
+                            tabBarPosition="bottom"
+                            tabBarTextStyle={{ ...fontSize(16), fontFamily: fontFamily.Inter }}
+                            tabBarActiveTextColor={Colors.TextColor}
+                            // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
+                            tabBarUnderlineStyle={{ backgroundColor: Colors.white, height: 2 }} >
+                            <Recent tabLabel={'Recent'} filterClick={() => this.onFilterClick.bind(this)} />
+                            <Timeline tabLabel={'Timeline'} filterClick={() => this.onFilterClick.bind(this)} />
+                        </ScrollableTabView>
+                        {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
+                    </View>
+                </SafeAreaView>
+                {this.state.appTourVisibility && <AppGuidedTour cancelAppTour={() => {
+                    this.setState({ appTourVisibility: false });
+                    DefaultPreference.set('hide_guide_tour', "true").then(function () { })
+                }
+                } />}
+            </View>);
+    }
+
     FetchConfigurations = async () => {
-        if(Utility.isInternetConnected){
+        if (Utility.isInternetConnected) {
             try {
                 let data = await Storage.get('userData')
                 let response: any = await configurations(`https://${data.instanceURL}`, data.userAuthToken).then((response: Response) => response.json())
-                .catch((err: Error) => {
-                    Promise.reject(err)
-                })
-                DefaultPreference.set('seasons', JSON.stringify(response.Details.seasons)).then(function() {});	
-                let monthArray = [{name: "Month*", tid : 0}];
+                    .catch((err: Error) => {
+                        Promise.reject(err)
+                    })
+                DefaultPreference.set('seasons', JSON.stringify(response.Details.seasons)).then(function () { });
+                let monthArray = [{ name: "Month*", tid: 0 }];
                 let seasonArray = response.Details.seasons ? response.Details.seasons : [];
-                seasonArray.forEach((element : any) => {
+                seasonArray.forEach((element: any) => {
                     monthArray.push(element);
                 });
                 MonthObj.serverMonthsCount = monthArray.length;
                 monthArray = monthArray.concat(months);
                 MonthObj.month = monthArray;
-                Account.selectedData().start_year =  response.Details.years.start;
-                Account.selectedData().end_year =  response.Details.years.end;
-                DefaultPreference.set('allow_redaction', response.Details.allow_redaction ).then(function() {
-                });	
-                DefaultPreference.set('default_share_option', response.Details.default_share_option ).then(function() {
+                // Account.selectedData().start_year = response.Details.years.start;
+                // Account.selectedData().end_year = response.Details.years.end;
+                DefaultPreference.set('allow_redaction', response.Details.allow_redaction).then(function () {
                 });
-                DefaultPreference.set('digital_archive_checkbox', response.Details.digital_archive_checkbox ).then(function() {
+                DefaultPreference.set('default_share_option', response.Details.default_share_option).then(function () {
                 });
-                DefaultPreference.set('etherpad_key', response.Details.etherpad_key ).then(function() {
+                DefaultPreference.set('digital_archive_checkbox', response.Details.digital_archive_checkbox).then(function () {
                 });
-                DefaultPreference.set('internal_filter', response.Details.internal_filter ).then(function() {
+                DefaultPreference.set('etherpad_key', response.Details.etherpad_key).then(function () {
                 });
-                DefaultPreference.set('privacy_policy_url', response.Details.privacy_policy_url ).then(function() {
-                });	
-                DefaultPreference.set('public_file_path', response.Details.public_file_path ).then(function() {
-                });	
-                DefaultPreference.set('site_logo', response.Details.site_logo ).then(function() {
-                });	
-                DefaultPreference.set('site_short_name', response.Details.site_short_name ).then(function() {
-                });	
-                DefaultPreference.set('start_year', response.Details.years.start).then(function() {
+                DefaultPreference.set('internal_filter', response.Details.internal_filter).then(function () {
                 });
-                DefaultPreference.set('end_year', response.Details.years.end).then(function() {
+                DefaultPreference.set('privacy_policy_url', response.Details.privacy_policy_url).then(function () {
+                });
+                DefaultPreference.set('public_file_path', response.Details.public_file_path).then(function () {
+                });
+                DefaultPreference.set('site_logo', response.Details.site_logo).then(function () {
+                });
+                DefaultPreference.set('site_short_name', response.Details.site_short_name).then(function () {
+                });
+                DefaultPreference.set('start_year', response.Details.years.start).then(function () {
+                });
+                DefaultPreference.set('end_year', response.Details.years.end).then(function () {
                 });
                 DefaultPreference.get('public_file_path').then((value: any) => {
                     Utility.setPublicURL();
                     var actualPath = Account.selectedData().profileImage.replace("public://", value);
                     Account.selectedData().profileImage = actualPath
                     DeviceEventEmitter.emit(kProfilePicUpdated);
-                    DefaultPreference.get('start_year').then((value: any) => {
-                        Account.selectedData().start_year =  value
-                        DefaultPreference.get('end_year').then((value: any) => {
-                            Account.selectedData().end_year =  value;
-                        });
-                    });
-                });                  
+                    // DefaultPreference.get('start_year').then((value: any) => {
+                    // Account.selectedData().start_year = value
+                    // DefaultPreference.get('end_year').then((value: any) => {
+                    //     Account.selectedData().end_year = value;
+                    // });
+                    // });
+                });
             } catch (err) {
                 console.log("Error fetching configurations")
-            }	
-        }else{
+            }
+        } else {
             setTimeout(() => {
-                this.setState({showNoInternetView: true});
+                this.setState({ showNoInternetView: true });
             }, 500);
         }
     };
+
 }
 
-export const filterView=(onClick : any, screen : any)=>{
+export const filterView = (onClick: any, screen: any) => {
     return (
-            <TouchableHighlight onPress={()=> onClick(screen)} underlayColor={'transparent'} style={{width: '100%', height: 40, backgroundColor : '#fff', borderBottomWidth: 0.5, borderBottomColor : '#dedede'}}>
-                <View style={{width : '100%', flex: 1, flexDirection : 'row', justifyContent : 'space-between', alignItems: 'center', paddingRight: 16, paddingLeft: 16}}>
-                    <TextNew style={{...fontSize(16)}}>Filters</TextNew>
-                    <Image source={filter_icon}></Image>
-                </View>
-            </TouchableHighlight>
-        )
+        <TouchableHighlight onPress={() => onClick(screen)} underlayColor={Colors.transparent} style={Styles.filterButnContainerStyle}>
+            <View style={[Styles.navigationHeaderContainer, { flexDirection: 'row', paddingRight: 16, paddingLeft: 16 }]}>
+                <TextNew style={{ ...fontSize(16) }}>Filters</TextNew>
+                <Image source={filter_icon}></Image>
+            </View>
+        </TouchableHighlight>
+    )
 };
 
 const mapState = (state: any) => {
-	return {
-        filterDataTimeLine : state.dashboardReducer.filterDataTimeline,
-        filterDataRecent : state.dashboardReducer.filterDataRecent,
-        loadingRecent : state.dashboardReducer.loadingRecent,
-        filterName : state.dashboardReducer.filterName,
+    return {
+        filterDataTimeLine: state.dashboardReducer.filterDataTimeline,
+        filterDataRecent: state.dashboardReducer.filterDataRecent,
+        loadingRecent: state.dashboardReducer.loadingRecent,
+        showAlert: state.MemoryInitials.showAlert,
+        showAlertData: state.MemoryInitials.showAlertData,
+        filterName: state.dashboardReducer.filterName,
     }
 };
 
 const mapDispatch = (dispatch: Function) => {
-	return {
-        fetchFiltersData : (payload: any) => dispatch({type: GET_FILTERS_DATA, payload: payload}),	
-        fetchFiltersDataTimeline : (payload: any) => dispatch({type: GET_FILTERS_DATA_TIMELINE, payload: payload}),	
-        fetchMemoryList : (payload : any) => dispatch({type: GET_MEMORY_LIST, payload : payload}),
-        sendMemoryActions: (payload : any) => dispatch({type: MEMORY_ACTIONS_DASHBOARD, payload : payload}),
-        setCurrentTabActions: (payload : any) => dispatch({type: ACTIVE_TAB_ON_DASHBOARD, payload : payload})
-	};
+    return {
+        fetchFiltersData: (payload: any) => dispatch({ type: GET_FILTERS_DATA, payload: payload }),
+        fetchFiltersDataTimeline: (payload: any) => dispatch({ type: GET_FILTERS_DATA_TIMELINE, payload: payload }),
+        fetchMemoryList: (payload: any) => dispatch({ type: GET_MEMORY_LIST, payload: payload }),
+        showAlertCall: (payload: any) => dispatch({ type: showCustomAlert, payload: payload }),
+        sendMemoryActions: (payload: any) => dispatch({ type: MEMORY_ACTIONS_DASHBOARD, payload: payload }),
+        setCurrentTabActions: (payload: any) => dispatch({ type: ACTIVE_TAB_ON_DASHBOARD, payload: payload })
+    };
 };
 
 export default connect(
-	mapState,
-	mapDispatch
+    mapState,
+    mapDispatch
 )(DashboardIndex);

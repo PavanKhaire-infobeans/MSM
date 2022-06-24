@@ -475,7 +475,7 @@ export default class Profile extends React.Component<object> {
           <View style={{flex: 1, backgroundColor: Colors.NewThemeColor}}>
             <NavigationBar title={'My Profile'} showClose={true} />
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             {Utility.isInternetConnected ? (

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, FlatList, TouchableHighlight, StyleSheet, Modal, View, StatusBar, Text, ActivityIndicator, Keyboard, RefreshControl, Platform, Alert, Image } from "react-native";
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { SafeAreaView, FlatList, TouchableHighlight, TouchableOpacity, Modal, View, StatusBar, Text, ActivityIndicator, Keyboard, RefreshControl, Platform, Alert, Image, Dimensions } from "react-native";
 import { connect } from 'react-redux';
 import AudioPlayer, { kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious } from '../../../common/component/audio_player/audio_player';
 import { MemoryActionsSheetItem } from '../../../common/component/memoryActionsSheet';
@@ -11,22 +11,24 @@ import { cancelActions } from '../../../images';
 import { Like, Unlike } from '../../memoryDetails/detailsWebService';
 import { kLiked, kUnliked } from '../../myMemories/myMemoriesWebService';
 import { MemoryActionsList, onActionItemClicked, renderSeparator, _onShowMemoryDetails } from '../../myMemories/PublishedMemory';
-import { filterView } from '../dashboardIndex';
+import styles from './styles';
 import { GET_MEMORY_LIST, GET_TIMELINE_LIST, JUMP_TO_VIEW_SHOW, ListType } from '../dashboardReducer';
 import DeviceInfo from "react-native-device-info";
 import MemoryListItem from '../../../../app/components/memoryListItem';
 // import MemoryListItem from '../../../common/component/memoryListItem';
+import { SvgXml } from 'react-native-svg';
 import JumpToScreen from '../jumpToScreen';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import EventManager from '../../../common/eventManager';
-import { chevronleftfilter } from '../../../../app/images';
+import { chevronleftfilter, leftgradient } from '../../../../app/images';
 type State = { [x: string]: any };
 type Props = { [x: string]: any };
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
 
 const Timeline = (props: Props) => {
-    let _actionSheet: any | MemoryActionsSheet = null;
-    let audioPlayer: React.RefObject<AudioPlayer> = React.createRef<AudioPlayer>();
+    let _actionSheet = useRef(null);
+    let flatListRef = useRef(null);
+    const audioPlayer = useRef(null);
     const [state, setState] = useState({
         showNoInternetView: false,
         audioFile: {
@@ -44,8 +46,34 @@ const Timeline = (props: Props) => {
         isJumpToCalled: false,
         jumpToDate: ''
     });
+    const [scrolling, setScrolling] = useState(false)
+    const [allYears, setAllYears] = useState(Array())
+    const [memoryYears, setMemoryYears] = useState(Array())
+    const [currentItemYear, setCurrentItemYear] = useState('')
+    const [previousItemYear, setPreviousItemYear] = useState('')
+    const [nextItemYear, setNextItemYear] = useState('')
 
     let memoryTimelineUpdateListener: EventManager;
+
+    useEffect(() => {
+        let allYearsTemp = [...allYears]
+        props.jumpToYears?.forEach((element: any, index: any) => {
+            allYearsTemp = allYearsTemp.concat(element);
+        });
+
+        setTimeout(() => {
+            let yearsArr = []
+            allYearsTemp.forEach(element => {
+                if (yearsArr.indexOf(element.year) === -1) {
+                    yearsArr.push(element.year);
+                }
+                // yearsArr.push(element.year)
+            });
+
+            setMemoryYears(yearsArr);
+            setAllYears(allYearsTemp);
+        }, 500);
+    }, [props.jumpToYears])
 
     useEffect(() => {
         memoryTimelineUpdateListener = EventManager.addListener("memoryUpdateTimelineListener", () => {
@@ -67,7 +95,7 @@ const Timeline = (props: Props) => {
     const handleLoadMore = () => {
         if (!props.isLoadMore) {
             let memoryDetails = props.timelineList[props.timelineList.length - 1]
-            props.fetchMemoryList({ type: ListType.Timeline, isLoadMore: true, lastMemoryDate: memoryDetails.updated, filters: props.filters });
+            props.fetchMemoryList({ type: ListType.Timeline, isLoadMore: true, lastMemoryDate: memoryDetails.memoryDate, filters: props.filters });
         }
     };
 
@@ -80,7 +108,7 @@ const Timeline = (props: Props) => {
         MemoryActions = MemoryActionsList(item);
         let cancelButtonIndex = MemoryActions.length
         MemoryActions.push({ index: cancelButtonIndex, text: "Cancel", image: cancelActions, actionType: MemoryActionKeys.cancelActionKey })
-        _actionSheet && _actionSheet.showSheet()
+        _actionSheet && _actionSheet.showSheet();
         setState(prevState => ({
             ...prevState,
             showMemoryActions: true
@@ -89,55 +117,63 @@ const Timeline = (props: Props) => {
 
     const audioView = (item: any) => {
         if (item.audios.length > 0) {
-            return <View style={{ justifyContent: "space-around", flexDirection: "row", margin: 16, marginTop: 0 }}>
-                <View style={[{ flex: 1, elevation: 2, backgroundColor: Colors.AudioViewBg, borderColor: Colors.AudioViewBorderColor, borderWidth: 2, borderRadius: 10 }, styles.boxShadow]}>
+            // console.log("item.audios :: ", JSON.stringify(item.audios))
+            return (<View style={styles.audioViewContainerStyle}>
+                <View style={[styles.audioViewSubContainerStyle, styles.boxShadow]}>
                     {(item.audios[0].url && item.audios[0].url != "") &&
-                        <View style={{ width: "100%", paddingTop: 10, paddingBottom: 10, justifyContent: "flex-start", flexDirection: "row", alignItems: "center" }} onStartShouldSetResponder={() => true} onResponderStart={() => togglePlayPause(item)}>
-                            <View style={{ width: 55, height: 55, marginLeft: 15, backgroundColor: "#fff", borderRadius: 30, borderWidth: 4, borderColor: Colors.AudioViewBorderColor, justifyContent: "center", alignItems: "center" }}>
+                        <View style={styles.audioPlayerContainer} onStartShouldSetResponder={() => true} onResponderStart={() => togglePlayPause(item)}>
+                            <View style={styles.playPauseContainer}>
                                 {state.audioFile.fid == item.audios[0].fid && state.audioFile.isPlaying ?
-                                    <View style={{ height: 20, width: 16, justifyContent: "space-between", flexDirection: "row" }}>
-                                        <View style={{ backgroundColor: Colors.AudioViewBorderColor, flex: 1, width: 5 }} />
-                                        <View style={{ backgroundColor: "transparent", flex: 1, width: 2 }} />
-                                        <View style={{ backgroundColor: Colors.AudioViewBorderColor, flex: 1, width: 5 }} />
+                                    <View style={styles.pauseContainer}>
+                                        <View style={styles.column} />
+                                        <View style={styles.columnTransparent} />
+                                        <View style={styles.column} />
                                     </View>
-                                    : <View style={{
-                                        height: 24, width: 24, marginLeft: 10,
-                                        borderLeftColor: Colors.AudioViewBorderColor, borderLeftWidth: 18,
-                                        borderTopColor: "transparent", borderTopWidth: 12,
-                                        borderBottomColor: "transparent", borderBottomWidth: 12
-                                    }} />
+                                    : <View style={styles.playbutton} />
                                 }
                             </View>
-                            <View style={{ marginLeft: 10 }}>
-                                <Text style={[styles.normalText, { color: "#000", marginBottom: 5, paddingRight: 80 }]} numberOfLines={1} ellipsizeMode='tail'>{item.audios[0].title ? item.audios[0].title : item.audios[0].filename ? item.audios[0].filename : ""}</Text>
-                                <Text style={[styles.normalText, { color: "#000" }]}>{item.audios[0].duration}</Text>
+                            <View style={styles.marginLeft10}>
+                                <Text style={[styles.normalText, styles.filenamecontainer, { color: Colors.black }]} numberOfLines={1} ellipsizeMode='tail'>{item.audios[0].title ? item.audios[0].title : item.audios[0].filename ? item.audios[0].filename : ""}</Text>
+                                <Text style={[styles.normalText, { color: Colors.black }]}>{item.audios[0].duration}</Text>
                             </View>
                         </View>
                     }
                 </View>
                 {item.audios.length > 1 ?
-                    <View style={[{ width: 56, marginLeft: 7, elevation: 2, backgroundColor: Colors.AudioViewBg, borderColor: Colors.AudioViewBorderColor, borderWidth: 2, borderRadius: 10 }, styles.boxShadow]}>
-                        <TouchableHighlight underlayColor={"#ffffff"}
-                            style={{ flex: 1, justifyContent: "center" }}
-                            onPress={
-                                () => {
-                                    _onShowMemoryDetails(item)
-                                }
-                            }
-                        >
-                            <Text style={{ color: Colors.TextColor, ...fontSize(14), textAlign: "center" }}>{"+"}{item.audios.length - 1}{"\n more"}</Text>
-                        </TouchableHighlight>
-                    </View>
+                    <TouchableOpacity
+                        onPress={() => {
+                            _onShowMemoryDetails(item)
+                        }}
+                        style={styles.buttonContainer}>
+                        <Text
+                            style={styles.moreTextStyle}>
+                            {'+'}
+                            {item.audios.length - 1}
+                        </Text>
+                    </TouchableOpacity>
+                    // <View style={[styles.audioMoreContainerStyle, styles.boxShadow]}>
+                    //     <TouchableHighlight underlayColor={Colors.white}
+                    //         style={styles.moreButtonStyle}
+                    //         onPress={
+                    //             () => {
+                    //                 _onShowMemoryDetails(item)
+                    //             }
+                    //         }
+                    //     >
+                    //         <Text style={styles.moreTextStyle}>{"+"}{item.audios.length - 1}{"\n more"}</Text>
+                    //     </TouchableHighlight>
+                    // </View>
                     : null
                 }
 
-            </View>
+            </View>)
 
         }
 
     }
 
     const togglePlayPause = (item: any) => {
+        console.log("togglePlayPause :: ", JSON.stringify(item.audios))
         if (item.audios[0].fid == state.audioFile.index) {
             audioPlayer.current.tooglePlayPause();
         } else {
@@ -149,7 +185,7 @@ const Timeline = (props: Props) => {
         //it will show indicator at the bottom of the list when data is loading otherwise it returns null
         if (!props.loadmore) return null;
         return (
-            <View style={{ width: "100%", height: 40, marginTop: 20 }}>
+            <View style={styles.renderFooterStyle}>
                 <ActivityIndicator
                     color={Colors.newTextColor}
                 />
@@ -161,9 +197,11 @@ const Timeline = (props: Props) => {
         if (Utility.isInternetConnected) {
             let playing = state.audioFile.isPlaying;
             let fid = state.audioFile.fid;
+            console.log("_onOpenAudios :: ", JSON.stringify(item.audios[0].fid), fid)
             if (item.audios[0].fid == fid) {
                 playing = !playing;
-            } else {
+            }
+            else {
                 playing = true;
             }
             let audioFile = {
@@ -175,11 +213,13 @@ const Timeline = (props: Props) => {
                 audioFile: audioFile
             }))
 
-            if (item.audios[0].fid == fid) {
-                audioPlayer.current.tooglePlayPause();
-            } else {
-                audioPlayer.current.showPlayer(0);
-            }
+            setTimeout(() => {
+                if (item.audios[0].fid == fid) {
+                    audioPlayer.current.tooglePlayPause();
+                } else {
+                    audioPlayer.current.showPlayer(0);
+                }
+            }, 1000);
 
         } else {
             No_Internet_Warning();
@@ -193,8 +233,6 @@ const Timeline = (props: Props) => {
 
         }
     }
-
-
 
     const like = (item: any) => {
 
@@ -246,51 +284,167 @@ const Timeline = (props: Props) => {
     }
 
     const jumpToClicked = (selectedYear: any, selectedMonth: any) => {
+        loaderHandler.showLoader("Loading...")
         props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, jumpTo: true, selectedYear, selectedMonth });
     }
 
+    const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
+        if (viewableItems && viewableItems.length) {
+            setCurrentItemYear(viewableItems[0]?.item?.memoryYear)
+        }
+        // if (changed && changed.length) {
+        //     if (viewableItems && viewableItems.length) {
+        //         if (viewableItems[0]?.item?.memoryYear < changed[0]?.item?.memoryYear) {
+        //             setPreviousItemYear(changed[0]?.item?.memoryYear)
+        //         }
+        //     }
+        // }
+    }, []);
 
     return (
-        <View style={{ flex: 1 }}>
-            <SafeAreaView style={{ flex: 1, alignItems: "center", justifyContent: 'center', height: '100%', backgroundColor: Colors.timeLinebackground }}>
-                <View style={{ height: "100%", width: "100%", backgroundColor: Colors.timeLinebackground }}>
+        <View style={styles.fullFlex}>
+            <SafeAreaView style={styles.container}>
+                <View style={styles.subcontainer}>
                     <Modal
                         animationType="slide"
                         transparent={true}
+                        style={{ backgroundColor: Colors.blacknew, flex: 1 }}
                         // visible={state.jumpToVisibility}
                         visible={props.isJumptoShow ? props.isJumptoShow : false}
                     >
-                        <JumpToScreen jumpToClick={(selectedYear: any, selectedMonth: any) => jumpToClicked(selectedYear, selectedMonth)}
-                            jumpToYears={props.jumpToYears} memoryDate={state.jumpToDate}
-                            closeAction={() => props.showJumpto(false)}
-                        />
+                        <View style={{ flex: 1, backgroundColor: Colors.blacknewrgb }}>
+
+                            <View style={{ flex: 1, backgroundColor: Colors.blacknewrgb }}>
+                                <TouchableOpacity onPress={() => props.showJumpto(false)} >
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flex: 7, borderTopLeftRadius: 12, borderTopRightRadius: 12, backgroundColor: Colors.blacknewrgb, shadowOpacity: 1, shadowColor: '(46, 49, 62, 0.05)', shadowRadius: 2, shadowOffset: { width: 4, height: 2 } }}>
+                                <JumpToScreen jumpToClick={(selectedYear: any, selectedMonth: any) => jumpToClicked(selectedYear, selectedMonth)}
+                                    jumpToYears={props.jumpToYears} memoryDate={state.jumpToDate}
+                                    closeAction={() => props.showJumpto(false)}
+                                />
+                            </View>
+
+                        </View>
+
                     </Modal>
                     {/* {filterView(props.filterClick(ListType.Timeline), ListType.Timeline)} */}
-                    <View style={{ height:  props.toDate && props.fromDate ? 50 : 10, width: "100%", justifyContent:'center', backgroundColor: Colors.timeLinebackground, padding: 10 }}>
-                        <View style={{ width: "10%", }}></View>
-                        <View style={{ flex: 1,width: "60%", flexDirection: 'row', height: 50, justifyContent: 'space-between',alignItems:'center' }}>
+
+                    {/* <View style={[styles.fromDateContainerStyle, { height: props.toDate && props.fromDate ? 56 : !scrolling ? 16 : 0 }]}> */}
+                    <View style={[styles.fromDateContainerStyle, { height: allYears.length && scrolling ? 56 : !scrolling ? 16 : 0 }]}>
+                        <View style={styles.filterDateCOntainer}>
                             {
-                                props.toDate && props.fromDate ?
+                                allYears.length && scrolling && currentItemYear ?
+                                    // props.toDate && props.fromDate ?
                                     <>
-                                        <Image source={chevronleftfilter} />
-                                        <Text style={[styles.newnormalText, { color: Colors.newTextColor }]} numberOfLines={1} ellipsizeMode='tail'>{props.fromDate}</Text>
-                                        <View style={{height:1,backgroundColor:Colors.newTextColor, width:50, marginHorizontal:10}}></View>
-                                        <Text style={[styles.newnormalText, { color: Colors.newTextColor }]}>{props.toDate}</Text>
+                                        <TouchableHighlight
+                                            onPress={() => {
+                                                setScrolling(false);
+                                                jumpToClicked(previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : '', "");
+                                                if (flatListRef.current) {
+                                                    flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
+                                                }
+                                                setCurrentItemYear(null)
+                                                setPreviousItemYear(null)
+                                                setNextItemYear(null)
+                                            }}
+                                            underlayColor={Colors.transparent} style={{ width: 64, justifyContent: 'center', alignItems: 'center' }}>
+                                            <Image source={chevronleftfilter} />
+                                        </TouchableHighlight>
+
+                                        <View style={{ width: Utility.getDeviceWidth() - 128, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
+                                            <View style={{ width: 26, height: 22, position: 'absolute', left: 0, zIndex: 9 }} >
+                                                <Image style={{ marginLeft: -2 }} source={leftgradient} />
+                                            </View>
+
+                                            {/* <Text style={[styles.newnormalText, { color: Colors.newTextColor }]} numberOfLines={1} ellipsizeMode='tail'>{props.fromDate}</Text> */}
+                                            <Text style={[styles.newnormalText, { color: Colors.newTextColor, ...fontSize(15), lineHeight: 15 }]} numberOfLines={1} ellipsizeMode='tail'>{previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : ''}</Text>
+                                            {<View style={{ height: 1, backgroundColor: Colors.newTextColor, width: 46 }}></View>}
+                                            {/* <Text style={[styles.newnormalText, { color: Colors.newTextColor }]}>{props.toDate}</Text> */}
+                                            <Text style={[styles.newnormalText, { color: Colors.newTextColor, fontWeight: '700', ...fontSize(19), lineHeight: 23.75 }]}>{JSON.stringify(currentItemYear)}</Text>
+                                            <View style={{ height: 1, backgroundColor: nextItemYear ? Colors.newTextColor : Colors.transparent, width: nextItemYear ? 46 : 64 }}></View>
+                                            {
+                                                nextItemYear ?
+                                                    <Text onPress={() => {
+                                                        setScrolling(false);
+                                                        jumpToClicked(nextItemYear ? JSON.stringify(nextItemYear) : '', "");
+                                                        if (flatListRef.current) {
+                                                            // debugger
+                                                            flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
+                                                        }
+                                                    }}
+                                                        style={[styles.newnormalText, { color: Colors.newTextColor, ...fontSize(15), lineHeight: 15 }]}>
+                                                        {JSON.stringify(nextItemYear)}
+                                                    </Text>
+                                                    :
+                                                    <View style={{ width: 46 }} />
+                                            }
+                                            <View
+                                                style={{ width: 26, height: 22, position: 'absolute', right: 0, zIndex: 9, transform: [{ rotate: '180deg' }] }} >
+                                                <Image style={{ marginRight: -2 }} source={leftgradient} />
+                                            </View>
+                                        </View>
+
+                                        {
+                                            nextItemYear ?
+                                                <TouchableHighlight
+                                                    disabled={!nextItemYear}
+                                                    onPress={() => {
+                                                        setScrolling(false);
+                                                        jumpToClicked(nextItemYear ? JSON.stringify(nextItemYear) : '', "");
+
+                                                        if (flatListRef.current) {
+                                                            flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
+                                                        }
+                                                        setCurrentItemYear(null)
+                                                        setPreviousItemYear(null)
+                                                        setNextItemYear(null)
+                                                    }}
+                                                    underlayColor={Colors.transparent} style={{ width: 64, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Image style={{ transform: [{ rotate: '180deg' }] }} source={chevronleftfilter} />
+                                                </TouchableHighlight>
+                                                :
+                                                <View style={{ width: 64, justifyContent: 'center', alignItems: 'center' }} />
+                                        }
                                     </>
                                     :
                                     null
                             }
                         </View>
-                        <View style={{ flex: 0.8,width: "30%", flexDirection: 'row', justifyContent: 'space-between', }}></View>
-
                     </View>
+
+                    <View style={{ height: allYears.length && scrolling ? 2 : 0, width: '100%', backgroundColor: Colors.bottomTabColor }} />
                     <FlatList
                         data={props.timelineList}
-                        style={{ width: '90%', alignSelf: 'center', backgroundColor: Colors.timeLinebackground }}
+                        ref={flatListRef}
+                        style={styles.flatlistStyle}
                         extraData={state}
                         keyExtractor={(_, index: number) => `${index}`}
-                        onScroll={() => { Keyboard.dismiss() }}
-                        ItemSeparatorComponent={() => <View style={{ height: 10, width: 20 }} />}
+                        onViewableItemsChanged={onViewableItemsChanged}
+                        viewabilityConfig={{
+                            itemVisiblePercentThreshold: 5
+                        }}
+                        onScroll={(e) => {
+                            debugger;
+                            if (e?.nativeEvent?.contentOffset?.y && (e?.nativeEvent?.contentOffset?.y > 9)) {
+                                setScrolling(true)
+                            }
+                            if (e?.nativeEvent?.contentOffset?.y && (e?.nativeEvent?.contentOffset?.y < 9)) {
+                                setScrolling(false)
+                            }
+                            if (currentItemYear) {
+                                let next = '', prev = '', currentIndex = memoryYears.indexOf(currentItemYear);
+                                prev = memoryYears[currentIndex] ? memoryYears[currentIndex + 1] : memoryYears[0]
+                                next = currentIndex > 0 ? memoryYears[currentIndex - 1] : null
+                                // console.log("aaa :", currentIndex, " ", JSON.stringify(memoryYears), currentItemYear, prev, next)
+
+                                setPreviousItemYear(prev);
+                                setNextItemYear(next);
+                                // console.warn("next : ",next ," prev : ",prev, " ",JSON.stringify(allYears))
+                            }
+                            Keyboard.dismiss()
+                        }}
+                        ItemSeparatorComponent={() => <View style={styles.renderSeparator} />}
                         renderItem={(item: any) =>
                             <MemoryListItem
                                 item={item}
@@ -303,30 +457,31 @@ const Timeline = (props: Props) => {
                                     ...prevState,
                                     jumpToVisibility: true, jumpToDate: memory_date
                                 }))}
-                                openMemoryActions={openMemoryActions}
+                                openMemoryActions={(itm) => openMemoryActions(itm)}
                             />}
                         maxToRenderPerBatch={50}
                         indicatorStyle='white'
                         removeClippedSubviews={true}
                         refreshControl={
                             <RefreshControl
-                                colors={[Platform.OS === "android" ? Colors.NewThemeColor : "#fff"]}
-                                tintColor={Platform.OS === "android" ? Colors.NewThemeColor : "#fff"}
+                                colors={[Platform.OS === "android" ? Colors.NewThemeColor : Colors.black]}
+                                tintColor={Platform.OS === "android" ? Colors.NewThemeColor : Colors.black}
                                 refreshing={props.refresh}
                                 onRefresh={onRefresh.bind(this)}
                             />
                         }
                         ListFooterComponent={renderFooter.bind(this)}
                         onEndReachedThreshold={0.4}
-                        onEndReached={(props.timelineList && props.timelineList.length > 2) ? handleLoadMore.bind(this) : () => { }}
+                        onEndReached={handleLoadMore.bind(this)}
+                    // onEndReached={(props.timelineList && props.timelineList.length > 2) ? handleLoadMore.bind(this) : () => { }}
                     />
                     {
                         props.timelineList.length == 0 &&
-                        <View style={{ position: 'absolute', top: 40, height: '100%', width: '100%', alignContent: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
+                        <View style={styles.noItemContainer}>
                             {props.loading ? <ActivityIndicator color={Colors.newTextColor}
                                 size="large"
-                                style={{ flex: 1, justifyContent: "center" }} /> :
-                                <Text style={{ ...fontSize(16), color: Colors.dullText, textAlign: 'center' }}>There are no memories or cues to display at this moment. Check your filter settings and try again</Text>}
+                                style={styles.activityStyle} /> :
+                                <Text style={styles.noItemTextStyle}>There are no memories or cues to display at this moment. Check your filter settings and try again</Text>}
                         </View>
                     }
                 </View>
@@ -372,46 +527,3 @@ export default connect(
     mapState,
     mapDispatch
 )(Timeline);
-
-const styles = StyleSheet.create({
-    normalText: {
-        ...fontSize(16),
-        fontWeight: "normal",
-        color: "#595959",
-        marginBottom: 10
-    },
-    newnormalText: {
-        ...fontSize(16),
-        fontWeight: "normal",
-        color: "#595959",
-    },
-    avatar: {
-        height: 40,
-        width: 40,
-        borderRadius: 20,
-        alignContent: "center"
-    },
-    boxShadow: {
-        shadowOpacity: 1,
-        shadowColor: '#D9D9D9',
-        shadowRadius: 2,
-        shadowOffset: { width: 0, height: 2 }
-    },
-    sideMenu: {
-        paddingTop: 15,
-        bottom: 0,
-        left: 0,
-        backgroundColor: "#fff",
-        minHeight: 50,
-        width: "100%",
-        position: "absolute",
-        borderRadius: 5,
-        shadowOpacity: 1,
-        elevation: 1,
-        borderWidth: 0.5,
-        borderColor: "rgba(0,0,0, 0.5)",
-        shadowColor: '#CACACA',
-        shadowRadius: 2,
-        shadowOffset: { width: 0, height: 2 }
-    },
-})

@@ -25,6 +25,7 @@ import {
   UpdateMemoryCollection,
 } from '../createMemoryWebService';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import Utility from '../../../common/utility';
 
 type State = {[x: string]: any};
 type Props = {tid: any; collectionName: any};
@@ -252,7 +253,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.ThemeColor}
             />
             <View

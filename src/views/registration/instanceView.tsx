@@ -11,6 +11,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {Size, fontSize, Colors} from '../../common/constants';
 import TextNew from '../../common/component/Text';
 import {checkbox_active, checkbox} from '../../images';
+import Utility from '../../common/utility';
 
 const InstanceView = ({
   communityInfo,
@@ -28,7 +29,7 @@ const InstanceView = ({
   return (
     <View style={[styles.container, style]}>
       <StatusBar
-        barStyle={'dark-content'}
+        barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
         backgroundColor={Colors.NewThemeColor}
       />
       <View style={{flexDirection: 'row', flex: 1}}>

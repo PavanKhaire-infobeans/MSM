@@ -6,123 +6,28 @@ import {
   Dimensions,
   Keyboard,
   Platform,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React from 'react';
 //@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
-import {fontSize, Colors, Size} from '../../constants';
-import {close_white, action_close, black_arrow} from '../../../images';
+import { fontSize, Colors, Size, fontFamily } from '../../constants';
+import { close_white, action_close, black_arrow } from '../../../images';
+import { moreoptions } from '../../../../app/images';
 import Text from '../Text';
-import {Account} from '../../loginStore';
+import { Account } from '../../loginStore';
 import MessageDialogue from '../messageDialogue';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import TextNew from '../Text';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import { parse } from '@babel/core';
+import Utility from '../../utility';
+import styles from './styles';
+
 const options = {
   enableVibrateFallback: true,
   ignoreAndroidSystemSettings: false,
 };
-const styles = EStyleSheet.create({
-  $size: Size.byWidth(43),
-  container: {
-    padding: Size.byWidth(10),
-    borderWidth: 1,
-    borderColor: '#EAE7DF',
-    flexDirection: 'row',
-    backgroundColor: '#F4F1EA',
-    width: '100%',
-    borderRadius: 8,
-    marginTop: 20,
-  },
 
-  innerContainer: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    paddingLeft: Size.byWidth(13),
-  },
-
-  communityName: {
-    fontStyle: 'normal',
-    ...fontSize(Size.byWidth(16)),
-    color: 'black',
-    textAlign: 'left',
-  },
-
-  url: {
-    fontStyle: 'normal',
-    ...fontSize(Size.byWidth(14)),
-    marginTop: Size.byWidth(5),
-    color: '#595959',
-    textAlign: 'left',
-  },
-  imageContainer: {
-    width: '$size',
-    height: '$size',
-    backgroundColor: Colors.NewLightThemeColor,
-    justifyContent: 'center',
-  },
-
-  image: {
-    width: '$size - 16',
-    height: '$size - 16',
-    alignSelf: 'center',
-  },
-  name: {
-    color: Colors.TextColor,
-    ...fontSize(10),
-    lineHeight: 15,
-    textAlign: 'left',
-    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-  },
-  titleText: {
-    color: Colors.TextColor,
-    ...fontSize(18),
-    lineHeight: 20,
-    textAlign: 'left',
-    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-  },
-
-  titleContainer: {
-    justifyContent: 'center',
-    paddingTop: 10,
-    flex: 1,
-    paddingRight: 10,
-  },
-
-  leftButtonTouchableContainer: {
-    justifyContent: 'center',
-    padding: 15,
-    marginTop: 5,
-  },
-
-  leftButtonContainer: {
-    backgroundColor: 'transparent',
-    height: 28,
-    width: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  leftCrossButtonContainer: {
-    backgroundColor: Colors.NewRadColor,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  rightButtonsContainer: {
-    paddingTop: 10,
-    paddingRight: 0,
-    height: '100%',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-
-  rightButtonsTouchable: {padding: 0, paddingRight: 10},
-});
-
-class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
+class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
   messageRef: any | MessageDialogue = null;
   static defaultProps = {
     showRightText: true,
@@ -131,29 +36,31 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
     return (
       <View>
         {!this.props.hideClose ? (
-          <TouchableOpacity
-            style={[styles.leftButtonTouchableContainer]}
+          <TouchableWithoutFeedback
             onPress={() => this.props.cancelAction()}>
-            <Image
-              style={{marginLeft:15}}
-              resizeMode="center"
-              source={
+            <View style={[styles.leftButtonTouchableContainer]}>
+              <Image
+                style={styles.marginleft}
+                resizeMode="center"
+                source={
+                  this.props.backIcon ? this.props.backIcon : this.props.isWhite ? black_arrow : close_white
+                }
+              />
+              {
                 this.props.backIcon
-                  ? this.props.backIcon
-                  : this.props.isWhite
-                  ? black_arrow
-                  : close_white
+                  ?
+                  <View style={styles.cancleTextContainer}>
+                    <Text style={styles.cancleTextStyle}>
+                      {this.props.cancleText ? this.props.cancleText : "Cancel"}
+                    </Text>
+                  </View>
+                  : null
               }
-            />
-            {
-              this.props.backIcon
-              ? 
-              <Text> Cancel </Text>
-              : null
-            }
-          </TouchableOpacity>
+            </View>
+
+          </TouchableWithoutFeedback>
         ) : (
-          <View style={{height: 10, width: 15}}></View>
+          <View style={styles.emptyView}></View>
         )}
       </View>
     );
@@ -168,7 +75,7 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
         <Text
           style={[
             styles.titleText,
-            {color: this.props.isWhite ? '#000' : Colors.TextColor},
+            { color: this.props.isWhite ? Colors.black : Colors.TextColor },
           ]}
           numberOfLines={1}
           ellipsizeMode="tail">
@@ -180,73 +87,43 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
 
   _renderRight() {
     return (
-      <View style={[styles.rightButtonsContainer]}>
+      <View style={styles.rightButtonsContainer}>
         {this.props.showRightText && (
-          <TouchableOpacity
+          <TouchableWithoutFeedback
             onPress={() => {
               if (this.props.showRightText == 'Publish') {
                 ReactNativeHapticFeedback.trigger('impactMedium', options);
               }
               this.props.saveValues();
             }}
-            style={styles.rightButtonsTouchable}>
+            style={this.props.rightText === "Save"? styles.rightButtonSaveTouchable : styles.rightButtonsTouchable}>
             <Text
-              style={{
-                ...fontSize(16),
-                fontWeight: 'bold',
-                color: this.props.isWhite ? '#000' : Colors.TextColor,
-                paddingRight: 10,
-              }}>
+              style={[styles.rightTextStyle, {
+                color: this.props.isWhite ? Colors.newDescTextColor : Colors.newDescTextColor,
+              }]}>
               {this.props.rightText}
             </Text>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         )}
-        {this.props.rightIcon && (
-          <TouchableOpacity onPress={() => this.props.showHideMenu()}>
+        {/* {this.props.rightIcon && (
+          <TouchableWithoutFeedback onPress={() => this.props.showHideMenu()}>
             <View
-              style={{
-                justifyContent: 'space-between',
-                height: '100%',
-                width: 30,
-                padding: 13.5,
-                paddingLeft: 3,
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  backgroundColor: Colors.TextColor,
-                  height: 4,
-                  width: 4,
-                  borderRadius: 2,
-                }}></View>
-              <View
-                style={{
-                  backgroundColor: Colors.TextColor,
-                  height: 4,
-                  width: 4,
-                  borderRadius: 2,
-                }}></View>
-              <View
-                style={{
-                  backgroundColor: Colors.TextColor,
-                  height: 4,
-                  width: 4,
-                  borderRadius: 2,
-                }}></View>
+              style={styles.moreOptionContainer}>
+              <Image source={moreoptions} />
             </View>
-          </TouchableOpacity>
-        )}
+          </TouchableWithoutFeedback>
+        )} */}
       </View>
     );
   }
 
   _showWithOutClose = (message: any, color: any) => {
     this.messageRef &&
-      this.messageRef._showWithOutClose({message: message, color: color});
+      this.messageRef._showWithOutClose({ message: message, color: color });
   };
 
   _show = (message: any, color: any) => {
-    this.messageRef && this.messageRef._show({message: message, color: color});
+    this.messageRef && this.messageRef._show({ message: message, color: color });
   };
 
   _hide = () => {
@@ -262,27 +139,19 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
       <View >
         {this.props.isRegisteration ? (
           <View
-            style={{
-              flexDirection: 'row',
-              width: Dimensions.get('window').width,
-              height: 54,
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              backgroundColor: 'white',
-              borderBottomWidth: 1,
-              borderBottomColor: 'rgba(0, 0, 0, 0.24)',
-            }}>
-            <TouchableOpacity
-              style={{width: 60, alignItems: 'center'}}
+            style={styles.registrationContainerStyle}>
+            <TouchableWithoutFeedback
               onPress={() => {
                 Keyboard.dismiss();
                 Actions.pop();
               }}>
-              <Image source={black_arrow} />
-            </TouchableOpacity>
+              <View style={styles.backArrowContainerSTyle}>
+                <Image source={black_arrow} />
+              </View>
+            </TouchableWithoutFeedback>
             <View style={styles.imageContainer}>
               <Image
-                source={{uri: accData.instanceImage}}
+                source={{ uri: accData.instanceImage }}
                 style={styles.image}
               />
             </View>
@@ -294,25 +163,9 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
           </View>
         ) : (
           <View
-            style={{
-              flexDirection: 'row',
-              width: '100%',
-              height: this.props.height == 0 ? this.props.height : this.props.padding ? parseInt(this.props.padding)+60 : 60,
-              justifyContent: 'space-between',
-              borderBottomWidth: this.props.isWhite ? 2 : 0,
-              borderBottomColor: 'rgba(0, 0, 0, 0.24)',
-              // padding: this.props.padding ? this.props.padding : 0,
-              backgroundColor:
-                this.props.isWhite || this.props.isRegisteration
-                  ? '#fff'
-                  : Colors.NewThemeColor,
-            }}>
+            style={[styles.mainContainer, { borderBottomWidth: this.props.isWhite ? 2 : 0, borderTopLeftRadius: 12, borderTopRightRadius: 12 }]}>
             <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                flex: 1,
-              }}>
+              style={styles.subContainer}>
               {this._renderLeft()}
               {this._renderMiddle()}
             </View>
@@ -321,7 +174,7 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
           </View>
         )}
         <MessageDialogue ref={ref => (this.messageRef = ref)} />
-        {this.props.isWhite && <StatusBar barStyle={'dark-content'} />}
+        {this.props.isWhite && <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />}
       </View>
     );
   }

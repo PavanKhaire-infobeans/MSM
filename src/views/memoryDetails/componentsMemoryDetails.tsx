@@ -601,7 +601,7 @@ export const UserDetails = (props: {
         <Border paddingTop={5} padding={15} />
       </View>
       <StatusBar
-        barStyle={'dark-content'}
+        barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
         backgroundColor={props.isExternalQueue ? Colors.ThemeColor : '#fff'}
       />
     </View>

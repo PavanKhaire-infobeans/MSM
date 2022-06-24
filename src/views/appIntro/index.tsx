@@ -33,6 +33,8 @@ import {fontSize, Colors} from '../../common/constants';
 import {Actions} from 'react-native-router-flux';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
+import Utility from '../../common/utility';
+import style from './styles';
 export default class AppIntro extends React.Component {
   _externalQueue: Carousel;
   _appIntroData: any = [{text: 'first'}, {text: 'second'}];
@@ -82,119 +84,54 @@ export default class AppIntro extends React.Component {
     item = item.item;
     return (
       <View
-        style={{
-          paddingTop: 30,
-          width: Dimensions.get('window').width,
-          flex: 1,
-          marginBottom: 50,
-        }}>
-        <ImageBackground source={item.background} style={{flex: 1}}>
+        style={style.renderAppIntroContainer}>
+        <ImageBackground source={item.background} style={style.flexContainer}>
           <View
-            style={{
-              width: '100%',
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            style={style.imageBgContainer}>
             <View
-              style={{
-                flex: 2,
-                width: Dimensions.get('window').width,
-                justifyContent: 'center',
-              }}>
+              style={style.imageBgSubContainer}>
               <Image
                 source={item.background1}
-                style={{
-                  resizeMode: 'stretch',
-                  width: Dimensions.get('window').width,
-                }}></Image>
+                style={style.imageStyle}></Image>
             </View>
             <View
-              style={{
-                position: 'absolute',
-                width: Dimensions.get('window').width,
-                height: '100%',
-                bottom: 0,
-              }}>
+              style={style.containtContainerStyle}>
               <View
-                style={{
-                  flex: 2,
-                  maxHeight: '72%',
-                  width: '100%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
+                style={style.animatedViewContainer}>
                 <Animated.View
-                  style={{
-                    opacity: this.state.fadeIn,
+                  style={[style.AnimatedViewStyle,{
                     flex: 1,
                     width: '100%',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginTop:
-                      this.state.currentIndex == 0
-                        ? 40
-                        : this.state.currentIndex == 2
-                        ? 30
-                        : 0,
-                  }}>
+                  }]}>
                   {this.state.currentIndex == index && (
                     <Image
                       source={item.image}
-                      style={{
-                        maxHeight: '100%',
-                        width: Dimensions.get('window').width,
-                        resizeMode:
-                          this.state.currentIndex == 1 ? 'stretch' : 'contain',
-                      }}></Image>
+                      style={[style.ScrollImagesStyle,{
+                        resizeMode: this.state.currentIndex == 1 ? 'stretch' : 'contain',
+                      }]}></Image>
                   )}
                 </Animated.View>
               </View>
-              <View style={{flex: 0.5, width: '100%'}}></View>
+              <View style={style.emptyView}></View>
             </View>
+
             <View
-              style={{
-                flex: 1,
-                maxHeight: '28%',
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                width: '100%',
-                paddingTop: 0,
-              }}>
+              style={style.descriptionContainer}>
               <Animated.View
-                style={{
+                style={[style.descriptionAnimatedViewStyle,{
                   opacity: this.state.fadeIn,
-                  width: '100%',
-                  flex: 1,
-                  justifyContent: 'flex-start',
-                  alignItems: 'flex-start',
-                }}>
+                }]}>
                 {this.state.currentIndex == index && (
                   <View
-                    style={{
-                      flex: 1,
-                      width: '100%',
-                      justifyContent: 'flex-start',
-                      alignItems: 'flex-start',
-                    }}>
+                    style={style.descTextContainer}>
                     <Text
-                      style={{
-                        ...fontSize(24),
-                        color: Colors.TextColor,
-                        width: Dimensions.get('window').width,
-                        fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                        textAlign: 'center',
-                      }}>
+                      style={style.titleTextStyle}>
                       {item.title}
                     </Text>
                     <Text
-                      style={{
-                        ...fontSize(18),
-                        color: Colors.TextColor,
-                        width: Dimensions.get('window').width,
-                        textAlign: 'center',
-                        padding: 10,
-                      }}>
+                      style={style.descTextStyle}>
                       {item.description}
                     </Text>
                   </View>
@@ -232,21 +169,9 @@ export default class AppIntro extends React.Component {
       <Pagination
         dotsLength={this.images.length}
         activeDotIndex={activeSlide}
-        containerStyle={{backgroundColor: 'transpa'}}
-        dotStyle={{
-          width: 8,
-          height: 8,
-          borderRadius: 4,
-          marginHorizontal: 0,
-          backgroundColor: Colors.TextColor,
-        }}
-        inactiveDotStyle={{
-          width: 8,
-          height: 8,
-          borderRadius: 4,
-          marginHorizontal: 0,
-          backgroundColor: '#D4E9E6',
-        }}
+        containerStyle={Colors.transparent}
+        dotStyle={style.dotStyle}
+        inactiveDotStyle={style.inactiveDotStyle}
         inactiveDotOpacity={1.0}
         inactiveDotScale={1.0}
       />
@@ -255,39 +180,24 @@ export default class AppIntro extends React.Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={style.flexContainer}>
         <SafeAreaView
-          style={{flex: 0, backgroundColor: Colors.NewThemeColor}}
+          style={style.statusBarConstainer}
         />
         <SafeAreaView
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#fff',
-          }}>
+          style={style.mainContainer}>
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <View
-            style={{
-              flex: 1,
-              backgroundColor: Colors.NewThemeColor,
-              alignItems: 'center',
-            }}>
+            style={style.container}>
             <View
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                width: '100%',
-                height: 100,
-                backgroundColor: 'white',
-              }}
+              style={style.absoluteView}
             />
             <Image
               source={app_intro_msm}
-              style={{resizeMode: 'center', marginTop: 20}}></Image>
+              style={style.appIntroImageStyle}></Image>
             <Carousel
               data={this.images}
               renderItem={(item: any) => this.renderAppIntro(item)}
@@ -316,21 +226,17 @@ export default class AppIntro extends React.Component {
                 this.setState({scrolling: true, fadeIn: new Animated.Value(1)})
               }
             />
-            <View style={{position: 'absolute', bottom: 0, width: '100%'}}>
+            <View style={style.paginationContainer}>
               {this.pagination}
             </View>
             {this.state.currentIndex == this.images.length - 1 && (
-              <View style={{position: 'absolute', bottom: 50}}>
+              <View style={style.startButtonContainer}>
                 <TouchableHighlight
-                  underlayColor="#ffffff11"
+                  underlayColor={Colors.touchableunderlayColor}
                   onPress={() => this.onDoneTap()}
-                  style={{padding: 5, paddingRight: 15, paddingLeft: 15}}>
+                  style={style.startButtonStyle}>
                   <Text
-                    style={{
-                      ...fontSize(22),
-                      fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                      color: Colors.TextColor,
-                    }}>
+                    style={style.startTextStyle}>
                     Start
                   </Text>
                 </TouchableHighlight>

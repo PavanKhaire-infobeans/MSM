@@ -9,22 +9,16 @@ import {
   StatusBar,
   ScrollView,
   Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Text from './../../../src/common/component/Text';
-import {
-  icon_people,
-  icon_events,
-  icon_settings,
-  icon_faq,
-  icon_info,
-  icon_headset,
-  pdf_icon,
-} from './../../../src/images';
 // import NavigationBar from '../dashboard/NavigationBar';
 import NavigationBarForEdit from './../../../src/common/component/navigationBarForEdit';
 import {Actions} from 'react-native-router-flux';
 import {Colors, fontSize} from './../../../src/common/constants';
 import {kImage, kAudio, kPDF} from './componentsMemoryDetails';
+import Utility from '../../../src/common/utility';
+import styles from './styles';
 
 type Props = {[x: string]: any};
 export default class FilesDetail extends React.Component<Props> {
@@ -57,35 +51,26 @@ export default class FilesDetail extends React.Component<Props> {
           rightText={false}
           saveValues={() => {}}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
+        <SafeAreaView style={styles.fileDetailsContainer}>
           <StatusBar
-            barStyle={'dark-content'}
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <ScrollView>
-            <TouchableOpacity onPress={() => this.navigateToViews()}>
+            <TouchableWithoutFeedback onPress={() => this.navigateToViews()}>
               <View
-                style={{
-                  backgroundColor: '#F3F3F3',
-                  width: '100%',
-                  height: 200,
-                }}>
+                style={styles.fileDetailsImageContainer}>
                 <Image
                   source={
                     this.props.type == 'pdf'
                       ? {uri: this.props.file.pdf_image_url}
                       : {uri: this.props.file.url}
                   }
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                    resizeMode: 'contain',
-                    backgroundColor: 'transparent',
-                  }}
+                  style={styles.imageStyle}
                 />
               </View>
-            </TouchableOpacity>
-            <Text style={{...fontSize(16), marginTop: 5, padding: 15}}>
+            </TouchableWithoutFeedback>
+            <Text style={styles.fileDescStyle}>
               {this.props.file.file_description}
             </Text>
           </ScrollView>

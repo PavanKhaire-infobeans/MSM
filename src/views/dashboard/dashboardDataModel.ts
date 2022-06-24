@@ -15,13 +15,15 @@ export class DashboardDataModel {
             parsedMemory.actions_on_memory = getDetails(element, ['actions_on_memory'] , keyObject); 
             parsedMemory.comments_count = getDetails(element, ['comments_count'] , keyString); 
             parsedMemory.created = getDetails(element, ['created'] , keyString); 
-            parsedMemory.description = getDetails(element, ['description'] , keyString).trim(); 
+            parsedMemory.description = getDetails(element, ['description'] , keyString);//.trim(); 
             parsedMemory.noOfComments = getDetails(element, ["comments_count"], keyInt);
             parsedMemory.noOfLikes = getDetails(element, ["like_comment_data", "like_count"], keyInt);
             parsedMemory.viewCount = getDetails(element, ["view_count"], keyInt); 
             parsedMemory.isLikedByUser = getDetails(element, ["like_comment_data", "like_flag"], keyInt);
             parsedMemory.location = getDetails(element, ['location'] , keyString); 
+            parsedMemory.memoryDate = getDetails(element, ['memory_date'] , keyString); 
             parsedMemory.memory_date = getDetails(element, ['memory_date'] , keyString); 
+            parsedMemory.memory_url = getDetails(element, ['memory_url'] , keyString); 
             parsedMemory.mins_to_read = getDetails(element, ['mins_to_read'] , keyString); 
             parsedMemory.nid = getDetails(element, ['nid'] , keyString); 
             parsedMemory.season = getDetails(element, ['season'] , keyString); 
@@ -57,7 +59,9 @@ export class DashboardDataModel {
             } else{
                 parsedMemory.showLikeCount = false;
             }
-            parsedMemory.memory_date = Utility.dateObjectToDefaultFormat(new Date(parseInt(getDetails(parsedMemory, ["memory_date"])) * 1000));                    
+            let memDate = parseInt(getDetails(parsedMemory, ["memory_date"])) * 1000;
+            parsedMemory.memory_date = Utility.dateObjectToDefaultFormat(new Date(memDate));                    
+            parsedMemory.memoryYear = new Date(memDate).getFullYear();                    
             if(parsedMemory.season && parsedMemory.season.trim().length > 0){
                 let season = parsedMemory.season.trim();
                 parsedMemory.memory_date = Utility.dateAccordingToFormat(""+parsedMemory.memory_date, "Y");  

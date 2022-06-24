@@ -4,11 +4,11 @@ import {
   checkPreRegistered,
 } from '../../common/webservice/loginServices';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {getValue} from '../../common/constants';
+import { getValue } from '../../common/constants';
 import Utility from '../../common/utility';
-import {No_Internet_Warning} from '../../common/component/Toast';
+import { No_Internet_Warning } from '../../common/component/Toast';
 
 export const kGetFormData = 'GetFormData';
 export const kSubmitFormItem = 'SubmitFormItem';
@@ -19,12 +19,12 @@ const HTML_TAGS: RegExp = /(<.{0,7}>)|(<.*=".*"\s{0,}>)/g;
 export interface FormStruct {
   label: string;
   type:
-    | 'sub'
-    | 'sub-single'
-    | 'date_select'
-    | 'options_select'
-    | 'text_textfield'
-    | 'options_buttons';
+  | 'sub'
+  | 'sub-single'
+  | 'date_select'
+  | 'options_select'
+  | 'text_textfield'
+  | 'options_buttons';
   form?: FormStruct[];
   default_value?: object;
   module?: 'date' | 'options' | 'text';
@@ -44,7 +44,7 @@ export const registrationForm = async () => {
       let resp: {
         ResponseCode: number;
         ResponseMessage: string;
-        Details: {form1: object};
+        Details: { form1: object };
       } = await (async () => response.json())();
       loaderHandler.hideLoader();
       if (resp.ResponseCode == 200) {
@@ -77,6 +77,9 @@ export const checkUserRegistration = async (submitData: any) => {
         personalInfo?: any;
       } = await (async () => chkResponse.json())();
       loaderHandler.hideLoader();
+
+      console.log("reg resp : ", JSON.stringify(chkResponse))
+      console.log(" resp : ", JSON.stringify(resp))
       EventManager.callBack(
         kCheckUserProfile,
         true,
@@ -95,7 +98,7 @@ export const submitRegistration = async (registrationData: any) => {
   try {
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader('Requesting...');
-      console.log("registrationData : "+JSON.stringify(registrationData));
+      console.log("registrationData : " + JSON.stringify(registrationData));
       let resp: {
         ResponseCode: number;
         ResponseMessage: string;
@@ -118,11 +121,11 @@ export const submitRegistration = async (registrationData: any) => {
           registrationData,
         );
       } else {
-        var form_error = {...(getValue(resp, ['form_errors']) || {})};
+        var form_error = { ...(getValue(resp, ['form_errors']) || {}) };
         let message = resp.ResponseMessage;
         if (form_error) {
           message = '';
-          for (let key in {...form_error}) {
+          for (let key in { ...form_error }) {
             let err_str: string = form_error[key];
             err_str = err_str.replace(HTML_TAGS, '');
             form_error[key] = err_str;
@@ -141,7 +144,7 @@ export const submitRegistration = async (registrationData: any) => {
 };
 
 //Generate form Entities for Registration Page
-function toForm(items: {[x: string]: any}): FormStruct[] {
+function toForm(items: { [x: string]: any }): FormStruct[] {
   let form: FormStruct[] = [];
   for (let key in items) {
     let currentObject = items[key];
@@ -171,17 +174,17 @@ function toForm(items: {[x: string]: any}): FormStruct[] {
         form:
           currentObject.widget.module == 'date'
             ? keys.map((ky: string, index: number) => ({
-                label: keyLength == 1 ? 'Year' : index == 0 ? 'From' : 'To',
-                type: currentObject.settings.field.type,
-                module: currentObject.settings.field.module,
-                ...(typeof currentObject['#multiple'] == 'undefined'
-                  ? {multiple: currentObject['#multiple']}
-                  : {}),
-                required: currentObject.required ? true : false,
-                default_value: currentObject.default_value,
-                field_name: ky,
-                values: currentObject.values,
-              }))
+              label: keyLength == 1 ? 'Year' : index == 0 ? 'From' : 'To',
+              type: currentObject.settings.field.type,
+              module: currentObject.settings.field.module,
+              ...(typeof currentObject['#multiple'] == 'undefined'
+                ? { multiple: currentObject['#multiple'] }
+                : {}),
+              required: currentObject.required ? true : false,
+              default_value: currentObject.default_value,
+              field_name: ky,
+              values: currentObject.values,
+            }))
             : [],
       });
     } else {
@@ -190,7 +193,7 @@ function toForm(items: {[x: string]: any}): FormStruct[] {
         type: currentObject.settings.field.type,
         module: currentObject.settings.field.module,
         ...(typeof currentObject['#multiple'] == 'undefined'
-          ? {multiple: currentObject['#multiple']}
+          ? { multiple: currentObject['#multiple'] }
           : {}),
         required: currentObject.required ? true : false,
         default_value: currentObject.default_value,

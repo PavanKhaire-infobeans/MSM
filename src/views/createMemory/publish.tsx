@@ -48,6 +48,7 @@ import DefaultPreference from 'react-native-default-preference';
 import Confetti from 'react-native-confetti';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import EventManager from '../../common/eventManager';
+import Styles from './styles';
 
 export const kTags = 'kTags';
 export const kWhoElseWhereThere = 'kWhoElseWhereThere';
@@ -112,54 +113,32 @@ class PublishMemoryDraft extends React.Component<Props, State> {
   ) => {
     return (
       <TouchableHighlight
-        style={{marginBottom: 30}}
+        style={Styles.marginBottom30}
         onPress={() => onPressCallback()}
-        underlayColor="#ffffff33">
+        underlayColor={Colors.underlay33OpacityColor}>
         <View>
           <TextNew
-            style={{
-              ...fontSize(18),
-              fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-            }}>
+            style={Styles.textStyle18Weight500}>
             {title}
           </TextNew>
           <View
-            style={{
-              borderBottomColor: 'rgba(0,0,0,0.2)',
-              paddingTop: 10,
-              paddingBottom: 7,
-              borderBottomWidth: 0.5,
-              alignItems: 'center',
-            }}>
+            style={Styles.commonListComponentContainer}>
             <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
+              style={Styles.placeholderContainer}>
               <TextNew
-                style={{
-                  flex: 1,
-                  ...fontSize(18),
-                  color: value.length > 0 ? '#000' : '#A3A3A3',
-                }}>
+                style={[Styles.placeholderTextStyle,{
+                  color: value.length > 0 ? Colors.black : Colors.redgray,
+                }]}>
                 {value.length > 0 ? this.getText(title, value) : placeholder}
               </TextNew>
               <Image
-                style={{width: 20, height: 20}}
+                style={Styles.leftButtonLogo}
                 resizeMode={'contain'}
                 source={value.length > 0 ? edit_icon : add_icon_small}></Image>
             </View>
             {this.showViewAll(title, value) && (
               <Text
-                style={{
-                  width: '100%',
-                  textAlign: 'left',
-                  paddingTop: 10,
-                  color: Colors.ThemeColor,
-                  ...fontSize(16),
-                }}>
+                style={Styles.viewAllTextStyle}>
                 View all
               </Text>
             )}
@@ -193,8 +172,8 @@ class PublishMemoryDraft extends React.Component<Props, State> {
     return (
       <View>
         {names_array.length > 0 && (
-          <View style={{width: '100%', paddingTop: 10}}>
-            <TextNew style={{...fontSize(16), color: '#000'}}>
+          <View style={Styles.getCustomFriendsViewCOntainerStyle}>
+            <TextNew style={Styles.friendNameTextStyle}>
               {splicedArray}
               {names_array.length > 2
                 ? ' (+' + (names_array.length - 2) + ' more)'
@@ -202,13 +181,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
             </TextNew>
             {names_array.length > 2 && (
               <Text
-                style={{
-                  width: '100%',
-                  textAlign: 'left',
-                  paddingTop: 10,
-                  color: Colors.ThemeColor,
-                  ...fontSize(16),
-                }}>
+                style={Styles.viewAllTextStyle}>
                 View all
               </Text>
             )}
@@ -347,15 +320,11 @@ class PublishMemoryDraft extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={Styles.fullFlex}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={Styles.emptySafeAreaStyle}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
+        <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
           <Confetti
             confettiCount={200}
             ref={(node: any) => (this._confettiView = node)}
@@ -368,7 +337,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
             ref={ref => (this.explosion = ref)}
         /> */}
           <View
-            style={{flex: 1}}
+            style={Styles.fullFlex}
             onStartShouldSetResponder={() => true}
             onResponderStart={() => this.setState({showMenu: false})}>
             <NavigationHeaderSafeArea
@@ -383,10 +352,10 @@ class PublishMemoryDraft extends React.Component<Props, State> {
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
-            <ScrollView style={{padding: 15}}>
+            <ScrollView style={Styles.padding15}>
               {this.commonListComponent(
                 shareWith,
                 this.props.shareOption,
@@ -394,11 +363,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                 this.whoCanSee,
               )}
               <TextNew
-                style={{
-                  ...fontSize(18),
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                  marginBottom: 30,
-                }}>
+                style={Styles.additionalTextStyle}>
                 {'Additional Details (Optional)'}
               </TextNew>
               {this.commonListComponent(
@@ -424,21 +389,12 @@ class PublishMemoryDraft extends React.Component<Props, State> {
             </ScrollView>
             {this.state.showMenu && (
               <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  height: '100%',
-                  width: '100%',
-                }}
+                style={[Styles.renderLoaderStyle,{ top: 0 }]}
                 onStartShouldSetResponder={() => true}
                 onResponderStart={() => this.setState({showMenu: false})}>
-                <View style={style.sideMenu}>
+                <View style={Styles.sideMenu}>
                   <TouchableOpacity
-                    style={{
-                      height: 45,
-                      justifyContent: 'center',
-                      paddingLeft: 10,
-                    }}
+                    style={Styles.titleContainer}
                     onPress={() => this.props.preview()}>
                     <Text style={{fontSize: 16, color: '#000'}}>
                       Preview...
@@ -446,11 +402,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={{
-                      height: 45,
-                      justifyContent: 'center',
-                      paddingLeft: 10,
-                    }}
+                    style={Styles.titleContainer}
                     onPress={() => this.props.delete()}>
                     <Text style={{fontSize: 16, color: Colors.NewRadColor}}>
                       Delete Draft...
@@ -463,62 +415,31 @@ class PublishMemoryDraft extends React.Component<Props, State> {
           {this.state.showGuideOverlay && (
             <Modal transparent>
               <SafeAreaView
-                style={{width: '100%', height: '100%', overflow: 'hidden'}}>
+                style={Styles.memoryDraftContainer}>
                 <Animated.View
-                  style={{
-                    opacity: this.state.fadeIn,
-                    flex: 1,
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: 0,
-                  }}>
-                  <View style={{flex: 1, width: '100%'}}>
+                  style={[Styles.animatedContainer,{ opacity: this.state.fadeIn }]}>
+                  <View style={[Styles.fullFlex,Styles.fullWidth]}>
                     <View
-                      style={{
-                        borderRadius: 1500,
-                        position: 'absolute',
-                        right: -1025 + this.widthVal * 0.16,
-                        top: -995,
-                        width: 2080,
-                        height: 2080,
-                        backgroundColor: 'transparent',
-                        borderWidth: 1000,
-                        borderColor: 'rgba(0, 0, 0, 0.7)',
-                      }}></View>
-                    <View style={{position: 'absolute', top: 80, left: 230}}>
+                      style={[Styles.drawerContainer,{ right: -1025 + this.widthVal * 0.16 }]}></View>
+                    <View style={Styles.arrowImageContainerStyle}>
                       <Image source={arrow7}></Image>
                     </View>
                     <View
-                      style={{
-                        position: 'absolute',
-                        width: this.widthVal - 90,
-                        top: 150,
-                        left: 90,
-                      }}>
+                      style={[Styles.memoryPublishContainer,{ width: this.widthVal - 90 }]}>
                       <TextNew
-                        style={{
-                          ...fontSize(24),
-                          color: 'white',
-                          fontWeight: '500',
-                        }}>
+                        style={Styles.guideTitleTextStyle}>
                         {'Memory Publish'}
                       </TextNew>
                       <TextNew
-                        style={{
-                          ...fontSize(20),
-                          color: 'white',
-                          fontWeight: '400',
-                          marginTop: 5,
-                        }}>
+                        style={Styles.guideDescTextStyle}>
                         {
                           'Publish the Memory and share your story! and Your published Memory will appear at the top of your Recent feed'
                         }
                       </TextNew>
-                      <View style={{flexDirection: 'row', marginTop: 5}}>
+                      <View style={Styles.prevContainer}>
                         <TouchableHighlight
-                          underlayColor={'transparent'}
-                          style={{paddingVertical: 20}}
+                          underlayColor={Colors.transparent}
+                          style={Styles.memoryDraftIntroButnStyle}
                           onPress={() => {
                             this.setState({showGuideOverlay: false});
                             DefaultPreference.set('hide_tour', 'true').then(
@@ -526,20 +447,9 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                             );
                           }}>
                           <View
-                            style={{
-                              backgroundColor: Colors.NewYellowColor,
-                              width: 80,
-                              paddingVertical: 10,
-                              borderRadius: 5,
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
+                            style={Styles.doneBtnContainer}>
                             <TextNew
-                              style={{
-                                ...fontSize(18),
-                                color: 'white',
-                                fontWeight: '500',
-                              }}>
+                              style={Styles.doneBtnTextStyle}>
                               Done
                             </TextNew>
                           </View>
@@ -574,20 +484,3 @@ const mapDispatch = (dispatch: Function) => {
 
 export default connect(mapState, mapDispatch)(PublishMemoryDraft);
 
-const style = StyleSheet.create({
-  sideMenu: {
-    right: 10,
-    backgroundColor: '#fff',
-    minHeight: 50,
-    width: 180,
-    position: 'absolute',
-    borderRadius: 5,
-    shadowOpacity: 1,
-    elevation: 2,
-    shadowColor: '#CACACA',
-    shadowRadius: 2,
-    borderWidth: 0.5,
-    borderColor: 'rgba(0,0,0,0.2)',
-    shadowOffset: {width: 0, height: 2},
-  },
-});

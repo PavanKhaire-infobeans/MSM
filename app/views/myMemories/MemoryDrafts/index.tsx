@@ -15,9 +15,11 @@ import {
   Alert,
   Platform,
   Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import {GetMemoryDrafts, kMemoryDraftsFetched} from '../myMemoriesWebService';
-import {MemoryDraftsDataModel} from './memoryDraftsDataModel';
+import { Actions } from 'react-native-router-flux';
+import { GetMemoryDrafts, kMemoryDraftsFetched } from '../myMemoriesWebService';
+import { MemoryDraftsDataModel } from './memoryDraftsDataModel';
 import {
   ToastMessage,
   No_Internet_Warning,
@@ -32,10 +34,9 @@ import {
 } from './../../../../src/common/constants';
 import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
 import EventManager from './../../../../src/common/eventManager';
-import DefaultListItem from './../../../../src/common/component/defaultListItem';
-import {profile_placeholder} from './../../../../src/images';
+import { profile_placeholder } from './../../../../src/images';
 import Utility from './../../../../src/common/utility';
-import {Border} from '../../memoryDetails/componentsMemoryDetails';
+import { Border } from '../../memoryDetails/componentsMemoryDetails';
 import {
   delete_comment,
   collaborative,
@@ -43,21 +44,12 @@ import {
   upImage,
   itemSelectedCheckMark,
 } from './../../../../src/images';
-import {Account} from './../../../../src/common/loginStore';
-import {styles} from './../../../../src/common/component/multipleDropDownView/styles';
-import {setFlagsFromString} from 'v8';
-// import {
-//   kDeleteDraft,
-//   DeleteDraftService,
-// } from '../../createMemory/createMemoryWebService';
-import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
-import {Actions} from 'react-native-router-flux';
+import styles from './styles'
+import { Account } from './../../../../src/common/loginStore';
 import { DeleteDraftService, kDeleteDraft } from '../../../../src/views/createMemory/createMemoryWebService';
 
-// import {CommonImageView} from '../../memoryDetails/index'
-
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 var memoryDraftsArray: any[] = [];
 var page: 0;
 var loadingDataFromServer = true;
@@ -83,7 +75,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   /**Menu options for actions*/
   menuOptions: Array<menuOption> = [
-    {key: 1, title: DraftType.allDrafts, onPress: this.draftOptionSelected},
+    { key: 1, title: DraftType.allDrafts, onPress: this.draftOptionSelected },
     {
       key: 2,
       title: DraftType.myPersonalDrafts,
@@ -94,7 +86,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       title: DraftType.myCollaborationDrafts,
       onPress: this.draftOptionSelected,
     },
-    {key: 4, title: DraftType.friendsDrafts, onPress: this.draftOptionSelected},
+    { key: 4, title: DraftType.friendsDrafts, onPress: this.draftOptionSelected },
     {
       key: 5,
       title: DraftType.recentryDeleteDrafts,
@@ -129,7 +121,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       if (this.props.decodedDataFromURL) {
         this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
       }
-      else{
+      else {
         GetMemoryDrafts('all', 'all', memoryDraftsArray.length);
       }
     } else {
@@ -156,7 +148,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         );
       }
       memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
-      this.setState({memoryDetailAvailable: true});
+      this.setState({ memoryDetailAvailable: true });
     } else {
       if (page != 0) {
         page--;
@@ -176,7 +168,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         {
           text: 'No',
           style: 'cancel',
-          onPress: () => {},
+          onPress: () => { },
         },
         {
           text: 'Yes',
@@ -200,7 +192,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           {
             text: 'No',
             style: 'cancel',
-            onPress: () => {},
+            onPress: () => { },
           },
           {
             text: 'Yes',
@@ -309,47 +301,29 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   render() {
     return (
       <SafeAreaView
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          backgroundColor: 'black',
-        }}>
+        style={styles.mainContainer}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
-        <View style={style.draftOptionsView}>
-          <TouchableOpacity
-            style={{
-              height: 50,
-              paddingLeft: 16,
-              paddingRight: 16,
-              flex: 1,
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              width: '100%',
-              flexDirection: 'row',
-            }}
+        <View style={styles.draftOptionsView}>
+          <TouchableWithoutFeedback
             onPress={() => {
               this.showMenu();
             }}>
-            <Text
-              style={{
-                fontFamily: 'Rubik',
-                fontSize: 16,
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                color: Colors.TextColor,
-              }}>
-              {this.state.draftType}{' '}
-            </Text>
-            {this.state.draftOptionsVisible ? (
-              <Image source={upImage} />
-            ) : (
-              <Image source={downImage} />
-            )}
-          </TouchableOpacity>
+            <View style={styles.draftOptionsViewSubContainer}>
+              <Text
+                style={styles.draftTypeTextStyle}>
+                {this.state.draftType}{' '}
+              </Text>
+              {this.state.draftOptionsVisible ? (
+                <Image source={upImage} />
+              ) : (
+                <Image source={downImage} />
+              )}
+            </View>
+
+          </TouchableWithoutFeedback>
         </View>
 
         <FlatList
@@ -358,7 +332,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           onScroll={() => {
             Keyboard.dismiss();
           }}
-          style={{width: '100%', backgroundColor: 'white'}}
+          style={styles.flatlistCOntainerSTyle}
           extraData={this.state}
           renderItem={(item: any) => this.renderDraftView(item)}
           maxToRenderPerBatch={50}
@@ -383,64 +357,40 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         />
         {memoryDraftsArray.length == 0 && loadingDataFromServer == false ? (
           <View
-            style={{
-              flex: 1,
-              width: '100%',
-              height: '100%',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'transparent',
-              alignSelf: 'center',
-              top: 0,
-              position: 'absolute',
-            }}
+            style={styles.memoryDraftsArrayStyle}
             pointerEvents="none">
             <Text
-              style={{...fontSize(18), color: '#909090', textAlign: 'center'}}>
+              style={styles.noDraftTextStyle}>
               There are no drafts available to display at this moment.
             </Text>
           </View>
         ) : null}
         {this.state.draftOptionsVisible && (
           <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              height: '100%',
-              width: '100%',
-            }}
+            style={styles.draftOptionsVisibleContainer}
             onStartShouldSetResponder={() => true}
             onResponderStart={this.hideMenu}>
-            <View style={style.sideMenu}>
+            <View style={styles.sideMenu}>
               {this.menuOptions.map((data: any) => {
                 return (
-                  <TouchableOpacity
+                  <TouchableWithoutFeedback
                     key={data.key}
-                    style={{
-                      height: 50,
-                      justifyContent: 'space-between',
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      flexDirection: 'row',
-                    }}
                     onPress={() => {
                       page = 0;
                       this.draftOptionSelected(data.title, true, false);
                     }}>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        color:
-                          this.state.draftType == data.title
-                            ? '#DE8B00'
-                            : Colors.TextColor,
-                      }}>
-                      {data.title}
-                    </Text>
-                    {this.state.draftType == data.title ? (
-                      <Image source={itemSelectedCheckMark} />
-                    ) : null}
-                  </TouchableOpacity>
+                    <View style={styles.draftOptionSelectedTouchableStyle}>
+                      <Text
+                        style={[styles.draftTitleTextStyle, {
+                          color: this.state.draftType == data.title ? '#DE8B00' : Colors.newTextColor,
+                        }]}>
+                        {data.title}
+                      </Text>
+                      {this.state.draftType == data.title ? (
+                        <Image source={itemSelectedCheckMark} />
+                      ) : null}
+                    </View>
+                  </TouchableWithoutFeedback>
                 );
               })}
             </View>
@@ -453,7 +403,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   getDraftDetails = (item: any) => {
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader();
-      Actions.push('createMemory', {editMode: true, draftNid: item.item.nid});
+      Actions.push('createMemory', { editMode: true, draftNid: item.item.nid });
     } else {
       No_Internet_Warning();
     }
@@ -475,64 +425,36 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               ? this.state.draftType == DraftType.friendsDrafts
                 ? this.getDraftDetails(item)
                 : this.getDraftDetails(item)
-              : () => {}
+              : () => { }
           // this.deleteDraft(item.item.nid, false)
         }>
-        <View style={{backgroundColor: Colors.NewThemeColor}}>
-          <View style={{backgroundColor: 'white', marginTop: 7}}>
+        <View style={styles.renderDraftViewContainer}>
+          <View style={styles.renderDraftViewSubContainer}>
             <UserDetails item={item} />
             <CommonImageView file={file} files={files} />
             <Text
-              style={{
-                ...fontSize(30),
-                color: Colors.NewTitleColor,
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                marginLeft: 16,
-                marginRight: 16,
-                textAlign: 'left',
-                marginBottom: 10,
-              }}>
+              style={styles.titleTextStyle}>
               {title}
             </Text>
             {journal_name && journal_name != '' ? (
               <Text
-                style={{
-                  ...fontSize(16),
-                  fontFamily: 'Rubik',
-                  color: Colors.TextColor,
-                  marginLeft: 16,
-                  marginBottom: 10,
-                }}>
+                style={styles.inCollectionTextStyle}>
                 {'In Collection '}
                 <Text
-                  style={{
-                    color: Colors.NewTitleColor,
-                    marginLeft: 0,
-                    marginRight: 16,
-                    marginBottom: 10,
-                  }}>
+                  style={styles.journal_nameStyle}>
                   {journal_name}
                 </Text>
               </Text>
             ) : null}
             {collaborativeArray ? (
               collaborativeArray.length > 0 ? (
-                <View style={{marginLeft: 16, marginBottom: 10}}>
+                <View style={styles.collaborativeContainer}>
                   <ImageBackground
                     source={collaborative}
-                    style={{
-                      width: 93,
-                      height: 20,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
+                    style={styles.collaborativeImagestyle}
                     resizeMode="contain">
                     <Text
-                      style={{
-                        textAlign: 'center',
-                        ...fontSize(12),
-                        color: 'white',
-                      }}>
+                      style={styles.CollaborativeTextStyle}>
                       Collaborative
                     </Text>
                   </ImageBackground>
@@ -544,73 +466,49 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             {collaborativeArray != undefined && collaborativeArray != null ? (
               collaborativeArray.length > 0 ? (
                 <View
-                  style={{
-                    marginLeft: 16,
-                    marginRight: 16,
-                    ...fontSize(17),
-                    paddingTop: 10,
-                  }}>
-                  <Text style={{...fontSize(17), color: Colors.TextColor}}>
+                  style={styles.collaborativeArrayContainer}>
+                  <Text style={styles.lastActivityTextStyle}>
                     Last activity {item.item.activity}
                   </Text>
                   <Text
-                    style={{
-                      ...fontSize(17),
-                      color: Colors.TextColor,
+                    style={[styles.lastActivityTextStyle, {
                       marginTop: 18,
-                    }}>
+                    }]}>
                     {item.item.attachment_count} attachments{' '}
                     {item.item.new_attachment_count != undefined &&
-                    item.item.new_attachment_count != null &&
-                    item.item.new_attachment_count != '' ? (
+                      item.item.new_attachment_count != null &&
+                      item.item.new_attachment_count != '' ? (
                       <Text
-                        style={{
-                          fontFamily: 'Rubik',
-                          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                          color: Colors.TextColor,
-                        }}>
+                        style={styles.attachmentCountTextStyle}>
                         ({item.item.new_attachment_count} new)
                       </Text>
                     ) : null}
                   </Text>
-                  <Text style={{...fontSize(17), marginTop: 18}}>
+                  <Text style={[styles.lastActivityTextStyle, {
+                    marginTop: 18,
+                  }]}>
                     {item.item.my_chat_count}{' '}
                     {item.item.my_chat_count == 1 ? 'message' : 'messages'}{' '}
                     {item.item.unread_chat_count != undefined &&
-                    item.item.unread_chat_count != null &&
-                    item.item.unread_chat_count != '' ? (
+                      item.item.unread_chat_count != null &&
+                      item.item.unread_chat_count != '' ? (
                       <Text
-                        style={{
-                          fontFamily: 'Rubik',
-                          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                          color: Colors.TextColor,
-                        }}>
+                        style={styles.attachmentCountTextStyle}>
                         ({item.item.unread_chat_count} new)
                       </Text>
                     ) : null}
                   </Text>
                   <Text
-                    style={{
-                      ...fontSize(17),
-                      marginTop: 18,
-                      marginBottom: 18,
-                      fontFamily: 'Rubik',
-                      fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                      color: Colors.NewYellowColor,
-                    }}>
+                    style={styles.new_collaborator_countTextStyle}>
                     {item.item.collaborators.length}{' '}
                     {item.item.collaborators.length == 1
                       ? 'collaborator'
                       : 'collaborators'}{' '}
                     {item.item.new_collaborator_count != undefined &&
-                    item.item.new_collaborator_count != null &&
-                    item.item.new_collaborator_count != '' ? (
+                      item.item.new_collaborator_count != null &&
+                      item.item.new_collaborator_count != '' ? (
                       <Text
-                        style={{
-                          fontFamily: 'Rubik',
-                          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                          color: Colors.TextColor,
-                        }}>
+                        style={styles.lastActivityTextStyle}>
                         ({item.item.new_collaborator_count} new)
                       </Text>
                     ) : null}
@@ -629,103 +527,56 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               }}>
               {this.state.draftType != DraftType.recentryDeleteDrafts ? (
                 this.state.draftType == DraftType.friendsDrafts ? (
-                  <TouchableOpacity
-                    style={{alignSelf: 'center'}}
+                  <TouchableWithoutFeedback
                     onPress={() => this.getDraftDetails(item)}>
-                    <View
-                      style={{
-                        height: 32,
-                        width: 126,
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        alignSelf: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: Colors.BtnBgColor,
-                        borderRadius: 32,
-                      }}>
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          color: '#fff',
-                          ...fontSize(16),
-                          borderRadius: 5,
-                        }}>
-                        {'Collaborate'}
-                      </Text>
+                    <View style={styles.alignSelfCenter}>
+                      <View
+                        style={styles.CollaborateContainer}>
+                        <Text
+                          style={styles.CollaborateTextStyle}>
+                          {'Collaborate'}
+                        </Text>
+                      </View>
                     </View>
-                  </TouchableOpacity>
+                  </TouchableWithoutFeedback>
                 ) : (
-                  <TouchableOpacity
-                    style={{alignSelf: 'center'}}
+                  <TouchableWithoutFeedback
                     onPress={() => this.getDraftDetails(item)}>
-                    <View
-                      style={{
-                        height: 32,
-                        width: 126,
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        alignSelf: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: Colors.BtnBgColor,
-                        borderRadius: 32,
-                      }}>
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          color: '#fff',
-                          ...fontSize(16),
-                          borderRadius: 5,
-                        }}>
-                        {'Edit Draft'}
-                      </Text>
+                    <View style={styles.alignSelfCenter}>
+                      <View
+                        style={styles.CollaborateContainer}>
+                        <Text
+                          style={styles.CollaborateTextStyle}>
+                          {'Edit Draft'}
+                        </Text>
+                      </View>
                     </View>
-                  </TouchableOpacity>
+                  </TouchableWithoutFeedback>
                 )
               ) : (
-                <TouchableOpacity
-                  style={{alignSelf: 'center'}}
+                <TouchableWithoutFeedback
                   onPress={() => this.deleteDraft(item.item.nid, false)}>
-                  <View
-                    style={{
-                      height: 32,
-                      width: 126,
-                      paddingRight: 10,
-                      paddingLeft: 10,
-                      alignSelf: 'center',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: Colors.BtnBgColor,
-                      borderRadius: 32,
-                    }}>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        color: '#fff',
-                        ...fontSize(16),
-                        borderRadius: 5,
-                      }}>
-                      {'Undelete'}
-                    </Text>
+                  <View style={styles.alignSelfCenter}>
+                    <View
+                      style={styles.CollaborateContainer}>
+                      <Text
+                        style={styles.CollaborateTextStyle}>
+                        {'Undelete'}
+                      </Text>
+                    </View>
                   </View>
-                </TouchableOpacity>
+                </TouchableWithoutFeedback>
               )}
               {Account.selectedData().userID == item.item.uid &&
-              this.state.draftType != DraftType.recentryDeleteDrafts ? (
-                <TouchableOpacity
-                  style={{alignSelf: 'center', padding: 16}}
+                this.state.draftType != DraftType.recentryDeleteDrafts ? (
+                <TouchableWithoutFeedback
+                  style={[styles.alignSelfCenter, { padding: 16 }]}
                   onPress={() => this.deleteDraft(item.item.nid, true)}>
                   <Image
-                    style={{
-                      height: 25,
-                      width: 22,
-                      flex: 1,
-                      resizeMode: 'stretch',
-                    }}
+                    style={styles.deleteImageStyle}
                     source={delete_comment}
                   />
-                </TouchableOpacity>
+                </TouchableWithoutFeedback>
               ) : null}
             </View>
           </View>
@@ -733,26 +584,25 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       </TouchableHighlight>
     );
   };
+
   renderFooter = () => {
     //it will show indicator at the bottom of the list when data is loading otherwise it returns null
     if (!this.state.loading) return null;
     return (
-      <View style={{width: '100%', height: 50}}>
-        <ActivityIndicator color = '#000' />
+      <View style={styles.footerContainer}>
+        <ActivityIndicator color={Colors.black} />
       </View>
     );
   };
+
   renderSeparator = () => {
     return (
       <View
-        style={{
-          height: 1,
-          width: '100%',
-          backgroundColor: '#CED0CE',
-        }}
+        style={styles.separator}
       />
     );
   };
+
   handleLoadMore = () => {
     let draftCount = this.memoryDraftsDataModel.getMemoryDraftsCount();
     if (memoryDraftsArray.length < draftCount) {
@@ -767,6 +617,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     }
   };
 }
+
 const UserDetails = (item: any) => {
   let createdOn: any = getValue(item, ['item', 'item', 'created']);
   // createdOn = Utility.timeDuration(createdOn, "M d, Y");
@@ -779,43 +630,21 @@ const UserDetails = (item: any) => {
   ]);
   return (
     <View
-      style={{
-        paddingTop: 15,
-        height: 50,
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-      }}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {/* <TouchableOpacity style={{paddingLeft: 15, paddingRight: 10}} onPress={()=>Actions.pop()}>
-                        <Image source={black_arrow}/>
-                    </TouchableOpacity> */}
+      style={styles.userDetailsContainer}>
+      <View style={styles.userDetailsSubContainer}>
+
         {
           <View
-            style={{
-              height: 40,
-              width: 40,
-              borderRadius: 20,
-              marginRight: 10,
-              marginLeft: 16,
-              overflow: 'hidden',
-              borderColor: 'rgba(0,0,0,0.2)',
-            }}>
+            style={styles.imagebackgroundContainer}>
             <ImageBackground
               style={[styles.avatar]}
-              imageStyle={{borderRadius: 20}}
+              imageStyle={{ borderRadius: 20 }}
               source={profile_placeholder}>
               <Image
-                style={{
-                  height: 40,
-                  width: 40,
-                  borderRadius: 20,
-                  alignContent: 'center',
-                }}
+                style={styles.userImageStyle}
                 source={
                   Account.selectedData().profileImage != ''
-                    ? {uri: Account.selectedData().profileImage}
+                    ? { uri: Account.selectedData().profileImage }
                     : profile_placeholder
                 }
               />
@@ -825,20 +654,12 @@ const UserDetails = (item: any) => {
 
         <View>
           <Text
-            style={{
-              ...fontSize(16),
-              fontFamily: 'Rubik-italic',
-              color: Colors.TextColor,
-            }}>
+            style={styles.nameTextStyle}>
             {'Created by '}
-            <Text style={{color: Colors.NewYellowColor}}>{name}</Text>
+            <Text style={{ color: Colors.NewYellowColor }}>{name}</Text>
           </Text>
           <Text
-            style={{
-              ...fontSize(16),
-              fontFamily: 'Rubik-italic',
-              color: Colors.TextColor,
-            }}>
+            style={styles.nameTextStyle}>
             {''}
             <Text>{createdOn}</Text>
           </Text>
@@ -847,29 +668,21 @@ const UserDetails = (item: any) => {
     </View>
   );
 };
-const CommonImageView = (props: {file: any; files: any}) => {
+
+const CommonImageView = (props: { file: any; files: any }) => {
   let currentIndex = props.files.indexOf(props.file);
   return (
     <View
       style={[
-        {backgroundColor: Colors.ThemeLight, marginBottom: 15, marginTop: 15},
-        style.boxShadow,
+        styles.commonImageContainer,
+        styles.boxShadow,
       ]}>
       {/* <TouchableOpacity onPress={()=>Actions.push("imageViewer", {files : props.files, index : currentIndex})}> */}
       <View
-        style={{
-          backgroundColor: Colors.NewLightThemeColor,
-          width: '100%',
-          height: 185,
-        }}>
+        style={styles.commonImageContainerSub}>
         <Image
-          source={{uri: props.file.url}}
-          style={{
-            height: '100%',
-            width: '100%',
-            resizeMode: 'contain',
-            backgroundColor: 'transparent',
-          }}
+          source={{ uri: props.file.url }}
+          style={styles.fileImageStyle}
         />
       </View>
       {/* </TouchableOpacity> */}
@@ -877,37 +690,3 @@ const CommonImageView = (props: {file: any; files: any}) => {
     </View>
   );
 };
-
-const style = StyleSheet.create({
-  boxShadow: {
-    shadowOpacity: 1,
-    elevation: 1,
-    shadowColor: '#D9D9D9',
-    shadowRadius: 2,
-    shadowOffset: {width: 0, height: 2},
-  },
-  draftOptionsView: {
-    height: 50,
-    width: '100%',
-    backgroundColor: 'white',
-  },
-  sideMenu: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    top: 40,
-    left: 10,
-    backgroundColor: '#fff',
-    minHeight: 50,
-    width: 233,
-    height: 252,
-    position: 'absolute',
-    borderRadius: 5,
-    shadowOpacity: 1,
-    elevation: 1,
-    borderWidth: 0.5,
-    borderColor: 'rgba(0,0,0, 0.5)',
-    shadowColor: '#CACACA',
-    shadowRadius: 2,
-    shadowOffset: {width: 0, height: 2},
-  },
-});

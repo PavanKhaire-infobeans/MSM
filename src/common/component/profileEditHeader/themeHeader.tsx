@@ -9,18 +9,18 @@ import {Account} from '../../loginStore';
 
 const styles = EStyleSheet.create({
   name: {
-    color: '#fff',
+    color: Colors.white,
     ...fontSize(10),
     lineHeight: 15,
     textAlign: 'left',
-    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+    fontWeight: "500",
   },
   titleText: {
-    color: '#fff',
+    color: Colors.white,
     ...fontSize(18),
     lineHeight: 20,
     textAlign: 'left',
-    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+    fontWeight: "500",
   },
 
   titleContainer: {
@@ -59,7 +59,11 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
 
-  rightButtonsTouchable: {padding: 0, paddingRight: 10},
+  rightButtonsTouchable: {
+    padding: 0, 
+    paddingRight: 10
+  },
+  
 });
 
 class ThemeHeader extends React.Component<{[x: string]: any}> {
@@ -109,8 +113,8 @@ class ThemeHeader extends React.Component<{[x: string]: any}> {
             <Text
               style={{
                 ...fontSize(16),
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                color: '#fff',
+                fontWeight: "500",
+                color: Colors.white,
                 paddingRight: 10,
               }}>
               {this.props.rightText}

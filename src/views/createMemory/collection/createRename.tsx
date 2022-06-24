@@ -40,6 +40,7 @@ import EventManager from '../../../common/eventManager';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import {ToastMessage} from '../../../common/component/Toast';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import Utility from '../../../common/utility';
 
 type State = {[x: string]: any};
 type Props = {
@@ -145,7 +146,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
-              barStyle={'dark-content'}
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <View

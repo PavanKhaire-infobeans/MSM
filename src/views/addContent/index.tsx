@@ -15,6 +15,7 @@ import {
   DeviceEventEmitter,
   Platform,
   StatusBar,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   icon_add_content_audio,
@@ -40,7 +41,7 @@ import {
   icon_send,
 } from '../../images';
 // @ts-ignore
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Text from '../../common/component/Text';
 import DeviceInfo from 'react-native-device-info';
 import {
@@ -50,20 +51,21 @@ import {
   TimeStampMilliSeconds,
   encode_utf8,
   NO_INTERNET,
+  fontFamily,
 } from '../../common/constants';
 import AccessoryView from '../../common/component/accessoryView';
-import {addListener} from 'cluster';
-import ActionSheet, {ActionSheetItem} from '../../common/component/actionSheet';
+import { addListener } from 'cluster';
+import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
 import {
   PickImage,
   CaptureImage,
   PickAudio,
   PickPDF,
 } from '../../common/component/filePicker/filePicker';
-import {element} from 'prop-types';
-import {Actions} from 'react-native-router-flux';
-import {TempFile} from '../mindPop/edit';
-import {FileType} from '../../common/database/mindPopStore/mindPopStore';
+import { element } from 'prop-types';
+import { Actions } from 'react-native-router-flux';
+import { TempFile } from '../mindPop/edit';
+import { FileType } from '../../common/database/mindPopStore/mindPopStore';
 import {
   addEditMindPop,
   kMindpopContentIdentifier,
@@ -71,28 +73,33 @@ import {
   kMindPopUploadedIdentifier,
 } from '../mindPop/edit/addMindPopflow';
 import EventManager from '../../common/eventManager';
-import {ToastMessage, No_Internet_Warning} from '../../common/component/Toast';
+import { ToastMessage, No_Internet_Warning } from '../../common/component/Toast';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import Utility from '../../common/utility';
 import NoInternetView from '../../common/component/NoInternetView';
-import {createNew} from '../createMemory';
-import {CreateUpdateMemory} from '../createMemory/createMemoryWebService';
-import {DefaultDetailsMemory} from '../createMemory/dataHelper';
+import { createNew } from '../createMemory';
+import { CreateUpdateMemory } from '../createMemory/createMemoryWebService';
+import { DefaultDetailsMemory, DefaultDetailsWithoutTitleMemory } from '../createMemory/dataHelper';
 //@ts-ignore
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import CreateMemoryIntro from '../createMemory/createMemoryIntro';
 import DefaultPreference from 'react-native-default-preference';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import style from './styles';
+import { xcircle } from '../../../app/images';
+import CustomAlert from '../../common/component/customeAlert';
+import { connect } from 'react-redux';
+import { showCustomAlert, showCustomAlertData } from '../createMemory/reducer';
 
-type State = {[key: string]: any};
+type State = { [key: string]: any };
 
 const ImageActions: Array<ActionSheetItem> = [
-  {index: 0, text: 'Image', image: action_camera},
-  {index: 1, text: 'Audio', image: action_audio},
-  {index: 2, text: 'PDF', image: action_pdf},
-  {index: 3, text: 'Cancel', image: action_close},
+  { index: 0, text: 'Image', image: action_camera },
+  { index: 1, text: 'Audio', image: action_audio },
+  { index: 2, text: 'PDF', image: action_pdf },
+  { index: 3, text: 'Cancel', image: action_close },
 ];
 
 const options = {
@@ -100,7 +107,7 @@ const options = {
   ignoreAndroidSystemSettings: false,
 };
 
-export default class AddContentDetails extends React.Component {
+class AddContentDetails extends React.Component {
   _actionSheet: any | ActionSheet = null;
   keyboardDidShowListener: any;
   keyboardDidHideListener: any;
@@ -120,9 +127,11 @@ export default class AddContentDetails extends React.Component {
       type: 'none',
       list: ImageActions,
     },
-    listItems: [{itemType: 'editor'}],
+    listItems: [{ itemType: 'editor' }],
     content: '',
     showNextDialog: false,
+    mindPopClick: false,
+    titleError: ""
   };
 
   constructor(props: any) {
@@ -134,136 +143,169 @@ export default class AddContentDetails extends React.Component {
     setTimeout(() => {
       DefaultPreference.get('hide_memory_intro').then((value: any) => {
         if (value == 'true') {
-          this.setState({memoryIntroVisibility: false});
+          this.setState({ memoryIntroVisibility: false });
         } else {
-          this.setState({memoryIntroVisibility: true});
+          this.setState({ memoryIntroVisibility: true });
         }
       });
     }, 200);
   };
   nextDialogView = () => {
     return (
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          height: '100%',
-          width: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
-          justifyContent: 'center',
-          alignItems: 'center',
+      <CustomAlert
+        modalVisible={true}
+        // setModalVisible={setModalVisible}
+        title={'Save your memory'}
+        message={'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'}
+        android={{
+          container: {
+            backgroundColor: '#ffffff'
+          },
+          title: {
+            color: Colors.black,
+            fontFamily: "SF Pro Text",
+            fontSize: 17,
+            fontWeight: '600',
+            lineHeight: 22
+          },
+          message: {
+            color: Colors.black,
+            // fontFamily: fontFamily.Inter,
+            fontSize: 16,
+            fontWeight: '500',
+          },
         }}
-        onStartShouldSetResponder={() => true}
-        onResponderStart={() => this.setState({showNextDialog: false})}>
-        <View>
-          <View
-            style={{
-              backgroundColor: '#fff',
-              overflow: 'hidden',
-              borderRadius: 10,
-              height: 400,
-              width: 300,
-            }}>
-            <View
-              style={{
-                flex: 1,
-                height: '50%',
-                borderBottomColor: 'rgba(0,0,0,0.3)',
-                borderBottomWidth: 0.5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {this.selectorButton(
-                'Save as Memory Draft',
-                memory_draft,
-                this.createMemory,
-              )}
-              <Text style={style.textDialog}>
-                {'If you want to set the Date, Location and Title now.'}
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                height: '50%',
-                borderTopColor: 'rgba(0,0,0,0.3)',
-                borderTopWidth: 0.5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {this.selectorButton(
-                'Save as a MindPop',
-                mindpopBarWhiteIcon,
-                this.saveMindPop,
-              )}
-              <Text style={style.textDialog}>
-                {
-                  'If you want to quickly capture an inkling of a memory before you forget it.'
-                }
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={{
-              top: -10,
-              right: -10,
-              position: 'absolute',
-              backgroundColor: '#000',
-              height: 24,
-              width: 24,
-              borderRadius: 12,
-              borderWidth: 2,
-              elevation: 1,
-              shadowColor: '#000000',
-              shadowOpacity: 0.8,
-              shadowRadius: 2,
-              shadowOffset: {height: 1, width: 1},
-              borderColor: '#fff',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            onPress={() => this.setState({showNextDialog: false})}>
-            <Image
-              source={small_close_white_}
-              style={{height: 11, width: 11}}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+        ios={{
+          container: {
+            backgroundColor: '#D3D3D3'
+          },
+          title: {
+            color: Colors.black,
+            // fontFamily: fontFamily.Inter,
+            lineHeight: 22,
+            fontSize: 17,
+            fontWeight: '600',
+          },
+          message: {
+            color: Colors.black,
+            // fontFamily: fontFamily.Inter,
+            fontSize: 13,
+            lineHeight: 18,
+            fontWeight: '400',
+          },
+        }}
+        buttons={[{
+          text: 'Save as Memory Draft',
+          func: () => {
+            ReactNativeHapticFeedback.trigger('impactMedium', options);
+            this.createMemory();
+          },
+          styles: {
+            lineHeight: 22,
+            fontSize: 17,
+            fontWeight: '600',
+          }
+        },
+        {
+          text: 'Save as a MindPop',
+          func: () => {
+            this.setState({
+              mindPopClick: true,
+              showNextDialog: false
+            }, () => {
+              if (this.state.content != '') {
+                ReactNativeHapticFeedback.trigger('impactMedium', options);
+                this.saveMindPop();
+              }
+              else {
+                ToastMessage('Title is mandatory');
+                this.setState({
+                  titleError: 'Title is mandatory'
+                })
+              }
+            })
+          },
+          styles: {
+            lineHeight: 22,
+            fontSize: 17,
+            fontWeight: '400',
+          }
+        },
+        {
+          text: 'Cancel',
+          func: () => {
+            this.setState({
+              showNextDialog: false
+            }, () => {
+              Actions.pop()
+            })
+          },
+          styles: {
+            lineHeight: 22,
+            fontSize: 17,
+            fontWeight: '400',
+          }
+        }
+        ]}
+      />
+      // <View
+      //   style={style.nextDialogViewContainer}
+      //   onStartShouldSetResponder={() => true}
+      //   onResponderStart={() => this.setState({ showNextDialog: false })}>
+      //   <View>
+      //     <View
+      //       style={style.nextDialogViewSubContainer}>
+      //       <View
+      //         style={style.saveAsDraftButtonContainer}>
+      //         {this.selectorButton(
+      //           'Save as Memory Draft',
+      //           memory_draft,
+      //           this.createMemory,
+      //         )}
+      //         <Text style={style.textDialog}>
+      //           {'If you want to set the Date, Location and Title now.'}
+      //         </Text>
+      //       </View>
+      //       <View
+      //         style={style.mindPopButtonContainer}>
+      //         {this.selectorButton(
+      //           'Save as a MindPop',
+      //           mindpopBarWhiteIcon,
+      //           this.saveMindPop,
+      //         )}
+      //         <Text style={style.textDialog}>
+      //           {
+      //             'If you want to quickly capture an inkling of a memory before you forget it.'
+      //           }
+      //         </Text>
+      //       </View>
+      //     </View>
+      //     <TouchableOpacity
+      //       style={style.canclebuttonStyle}
+      //       onPress={() => this.setState({ showNextDialog: false })}>
+      //       <Image
+      //         source={small_close_white_}
+      //         style={style.cancleImageStyle}
+      //       />
+      //     </TouchableOpacity>
+      //   </View>
+      // </View>
     );
   };
 
   selectorButton = (name: any, icon: any, onItemPressed: () => void) => {
     return (
       <View
-        style={{
-          backgroundColor: Colors.ThemeColor,
-          width: 250,
-          height: 50,
-          borderRadius: 35,
-        }}>
+        style={style.selectorButtonContainer}>
         <TouchableOpacity
-          style={{
-            width: '100%',
-            height: '100%',
-            flexDirection: 'row',
-            padding: 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          style={style.selectorButtonStyle}
           onPress={() => {
             ReactNativeHapticFeedback.trigger('impactMedium', options);
             onItemPressed();
           }}>
           <Image source={icon} />
           <Text
-            style={{
-              ...fontSize(18),
-              marginLeft: 10,
-              lineHeight: 20,
-              textAlign: 'center',
-              color: '#FFFFFF',
-            }}>
+            style={style.textStyle}>
             {name}
           </Text>
         </TouchableOpacity>
@@ -314,7 +356,7 @@ export default class AddContentDetails extends React.Component {
         textTitle: this.draftDetails.title,
         editMode: false,
         padDetails: padDetails,
-        location: {description: '', reference: ''},
+        location: { description: '', reference: '' },
         memoryDate: this.draftDetails.memory_date,
         type: createNew,
       });
@@ -333,7 +375,7 @@ export default class AddContentDetails extends React.Component {
             style: 'cancel',
             onPress: () => {
               let content = this.state.oldcontent;
-              this.setState({content}, () => {
+              this.setState({ content }, () => {
                 //Go Back
                 Keyboard.dismiss();
                 Actions.pop();
@@ -363,7 +405,32 @@ export default class AddContentDetails extends React.Component {
 
   mindPopUpdated = (success: any, mindpopID: any) => {
     if (success) {
-      Actions.replace('mindPop');
+      // this.props.showAlertCall(true);
+      // this.props.showAlertCallData({
+      //   alertTitle: 'New MindPop saved!',
+      //   desc: `See your new MindPop added with the rest of your in-progress work now.`,
+      // });
+      this.props.showAlertCall(true)
+      this.props.showAlertCallData({
+        title: 'New MindPop saved!',
+        desc: `See your new MindPop added with the rest of your in-progress work now.`
+      })
+      // Alert.alert('New MindPop saved!', `See your new MindPop added with the rest of your in-progress work now.`, [
+      //   {
+      //     text: 'Great!',
+      //     style: 'cancel',
+      //     onPress: () => {
+      //     },
+      //   }
+      // ]);
+      // Actions.replace('mindPop')
+      Actions.mindPop();
+
+      // , {
+      //   showPublishedPopup: true,
+      //   alertTitle: 'New MindPop saved!',
+      //   desc: `See your new MindPop added with the rest of your in-progress work now.`,
+      // });
     } else {
       loaderHandler.hideLoader();
     }
@@ -390,30 +457,36 @@ export default class AddContentDetails extends React.Component {
   saveMemoryOrMindpop = () => {
     if (Utility.isInternetConnected) {
       Keyboard.dismiss();
-      if (this.state.content.trim() == '' && this.state.files.length == 0) {
-        ToastMessage('No changes were made', 'black');
-      } else {
-        if (this.state.content.trim().length == 0) {
-          ToastMessage('Please add a description', Colors.ErrorColor);
-        } else {
-          this.setState({
-            showNextDialog: true,
-          });
-        }
-      }
+      // if (this.state.content.trim() == '' && this.state.files.length == 0) {
+      //   ToastMessage('No changes were made', 'black');
+      // } else {
+      //   if (this.state.content.trim().length == 0) {
+      //     ToastMessage('Please add a description', Colors.ErrorColor);
+      //   } else {
+      this.setState({
+        showNextDialog: true,
+      });
+      //   }
+      // }
     } else {
       No_Internet_Warning();
     }
   };
 
-  createMemory = () => {
+  createMemory = async() => {
     this.setState({
       showNextDialog: false,
     });
     if (Utility.isInternetConnected) {
-      this.draftDetails = DefaultDetailsMemory(this.state.content.trim());
+      if (this.state.content.trim() === "") {
+        this.draftDetails = DefaultDetailsMemory("My memory");
+      }
+      else {
+        this.draftDetails = DefaultDetailsWithoutTitleMemory(this.state.content);//.trim()
+      }
       loaderHandler.showLoader('Loading...');
       CreateUpdateMemory(this.draftDetails, [], 'addContentCreateMemory');
+      
     } else {
       No_Internet_Warning();
     }
@@ -426,7 +499,7 @@ export default class AddContentDetails extends React.Component {
     if (Utility.isInternetConnected) {
       let moment = TimeStampMilliSeconds();
       var req: {
-        requestDetails: {mindPopContentArray: Array<any>; mindPopID?: string};
+        requestDetails: { mindPopContentArray: Array<any>; mindPopID?: string };
         configurationTimestamp: string;
       } = {
         requestDetails: {
@@ -469,11 +542,11 @@ export default class AddContentDetails extends React.Component {
       editRefresh: (file: any[]) => {
         Keyboard.dismiss();
         let fid = GenerateRandomID();
-        let tempFile: TempFile[] = file.map(obj => ({...obj, fid}));
+        let tempFile: TempFile[] = file.map(obj => ({ ...obj, fid }));
         this.fileCallback(tempFile);
       },
-      reset: () => {},
-      deleteItem: () => {},
+      reset: () => { },
+      deleteItem: () => { },
     });
   };
 
@@ -488,11 +561,11 @@ export default class AddContentDetails extends React.Component {
         }
         break;
       case 'files':
-        Actions.push('pdfViewer', {file: file});
+        Actions.push('pdfViewer', { file: file });
         break;
       case 'images':
         Actions.push('imageViewer', {
-          files: [{url: file.thumb_uri}],
+          files: [{ url: file.thumb_uri }],
           hideDescription: true,
         });
         break;
@@ -519,215 +592,125 @@ export default class AddContentDetails extends React.Component {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: '#F5F5F5',
-        }}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        style={[style.toolbarContainer, {
+          backgroundColor: this.state.bottomBar.keyboardVisible ? Colors.SerachbarColor : Colors.white,
+        }]}>
+
+        {!this.state.bottomBar.keyboardVisible ? (
           <View
-            style={{
-              width: '100%',
-              minHeight: 40,
-              flexDirection: 'row',
-              backgroundColor: this.state.bottomBar.keyboardVisible
-                ? '#F3F3F3'
-                : '#FFF',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              paddingLeft: 10,
-              paddingRight: 10,
-              borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
-              borderTopWidth: 1,
-            }}>
-            {!this.state.bottomBar.keyboardVisible ? (
-              <View
-                style={{
-                  width: '100%',
-                  height: 130,
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                }}>
-                <TouchableHighlight
-                  onPress={() => this.cameraAttachmentPress()}>
-                  <View style={style.bottomRowView}>
-                    <Image
-                      style={{height: 35, resizeMode: 'contain', padding: 15}}
-                      source={icon_add_content_camera}
-                    />
-                    <Text
-                      style={{...fontSize(16), color: '#fff', paddingTop: 10}}>
-                      {'Photo/Scan'}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-
-                <TouchableHighlight onPress={() => this.audioAttachmentPress()}>
-                  <View style={style.bottomRowView}>
-                    <Image
-                      style={{height: 35, resizeMode: 'contain'}}
-                      source={icon_add_content_audio}
-                    />
-                    <Text
-                      style={{...fontSize(16), color: '#fff', paddingTop: 10}}>
-                      {'Talk'}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-
-                <TouchableHighlight
-                  onPress={() =>
-                    this._actionSheet && this._actionSheet.showSheet()
-                  }>
-                  <View style={style.bottomRowView}>
-                    <Image
-                      style={{height: 35, resizeMode: 'contain', padding: 15}}
-                      source={icon_add_content_upload}
-                    />
-                    <Text
-                      style={{...fontSize(16), color: '#fff', paddingTop: 10}}>
-                      {'Upload'}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
+            style={style.keyboardVisible}>
+            <TouchableHighlight
+              onPress={() => this.cameraAttachmentPress()}>
+              <View style={style.bottomRowView}>
+                <Image
+                  style={style.cameraImageStyle}
+                  source={icon_add_content_camera}
+                />
+                <Text
+                  style={style.bottomTextStyle}>
+                  {'Photo/Scan'}
+                </Text>
               </View>
-            ) : (
+            </TouchableHighlight>
+
+            <TouchableHighlight onPress={() => this.audioAttachmentPress()}>
+              <View style={style.bottomRowView}>
+                <Image
+                  style={style.audioImageStyle}
+                  source={icon_add_content_audio}
+                />
+                <Text
+                  style={style.bottomTextStyle}>
+                  {'Talk'}
+                </Text>
+              </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight
+              onPress={() =>
+                this._actionSheet && this._actionSheet.showSheet()
+              }>
+              <View style={style.bottomRowView}>
+                <Image
+                  style={style.cameraImageStyle}
+                  source={icon_add_content_upload}
+                />
+                <Text
+                  style={style.bottomTextStyle}>
+                  {'Upload'}
+                </Text>
+              </View>
+            </TouchableHighlight>
+          </View>
+        )
+          :
+          (
+            <View
+              style={style.toolbarSubContainer}>
               <View
-                style={{
-                  width: '100%',
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                }}>
-                <View
-                  style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.cameraAttachmentPress();
-                    }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 40,
-                      height: 40,
-                    }}>
-                    <Image source={camera} resizeMode="stretch" />
-                  </TouchableOpacity>
+                style={style.bottomBarContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.cameraAttachmentPress();
+                  }}
+                  style={style.buttonContainerStyle}>
+                  <Image source={camera} resizeMode="stretch" />
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.audioAttachmentPress();
-                    }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 40,
-                      height: 40,
-                    }}>
-                    <Image source={record} resizeMode="stretch" />
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.audioAttachmentPress();
+                  }}
+                  style={style.buttonContainerStyle}>
+                  <Image source={record} resizeMode="stretch" />
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      Keyboard.dismiss();
-                      this._actionSheet && this._actionSheet.showSheet();
-                    }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 40,
-                      height: 40,
-                    }}>
-                    <Image source={icon_upload_file} resizeMode="stretch" />
-                  </TouchableOpacity>
-                </View>
                 <TouchableOpacity
                   onPress={() => {
                     Keyboard.dismiss();
+                    this._actionSheet && this._actionSheet.showSheet();
                   }}
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 40,
-                    height: 40,
-                  }}>
-                  <Image
-                    source={keyboard_hide}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 25,
-                      height: 25,
-                    }}
-                    resizeMode="stretch"
-                  />
+                  style={style.buttonContainerStyle}>
+                  <Image source={icon_upload_file} resizeMode="stretch" />
                 </TouchableOpacity>
               </View>
-            )}
-          </View>
-        </View>
+              <TouchableOpacity
+                onPress={() => {
+                  Keyboard.dismiss();
+                }}
+                style={style.buttonContainerStyle}>
+                <Image
+                  source={keyboard_hide}
+                  style={style.keyboardHideImageStyle}
+                  resizeMode="stretch"
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+
       </KeyboardAwareScrollView>
-    ) : (
-      <KeyboardAccessory
-        style={{
-          backgroundColor: '#fff',
-          position: 'absolute',
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderTopWidth: 1,
-          borderBottomWidth: 1,
-          borderColor: 'rgba(0,0,0,0.4)',
-        }}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+    )
+      :
+      (
+        <KeyboardAccessory
+          style={style.subContainerStyle}>
+
           <View
-            style={{
-              width: '100%',
-              minHeight: 40,
-              flexDirection: 'row',
-              backgroundColor: this.state.bottomBar.keyboardVisible
-                ? '#F3F3F3'
-                : '#FFF',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              paddingLeft: 10,
-              paddingRight: 10,
-              borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
-              borderTopWidth: 1,
-            }}>
+            style={[style.keyboardAccesoryContainer, {
+              backgroundColor: this.state.bottomBar.keyboardVisible ? Colors.SerachbarColor : Colors.white,
+            }]}>
             {!this.state.bottomBar.keyboardVisible ? (
               <View
-                style={{
-                  width: '100%',
-                  height: 130,
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                }}>
+                style={style.keyboardVisible}>
                 <TouchableHighlight
                   onPress={() => this.cameraAttachmentPress()}>
                   <View style={style.bottomRowView}>
                     <Image
-                      style={{height: 35, resizeMode: 'contain', padding: 15}}
+                      style={style.cameraImageStyle}
                       source={icon_add_content_camera}
                     />
                     <Text
-                      style={{...fontSize(16), color: '#fff', paddingTop: 10}}>
+                      style={style.bottomTextStyle}>
                       {'Photo/Scan'}
                     </Text>
                   </View>
@@ -736,11 +719,11 @@ export default class AddContentDetails extends React.Component {
                 <TouchableHighlight onPress={() => this.audioAttachmentPress()}>
                   <View style={style.bottomRowView}>
                     <Image
-                      style={{height: 35, resizeMode: 'contain'}}
+                      style={style.audioImageStyle}
                       source={icon_add_content_audio}
                     />
                     <Text
-                      style={{...fontSize(16), color: '#fff', paddingTop: 10}}>
+                      style={style.bottomTextStyle}>
                       {'Talk'}
                     </Text>
                   </View>
@@ -752,11 +735,11 @@ export default class AddContentDetails extends React.Component {
                   }>
                   <View style={style.bottomRowView}>
                     <Image
-                      style={{height: 35, resizeMode: 'contain', padding: 15}}
+                      style={style.cameraImageStyle}
                       source={icon_add_content_upload}
                     />
                     <Text
-                      style={{...fontSize(16), color: '#fff', paddingTop: 10}}>
+                      style={style.bottomTextStyle}>
                       {'Upload'}
                     </Text>
                   </View>
@@ -764,23 +747,14 @@ export default class AddContentDetails extends React.Component {
               </View>
             ) : (
               <View
-                style={{
-                  width: '100%',
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                }}>
+                style={style.toolbarSubContainer}>
                 <View
-                  style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+                  style={style.buttonSubContainer}>
                   <TouchableOpacity
                     onPress={() => {
                       this.cameraAttachmentPress();
                     }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 40,
-                      height: 40,
-                    }}>
+                    style={style.buttonContainerStyle}>
                     <Image source={camera} resizeMode="stretch" />
                   </TouchableOpacity>
 
@@ -788,12 +762,7 @@ export default class AddContentDetails extends React.Component {
                     onPress={() => {
                       this.audioAttachmentPress();
                     }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 40,
-                      height: 40,
-                    }}>
+                    style={style.buttonContainerStyle}>
                     <Image source={record} resizeMode="stretch" />
                   </TouchableOpacity>
 
@@ -802,12 +771,7 @@ export default class AddContentDetails extends React.Component {
                       Keyboard.dismiss();
                       this._actionSheet && this._actionSheet.showSheet();
                     }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 40,
-                      height: 40,
-                    }}>
+                    style={style.buttonContainerStyle}>
                     <Image source={icon_upload_file} resizeMode="stretch" />
                   </TouchableOpacity>
                 </View>
@@ -815,29 +779,19 @@ export default class AddContentDetails extends React.Component {
                   onPress={() => {
                     Keyboard.dismiss();
                   }}
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 40,
-                    height: 40,
-                  }}>
+                  style={style.buttonContainerStyle}>
                   <Image
                     source={keyboard_hide}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 25,
-                      height: 25,
-                    }}
+                    style={style.keyboardHideImageStyle}
                     resizeMode="stretch"
                   />
                 </TouchableOpacity>
               </View>
             )}
           </View>
-        </View>
-      </KeyboardAccessory>
-    );
+
+        </KeyboardAccessory>
+      );
     // <KeyboardAccessory style={{backgroundColor: "#fff",
     //                            position:"absolute",
     //                            width: "100%",
@@ -929,136 +883,71 @@ export default class AddContentDetails extends React.Component {
   };
 
   _renderRow = (element: any, width: any) => {
-    let thumbnailHeight = 120;
+
     return (
       <TouchableHighlight
         onPress={() => this.rowItemPressed(element)}
-        underlayColor={'#ffffffaa'}
+        underlayColor={Colors.touchableunderlayColor}
         key={element.fid}
-        style={{padding: 15}}>
+        style={style.padding15}>
         <View>
-          <View>
-            <View
-              style={{
-                borderWidth: 1,
-                width: width,
-                height: thumbnailHeight,
-                borderRadius: 5,
-                overflow: 'hidden',
-              }}>
-              {element.type == 'audios' ? (
-                <ImageBackground
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                  source={sound_wave}
-                  resizeMode="contain">
+          <View
+            style={[style.RecordContainer, { width }]}>
+            {element.type == 'audios' ? (
+              <ImageBackground
+                style={style.RecordContainerImgBackgrounStyle}
+                source={sound_wave}
+                resizeMode="contain">
+                <View
+                  style={style.playButtonMainContainer}>
                   <View
-                    style={{
-                      backgroundColor: Colors.ThemeColor,
-                      borderRadius: 20,
-                      width: 40,
-                      height: 40,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <View
-                      style={{
-                        height: 20,
-                        width: 22,
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                      }}>
-                      <Image
-                        style={{height: 18, width: 17.5}}
-                        source={audio_play}
-                      />
-                    </View>
+                    style={style.playButtonContainer}>
+                    <Image
+                      style={style.audioImage}
+                      source={audio_play}
+                    />
                   </View>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      color: '#595959',
-                      ...fontSize(12),
-                      bottom: 5,
-                      position: 'absolute',
-                      alignSelf: 'center',
-                      textAlign: 'center',
-                    }}>
-                    {`${element.filename}`}
-                  </Text>
-                </ImageBackground>
-              ) : element.type == 'images' ? (
-                <Image
-                  source={{uri: element.thumb_uri}}
-                  style={{width: width, height: thumbnailHeight}}
+                </View>
+                <Text
+                  numberOfLines={1}
+                  style={style.filenameTextStyle}>
+                  {`${element.filename}`}
+                </Text>
+              </ImageBackground>
+            ) : element.type == 'images' ? (
+              <Image
+                source={{ uri: element.thumb_uri }}
+                style={{ width: width, height: 120 }}
+                resizeMode="contain"
+              />
+            ) : element.type == 'files' ? (
+              <View
+                style={style.RecordContainerImgBackgrounStyle}>
+                <ImageBackground
+                  style={style.pdfImageStyle}
+                  source={pdf_icon}
                   resizeMode="contain"
                 />
-              ) : element.type == 'files' ? (
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100%',
-                    width: '100%',
-                  }}>
-                  <ImageBackground
-                    style={{width: '85%', height: '85%', marginLeft: 10}}
-                    source={pdf_icon}
-                    resizeMode="contain"
-                  />
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      color: '#595959',
-                      ...fontSize(12),
-                      bottom: 5,
-                      position: 'absolute',
-                      alignSelf: 'center',
-                      textAlign: 'center',
-                    }}>
-                    {`${element.filename}`}
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-            <TouchableOpacity
-              onPress={() => this.removeFile(element.fid)}
-              style={{
-                width: 36,
-                height: 36,
-                position: 'absolute',
-                right: -15,
-                top: -15,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderWidth: 2,
-                  borderColor: '#fff',
-                  borderRadius: 16,
-                  backgroundColor: '#000',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
                 <Text
-                  style={{
-                    color: 'white',
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                    ...fontSize(12),
-                    lineHeight: 14,
-                  }}>
-                  {'✕'}
+                  numberOfLines={1}
+                  style={style.filenameTextStyle}>
+                  {`${element.filename}`}
                 </Text>
               </View>
-            </TouchableOpacity>
+            ) : null}
           </View>
+
+          <TouchableOpacity
+            onPress={() => this.removeFile(element.fid)}
+            style={style.deletefileContainer}>
+            <View
+              style={style.deletefileSubContainer}>
+              <Text
+                style={style.crossTextStyle}>
+                {'✕'}
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </TouchableHighlight>
     );
@@ -1067,120 +956,125 @@ export default class AddContentDetails extends React.Component {
   render() {
     return (
       <SafeAreaView
-        style={{
-          width: '100%',
-          flex: 1,
-          backgroundColor: Colors.NewThemeColor,
-          flexDirection: 'row',
-        }}>
+        style={style.mainConTainer}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
-        <View style={{flex: 1, backgroundColor: '#fff'}}>
-          <NavigationHeaderSafeArea
+
+        <View style={style.container}>
+          {/* <NavigationHeaderSafeArea
             heading={'New Memory/MindPop'}
             showCommunity={true}
             cancelAction={this._onBack}
             showRightText={true}
             rightText={'Next'}
             saveValues={this.saveMemoryOrMindpop}
-          />
-          <View style={{width: '100%', flex: 1}}>
-            <View
-              style={{
-                padding: 15,
-                paddingTop: 5,
-                paddingBottom: 25,
-                width: '100%',
-                flex: 1,
-              }}>
-              <TextInput
-                placeholder="Capture your Memory here..."
-                autoFocus={false}
-                onChangeText={text => {
-                  this.setState({content: text});
-                }}
-                placeholderTextColor="rgba(0, 0, 0, 0.4)"
-                value={this.state.content}
-                multiline={true}
-                style={{
-                  fontFamily: 'Rubik',
-                  ...fontSize(18),
-                  textAlignVertical: 'top',
-                  fontStyle:
-                    this.state.content && this.state.content.length > 0
-                      ? 'normal'
-                      : 'italic',
-                  minHeight: 150,
-                  textAlign: 'left',
-                  flex: 1,
-                }}
-              />
-            </View>
-            {this.state.files.length > 0 ? (
-              <View>
+          /> */}
+          <>
+            <NavigationHeaderSafeArea
+              // heading={'Filters'}
+              height="120"
+              heading={''}
+              // padding={20}
+              showCommunity={false}
+              cancelAction={this.saveMemoryOrMindpop}
+              // cancelAction={this._onBack}
+              showRightText={this.state.content.length ? true : false}
+              isWhite={true}
+              rightText={'Save'}
+              saveValues={this.saveMemoryOrMindpop}
+              backIcon={action_close}
+            />
+            <TouchableWithoutFeedback onPress={() => {
+              // this.setState({
+              //   showNextDialog: true
+              // })
+            }}
+              underlayColor={Colors.white}
+              style={style.fullWidth}>
+              <View style={style.fullFlex}>
                 <View
-                  key="seperator"
-                  style={{height: 1, backgroundColor: '#59595931'}}
-                />
+                  style={style.inputContainer}>
+                  {/* {
+                    this.state.mindPopClick ? */}
+                  <>
+                    <TextInput
+                      placeholder="|Tap to start writing..."
+                      autoFocus={false}
+                      onChangeText={text => {
+                        this.setState({ content: text, titleError: "" });
+                      }}
+                      placeholderTextColor={Colors.bordercolor}
+                      value={this.state.content}
+                      multiline={true}
+                      style={style.textInputStyle}
+                    />
+                    {
+                      this.state.titleError != "" && <Text style={{ color: Colors.ErrorColor, fontSize: 14 }}>
+                        {this.state.titleError}
+                      </Text>
+                    }
+                  </>
+                  {/* :
+                      <Text style={style.textInputStyle}>{"|Tap to start writing..."}</Text>
+                  } */}
+                  {/*  */}
+                </View>
+                {this.state.files.length > 0 ? (
+                  <View>
+                    <View
+                      key="seperator"
+                      style={style.attachmentContainer}
+                    />
 
-                <FlatList
-                  horizontal={true}
-                  keyboardShouldPersistTaps={'handled'}
-                  keyExtractor={(_, index: number) => `${index}`}
-                  style={{
-                    height: 160,
-                    width: '100%',
-                    marginBottom:
-                      this.state.bottomBar.bottom > 0
-                        ? this.state.bottomBar.bottom -
-                          (Platform.OS == 'android' ? 230 : 160)
-                        : 120,
-                    backgroundColor: '#fff',
-                  }}
-                  keyExtractor={(_: any, index: number) => `${index}`}
-                  data={this.state.files}
-                  renderItem={(item: any) => this._renderRow(item.item, 180)}
-                />
+                    <FlatList
+                      horizontal={true}
+                      keyboardShouldPersistTaps={'handled'}
+                      keyExtractor={(_, index: number) => `${index}`}
+                      style={[style.flatlistStyle, {
+                        marginBottom: this.state.bottomBar.bottom > 0 ? this.state.bottomBar.bottom -
+                          (Platform.OS == 'android' ? 230 : 160) : 120,
+                      }]}
+                      keyExtractor={(item: any, index: number) => `${index}`}
+                      data={this.state.files}
+                      renderItem={(item: any) => this._renderRow(item.item, 180)}
+                    />
+                  </View>
+                ) : (
+                  <View
+                    style={{
+                      width: '100%',
+                      height:
+                        Platform.OS == 'android'
+                          ? 0
+                          : this.state.bottomBar.bottom == 0
+                            ? 130
+                            : this.state.bottomBar.bottom,
+                    }}></View>
+                )}
               </View>
-            ) : (
-              <View
-                style={{
-                  width: '100%',
-                  height:
-                    Platform.OS == 'android'
-                      ? 0
-                      : this.state.bottomBar.bottom == 0
-                      ? 130
-                      : this.state.bottomBar.bottom,
-                }}></View>
-            )}
-          </View>
+            </TouchableWithoutFeedback>
 
-          {this.toolbar()}
-          {this.state.showNextDialog && this.nextDialogView()}
-          <ActionSheet
-            ref={ref => (this._actionSheet = ref)}
-            width={DeviceInfo.isTablet() ? '65%' : '100%'}
-            actions={this.state.actionSheet.list}
-            onActionClick={this.onActionItemClicked.bind(this)}
-          />
-          <View
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: 100,
-              bottom: -100,
-              backgroundColor: '#fff',
-            }}></View>
+            {/* {this.toolbar()} */}
+            {this.state.showNextDialog && this.nextDialogView()}
+            <ActionSheet
+              ref={ref => (this._actionSheet = ref)}
+              width={DeviceInfo.isTablet() ? '65%' : '100%'}
+              actions={this.state.actionSheet.list}
+              onActionClick={this.onActionItemClicked.bind(this)}
+            />
+            <View
+              style={style.emptyView}></View>
+          </>
         </View>
+
         {this.state.memoryIntroVisibility && (
           <CreateMemoryIntro
             cancelMemoryIntro={() => {
-              this.setState({memoryIntroVisibility: false});
+              this.setState({ memoryIntroVisibility: false });
               DefaultPreference.set('hide_memory_intro', 'true').then(
-                function () {},
+                function () { },
               );
             }}></CreateMemoryIntro>
         )}
@@ -1189,21 +1083,18 @@ export default class AddContentDetails extends React.Component {
   }
 }
 
-const style = StyleSheet.create({
-  bottomRowView: {
-    height: 90,
-    width: 105,
-    borderRadius: 5,
-    backgroundColor: Colors.ThemeColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textDialog: {
-    ...fontSize(16),
-    lineHeight: 20,
-    textAlign: 'center',
-    color: '#000000',
-    paddingTop: 20,
-    width: 250,
-  },
+const mapState = (state: { [x: string]: any }) => ({
+  showAlert: state.MemoryInitials.showAlert,
 });
+
+
+const mapDispatch = (dispatch: Function) => {
+  return {
+    showAlertCall: (payload: any) => dispatch({ type: showCustomAlert, payload: payload }),
+    showAlertCallData: (payload: any) => dispatch({ type: showCustomAlertData, payload: payload }),
+  };
+};
+export default connect(
+  mapState,
+  mapDispatch
+)(AddContentDetails);
