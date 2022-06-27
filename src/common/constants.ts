@@ -262,37 +262,37 @@ export function uploadTask(
       asyncGen(function* () {
 
         // console.log("File Upload payload:",JSON.stringify(options));
-        loaderHandler.showLoader('Uploading..');
+        // loaderHandler.showLoader('Uploading..');
         try {
           let uploadId = yield UploadManager.startUpload(options);
           if (typeof uploadId == 'string') {
             UploadManager.addListener('error', uploadId, (data: any) => {
-              hideLoaderWithTimeOut();
+              // hideLoaderWithTimeOut();
               failure(data);
             });
             UploadManager.addListener(
               'cancelled',
               uploadId,
               (...data: any[]) => {
-                hideLoaderWithTimeOut();
+                // hideLoaderWithTimeOut();
                 failure({ message: 'Upload cancelled', uploadId, data });
               },
             );
             UploadManager.addListener('completed', uploadId, (data: any) => {
-              hideLoaderWithTimeOut();
+              // hideLoaderWithTimeOut();
               success(data);
             });
           } else {
-            hideLoaderWithTimeOut();
+            // hideLoaderWithTimeOut();
             failure(uploadId);
           }
         } catch (err) {
-          hideLoaderWithTimeOut();
+          // hideLoaderWithTimeOut();
           failure(err);
         }
       });
     } catch (error) {
-      hideLoaderWithTimeOut();
+      // hideLoaderWithTimeOut();
       failure(error);
     }
   };

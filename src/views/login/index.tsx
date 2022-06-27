@@ -296,7 +296,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     // let keyboardHeight = this.state.keyboardHeight
     const yVal = this.moveOnYAxis.interpolate({
       inputRange: [0, 0.5, 1],
-      outputRange: [0, -(this.state.keyboardHeight*0.8), -(this.state.keyboardHeight*0.8)],
+      outputRange: [0, -(this.state.keyboardHeight * 0.8), -(this.state.keyboardHeight * 0.8)],
     });
 
     const animStyle = {
@@ -365,7 +365,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 								</View> */}
                 <View style={{ height: Utility.getDeviceHeight() * 0.65, justifyContent: 'space-between' }}>
 
-                  <View style={{ width: Utility.getDeviceWidth() - 48, marginLeft: 24 }}>
+                  <View style={{ width: Utility.getDeviceWidth() - 48, marginLeft: 24, }}>
 
                     <Text style={[CommonTextStyles.fontWeight500Size13Inter, { marginBottom: 4, marginLeft: 8, color: Colors.newTextColor }]}>
                       EMAIL OR USERNAME
@@ -406,7 +406,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                         this.controller.onTextChange('password', text)
                       }
                     />
-                    <View style={{height:10}}/>
+                    <View style={{ height: 10 }} />
                   </View>
 
                   {/* <View
@@ -428,7 +428,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                   }, animStyle]} >
 
                     <TouchableWithoutFeedback
-                      // disabled={this.state.username != '' && this.state.password != ''}
+                      disabled={(this.state.username != '' && this.state.password != '') ? false : true}
                       onPress={this.controller.onClick.bind(this.controller)}
                     >
                       <View style={[Styles.loginSSOButtonStyle, {

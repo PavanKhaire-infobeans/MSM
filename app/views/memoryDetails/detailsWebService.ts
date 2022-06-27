@@ -385,7 +385,7 @@ export const GetMemoryDetails = async (nid: any, type: string) => {
       .catch((err: Error) => {
         Promise.reject(err);
       });
-
+      
     if (response.ResponseCode == 200) {
       EventManager.callBack(kMemoryDetailsFetched, true, response['Details']);
     } else {

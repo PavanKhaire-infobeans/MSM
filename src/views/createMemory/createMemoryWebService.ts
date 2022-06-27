@@ -73,6 +73,7 @@ export const CreateUpdateMemory = async (
           EventManager.callBack(listener, true, id, padDetails, key);
         }
         else {
+          loaderHandler.hideLoader();
           return response;
         }
 
@@ -83,6 +84,7 @@ export const CreateUpdateMemory = async (
           EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
         }
         else {
+          loaderHandler.hideLoader();
           return response;
         }
       }
@@ -92,6 +94,7 @@ export const CreateUpdateMemory = async (
         EventManager.callBack(listener, false, response['ResponseMessage']);
       }
       else {
+        loaderHandler.hideLoader();
         return response;
       }
       // loaderHandler.hideLoader();
@@ -370,7 +373,7 @@ export const CollaboratorActionAPI = async (params: any) => {
 };
 
 async function uploadAttachments(memoryId: number, files: TempFile[], listener: string, res: boolean, id: any, padDetails: any, key: any) {
-  return new Promise((resolve, reject) => {
+  let result = await new Promise((resolve, reject) => {
     asyncGen(function* () {
       try {
         var resp: any[] = [];
@@ -378,12 +381,13 @@ async function uploadAttachments(memoryId: number, files: TempFile[], listener: 
           let rsp = yield uploadFile(memoryId, fl);
           resp.push(rsp);
         }
-        if (files.length == resp.length) {
+
+        // if (files.length === resp.length) {
           resolve(resp);
-        }
+        // }
         debugger
-        console.log("files resp :",JSON.stringify(resp))
         loaderHandler.showLoader('Loading...');
+        return resp;
         // loaderHandler.hideLoader();
         // EventManager.callBack(listener, res, id, padDetails, key);
       } catch (err) {
@@ -391,7 +395,8 @@ async function uploadAttachments(memoryId: number, files: TempFile[], listener: 
         reject(err);
       }
     });
-  });
+  })
+  return result;
 }
 
 async function uploadFile(memoryId: number, file: TempFile) {
@@ -426,6 +431,8 @@ async function uploadFile(memoryId: number, file: TempFile) {
       title: getValue(file, ['filename']),
     };
   }
+  loaderHandler.showLoader('Uploading..');
+
   return new Promise((resolve, reject) => {
     uploadTask(
       (data: any) => {

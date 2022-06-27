@@ -10,7 +10,7 @@ import NewNavigationBar from '../../../app/components/NewNavigationBarWrite';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore
-import ScrollableTabView from "../../common/component/ScrollableTabView";
+import ScrollableTabViewForWrite from "../../common/component/ScrollableTabViewForWrite";
 import { MonthObj, months } from '../createMemory';
 import { Account } from '../../common/loginStore';
 import EventManager from '../../common/eventManager';
@@ -65,13 +65,13 @@ class WriteTabs extends React.Component<Props>{
     }
 
     navigateToAddContent = () => {
-        ReactNativeHapticFeedback.trigger("notificationSuccess", options);
-        Actions.push("addContent");
+        // ReactNativeHapticFeedback.trigger("notificationSuccess", options);
+        // Actions.push("addContent");
     }
 
     componentDidMount = () => {
 
-        this.eventManager = EventManager.addListener("addContentTabPressed", this.navigateToAddContent);
+        // this.eventManager = EventManager.addListener("addContentTabPressed", this.navigateToAddContent);
         this.notificationListener = EventManager.addListener(kGetInvidualNotification, this.notificationCallback);
         this.foregroundNotification = EventManager.addListener(kForegroundNotice, this.foregroundNotificationCallback);
         this.backgroundNotification = EventManager.addListener(kBackgroundNotice, this.checkNotificationAvailiability);
@@ -251,7 +251,7 @@ class WriteTabs extends React.Component<Props>{
                     <View style={Styles.fullFlex}>
 
                         {
-                            this.props.showAlert && this.props.showAlertData?.title?
+                            this.props.showAlert && this.props.showAlertData?.title ?
                                 <CustomAlert
                                     // modalVisible={this.state.showCustomAlert}
                                     modalVisible={this.props.showAlert}
@@ -321,8 +321,9 @@ class WriteTabs extends React.Component<Props>{
                             title={this.props.filterName ? this.props.filterName : TabItems.AllMemories}
                             showRight={false}
                         />
+                        
                         <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} backgroundColor='#ffffff' />
-                        <ScrollableTabView
+                        <ScrollableTabViewForWrite
                             ref={(ref: any) => { this.scrollableTabView = ref; }}
                             style={Styles.fullWidth}
                             scrollEnabled={Platform.OS == 'ios' ? true : false}
@@ -330,7 +331,7 @@ class WriteTabs extends React.Component<Props>{
                             initialPage={0}
                             currentScreen={(screenName: any) => {
                                 if (screenName == 1) {
-                                    if (Actions.currentScene != 'createMemory' && Actions.currentScene != 'mindPopList' && Actions.currentScene != 'addContent') {
+                                    if (Actions.currentScene != 'createMemory' && Actions.currentScene != 'mindPopList' && Actions.currentScene != 'addContent' && Actions.currentScene != 'dashboard') {
                                         Actions.addContent();
                                     }
                                 }
@@ -346,7 +347,7 @@ class WriteTabs extends React.Component<Props>{
                             {/* <AddContent tabLabel={'New'} /> */}
                             {/* <View tabLabel={'New'} ></View> */}
                             <Prompts tabLabel={'Prompts'} />
-                        </ScrollableTabView>
+                        </ScrollableTabViewForWrite>
                         {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
                     </View>
                 </SafeAreaView>

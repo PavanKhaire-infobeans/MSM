@@ -338,6 +338,8 @@ PODS:
     - React
   - react-native-document-picker (3.5.4):
     - React
+  - react-native-image-picker (4.8.4):
+    - React-Core
   - react-native-netinfo (6.0.0):
     - React-Core
   - react-native-pager-view (5.4.0):
@@ -449,12 +451,12 @@ PODS:
   - RNGoogleSignin (7.2.1):
     - GoogleSignIn (~> 6.1.0)
     - React-Core
-  - RNImageCropPicker (0.36.2):
+  - RNImageCropPicker (0.37.3):
     - React-Core
     - React-RCTImage
-    - RNImageCropPicker/QBImagePickerController (= 0.36.2)
+    - RNImageCropPicker/QBImagePickerController (= 0.37.3)
     - TOCropViewController
-  - RNImageCropPicker/QBImagePickerController (0.36.2):
+  - RNImageCropPicker/QBImagePickerController (0.37.3):
     - React-Core
     - React-RCTImage
     - TOCropViewController
@@ -556,6 +558,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-background-upload (from `../node_modules/react-native-background-upload`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-pdf (from `../node_modules/react-native-pdf`)
@@ -677,6 +680,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-background-upload"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-pager-view:
@@ -815,6 +820,7 @@ SPEC CHECKSUMS:
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
   react-native-background-upload: 4f82b6b9b2538a9f6d25dc275f4259d038065849
   react-native-document-picker: c5752781fbc0c126c627c1549b037c139444a4cf
+  react-native-image-picker: 9f9eb160a4f4fc0702f9d0a60fa453b413258ef8
   react-native-netinfo: 34f4d7a42f49157f3b45c14217d256bce7dc9682
   react-native-pager-view: c63e9d2b4177b132c225f0ceaed4e8faf12767c3
   react-native-pdf: ef641e79a6d550cfabe5d7ec1916799726514c43
@@ -848,7 +854,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 510bef8284ab30807e3815dde6d91a02c282abe0
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNGoogleSignin: 0113bbfea7522e8f89476db1e6502b8f006b0f1e
-  RNImageCropPicker: 35a3ceb837446fa11547704709bb22b5fac6d584
+  RNImageCropPicker: 44e2807bc410741f35d4c45b6586aedfe3da39d2
   RNPermissions: 3e5bb8afd93c787681bbacbf54d586a6272ecc92
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
   RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563

@@ -17,7 +17,7 @@ const Styles = EStyleSheet.create({
   },
   carouselContainer:{
     width: '100%',
-    padding: 16,
+    // padding: 16,
     paddingTop: 0,
     alignItems: 'center',
     height: 100,

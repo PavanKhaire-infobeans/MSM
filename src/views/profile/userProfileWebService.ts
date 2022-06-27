@@ -236,6 +236,7 @@ export const UploadProfilePic = async function uploadProfilePicture(
   if (type == PhotoType.cover) {
     options['parameters'] = {type: 'cover'};
   }
+  loaderHandler.showLoader('Uploading..');
 
   return new Promise((resolve, reject) => {
     uploadTask(

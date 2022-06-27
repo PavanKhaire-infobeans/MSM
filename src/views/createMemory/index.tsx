@@ -482,12 +482,10 @@ class CreateMemory extends React.Component<Props> {
           title: 'Memory published! 🎉',
           desc: `Nice work writing Shakespeare! Your new memory has been published!`
         })
+        this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+        loaderHandler.showLoader();
 
-        Actions.replace('dashboard', {
-          showPublishedPopup: true,
-          title: 'Memory published! 🎉',
-          desc: `Nice work writing Shakespeare! Your new memory has been published!`,
-        });
+        Actions.replace('dashboard');
         // Alert.alert(
         //   'Memory published! 🎉',
         //   `Nice work writing Shakespeare! Your new memory has been published!`,
@@ -502,7 +500,6 @@ class CreateMemory extends React.Component<Props> {
         // );
 
         // Actions.dashBoard();
-        loaderHandler.showLoader();
       } else if (this.props.editPublsihedMemory) {
         this.props.showAlertCall(true);
         this.props.showAlertCallData({

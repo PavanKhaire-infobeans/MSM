@@ -4,99 +4,108 @@ import { profile_placeholder } from '../../images';
 import { Account } from '../../common/loginStore';
 
 export class DashboardDataModel {
-    static getConvertedData = (memory : any) =>{
-        let memories : any = [];
-        if(memory == undefined || memory == null)
+    static getConvertedData = (memory: any) => {
+        let memories: any = [];
+        if (memory == undefined || memory == null)
             return []
-        memory.forEach((element : any) => {
+        memory.forEach((element: any) => {
             let parsedMemory: any = {};
-            parsedMemory.api_url = getDetails(element, ['api_url'] , keyArray); 
-            parsedMemory.collection = getDetails(element, ['collection'] , keyArray); 
-            parsedMemory.actions_on_memory = getDetails(element, ['actions_on_memory'] , keyObject); 
-            parsedMemory.comments_count = getDetails(element, ['comments_count'] , keyString); 
-            parsedMemory.created = getDetails(element, ['created'] , keyString); 
-            parsedMemory.description = getDetails(element, ['description'] , keyString);//.trim(); 
+            parsedMemory.api_url = getDetails(element, ['api_url'], keyArray);
+            parsedMemory.collection = getDetails(element, ['collection'], keyArray);
+            parsedMemory.actions_on_memory = getDetails(element, ['actions_on_memory'], keyObject);
+            parsedMemory.comments_count = getDetails(element, ['comments_count'], keyString);
+            parsedMemory.created = getDetails(element, ['created'], keyString);
+            parsedMemory.description = getDetails(element, ['description'], keyString);//.trim(); 
             parsedMemory.noOfComments = getDetails(element, ["comments_count"], keyInt);
             parsedMemory.noOfLikes = getDetails(element, ["like_comment_data", "like_count"], keyInt);
-            parsedMemory.viewCount = getDetails(element, ["view_count"], keyInt); 
+            parsedMemory.viewCount = getDetails(element, ["view_count"], keyInt);
             parsedMemory.isLikedByUser = getDetails(element, ["like_comment_data", "like_flag"], keyInt);
-            parsedMemory.location = getDetails(element, ['location'] , keyString); 
-            parsedMemory.memoryDate = getDetails(element, ['memory_date'] , keyString); 
-            parsedMemory.memory_date = getDetails(element, ['memory_date'] , keyString); 
-            parsedMemory.memory_url = getDetails(element, ['memory_url'] , keyString); 
-            parsedMemory.mins_to_read = getDetails(element, ['mins_to_read'] , keyString); 
-            parsedMemory.nid = getDetails(element, ['nid'] , keyString); 
-            parsedMemory.season = getDetails(element, ['season'] , keyString); 
-            parsedMemory.share_count = getDetails(element, ['share_count'] , keyInt); 
-            parsedMemory.share_option_value = getDetails(element, ['share_option_value'] , keyString); 
-            switch(parsedMemory.share_option_value){
-                case "only_me" : parsedMemory.shareText = 'Shared only with me';
-                                 parsedMemory.color = "#50B660";
-                        break;
+            parsedMemory.location = getDetails(element, ['location'], keyString);
+            parsedMemory.memoryDate = getDetails(element, ['memory_date'], keyString);
+            parsedMemory.memory_date = getDetails(element, ['memory_date'], keyString);
+            parsedMemory.memory_url = getDetails(element, ['memory_url'], keyString);
+            parsedMemory.mins_to_read = getDetails(element, ['mins_to_read'], keyString);
+            parsedMemory.nid = getDetails(element, ['nid'], keyString);
+            parsedMemory.season = getDetails(element, ['season'], keyString);
+            parsedMemory.share_count = getDetails(element, ['share_count'], keyInt);
+            parsedMemory.share_option_value = getDetails(element, ['share_option_value'], keyString);
+            switch (parsedMemory.share_option_value) {
+                case "only_me": parsedMemory.shareText = 'Shared only with me';
+                    parsedMemory.color = "#50B660";
+                    break;
                 case "allfriends" || 'custom':
-                                parsedMemory.shareText = 'Shared with ' + parsedMemory.share_count + (parsedMemory.share_count > 1 ? " members": " member");
-                                parsedMemory.color = "#0077B2" ;
-                        break;        
-                case "cueback" : parsedMemory.shareText = 'Shared with Public';
-                                 parsedMemory.color = "#BE6767";
-                        break;
-                default :
-                        parsedMemory.shareText = 'Shared with ' + parsedMemory.share_count + (parsedMemory.share_count > 1 ? " members": " member");
-                        parsedMemory.color = "#0077B2" ;
-                        break; 
+                    parsedMemory.shareText = 'Shared with ' + parsedMemory.share_count + (parsedMemory.share_count > 1 ? " members" : " member");
+                    parsedMemory.color = "#0077B2";
+                    break;
+                case "cueback": parsedMemory.shareText = 'Shared with Public';
+                    parsedMemory.color = "#BE6767";
+                    break;
+                default:
+                    parsedMemory.shareText = 'Shared with ' + parsedMemory.share_count + (parsedMemory.share_count > 1 ? " members" : " member");
+                    parsedMemory.color = "#0077B2";
+                    break;
 
             }
-            parsedMemory.title = getDetails(element, ['title'] , keyString); 
-            parsedMemory.type = getDetails(element, ['type'] , keyString); 
-            parsedMemory.updated = getDetails(element, ['updated'] , keyString); 
-            parsedMemory.user_details = getDetails(element, ['user_details'] , keyObject); 
-            parsedMemory.images = getDetails(element, ['images'] , keyArray); 
-            parsedMemory.pdf = getDetails(element, ['pdf'] , keyArray); 
-            parsedMemory.audios = getDetails(element, ['audios'] , keyArray);   
-            parsedMemory.season =  getDetails(element, ['season'] , keyString);      
-            if(element.like_comment_data.like_count != undefined && element.like_comment_data.like_count != null){
+            parsedMemory.title = getDetails(element, ['title'], keyString);
+            parsedMemory.type = getDetails(element, ['type'], keyString);
+            parsedMemory.updated = getDetails(element, ['updated'], keyString);
+            parsedMemory.user_details = getDetails(element, ['user_details'], keyObject);
+            parsedMemory.version_data = getDetails(element, ['version_data'], keyObject);
+            parsedMemory.images = getDetails(element, ['images'], keyArray);
+            parsedMemory.pdf = getDetails(element, ['pdf'], keyArray);
+            parsedMemory.audios = getDetails(element, ['audios'], keyArray);
+            parsedMemory.season = getDetails(element, ['season'], keyString);
+            if (element.like_comment_data.like_count != undefined && element.like_comment_data.like_count != null) {
                 parsedMemory.showLikeCount = true;
-            } else{
+            } else {
                 parsedMemory.showLikeCount = false;
             }
             let memDate = parseInt(getDetails(parsedMemory, ["memory_date"])) * 1000;
-            parsedMemory.memory_date = Utility.dateObjectToDefaultFormat(new Date(memDate));                    
-            parsedMemory.memoryYear = new Date(memDate).getFullYear();                    
-            if(parsedMemory.season && parsedMemory.season.trim().length > 0){
+            parsedMemory.memory_date = Utility.dateObjectToDefaultFormat(new Date(memDate));
+            parsedMemory.memoryYear = new Date(memDate).getFullYear();
+            if (parsedMemory.season && parsedMemory.season.trim().length > 0) {
                 let season = parsedMemory.season.trim();
-                parsedMemory.memory_date = Utility.dateAccordingToFormat(""+parsedMemory.memory_date, "Y");  
+                parsedMemory.memory_date = Utility.dateAccordingToFormat("" + parsedMemory.memory_date, "Y");
                 parsedMemory.memory_date = season.charAt(0).toUpperCase() + season.slice(1) + " " + parsedMemory.memory_date;
-            } else{
-                parsedMemory.memory_date = Utility.dateAccordingToFormat(""+parsedMemory.memory_date, "M Y");
+            } else {
+                parsedMemory.memory_date = Utility.dateAccordingToFormat("" + parsedMemory.memory_date, "M Y");
             }
-            if (parsedMemory.location){
-                parsedMemory.dateWithLocation = parsedMemory.memory_date+", " + parsedMemory.location
+            if (parsedMemory.location) {
+                parsedMemory.dateWithLocation = parsedMemory.memory_date + ", " + parsedMemory.location
             }
-            
+
+            if (parsedMemory.version_data && parsedMemory['version_data']['data'] && parsedMemory['version_data']['data'][0] && parsedMemory['version_data']['data'][0]['content']) {
+                parsedMemory.memoryDescription = parsedMemory['version_data']['data'][0]['content'];
+            }
+
             const regex = /(<([^>]+)>)/ig;
-            parsedMemory.description = parsedMemory.description.replace(regex, '');
+            parsedMemory.description = parsedMemory.description.trim().replace(/<br>/ig, '\n');
+            parsedMemory.description = parsedMemory.description.trim().replace(/<br \/>/ig, '\n');
+            parsedMemory.description = parsedMemory.description.trim().replace(/<p>/ig, '\n');
+            parsedMemory.description = parsedMemory.description.trim().replace(/<\/p>/ig, '');
+            parsedMemory.description = parsedMemory.description.trim();
             memories.push(parsedMemory);
         });
         return memories;
-  }
- 
-  static getUserObj = (memoryDetails: any) =>{
-        let userDetails : any = {}
-        if(Account.selectedData().userID!=memoryDetails.user_details.uid){
+    }
+
+    static getUserObj = (memoryDetails: any) => {
+        let userDetails: any = {}
+        if (Account.selectedData().userID != memoryDetails.user_details.uid) {
             let first_name = getDetails(memoryDetails, ["user_details", "field_first_name_value"]);
             let last_name = getDetails(memoryDetails, ["user_details", "field_last_name_value"]);
-            userDetails.name =   first_name + " " + last_name;
+            userDetails.name = first_name + " " + last_name;
         }
-        else{
+        else {
             userDetails.name = "You"
         }
-        userDetails.createdOn = parseInt(getDetails(memoryDetails, ["updated"], keyInt));                    
-        userDetails.createdOn = Utility.timeDuration(""+userDetails.createdOn, "M d, Y");
+        userDetails.createdOn = parseInt(getDetails(memoryDetails, ["updated"], keyInt));
+        userDetails.createdOn = Utility.timeDuration("" + userDetails.createdOn, "M d, Y");
         let uriPic = getDetails(memoryDetails, ["user_details", "uri"]);
-        userDetails.userProfilePic = Utility.getFileURLFromPublicURL(uriPic);                        
-        if(userDetails.userProfilePic != profile_placeholder){
+        userDetails.userProfilePic = Utility.getFileURLFromPublicURL(uriPic);
+        if (userDetails.userProfilePic != profile_placeholder) {
             userDetails.isProfileAvailable = true;
         }
         return userDetails;
-  }
+    }
 }

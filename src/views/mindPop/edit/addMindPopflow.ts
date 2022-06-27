@@ -10,14 +10,14 @@ import {
 } from '../../../common/constants';
 import MindPopStore from '../../../common/database/mindPopStore/mindPopStore';
 import EventManager from '../../../common/eventManager';
-import {Account} from '../../../common/loginStore';
+import { Account } from '../../../common/loginStore';
 import {
   addMindPops,
   getMindPopWithId,
 } from '../../../common/webservice/mindPopServices';
-import {action_picture} from '../../../images';
-import {TempFile} from '.';
-import {Platform} from 'react-native';
+import { action_picture } from '../../../images';
+import { TempFile } from '.';
+import { Platform } from 'react-native';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 
 export const kAddEditIdentifier = 'kAddEditIdentifier';
@@ -64,6 +64,7 @@ export const addEditMindPop = async (
       loaderHandler.hideLoader();
       EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
     } else {
+      loaderHandler.hideLoader();
       EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
     }
     loaderHandler.hideLoader();
@@ -141,11 +142,11 @@ async function uploadFile(mindpopID: number, file: TempFile) {
   // if (Platform.OS == "android") {
   filePath = filePath.replace('file://', '');
   // }
-  let options: {[x: string]: any} = {
+  let options: { [x: string]: any } = {
     url: `https://${Account.selectedData().instanceURL}/api/mindpop/upload`,
     path: filePath,
     method: 'POST',
-    ...(file.type == 'audios' ? {title: file.filename} : {}),
+    ...(file.type == 'audios' ? { title: file.filename } : {}),
     field: file.type == 'images' ? 'image' : file.type,
     type: 'multipart',
     headers: {
@@ -154,13 +155,14 @@ async function uploadFile(mindpopID: number, file: TempFile) {
     },
   };
   if (mindpopID) {
-    options['parameters'] = {mindPopID: `${mindpopID}`};
+    options['parameters'] = { mindPopID: `${mindpopID}` };
   }
 
   let name = getValue(file, ['filename']);
   if (name) {
-    options['parameters'] = {...options['parameters'], title: name};
+    options['parameters'] = { ...options['parameters'], title: name };
   }
+  loaderHandler.showLoader('Uploading..');
 
   return new Promise((resolve, reject) => {
     uploadTask(

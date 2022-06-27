@@ -12,6 +12,13 @@ const Styles = EStyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1,
   },
+  RenderHtmlStyle: {
+    ...fontSize(19),
+    fontFamily: fontFamily.Inter,
+    color: Colors.newDescTextColor,
+    fontWeight: '400',
+    lineHeight: 24
+  },
   WebViewContainerStyle: {
     width: '100%',
     minHeight: 400,
@@ -130,17 +137,20 @@ const Styles = EStyleSheet.create({
   },
   activepromptsContainer: {
     borderWidth: 1,
-    borderColor: Colors.black,
+    borderColor: Colors.newBagroundColor,
     elevation: 2,
-    borderRadius: 8,
+    borderRadius: 12,
     width: '100%',
     backgroundColor: Colors.NewThemeColor,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
   },
   activepromptsSubContainer: {
     width: '100%',
-    padding: 16,
-    paddingTop: 7,
-    borderRadius: 5,
+    paddingVertical: 16,
+    // paddingTop: 7,
+    borderRadius: 12,
     backgroundColor: Colors.ThemeColor,
   },
   authorContainer: {

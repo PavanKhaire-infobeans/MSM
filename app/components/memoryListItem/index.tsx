@@ -18,6 +18,7 @@ import {
   RenderLikeAndCommentSection,
   _onShowMemoryDetails,
 } from './../../views/myMemories/PublishedMemory';
+import RenderHtml, { defaultSystemFonts } from 'react-native-render-html';
 import { PublishedMemoryDataModel } from './../../../src/views/myMemories/PublishedMemory/publishedMemoryDataModel';
 import { Colors, fontSize, MemoryActionKeys } from './../../../src/common/constants';
 import Utility from './../../../src/common/utility';
@@ -31,6 +32,7 @@ import WebView from 'react-native-webview';
 import { globesmall, calendarsmall, calender, moreoptions } from './../../images';
 import Prompts from './../../../src/common/component/prompts/prompts';
 import styles from './styles';
+import Styles from './styles';
 type Props = {
   addMemoryFromPrompt?: (firstIndex: any, secondIndex: any) => void;
   item: any;
@@ -238,6 +240,15 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           style={styles.descriptionText}>
                           {this.props.item.item.description}
                         </Text>
+                       
+                          // <RenderHtml
+                          //   tagsStyles={{ p: Styles.descriptionText, li: Styles.descriptionText, span: Styles.descriptionText }}
+                          //   source={{ html: this.props.item.item.memoryDescription }}
+                          //   // ignoredDomTags={['br']}
+                          //   enableExperimentalBRCollapsing={true}
+                          //   contentWidth={Dimensions.get('window').width}
+                          //   enableExperimentalMarginCollapsing={true}
+                          // ></RenderHtml>
                       ) : null}
 
                       <View style={{ height: 16 }} />
@@ -256,7 +267,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
         ) : (
           this.props.item.item.active_prompts.length > 0 && (
             <View
-              style={styles.activepromptsContainer}>
+              style={[styles.activepromptsContainer, { shadowColor: '(7, 53, 98, 0.05)', }]}>
               <View
                 style={styles.activepromptsSubContainer}>
                 <Prompts
