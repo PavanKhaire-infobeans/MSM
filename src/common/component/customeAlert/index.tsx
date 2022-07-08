@@ -59,6 +59,7 @@ const CustomAlert = (props) => {
     const [buttonLayoutHorizontal, setButtonLayoutHorizontal] = useState(1);
     const buttonProps = props.buttons && props.buttons.length > 0 ? props.buttons : [{}]
 
+    console.log("buttonPropsAndroid :",JSON.stringify(buttonProps))
     return (
       <View style={[styles.androidButtonGroup, {
         flexDirection: "column",//buttonLayoutHorizontal === 1 ? "row" : "column",
@@ -69,7 +70,7 @@ const CustomAlert = (props) => {
         {
           buttonProps.map((item, index) => {
             if (index > 2) return null;
-            const alignSelfProperty = buttonProps.length > 2 && index === 0 && buttonLayoutHorizontal === 1 ? 'flex-start' : 'flex-end';
+            const alignSelfProperty = 'flex-end';//buttonProps.length > 2 && index === 0 && buttonLayoutHorizontal === 1 ? 'flex-start' : 'flex-end';
             let defaultButtonText = 'OK'
             if (buttonProps.length > 2) {
               if (index === 0)
@@ -79,9 +80,10 @@ const CustomAlert = (props) => {
             } else if (buttonProps.length === 2 && index === 0)
               defaultButtonText = 'CANCEL';
             return (
-              <View style={[styles.androidButton, index === 0 && buttonLayoutHorizontal === 1 ? { flex: 1 } : {}]}>
+              // index === 0 && buttonLayoutHorizontal === 1 ? { flex: 1 } : {}
+              <View style={[styles.androidButton, ]}>
                 <Pressable onPress={() => {
-                  props.setModalVisible(false)
+                  // props.setModalVisible(false)
                   if (item.func && typeof (item.func) === 'function')
                     item.func();
                 }} style={[{
@@ -97,7 +99,7 @@ const CustomAlert = (props) => {
                         fontWeight: (item.styles && item.styles.fontWeight) || androidDefaults.button.fontWeight,
                         textTransform: (item.styles && item.styles.textTransform) || androidDefaults.button.textTransform,
                       }}
-                    >{item.text || defaultButtonText}</Text>
+                    >{(item.text && item.text.toUpperCase()) || defaultButtonText}</Text>
                   </View>
                 </Pressable>
               </View>
@@ -182,7 +184,11 @@ const CustomAlert = (props) => {
         //   props.setModalVisible(false);
       }}
     >
-      <Pressable style={[Platform.OS === "ios" ? styles.iOSBackdrop : styles.androidBackdrop, styles.backdrop]} onPress={() => props.setModalVisible(false)} />
+      <Pressable style={[Platform.OS === "ios" ? styles.iOSBackdrop : styles.androidBackdrop, styles.backdrop]} onPress={() => {
+        // props.setModalVisible(false)
+
+      }
+        } />
       <View style={styles.alertBox}>
         {
           Platform.OS === "ios" ?

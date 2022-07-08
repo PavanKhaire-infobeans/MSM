@@ -237,6 +237,7 @@ class AddContentDetails extends React.Component {
             this.setState({
               showNextDialog: false
             }, () => {
+              this.props.beforeBack ? this.props.beforeBack() : null;
               Actions.pop()
             })
           },

@@ -20,7 +20,7 @@ import {
 } from './../../views/myMemories/PublishedMemory';
 import RenderHtml, { defaultSystemFonts } from 'react-native-render-html';
 import { PublishedMemoryDataModel } from './../../../src/views/myMemories/PublishedMemory/publishedMemoryDataModel';
-import { Colors, fontSize, MemoryActionKeys } from './../../../src/common/constants';
+import { Colors, fontFamily, fontSize, MemoryActionKeys } from './../../../src/common/constants';
 import Utility from './../../../src/common/utility';
 import PlaceholderImageView from './../../../src/common/component/placeHolderImageView';
 import TextNew from './../../../src/common/component/Text';
@@ -88,7 +88,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
       <>
         {!this.props.item.item.isPrompt ? (
           <View
-            style={[styles.promptContainer, { shadowColor: '(7, 53, 98, 0.05)', }]}>
+            style={[styles.promptContainer, { shadowColor: '(7, 53, 98, 0.05)',}]}>
 
             {this.externalCueItems.includes(this.props.item.item.type) ? (
               this.props.item.item.type == 'songs' ? (
@@ -171,7 +171,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                 </View>
               )
             ) : (
-              <View style={{ backgroundColor: Colors.NewThemeColor, borderRadius: 10 }}>
+              <View style={styles.mainMemoryContainerStyle}>
                 <View
                   style={styles.memoriesContainer}>
                   {MemoryBasicDetails(
@@ -195,19 +195,13 @@ export default class MemoryListItem extends React.Component<Props, State> {
                       {MediaView(this.props.item, this.props.audioView)}
 
                       <View style={styles.dateContainer}>
-                        {/* <View style={{ alignItems: 'center', flexDirection: 'row', marginRight: 5 }}>
-                          <Image style={{marginTop:-5}} source={globesmall} />
+                        <View style={styles.shareTextContainerStyle}>
+                          <Image source={globesmall} />
                           <TextNew
-                            style={{
-                              color: Colors.newTextColor,
-                              paddingLeft: 7,
-                              fontWeight: '500',
-                              fontFamily: 'Inter',
-                              ...fontSize(14),lineHeight:14,letterSpacing:-0.05,
-                            }}>
+                            style={styles.sharewithTextStyle}>
                             {this.props.item.item.shareText}
                           </TextNew>
-                        </View> */}
+                        </View>
                         <View style={styles.memoryDateContainer}>
                           <Image style={styles.imageTopMargin} source={calendarsmall} />
                           <TextNew
@@ -251,12 +245,12 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           // ></RenderHtml>
                       ) : null}
 
-                      <View style={{ height: 16 }} />
-                      {/* {RenderLikeAndCommentSection(
+                      {RenderLikeAndCommentSection(
                         this.props.item,
                         this.props.like,
                         this.props.animate,
-                      )} */}
+                      )}
+                      <View style={{ height: 16 }} />
                       {/* {CommentBox(this.props.item)} */}
                     </View>
                   </TouchableHighlight>

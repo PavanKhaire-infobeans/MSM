@@ -41,7 +41,7 @@ import {
 import { Like, Unlike, GetAllLikes } from '../../memoryDetails/detailsWebService';
 import DeviceInfo from 'react-native-device-info';
 import SelectDropdown from './../../../../src/common/component/SelectDropDown';
-
+import ContextMenu from "react-native-context-menu-view";
 import Utility from './../../../../src/common/utility';
 import {
   No_Internet_Warning,
@@ -771,7 +771,7 @@ const _onShareMemory = async (url: any) => {
 }
 
 export const onActionItemClicked = (index: number, data: any): void => {
-  //console.log(data);
+  // console.log(JSON.stringify(data));
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
       _addToCollection(data.nid);
@@ -1029,7 +1029,7 @@ export const RenderLikeAndCommentSection = (
     }
   }
   return (
-    <View style={{ paddingRight: 15, paddingLeft: 15 }} key={item.index}>
+    <View style={{ marginRight: 24 }} key={item.index}>
       {/* {(memoryDetail.noOfComments > 0 || memoryDetail.showLikeCount) && (
         <Border />
       )} */}
@@ -1037,15 +1037,13 @@ export const RenderLikeAndCommentSection = (
         style={{
           flexDirection: 'row',
           justifyContent: 'flex-end',
-          marginBottom: 5,
+
         }}>
         <TouchableHighlight
           underlayColor={Colors.touchableunderlayColor}
           style={{
-            flexDirection: 'row',
-            flex: 1,
             justifyContent: 'flex-end',
-            alignItems: 'center',
+            alignItems: 'flex-end',
           }}
           onPress={() => {
             EventManager.callBack('startAnim');
@@ -1147,10 +1145,11 @@ export const _onOpenImages = (items: any, index: any) => {
 
 const MemoryActionsListArray = (item: any) => {
   var i = 0;
-  let memoryActions = [];
+  let memoryActions: any = [];
   memoryActions.push(
     {
       text: "Share memory",
+      title: "Share memory",
       // image: add_icon_small,
       nid: item.nid,
       memory_url: item.memory_url,
@@ -1168,6 +1167,7 @@ const MemoryActionsListArray = (item: any) => {
         //   {
         //     index: i,
         //     text: item.actions_on_memory[value],
+        //     title: item.actions_on_memory[value],
         //     // image: add_icon_small,
         //     nid: item.nid,
         //     memoryType: item.type,
@@ -1181,6 +1181,7 @@ const MemoryActionsListArray = (item: any) => {
         // memoryActions.push({
         //   index: i,
         //   text: item.actions_on_memory[value],
+        //   title: item.actions_on_memory[value],
         //   // image: Platform.OS == 'ios' ? personxmark :block,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1194,6 +1195,7 @@ const MemoryActionsListArray = (item: any) => {
         // memoryActions.push({
         //   index: i,
         //   text: item.actions_on_memory[value],
+        //   title: item.actions_on_memory[value],
         //   // image: Platform.OS == 'ios' ? flagandroid : flag,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1206,6 +1208,7 @@ const MemoryActionsListArray = (item: any) => {
         // memoryActions.push({
         //   index: i,
         //   text: item.actions_on_memory[value],
+        //   title: item.actions_on_memory[value],
         //   // image: Platform.OS == 'ios' ? redstar : report,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1219,6 +1222,7 @@ const MemoryActionsListArray = (item: any) => {
         memoryActions.push({
           index: i,
           text: item.actions_on_memory[value],
+          title: item.actions_on_memory[value],
           // image: edit_memory,
           nid: item.nid,
           memoryType: item.type,
@@ -1230,6 +1234,7 @@ const MemoryActionsListArray = (item: any) => {
         // memoryActions.push({
         //   index: i,
         //   text: item.actions_on_memory[value],
+        //   title: item.actions_on_memory[value],
         //   // image: delete_memory,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1241,6 +1246,7 @@ const MemoryActionsListArray = (item: any) => {
         // memoryActions.push({
         //   index: i,
         //   text: item.actions_on_memory[value],
+        //   title: item.actions_on_memory[value],
         //   // image: move_to_draft,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1252,6 +1258,7 @@ const MemoryActionsListArray = (item: any) => {
         // memoryActions.push({
         //   index: i,
         //   text: item.actions_on_memory[value],
+        //   title: item.actions_on_memory[value],
         //   // image: remove_me_from_this_post,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1263,6 +1270,7 @@ const MemoryActionsListArray = (item: any) => {
         // memoryActions.push({
         //   index: i,
         //   text: item.actions_on_memory[value],
+        //   title: item.actions_on_memory[value],
         //   // image: block_memory,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1280,7 +1288,8 @@ export const MemoryBasicDetails = (
   openMemoryActions?: any,
   listType?: any,
 ) => {
-  //.userProfilePic
+
+  let memoryActions = MemoryActionsListArray(item);
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (Utility.isInternetConnected) {
@@ -1298,7 +1307,7 @@ export const MemoryBasicDetails = (
               userDetails.userProfilePic && userDetails.userProfilePic != '' ? { uri: userDetails.userProfilePic } : profile_placeholder
             }
           ></Image>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 8 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 8, }}>
             <View>
               <Text
                 style={styles.userNameTextStyle}>
@@ -1317,8 +1326,8 @@ export const MemoryBasicDetails = (
               // ref={this.dropDownRef}
               dropdownStyle={{ borderRadius: 12 }}
               rowTextStyle={{ textAlign: 'left', fontSize: 17, fontWeight: '400', color: Colors.black, paddingLeft: 16 }}
-              dropdownOverlayColor={Colors.blacknewrgb}
-              rowStyle={{ backgroundColor: '#c4c4c4', height: 44, borderBottomColor: '#939396', borderBottomWidth: 0.5 }}
+              dropdownOverlayColor={Colors.contextBackground}
+              rowStyle={{ backgroundColor: Colors.actionBgHex, opacity: 0.8, height: 44, borderBottomColor: '#939396', borderBottomWidth: 0.5 }}
               buttonStyle={{ backgroundColor: Colors.white, width: 40 }}
               data={MemoryActionsListArray(item)}
               onSelect={(selectedItem, index) => {
@@ -1326,7 +1335,21 @@ export const MemoryBasicDetails = (
               }}
               renderCustomizedButtonChild={() => <Image style={{ alignSelf: 'flex-end' }} source={moreoptions} />}
             />
-            {/* <Image source={moreoptions} /> */}
+
+            {/* <ContextMenu
+              actions={memoryActions}
+              dropdownMenuMode={true}
+              previewBackgroundColor="transparent"
+              onPress={(e) => {
+                let data = memoryActions.filter((itm)=>itm.title === e.nativeEvent.name)
+                if (data && data[0]) {
+                  onActionItemClicked(e.nativeEvent.index, data[0])
+                }
+              }}
+            >
+              <Image source={moreoptions} />
+            </ContextMenu> */}
+
             {/* <Image source={greenDotsButton} /> */}
           </View>
         </TouchableWithoutFeedback>

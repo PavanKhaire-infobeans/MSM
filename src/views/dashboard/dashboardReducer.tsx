@@ -79,7 +79,6 @@ export const dashboardReducer = (state: DashboardState = {}, action: PayLoad): D
         case SET_FILTERS_NAME: newState = { ...newState, filterName: action.payload }
             break;
         case SET_KEYBOARD_HEIGHT: newState = { ...newState, keyBoardHeight: action.payload }
-            alert("d")
             break;
         case ACTIVE_TAB_ON_DASHBOARD: newState = { ...newState, currentTabName: action.payload }
             break;

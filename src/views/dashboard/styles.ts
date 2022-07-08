@@ -291,7 +291,7 @@ const Styles = EStyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 4,
     shadowRadius: 2,
-    elevation: 2,
+    elevation: 3,
   },
   justifyContentSpaceBetween:{ 
     justifyContent: 'space-between' 

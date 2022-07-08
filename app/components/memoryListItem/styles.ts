@@ -7,7 +7,7 @@ const Styles = EStyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.newBagroundColor,
     borderRadius: 12,
-    elevation: 1,
+    elevation: 3,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1,
@@ -90,6 +90,11 @@ const Styles = EStyleSheet.create({
     marginHorizontal: 2,
     backgroundColor: Colors.NewThemeColor,
   },
+  shareTextContainerStyle: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginRight: 18
+  },
   memoriesContainer: {
     backgroundColor: Colors.white,
     borderRadius: 15,
@@ -123,6 +128,19 @@ const Styles = EStyleSheet.create({
     fontFamily: fontFamily.Lora,
     lineHeight: 30,
     letterSpacing: -0.01,
+  },
+  mainMemoryContainerStyle: {
+    backgroundColor: Colors.NewThemeColor,
+    borderRadius: 10
+  },
+  sharewithTextStyle: {
+    color: Colors.newTextColor,
+    paddingLeft: 4,
+    fontWeight: '500',
+    fontFamily: fontFamily.Inter,
+    ...fontSize(14),
+    lineHeight: 17.5,
+    letterSpacing: -0.05,
   },
   descriptionText: {
     color: Colors.newDescTextColor,
@@ -166,11 +184,11 @@ const Styles = EStyleSheet.create({
   memoryDateContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    height:18,
+    height: 18,
   },
   imageTopMargin: {
-    height:16,
-    width:16
+    height: 16,
+    width: 16
   }
 });
 

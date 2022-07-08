@@ -88,7 +88,7 @@ import {
   cancelActions,
 } from './../../../src/images';
 
-import { heart, liked, xcircle } from './../../images'
+import { backArrow, heart, liked, penEdit, xcircle } from './../../images'
 import Text from './../../../src/common/component/Text';
 import DeviceInfo from 'react-native-device-info';
 //@ts-ignore
@@ -2101,12 +2101,19 @@ export default class MemoryDetails extends React.Component<Props, State> {
               // heading={'Filters'}
               padding={20}
               heading={''}
-              cancleText={'Close'}
+              cancleText={'Back'}
               showCommunity={false}
               cancelAction={() => Actions.pop()}
               showRightText={false}
               isWhite={true}
-              backIcon={xcircle}
+              rightText={this.memoryDataModel.userDetails.name == 'You' ? "Edit\nMemory" : ''}
+              backIcon={backArrow}
+              rightIcon={penEdit}
+              saveValues={()=>{
+                if (this.memoryDataModel.userDetails.name == 'You') {
+                  this.onActionItemClicked(0,{ nid: this.memoryDataModel.nid, actionType: MemoryActionKeys.editMemoryKey })
+                }
+              }}
             />
             // <UserDetails
             //   userDetails={this.memoryDataModel.userDetails}
@@ -2207,7 +2214,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                   </View>
                 )}
 
-                <ShowSharedaetilsDetails
+                {/* <ShowSharedaetilsDetails
                   userDetails={this.memoryDataModel.userDetails}
                   shareDetails={this.memoryDataModel.shareOption}
                   deepLinkBackClick={this.props.deepLinkBackClick}
@@ -2223,7 +2230,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                       <Image source={this.memoryDataModel.likesComments.isLikedByUser ? liked : heart} resizeMode="contain" />
                     </TouchableWithoutFeedback>
                   </Animated.View>)}
-                />
+                /> */}
                 {/* Render Desc and title */}
                 {this.state.isExternalQueue
                   ? this.ExternalQueue()

@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 5,
-    backgroundColor:Colors.white
+    backgroundColor:Colors.transparent
   },
   visiblalityButtonContainer: {
     zIndex: 99999,
@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     // paddingTop: 10,
     paddingRight: 8,
     // width: 70,
-    height: 50,
+    // height: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -114,17 +114,18 @@ export const styles = StyleSheet.create({
   },
   animatedViewStyle:{
     width: '100%',
-    alignItems: 'flex-start',
+    alignItems: 'flex-end',
   },
   minWidth:{ 
-    minWidth: 180 
+    // minWidth: 180 
   },
   errorTextStyle:{
-    ...fontSize(12),
-    color: Colors.ErrorColor,
+    ...fontSize(13),
+    color: Colors.newTextColor,//ErrorColor,
     marginTop: 3,
-    lineHeight: 13,
-    marginLeft:5,
+    lineHeight: 16,
+    textAlign:'right',
+    // marginLeft:5,
     letterSpacing: -0.1,
     fontFamily: fontFamily.Inter,
   }

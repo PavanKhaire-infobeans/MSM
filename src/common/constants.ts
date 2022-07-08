@@ -16,8 +16,8 @@ export const keyArray = 'array';
 export const keyInt = 'int';
 export const keyBoolean = 'boolean';
 export const fontFamily = {
-  Inter: 'Inter',
-  Lora: 'Lora',
+  Inter: 'Inter-Regular',
+  Lora: 'Lora-Regular',
   // SFPro:"SFPro-Regular"
 };
 
@@ -63,6 +63,7 @@ export const Colors = {
   green: '#50B660',
   blacknew: '#222222',
   blacknewrgb: 'rgba(34,34,34,0.7)',
+  contextBackground: 'rgba(255,255,255,0)',
   overlayOpacityColor: '#ffffff22',
   underlay33OpacityColor: '#ffffff33',
   underlayBlackOpacityColor: '#00000011',
@@ -115,6 +116,7 @@ export const Colors = {
   filterborder: '#4D3C00',
   bottomTabColor: Appearance.getColorScheme() == 'light' ? '#E2E4E9' : '#ffffff',
   actionBg: 'rgba(237, 237, 237, 0.8)',
+  actionBgHex: '#EDEDED',
   decadeFilterBorder: '#052747',
   actionlistSeparater: 'rgba(0.35, 0.35, 0.35, 0.2)',
   black: Appearance.getColorScheme() == 'light' ? '#000000' : '#ffffff',
@@ -464,9 +466,9 @@ export const CommonTextStyles = {
   },
   fontWeight500Size13Inter: {
     fontWeight: '500',
-    ...fontSize(13),
+    ...fontSize(14),
     fontFamily: fontFamily.Inter,
-    lineHeight: 16
+    lineHeight: 17
   },
 };
 /*export const requestPermission = async (type: string): Promise<boolean> => {

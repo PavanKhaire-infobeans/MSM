@@ -25,7 +25,6 @@ const Styles = EStyleSheet.create({
         fontWeight: '500',
         fontFamily: 'Inter',
         lineHeight: 17
-        // fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     },
     titleContainer: {
         justifyContent: 'center',

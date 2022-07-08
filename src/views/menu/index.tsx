@@ -353,7 +353,7 @@ const styles = EStyleSheet.create({
     padding: Size.byWidth(16),
     flexDirection: 'row',
     shadowOpacity: 0.75,
-    elevation: 1,
+    elevation: 3,
     shadowRadius: 5,
     shadowColor: 'rgb(210,210,210)',
     shadowOffset: {height: 0, width: 1},

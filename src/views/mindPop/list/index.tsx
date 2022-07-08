@@ -606,7 +606,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 									}}
 									buttons={[
 										{
-											text: 'Great!',
+											text:  Platform.OS==='android'?'GREAT!':'Great!',
 											func: () => {
 												this.props.showAlertCall(false);
 											},

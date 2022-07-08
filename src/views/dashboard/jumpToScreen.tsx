@@ -147,7 +147,6 @@ const JumpToScreen = (props: Props) => {
     //   let index = allMonths.indexOf(state.selectedMonth) + 1;
     //   let month = (index < 10 ? '0' : '') + index;
     props.jumpToClick(selectedYear, '');//month
-    loaderHandler.showLoader();
     props.closeAction();
     // }
   };
@@ -251,6 +250,7 @@ const JumpToScreen = (props: Props) => {
                               shadowColor: Colors.black,
                               shadowOffset: { width: 0, height: 3 },
                               shadowOpacity: 0.2,
+                              elevation: 3,
                               shadowRadius: 3.22,
                             }
                               :
@@ -261,7 +261,7 @@ const JumpToScreen = (props: Props) => {
                         <View style={{ height: '100%', width: '100%', zIndex: 99, justifyContent: 'center', alignItems: 'center', borderRadius: 12, backgroundColor: Colors.white, overflow: 'hidden' }}>
                           <View style={{ backgroundColor: Colors.unSelectedFilterbg, height: '100%', justifyContent: 'center', alignItems: 'center', width: '100%', borderRadius: 12 }}>
 
-                            <View style={[styles.justifyContentCenterAlignCenter,{padding:10}]}>
+                            <View style={[styles.justifyContentCenterAlignCenter, { padding: 10 }]}>
                               {/* <SvgXml xml={xml} /> */}
                               {item.icon}
                             </View>
@@ -298,6 +298,7 @@ const JumpToScreen = (props: Props) => {
                           onPress={() => {
                             if (item.item.disabled == false) {
                               setSelectedYear(item?.item.name);
+                              loaderHandler.showLoader();
                               setTimeout(() => {
                                 jumpToClicked(item?.item.name)
                               }, 200);
@@ -321,11 +322,12 @@ const JumpToScreen = (props: Props) => {
                                 shadowOffset: { width: 0, height: item.item.name == selectedYear ? 1 : 0 },
                                 shadowOpacity: item.item.name == selectedYear ? 0.2 : 0,
                                 shadowRadius: item.item.name == selectedYear ? 2.22 : 0,
+                                elevation: 3,
                                 backgroundColor: Colors.white
                               }
                           ]}>
                           <View style={{ height: '100%', width: '100%', zIndex: 99, justifyContent: 'center', alignItems: 'center', borderRadius: 12, backgroundColor: Colors.white, overflow: 'hidden' }}>
-                            <View style={[styles.justifyContentCenterAlignCenter,{ backgroundColor: Colors.white, height: '100%', justifyContent: 'center', alignItems: 'center', width: '100%', borderRadius: 12 }]}>
+                            <View style={[styles.justifyContentCenterAlignCenter, { backgroundColor: Colors.white, height: '100%', justifyContent: 'center', alignItems: 'center', width: '100%', borderRadius: 12 }]}>
 
                               <Text
                                 style={[

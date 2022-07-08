@@ -1396,6 +1396,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowColor: '#D9D9D9',
     shadowRadius: 2,
+    elevation: 3,
     shadowOffset: {width: 0, height: 2},
   },
   sideMenu: {
@@ -1408,7 +1409,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderRadius: 5,
     shadowOpacity: 1,
-    elevation: 1,
+    elevation: 3,
     borderWidth: 0.5,
     borderColor: 'rgba(0,0,0, 0.5)',
     shadowColor: '#CACACA',

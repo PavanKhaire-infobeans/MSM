@@ -16,7 +16,7 @@ const Styles = EStyleSheet.create({
         shadowRadius: 2,
         shadowOffset: { width: 0, height: 2 },
         flex: 1,
-        elevation: 2, 
+        elevation: 3, 
         backgroundColor: Colors.timeLinebackground, 
         borderColor: Colors.bottomTabColor, 
         borderWidth: 2, 

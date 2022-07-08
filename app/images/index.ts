@@ -59,3 +59,7 @@ export const image = require('./write/image.png');
 export const calendarWrite = require('./write/calendar.png');
 export const plus = require('./prompts/plus.png');
 export const sampleimage = require('./prompts/sampleimage.png');
+export const backArrow = require('./write/backArrow.png');
+export const penEdit = require('./write/pen.png');
+export const eye = require('./auth/eye.png');
+export const eyeoff = require('./auth/eyeoff.png');

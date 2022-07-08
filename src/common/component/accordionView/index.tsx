@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 
-import {chevron_down} from '../../../images';
+import { chevron_down } from '../../../images';
 import Text from '../../../common/component/Text';
 import styles from './styles';
 
@@ -25,20 +25,20 @@ type Props = {
   sectionData: [any];
 };
 
-const AccordionView = (props:Props) =>{
-  const [state , setState] = useState({
-                                      activeSections: [],
-                                      sectionData: SECTIONS,
-                                    }) ;
+const AccordionView = (props: Props) => {
+  const [state, setState] = useState({
+    activeSections: [],
+    sectionData: SECTIONS,
+  });
 
-  useEffect(()=>{
+  useEffect(() => {
     setState(prevState => ({
       ...prevState,
       sectionData: props.sectionData
-  }))
-  },[props.sectionData]);
+    }))
+  }, [props.sectionData]);
 
-  const _renderHeader = (section: {[s: string]: any}) => {
+  const _renderHeader = (section: { [s: string]: any }) => {
     let imgStyle =
       state.activeSections.length == 0
         ? styles.chevronImageNormal
@@ -51,7 +51,7 @@ const AccordionView = (props:Props) =>{
     );
   };
 
-  const _renderContent = (section: {[s: string]: any}) => {
+  const _renderContent = (section: { [s: string]: any }) => {
     return (
       <View style={styles.cellContainer}>
         <Text numberofLines={0} style={styles.textSize16}>
@@ -68,20 +68,20 @@ const AccordionView = (props:Props) =>{
     setState(prevState => ({
       ...prevState,
       activeSections: activeSections
-  }))
+    }))
   };
 
-    return (
-      <Accordion
-        touchableComponent={TouchableWithoutFeedback}
-        sections={props.sectionData}
-        activeSections={state.activeSections}
-        renderHeader={_renderHeader}
-        renderContent={_renderContent}
-        onChange={_updateSections}
-      />
-    );
-  
+  return (
+    <Accordion
+      touchableComponent={TouchableWithoutFeedback}
+      sections={props.sectionData}
+      activeSections={state.activeSections}
+      renderHeader={_renderHeader}
+      renderContent={_renderContent}
+      onChange={_updateSections}
+    />
+  );
+
 }
 
 export default AccordionView;

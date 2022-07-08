@@ -44,7 +44,7 @@ const Styles = EStyleSheet.create({
     width: 24,
     borderRadius: 12,
     borderWidth: 2,
-    elevation: 1,
+    elevation: 3,
     shadowColor: Colors.black,
     shadowOpacity: 0.8,
     shadowRadius: 2,

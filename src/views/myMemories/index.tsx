@@ -108,7 +108,7 @@ export default class MyMemoriesContainer extends React.Component<Props> {
         }}
         buttons={[
           {
-            text: 'Great!',
+            text:  Platform.OS==='android'?'GREAT!':'Great!',
             func: () => {
 
             },

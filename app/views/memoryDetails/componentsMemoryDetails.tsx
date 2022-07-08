@@ -331,6 +331,7 @@ export const UserDetails = (props: {
           <View>
             <Image
               style={Styles.userImageStyle}
+              resizeMode='stretch'
               source={
                 props.isExternalQueue ? white_head_icon : blue_head_icon
               }
@@ -343,6 +344,7 @@ export const UserDetails = (props: {
             source={profile_placeholder}>
             <Image
               style={Styles.userImageStyle}
+              resizeMode='cover'
               source={
                 props.userDetails.isProfileAvailable
                   ? { uri: props.userDetails.userProfilePic }
@@ -738,8 +740,8 @@ export const LikeCommentShare = (props: {
   );
   let localId = props.id;
   return (
-    <View>
-      {props.animate == localId && props.animateType == 'like' ? (
+    // <View>
+      props.animate == localId && props.animateType == 'like' ? (
         <Animatable.View
           style={[Styles.LikeCommentShareContainer, {
             transform: [{ translateX: PublishedMemory.shakeAnimation }],
@@ -776,8 +778,8 @@ export const LikeCommentShare = (props: {
             {props.name}
           </Text> */}
         </View>
-      )}
-    </View>
+      )
+    // </View>
   );
 };
 

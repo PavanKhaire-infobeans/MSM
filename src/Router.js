@@ -214,7 +214,7 @@ const AppRouter = () => (
               borderWidth:1,
               borderTopWidth:3,
               borderTopColor:'white',
-              paddingBottom: Platform.OS === 'android' ? 0 : 25,
+              paddingBottom: Platform.OS === 'android' ? 25 : 25,
               // overflow: 'hidden',
               width: '94%',
               borderRadius: 12,

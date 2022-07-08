@@ -137,7 +137,7 @@ const Recent = (props: Props) => {
                             <Text
                                 style={styles.moreTextStyle}>
                                 {'+'}
-                                {item.audios.length - 1}
+                                {item.audios.length - 1+" more"}
                             </Text>
                         </TouchableOpacity>
                         // <View style={[{ width: 56, marginLeft: 7, elevation: 2, backgroundColor: Colors.AudioViewBg, borderColor: Colors.AudioViewBorderColor, borderWidth: 2, borderRadius: 10 }, styles.boxShadow]}>

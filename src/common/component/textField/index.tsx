@@ -13,6 +13,7 @@ import { Props, State } from './types';
 import { styles } from './styles';
 import { visibility, visibility_off } from '../../../images';
 import { Colors, fontFamily, fontSize } from '../../constants';
+import { eye, eyeoff } from '../../../../app/images';
 
 const kTop = 19,
   kTopAnimated = 5;
@@ -50,7 +51,8 @@ export default class TextField extends React.Component<Props, State> {
     onSubmitEditing: () => { },
     isCuebackRegistration: false,
     showStrength: false,
-    inputFocused: false
+    inputFocused: false,
+    nameInput: ''
   };
   constructor(props: Props) {
     super(props);
@@ -171,7 +173,8 @@ export default class TextField extends React.Component<Props, State> {
     return (
       <View
         style={[this.props.style, styles.container]}>
-        <View style={[styles.subContainer, this.props.secureTextEntry ? { flexDirection: 'row' } : {}]}>
+
+        <View style={[styles.subContainer, ]}>
           {/* <Animated.View
             style={[{
               height: this.state.height,
@@ -187,6 +190,7 @@ export default class TextField extends React.Component<Props, State> {
             shadowOffset: { width: 2, height: 3 },
             shadowOpacity: 0.2,
             shadowRadius: 3.22,
+            elevation: 3,
           }
             :
             // this.props.secureTextEntry ? { width: '90%' } :
@@ -243,6 +247,16 @@ export default class TextField extends React.Component<Props, State> {
                   secureTextEntry={
                     this.state.showPassword ? this.props.secureTextEntry : false
                   }
+                  // onChangeText={text => {
+                  //   const lastDigit = text[text.length - 1];
+                  //   this.setState({
+                  //     nameInput: this.state.nameInput.concat( '*'),
+                  //   });
+                  // }}
+                  //   onKeyPress={({ nativeEvent }) => {
+                  //     alert(nativeEvent.key)
+                  //     // nativeEvent.key in KeyCodes ? this.setState({ nameInput: KeyCodes.q }) : null
+                  // }}
                   onChangeText={(text: any) => this.onTextChange(text)}
                   style={[
                     this.props.inputTextStyle,
@@ -254,7 +268,7 @@ export default class TextField extends React.Component<Props, State> {
                   numberOfLines={1}
                   onFocus={this.onFocus}
                   multiline={false}
-                  value={value}
+                  value={this.state.nameInput}
                   defaultValue={defaultValue}
                   clearButtonMode={this.props.clearButtonMode}
                   selectionColor={Colors.darkGray}
@@ -276,16 +290,16 @@ export default class TextField extends React.Component<Props, State> {
 
           {this.props.secureTextEntry ? this.props.passwordToggle ? (
             <View
-              style={[styles.passwordToggleContainer, this.props.secureTextEntry ? { width: '10%', position: 'absolute', right: 5, top:8 } : { width: 0 }]}>
+              style={[styles.passwordToggleContainer, this.props.secureTextEntry ? { width: '10%', position: 'absolute', right: 5, top: 5 } : { width: 0 }]}>
               <TouchableOpacity
                 onPress={() => {
                   this.setState({ showPassword: !this.state.showPassword });
                 }}
                 style={styles.visiblalityButtonContainer}>
                 <Image
-                  style={styles.imageStyle}
+                  // style={styles.imageStyle}
                   source={
-                    this.state.showPassword ? visibility_off : visibility
+                    this.state.showPassword ? eyeoff : eye
                   }
                 />
               </TouchableOpacity>
@@ -296,7 +310,7 @@ export default class TextField extends React.Component<Props, State> {
 
               <TouchableOpacity
                 onPress={this.props.onPressClear}
-                style={[styles.crossContainer, this.props.secureTextEntry ? { width: '10%', position: 'absolute', right: 5, top:3 } : { width: 0 }]}>
+                style={[styles.crossContainer, this.props.secureTextEntry ? { width: '10%', position: 'absolute', right: 5, top: 3 } : { width: 0 }]}>
                 <Image
                   source={require('../../../images/cross/cross_icon.png')}
                   style={styles.crossImageStyle}

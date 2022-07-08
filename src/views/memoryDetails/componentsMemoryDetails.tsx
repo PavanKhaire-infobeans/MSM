@@ -60,7 +60,7 @@ const style = StyleSheet.create({
   },
   boxShadow: {
     shadowOpacity: 1,
-    elevation: 1,
+    elevation: 2,
     shadowColor: '#D9D9D9',
     shadowRadius: 2,
     shadowOffset: {width: 0, height: 2},

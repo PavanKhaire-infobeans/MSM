@@ -59,8 +59,8 @@ static void InitializeFlipper(UIApplication *application) {
 {
 #if DEBUG
 
-  return [NSURL URLWithString:@"http://192.168.2.175:8081/index.bundle?platform=ios"];
-  // return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  // return [NSURL URLWithString:@"http://192.168.2.175:8081/index.bundle?platform=ios"];
+  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif

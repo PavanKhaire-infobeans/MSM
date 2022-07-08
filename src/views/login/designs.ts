@@ -1,12 +1,12 @@
 import {StyleSheet, Platform} from 'react-native';
-import {Size, fontSize} from '../../common/constants';
+import {Size, fontSize, Colors} from '../../common/constants';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: Colors.timeLinebackground,
   },
 
   innerContainer: {

@@ -16,7 +16,7 @@ const Styles = EStyleSheet.create({
         shadowRadius: 2,
         shadowOffset: { width: 0, height: 2 },
         flex: 1,
-        elevation: 2,
+        elevation: 3,
         backgroundColor: Colors.timeLinebackground,
         borderColor: Colors.bottomTabColor,
         borderWidth: 2,
@@ -164,7 +164,7 @@ const Styles = EStyleSheet.create({
         position: "absolute",
         borderRadius: 5,
         shadowOpacity: 1,
-        elevation: 1,
+        elevation: 3,
         borderWidth: 0.5,
         borderColor: Colors.colorBlackOpacity5,
         shadowColor: Colors.redgray,
@@ -187,10 +187,11 @@ const Styles = EStyleSheet.create({
         justifyContent: "center"
     },
     moreTextStyle: {
-        color: Colors.newTextColor,
+        color: Colors.white,
         fontFamily: fontFamily.Inter,
+        fontWeight: '400',
         ...fontSize(15),
-        textAlign: "center"
+        textAlign: 'center',
     },
     audioMoreContainerStyle: {
         width: 56,

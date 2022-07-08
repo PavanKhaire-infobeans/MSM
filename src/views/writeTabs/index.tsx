@@ -53,9 +53,10 @@ class WriteTabs extends React.Component<Props>{
     state = {
         filterScreenVisibility: false,
         jumpToVisibility: false,
-        currentScreen: ListType.Recent,
+        currentScreen: "Edit",
         appTourVisibility: false,
-        showCustomAlert: false
+        showCustomAlert: false,
+        setInitial: 0
     };
     memoryFromPrompt: EventManager;
     screen = '';
@@ -200,7 +201,7 @@ class WriteTabs extends React.Component<Props>{
 
     componentWillUnmount = () => {
         this.props.showAlertCall(false);
-        this.eventManager.removeListener();
+        // this.eventManager.removeListener();
     }
 
     componentWillReceiveProps(props: Props) {
@@ -234,14 +235,16 @@ class WriteTabs extends React.Component<Props>{
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-
-    }
-
     onFilterClick = () => {
         this.setState({ currentScreen: this.screen }, () => {
             Actions.push("filtersScreen", { currentScreen: this.screen });
         })
+    }
+    
+    setScreen = () => {
+        if (this.scrollableTabView?.goToPage) {
+            this.scrollableTabView.goToPage(0);
+        }
     }
     render() {
         return (
@@ -298,7 +301,7 @@ class WriteTabs extends React.Component<Props>{
                                     }}
                                     buttons={[
                                         {
-                                            text: 'Great!',
+                                            text: Platform.OS==='android'?'GREAT!': 'Great!',
                                             func: () => {
                                                 this.props.showAlertCall(false);
                                             },
@@ -321,7 +324,7 @@ class WriteTabs extends React.Component<Props>{
                             title={this.props.filterName ? this.props.filterName : TabItems.AllMemories}
                             showRight={false}
                         />
-                        
+
                         <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} backgroundColor='#ffffff' />
                         <ScrollableTabViewForWrite
                             ref={(ref: any) => { this.scrollableTabView = ref; }}
@@ -332,7 +335,9 @@ class WriteTabs extends React.Component<Props>{
                             currentScreen={(screenName: any) => {
                                 if (screenName == 1) {
                                     if (Actions.currentScene != 'createMemory' && Actions.currentScene != 'mindPopList' && Actions.currentScene != 'addContent' && Actions.currentScene != 'dashboard') {
-                                        Actions.addContent();
+                                        Actions.push('addContent', {
+                                            beforeBack: () => { this.setScreen() }
+                                        });
                                     }
                                 }
                             }}

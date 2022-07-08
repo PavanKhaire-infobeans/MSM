@@ -1,11 +1,12 @@
 import { StyleSheet, Dimensions, I18nManager } from "react-native";
+import { Colors } from "../../constants";
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   dropdownButton: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#EFEFEF",
+    backgroundColor: Colors.actionBg,//"#EFEFEF",
     width: 40,
     height: 40,
     // paddingHorizontal: 8,
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
   dropdownOverlay: {
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: "rgba(0,0,0,1)",
   },
   dropdownOverlayView: {
     backgroundColor: "#C4C4C4",
@@ -66,6 +67,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 10,
+    elevation: 4,
   },
 });
 

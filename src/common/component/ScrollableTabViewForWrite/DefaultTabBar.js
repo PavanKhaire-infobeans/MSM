@@ -62,7 +62,7 @@ const DefaultTabBar = createReactClass({
               name == 'Prompts' && isTabActive ?
               <Image source={promptOn} />
               :
-              <Image  style={name == 'New' ?{ height: 56, width: 56 ,shadowOpacity: 0.05, shadowColor: '(46, 49, 62, 1)', shadowRadius: 9, shadowOffset: { width: -2, height: 2 }}:{}} source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : name == 'Edit' ? editOff : name == 'Prompts' ? promptsOff : name == 'New' ? newMemory : isTabActive ? timelinecalendar : bottomcalendar} />
+              <Image  style={name == 'New' ?{ height: 56, width: 56 ,elevation: 3,shadowOpacity: 0.05, shadowColor: '(46, 49, 62, 1)', shadowRadius: 9, shadowOffset: { width: -2, height: 2 }}:{}} source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : name == 'Edit' ? editOff : name == 'Prompts' ? promptsOff : name == 'New' ? newMemory : isTabActive ? timelinecalendar : bottomcalendar} />
         }
         <View style={{ height: 8 }} />
         <Text style={[{ color: textColor, fontWeight, fontFamily: fontFamily.Inter, fontSize: 19, lineHeight: 24 },]}>
@@ -118,14 +118,14 @@ const styles = StyleSheet.create({
     paddingBottom: 7,
   },
   tabs: {
-    height: 100,
+    height: 110,
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderWidth: 0,
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    paddingTop: 10,
+    paddingVertical: 5,
     borderColor: '#ffffff',
     width: '90%',
     alignSelf: 'center',

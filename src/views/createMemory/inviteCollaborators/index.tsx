@@ -510,7 +510,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                         position: 'absolute',
                         borderRadius: 5,
                         shadowOpacity: 1,
-                        elevation: 2,
+                        elevation: 3,
                         shadowColor: '#CACACA',
                         shadowRadius: 2,
                         borderWidth: 0.5,

@@ -148,7 +148,7 @@ const Timeline = (props: Props) => {
                         <Text
                             style={styles.moreTextStyle}>
                             {'+'}
-                            {item.audios.length - 1}
+                            {item.audios.length - 1+" more"}
                         </Text>
                     </TouchableOpacity>
                     // <View style={[styles.audioMoreContainerStyle, styles.boxShadow]}>
@@ -318,7 +318,7 @@ const Timeline = (props: Props) => {
                                 <TouchableOpacity onPress={() => props.showJumpto(false)} >
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flex: 7, borderTopLeftRadius: 12, borderTopRightRadius: 12, backgroundColor: Colors.blacknewrgb, shadowOpacity: 1, shadowColor: '(46, 49, 62, 0.05)', shadowRadius: 2, shadowOffset: { width: 4, height: 2 } }}>
+                            <View style={{ flex: 7, borderTopLeftRadius: 12, borderTopRightRadius: 12, backgroundColor: Colors.blacknewrgb, shadowOpacity: 1,elevation: 3, shadowColor: '(46, 49, 62, 0.05)', shadowRadius: 2, shadowOffset: { width: 4, height: 2 } }}>
                                 <JumpToScreen jumpToClick={(selectedYear: any, selectedMonth: any) => jumpToClicked(selectedYear, selectedMonth)}
                                     jumpToYears={props.jumpToYears} memoryDate={state.jumpToDate}
                                     closeAction={() => props.showJumpto(false)}

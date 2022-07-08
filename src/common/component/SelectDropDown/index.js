@@ -1,10 +1,10 @@
-import React, {useEffect, useState, useRef, forwardRef, useImperativeHandle} from 'react';
-import {View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, I18nManager} from 'react-native';
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, I18nManager } from 'react-native';
 import styles from './styles';
 // import findIndexInArr from './helpers/findIndexInArr';
 import calculateDropdownHeight from './helpers/calculateDropdownHeight';
 import isExist from './helpers/isExist';
-const {height,width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const SelectDropdown = (
   {
@@ -144,17 +144,17 @@ const SelectDropdown = (
   };
   ///////////////////////////////////////////////////////
   /* ******************** Render Methods ******************** */
-  const renderFlatlistItem = ({item, index}) => {
+  const renderFlatlistItem = ({ item, index }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        style={{...styles.dropdownRow, ...rowStyle}}
+        style={[data && data.length && data.length - 1 === index ? { ...styles.dropdownRow, ...rowStyle, borderBottomWidth: 0 } : { ...styles.dropdownRow, ...rowStyle }]}
         onPress={() => onSelectItem(item, index)}>
         {renderCustomizedRowChild ? (
           <View style={styles.dropdownCustomizedRowParent}>{renderCustomizedRowChild(item, index)}</View>
         ) : (
           <Text numberOfLines={1} allowFontScaling={false} style={[styles.dropdownRowText, rowTextStyle]}>
-            {rowTextForSelection ? rowTextForSelection(item, index) : item.text.toString().replace("Memory","memory")}
+            {rowTextForSelection ? rowTextForSelection(item, index) : item.text.toString().replace("Memory", "memory")}
           </Text>
         )}
       </TouchableOpacity>
@@ -189,7 +189,8 @@ const SelectDropdown = (
                 top: dropdownPY,
                 height: dropdownHEIGHT,
                 width: 254,//dropdownWIDTH
-                left:(width-254)/2,
+                // left:(width-254)/2,
+                right: 40,
                 borderTopWidth: 0,
                 overflow: 'hidden',
               },
@@ -201,18 +202,19 @@ const SelectDropdown = (
               <View style={styles.dropdownActivityIndicatorView}>
                 <ActivityIndicator size="small" color={'#999999'} />
               </View>
-            ) 
-            : 
-            (
-              <FlatList
-                data={data}
-                keyExtractor={(item, index) => index.toString()}
-                ref={ref => (dropDownFlatlistRef.current = ref)}
-                renderItem={renderFlatlistItem}
-                getItemLayout={getItemLayout}
-                onLayout={onLayout}
-              />
-            )}
+            )
+              :
+              (
+                <FlatList
+                  data={data}
+                  scrollEnabled={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  ref={ref => (dropDownFlatlistRef.current = ref)}
+                  renderItem={renderFlatlistItem}
+                  getItemLayout={getItemLayout}
+                  onLayout={onLayout}
+                />
+              )}
           </View>
         </Modal>
       )
@@ -226,7 +228,7 @@ const SelectDropdown = (
       activeOpacity={0.8}
       style={{
         ...styles.dropdownButton,
-        ...(dropdownIconPosition == 'left' ? {flexDirection: 'row'} : {flexDirection: 'row-reverse'}),
+        ...(dropdownIconPosition == 'left' ? { flexDirection: 'row' } : { flexDirection: 'row-reverse' }),
         ...buttonStyle,
       }}
       onPress={() => openDropdown()}>
@@ -235,7 +237,7 @@ const SelectDropdown = (
       {renderCustomizedButtonChild ? (
         <View style={styles.dropdownCustomizedButtonParent}>{renderCustomizedButtonChild(selectedItem, index)}</View>
       ) : (
-        <Text numberOfLines={1} allowFontScaling={false} style={{...styles.dropdownButtonText, ...buttonTextStyle}}>
+        <Text numberOfLines={1} allowFontScaling={false} style={{ ...styles.dropdownButtonText, ...buttonTextStyle }}>
           {isExist(selectedItem)
             ? buttonTextAfterSelection
               ? buttonTextAfterSelection(selectedItem, index)

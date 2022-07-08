@@ -2222,6 +2222,7 @@ const style = StyleSheet.create({
     shadowOpacity: 1,
     shadowColor: '#D9D9D9',
     shadowRadius: 2,
+    elevation: 3,
     shadowOffset: { width: 0, height: 2 },
   },
   avatar: {

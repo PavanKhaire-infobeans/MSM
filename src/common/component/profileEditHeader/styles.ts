@@ -62,7 +62,7 @@ const Styles = EStyleSheet.create({
   name: {
     color: Colors.newTextColor,
     ...fontSize(10),
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
     lineHeight: 15,
     textAlign: 'left',
     fontWeight: '500',
@@ -74,21 +74,26 @@ const Styles = EStyleSheet.create({
     flex: 1,
     paddingRight: 10,
   },
-
+  rightContainer: {
+    flex: 1.5,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    marginRight: 8
+  },
   rightButtonsContainer: {
     marginTop: 12,
     // paddingRight: 0,
     height: 40,
-    borderRadius:1000,
+    borderRadius: 1000,
     flexDirection: 'row',
-    paddingVertical: 8,
+    // paddingVertical: 8,
     paddingHorizontal: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:Colors.timeLinebackground,
-    marginRight:16,
-    borderWidth:1,
-    borderColor:Colors.bottomTabColor,
+    backgroundColor: Colors.timeLinebackground,
+    marginRight: 16,
+    borderWidth: 1,
+    borderColor: Colors.bottomTabColor,
   },
 
   moreOptionContainer: {
@@ -106,15 +111,26 @@ const Styles = EStyleSheet.create({
     alignItems: 'center',
     paddingRight: 10
   },
-
+  rightButtonsTouchableStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cancleText: {
+    color: Colors.newDescTextColor,
+    ...fontSize(16),
+    width: '100%',
+    textAlign: 'center',
+    fontWeight: '400',
+    fontFamily: 'Inter',
+    lineHeight: 16
+  },
   rightButtonSaveTouchable: {
     paddingVertical: 8,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    borderRadius:1000,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 1000,
     paddingHorizontal: 12,
     // backgroundColor:Colors.bottomTabColor,
-    backgroundColor:'red'
 
   },
 
@@ -133,7 +149,7 @@ const Styles = EStyleSheet.create({
     alignItems: 'center'
   },
   marginleft: {
-    marginLeft: 34
+    marginLeft: 30
   },
   cancleTextContainer: {
     width: 72,
@@ -148,13 +164,13 @@ const Styles = EStyleSheet.create({
     ...fontSize(14),
     lineHeight: 17
   },
-  emptyView:{ 
-    height: 10, 
-    width: 15 
+  emptyView: {
+    height: 10,
+    width: 15
   },
   titleText: {
     color: Colors.newTextColor,
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
     ...fontSize(18),
     lineHeight: 20,
     textAlign: 'left',
@@ -162,7 +178,7 @@ const Styles = EStyleSheet.create({
   },
   leftButtonTouchableContainer: {
     justifyContent: 'center',
-    height:'100%',
+    height: '100%',
     // padding: 15,
     marginTop: 5,
   },
@@ -184,12 +200,12 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
   },
 
-  rightTextStyle:{
+  rightTextStyle: {
     ...fontSize(19),
     fontWeight: '400',
-    textAlign:'center',
+    textAlign: 'center',
     color: Colors.newTextColor,
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
   },
 
 });

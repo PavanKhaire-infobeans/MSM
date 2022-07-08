@@ -309,7 +309,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 
     return (
       <View style={styles.container} onTouchStart={() => { Keyboard.dismiss() }}>
-        <ImageBackground source={Rectangle} resizeMode='cover' style={{ flex: 1, height: '100%', width: '100%', alignItems: 'center' }}>
+        {/* <ImageBackground source={Rectangle} resizeMode='cover' style={{ flex: 1, height: '100%', width: '100%', alignItems: 'center' }}> */}
 
           {/* <Modal
             animationType={'slide'}
@@ -340,21 +340,21 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 						Keyboard.dismiss();
 					}}> */}
 
-          <LinearGradient
+          {/* <LinearGradient
             // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
             // locations={[0, 0.6]}
             colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.6)']}
-            style={{ height: '100%', width: '100%' }}>
+            style={{ height: '100%', width: '100%' }}> */}
             <SafeAreaView>
               <MessageDialogue ref={(ref: any) => this.messageRef = ref} />
               <View
               // onScroll={() => { Keyboard.dismiss() }}
               >
 
-                <View style={{ height: 77, width: Utility.getDeviceWidth() - 48, flexDirection: 'row', justifyContent: 'space-between', marginLeft: 24, marginTop: 68 }}>
-                  <TouchableWithoutFeedback onPress={() => Actions.pop()}><Image source={loginBack} /></TouchableWithoutFeedback>
-                  <Text style={{ fontWeight: '500', ...fontSize(31), lineHeight: 45, fontFamily: fontFamily.Lora, color: Colors.bordercolor, textAlign: 'center' }}>Login</Text>
-                  <View style={{ width: 40 }} />
+                <View style={{ height: 77, width: Utility.getDeviceWidth() - 48, flexDirection: 'row', justifyContent: 'space-between', marginTop: 68 }}>
+                  {/* <TouchableWithoutFeedback onPress={() => Actions.pop()}><Image source={loginBack} /></TouchableWithoutFeedback> */}
+                  <Text style={{ fontWeight: '500', ...fontSize(36), lineHeight: 45, fontFamily: fontFamily.Lora, color: Colors.black, textAlign: 'left' }}>Login</Text>
+                  {/* <View style={{ width: 40 }} /> */}
                 </View>
 
                 <View style={Styles.separatorHeightStyle16} />
@@ -363,9 +363,9 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                 {/* <View style={styles.communityBanner}>
 									<CommunityBanner communityInfo={this.selectedCommunity} />
 								</View> */}
-                <View style={{ height: Utility.getDeviceHeight() * 0.65, justifyContent: 'space-between' }}>
+                <View style={{ height: Utility.getDeviceHeight() * 0.65, width: Utility.getDeviceWidth() - 48, justifyContent: 'space-between'}}>
 
-                  <View style={{ width: Utility.getDeviceWidth() - 48, marginLeft: 24, }}>
+                  <View style={{ }}>
 
                     <Text style={[CommonTextStyles.fontWeight500Size13Inter, { marginBottom: 4, marginLeft: 8, color: Colors.newTextColor }]}>
                       EMAIL OR USERNAME
@@ -406,7 +406,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                         this.controller.onTextChange('password', text)
                       }
                     />
-                    <View style={{ height: 10 }} />
+                    {/* <View style={{ height: 10 }} /> */}
                   </View>
 
                   {/* <View
@@ -422,17 +422,17 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                     // padding: 24,
                     // flex: 1,
                     width: Utility.getDeviceWidth() - 48,
-                    marginLeft: 24,
                     // backgroundColor: 'red',
                     justifyContent: "flex-end"
                   }, animStyle]} >
 
                     <TouchableWithoutFeedback
-                      disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                      // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
                       onPress={this.controller.onClick.bind(this.controller)}
                     >
                       <View style={[Styles.loginSSOButtonStyle, {
-                        backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 0.5, flexDirection: 'row'
+                        backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.bordercolor : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
+                        // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
                       }]}>
                         <Text style={[CommonTextStyles.fontWeight400Size19Inter, { color: Colors.white, marginRight: 9.67 }]}>
                           Login
@@ -510,9 +510,9 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
               {/* </View> */}
               {/* </View> */}
             </SafeAreaView>
-          </LinearGradient>
+          {/* </LinearGradient> */}
           {/* </TouchableWithoutFeedback> */}
-        </ImageBackground>
+        {/* </ImageBackground> */}
       </View>
     );
   }

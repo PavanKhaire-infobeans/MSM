@@ -298,7 +298,7 @@ export default class PromptsView extends React.Component<State, Props> {
                         borderWidth: 0,
                         alignSelf: 'center',
                         shadowOpacity: 0.2,
-                        elevation: 0.2,
+                        elevation: 3,
                       }}>
                       {/* <View>
                       <TouchableOpacity
