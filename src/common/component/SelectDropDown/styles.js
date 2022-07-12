@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, I18nManager } from "react-native";
+import { StyleSheet, Dimensions, I18nManager, Platform } from "react-native";
 import { Colors } from "../../constants";
 const { width, height } = Dimensions.get("window");
 
@@ -42,19 +42,20 @@ const styles = StyleSheet.create({
   dropdownRow: {
     flex: 1,
     height: 44,
-    width:254,
+    width: Platform.OS === 'ios' ? 254 : 130,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     borderBottomColor: "#939396",
-    borderBottomWidth: 0.5,
+    borderBottomWidth:  Platform.OS === 'ios' ? 0.5 :0,
+    paddingVertical:8
   },
   dropdownRowText: {
     flex: 1,
     fontSize: 18,
     color: "#000000",
     textAlign: "center",
-    // marginHorizontal: 8,
+    lineHeight: Platform.OS === 'ios' ? 22 : 18.75
   },
   dropdownCustomizedRowParent: {
     flex: 1,
@@ -66,8 +67,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
-    elevation: 10,
-    elevation: 4,
+    elevation: 8,
+    // elevation: 4,
   },
 });
 

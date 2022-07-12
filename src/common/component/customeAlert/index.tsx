@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View, Platform } from "react-native";
+import { Colors } from "../../constants";
 import styles from './styles';
 
 const CustomAlert = (props) => {
@@ -9,19 +10,19 @@ const CustomAlert = (props) => {
       backgroundColor: (props.android && props.android.container && props.android.container.backgroundColor) || '#FAFAFA',
     },
     title: {
-      color: (props.android && props.android.title && props.android.title.color) || '#000000',
+      color: (props.android && props.android.title && props.android.title.color) || Colors.black,
       //   fontFamily: (props.android && props.android.title && props.android.title.fontFamily) || 'initial',
       fontSize: (props.android && props.android.title && props.android.title.fontSize) || 22,
       fontWeight: (props.android && props.android.title && props.android.title.fontWeight) || 'bold',
     },
     message: {
-      color: (props.android && props.android.message && props.android.message.color) || '#000000',
+      color: (props.android && props.android.message && props.android.message.color) || Colors.black,
       //   fontFamily: (props.android && props.android.message && props.android.message.fontFamily) || 'initial',
       fontSize: (props.android && props.android.message && props.android.message.fontSize) || 15,
       fontWeight: (props.android && props.android.message && props.android.message.fontWeight) || 'normal',
     },
     button: {
-      color: '#387ef5',
+      color: '#6200EE',
       //   fontFamily: 'initial',
       fontSize: 16,
       fontWeight: '500',
@@ -34,13 +35,13 @@ const CustomAlert = (props) => {
       backgroundColor: (props.ios && props.ios.container && props.ios.container.backgroundColor) || '#D4D4D4',
     },
     title: {
-      color: (props.ios && props.ios.title && props.ios.title.color) || '#000000',
+      color: (props.ios && props.ios.title && props.ios.title.color) || Colors.black,
       //   fontFamily: (props.ios && props.ios.title && props.ios.title.fontFamily) || 'initial',
       fontSize: (props.ios && props.ios.title && props.ios.title.fontSize) || 17,
       fontWeight: (props.ios && props.ios.title && props.ios.title.fontWeight) || '600',
     },
     message: {
-      color: (props.ios && props.ios.message && props.ios.message.color) || '#000000',
+      color: (props.ios && props.ios.message && props.ios.message.color) || Colors.black,
       //   fontFamily: (props.ios && props.ios.message && props.ios.message.fontFamily) || 'initial',
       fontSize: (props.ios && props.ios.message && props.ios.message.fontSize) || 13,
       fontWeight: (props.ios && props.ios.message && props.ios.message.fontWeight) || 'normal',

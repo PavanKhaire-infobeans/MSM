@@ -1324,10 +1324,10 @@ export const MemoryBasicDetails = (
           <View style={styles.moreoptionStyle}>
             <SelectDropdown
               // ref={this.dropDownRef}
-              dropdownStyle={{ borderRadius: 12 }}
-              rowTextStyle={{ textAlign: 'left', fontSize: 17, fontWeight: '400', color: Colors.black, paddingLeft: 16 }}
+              dropdownStyle={{ borderRadius: Platform.OS === 'ios' ? 12 : 4 }}
+              rowTextStyle={{ textAlign: 'left', fontSize: Platform.OS === 'ios' ? 17 : 16, color: Platform.OS === 'ios' ? Colors.black : Colors.blackOpacity60, fontWeight: '400', paddingLeft: 16 }}
               dropdownOverlayColor={Colors.contextBackground}
-              rowStyle={{ backgroundColor: Colors.actionBgHex, opacity: 0.8, height: 44, borderBottomColor: '#939396', borderBottomWidth: 0.5 }}
+              rowStyle={{ backgroundColor: Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white, opacity: Platform.OS === 'ios' ? 0.8 : 1, height: Platform.OS === 'ios' ? 44 : 48, borderBottomColor: '#939396', marginRight: Platform.OS === 'ios' ? undefined : 22, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0 }}
               buttonStyle={{ backgroundColor: Colors.white, width: 40 }}
               data={MemoryActionsListArray(item)}
               onSelect={(selectedItem, index) => {

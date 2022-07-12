@@ -21,6 +21,7 @@ import JumpToScreen from '../jumpToScreen';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import EventManager from '../../../common/eventManager';
 import { chevronleftfilter, leftgradient } from '../../../../app/images';
+import LinearGradient from 'react-native-linear-gradient';
 type State = { [x: string]: any };
 type Props = { [x: string]: any };
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
@@ -148,7 +149,7 @@ const Timeline = (props: Props) => {
                         <Text
                             style={styles.moreTextStyle}>
                             {'+'}
-                            {item.audios.length - 1+" more"}
+                            {item.audios.length - 1 + " more"}
                         </Text>
                     </TouchableOpacity>
                     // <View style={[styles.audioMoreContainerStyle, styles.boxShadow]}>
@@ -314,15 +315,27 @@ const Timeline = (props: Props) => {
                     >
                         <View style={{ flex: 1, backgroundColor: Colors.blacknewrgb }}>
 
-                            <View style={{ flex: 1, backgroundColor: Colors.blacknewrgb }}>
-                                <TouchableOpacity onPress={() => props.showJumpto(false)} >
+                            <View style={{ flex: 1, backgroundColor: Colors.transparent }}>
+                                <TouchableOpacity style={{ flex: 1, backgroundColor: Colors.transparent }} onPress={() => props.showJumpto(false)} >
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flex: 7, borderTopLeftRadius: 12, borderTopRightRadius: 12, backgroundColor: Colors.blacknewrgb, shadowOpacity: 1,elevation: 3, shadowColor: '(46, 49, 62, 0.05)', shadowRadius: 2, shadowOffset: { width: 4, height: 2 } }}>
+                            <View style={{ flex: 7, borderTopLeftRadius: 12, borderTopRightRadius: 12, shadowOpacity: 1, elevation: 3, shadowColor: '(46, 49, 62, 0.05)', shadowRadius: 2, shadowOffset: { width: 4, height: 2 } }}>
                                 <JumpToScreen jumpToClick={(selectedYear: any, selectedMonth: any) => jumpToClicked(selectedYear, selectedMonth)}
                                     jumpToYears={props.jumpToYears} memoryDate={state.jumpToDate}
                                     closeAction={() => props.showJumpto(false)}
                                 />
+                                <LinearGradient
+                                    // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+                                    // locations={[0, 0.6]}
+                                    colors={['rgba(255, 255, 255, 0)','rgba(255, 255, 255, 0.9)', 'rgba(255, 255, 255, 1)']}
+                                    style={{ height: 50, width: '100%', position:'absolute',bottom:20 }}>
+                                </LinearGradient>
+                                <LinearGradient
+                                    // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+                                    // locations={[0, 0.6]}
+                                    colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)']}
+                                    style={{ height: 20, width: '100%', position:'absolute',bottom:0 }}>
+                                </LinearGradient>
                             </View>
 
                         </View>

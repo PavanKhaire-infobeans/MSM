@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, I18nManager } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, I18nManager, Platform } from 'react-native';
 import styles from './styles';
 // import findIndexInArr from './helpers/findIndexInArr';
 import calculateDropdownHeight from './helpers/calculateDropdownHeight';
 import isExist from './helpers/isExist';
+import { Colors } from '../../constants';
 const { height, width } = Dimensions.get('window');
 
 const SelectDropdown = (
@@ -188,10 +189,13 @@ const SelectDropdown = (
                 position: 'absolute',
                 top: dropdownPY,
                 height: dropdownHEIGHT,
-                width: 254,//dropdownWIDTH
+                width: Platform.OS === 'ios' ? 254 : undefined,//dropdownWIDTH
                 // left:(width-254)/2,
                 right: 40,
-                borderTopWidth: 0,
+                elevation: 10,
+                borderWidth: 1,
+                borderColor: 'transparent',
+                backgroundColor:  Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white,
                 overflow: 'hidden',
               },
               // ...(I18nManager.isRTL

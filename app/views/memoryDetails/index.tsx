@@ -139,6 +139,7 @@ import { kPublishedMemoryUpdated, MemoryBasicDetails } from '../../../src/views/
 import { MemoryAction, kMemoryActionPerformedOnMemoryDetails } from '../../../src/views/myMemories/myMemoriesWebService';
 import NavigationHeaderSafeArea from '../../../src/common/component/profileEditHeader/navigationHeaderSafeArea';
 import style from './styles';
+import LinearGradient from 'react-native-linear-gradient';
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
@@ -1069,93 +1070,93 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 (file.item.filePath && file.item.filePath != '')) && (
                   <TouchableWithoutFeedback onPress={() => this.togglePlayPause(file.index)}>
                     {/* <> */}
+                    <View
+                      style={{
+                        width: '100%',
+                        paddingVertical: 10,
+                        justifyContent: 'flex-start',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
                       <View
                         style={{
-                          width: '100%',
-                          paddingVertical: 10,
-                          justifyContent: 'flex-start',
-                          flexDirection: 'row',
+                          width: 55,
+                          height: 55,
+                          marginLeft: 15,
+                          backgroundColor: Colors.white,
+                          borderRadius: 30,
+                          justifyContent: 'center',
                           alignItems: 'center',
+                          borderWidth: 4,
+                          borderColor: Colors.bordercolor,
                         }}>
-                        <View
-                          style={{
-                            width: 55,
-                            height: 55,
-                            marginLeft: 15,
-                            backgroundColor: Colors.white,
-                            borderRadius: 30,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderWidth: 4,
-                            borderColor: Colors.bordercolor,
-                          }}>
-                          {this.state.audioFile.index == file.index &&
-                            this.state.audioFile.isPlaying ? (
+                        {this.state.audioFile.index == file.index &&
+                          this.state.audioFile.isPlaying ? (
+                          <View
+                            style={{
+                              height: 20,
+                              width: 16,
+                              justifyContent: 'space-between',
+                              flexDirection: 'row',
+                            }}>
                             <View
                               style={{
-                                height: 20,
-                                width: 16,
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
-                              }}>
-                              <View
-                                style={{
-                                  backgroundColor: Colors.bordercolor,
-                                  flex: 1,
-                                  width: 5,
-                                }}
-                              />
-                              <View
-                                style={{
-                                  backgroundColor: 'transparent',
-                                  flex: 1,
-                                  width: 2,
-                                }}
-                              />
-                              <View
-                                style={{
-                                  backgroundColor: Colors.bordercolor,
-                                  flex: 1,
-                                  width: 5,
-                                }}
-                              />
-                            </View>
-                          ) : (
-                            <View
-                              style={{
-                                height: 24,
-                                width: 24,
-                                marginLeft: 10,
-                                borderLeftColor: Colors.bordercolor,
-                                borderLeftWidth: 18,
-                                borderTopColor: 'transparent',
-                                borderTopWidth: 12,
-                                borderBottomColor: 'transparent',
-                                borderBottomWidth: 12,
+                                backgroundColor: Colors.bordercolor,
+                                flex: 1,
+                                width: 5,
                               }}
                             />
-                          )}
-                        </View>
-                        <View style={{ marginLeft: 10 }}>
-                          <Text
-                            style={[
-                              style.normalText,
-                              { color: '#000', marginBottom: 5, paddingRight: 80 },
-                            ]}
-                            numberOfLines={1}
-                            ellipsizeMode="tail">
-                            {file.item.title
-                              ? file.item.title
-                              : file.item.filename
-                                ? file.item.filename
-                                : ''}
-                          </Text>
-                          <Text style={[style.normalText, { color: '#000' }]}>
-                            {file.item.duration}
-                          </Text>
-                        </View>
+                            <View
+                              style={{
+                                backgroundColor: 'transparent',
+                                flex: 1,
+                                width: 2,
+                              }}
+                            />
+                            <View
+                              style={{
+                                backgroundColor: Colors.bordercolor,
+                                flex: 1,
+                                width: 5,
+                              }}
+                            />
+                          </View>
+                        ) : (
+                          <View
+                            style={{
+                              height: 24,
+                              width: 24,
+                              marginLeft: 10,
+                              borderLeftColor: Colors.bordercolor,
+                              borderLeftWidth: 18,
+                              borderTopColor: 'transparent',
+                              borderTopWidth: 12,
+                              borderBottomColor: 'transparent',
+                              borderBottomWidth: 12,
+                            }}
+                          />
+                        )}
                       </View>
-                      {/* <TitleAndDescription file={file} type={kAudio} /> */}
+                      <View style={{ marginLeft: 10 }}>
+                        <Text
+                          style={[
+                            style.normalText,
+                            { color: '#000', marginBottom: 5, paddingRight: 80 },
+                          ]}
+                          numberOfLines={1}
+                          ellipsizeMode="tail">
+                          {file.item.title
+                            ? file.item.title
+                            : file.item.filename
+                              ? file.item.filename
+                              : ''}
+                        </Text>
+                        <Text style={[style.normalText, { color: '#000' }]}>
+                          {file.item.duration}
+                        </Text>
+                      </View>
+                    </View>
+                    {/* <TitleAndDescription file={file} type={kAudio} /> */}
                     {/* </> */}
                   </TouchableWithoutFeedback>
                 )}
@@ -2108,10 +2109,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
               isWhite={true}
               rightText={this.memoryDataModel.userDetails.name == 'You' ? "Edit\nMemory" : ''}
               backIcon={backArrow}
-              rightIcon={penEdit}
-              saveValues={()=>{
+              rightIcon={this.memoryDataModel.userDetails.name == 'You' ? penEdit : null}
+              saveValues={() => {
                 if (this.memoryDataModel.userDetails.name == 'You') {
-                  this.onActionItemClicked(0,{ nid: this.memoryDataModel.nid, actionType: MemoryActionKeys.editMemoryKey })
+                  this.onActionItemClicked(0, { nid: this.memoryDataModel.nid, actionType: MemoryActionKeys.editMemoryKey })
                 }
               }}
             />
@@ -2157,8 +2158,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 enableResetScrollToCoords={false}
                 enableAutomaticScroll={true}
                 style={{
-                  marginBottom: Platform.OS == 'android' && this.state.bottomToolbar == 0
-                    ? 150 : Platform.OS == 'ios' ? 150 : -300
+                  // marginBottom: Platform.OS == 'android' && this.state.bottomToolbar == 0
+                  //   ? 150 : Platform.OS == 'ios' ? 150 : -300
                 }}
                 keyboardShouldPersistTaps={'always'}
                 enableOnAndroid={false}
@@ -2271,9 +2272,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 }
 
                 {/* Common comment box for all sections */}
-                {!this.props.previewDraft &&
+                {/* {!this.props.previewDraft &&
                   this.state.memoryDetailAvailable &&
-                  this.CommentBox()}
+                  this.CommentBox()} */}
 
               </KeyboardAwareScrollView>
             </View>
@@ -2289,8 +2290,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
             playerCallback={(event: any) => this.playerCallback(event)}
             files={this.memoryDataModel.files.audios}
             memoryTitle={this.memoryDataModel.memory.memoryTitle}
-            // by={'by ' + this.memoryDataModel.userDetails.name}
-            ></AudioPlayer>
+          // by={'by ' + this.memoryDataModel.userDetails.name}
+          ></AudioPlayer>
           <MemoryActionsSheet
             ref={ref => (this._actionSheet = ref)}
             width={DeviceInfo.isTablet() ? '65%' : '100%'}
@@ -2299,6 +2300,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
             onActionClick={this.onActionItemClicked.bind(this)}
           />
         </>
+
+        <LinearGradient
+          // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+          // locations={[0, 0.6]}
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
+          style={{ height: 34, width: '100%', position: 'absolute', bottom: 0 }}>
+        </LinearGradient>
       </SafeAreaView>
     );
   }

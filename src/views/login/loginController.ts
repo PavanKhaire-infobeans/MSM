@@ -8,12 +8,12 @@ import {
   NO_INTERNET,
   CueBackInsatance,
 } from '../../common/constants';
-import {Keyboard, Alert, DeviceEventEmitter, Platform} from 'react-native';
+import { Keyboard, Alert, DeviceEventEmitter, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {ToastMessage, No_Internet_Warning} from '../../common/component/Toast';
-import {LoginStore, Account, UserData} from '../../common/loginStore';
-import {Actions} from 'react-native-router-flux';
+import { ToastMessage, No_Internet_Warning } from '../../common/component/Toast';
+import { LoginStore, Account, UserData } from '../../common/loginStore';
+import { Actions } from 'react-native-router-flux';
 import Utility from '../../common/utility';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
@@ -21,9 +21,9 @@ import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import {SSOLogin, kSSOLogin} from '../../common/webservice/loginServices';
+import { SSOLogin, kSSOLogin } from '../../common/webservice/loginServices';
 import EventManager from '../../common/eventManager';
-import {NativeModules, NativeEventEmitter} from 'react-native';
+import { NativeModules, NativeEventEmitter } from 'react-native';
 
 let userInfo: any = {};
 export const kAppleCredentials = 'appleUserCredentials';
@@ -71,7 +71,7 @@ export class LoginController implements LoginControllerProtocol {
 
   appleLoginCallBack(params: any) {
     this.appleSubscriber.remove();
-    let user = {id: params.id};
+    let user = { id: params.id };
     if (params.id != null && params.id.trim() != '') {
       loaderHandler.showLoader();
       if (params.email != null && params.email.trim() != '') {
@@ -84,7 +84,7 @@ export class LoginController implements LoginControllerProtocol {
           name: params.givenName + ' ' + params.familyName,
         };
       }
-      userInfo = {user};
+      userInfo = { user };
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
           params = {
@@ -190,7 +190,7 @@ export class LoginController implements LoginControllerProtocol {
 
   onClick() {
     if (Utility.isInternetConnected) {
-      const {username, password} = this.view.state;
+      const { username, password } = this.view.state;
       if (username.length == 0 || password.length == 0) {
         var state = {};
         if (username.length == 0) {
@@ -260,7 +260,7 @@ export class LoginController implements LoginControllerProtocol {
    * @param value
    */
   onTextChange(key: string, value: string) {
-    var state: {[x: string]: any} = {[key]: value};
+    var state: { [x: string]: any } = { [key]: value };
     if (
       key == 'username' &&
       this.view.state.userNameError.error == true &&
@@ -315,14 +315,14 @@ export class LoginController implements LoginControllerProtocol {
 
   loginUserAccounts = (portal_ids?: any) => {
     loaderHandler.showLoader();
-    const {username, password} = this.view.state;
-    let loginObj: any = {emailId: username, password: password, fcm_token: ''};
+    const { username, password } = this.view.state;
+    let loginObj: any = { emailId: username, password: password, fcm_token: '' };
     if (portal_ids) {
-      loginObj = {...loginObj, portal_ids: portal_ids};
+      loginObj = { ...loginObj, portal_ids: portal_ids };
     }
     DefaultPreference.get('firebaseToken').then(
       (value: any) => {
-        this.view.props.loginServiceCall({...loginObj, fcm_token: value});
+        this.view.props.loginServiceCall({ ...loginObj, fcm_token: value });
       },
       (err: any) => {
         this.view.props.loginServiceCall(loginObj);
@@ -370,7 +370,7 @@ export class LoginController implements LoginControllerProtocol {
       isSSOLogin: isSSOLogin,
       // profileImage:  this.generateFileForProfile(profileImage)
     };
-    const values = {...this.view.selectedCommunity};
+    const values = { ...this.view.selectedCommunity };
     LoginStore.saveOnLogin(values);
     this.view.dataWasStored = userID;
     this.view.props.setUser(this.view.selectedCommunity);
@@ -403,8 +403,8 @@ export class LoginController implements LoginControllerProtocol {
               DefaultPreference.set('loginCredentials', JSON.stringify(obj));
             } else {
               DefaultPreference.get('loginCredentials').then((value: any) => {
-                value = JSON.parse(value);
-                if (value.username && value.password) {
+                value = value ? JSON.parse(value) : null;
+                if (value && (value.username && value.password)) {
                   if (
                     obj.username == value.username &&
                     obj.password == value.password
@@ -427,7 +427,7 @@ export class LoginController implements LoginControllerProtocol {
         }
       } else {
         //If web service failed
-        var msg: {message: string; ResponseMessage: string} = getValue(
+        var msg: { message: string; ResponseMessage: string } = getValue(
           loginStatus,
           ['logindata'],
         );
@@ -480,7 +480,7 @@ export class LoginController implements LoginControllerProtocol {
           this.view._show(NO_INTERNET, Colors.WarningColor);
         }
       } else {
-        var msg: {message: string; ResponseMessage: string} = getValue(
+        var msg: { message: string; ResponseMessage: string } = getValue(
           loginStatus,
           ['instanceData'],
         );

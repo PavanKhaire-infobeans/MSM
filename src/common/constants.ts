@@ -128,6 +128,7 @@ export const Colors = {
   touchableunderlayColor: '#ffffff00',
   SerachbarColor: '#F3F3F3',
   moreViewBg: 'rgba(11, 12, 15, 0.6)',
+  blackOpacity60: 'rgba(0, 0, 0, 0.6)',
   transparent: 'transparent'
 };
 export const MyMemoriesTapBarOptions = {

@@ -8,9 +8,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Utility from '../../common/utility';
 import {No_Internet_Warning} from '../../common/component/Toast';
 
-// export const kAdmin: string = 'https://admin.cueback.com'; //production
+export const kAdmin: string = 'https://admin.cueback.com'; //production
 //export const kAdmin: string = 'https://qa-admin.cueback.com';
-export const kAdmin: string = 'https://admin.cuebackqa.com';
+// export const kAdmin: string = 'https://admin.cuebackqa.com';
 const qaURL: string = 'https://admin.cueback.com';
 export const isCueBackInstance = (kAdmin == qaURL) ? true : false;
 const kStoreInstance = 'StoreInstanceData';

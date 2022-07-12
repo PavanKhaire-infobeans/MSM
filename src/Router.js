@@ -120,7 +120,7 @@ if (Text.defaultProps == null) Text.defaultProps = {};
 Text.defaultProps.allowFontScaling = false;
 
 const AppRouter = () => (
-  <Router sceneStyle={{backgroundColor: Colors.white}}>
+  <Router sceneStyle={{ backgroundColor: Colors.white }}>
     <Scene key="root">
       {/* <Scene key="animatedAppIntro" type={ActionConst.RESET} hideNavBar component={AnimatedAppIntro} /> */}
       <Scene
@@ -211,9 +211,9 @@ const AppRouter = () => (
               justifyContent: 'flex-start',
               alignItems: 'flex-start',
               backgroundColor: Colors.white,
-              borderWidth:1,
-              borderTopWidth:3,
-              borderTopColor:'white',
+              borderWidth: 1,
+              borderTopWidth: 3,
+              borderTopColor: 'white',
               paddingBottom: Platform.OS === 'android' ? 25 : 25,
               // overflow: 'hidden',
               width: '94%',
@@ -405,7 +405,7 @@ function navigateToParticular(navigation, defaultHandler) {
     // if (navigation.state.routeName == 'key3') {
     //   EventManager.callBack('addContentTabPressed');
     // } else {
-      defaultHandler();
+    defaultHandler();
     // }
   } catch (error) {
     console.log("defaultHandler  > ", error)
@@ -418,10 +418,10 @@ const App = (props) => {
 
   // alert(useWindowDimensions().fontScale)
 
-   /*
-     * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
-     * */
-   const notificationOpenedListener = messaging().onNotificationOpenedApp(
+  /*
+    * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+    * */
+  const notificationOpenedListener = messaging().onNotificationOpenedApp(
     notificationOpen => {
       // const { data  } = notificationOpen.notification;
       const { data } = notificationOpen;
@@ -459,6 +459,7 @@ const App = (props) => {
         onTokenRefreshListener();
     }
   }, [])
+
   // async componentDidMount() {
   //   setTimeout(() => SplashScreen.hide(), 500);
   //   networkConnectivitySaga();
@@ -600,7 +601,7 @@ const App = (props) => {
       trackAppLifecycleEvents: true,
     });
   }
-  
+
   console.disableYellowBox = true;
   return (
     <Provider store={store}>

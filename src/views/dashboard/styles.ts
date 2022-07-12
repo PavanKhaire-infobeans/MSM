@@ -313,7 +313,7 @@ const Styles = EStyleSheet.create({
   jumptoScreenContainer:{ 
     height: '100%', 
     width: '100%', 
-    backgroundColor: Colors.blacknew, 
+    // backgroundColor: Colors.blacknew, 
     borderTopLeftRadius: 12, 
     borderTopRightRadius: 12 
   },

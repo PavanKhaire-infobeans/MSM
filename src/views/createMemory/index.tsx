@@ -120,6 +120,8 @@ import { MemoryDraftsDataModel } from '../myMemories/MemoryDrafts/memoryDraftsDa
 //@ts-ignore
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import { DateTimePickerAndroid, DatePickerOptions } from '@react-native-community/datetimepicker';
+import DateTimePicker from '../../common/component/DateTimePicker';
+
 import MemoryDraftIntro from './memoryDraftIntro';
 import Styles from './styles';
 import { calender, image, arrowRight, calendarsmall, calendarWrite } from '../../../app/images';
@@ -1790,6 +1792,20 @@ class CreateMemory extends React.Component<Props> {
           </TouchableOpacity> */}
 
         </View>
+
+        {Platform.OS === 'android' && this.state.showCalender && <DateTimePicker
+          isVisible={this.state.showCalender}
+          onCancel={() => {
+            this.setState({ showCalender: false });
+            //console.log("cancelled")
+          }}
+          onDateSelection={(date: any) => {
+            this.setState({
+              showCalender: false,
+              memory_date: moment(date).format('DD/MM/YYYY')
+            })
+          }}
+        />}
         {
           this.state.bottomToolbar ?
             null
@@ -1800,13 +1816,13 @@ class CreateMemory extends React.Component<Props> {
                   <TouchableOpacity
                     style={{ flex: 1, backgroundColor: Colors.white, borderWidth: 1.5, borderColor: Colors.bottomTabColor, borderRadius: 8, justifyContent: 'space-evenly', alignItems: 'center' }}
                     onPress={() => {
-                      if (Platform.OS === 'android') {
-                        DateTimePickerAndroid.open(this.dateOptions);
-                      } else {
-                        this.setState({
-                          showCalender: true
-                        })
-                      }
+                      // if (Platform.OS === 'android') {
+                      //   DateTimePickerAndroid.open(this.dateOptions);
+                      // } else {
+                      this.setState({
+                        showCalender: true
+                      })
+                      // }
                     }}>
                     <Image source={calendarWrite} />
                     <Text
@@ -1999,7 +2015,7 @@ class CreateMemory extends React.Component<Props> {
         <SafeAreaView
           style={styles.SafeAreaViewContainerStyle}>
 
-          {this.state.showCalender && <View
+          {Platform.OS === 'ios' && this.state.showCalender && <View
             style={[{
               minHeight: 400, borderRadius: 12,
               alignItems: 'center',
@@ -2147,7 +2163,7 @@ class CreateMemory extends React.Component<Props> {
             <NavigationHeaderSafeArea
               // heading={'Memory Draft'}
               showCommunity={false}
-              cancelAction={() => this.setState({ showCustomAlert: true })}//this.cancelAction}
+              cancelAction={() => this.saveDraft()} //this.setState({ showCustomAlert: true }) //this.cancelAction}
               showRightText={true}
               rightText={
                 this.props.editPublsihedMemory
@@ -2157,7 +2173,7 @@ class CreateMemory extends React.Component<Props> {
                   : 'Save'
               }
               backIcon={action_close}
-              saveValues={this.saveDraft}
+              saveValues={() => this.setState({ showCustomAlert: true })}//this.saveDraft
             // rightIcon={this.state.isCreatedByUser}
             // showHideMenu={() => this.showMenu(!this.state.menuVisibility)}
             />
@@ -2222,14 +2238,14 @@ class CreateMemory extends React.Component<Props> {
                     },
                   }}
                   buttons={
-                    this.state.actionSheet.list = this.state.actionSheet.list.map((item:any)=>{
+                    this.state.actionSheet.list = this.state.actionSheet.list.map((item: any) => {
                       return ({
                         text: item.text,
                         index: item.index,
                         func: () => {
                           this.setState({
                             showActionAndroid: false
-                          },()=>{
+                          }, () => {
                             this.onActionItemClicked(item.index);
                           })
                         },
@@ -2240,54 +2256,54 @@ class CreateMemory extends React.Component<Props> {
                         }
                       })
                     })
-                  //   [{
-                  //   text: 'Close and save as draft',
-                  //   func: () => {
-                  //     this.setState({ showCustomAlert: false }, () => {
-                  //       if (this.props.padDetails?.padId) {
-                  //         this.setEtherPadContent('get', '', this.state.padDetails.padId);
-                  //       }
-                  //       setTimeout(() => {
-                  //         this.saveORPublish('save');
-                  //       }, 1000);
-                  //     })
+                    //   [{
+                    //   text: 'Close and save as draft',
+                    //   func: () => {
+                    //     this.setState({ showCustomAlert: false }, () => {
+                    //       if (this.props.padDetails?.padId) {
+                    //         this.setEtherPadContent('get', '', this.state.padDetails.padId);
+                    //       }
+                    //       setTimeout(() => {
+                    //         this.saveORPublish('save');
+                    //       }, 1000);
+                    //     })
 
-                  //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                  //   },
-                  //   styles: {
-                  //     lineHeight: 22,
-                  //     fontSize: 17,
-                  //     fontWeight: '600',
-                  //   }
-                  // },
-                  // {
-                  //   text: 'Continue editing',
-                  //   func: () => {
-                  //     this.setState({ showCustomAlert: false })
-                  //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                  //   },
-                  //   styles: {
-                  //     lineHeight: 22,
-                  //     fontSize: 17,
-                  //     fontWeight: '400',
-                  //   }
-                  // },
-                  // {
-                  //   text: 'Cancel',
-                  //   func: () => {
-                  //     this.setState({ showActionAndroid: false }, () => {
-                        
-                  //     })
-                  //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                  //   },
-                  //   styles: {
-                  //     lineHeight: 22,
-                  //     fontSize: 17,
-                  //     fontWeight: '400',
-                  //   }
-                  // }
-                  // ]
-                }
+                    //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+                    //   },
+                    //   styles: {
+                    //     lineHeight: 22,
+                    //     fontSize: 17,
+                    //     fontWeight: '600',
+                    //   }
+                    // },
+                    // {
+                    //   text: 'Continue editing',
+                    //   func: () => {
+                    //     this.setState({ showCustomAlert: false })
+                    //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+                    //   },
+                    //   styles: {
+                    //     lineHeight: 22,
+                    //     fontSize: 17,
+                    //     fontWeight: '400',
+                    //   }
+                    // },
+                    // {
+                    //   text: 'Cancel',
+                    //   func: () => {
+                    //     this.setState({ showActionAndroid: false }, () => {
+
+                    //     })
+                    //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+                    //   },
+                    //   styles: {
+                    //     lineHeight: 22,
+                    //     fontSize: 17,
+                    //     fontWeight: '400',
+                    //   }
+                    // }
+                    // ]
+                  }
                 />
               }
               {
