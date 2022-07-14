@@ -60,7 +60,8 @@ const Styles = EStyleSheet.create({
     paddingLeft: 16
   },
   pickerText: {
-    fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
+    fontWeight:'600',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
     ...fontSize(18),
     color: Colors.newTextColor,
   },

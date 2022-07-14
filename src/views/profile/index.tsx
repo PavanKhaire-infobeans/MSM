@@ -44,7 +44,7 @@ import {
 import {ProfileDataModel} from './profileDataModel';
 import {Actions} from 'react-native-router-flux';
 import Utility from '../../common/utility';
-import {getValue, NO_INTERNET, fontSize} from '../../common/constants';
+import {getValue, NO_INTERNET, fontSize, fontFamily} from '../../common/constants';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import ActionSheet, {
   ActionSheetItem as ImageSelectionSheetItem,
@@ -385,7 +385,8 @@ export default class Profile extends React.Component<object> {
           </View>
           <Text
             style={{
-              fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+              fontWeight: '500',
+              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
               marginTop: 7,
               ...fontSize(18),
               color: Colors.TextColor,
@@ -698,7 +699,8 @@ const FriendListView = (props: {
       <View style={cardStyles.headerComponent}>
         <Text
           style={{
-            fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+            fontWeight: '500',
+            fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
             ...fontSize(18),
           }}>
           {props.heading}
@@ -706,9 +708,10 @@ const FriendListView = (props: {
         <TouchableOpacity onPress={() => props.viewFriendsList}>
           <Text
             style={{
-              fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+              fontWeight: '500',
               lineHeight: 20,
               ...fontSize(16),
+              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
               color: Colors.NewTitleColor,
               paddingRight: 10,
             }}>
@@ -771,7 +774,8 @@ const Card = (props: {
         <Text
           style={{
             color: Colors.TextColor,
-            fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+            fontWeight: '500',
+            fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
             ...fontSize(18),
           }}>
           {props.heading}
@@ -809,8 +813,9 @@ const TextViewWithHeading = (props: {heading: String; value: String}) => {
       <Text
         style={{
           ...fontSize(16),
-          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+          fontWeight: '500',
           color: Colors.TextColor,
+          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
         }}>
         {' '}
         {props.heading}{' '}

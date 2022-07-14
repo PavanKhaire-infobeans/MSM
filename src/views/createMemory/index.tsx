@@ -1713,7 +1713,7 @@ class CreateMemory extends React.Component<Props> {
                       fontSize: 22,
                       lineHeight: 27.5,
                       color: Colors.newTextColor,
-                      fontFamily: fontFamily.Lora,
+                      fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
                     }]}
 
                     value={this.state.title}
@@ -2083,7 +2083,7 @@ class CreateMemory extends React.Component<Props> {
               },
               message: {
                 color: Colors.black,
-                // fontFamily: fontFamily.Inter,
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                 fontSize: 16,
                 fontWeight: '500',
               },
@@ -2213,7 +2213,7 @@ class CreateMemory extends React.Component<Props> {
                     },
                     message: {
                       color: Colors.black,
-                      // fontFamily: fontFamily.Inter,
+                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                       fontSize: 16,
                       fontWeight: '500',
                     },

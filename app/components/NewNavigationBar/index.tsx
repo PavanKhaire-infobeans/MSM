@@ -138,11 +138,14 @@ const NavigationBar = (props: Props) => {
               testID={testID.rightButtons.mindpop}>
               <View style={styles.rightButtonsTouchable}>
                 <Image
+                  style={{ height: 24, width: 24 }}
                   source={jumptocalendar}
                   resizeMode="contain"
                 />
                 <View style={{ height: 4 }} />
-                <Text style={styles.cancleText}>{'Jump to Year'}</Text>
+                <View style={{ height: 32 }} >
+                  <Text style={styles.JumptoText}>{'Jump to\nYear'}</Text>
+                </View>
               </View>
             </TouchableWithoutFeedback>
             :
@@ -191,20 +194,21 @@ const NavigationBar = (props: Props) => {
         <View style={styles.leftButtonTouchableContainer}>
           {showClose ? (
             <View style={styles.closeButton}>
-              <View >
+              <View style={{ height: 24 }}  >
                 <Image source={close_white} />
               </View>
-              <View >
+              <View style={{ height: 4 }} />
+              <View style={{ height: 32, justifyContent: 'center' }}>
                 <Text style={styles.cancleText}>Cancle</Text>
               </View>
             </View>
           ) : (
             <View style={styles.closeButton}>
-              <View style={styles.marginBottom} >
+              <View style={{ height: 24 }} >
                 <Image source={user} />
               </View>
-              {/* <View style={{ height: 20 }} /> */}
-              <View >
+              <View style={{ height: 4 }} />
+              <View style={{ height: 32, alignItems: 'center', justifyContent: 'center', paddingTop: 8 }}>
                 <Text style={styles.cancleText}>Profile</Text>
               </View>
             </View>

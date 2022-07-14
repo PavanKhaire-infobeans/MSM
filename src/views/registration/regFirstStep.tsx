@@ -9,7 +9,7 @@ import { SubmitButton } from "../../common/component/button";
 import TextField from "../../common/component/textField";
 import Text from "../../common/component/Text";
 import DropDown from "../../common/component/dropDown";
-import { Size, Colors, fontSize, ERROR_MESSAGE, testEmail, TimeStampMilliSeconds, getValue, validBirthYear, CommonTextStyles } from "../../common/constants";
+import { Size, Colors, fontSize, ERROR_MESSAGE, testEmail, TimeStampMilliSeconds, getValue, validBirthYear, CommonTextStyles, fontFamily } from "../../common/constants";
 import { Actions } from "react-native-router-flux";
 import EventManager from "../../common/eventManager";
 import { ToastMessage } from "../../common/component/Toast";
@@ -651,7 +651,7 @@ export default class RegFirstStep extends Component<Props> {
 									<View style={{ width: "100%", padding: 15 }}>
 										<View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 15 }}>
 											<Image source={registration_vector} />
-											<Text style={{ fontWeight: Platform.OS === "ios" ? '600' : 'bold', ...fontSize(18), paddingLeft: 10 }}>Registration</Text>
+											<Text style={{ fontWeight: '600', ...fontSize(18), fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold, paddingLeft: 10 }}>Registration</Text>
 										</View>
 										{this.form.map((form: FormStruct, index: number) => {
 											return this.getFormEntity(form, { fieldID: `${index}`, isLast: formLength - 1 == index });
@@ -679,7 +679,7 @@ export default class RegFirstStep extends Component<Props> {
 													justifyContent: "center",
 													backgroundColor: "transparent"
 												}}>
-												<Text style={{ fontWeight: Platform.OS === "ios" ? '600' : 'bold', color: Colors.NewTitleColor, ...fontSize(Size.byWidth(18)) }}>Login</Text>
+												<Text style={{ fontWeight: '600', fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold, color: Colors.NewTitleColor, ...fontSize(Size.byWidth(18)) }}>Login</Text>
 											</TouchableOpacity>
 										</View>
 									</View>

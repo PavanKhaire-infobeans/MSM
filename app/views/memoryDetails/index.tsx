@@ -1904,7 +1904,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
         <Text
           style={{
-            fontFamily: fontFamily.Lora,
+            fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
             lineHeight: 37,
             ...fontSize(30),
             color: Colors.bordercolor,
@@ -2100,7 +2100,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           {this.state.memoryDetailAvailable && (
             <NavigationHeaderSafeArea
               // heading={'Filters'}
-              padding={20}
+              // padding={20}
               heading={''}
               cancleText={'Back'}
               showCommunity={false}

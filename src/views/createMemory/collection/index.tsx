@@ -18,7 +18,7 @@ import React from 'react';
 import {Actions} from 'react-native-router-flux';
 // @ts-ignore
 import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
-import {Colors, fontSize, decode_utf8} from '../../../common/constants';
+import {Colors, fontSize, decode_utf8, fontFamily} from '../../../common/constants';
 import NavigationThemeBar from '../../../common/component/navigationBarForEdit/navigationBarWithTheme';
 import {
   pdf_icon,
@@ -178,7 +178,8 @@ class CollectionList extends React.Component<Props, State> {
                 <Text
                   style={{
                     ...fontSize(16),
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontWeight:'500',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                     color: Colors.TextColor,
                   }}>
                   {decode_utf8(item.item.name)}
@@ -258,7 +259,8 @@ class CollectionList extends React.Component<Props, State> {
                   style={{
                     ...fontSize(16),
                     marginLeft: 10,
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontWeight:'500',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                     color: Colors.NewTitleColor,
                   }}>
                   Create New Collection

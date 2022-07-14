@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import Text from '../../../common/component/Text';
 import {Actions} from 'react-native-router-flux';
-import {fontSize, Colors} from '../../../common/constants';
+import {fontSize, Colors, fontFamily} from '../../../common/constants';
 import DeviceInfo from 'react-native-device-info';
 //@ts-ignore
 import Carousel, {Pagination} from 'react-native-snap-carousel';
@@ -215,9 +215,10 @@ export default class ImageViewer extends React.Component<Props> {
                   <Text
                     style={{
                       ...fontSize(16),
-                      fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                      fontWeight: '500',
                       color: '#D3D3D3',
                       backgroundColor: 'transparent',
+                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                       marginBottom: 10,
                     }}>
                     {this.props.files[this.state.activeSlide].file_title}

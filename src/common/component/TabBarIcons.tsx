@@ -130,7 +130,7 @@ export default class TabIcon extends React.Component<{ [x: string]: any }> {
     }
 
     return (
-      <View style={[style.container,{
+      <View style={[style.container, {
         borderTopLeftRadius: this.props.title == 'Read' ? 14 : 0,
         borderBottomLeftRadius: this.props.title == 'Read' ? 14 : 0,
         borderTopRightRadius: this.props.title == 'Write' ? 14 : 0,
@@ -138,16 +138,26 @@ export default class TabIcon extends React.Component<{ [x: string]: any }> {
       }]}>
 
         <View
-          style={[style.subContainer,{
+          style={[style.subContainer, {
             borderWidth: this.props.focused ? 1 : 0,
             borderBottomColor: this.props.focused ? Colors.bordercolor : Colors.transparent,
             backgroundColor: this.props.focused ? Colors.white : Colors.bottomTabColor,
-          }]}>
+          },
+          this.props.focused ?
+            {
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 10,
+              elevation:5,
+              shadowColor: Colors.black
+            }
+            :
+            {}]}>
 
           {this.props.title != TabItems.AddContent && (
             <>
               <Text
-                style={[style.titleTextStyle,{
+                style={[style.titleTextStyle, {
                   ...fontSize(font),
                   color: this.props.focused ? Colors.bordercolor : Colors.newTextColor,
                 }]}>

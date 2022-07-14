@@ -11,7 +11,7 @@ import {
 import Text from '../../common/component/Text';
 import {Actions} from 'react-native-router-flux';
 import {backBtn} from '../../images';
-import {Colors, fontSize} from '../../common/constants';
+import {Colors, fontFamily, fontSize} from '../../common/constants';
 import Utility from '../../common/utility';
 
 export default class TipsAndTricks extends React.Component<{[x: string]: any}> {
@@ -54,9 +54,10 @@ export default class TipsAndTricks extends React.Component<{[x: string]: any}> {
           </TouchableOpacity>
           <Text
             style={{
-              color: '#fff',
+              color: Colors.white,
               ...fontSize(18),
-              fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
+              fontWeight:'600',
+              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
               marginLeft: 30,
               marginBottom: 8,
             }}>

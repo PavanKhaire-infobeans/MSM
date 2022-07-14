@@ -358,7 +358,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                   style={[
                     style.tabsText,
                     {
-                      fontWeight: this.state.userTabSelected ? Platform.OS === 'ios'? '500': 'bold' : 'normal',
+                      fontWeight: this.state.userTabSelected ? '500' : 'normal',
                     },
                   ]}>
                   Friends
@@ -379,7 +379,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                   style={[
                     style.tabsText,
                     {
-                      fontWeight: !this.state.userTabSelected ? Platform.OS === 'ios' ? '500' : 'bold' : 'normal',
+                      fontWeight: !this.state.userTabSelected ?'500' : 'normal',
                     },
                   ]}>
                   Friend Circle

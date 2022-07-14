@@ -1,35 +1,36 @@
-import {Image, TouchableOpacity, View, StatusBar, Platform} from 'react-native';
+import { Image, TouchableOpacity, View, StatusBar, Platform } from 'react-native';
 import Text from '../../../common/component/Text';
 import React from 'react';
 //@ts-ignore
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {backBtn, navBarCrossIconWhite, mindpopBarIcon} from '../../../images';
-import {connect} from 'react-redux';
-import {Colors, fontSize} from '../../../common/constants';
+import { backBtn, navBarCrossIconWhite, mindpopBarIcon } from '../../../images';
+import { connect } from 'react-redux';
+import { Colors, fontSize, fontFamily } from '../../../common/constants';
 import NavigationHeader from '../../../common/component/navigationHeader';
 import { Actions } from 'react-native-router-flux';
 
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
-  leftButtons: {menu: 'navbar_leftbtn_menu'},
+  leftButtons: { menu: 'navbar_leftbtn_menu' },
   rightButtons: {
     mindpop: 'mindpop_btn',
     message: 'message_btn',
     notification: 'notification_btn',
   },
-  title: {text: 'title'},
+  title: { text: 'title' },
 };
-
+//Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
 const styles = EStyleSheet.create({
   titleText: {
     color: Colors.TextColor,
     ...fontSize(18),
     lineHeight: 20,
     textAlign: 'left',
-    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+    fontFamily: 'Inter',
+    fontWeight: '500',
   },
 
-  titleContainer: {justifyContent: 'center', paddingTop: 10},
+  titleContainer: { justifyContent: 'center', paddingTop: 10 },
 
   leftButtonTouchableContainer: {
     justifyContent: 'center',
@@ -54,7 +55,7 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
   },
 
-  leftButtonLogo: {width: 20, height: 20},
+  leftButtonLogo: { width: 20, height: 20 },
 
   rightButtonsContainer: {
     flex: 1,
@@ -65,9 +66,9 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
 
-  rightButtonsTouchable: {padding: 5, paddingRight: 10},
+  rightButtonsTouchable: { padding: 5, paddingRight: 10 },
 
-  rightButtonsBackgroundImage: {width: 30, height: 30},
+  rightButtonsBackgroundImage: { width: 30, height: 30 },
 
   rightButtonsBadge: {
     position: 'absolute',
@@ -81,10 +82,10 @@ const styles = EStyleSheet.create({
     alignContent: 'center',
   },
 
-  rightButtonsBadgeText: {...fontSize(10), color: '#ffffff'},
+  rightButtonsBadgeText: { ...fontSize(10), color: '#ffffff' },
 });
 
-class MindPopNavigationBar extends React.Component<{[x: string]: any}> {
+class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
   _renderLeft() {
     let action = this.props.isSelectionOn
       ? this.props.backAction
@@ -95,9 +96,9 @@ class MindPopNavigationBar extends React.Component<{[x: string]: any}> {
         style={[styles.leftButtonTouchableContainer]}
         testID={testID.leftButtons.menu}
         onPress={() => Actions.dashBoard()}>
-{/* action() */}
+        {/* action() */}
         <Image
-          style={{height: 28, width: 28}}
+          style={{ height: 28, width: 28 }}
           resizeMode="center"
           source={leftImg}
         />
@@ -116,9 +117,9 @@ class MindPopNavigationBar extends React.Component<{[x: string]: any}> {
     let mindPopImg = mindpopBarIcon;
     return (
       <View
-        style={{alignItems: 'center', justifyContent: 'center', marginEnd: 10}}>
+        style={{ alignItems: 'center', justifyContent: 'center', marginEnd: 10 }}>
         <Image
-          style={{height: 28, width: 28}}
+          style={{ height: 28, width: 28 }}
           resizeMode="center"
           source={mindPopImg}
         />
@@ -179,7 +180,7 @@ class MindPopNavigationBar extends React.Component<{[x: string]: any}> {
   }
 }
 
-const mapStateToProps = (state: {[x: string]: any}) => ({
+const mapStateToProps = (state: { [x: string]: any }) => ({
   isSelectionOn: state.mindPopListSelectionStatus as boolean,
   listCount: state.listCount as number,
   selectedItemCount: state.selectedItemCount,

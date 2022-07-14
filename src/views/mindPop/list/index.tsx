@@ -5,7 +5,7 @@ import Text from "../../../common/component/Text";
 import { Actions } from "react-native-router-flux";
 //@ts-ignore
 import EStyleSheet from "react-native-extended-stylesheet";
-import { Size, getValue, TimeStampMilliSeconds, Colors, fontSize, NO_INTERNET, ERROR_MESSAGE, decode_utf8, MindPopsInProgress } from "../../../common/constants";
+import { Size, getValue, TimeStampMilliSeconds, Colors, fontSize, NO_INTERNET, ERROR_MESSAGE, decode_utf8, MindPopsInProgress, fontFamily } from "../../../common/constants";
 import DeviceInfo from "react-native-device-info";
 import { GetMindPopStatus, MindPopListSelectionState, MindPopListCount, MindPopSelectedItemCount } from "./reducer";
 import { connect } from "react-redux";
@@ -547,7 +547,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 	}
 	private _empty = () => (
 		<View style={{ height: 300, width: 300, backgroundColor: "transparent", alignItems: "center", alignSelf: "center" }}>
-			<Text style={{ color: "black", ...fontSize(18), marginTop: 41, fontWeight: Platform.OS === "ios" ? '600' : 'bold' }}>No Results Found</Text>
+			<Text style={{ color: "black", ...fontSize(18), marginTop: 41, fontWeight: '600',fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold, }}>No Results Found</Text>
 			<Text style={{ color: "#1c1c1c", ...fontSize(18), lineHeight: 26, marginTop: 16, textAlign: "center" }}>{`We couldn't find any results for '${this.searchKeyword}'. Try searching for something else`}</Text>
 		</View>
 	);
@@ -845,8 +845,9 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 											borderBottomRadius: 5
 										}}>
 										<Text style={{
-											fontWeight: Platform.OS === "ios" ? '500' : 'bold',
+											fontWeight: '500',
 											...fontSize(18),
+											fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
 											color: Colors.NewTitleColor,
 											paddingLeft: 15
 										}}>{"Convert to Memory"}</Text>
@@ -1045,17 +1046,18 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 
 const styles = EStyleSheet.create({
 	container: {
-		backgroundColor: "white",
+		backgroundColor: Colors.white,
 		flex: 1,
 		width: "100%"
 	},
 	containerSearch: {
-		backgroundColor: "white",
+		backgroundColor: Colors.white,
 	},
 	backTextWhite: {
-		color: "#FFF",
+		color: Colors.white,
 		...fontSize(17),
-		fontWeight: Platform.OS === "ios" ? '500' : 'bold',
+		fontWeight: '500',
+		fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
 		padding: 12,
 		textAlign: "center"
 	},

@@ -23,6 +23,7 @@ import {
   fontSize,
   encode_utf8,
   MemoryActionKeys,
+  fontFamily,
 } from '../../../common/constants';
 import {
   GetPublishedMemories,
@@ -1151,7 +1152,7 @@ export const MemoryBasicDetails = (
             <Text
               style={{
                 ...fontSize(16),
-                fontFamily: 'Rubik',
+                fontFamily: fontFamily.Inter,
                 color: Colors.TextColor,
                 lineHeight: 20,
               }}>
@@ -1159,7 +1160,8 @@ export const MemoryBasicDetails = (
               <Text
                 style={{
                   color: Colors.NewYellowColor,
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500',
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                   lineHeight: 20,
                 }}>
                 {userDetails.name}
@@ -1169,7 +1171,7 @@ export const MemoryBasicDetails = (
               <Text
                 style={{
                   ...fontSize(14),
-                  fontFamily: 'Rubik',
+                  fontFamily: fontFamily.Inter,
                   color: Colors.TextColor,
                   lineHeight: 20,
                 }}>

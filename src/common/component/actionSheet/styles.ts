@@ -28,6 +28,7 @@ const Styles = EStyleSheet.create({
     paddingStart: 24,
     height: 56,
     ...fontSize(18),
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
   },
   flatlistContainer: {

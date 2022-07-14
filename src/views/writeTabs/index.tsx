@@ -240,7 +240,7 @@ class WriteTabs extends React.Component<Props>{
             Actions.push("filtersScreen", { currentScreen: this.screen });
         })
     }
-    
+
     setScreen = () => {
         if (this.scrollableTabView?.goToPage) {
             this.scrollableTabView.goToPage(0);
@@ -301,7 +301,7 @@ class WriteTabs extends React.Component<Props>{
                                     }}
                                     buttons={[
                                         {
-                                            text: Platform.OS==='android'?'GREAT!': 'Great!',
+                                            text: Platform.OS === 'android' ? 'GREAT!' : 'Great!',
                                             func: () => {
                                                 this.props.showAlertCall(false);
                                             },
@@ -343,7 +343,7 @@ class WriteTabs extends React.Component<Props>{
                             }}
                             tabBarBackgroundColor={Colors.white}
                             tabBarPosition="bottom"
-                            tabBarTextStyle={{ ...fontSize(16), fontFamily: fontFamily.Inter }}
+                            tabBarTextStyle={{ ...fontSize(16), fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium }}
                             tabBarActiveTextColor={Colors.TextColor}
                             // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
                             tabBarUnderlineStyle={{ backgroundColor: Colors.white, height: 2 }} >

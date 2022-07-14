@@ -25,7 +25,7 @@ import {
 import NavigationBar from '../dashboard/NavigationBar';
 import NavigationBarForEdit from '../../common/component/navigationBarForEdit';
 import {Actions} from 'react-native-router-flux';
-import {Colors, fontSize, Size} from '../../common/constants';
+import {Colors, fontFamily, fontSize, Size} from '../../common/constants';
 import Utility from '../../common/utility';
 import {Account} from '../../common/loginStore';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
@@ -83,7 +83,8 @@ export default class CustomListView extends React.Component<Props> {
             <Text
               style={{
                 marginLeft: 10,
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                fontWeight: '500',
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                 lineHeight: 20,
                 fontSize: 16,
                 color: Colors.TextColor,
@@ -105,8 +106,9 @@ export default class CustomListView extends React.Component<Props> {
               onPress={() => this.props.onClick(item.item.uid)}>
               <Text
                 style={{
-                  color: '#fff',
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  color: Colors.white,
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                  fontWeight: '500',
                 }}>
                 Unblock
               </Text>

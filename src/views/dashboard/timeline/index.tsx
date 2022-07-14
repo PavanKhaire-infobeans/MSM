@@ -5,7 +5,7 @@ import AudioPlayer, { kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious } fro
 import { MemoryActionsSheetItem } from '../../../common/component/memoryActionsSheet';
 import MemoryActionsSheet from './../../../../app/components/memoryActionsSheet';
 import { No_Internet_Warning } from '../../../common/component/Toast';
-import { Colors, fontSize, MemoryActionKeys } from '../../../common/constants';
+import { Colors, fontFamily, fontSize, MemoryActionKeys } from '../../../common/constants';
 import Utility from '../../../common/utility';
 import { cancelActions } from '../../../images';
 import { Like, Unlike } from '../../memoryDetails/detailsWebService';
@@ -327,14 +327,14 @@ const Timeline = (props: Props) => {
                                 <LinearGradient
                                     // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
                                     // locations={[0, 0.6]}
-                                    colors={['rgba(255, 255, 255, 0)','rgba(255, 255, 255, 0.9)', 'rgba(255, 255, 255, 1)']}
-                                    style={{ height: 50, width: '100%', position:'absolute',bottom:20 }}>
+                                    colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.9)', 'rgba(255, 255, 255, 1)']}
+                                    style={{ height: 50, width: '100%', position: 'absolute', bottom: 20 }}>
                                 </LinearGradient>
                                 <LinearGradient
                                     // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
                                     // locations={[0, 0.6]}
                                     colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)']}
-                                    style={{ height: 20, width: '100%', position:'absolute',bottom:0 }}>
+                                    style={{ height: 20, width: '100%', position: 'absolute', bottom: 0 }}>
                                 </LinearGradient>
                             </View>
 
@@ -374,7 +374,7 @@ const Timeline = (props: Props) => {
                                             <Text style={[styles.newnormalText, { color: Colors.newTextColor, ...fontSize(15), lineHeight: 15 }]} numberOfLines={1} ellipsizeMode='tail'>{previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : ''}</Text>
                                             {<View style={{ height: 1, backgroundColor: Colors.newTextColor, width: 46 }}></View>}
                                             {/* <Text style={[styles.newnormalText, { color: Colors.newTextColor }]}>{props.toDate}</Text> */}
-                                            <Text style={[styles.newnormalText, { color: Colors.newTextColor, fontWeight: '700', ...fontSize(19), lineHeight: 23.75 }]}>{JSON.stringify(currentItemYear)}</Text>
+                                            <Text style={[styles.newnormalText, { color: Colors.newTextColor, fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterBold, fontWeight: '700', ...fontSize(19), lineHeight: 23.75 }]}>{JSON.stringify(currentItemYear)}</Text>
                                             <View style={{ height: 1, backgroundColor: nextItemYear ? Colors.newTextColor : Colors.transparent, width: nextItemYear ? 46 : 64 }}></View>
                                             {
                                                 nextItemYear ?

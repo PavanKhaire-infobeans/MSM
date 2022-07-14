@@ -19,7 +19,7 @@ import {
   _onShowMemoryDetails,
 } from '../../../views/myMemories/PublishedMemory';
 import { PublishedMemoryDataModel } from '../../../views/myMemories/PublishedMemory/publishedMemoryDataModel';
-import { Colors, fontSize } from '../../constants';
+import { Colors, fontFamily, fontSize } from '../../constants';
 import Utility from '../../utility';
 import PlaceholderImageView from '../placeHolderImageView';
 import TextNew from '../Text';
@@ -149,6 +149,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           color: 'white',
                           flex: 1,
                           fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                           textAlign: 'left',
                         }}>
                         {this.props.item.item.title}
@@ -226,6 +227,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                                   ...fontSize(14),
                                   paddingTop: 10,
                                   fontWeight: '500',
+                                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                                   textAlign: 'center',
                                 }}>
                                 {collection.item.title}
@@ -290,6 +292,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           ...fontSize(30),
                           color: Colors.NewTitleColor,
                           fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                           marginLeft: 16,
                           marginRight: 16,
                           textAlign: 'left',
@@ -376,6 +379,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                                 ...fontSize(18),
                                 fontWeight:
                                   Platform.OS === 'ios' ? '500' : 'bold',
+                                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                                 color: Colors.NewYellowColor,
                                 marginBottom: 16,
                               }}>

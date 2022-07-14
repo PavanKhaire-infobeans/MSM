@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../common/constants';
 
@@ -252,7 +253,7 @@ const Styles = EStyleSheet.create({
   crossTextStyle:{
     color: 'white',
     fontWeight: '500',
-    fontFamily:fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     ...fontSize(12),
     lineHeight: 14,
   },

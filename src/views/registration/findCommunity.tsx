@@ -174,7 +174,7 @@ class FindCommunity extends Component<FindProps, State> {
             padding: 16,
             paddingTop: 10,
             alignItems: 'center',
-            backgroundColor: 'transparent',
+            backgroundColor: Colors.transparent
           }}>
           <Text style={{...fontSize(15), color: '#777777', paddingBottom: 10}}>
             Search for your private community by organization or URL

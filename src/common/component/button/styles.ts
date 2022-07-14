@@ -20,6 +20,7 @@ const Styles = EStyleSheet.create({
     color: '$buttonTextColor',
     fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     ...fontSize(Size.byWidth(18)),
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     textAlign: 'center',
   },
 });

@@ -757,7 +757,7 @@ export default class CommonAudioRecorder extends React.Component<
                     style={{
                       ...fontSize(15),
                       color: 'black',
-                      fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
+                      fontWeight:'600',
                     }}>
                     ✕
                   </Text>

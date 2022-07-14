@@ -337,7 +337,7 @@ export default class PromptsView extends React.Component<State, Props> {
                                 fontSize: 14,
                                 lineHeight: 14,
                                 marginBottom: 22,
-                                fontFamily: fontFamily.Inter,
+                                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                                 fontWeight: '500',
                                 color: Colors.newTextColor,
                                 textAlign: 'center',
@@ -351,7 +351,7 @@ export default class PromptsView extends React.Component<State, Props> {
                                   fontSize: 14,
                                   lineHeight: 14,
                                   marginBottom: 22,
-                                  fontFamily: fontFamily.Inter,
+                                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                                   fontWeight: '500',
                                   color: Colors.newTextColor,
                                   textAlign: 'center',
@@ -374,7 +374,7 @@ export default class PromptsView extends React.Component<State, Props> {
                             flex: 1,
                             // marginRight: 20,
                             // marginBottom: 16,
-                            fontFamily: fontFamily.Lora,
+                            fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
                             textAlign: 'center',
                             paddingHorizontal: 15,
                           }}>
@@ -405,7 +405,7 @@ export default class PromptsView extends React.Component<State, Props> {
                                   lineHeight: 17,
                                   marginLeft: 5,
                                   fontWeight: '500',
-                                  fontFamily: fontFamily.Inter,
+                                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                                   color: Colors.newDescTextColor,
                                 }}>
                                 Answer Prompt

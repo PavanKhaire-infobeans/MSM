@@ -135,7 +135,7 @@ const Styles = EStyleSheet.create({
     marginRight: 16,
     textAlign: 'left',
     marginBottom: 10,
-    fontFamily:fontFamily.Inter
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   inCollectionTextStyle:{
     ...fontSize(16),
@@ -179,7 +179,7 @@ const Styles = EStyleSheet.create({
     fontFamily:fontFamily.Inter
   },
   attachmentCountTextStyle:{
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
     color: Colors.newTextColor,
   },
@@ -187,7 +187,7 @@ const Styles = EStyleSheet.create({
     ...fontSize(17),
     marginTop: 18,
     marginBottom: 18,
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight:'500',
     color: Colors.NewYellowColor,
   },
@@ -236,7 +236,7 @@ const Styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   draftTypeTextStyle:{
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontSize: 16,
     fontWeight: '500',
     color: Colors.newTextColor,

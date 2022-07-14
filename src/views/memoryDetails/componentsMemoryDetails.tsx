@@ -20,6 +20,7 @@ import {
   fontSize,
   decode_utf8,
   NO_INTERNET,
+  fontFamily,
 } from '../../common/constants';
 import {Actions} from 'react-native-router-flux';
 import Utility from '../../common/utility';
@@ -130,7 +131,8 @@ export const MemoryCollections = (props: {
                       ...fontSize(18),
                       lineHeight: 20,
                       color: 'white',
-                      fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                      fontWeight: '500',
                       marginBottom: 2,
                     }}>
                     {item.item.name}
@@ -150,7 +152,7 @@ export const MemoryCollections = (props: {
                       style={{
                         ...fontSize(14),
                         color: 'white',
-                        fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                        fontWeight: '500',
                       }}>
                       {item.item.memories.length}
                     </Text>
@@ -238,7 +240,7 @@ export const MemoryCollections = (props: {
                   style={{
                     ...fontSize(16),
                     color: Colors.NewTitleColor,
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontWeight: '500',
                     marginRight: 20,
                   }}>
                   {item.item.likeCount > 0
@@ -260,7 +262,7 @@ export const MemoryCollections = (props: {
                 style={{
                   ...fontSize(16),
                   color: Colors.NewTitleColor,
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500',
                   padding: 15,
                   paddingTop: 5,
                   paddingBottom: 5,
@@ -494,7 +496,7 @@ export const UserDetails = (props: {
                     color: props.isExternalQueue
                       ? '#fff'
                       : Colors.NewYellowColor,
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontWeight: '500',
                   }}>
                   {props.userDetails.name}
                 </Text>
@@ -759,7 +761,7 @@ export const TitleAndDescription = (props: {file: any; type: any}) => {
             {fileTitle.length > 0 && (
               <Text
                 style={{
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500',
                   ...fontSize(18),
                   color: Colors.TextColor,
                 }}>
@@ -789,7 +791,7 @@ export const TitleAndDescription = (props: {file: any; type: any}) => {
                 <Text
                   style={{
                     ...fontSize(16),
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontWeight: '500',
                     color: Colors.NewYellowColor,
                   }}>
                   {'See more'}
@@ -843,7 +845,7 @@ export const LikeView = (props: {
           style={{
             ...fontSize(16),
             marginLeft: 5,
-            fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+            fontWeight: '500',
             flex: 1,
             color: Colors.NewTitleColor,
           }}>
@@ -909,7 +911,7 @@ export const LikeCommentShare = (props: {
           {/* <Text
             style={{
               ...fontSize(16),
-              fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+              fontWeight: '500',
               height: '100%',
               color: Colors.NewTitleColor,
             }}>
@@ -926,7 +928,7 @@ export const LikeCommentShare = (props: {
           {/* <Text
             style={{
               ...fontSize(16),
-              fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+              fontWeight: '500',
               height: '100%',
               color: Colors.NewTitleColor,
             }}>
@@ -944,7 +946,7 @@ export const TitleAndValue = (props: {title: string; description: string}) => {
       <Text
         style={{
           ...fontSize(18),
-          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+          fontWeight: '500',
         }}>
         {props.title}
       </Text>

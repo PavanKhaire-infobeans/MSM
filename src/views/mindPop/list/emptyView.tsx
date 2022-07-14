@@ -5,7 +5,7 @@ import {SubmitButton} from '../../../common/component/button';
 import {emptyMindPop as EmptyMindPop} from '../../../images';
 import DeviceInfo from 'react-native-device-info';
 import {Actions} from 'react-native-router-flux';
-import {Size, fontSize, Colors} from '../../../common/constants';
+import {Size, fontSize, Colors, fontFamily} from '../../../common/constants';
 
 export default class EmptyView extends Component<{
   resetEdit: Function;
@@ -40,7 +40,8 @@ export default class EmptyView extends Component<{
               paddingBottom: 8,
               textAlign: 'center',
               ...fontSize(18),
-              fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
+              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
+              fontWeight:'600',
               color: Colors.TextColor,
             }}>
             What are MindPops?

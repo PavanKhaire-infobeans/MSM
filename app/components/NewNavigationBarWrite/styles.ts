@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontSize } from '../../../src/common/constants';
+import { Colors, fontFamily, fontSize } from '../../../src/common/constants';
 
 const Styles = EStyleSheet.create({
     name: {
@@ -8,7 +8,8 @@ const Styles = EStyleSheet.create({
         ...fontSize(10),
         lineHeight: 15,
         textAlign: 'left',
-        fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+         fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     },
     titleText: {
         color: Colors.TextColor,
@@ -23,7 +24,7 @@ const Styles = EStyleSheet.create({
         width: '100%',
         textAlign: 'center',
         fontWeight: '500',
-        fontFamily: 'Inter',
+        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
         lineHeight: 17
         // fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     },

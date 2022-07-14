@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../common/constants';
 
@@ -50,7 +50,7 @@ const Styles = EStyleSheet.create({
   startTextStyle:{
     ...fontSize(22),
     fontWeight: '500',
-    fontFamily:fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.TextColor,
   },
   dotStyle:{
@@ -139,7 +139,7 @@ const Styles = EStyleSheet.create({
     ...fontSize(24),
     color: Colors.TextColor,
     width: Dimensions.get('window').width,
-    fontFamily:fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
     textAlign: 'center',
   },

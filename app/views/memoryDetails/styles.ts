@@ -17,7 +17,7 @@ const Styles = EStyleSheet.create({
     lineHeight: 18,
     color: Colors.newTextColor,
     marginBottom: 10,
-    fontFamily: fontFamily.Inter
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   boxShadow: {
     shadowOpacity: 1,
@@ -127,7 +127,7 @@ const Styles = EStyleSheet.create({
     fontWeight: '500',
     lineHeight: 20,
     fontSize: 16,
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.newTextColor,
   },
   unblockContainer: {
@@ -139,7 +139,7 @@ const Styles = EStyleSheet.create({
   },
   unblockTextStyle: {
     color: Colors.white,
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
   customlistviewMainContainer: {
@@ -197,7 +197,7 @@ const Styles = EStyleSheet.create({
     ...fontSize(18),
     lineHeight: 20,
     color: Colors.white,
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
     marginBottom: 2,
   },
@@ -215,7 +215,7 @@ const Styles = EStyleSheet.create({
   memorylengthTextStyle: {
     ...fontSize(14),
     color: Colors.white,
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
   byTextStyle: {
@@ -264,7 +264,7 @@ const Styles = EStyleSheet.create({
   },
   likeTextStyle: {
     ...fontSize(16),
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.NewTitleColor,
     fontWeight: '500',
     marginRight: 20,
@@ -276,7 +276,7 @@ const Styles = EStyleSheet.create({
   },
   whoelseTextStyle: {
     ...fontSize(16),
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.NewTitleColor,
     fontWeight: '500',
     padding: 15,
@@ -362,7 +362,7 @@ const Styles = EStyleSheet.create({
   userDetailsNameTextStyle: {
     color: Colors.newTextColor,
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     ...(fontSize(17)),
     marginLeft: 8,
   },
@@ -464,7 +464,7 @@ const Styles = EStyleSheet.create({
   },
   fileNameTextStyle: {
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     ...fontSize(18),
     color: Colors.bordercolor,
   },
@@ -484,7 +484,7 @@ const Styles = EStyleSheet.create({
     ...fontSize(16),
     fontWeight: '500',
     color: Colors.bordercolor,
-    fontFamily: fontFamily.Inter
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   fileDescTextStyle: {
     textAlign: 'right',
@@ -508,21 +508,21 @@ const Styles = EStyleSheet.create({
     marginLeft: 5,
     fontWeight: '500',
     flex: 1,
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.bordercolor,
   },
   LikeCommentShareContainer:{
     flexDirection: 'row',
     alignItems: 'center', 
     justifyContent: 'center',
-    height: 40, 
-    width: 40, 
-    borderRadius: 20, 
+    height: 48, 
+    width: 48, 
+    borderRadius: 100,
     backgroundColor: Colors.timeLinebackground,
   },
   titleandValueTextStyle:{
     ...fontSize(18),
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
   

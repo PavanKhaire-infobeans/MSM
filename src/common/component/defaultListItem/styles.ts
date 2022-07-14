@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontSize } from '../../constants';
+import { Colors, fontFamily, fontSize } from '../../constants';
 
 const Styles = EStyleSheet.create({
   container: {
@@ -27,6 +27,7 @@ const Styles = EStyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
   },
   width100:{

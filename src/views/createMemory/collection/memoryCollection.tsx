@@ -17,7 +17,7 @@ import {
 import React from 'react';
 import {Actions} from 'react-native-router-flux';
 // @ts-ignore
-import {Colors, fontSize, decode_utf8} from '../../../common/constants';
+import {Colors, fontSize, decode_utf8, fontFamily} from '../../../common/constants';
 import {
   add_icon,
   settings_icon,
@@ -165,7 +165,8 @@ class MemoryCollectionList extends React.Component<Props, State> {
                 <Text
                   style={{
                     ...fontSize(16),
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontWeight: '500',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                     color: Colors.TextColor,
                   }}>
                   {decode_utf8(item.item.name)}
@@ -245,7 +246,8 @@ class MemoryCollectionList extends React.Component<Props, State> {
                   style={{
                     ...fontSize(16),
                     marginLeft: 10,
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontWeight: '500',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                     color: Colors.NewTitleColor,
                   }}>
                   Create New Collection

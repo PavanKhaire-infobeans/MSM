@@ -125,7 +125,7 @@ const Styles = EStyleSheet.create({
   collaborateTextStyle: {
     ...fontSize(16),
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.NewTitleColor,
     marginRight: 5,
   },
@@ -177,7 +177,7 @@ const Styles = EStyleSheet.create({
     lineHeight: 20,
     fontSize: 16,
     color: Colors.NewYellowColor,
-    fontFamily: fontFamily.Inter
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   paddingRight: {
     paddingRight: 25
@@ -187,7 +187,7 @@ const Styles = EStyleSheet.create({
     fontWeight: '500',
     marginBottom: 10,
     color: Colors.TextColor,
-    fontFamily: fontFamily.Inter
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   fileDescTextStyle: {
     ...fontSize(16),
@@ -374,6 +374,7 @@ const Styles = EStyleSheet.create({
     height: 50,
     backgroundColor: Colors.white,
     borderBottomWidth: 0.5,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
   createdByUserContainer: {
@@ -385,7 +386,7 @@ const Styles = EStyleSheet.create({
   titletextContainer: {
     ...fontSize(18),
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.TextColor,
     marginBottom: 15,
     marginTop: 15,
@@ -442,7 +443,7 @@ const Styles = EStyleSheet.create({
   ownerNameTextStyle: {
     fontWeight: '500',
     ...fontSize(16),
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.TextColor,
   },
   fullFlex: {
@@ -516,6 +517,7 @@ const Styles = EStyleSheet.create({
   },
   tabsText: {
     ...fontSize(16),
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.TextColor,
   },
   rowmainContainerStyle: {
@@ -610,7 +612,7 @@ const Styles = EStyleSheet.create({
   textStyle18Weight700: {
     ...fontSize(18),
     fontWeight: '700',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterBold,
     textAlign: 'center'
   },
   textStyle18Weight400: {
@@ -622,7 +624,7 @@ const Styles = EStyleSheet.create({
   textStyle18Weight500: {
     ...fontSize(18),
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     textAlign: 'center'
   },
   margin20: {
@@ -727,7 +729,7 @@ const Styles = EStyleSheet.create({
     textAlignVertical: 'top',
     borderBottomColor: Colors.backrgba,
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     maxHeight: 70,
     paddingBottom: 10,
     borderBottomWidth: 0.5,
@@ -743,6 +745,7 @@ const Styles = EStyleSheet.create({
     ...fontSize(10),
     lineHeight: 15,
     textAlign: 'left',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
   titleText: {
@@ -750,6 +753,7 @@ const Styles = EStyleSheet.create({
     ...fontSize(18),
     lineHeight: 20,
     textAlign: 'left',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
 
@@ -838,7 +842,7 @@ const Styles = EStyleSheet.create({
     fontWeight: '500',
     lineHeight: 20,
     ...fontSize(16),
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     padding: 10,
     color: Colors.white,
   },
@@ -871,7 +875,7 @@ const Styles = EStyleSheet.create({
   guideTitleTextStyle: {
     ...fontSize(24),
     color: 'white',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500'
   },
   guideDescTextStyle: {
@@ -908,7 +912,7 @@ const Styles = EStyleSheet.create({
   doneBtnTextStyle: {
     ...fontSize(18),
     color: Colors.white,
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
   memoryDraftContainer: {
@@ -957,7 +961,7 @@ const Styles = EStyleSheet.create({
   additionalTextStyle: {
     ...fontSize(18),
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     marginBottom: 30,
   },
   drawerContainer: {

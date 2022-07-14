@@ -7,7 +7,7 @@ import {backBtn, navBarCrossIconWhite} from '../../../images';
 import {connect} from 'react-redux';
 import {EditMode} from '../edit/reducer';
 import {Actions} from 'react-native-router-flux';
-import {Colors, fontSize} from '../../../common/constants';
+import {Colors, fontFamily, fontSize} from '../../../common/constants';
 import NavigationHeader from '../../../common/component/navigationHeader';
 
 const testID = {
@@ -27,7 +27,8 @@ const styles = EStyleSheet.create({
     ...fontSize(18),
     lineHeight: 20,
     textAlign: 'left',
-    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    fontWeight: '500',
   },
 
   titleContainer: {justifyContent: 'center', paddingTop: 10},

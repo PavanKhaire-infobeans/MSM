@@ -276,7 +276,7 @@ class Prologue extends Component<Props> {
 										<View>
 											<View style={{ height: 77, width: Utility.getDeviceWidth() - 48, flexDirection: 'row', justifyContent: 'space-between', marginLeft: 24, marginTop: 68 }}>
 												<TouchableOpacity onPress={() => this.setState({ isRegistrationOpen: false })}><Image source={loginBack} /></TouchableOpacity>
-												<Text style={{ fontWeight: '500', ...fontSize(31), lineHeight: 45, fontFamily: fontFamily.Lora, color: Colors.bordercolor, textAlign: 'center' }}>Sign up</Text>
+												<Text style={{ fontWeight: '500', ...fontSize(31), lineHeight: 45,fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium, color: Colors.bordercolor, textAlign: 'center' }}>Sign up</Text>
 												<View style={{ width: 40 }} />
 											</View>
 
@@ -291,10 +291,10 @@ class Prologue extends Component<Props> {
 										<View>
 											{/* <Image style={{ margin: 16, marginBottom: 0 }} source={recordRegistration}></Image> */}
 
-											{/* <Text style={{ padding: 16, paddingBottom: 10, fontWeight: Platform.OS === "ios" ? '500' : 'bold', ...fontSize(24), color: Colors.TextColor }}>'New to{"\n"}My Stories Matter?'</Text> */}
+											{/* <Text style={{ padding: 16, paddingBottom: 10, fontWeight: '500', ...fontSize(24), color: Colors.TextColor }}>'New to{"\n"}My Stories Matter?'</Text> */}
 											<View style={{ height: Utility.getDeviceHeight() * 0.36, width: Utility.getDeviceWidth() - 48, justifyContent: 'center', alignItems: 'center', marginLeft: 24, marginTop: 68 }}>
 
-												<Text style={{ fontWeight: '500', ...fontSize(31), lineHeight: 45, fontFamily: fontFamily.Lora, color: Colors.bordercolor, textAlign: 'center' }}>Ready to start reminiscing?</Text>
+												<Text style={{ fontWeight: '500', ...fontSize(31), lineHeight: 45,fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium, color: Colors.bordercolor, textAlign: 'center' }}>Ready to start reminiscing?</Text>
 											</View>
 											<View style={Styles.separatorHeightStyle16} />
 
@@ -330,7 +330,7 @@ class Prologue extends Component<Props> {
 												</TouchableHighlight>
 
 												{/* <TouchableHighlight underlayColor={"#ffffff00"} style={{ padding: 16, justifyContent: "center", alignItems: "center" }} onPress={() => { Actions.push("commonWebView", { url: "https://mystoriesmatter.com/content/end-user-license-agreement?no_header=1", title: "Terms and Conditions" }) }}>
-													<Text style={{ marginLeft: 10, textAlign: "center", color: Colors.TextColor, fontWeight: Platform.OS === "ios" ? '600' : 'bold', ...fontSize(14) }}>By Signing up,  I agree to the <Text style={{ fontWeight: Platform.OS === "ios" ? '500' : 'bold', textDecorationLine: 'underline' }}>Terms and Conditions</Text> </Text>
+													<Text style={{ marginLeft: 10, textAlign: "center", color: Colors.TextColor, fontWeight: Platform.OS === "ios" ? '600' : 'bold', ...fontSize(14) }}>By Signing up,  I agree to the <Text style={{ fontWeight: '500', textDecorationLine: 'underline' }}>Terms and Conditions</Text> </Text>
 												</TouchableHighlight> */}
 												<View style={Styles.separatorHeightStyle32} />
 

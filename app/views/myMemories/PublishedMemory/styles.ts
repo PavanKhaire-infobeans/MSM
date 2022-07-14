@@ -103,7 +103,7 @@ const Styles = EStyleSheet.create({
     },
     userNameTextStyle: {
         ...fontSize(17),
-        fontFamily: fontFamily.Inter,
+        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
         color: Colors.newTextColor,
         lineHeight: 20,
         fontWeight: '500'

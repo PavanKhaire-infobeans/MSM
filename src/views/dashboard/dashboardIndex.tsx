@@ -285,7 +285,7 @@ class DashboardIndex extends React.Component<Props>{
                                     }}
                                     buttons={[
                                         {
-                                            text: Platform.OS==='android'?'GREAT!':'Great!',
+                                            text: Platform.OS === 'android' ? 'GREAT!' : 'Great!',
                                             func: () => {
                                                 this.props.showAlertCall(false);
                                             },
@@ -318,7 +318,7 @@ class DashboardIndex extends React.Component<Props>{
                             }}
                             tabBarBackgroundColor={Colors.white}
                             tabBarPosition="bottom"
-                            tabBarTextStyle={{ ...fontSize(16), fontFamily: fontFamily.Inter }}
+                            tabBarTextStyle={{ ...fontSize(16), fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium }}
                             tabBarActiveTextColor={Colors.TextColor}
                             // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
                             tabBarUnderlineStyle={{ backgroundColor: Colors.white, height: 2 }} >

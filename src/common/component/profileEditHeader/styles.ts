@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontSize, fontFamily, Size } from '../../constants';
 
@@ -17,7 +17,7 @@ const Styles = EStyleSheet.create({
   mainContainer: {
     flexDirection: 'row',
     width: '100%',
-    height: 82,
+    height: 68,
     justifyContent: 'space-between',
     borderBottomColor: Colors.bottomTabColor,
     backgroundColor: Colors.white,
@@ -62,7 +62,7 @@ const Styles = EStyleSheet.create({
   name: {
     color: Colors.newTextColor,
     ...fontSize(10),
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     lineHeight: 15,
     textAlign: 'left',
     fontWeight: '500',
@@ -158,7 +158,7 @@ const Styles = EStyleSheet.create({
     marginTop: 6,
   },
   cancleTextStyle: {
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     textAlign: 'center',
     fontWeight: '500',
     ...fontSize(14),
@@ -170,7 +170,7 @@ const Styles = EStyleSheet.create({
   },
   titleText: {
     color: Colors.newTextColor,
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     ...fontSize(18),
     lineHeight: 20,
     textAlign: 'left',

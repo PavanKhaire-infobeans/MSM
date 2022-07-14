@@ -27,6 +27,7 @@ import {
   DraftType,
   DraftActions,
   NO_INTERNET,
+  fontFamily,
 } from '../../../common/constants';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import Utility from '../../../common/utility';
@@ -191,8 +192,9 @@ export default class Activities extends React.Component<Props, State> {
                 <Text
                   style={{
                     ...fontSize(18),
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                    color: '#fff',
+                    fontWeight: '500',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                    color: Colors.white,
                   }}>
                   {'+'}
                   {item.userCount - 1}
@@ -232,7 +234,8 @@ export default class Activities extends React.Component<Props, State> {
                   ...fontSize(16),
                   color: Colors.TextColor,
                   paddingBottom: 15,
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500',
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                   fontStyle: 'italic',
                 }}>
                 Notes to collaborators:{' '}

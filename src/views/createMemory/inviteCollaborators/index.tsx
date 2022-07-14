@@ -26,6 +26,7 @@ import {
   getValue,
   ShareOptions,
   NO_INTERNET,
+  fontFamily,
 } from '../../../common/constants';
 import NavigationThemeBar from '../../../common/component/navigationBarForEdit/navigationBarWithTheme';
 import {
@@ -263,7 +264,8 @@ class InviteCollaborators extends React.Component<Props, State> {
               <Text
                 style={{
                   ...fontSize(18),
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500',
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                   color: Colors.TextColor,
                 }}>
                 {item.field_first_name_value} {item.field_last_name_value}
@@ -292,7 +294,8 @@ class InviteCollaborators extends React.Component<Props, State> {
               <Text
                 style={{
                   ...fontSize(18),
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500',
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                   color: Colors.TextColor,
                 }}>
                 {item.name}
@@ -449,7 +452,8 @@ class InviteCollaborators extends React.Component<Props, State> {
                       <Text
                         style={{
                           ...fontSize(16),
-                          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                          fontWeight: '500',
+                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                           color: Colors.NewTitleColor,
                         }}>
                         Invite More
@@ -469,7 +473,8 @@ class InviteCollaborators extends React.Component<Props, State> {
                     <Text
                       style={{
                         ...fontSize(16),
-                        fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                        fontWeight: '500',
+                        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                         color: Colors.NewTitleColor,
                       }}>
                       {this.state.showLeave ? 'View ' : ''}
@@ -581,8 +586,9 @@ class InviteCollaborators extends React.Component<Props, State> {
                       style={{
                         marginLeft: 15,
                         ...fontSize(16),
-                        color: 'black',
-                        fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                        color: Colors.black,
+                        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                        fontWeight: '500',
                       }}>
                       Don't show me this again
                     </Text>

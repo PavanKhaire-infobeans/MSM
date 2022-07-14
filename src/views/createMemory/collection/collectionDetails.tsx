@@ -15,7 +15,7 @@ import {Actions} from 'react-native-router-flux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import NavigationThemeBar from '../../../common/component/navigationBarForEdit/navigationBarWithTheme';
 import {ToastMessage} from '../../../common/component/Toast';
-import {Colors, decode_utf8, fontSize} from '../../../common/constants';
+import {Colors, decode_utf8, fontFamily, fontSize} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
 import {move_arrow, visibility_theme} from '../../../images';
 import {
@@ -153,8 +153,9 @@ export default class CollectionDetails extends React.Component<Props, State> {
               <Text
                 style={{
                   ...fontSize(16),
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500' ,
                   color: Colors.TextColor,
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                 }}>
                 {decode_utf8(item.item.title)}
               </Text>
@@ -212,7 +213,8 @@ export default class CollectionDetails extends React.Component<Props, State> {
               <Text
                 style={{
                   ...fontSize(16),
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500',
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                   color: Colors.TextColor,
                 }}>
                 {decode_utf8(item.title)}

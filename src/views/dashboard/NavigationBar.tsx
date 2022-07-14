@@ -24,7 +24,7 @@ import {
 } from '../../images';
 //@ts-ignore
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontSize } from '../../common/constants';
+import { Colors, fontFamily, fontSize } from '../../common/constants';
 import NavigationHeader from '../../common/component/navigationHeader';
 import { Account } from '../../common/loginStore';
 import EventManager from '../../common/eventManager';
@@ -56,14 +56,16 @@ const styles = EStyleSheet.create({
     ...fontSize(10),
     lineHeight: 15,
     textAlign: 'left',
-    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+    fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   titleText: {
     color: Colors.TextColor,
     ...fontSize(18),
     lineHeight: 20,
     textAlign: 'left',
-    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+    fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   containerNavBarStyle: {
     flexDirection: 'row',

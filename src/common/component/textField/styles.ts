@@ -110,7 +110,7 @@ export const styles = StyleSheet.create({
   },
   passwordTextStyle:{ 
     fontWeight: '500', 
-    fontFamily: fontFamily.Inter, 
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium
   },
   animatedViewStyle:{
     width: '100%',

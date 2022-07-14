@@ -1,5 +1,5 @@
 import {StyleSheet, Platform} from 'react-native';
-import {Size, fontSize} from '../../common/constants';
+import {Size, fontSize, fontFamily} from '../../common/constants';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -18,7 +18,8 @@ export const styles = StyleSheet.create({
 
   titleText: {
     ...fontSize(Size.byWidth(24)),
-    fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
+    fontWeight:'600',
   },
 
   loginContainer: {

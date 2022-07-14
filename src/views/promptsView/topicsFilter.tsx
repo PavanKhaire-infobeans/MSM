@@ -16,7 +16,7 @@ import {Actions} from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextNew from '../../common/component/Text';
-import {Colors, fontSize} from '../../common/constants';
+import {Colors, fontFamily, fontSize} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import {action_close, check, plus, topics_filter} from '../../images';
@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
   filterHeaderText: {
     ...fontSize(16),
     fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.TextColor,
   },
   filterItem: {
@@ -206,7 +207,8 @@ const styles = StyleSheet.create({
   },
   filterText: {
     ...fontSize(16),
-    fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
+    fontWeight:'600',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
     paddingLeft: 6,
     paddingTop: 2,
     paddingBottom: 5,

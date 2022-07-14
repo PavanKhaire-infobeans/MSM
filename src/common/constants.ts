@@ -17,7 +17,13 @@ export const keyInt = 'int';
 export const keyBoolean = 'boolean';
 export const fontFamily = {
   Inter: 'Inter-Regular',
+  InterMedium: 'Inter-Medium',
+  IntersemiBold: 'Inter-SemiBold',
+  InterBold: 'Inter-Bold',
   Lora: 'Lora-Regular',
+  LoraMedium: 'Lora-Medium',
+  LoraBold:'Lora-Bold',
+  LoraSemiBold:'Lora-SemiBold',
   // SFPro:"SFPro-Regular"
 };
 
@@ -468,7 +474,7 @@ export const CommonTextStyles = {
   fontWeight500Size13Inter: {
     fontWeight: '500',
     ...fontSize(14),
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     lineHeight: 17
   },
 };

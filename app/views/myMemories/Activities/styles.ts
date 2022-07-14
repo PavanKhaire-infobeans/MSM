@@ -43,7 +43,7 @@ const Styles = EStyleSheet.create({
         ...fontSize(18),
         fontWeight: '500',
         color: Colors.white,
-        fontFamily: fontFamily.Inter
+        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     },
     fullFlex: {
         flex: 1
@@ -66,7 +66,7 @@ const Styles = EStyleSheet.create({
     notesToCollabrationTextStyle: {
         ...fontSize(16),
         color: Colors.newTextColor,
-        fontFamily: fontFamily.Inter,
+        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
         paddingBottom: 15,
         fontWeight: '500',
         fontStyle: 'italic',

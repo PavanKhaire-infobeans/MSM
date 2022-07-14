@@ -6,7 +6,7 @@ import {Actions} from 'react-native-router-flux';
 import {EditMode} from './reducer';
 import DeviceInfo from 'react-native-device-info';
 import NavigationHeader from '../../../common/component/navigationHeader';
-import {Colors, fontSize} from '../../../common/constants';
+import {Colors, fontFamily, fontSize} from '../../../common/constants';
 
 class EditHeader extends React.Component<{
   navigation: {[x: string]: any};
@@ -61,7 +61,8 @@ class EditHeader extends React.Component<{
               style={{
                 color: Colors.TextColor,
                 ...fontSize(18),
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                fontWeight: '500',
               }}>
               MindPops
             </Text>

@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../../src/common/constants';
 
@@ -39,12 +40,12 @@ const Styles = EStyleSheet.create({
   },
   titleText: {
     ...fontSize(24),
-    fontFamily: fontFamily.Lora,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
     paddingLeft: 5,
     color: Colors.bordercolor,
     lineHeight: 30,
     flex: 1,
-    fontWeight: '600',
+    fontWeight:'600',
     textAlign: 'left',
   },
   playContainer: {
@@ -112,7 +113,7 @@ const Styles = EStyleSheet.create({
     color: Colors.newTextColor,
     paddingLeft: 2,
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     ...fontSize(14),
     lineHeight: 17.5,
     letterSpacing: -0.05,
@@ -121,11 +122,11 @@ const Styles = EStyleSheet.create({
   memoryTitle: {
     ...fontSize(24),
     color: Colors.bordercolor,
-    fontWeight: '600',
+    fontWeight:'600' ,
     marginLeft: 16,
     marginRight: 16,
     textAlign: 'left',
-    fontFamily: fontFamily.Lora,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
     lineHeight: 30,
     letterSpacing: -0.01,
   },
@@ -137,7 +138,7 @@ const Styles = EStyleSheet.create({
     color: Colors.newTextColor,
     paddingLeft: 4,
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     ...fontSize(14),
     lineHeight: 17.5,
     letterSpacing: -0.05,
@@ -156,7 +157,7 @@ const Styles = EStyleSheet.create({
   activepromptsContainer: {
     borderWidth: 1,
     borderColor: Colors.newBagroundColor,
-    elevation: 2,
+    elevation: 7,
     borderRadius: 12,
     width: '100%',
     backgroundColor: Colors.NewThemeColor,

@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import DefaultListItem from '../../common/component/defaultListItem';
-import {Colors, getValue, fontSize} from '../../common/constants';
+import {Colors, getValue, fontSize, fontFamily} from '../../common/constants';
 import {
   kNotificationTypes,
   kForegroundNotificationListener,
@@ -193,8 +193,9 @@ class NotificationListing extends React.Component<Props> {
                 <Text
                   style={{
                     ...fontSize(18),
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                    color: '#fff',
+                    fontWeight: '500',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                    color: Colors.white,
                   }}>
                   {'+'}
                   {item.userCount - 1}
@@ -234,7 +235,8 @@ class NotificationListing extends React.Component<Props> {
                   ...fontSize(16),
                   color: Colors.TextColor,
                   paddingBottom: 15,
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500',
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                   fontStyle: 'italic',
                 }}>
                 Notes to collaborators:{' '}

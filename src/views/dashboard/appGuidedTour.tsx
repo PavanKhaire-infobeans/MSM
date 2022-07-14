@@ -4,7 +4,7 @@ import { Props } from "../login/loginController";
 //@ts-ignore
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import TextNew from "../../common/component/Text";
-import { Colors, fontSize, Size } from "../../common/constants";
+import { Colors, fontFamily, fontSize, Size } from "../../common/constants";
 import { add_content, arrow_left, arrow_right, close_big_grey, exit_tour, more_options_selected, msm_allPages_mindPop, msm_logo, msm_preserveYourMemories, progress_dot, progress_dot_check } from "../../images";
 import { SubmitButton } from "../../common/component/button";
 import LottieView from 'lottie-react-native';
@@ -39,7 +39,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 	width_X = Dimensions.get('window').width;
 
 	appIntro = [{
-		title: 'Scroll through stories', desc: <><TextNew>Read stories on the</TextNew><TextNew style={{ fontWeight: '500' }}> All Memories </TextNew>
+		title: 'Scroll through stories', desc: <><TextNew>Read stories on the</TextNew><TextNew style={{ fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,fontWeight: '500' }}> All Memories </TextNew>
 			<TextNew>tab.</TextNew></>, imageSource: require('../../common/lottieFiles/msm_guidedTour_animation1.json')
 	},
 	{ title: 'Timeline', desc: 'Explore different time periods and read stories alongside cues from that era.', imageSource: require('../../common/lottieFiles/msm_guidedTour_animation2.json') },
@@ -49,7 +49,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 			<TextNew> button.</TextNew></>, imageSource: require('../../common/lottieFiles/msm_guidedTour_animation4.json')
 	},
 	{
-		title: 'Get inspired', desc: <><TextNew>Choose a Prompt to answer and tap{"\n"}</TextNew><TextNew style={{ fontWeight: '500' }}> Add your memory </TextNew>
+		title: 'Get inspired', desc: <><TextNew>Choose a Prompt to answer and tap{"\n"}</TextNew><TextNew style={{ fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,fontWeight: '500' }}> Add your memory </TextNew>
 			<TextNew>to get started.</TextNew></>, imageSource: require('../../common/lottieFiles/msm_guidedTour_animation5_part1.json')
 	},
 	]

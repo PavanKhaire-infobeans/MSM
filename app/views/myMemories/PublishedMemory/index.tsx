@@ -1322,33 +1322,38 @@ export const MemoryBasicDetails = (
             // openMemoryActions(item);
           }}>
           <View style={styles.moreoptionStyle}>
-            <SelectDropdown
-              // ref={this.dropDownRef}
-              dropdownStyle={{ borderRadius: Platform.OS === 'ios' ? 12 : 4 }}
-              rowTextStyle={{ textAlign: 'left', fontSize: Platform.OS === 'ios' ? 17 : 16, color: Platform.OS === 'ios' ? Colors.black : Colors.blackOpacity60, fontWeight: '400', paddingLeft: 16 }}
-              dropdownOverlayColor={Colors.contextBackground}
-              rowStyle={{ backgroundColor: Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white, opacity: Platform.OS === 'ios' ? 0.8 : 1, height: Platform.OS === 'ios' ? 44 : 48, borderBottomColor: '#939396', marginRight: Platform.OS === 'ios' ? undefined : 22, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0 }}
-              buttonStyle={{ backgroundColor: Colors.white, width: 40 }}
-              data={MemoryActionsListArray(item)}
-              onSelect={(selectedItem, index) => {
-                onActionItemClicked(index, selectedItem)
-              }}
-              renderCustomizedButtonChild={() => <Image style={{ alignSelf: 'flex-end' }} source={moreoptions} />}
-            />
 
-            {/* <ContextMenu
-              actions={memoryActions}
-              dropdownMenuMode={true}
-              previewBackgroundColor="transparent"
-              onPress={(e) => {
-                let data = memoryActions.filter((itm)=>itm.title === e.nativeEvent.name)
-                if (data && data[0]) {
-                  onActionItemClicked(e.nativeEvent.index, data[0])
-                }
-              }}
-            >
-              <Image source={moreoptions} />
-            </ContextMenu> */}
+            {/* {
+              Platform.OS === 'ios' ?
+                <ContextMenu
+                  actions={memoryActions}
+                  dropdownMenuMode={true}
+                  previewBackgroundColor="transparent"
+                  onPress={(e) => {
+                    let data = memoryActions.filter((itm) => itm.title === e.nativeEvent.name)
+                    if (data && data[0]) {
+                      onActionItemClicked(e.nativeEvent.index, data[0])
+                    }
+                  }}
+                >
+                  <Image source={moreoptions} />
+                </ContextMenu>
+                : */}
+                <SelectDropdown
+                  // ref={this.dropDownRef}
+                  dropdownStyle={{ borderRadius: Platform.OS === 'ios' ? 12 : 4 }}
+                  rowTextStyle={{ textAlign: 'left', fontSize: Platform.OS === 'ios' ? 17 : 16, color: Platform.OS === 'ios' ? Colors.black : Colors.blackOpacity60, fontWeight: '400', paddingLeft: 16 }}
+                  dropdownOverlayColor={Colors.contextBackground}
+                  rowStyle={{ backgroundColor: Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white, opacity: Platform.OS === 'ios' ? 0.8 : 1, height: Platform.OS === 'ios' ? 44 : 48, borderBottomColor: '#939396', marginRight: Platform.OS === 'ios' ? undefined : 22, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0 }}
+                  buttonStyle={{ backgroundColor: Colors.white, width: 40 }}
+                  data={MemoryActionsListArray(item)}
+                  onSelect={(selectedItem, index) => {
+                    onActionItemClicked(index, selectedItem)
+                  }}
+                  renderCustomizedButtonChild={() => <Image style={{ alignSelf: 'flex-end' }} source={moreoptions} />}
+                />
+            {/* } */}
+
 
             {/* <Image source={greenDotsButton} /> */}
           </View>

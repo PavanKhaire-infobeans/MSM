@@ -26,7 +26,7 @@ const Styles = EStyleSheet.create({
   font30Weight500: {
     ...fontSize(30),
     fontWeight: '500',
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     textAlign: 'center'
   },
   iconStyle:{ 
@@ -42,7 +42,7 @@ const Styles = EStyleSheet.create({
   },
   font18Weight500:{ 
     fontWeight: '500', 
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.newTextColor, 
     ...fontSize(18) 
   },
@@ -118,7 +118,7 @@ const Styles = EStyleSheet.create({
   },
   font20Weight500textStyle: {
     ...fontSize(20),
-    fontFamily: fontFamily.Inter,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
     textAlign: 'center',
     color: Colors.BtnBgColor
@@ -278,7 +278,7 @@ const Styles = EStyleSheet.create({
     paddingTop: 2,
     paddingBottom: 5,
     paddingRight: 5,
-    fontFamily: 'Inter'
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
   },
   bottomView: {
     height: Platform.OS == 'ios' ? 70 : 100,

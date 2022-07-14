@@ -3,7 +3,7 @@ import {SafeAreaView, View, StatusBar, Keyboard, Platform} from 'react-native';
 import {Account} from '../../common/loginStore';
 import InstanceView from './instanceView';
 import Text from '../../common/component/Text';
-import {Colors, getValue, fontSize} from '../../common/constants';
+import {Colors, getValue, fontSize, fontFamily} from '../../common/constants';
 import {Actions} from 'react-native-router-flux';
 import {SubmitButton} from '../../common/component/button';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
@@ -72,7 +72,7 @@ export default class UserRegistrationStatus extends Component<{
                 }}>
                 {`Hello ${name}, an account with the email `}
                 <Text
-                  style={{fontWeight: Platform.OS === 'ios' ? '600' : 'bold'}}>
+                  style={{fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,fontWeight:'600'}}>
                   {this.props.userDetails.authorizationInfo.emailAddress}
                 </Text>
                 {` already exists on ${accData.name}`}
@@ -88,7 +88,8 @@ export default class UserRegistrationStatus extends Component<{
                 {`If you know your password,\n`}
                 <Text
                   style={{
-                    fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
+                    fontWeight:'600',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
                     ...fontSize(22),
                     color: Colors.ThemeColor,
                   }}
@@ -110,7 +111,8 @@ export default class UserRegistrationStatus extends Component<{
                 {`If you have forgotten your password,\n`}
                 <Text
                   style={{
-                    fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
+                    fontWeight:'600',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
                     ...fontSize(22),
                     color: Colors.ThemeColor,
                   }}
@@ -153,7 +155,8 @@ export default class UserRegistrationStatus extends Component<{
                 }}>
                 <Text
                   style={{
-                    fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
+                    fontWeight:'600',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
                     ...fontSize(22),
                     color: Colors.ThemeColor,
                   }}

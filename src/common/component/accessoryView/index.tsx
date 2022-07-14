@@ -1,15 +1,14 @@
-import React, {Component, useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   Animated,
   EventSubscription,
   Keyboard,
   Platform,
-  ViewStyle,
   Easing,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
-const AccessoryView = (props: any)=>{
+const AccessoryView = (props: any) => {
   let state = {
     bottom: new Animated.Value(0),
   };
@@ -17,7 +16,7 @@ const AccessoryView = (props: any)=>{
   let showSubscription: EventSubscription = null;
   let hideSubscription: EventSubscription = null;
 
-  useEffect(()=>{
+  useEffect(() => {
     showSubscription = Keyboard.addListener(
       'keyboardWillShow',
       _onShow,
@@ -27,12 +26,12 @@ const AccessoryView = (props: any)=>{
       _onHide,
     );
 
-      return ()=>{
-        showSubscription.remove();
-        hideSubscription.remove();
-      }
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    }
 
-  },[]);
+  }, []);
 
   const _onShow = (event: {
     endCoordinates: {
@@ -58,15 +57,15 @@ const AccessoryView = (props: any)=>{
     }).start();
   };
 
-    return (
-      <Animated.View
-        style={[
-          {position: 'absolute', bottom: state.bottom},
-          props.style,
-        ]}>
-        {props.children}
-      </Animated.View>
-    );
+  return (
+    <Animated.View
+      style={[
+        { position: 'absolute', bottom: state.bottom },
+        props.style,
+      ]}>
+      {props.children}
+    </Animated.View>
+  );
 }
 
 export default AccessoryView;

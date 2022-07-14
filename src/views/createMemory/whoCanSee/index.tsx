@@ -24,6 +24,7 @@ import {
   decode_utf8,
   getValue,
   ShareOptions,
+  fontFamily,
 } from '../../../common/constants';
 import NavigationThemeBar from '../../../common/component/navigationBarForEdit/navigationBarWithTheme';
 import {
@@ -182,6 +183,7 @@ class WhoCanSee extends React.Component<Props, State> {
                         flex: 1,
                         color: Colors.ThemeColor,
                         fontWeight: '500',
+                        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                         ...fontSize(16),
                       }}>
                       {this.getCustomText()}

@@ -29,6 +29,7 @@ import {
   DraftType,
   DraftActions,
   NO_INTERNET,
+  fontFamily,
 } from '../../../common/constants';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import EventManager from '../../../common/eventManager';
@@ -336,9 +337,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             }}>
             <Text
               style={{
-                fontFamily: 'Rubik',
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                 fontSize: 16,
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                fontWeight: '500',
                 color: Colors.TextColor,
               }}>
               {this.state.draftType}{' '}
@@ -485,7 +486,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               style={{
                 ...fontSize(30),
                 color: Colors.NewTitleColor,
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                fontWeight: '500',
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                 marginLeft: 16,
                 marginRight: 16,
                 textAlign: 'left',
@@ -564,8 +566,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                     item.item.new_attachment_count != '' ? (
                       <Text
                         style={{
-                          fontFamily: 'Rubik',
-                          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                          fontWeight: '500',
                           color: Colors.TextColor,
                         }}>
                         ({item.item.new_attachment_count} new)
@@ -580,8 +582,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                     item.item.unread_chat_count != '' ? (
                       <Text
                         style={{
-                          fontFamily: 'Rubik',
-                          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                          fontWeight: '500',
                           color: Colors.TextColor,
                         }}>
                         ({item.item.unread_chat_count} new)
@@ -593,8 +595,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                       ...fontSize(17),
                       marginTop: 18,
                       marginBottom: 18,
-                      fontFamily: 'Rubik',
-                      fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                      fontWeight: '500',
                       color: Colors.NewYellowColor,
                     }}>
                     {item.item.collaborators.length}{' '}
@@ -606,8 +608,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                     item.item.new_collaborator_count != '' ? (
                       <Text
                         style={{
-                          fontFamily: 'Rubik',
-                          fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                          fontWeight: '500',
                           color: Colors.TextColor,
                         }}>
                         ({item.item.new_collaborator_count} new)

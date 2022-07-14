@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontSize } from '../../../src/common/constants';
+import { Colors, fontFamily, fontSize } from '../../../src/common/constants';
 
 const Styles = EStyleSheet.create({
     name: {
@@ -8,6 +8,7 @@ const Styles = EStyleSheet.create({
         ...fontSize(10),
         lineHeight: 15,
         textAlign: 'left',
+        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
         fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     },
     titleText: {
@@ -19,12 +20,21 @@ const Styles = EStyleSheet.create({
     },
     cancleText: {
         color: Colors.TextColor,
-        ...fontSize(14),
+        fontSize:16,
         width: '100%',
         textAlign: 'center',
         fontWeight: '500',
-        fontFamily: 'Inter',
-        lineHeight: 17
+        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+        lineHeight: 16
+    },
+    JumptoText: {
+        color: Colors.TextColor,
+        fontSize:16,
+        width: '100%',
+        textAlign: 'center',
+        fontWeight: '500',
+        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+        lineHeight: 16
     },
     titleContainer: {
         justifyContent: 'center',
@@ -116,7 +126,7 @@ const Styles = EStyleSheet.create({
     container: {
         flexDirection: 'row',
         width: '100%',
-        height: 85,
+        height: 68,//85,
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomWidth: 2,

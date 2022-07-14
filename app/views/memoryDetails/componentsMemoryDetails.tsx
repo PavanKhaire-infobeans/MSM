@@ -741,17 +741,18 @@ export const LikeCommentShare = (props: {
   let localId = props.id;
   return (
     // <View>
-      props.animate == localId && props.animateType == 'like' ? (
-        <Animatable.View
-          style={[Styles.LikeCommentShareContainer, {
-            transform: [{ translateX: PublishedMemory.shakeAnimation }],
-          }]}>
-          <Image
-            source={props.icon}
-            style={{ padding: 1, }}
-            resizeMode="contain"
-          />
-          {/* <Text
+    props.animate == localId && props.animateType == 'like' ? (
+      <Animatable.View
+        style={[Styles.LikeCommentShareContainer, {
+          transform: [{ translateX: PublishedMemory.shakeAnimation }],
+          borderColor: Colors.bottomTabColor,
+          borderWidth: props.selectedItem ? 0 : 1
+        }]}>
+        <Image
+          source={props.icon}
+          resizeMode="contain"
+        />
+        {/* <Text
             style={{
               ...fontSize(16),
               fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
@@ -760,15 +761,17 @@ export const LikeCommentShare = (props: {
             }}>
             {props.name}
           </Text> */}
-        </Animatable.View>
-      ) : (
-        <View style={Styles.LikeCommentShareContainer}>
-          <Image
-            source={props.icon}
-            style={{ padding: 1 }}
-            resizeMode="contain"
-          />
-          {/* <Text
+      </Animatable.View>
+    ) : (
+      <View style={[Styles.LikeCommentShareContainer, {
+        borderColor: Colors.bottomTabColor,
+        borderWidth: props.selectedItem ? 0 : 1
+      }]}>
+        <Image
+          source={props.icon}
+          resizeMode="contain"
+        />
+        {/* <Text
             style={{
               ...fontSize(16),
               fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
@@ -777,8 +780,8 @@ export const LikeCommentShare = (props: {
             }}>
             {props.name}
           </Text> */}
-        </View>
-      )
+      </View>
+    )
     // </View>
   );
 };

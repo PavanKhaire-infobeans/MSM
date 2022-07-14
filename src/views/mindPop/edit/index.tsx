@@ -35,6 +35,7 @@ import {
   decode_utf8,
   encode_utf8,
   ERROR_MESSAGE,
+  fontFamily,
   fontSize,
   GenerateRandomID,
   GetFileType,
@@ -1710,8 +1711,9 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
                   }}>
                   <Text
                     style={{
-                      color: 'white',
-                      fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                      color: Colors.white,
+                      fontWeight: '500',
+                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                       ...fontSize(12),
                       lineHeight: 14,
                     }}>{`${found ? '-' : '✕'}`}</Text>

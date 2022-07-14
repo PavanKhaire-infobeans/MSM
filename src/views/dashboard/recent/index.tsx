@@ -220,7 +220,6 @@ const Recent = (props: Props) => {
     }
 
     const like = (item: any) => {
-        console.log("item on like:", item);
 
         setState(prevState => ({
             ...prevState,

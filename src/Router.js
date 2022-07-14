@@ -9,7 +9,8 @@ import {
   Linking,
   useWindowDimensions,
   Image,
-  Appearance
+  Appearance,
+  SafeAreaView
 } from 'react-native';
 import DeviceInfo, { hasNotch } from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -208,18 +209,18 @@ const AppRouter = () => (
             tabBarStyle={{
               height: 40,
               // paddingHorizontal:20,
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
+              // justifyContent: 'flex-start',
+              // alignItems: 'flex-start',
               backgroundColor: Colors.white,
               borderWidth: 1,
               borderTopWidth: 3,
               borderTopColor: 'white',
-              paddingBottom: Platform.OS === 'android' ? 25 : 25,
+              // paddingBottom: Platform.OS === 'android' ? 25 : 25,
               // overflow: 'hidden',
               width: '94%',
               borderRadius: 12,
               borderColor: 'white',
-              // padding:5,
+              marginVertical: 4,
               alignSelf: 'center'
             }}>
             <Stack title={NewTabItems.Read} tabBarIcon={TabIcon}>

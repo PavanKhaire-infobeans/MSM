@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Text from '../Text';
 import DeviceInfo from 'react-native-device-info';
-import {fontSize} from '../../constants';
+import {fontFamily, fontSize} from '../../constants';
 type State = {
   backgroundColor: string;
   message: string;
@@ -180,6 +180,7 @@ class MessageDialogue extends Component<{}, State> {
                     color: this.state.backgroundColor,
                     ...fontSize(16),
                     fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                   }}>
                   ✕
                 </DefText>

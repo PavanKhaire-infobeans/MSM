@@ -353,7 +353,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 
             <View style={{ height: 77, width: Utility.getDeviceWidth() - 48, flexDirection: 'row', justifyContent: 'space-between', marginTop: 68 }}>
               {/* <TouchableWithoutFeedback onPress={() => Actions.pop()}><Image source={loginBack} /></TouchableWithoutFeedback> */}
-              <Text style={{ fontWeight: '500', ...fontSize(36), lineHeight: 45, fontFamily: fontFamily.Lora, color: Colors.black, textAlign: 'left' }}>Login</Text>
+              <Text style={{ fontWeight: '500', ...fontSize(36), lineHeight: 45, fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium, color: Colors.black, textAlign: 'left' }}>Login</Text>
               {/* <View style={{ width: 40 }} /> */}
             </View>
 

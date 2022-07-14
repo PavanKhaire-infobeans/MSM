@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, I18nManager, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, I18nManager, Platform, Animated, Easing } from 'react-native';
 import styles from './styles';
 // import findIndexInArr from './helpers/findIndexInArr';
 import calculateDropdownHeight from './helpers/calculateDropdownHeight';
@@ -95,6 +95,16 @@ const SelectDropdown = (
   ///////////////////////////////////////////////////////
   /* ******************** Methods ******************** */
   const openDropdown = () => {
+    Animated.timing(
+      fadeAnim,
+      {
+        toValue: 1,
+        duration: 500,
+        easing:Easing.inOut(Easing.cubic),
+        useNativeDriver: true
+      }
+    ).start();
+
     DropdownButton.current.measure((fx, fy, w, h, px, py) => {
       // console.log('position y => ', py, '\nheight', h, '\nposition x => ', px)
       if (height - 18 < py + h + dropdownHEIGHT) {
@@ -110,9 +120,19 @@ const SelectDropdown = (
     });
   };
   const closeDropdown = () => {
+    Animated.timing(
+      fadeAnim,
+      {
+        toValue: 0,
+        duration: 1000,
+        easing:Easing.inOut(Easing.cubic),
+        useNativeDriver: true
+      }
+    ).start();
     setIsVisible(false);
     onBlur && onBlur();
   };
+
   const reset = () => {
     setSelectedItem(null);
     setIndex(-1);
@@ -161,7 +181,17 @@ const SelectDropdown = (
       </TouchableOpacity>
     );
   };
+
+
+  const fadeAnim = useRef(new Animated.Value(0)).current
+
+  // useEffect(() => {
+   
+  // }, [fadeAnim])
+
+
   const renderDropdown = () => {
+
     return (
       isVisible && (
         <Modal
@@ -180,7 +210,7 @@ const SelectDropdown = (
               }),
             }}
           />
-          <View
+          <Animated.View
             style={{
               ...styles.dropdownOverlayView,
               ...styles.shadow,
@@ -195,8 +225,11 @@ const SelectDropdown = (
                 elevation: 10,
                 borderWidth: 1,
                 borderColor: 'transparent',
-                backgroundColor:  Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white,
+                backgroundColor: Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white,
                 overflow: 'hidden',
+                transform: [{
+                  scale: fadeAnim
+                }]
               },
               // ...(I18nManager.isRTL
               //   ? {right: dropdownStyle?.right || dropdownPX}
@@ -219,7 +252,7 @@ const SelectDropdown = (
                   onLayout={onLayout}
                 />
               )}
-          </View>
+          </Animated.View>
         </Modal>
       )
     );

@@ -14,6 +14,7 @@ import {
   Colors,
   MyMemoriesTapBarOptions,
   fontSize,
+  fontFamily,
 } from '../../common/constants';
 import MemoryDrafts from './MemoryDrafts/index';
 import PublishedMemory from './PublishedMemory/index';
@@ -84,6 +85,7 @@ export default class MyMemoriesContainer extends React.Component<Props> {
             color: Colors.black,
             // fontFamily: fontFamily.Inter,
             fontSize: 16,
+            fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
             fontWeight: '500',
           },
         }}

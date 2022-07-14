@@ -56,6 +56,7 @@ import {
   keyInt,
   keyBoolean,
   keyString,
+  fontFamily,
 } from '../../common/constants';
 import { MemoryDataModel, kNews, kSports } from './memoryDataModel';
 import { Actions } from 'react-native-router-flux';
@@ -1295,7 +1296,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
             {this.state.viewAllComments ? (
               <Text
                 style={{
-                  fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                  fontWeight: '500',
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                   lineHeight: 20,
                   fontSize: 16,
                   color: Colors.NewYellowColor,
@@ -1497,7 +1499,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
             style={{
               ...fontSize(30),
               paddingTop: 5,
-              fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+              fontWeight: '500',
+              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
               color: Colors.TextColor,
             }}>
             {currentSelectedItem.title}
@@ -1867,7 +1870,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
           style={{
             ...fontSize(30),
             color: Colors.NewTitleColor,
-            fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+            fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+            fontWeight: '500',
             width: '100%',
             textAlign: 'left',
             marginBottom: 5,
@@ -1895,7 +1899,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 <Text
                   style={{
                     ...fontSize(16),
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontWeight: '500',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                     color: Colors.NewTitleColor,
                   }}>
                   {this.memoryDataModel.memory.youWhereThere && (
@@ -1972,7 +1977,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
             style={{ flexDirection: 'row', paddingBottom: 5, paddingTop: 5 }}>
             <Text
               style={{
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                fontWeight: '500',
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                 fontSize: 16,
                 color: Colors.NewYellowColor,
               }}>
@@ -1984,7 +1990,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
             <Text
               style={{
                 ...fontSize(18),
-                fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                fontWeight: '500',
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                 color: Colors.ThemeColor,
                 transform: [
                   {

@@ -24,7 +24,7 @@ const Styles = EStyleSheet.create({
     borderRadius: 12,
     zIndex: 99,
     justifyContent: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   titleTextStyle:{
     fontFamily: fontFamily.Inter,

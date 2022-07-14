@@ -13,7 +13,7 @@ import {
 import {Actions} from 'react-native-router-flux';
 import DefaultListItem from '../../common/component/defaultListItem';
 import TextNew from '../../common/component/Text';
-import {Colors, fontSize} from '../../common/constants';
+import {Colors, fontFamily, fontSize} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import {Account} from '../../common/loginStore';
 import {
@@ -194,7 +194,8 @@ export default class MyAccount extends React.Component {
               <View style={{alignItems: 'flex-start', paddingLeft: 10}}>
                 <TextNew
                   style={{
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                    fontWeight: '500',
+                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                     ...fontSize(18),
                     color: Colors.TextColor,
                   }}>
@@ -208,7 +209,8 @@ export default class MyAccount extends React.Component {
                   <TextNew
                     style={{
                       paddingTop: 6,
-                      fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                      fontWeight: '500',
                       ...fontSize(16),
                       color: Colors.NewTitleColor,
                     }}>
