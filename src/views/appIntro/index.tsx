@@ -1,25 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   Image,
   StatusBar,
   Dimensions,
-  ScrollView,
   Animated,
   SafeAreaView,
-  Alert,
   TouchableHighlight,
-  Platform,
   ImageBackground,
+  FlatList,
 } from 'react-native';
 //@ts-ignore
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import {
-  appIntroBg1,
-  appIntroBg2,
-  appIntroBg3,
-  appIntroBg4,
-  appIntroBg5,
   appIntro1,
   appIntro2,
   appIntro3,
@@ -27,10 +20,9 @@ import {
   app_intro_msm,
   appIntroBg,
 } from '../../images';
-import { ToastMessage } from '../../common/component/Toast';
 import Text from '../../common/component/Text';
-import { fontSize, Colors } from '../../common/constants';
-import { Actions } from 'react-native-router-flux';
+import {Colors} from '../../common/constants';
+import {Actions} from 'react-native-router-flux';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 import Utility from '../../common/utility';
@@ -67,13 +59,12 @@ export default class AppIntro extends React.Component {
       description: 'A life worth remembering is a life worth recording.',
     },
   ];
+
   state: any = {
-    fadeIn: new Animated.Value(1),
     currentIndex: 0,
-    // eventX : 0,
-    // scrollStartted : false,
-    scrolling: false,
+    fadeInOut: new Animated.Value(1)
   };
+
   onDoneTap = () => {
     DefaultPreference.set('hide_app_intro', 'true').then(function () { });
     Actions.prologue();
@@ -82,6 +73,7 @@ export default class AppIntro extends React.Component {
   renderAppIntro = (item: any) => {
     let index = item.index;
     item = item.item;
+    console.log('Render Item : ',index)
     return (
       <View
         style={style.renderAppIntroContainer}>
@@ -104,6 +96,8 @@ export default class AppIntro extends React.Component {
                     width: '100%',
                     justifyContent: 'center',
                     alignItems: 'center',
+                  },{
+                    opacity:this.state.fadeInOut
                   }]}>
                   {this.state.currentIndex == index && (
                     <Image
@@ -120,10 +114,8 @@ export default class AppIntro extends React.Component {
             <View
               style={style.descriptionContainer}>
               <Animated.View
-                style={[style.descriptionAnimatedViewStyle, {
-                  opacity: this.state.fadeIn,
-                }]}>
-                {this.state.currentIndex == index && (
+                style={[style.descriptionAnimatedViewStyle]}>
+                {this.state.currentIndex === index && (
                   <View
                     style={style.descTextContainer}>
                     <Text
@@ -144,27 +136,6 @@ export default class AppIntro extends React.Component {
     );
   };
 
-  fadeIn = (index: any) => {
-    this.setState(
-      { currentIndex: index, fadeIn: new Animated.Value(0), scrolling: false },
-      () => {
-        Animated.timing(this.state.fadeIn, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true
-        }).start();
-      },
-    );
-  };
-
-  fadeOut() {
-    Animated.timing(this.state.fadeIn, {
-      toValue: 0,
-      duration: 1500,
-      useNativeDriver: true
-    }).start();
-  }
-
   get pagination() {
     let activeSlide = this.state.currentIndex;
     return (
@@ -178,6 +149,39 @@ export default class AppIntro extends React.Component {
         inactiveDotScale={1.0}
       />
     );
+  }
+
+  fadeIn = () => {
+    this.setState(
+      {fadeIn: new Animated.Value(0)},
+      () => {
+        Animated.timing(this.state.fadeIn, {
+          toValue: 1,
+          duration: 1500,
+          useNativeDriver:false
+        }).start();
+      },
+    );
+  };
+
+  fadeOut() {
+    Animated.timing(this.state.fadeIn, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver:false
+    }).start();
+  }
+
+  onScroll(e: any) {
+    let page = Math.ceil(e.nativeEvent.contentOffset.x / Dimensions.get('window').width);
+    if (page !==  this.state.currentIndex) {
+      if(page >= this.images.length){
+         page = this.images.length-1;
+      }
+      this.setState({
+        currentIndex:page
+      })
+    }
   }
 
   render() {
@@ -200,36 +204,16 @@ export default class AppIntro extends React.Component {
             <Image
               source={app_intro_msm}
               style={style.appIntroImageStyle}></Image>
-            <Carousel
-              data={this.images}
-              renderItem={(item: any) => this.renderAppIntro(item)}
-              // contentContainerCustomStyle={{alignItems: 'center', justifyContent: 'center', width:'100%'}}
-              onSnapToItem={(i: any) => this.fadeIn(i)}
-              sliderWidth={Dimensions.get('window').width}
-              itemWidth={Dimensions.get('window').width}
-              slideStyle={{ width: Dimensions.get('window').width, flex: 1 }}
-              inactiveSlideOpacity={1}
-              removeClippedSubviews={false}
-              inactiveSlideScale={1}
-              useScrollView={false}
-              onScroll={(event: any) => {
-                if (this.state.scrolling) {
-                  this.setState({
-                    fadeIn: new Animated.Value(
-                      1 -
-                      Math.abs(
-                        this.state.currentIndex -
-                        event.nativeEvent.contentOffset.x /
-                        Dimensions.get('window').width,
-                      ),
-                    ),
-                  });
-                }
-              }}
-              onScrollBeginDrag={() =>
-                this.setState({ scrolling: true, fadeIn: new Animated.Value(1) })
-              }
-            />
+              <FlatList
+                data={this.images}
+                initialNumToRender={this.images.length}
+                renderItem={this.renderAppIntro}
+                horizontal
+                pagingEnabled={true}
+                showsHorizontalScrollIndicator={true}
+                keyExtractor={(item, index) => index + ''}
+                onScroll={(e)=>this.onScroll(e)}
+              />
             <View style={style.paginationContainer}>
               {this.pagination}
             </View>
