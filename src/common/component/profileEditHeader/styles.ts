@@ -18,7 +18,7 @@ const Styles = EStyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     height: 68,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     borderBottomColor: Colors.bottomTabColor,
     backgroundColor: Colors.white,
   },
@@ -76,6 +76,8 @@ const Styles = EStyleSheet.create({
   },
   rightContainer: {
     flex: 1.5,
+    height:60,
+    width: 100,
     alignItems: 'flex-end',
     justifyContent: 'center',
     marginRight: 8
@@ -112,13 +114,13 @@ const Styles = EStyleSheet.create({
     paddingRight: 10
   },
   rightButtonsTouchableStyle: {
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
   },
   cancleText: {
     color: Colors.newDescTextColor,
     ...fontSize(16),
-    width: '100%',
+    // width: '100%',
     textAlign: 'center',
     fontWeight: '400',
     fontFamily: 'Inter',
@@ -149,13 +151,17 @@ const Styles = EStyleSheet.create({
     alignItems: 'center'
   },
   marginleft: {
+    marginBottom: 4,
+    height: 24,
+    width: 24,
     marginLeft: 30
   },
   cancleTextContainer: {
+    justifyContent: 'center',
     width: 72,
+    height:32,
     marginLeft: 8,
-    marginBottom: 10,
-    marginTop: 6,
+    marginBottom: 8,
   },
   cancleTextStyle: {
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,

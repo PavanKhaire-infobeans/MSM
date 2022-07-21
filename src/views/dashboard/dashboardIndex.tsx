@@ -321,7 +321,8 @@ class DashboardIndex extends React.Component<Props>{
                             tabBarTextStyle={{ ...fontSize(16), fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium }}
                             tabBarActiveTextColor={Colors.TextColor}
                             // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
-                            tabBarUnderlineStyle={{ backgroundColor: Colors.white, height: 2 }} >
+                            tabBarUnderlineStyle={{ backgroundColor: Colors.white, height: 0 }} 
+                            >
                             <Recent tabLabel={'Recent'} filterClick={() => this.onFilterClick.bind(this)} />
                             <Timeline tabLabel={'Timeline'} filterClick={() => this.onFilterClick.bind(this)} />
                         </ScrollableTabView>

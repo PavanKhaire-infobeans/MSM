@@ -113,7 +113,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   startMoveOnYAxis = () => {
     Animated.timing(this.moveOnYAxis, {
       toValue: 1,
-      duration: 1000,
+      duration: 5,
       useNativeDriver: true,
     }).start();
   };
@@ -121,7 +121,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   startMoveDownYAxis = () => {
     Animated.timing(this.moveOnYAxis, {
       toValue: 0,
-      duration: 1000,
+      duration: 5,
       useNativeDriver: true,
     }).start();
   };
@@ -296,7 +296,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     // let keyboardHeight = this.state.keyboardHeight
     const yVal = this.moveOnYAxis.interpolate({
       inputRange: [0, 0.5, 1],
-      outputRange: [0, -(this.state.keyboardHeight * 0.8), -(this.state.keyboardHeight * 0.8)],
+      outputRange: [0, -(this.state.keyboardHeight * 0.55), -(this.state.keyboardHeight * 0.85)],
     });
 
     const animStyle = {
@@ -345,29 +345,23 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             // locations={[0, 0.6]}
             colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.6)']}
             style={{ height: '100%', width: '100%' }}> */}
-        <SafeAreaView>
+        <SafeAreaView style={Styles.flexContainer}>
           <MessageDialogue ref={(ref: any) => this.messageRef = ref} />
-          <View
-          // onScroll={() => { Keyboard.dismiss() }}
-          >
+         
 
-            <View style={{ height: 77, width: Utility.getDeviceWidth() - 48, flexDirection: 'row', justifyContent: 'space-between', marginTop: 68 }}>
-              {/* <TouchableWithoutFeedback onPress={() => Actions.pop()}><Image source={loginBack} /></TouchableWithoutFeedback> */}
-              <Text style={{ fontWeight: '500', ...fontSize(36), lineHeight: 45, fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium, color: Colors.black, textAlign: 'left' }}>Login</Text>
-              {/* <View style={{ width: 40 }} /> */}
+            <View style={Styles.LoginHeader}>
+              <Text style={Styles.hederText}>Login</Text>
             </View>
 
             <View style={Styles.separatorHeightStyle16} />
+            <View style={Styles.separatorHeightStyle16} />
 
-            {/** Commuity banner UI */}
-            {/* <View style={styles.communityBanner}>
-									<CommunityBanner communityInfo={this.selectedCommunity} />
-								</View> */}
-            <View style={{ height: Utility.getDeviceHeight() * 0.65, width: Utility.getDeviceWidth() - 48, justifyContent: 'space-between' }}>
+           
+            <View style={Styles.inputsContainer}>
 
-              <View style={{}}>
+              <View >
 
-                <Text style={[CommonTextStyles.fontWeight500Size13Inter, { marginBottom: 4, marginLeft: 8, color: Colors.newTextColor }]}>
+                <Text style={[CommonTextStyles.fontWeight500Size13Inter, Styles.labelStyle]}>
                   EMAIL OR USERNAME
                 </Text>
 
@@ -387,9 +381,10 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                   }
                 />
                 {/* <View style={Styles.separatorHeightStyle16} /> */}
-                <Text style={[CommonTextStyles.fontWeight500Size13Inter, { marginBottom: 4, paddingLeft: 8, color: Colors.newTextColor }]}>
+                <Text style={[CommonTextStyles.fontWeight500Size13Inter, Styles.labelStyle]}>
                   PASSWORD
                 </Text>
+
                 <TextField
                   passwordToggle={true}
                   errorMessage={this.state.passwordError.text}
@@ -417,24 +412,18 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                     marginLeft: 24,
                     height: 380 - this.state.keyboardHeight
                   }}> */}
-              <Animated.View style={[{
-                // height: 380,
-                // padding: 24,
-                // flex: 1,
-                width: Utility.getDeviceWidth() - 48,
-                // backgroundColor: 'red',
-                justifyContent: "flex-end"
-              }, animStyle]} >
+              <Animated.View style={[Styles.buttonContainer, animStyle]} >
 
                 <TouchableWithoutFeedback
                   // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
                   onPress={this.controller.onClick.bind(this.controller)}
                 >
-                  <View style={[Styles.loginSSOButtonStyle, {
-                    backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.bordercolor : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
+                  <View style={[Styles.loginSSOButtonStyle, {height:44,
+                    backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.bordercolor : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, 
+                    flexDirection: 'row'
                     // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
                   }]}>
-                    <Text style={[CommonTextStyles.fontWeight400Size19Inter, { color: Colors.white, marginRight: 9.67 }]}>
+                    <Text style={[CommonTextStyles.fontWeight500Size17Inter, Styles.loginTextStyle]}>
                       Login
                     </Text>
                     <Image source={arrowRightCircle} />
@@ -506,7 +495,6 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 
 
             {/* </View> */}
-          </View>
           {/* </View> */}
           {/* </View> */}
         </SafeAreaView>

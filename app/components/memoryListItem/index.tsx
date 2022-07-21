@@ -206,7 +206,8 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           <Image style={styles.imageTopMargin} source={calendarsmall} />
                           <TextNew
                             style={styles.memoryDatetext}>
-                            {this.props.item.item.memory_date}
+                            {this.props.item.item.memoryDateDisplay}
+                            {/* memory_date */}
                           </TextNew>
                         </View>
                       </View>
@@ -214,7 +215,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                       <View style={{ height: 8 }} />
 
                       <TextNew
-                        numberOfLines={3}
+                        numberOfLines={2}
                         style={styles.memoryTitle}>
                         {this.props.item.item.title}
                       </TextNew>
@@ -250,7 +251,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                         this.props.like,
                         this.props.animate,
                       )}
-                      <View style={{ height: 16 }} />
+                      <View style={styles.height16} />
                       {/* {CommentBox(this.props.item)} */}
                     </View>
                   </TouchableHighlight>

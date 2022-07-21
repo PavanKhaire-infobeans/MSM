@@ -8,16 +8,17 @@ import {
 } from 'react-native';
 import Text from '../Text';
 //@ts-ignore
-import {Size, Colors, fontSize} from '../../constants';
+import { Size, Colors, fontSize } from '../../constants';
 //@ts-ignore
-import Carousel, {Pagination} from 'react-native-snap-carousel';
+import Carousel,{ Pagination } from 'react-native-snap-carousel';
+// import Carousel from 'react-native-reanimated-carousel';
 import styles from './styles';
 type Props = {
   data: any;
   onAddToMemory?: (activeIndex: any) => void;
 };
 
-type State = {activeIndex: Number};
+type State = { activeIndex: Number };
 export let promptCarousel = {};
 // export default class Prompt extends React.Component<Props, State> {
 //   state = {
@@ -76,6 +77,7 @@ export default class Prompts extends React.Component<Props, State> {
           ref={(ref: any) => (promptCarousel = ref)}
           data={this.props.data}
           extraData={this.state}
+          removeClippedSubviews={false}
           renderItem={(item: any) => (
             <View
               style={styles.carouselContainer}>
@@ -86,10 +88,11 @@ export default class Prompts extends React.Component<Props, State> {
               </Text>
             </View>
           )}
-          onSnapToItem={(i: any) => this.setState({activeIndex: i})}
-          sliderWidth={Dimensions.get('window').width - 50}
-          itemWidth={Dimensions.get('window').width - 50}
-          slideStyle={{width: Dimensions.get('window').width - 50, flex: 1}}
+          onSnapToItem={(i: any) => this.setState({ activeIndex: i })}
+          // initialNumToRender={this.props.data?.length}
+          sliderWidth={Dimensions.get('window').width - 48}
+          itemWidth={Dimensions.get('window').width - 48}
+          slideStyle={{ width: Dimensions.get('window').width - 48, flex: 1 }}
           inactiveSlideOpacity={1}
           inactiveSlideScale={1}
           useScrollView={false}
@@ -103,7 +106,7 @@ export default class Prompts extends React.Component<Props, State> {
               this.state.activeIndex == this.props.data.length - 1 &&
               this.state.activeIndex != 0
             ) {
-              this.setState({activeIndex: this.state.activeIndex - 1});
+              this.setState({ activeIndex: this.state.activeIndex - 1 });
             }
           }}>
           <View

@@ -148,7 +148,7 @@ const Styles = EStyleSheet.create({
     marginLeft: 16,
     marginRight: 16,
     fontWeight: '400',
-    marginBottom: 8,
+    marginBottom: 16,
     textAlign: 'left',
     fontFamily: fontFamily.Inter,
     lineHeight: 24,
@@ -184,12 +184,17 @@ const Styles = EStyleSheet.create({
   },
   memoryDateContainer: {
     alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
     height: 18,
   },
   imageTopMargin: {
+    top:-1,
     height: 16,
     width: 16
+  },
+  height16:{
+    height: 16,
   }
 });
 

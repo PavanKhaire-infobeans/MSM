@@ -2,6 +2,7 @@ import Utility from '../../common/utility';
 import { getDetails, keyInt, keyArray, keyString, keyObject } from "../../common/constants";
 import { profile_placeholder } from '../../images';
 import { Account } from '../../common/loginStore';
+import moment from 'moment';
 
 export class DashboardDataModel {
     static getConvertedData = (memory: any) => {
@@ -37,7 +38,7 @@ export class DashboardDataModel {
                     parsedMemory.shareText = 'Shared with ' + parsedMemory.share_count + (parsedMemory.share_count > 1 ? " members" : " member");
                     parsedMemory.color = "#0077B2";
                     break;
-                case "cueback": parsedMemory.shareText = 'Shared with Public';
+                case "cueback": parsedMemory.shareText = 'Public';//Shared with 
                     parsedMemory.color = "#BE6767";
                     break;
                 default:
@@ -62,6 +63,7 @@ export class DashboardDataModel {
             }
             let memDate = parseInt(getDetails(parsedMemory, ["memory_date"])) * 1000;
             parsedMemory.memory_date = Utility.dateObjectToDefaultFormat(new Date(memDate));
+            parsedMemory.memoryDateDisplay = moment(memDate).format('ll');
             parsedMemory.memoryYear = new Date(memDate).getFullYear();
             if (parsedMemory.season && parsedMemory.season.trim().length > 0) {
                 let season = parsedMemory.season.trim();
@@ -81,6 +83,7 @@ export class DashboardDataModel {
             const regex = /(<([^>]+)>)/ig;
             parsedMemory.description = parsedMemory.description.trim().replace(/<br>/ig, '\n');
             parsedMemory.description = parsedMemory.description.trim().replace(/<br \/>/ig, '\n');
+            parsedMemory.description = parsedMemory.description.trim().replace(/<br\/>/ig, '\n');
             parsedMemory.description = parsedMemory.description.trim().replace(/<p>/ig, '\n');
             parsedMemory.description = parsedMemory.description.trim().replace(/<\/p>/ig, '');
             parsedMemory.description = parsedMemory.description.trim();

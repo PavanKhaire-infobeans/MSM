@@ -22,6 +22,7 @@ import loaderHandler from '../../../common/component/busyindicator/LoaderHandler
 import EventManager from '../../../common/eventManager';
 import { chevronleftfilter, leftgradient } from '../../../../app/images';
 import LinearGradient from 'react-native-linear-gradient';
+import ActionSheet from "react-native-actions-sheet";
 type State = { [x: string]: any };
 type Props = { [x: string]: any };
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
@@ -30,6 +31,9 @@ const Timeline = (props: Props) => {
     let _actionSheet = useRef(null);
     let flatListRef = useRef(null);
     const audioPlayer = useRef(null);
+    const actionSheetRef = useRef(null);
+    const timelineYearRef = useRef(null);
+
     const [state, setState] = useState({
         showNoInternetView: false,
         audioFile: {
@@ -53,7 +57,6 @@ const Timeline = (props: Props) => {
     const [currentItemYear, setCurrentItemYear] = useState('')
     const [previousItemYear, setPreviousItemYear] = useState('')
     const [nextItemYear, setNextItemYear] = useState('')
-
     let memoryTimelineUpdateListener: EventManager;
 
     useEffect(() => {
@@ -72,9 +75,18 @@ const Timeline = (props: Props) => {
             });
 
             setMemoryYears(yearsArr);
-            setAllYears(allYearsTemp);
+            setAllYears(allYearsTemp.reverse());
         }, 500);
     }, [props.jumpToYears])
+
+    useEffect(() => {
+        if (props.isJumptoShow) {
+            actionSheetRef.current?.show();
+        }
+        else {
+            actionSheetRef.current?.hide();
+        }
+    }, [props.isJumptoShow])
 
     useEffect(() => {
         memoryTimelineUpdateListener = EventManager.addListener("memoryUpdateTimelineListener", () => {
@@ -306,7 +318,7 @@ const Timeline = (props: Props) => {
         <View style={styles.fullFlex}>
             <SafeAreaView style={styles.container}>
                 <View style={styles.subcontainer}>
-                    <Modal
+                    {/* <Modal
                         animationType="slide"
                         transparent={true}
                         style={{ backgroundColor: Colors.blacknew, flex: 1 }}
@@ -315,32 +327,34 @@ const Timeline = (props: Props) => {
                     >
                         <View style={{ flex: 1, backgroundColor: Colors.blacknewrgb }}>
 
-                            <View style={{ flex: 1, backgroundColor: Colors.transparent }}>
+                            <View style={{ height: 68, backgroundColor: Colors.transparent }}>
                                 <TouchableOpacity style={{ flex: 1, backgroundColor: Colors.transparent }} onPress={() => props.showJumpto(false)} >
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flex: 7, borderTopLeftRadius: 12, borderTopRightRadius: 12, shadowOpacity: 1, elevation: 3, shadowColor: '(46, 49, 62, 0.05)', shadowRadius: 2, shadowOffset: { width: 4, height: 2 } }}>
-                                <JumpToScreen jumpToClick={(selectedYear: any, selectedMonth: any) => jumpToClicked(selectedYear, selectedMonth)}
-                                    jumpToYears={props.jumpToYears} memoryDate={state.jumpToDate}
-                                    closeAction={() => props.showJumpto(false)}
-                                />
-                                <LinearGradient
-                                    // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
-                                    // locations={[0, 0.6]}
-                                    colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.9)', 'rgba(255, 255, 255, 1)']}
-                                    style={{ height: 50, width: '100%', position: 'absolute', bottom: 20 }}>
-                                </LinearGradient>
-                                <LinearGradient
-                                    // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
-                                    // locations={[0, 0.6]}
-                                    colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)']}
-                                    style={{ height: 20, width: '100%', position: 'absolute', bottom: 0 }}>
-                                </LinearGradient>
-                            </View>
+                            <View style={{ height: Utility.getDeviceHeight() - 68, borderTopLeftRadius: 12, borderTopRightRadius: 12, shadowOpacity: 1, elevation: 3, shadowColor: '(46, 49, 62, 0.05)', shadowRadius: 2, shadowOffset: { width: 4, height: 2 } }}> */}
+                    <ActionSheet closeOnTouchBackdrop={false} closeOnPressBack={false} ref={actionSheetRef} >
+                        <JumpToScreen jumpToClick={(selectedYear: any, selectedMonth: any) => jumpToClicked(selectedYear, selectedMonth)}
+                            jumpToYears={props.jumpToYears} memoryDate={state.jumpToDate}
+                            closeAction={() => props.showJumpto(false)}
+                        />
+                        <LinearGradient
+                            // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+                            // locations={[0, 0.6]}
+                            colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.9)', 'rgba(255, 255, 255, 1)']}
+                            style={{ height: 50, width: '100%', position: 'absolute', bottom: 18 }}>
+                        </LinearGradient>
+                        <LinearGradient
+                            // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+                            // locations={[0, 0.6]}
+                            colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)']}
+                            style={{ height: 20, width: '100%', position: 'absolute', bottom: 0 }}>
+                        </LinearGradient>
+                    </ActionSheet>
+                    {/* </View>
 
                         </View>
 
-                    </Modal>
+                    </Modal> */}
                     {/* {filterView(props.filterClick(ListType.Timeline), ListType.Timeline)} */}
 
                     {/* <View style={[styles.fromDateContainerStyle, { height: props.toDate && props.fromDate ? 56 : !scrolling ? 16 : 0 }]}> */}
@@ -361,32 +375,51 @@ const Timeline = (props: Props) => {
                                                 setPreviousItemYear(null)
                                                 setNextItemYear(null)
                                             }}
-                                            underlayColor={Colors.transparent} style={{ width: 64, justifyContent: 'center', alignItems: 'center' }}>
+                                            underlayColor={Colors.transparent}
+                                            style={{ width: 48, justifyContent: 'center', alignItems: 'flex-end' }}>
                                             <Image source={chevronleftfilter} />
                                         </TouchableHighlight>
 
-                                        <View style={{ width: Utility.getDeviceWidth() - 128, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
-                                            <View style={{ width: 26, height: 22, position: 'absolute', left: 0, zIndex: 9 }} >
-                                                <Image style={{ marginLeft: -2 }} source={leftgradient} />
+                                        <View style={{ width: Utility.getDeviceWidth() - 96, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingLeft: 16 }}>
+                                            <View style={{ width: 26, height: 22, position: 'absolute', left: 16, zIndex: 9 }} >
+                                                <Image style={{ marginLeft: -5 }} source={leftgradient} />
                                             </View>
 
-                                            {/* <Text style={[styles.newnormalText, { color: Colors.newTextColor }]} numberOfLines={1} ellipsizeMode='tail'>{props.fromDate}</Text> */}
-                                            <Text style={[styles.newnormalText, { color: Colors.newTextColor, ...fontSize(15), lineHeight: 15 }]} numberOfLines={1} ellipsizeMode='tail'>{previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : ''}</Text>
-                                            {<View style={{ height: 1, backgroundColor: Colors.newTextColor, width: 46 }}></View>}
-                                            {/* <Text style={[styles.newnormalText, { color: Colors.newTextColor }]}>{props.toDate}</Text> */}
-                                            <Text style={[styles.newnormalText, { color: Colors.newTextColor, fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterBold, fontWeight: '700', ...fontSize(19), lineHeight: 23.75 }]}>{JSON.stringify(currentItemYear)}</Text>
-                                            <View style={{ height: 1, backgroundColor: nextItemYear ? Colors.newTextColor : Colors.transparent, width: nextItemYear ? 46 : 64 }}></View>
+                                            {/* <FlatList
+                                                data={allYears}
+                                                // style={styles.flatlistStyle}
+                                                extraData={state}
+                                                horizontal={true}
+                                                snapToAlignment='center'
+                                                ref={timelineYearRef}
+                                                keyExtractor={(_, index: number) => `${index}`}
+                                                // onViewableItemsChanged={onViewableItemsChanged}
+                                                // viewabilityConfig={{
+                                                //     itemVisiblePercentThreshold: 5
+                                                // }}
+                                                showsHorizontalScrollIndicator={false}
+                                                ItemSeparatorComponent={() => <View style={{ height: 1, marginTop: 5, backgroundColor: Colors.newTextColor, width: 46.5, marginLeft: 24, marginRight: 17 }}></View>}
+                                                renderItem={({ item, index }) => (
+                                                    <Text style={[styles.newnormalText, { color: Colors.newTextColor, fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterBold, ...fontSize(15), lineHeight: 15 }]}>{item.year}</Text>
+                                                )}
+                                                indicatorStyle='white'
+                                            // onEndReached={(props.timelineList && props.timelineList.length > 2) ? handleLoadMore.bind(this) : () => { }}
+                                            /> */}
+
+                                            <Text style={[styles.newnormalText]} numberOfLines={1} ellipsizeMode='tail'>{previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : ''}</Text>
+                                            {<View style={{ height: 1, backgroundColor: Colors.newTextColor, width: 46, marginLeft: 24, marginRight: 17 }}></View>}
+                                            <Text style={[styles.currentYearText]}>{JSON.stringify(currentItemYear)}</Text>
+                                            <View style={{ height: 1, backgroundColor: nextItemYear ? Colors.newTextColor : Colors.transparent, width: nextItemYear ? 46 : 64, marginLeft: nextItemYear ? 17 : 0, marginRight: nextItemYear ? 17 : 0 }}></View>
                                             {
                                                 nextItemYear ?
                                                     <Text onPress={() => {
                                                         setScrolling(false);
                                                         jumpToClicked(nextItemYear ? JSON.stringify(nextItemYear) : '', "");
                                                         if (flatListRef.current) {
-                                                            // debugger
                                                             flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
                                                         }
                                                     }}
-                                                        style={[styles.newnormalText, { color: Colors.newTextColor, ...fontSize(15), lineHeight: 15 }]}>
+                                                        style={[styles.newnormalText]}>
                                                         {JSON.stringify(nextItemYear)}
                                                     </Text>
                                                     :
@@ -394,7 +427,7 @@ const Timeline = (props: Props) => {
                                             }
                                             <View
                                                 style={{ width: 26, height: 22, position: 'absolute', right: 0, zIndex: 9, transform: [{ rotate: '180deg' }] }} >
-                                                <Image style={{ marginRight: -2 }} source={leftgradient} />
+                                                <Image style={{ marginRight: -5 }} source={leftgradient} />
                                             </View>
                                         </View>
 
@@ -413,7 +446,8 @@ const Timeline = (props: Props) => {
                                                         setPreviousItemYear(null)
                                                         setNextItemYear(null)
                                                     }}
-                                                    underlayColor={Colors.transparent} style={{ width: 64, justifyContent: 'center', alignItems: 'center' }}>
+                                                    underlayColor={Colors.transparent}
+                                                    style={{ width: 48, justifyContent: 'center', alignItems: 'flex-start' }}>
                                                     <Image style={{ transform: [{ rotate: '180deg' }] }} source={chevronleftfilter} />
                                                 </TouchableHighlight>
                                                 :
@@ -446,6 +480,15 @@ const Timeline = (props: Props) => {
                                 setScrolling(false)
                             }
                             if (currentItemYear) {
+
+                                // if (timelineYearRef.current) {
+                                //     let index = allYears.findIndex(i => i.year === currentItemYear);
+                                //     // alert(index)
+                                //     if (index !== -1) {
+                                //         timelineYearRef.current.scrollToIndex({ animated: false, index: index });
+                                //     }
+                                // }
+
                                 let next = '', prev = '', currentIndex = memoryYears.indexOf(currentItemYear);
                                 prev = memoryYears[currentIndex] ? memoryYears[currentIndex + 1] : memoryYears[0]
                                 next = currentIndex > 0 ? memoryYears[currentIndex - 1] : null

@@ -19,7 +19,7 @@ const Styles = EStyleSheet.create({
         // fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     },
     cancleText: {
-        color: Colors.TextColor,
+        color: Colors.newDescTextColor,
         fontSize:16,
         width: '100%',
         textAlign: 'center',
@@ -28,12 +28,12 @@ const Styles = EStyleSheet.create({
         lineHeight: 16
     },
     JumptoText: {
-        color: Colors.TextColor,
+        color: Colors.newDescTextColor,
         fontSize:16,
         width: '100%',
         textAlign: 'center',
-        fontWeight: '500',
-        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+        fontWeight: '400',
+        fontFamily: fontFamily.Inter ,
         lineHeight: 16
     },
     titleContainer: {
@@ -127,16 +127,17 @@ const Styles = EStyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         height: 68,//85,
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        // justifyContent: 'space-between',
+        // alignItems: 'center',
         borderBottomWidth: 2,
         // paddingHorizontal:10,
         borderBottomColor: Colors.bottomTabColor
     },
     rightContainer: {
         flex: 1.5,
-        justifyContent: 'center',
-        marginRight: 8
+        height:60,
+        // justifyContent: 'center',
+        marginRight: 8,
     },
     filterContainer: {
         height: '65%',

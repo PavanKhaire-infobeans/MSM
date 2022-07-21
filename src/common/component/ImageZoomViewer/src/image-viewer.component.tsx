@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import styles from './image-viewer.style';
-import {IImageInfo, IImageSize, Props, State} from './image-viewer.type';
+import { IImageInfo, IImageSize, Props, State } from './image-viewer.type';
 import stylesnew from './styles'
 export default class ImageViewer extends React.Component<Props, State> {
   public static defaultProps = new Props();
@@ -68,6 +68,7 @@ export default class ImageViewer extends React.Component<Props, State> {
           Animated.timing(this.fadeAnim, {
             toValue: 1,
             duration: 200,
+            useNativeDriver: true,
           }).start();
         },
       );
@@ -109,6 +110,7 @@ export default class ImageViewer extends React.Component<Props, State> {
         Animated.timing(this.fadeAnim, {
           toValue: 1,
           duration: 200,
+          useNativeDriver: true,
         }).start();
       },
     );
@@ -146,7 +148,7 @@ export default class ImageViewer extends React.Component<Props, State> {
     this.loadedIndex.set(index, true);
 
     const image = this.props.imageUrls[index];
-    const imageStatus = {...this!.state!.imageSizes![index]};
+    const imageStatus = { ...this!.state!.imageSizes![index] };
 
     // 保存 imageSize
     const saveImageSize = () => {
@@ -160,7 +162,7 @@ export default class ImageViewer extends React.Component<Props, State> {
 
       const imageSizes = this!.state!.imageSizes!.slice();
       imageSizes[index] = imageStatus;
-      this.setState({imageSizes});
+      this.setState({ imageSizes });
     };
 
     if (this!.state!.imageSizes![index].status === 'success') {
@@ -211,8 +213,8 @@ export default class ImageViewer extends React.Component<Props, State> {
       () => {
         try {
           const data = (Image as any).resolveAssetSource(image.props.source);
-          imageStatus.width = data.width?data.width:'';
-          imageStatus.height = data.height?data.height:'';
+          imageStatus.width = data.width ? data.width : '';
+          imageStatus.height = data.height ? data.height : '';
           imageStatus.status = 'success';
           saveImageSize();
         } catch (newError) {
@@ -262,14 +264,14 @@ export default class ImageViewer extends React.Component<Props, State> {
     const vxRTL = I18nManager.isRTL ? -vx : vx;
     const isLeftMove = I18nManager.isRTL
       ? this.positionXNumber - this.standardPositionX <
-        -(this.props.flipThreshold || 0)
+      -(this.props.flipThreshold || 0)
       : this.positionXNumber - this.standardPositionX >
-        (this.props.flipThreshold || 0);
+      (this.props.flipThreshold || 0);
     const isRightMove = I18nManager.isRTL
       ? this.positionXNumber - this.standardPositionX >
-        (this.props.flipThreshold || 0)
+      (this.props.flipThreshold || 0)
       : this.positionXNumber - this.standardPositionX <
-        -(this.props.flipThreshold || 0);
+      -(this.props.flipThreshold || 0);
 
     if (vxRTL > 0.7) {
       // 上一张
@@ -320,6 +322,7 @@ export default class ImageViewer extends React.Component<Props, State> {
     Animated.timing(this.positionX, {
       toValue: this.positionXNumber,
       duration: this.props.pageAnimateTime,
+      useNativeDriver: true,
     }).start();
 
     const nextIndex = (this.state.currentShowIndex || 0) - 1;
@@ -353,6 +356,7 @@ export default class ImageViewer extends React.Component<Props, State> {
     Animated.timing(this.positionX, {
       toValue: this.positionXNumber,
       duration: this.props.pageAnimateTime,
+      useNativeDriver: true,
     }).start();
 
     const nextIndex = (this.state.currentShowIndex || 0) + 1;
@@ -377,6 +381,7 @@ export default class ImageViewer extends React.Component<Props, State> {
     Animated.timing(this.positionX, {
       toValue: this.standardPositionX,
       duration: 150,
+      useNativeDriver: true,
     }).start();
   }
 
@@ -386,7 +391,7 @@ export default class ImageViewer extends React.Component<Props, State> {
   public handleLongPress = (image: IImageInfo) => {
     if (this.props.saveToLocalByLongPress) {
       // 出现保存到本地的操作框
-      this.setState({isShowMenu: true});
+      this.setState({ isShowMenu: true });
     }
 
     if (this.props.onLongPress) {
@@ -459,7 +464,7 @@ export default class ImageViewer extends React.Component<Props, State> {
         return (
           <View
             key={index}
-            style={{width: screenWidth, height: screenHeight}}
+            style={{ width: screenWidth, height: screenHeight }}
           />
         );
       }
@@ -482,7 +487,7 @@ export default class ImageViewer extends React.Component<Props, State> {
         return (
           <View
             key={index}
-            style={{width: screenWidth, height: screenHeight}}
+            style={{ width: screenWidth, height: screenHeight }}
           />
         );
       }
@@ -501,7 +506,7 @@ export default class ImageViewer extends React.Component<Props, State> {
         height *= HeightPixel;
       }
 
-      const Wrapper = ({children, ...others}: any) => (
+      const Wrapper = ({ children, ...others }: any) => (
         <ImageZoom
           cropWidth={this.width}
           cropHeight={this.height}
@@ -592,7 +597,7 @@ export default class ImageViewer extends React.Component<Props, State> {
                 this.props.enableImageZoom && !this.state.isShowMenu
               }
               doubleClickInterval={this.props.doubleClickInterval}
-              style={{...image.props.style, paddingBottom: 60}}>
+              style={{ ...image.props.style, paddingBottom: 60 }}>
               {this!.props!.renderImage!(image.props)}
             </ImageZoom>
           );
@@ -627,9 +632,9 @@ export default class ImageViewer extends React.Component<Props, State> {
     });
 
     return (
-      <Animated.View style={{zIndex: 9}}>
+      <Animated.View style={{ zIndex: 9 }}>
         <Animated.View
-          style={{...this.styles.container, opacity: this.fadeAnim}}>
+          style={{ ...this.styles.container, opacity: this.fadeAnim }}>
           {this!.props!.renderHeader!(this.state.currentShowIndex)}
 
           <View style={this.styles.arrowLeftContainer}>
@@ -647,7 +652,7 @@ export default class ImageViewer extends React.Component<Props, State> {
           <Animated.View
             style={{
               ...this.styles.moveBox,
-              transform: [{translateX: this.positionX}],
+              transform: [{ translateX: this.positionX }],
               width: this.width * this.props.imageUrls.length,
             }}>
             {ImageElements}
@@ -667,7 +672,7 @@ export default class ImageViewer extends React.Component<Props, State> {
             )}
           <View
             style={[
-              {bottom: 0, position: 'absolute', zIndex: 9},
+              { bottom: 0, position: 'absolute', zIndex: 9 },
               this.props.footerContainerStyle,
             ]}>
             {this!.props!.renderFooter!(this.state.currentShowIndex || -1)}
@@ -692,7 +697,7 @@ export default class ImageViewer extends React.Component<Props, State> {
       );
     }
 
-    this.setState({isShowMenu: false});
+    this.setState({ isShowMenu: false });
   };
 
   public getMenu() {
@@ -737,7 +742,7 @@ export default class ImageViewer extends React.Component<Props, State> {
   }
 
   public handleLeaveMenu = () => {
-    this.setState({isShowMenu: false});
+    this.setState({ isShowMenu: false });
   };
 
   public handleSwipeDown = () => {
@@ -760,7 +765,7 @@ export default class ImageViewer extends React.Component<Props, State> {
     return (
       <View
         onLayout={this.handleLayout}
-        style={[stylesnew.overlayStyle,{
+        style={[stylesnew.overlayStyle, {
           ...this.props.style,
         }]}>
         {childs}

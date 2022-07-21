@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../../common/constants';
 
@@ -22,7 +22,7 @@ const Styles = EStyleSheet.create({
         borderWidth: 2,
         borderRadius: 10
     },
-    buttonContainer:{
+    buttonContainer: {
         backgroundColor: Colors.moreViewBg,
         padding: 5,
         borderRadius: 5,
@@ -36,8 +36,8 @@ const Styles = EStyleSheet.create({
         height: 16,
         width: 20
     },
-    fullFlex:{
-        flex:1
+    fullFlex: {
+        flex: 1
     },
     container: {
         flex: 1,
@@ -143,10 +143,18 @@ const Styles = EStyleSheet.create({
         borderRadius: 10
     },
     newnormalText: {
-        ...fontSize(16),
-        fontWeight: "normal",
+        ...fontSize(15),
+        fontWeight: "400",
         fontFamily: fontFamily.Inter,
-        color: Colors.darkGray,
+        color: Colors.newTextColor,
+        lineHeight: 18.75
+    },
+    currentYearText: {
+        ...fontSize(19),
+        fontWeight: "700",
+        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterBold,
+        color: Colors.newDescTextColor,
+        lineHeight: 23.75
     },
     avatar: {
         height: 40,
@@ -207,28 +215,28 @@ const Styles = EStyleSheet.create({
         height: 40,
         marginTop: 20
     },
-    fromDateContainerStyle:{ 
-        width: "100%", 
-        justifyContent:'center', 
-        backgroundColor: Colors.timeLinebackground, 
+    fromDateContainerStyle: {
+        width: "100%",
+        justifyContent: 'center',
+        backgroundColor: Colors.timeLinebackground,
         // padding: 10 
     },
-    filterDateCOntainer:{ 
+    filterDateCOntainer: {
         flex: 1,
-        width: "100%", 
-        flexDirection: 'row', 
-        height: 56, 
+        width: "100%",
+        flexDirection: 'row',
+        height: 56,
         // alignItems:'center' ,
     },
-    emptyStyle:{ 
+    emptyStyle: {
         flex: 0.8,
-        width: "30%", 
+        width: "30%",
     },
-    activityStyle:{ 
-        flex: 1, 
-        justifyContent: "center" 
+    activityStyle: {
+        flex: 1,
+        justifyContent: "center"
     },
-    
+
 });
 
 export default Styles;

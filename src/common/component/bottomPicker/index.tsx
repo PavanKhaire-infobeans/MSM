@@ -125,6 +125,7 @@ const BottomPicker = (props: Props) => {
     Animated.timing(state.bottom, {
       toValue: 0,
       duration: 200,
+      useNativeDriver:true,
     }).start();
 
     // setTimeout(() => {
@@ -143,6 +144,7 @@ const BottomPicker = (props: Props) => {
     Animated.timing(state.bottom, {
       toValue: -height,
       duration: 200,
+      useNativeDriver:true,
     }).start(() => {
       setTimeout(() => {
         setState(prev => ({ ...prev, hidden: true }));

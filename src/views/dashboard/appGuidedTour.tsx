@@ -39,7 +39,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 	width_X = Dimensions.get('window').width;
 
 	appIntro = [{
-		title: 'Scroll through stories', desc: <><TextNew>Read stories on the</TextNew><TextNew style={{ fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,fontWeight: '500' }}> All Memories </TextNew>
+		title: 'Scroll through stories', desc: <><TextNew>Read stories on the</TextNew><TextNew style={{ fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium, fontWeight: '500' }}> All Memories </TextNew>
 			<TextNew>tab.</TextNew></>, imageSource: require('../../common/lottieFiles/msm_guidedTour_animation1.json')
 	},
 	{ title: 'Timeline', desc: 'Explore different time periods and read stories alongside cues from that era.', imageSource: require('../../common/lottieFiles/msm_guidedTour_animation2.json') },
@@ -49,7 +49,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 			<TextNew> button.</TextNew></>, imageSource: require('../../common/lottieFiles/msm_guidedTour_animation4.json')
 	},
 	{
-		title: 'Get inspired', desc: <><TextNew>Choose a Prompt to answer and tap{"\n"}</TextNew><TextNew style={{ fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,fontWeight: '500' }}> Add your memory </TextNew>
+		title: 'Get inspired', desc: <><TextNew>Choose a Prompt to answer and tap{"\n"}</TextNew><TextNew style={{ fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium, fontWeight: '500' }}> Add your memory </TextNew>
 			<TextNew>to get started.</TextNew></>, imageSource: require('../../common/lottieFiles/msm_guidedTour_animation5_part1.json')
 	},
 	]
@@ -87,6 +87,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 				{
 					toValue: 1,
 					duration: 500,
+					useNativeDriver: true,
 				}
 			).start();
 		})
@@ -99,6 +100,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 				{
 					toValue: 1,
 					duration: 1000,
+					useNativeDriver: true,
 				}
 			).start();
 		});
@@ -110,6 +112,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 			{
 				toValue: 0,
 				duration: 1000,
+				useNativeDriver: true,
 			}
 		).start();
 	}
@@ -121,6 +124,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 			{
 				toValue: 0,
 				duration: 200,
+				useNativeDriver: true,
 			}
 		).start();
 	}
@@ -175,12 +179,12 @@ export default class AppGuidedTour extends React.Component<Props> {
 
 	renderAppIntro = (item: any) => {
 		let index = item.index;
-		return <Animated.View style={styles.animatedViewContainer}>
+		return <View style={styles.animatedViewContainer}>
 			{this.state.currentIndex == index &&
 				<View style={styles.flex1Width90}>
 					<View style={styles.titleDescContainer}>
 						<TextNew style={styles.font30Weight500}>{this.appIntro[index].title}</TextNew>
-						<TextNew style={[styles.font18Weight400,styles.textTopStyle]}>{this.appIntro[index].desc}</TextNew>
+						<TextNew style={[styles.font18Weight400, styles.textTopStyle]}>{this.appIntro[index].desc}</TextNew>
 					</View>
 					<View style={styles.lottieContainer} onStartShouldSetResponder={(e) => { if (this.state.currentIndex == this.appIntro.length - 1) this.setState({ showPromptAnim: true }); return true }}>
 						{/* { !this.state.showPromptAnim && <Image style={{width: "90%", flex:1,bottom:0, height: "90%",backgroundColor:"yellow"}} source={require("../../common/lottieFiles/1_alternate.gif")} /> } */}
@@ -190,7 +194,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 					</View>
 				</View>
 			}
-		</Animated.View>
+		</View>
 	}
 
 	renderDismissPopUp() {
@@ -207,7 +211,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 							<Image source={msm_logo} style={styles.margin10} />
 							<Image source={exit_tour} style={styles.margin10} />
 							<TextNew style={styles.font30Weight500}>Exit guided tour?</TextNew>
-							<TextNew style={[styles.font18Weight400,styles.textTopStyle]}>You’re only few steps away from completing the tour.</TextNew>
+							<TextNew style={[styles.font18Weight400, styles.textTopStyle]}>You’re only few steps away from completing the tour.</TextNew>
 							<SubmitButton style={styles.submitButnStyle} text="Resume tour" onPress={() => { this.setState({ beginTour: true }); this.resumeTour(); this.setState({ tourEnded: false }) }} />
 							<TouchableOpacity onPress={() => { this.setState({ beginTour: false }); this.setState({ initialView: false }); this.setState({ tourSaveForLater: true }); this.setState({ tourEnded: false }) }} style={styles.buttonContainer}>
 								<TextNew style={styles.font20Weight500textStyle}>Save for later</TextNew>
@@ -249,6 +253,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 									this.setState({ currentIndex: i });
 									//this.fadeIn(i)
 								}}
+								initialNumToRender={this.appIntro.length}
 								sliderWidth={Dimensions.get('window').width}
 								itemWidth={Dimensions.get('window').width}
 								inactiveSlideScale={1}
@@ -270,16 +275,16 @@ export default class AppGuidedTour extends React.Component<Props> {
 									this.setState({ showPromptAnim: false });
 								} else { this._carousal.snapToNext(); }
 							}}>
-								<View style={[styles.backBtnContainer,{backgroundColor: Colors.BtnBgColor, }]}>
-									<TextNew style={[styles.backTextStyle,{marginLeft:0,marginRight:10}]}>Next</TextNew>
+								<View style={[styles.backBtnContainer, { backgroundColor: Colors.BtnBgColor, }]}>
+									<TextNew style={[styles.backTextStyle,styles.nextTextStyle]}>Next</TextNew>
 									<Image source={arrow_right}></Image>
 								</View>
 							</TouchableHighlight>
 						</View>
 					</View>
-					: 
+					:
 					<View style={styles.renderDismissPopUpContainerStyle}>
-						<View style={[styles.renderDismissPopUpSubContainerStyle,{ borderRadius: 10 }]}>
+						<View style={[styles.renderDismissPopUpSubContainerStyle, { borderRadius: 10 }]}>
 							{
 								//this.state.tourEnded ? 
 								//  this.renderDismissPopUp()
@@ -303,12 +308,12 @@ export default class AppGuidedTour extends React.Component<Props> {
 								// </View>
 								this.state.tourSaveForLater ? <View style={styles.saveLaterContainer}>
 									<Image source={msm_logo} style={styles.margin10} />
-									<TextNew style={[styles.font30Weight500,{ marginTop: 16 }]}>Access this tour at anytime</TextNew>
-									<TextNew style={[styles.font18Weight400,{ margin: 12 }]}>Find this tour again when you tap the <Image style={styles.iconStyle} source={more_options_selected} /> icon</TextNew>
+									<TextNew style={[styles.font30Weight500, { marginTop: 16 }]}>Access this tour at anytime</TextNew>
+									<TextNew style={[styles.font18Weight400, { margin: 12 }]}>Find this tour again when you tap the <Image style={styles.iconStyle} source={more_options_selected} /> icon</TextNew>
 									<SubmitButton style={styles.submitButnStyle} text="Got it!" onPress={() => this.props.cancelAppTour()} />
 								</View>
-									: this.state.showMemoryCreationView ? <View style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height, backgroundColor:Colors.lightSkyBlue }}>
-										<Animated.View style={[styles.beginTourContainer,{ opacity: this.state.fadeInView }]}>
+									: this.state.showMemoryCreationView ? <View style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height, backgroundColor: Colors.lightSkyBlue }}>
+										<Animated.View style={[styles.beginTourContainer, { opacity: this.state.fadeInView }]}>
 											<View style={styles.fullWidth}>
 												<View style={{ top: Platform.OS == 'ios' ? 20 : 0, zIndex: 99999 }}>
 													<TouchableOpacity underlayColor={Colors.transparent} onPress={() => { this.setState({ tourEnded: false }), this.setState({ tourSaveForLater: true }); }} style={styles.closeContainerStyle}>
@@ -317,10 +322,10 @@ export default class AppGuidedTour extends React.Component<Props> {
 												</View>
 												<View style={styles.tourContainerStyle}>
 													<Image source={msm_allPages_mindPop}></Image>
-													<TextNew style={[styles.font30Weight500,{ marginTop: Platform.OS == 'ios' ? 20 : 10 }]}>Let’s get started!</TextNew>
-													<TextNew style={[styles.font18Weight400,styles.textTopStyle]}>Add your first memory.</TextNew>
+													<TextNew style={[styles.font30Weight500, { marginTop: Platform.OS == 'ios' ? 20 : 10 }]}>Let’s get started!</TextNew>
+													<TextNew style={[styles.font18Weight400, styles.textTopStyle]}>Add your first memory.</TextNew>
 													<SubmitButton style={styles.submitButnStyleWidth75} text="Answer a Prompt" onPress={this.onClick.bind(this)} />
-													<TextNew style={[styles.font20Weight500textStyle,{ marginTop: 16, color: Colors.black }]}>or</TextNew>
+													<TextNew style={[styles.font20Weight500textStyle, { marginTop: 16, color: Colors.black }]}>or</TextNew>
 													<TouchableOpacity onPress={() => {
 														this.fadeOutView();
 														setTimeout(() => {
@@ -376,7 +381,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 												<Image source={msm_logo} style={styles.margin10} />
 												<Image source={msm_preserveYourMemories} style={styles.margin10} />
 												<TextNew style={styles.font30Weight500}>Your memories are just a tap away!</TextNew>
-												<TextNew style={[styles.font18Weight400,styles.textTopStyle]}>Start with this quick tour of the app to start reminiscing today.</TextNew>
+												<TextNew style={[styles.font18Weight400, styles.textTopStyle]}>Start with this quick tour of the app to start reminiscing today.</TextNew>
 												<SubmitButton style={styles.submitButnStyle} text="Let’s get started!" onPress={() => { this.setState({ beginTour: true }); this.setState({ initialView: false }) }} />
 											</View>
 										</View>}

@@ -176,6 +176,7 @@ export default class MindPopIntro extends React.Component<Props> {
         Animated.timing(this.state.fadeIn, {
           toValue: 1,
           duration: 500,
+          useNativeDriver: true,
         }).start();
       },
     );
@@ -185,6 +186,7 @@ export default class MindPopIntro extends React.Component<Props> {
     Animated.timing(this.state.fadeIn, {
       toValue: 0,
       duration: 200,
+      useNativeDriver: true,
     }).start();
   };
 

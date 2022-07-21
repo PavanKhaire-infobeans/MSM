@@ -12,6 +12,7 @@ export const usercheck = require('./dashboard/recent/usercheck.png');
 export const user = require('./dashboard/recent/user.png');
 export const users = require('./dashboard/recent/users.png');
 export const book = require('./dashboard/recent/book.png');
+export const x = require('./dashboard/recent/x.png');
 export const moreoptions = require('./dashboard/recent/moreoptions.png');
 export const xcircle = require('./dashboard/recent/xcircle.png');
 export const timelinecalendar = require('./dashboard/recent/timelinecalendar.png');

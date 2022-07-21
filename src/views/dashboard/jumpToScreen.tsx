@@ -10,12 +10,13 @@ import {
   View,
   FlatList,
   Image,
+  Platform,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { Colors, fontSize } from '../../common/constants';
+import { Colors, fontFamily, fontSize } from '../../common/constants';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { action_close } from '../../images';
+import { action_close, black_arrow } from '../../images';
 import Image2020 from './../../../app/images/dashboard/timeline/2020.svg';
 import Image2010 from './../../../app/images/dashboard/timeline/2010.svg';
 import Image2000 from './../../../app/images/dashboard/timeline/2000.svg';
@@ -26,8 +27,9 @@ import Image1960 from './../../../app/images/dashboard/timeline/1960.svg';
 import Image1950 from './../../../app/images/dashboard/timeline/1950.svg';
 import Image1940 from './../../../app/images/dashboard/timeline/1940.svg';
 import Image1930 from './../../../app/images/dashboard/timeline/1930.svg';
-import { chevronleft, year1930, year1940, year1950, year1960, year1970, year1980, year1990, year2000, year2010, year2020 } from './../../../app/images'
+import { chevronleft, x, year1930, year1940, year1950, year1960, year1970, year1980, year1990, year2000, year2010, year2020 } from './../../../app/images'
 import styles from './styles';
+import Styles from './styles';
 type Props = { [x: string]: any };
 type State = { [x: string]: any };
 enum fieldType {
@@ -154,29 +156,38 @@ const JumpToScreen = (props: Props) => {
   return (
     <View style={styles.jumptoScreenContainer}>
 
-      <NavigationHeaderSafeArea
+      {/* <NavigationHeaderSafeArea
         // heading={'Filters'}
         height="120"
         heading={''}
-        padding={20}
+        // padding={20}
         showCommunity={false}
         cancelAction={() => props.closeAction()}
         showRightText={false}
         isWhite={true}
         backIcon={action_close}
-      />
-
-      {/* <View
-        style={{
-          height: '30%',
-          width: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        }}
-        onStartShouldSetResponder={() => true}
-        onResponderStart={() => this.props.closeAction()}
       /> */}
+
+      <View
+        style={Styles.jumptoCancelContainerStyle}
+      >
+        <TouchableHighlight
+          underlayColor={Colors.transparent}
+          style={Styles.jumptoCancelSubContainerStyle}
+          onPress={() => props.closeAction()} >
+          <>
+            <Image style={Styles.cancelImageStyle} source={x} />
+
+            <Text
+              style={Styles.cancelTextStyle}>
+              Cancel
+            </Text>
+          </>
+        </TouchableHighlight>
+      </View>
+
       <View style={styles.jumptoScreenSubContainer}>
-        <ScrollView>
+        <ScrollView nestedScrollEnabled={true}>
 
           <View>
             {/* {props.jumpToYears.map((obj: any, index: any) => {
@@ -218,6 +229,7 @@ const JumpToScreen = (props: Props) => {
                     data={years}
                     keyExtractor={(_, index: number) => `${index}`}
                     numColumns={2}
+                    nestedScrollEnabled={true}
                     style={styles.fullWidth}
                     ItemSeparatorComponent={() => { return (<View style={styles.separatorStyle} />) }}
                     renderItem={({ item, index, separators }) => (
@@ -240,47 +252,30 @@ const JumpToScreen = (props: Props) => {
                         }}
                         style={[
                           styles.newFilterItem,
-                          item.disabled ? {
-                            borderWidth: 2,
-                            borderColor: Colors.transparent
-                          }
+                          item.year == selectedDecade ? styles.shadowBoxStyle
                             :
-                            item.year == selectedDecade ? {
-                              borderWidth: 2,
-                              shadowColor: Colors.black,
-                              shadowOffset: { width: 0, height: 3 },
-                              shadowOpacity: 0.2,
-                              elevation: 3,
-                              shadowRadius: 3.22,
-                            }
-                              :
-                              {
-                                borderWidth: item.year == selectedDecade ? 2 : 0,
-                              },
+                            {},
                         ]}>
-                        <View style={{ height: '100%', width: '100%', zIndex: 99, justifyContent: 'center', alignItems: 'center', borderRadius: 12, backgroundColor: Colors.white, overflow: 'hidden' }}>
-                          <View style={{ backgroundColor: Colors.unSelectedFilterbg, height: '100%', justifyContent: 'center', alignItems: 'center', width: '100%', borderRadius: 12 }}>
+                        <>
+                          <View style={[styles.justifyContentCenterAlignCenter, { paddingTop: 12 }]}>
+                            {/* <SvgXml xml={xml} /> */}
+                            {item.icon}
+                          </View>
 
-                            <View style={[styles.justifyContentCenterAlignCenter, { padding: 10 }]}>
-                              {/* <SvgXml xml={xml} /> */}
-                              {item.icon}
-                            </View>
+                          <View style={styles.height8}></View>
 
-                            <View style={styles.height8}></View>
-
-                            <View style={[styles.justifyContentCenterAlignCenter, { height: 52 }]}>
-                              <Text
-                                style={[
-                                  styles.filterTextJumpto,
-                                  // { margin: 8 }
-                                ]}>
-                                {item.year}
-                              </Text>
-
-                            </View>
+                          <View style={[styles.justifyContentCenterAlignCenter, { height: 52 }]}>
+                            <Text
+                              style={[
+                                styles.filterTextJumpto,
+                                // { margin: 8 }
+                              ]}>
+                              {item.year}
+                            </Text>
 
                           </View>
-                        </View>
+                        </>
+                        
                       </TouchableHighlight>
                     )}
                   />
@@ -289,8 +284,9 @@ const JumpToScreen = (props: Props) => {
                     data={yearArrayDisplay}
                     keyExtractor={(_, index: number) => `${index}`}
                     numColumns={2}
+                    nestedScrollEnabled={true}
                     style={styles.fullWidth}
-                    ItemSeparatorComponent={() => { return (<View style={styles.separatorStyle} />) }}
+                    // ItemSeparatorComponent={() => { return (<View style={styles.separatorStyle} />) }}
                     renderItem={(item: any) => {
                       return (
                         <TouchableHighlight
@@ -309,34 +305,31 @@ const JumpToScreen = (props: Props) => {
                             styles.newFilterItem,
                             item.item.disabled == undefined ? {
                               borderWidth: 0,
-                              borderColor: Colors.transparent,
                               backgroundColor: Colors.white,
-                              height: 77,
+                              height: 76,
+                              marginBottom: 16
                             }
                               :
                               {
                                 borderColor: item.item.name == selectedYear ? Colors.decadeFilterBorder : Colors.bottomTabColor,
                                 borderWidth: 2,
-                                height: 77,
-                                shadowColor: item.item.name == selectedYear ? '(0,0,0,0.1)' : '',
+                                height: 76,
+                                shadowColor: item.item.name == selectedYear ? '(0,0,0,0.1)' : undefined,
                                 shadowOffset: { width: 0, height: item.item.name == selectedYear ? 1 : 0 },
                                 shadowOpacity: item.item.name == selectedYear ? 0.2 : 0,
                                 shadowRadius: item.item.name == selectedYear ? 2.22 : 0,
                                 elevation: 3,
-                                backgroundColor: Colors.white
+                                backgroundColor: Colors.white,
+                                marginBottom: 16
                               }
                           ]}>
-                          <View style={{ height: '100%', width: '100%', zIndex: 99, justifyContent: 'center', alignItems: 'center', borderRadius: 12, backgroundColor: Colors.white, overflow: 'hidden' }}>
-                            <View style={[styles.justifyContentCenterAlignCenter, { backgroundColor: Colors.white, height: '100%', justifyContent: 'center', alignItems: 'center', width: '100%', borderRadius: 12 }]}>
-
-                              <Text
+                             <Text
                                 style={[
                                   styles.filterTextJumpto, { color: item.item.disabled == undefined ? '#858587' : Colors.bordercolor }
                                 ]}>
                                 {item.item.name}
                               </Text>
-                            </View>
-                          </View>
+                           
                         </TouchableHighlight>
                       )
                     }}

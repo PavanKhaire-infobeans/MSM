@@ -44,6 +44,7 @@ const MultipleDropDownSelector = (props: Props) => {
     Animated.timing(state.opacity, {
       toValue: props.showError ? 1 : 0,
       duration: 100,
+      useNativeDriver:true,
     }).start();
   }, [props.showError])
   // componentWillReceiveProps(nextProps: Props) {

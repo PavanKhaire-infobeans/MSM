@@ -9,14 +9,43 @@ const Styles = EStyleSheet.create({
     fontFamily: fontFamily.Inter,
     color: Colors.newDescTextColor,
     fontWeight: '400',
-    lineHeight: 24
+    lineHeight: 23.75,
+    padding: 0,
+    marginTop: 0,
+  },
+  padding16: {
+    padding: 16
+  },
+  dotStyle: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 0,
+    backgroundColor: Colors.NewTitleColor,
+  },
+  inactiveDotStyle: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 0,
+    backgroundColor: Colors.darkGray,
+  },
+  caraousalcontainerStyle: {
+    height: 350,
+    width: Dimensions.get('window').width,
+    backgroundColor: Colors.white,
+  },
+  collectionTitleTextSTyle: {
+    ...fontSize(18),
+    lineHeight: 26,
+    color: Colors.newTextColor
   },
   normalText: {
     ...fontSize(17),
     fontWeight: '500',
-    lineHeight: 18,
+    lineHeight: 18.7,
     color: Colors.newTextColor,
-    marginBottom: 10,
+    // marginBottom: 10,
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   boxShadow: {
@@ -24,6 +53,9 @@ const Styles = EStyleSheet.create({
     shadowColor: '#D9D9D9',
     shadowRadius: 2,
     shadowOffset: { width: 0, height: 2 },
+  },
+  bottomMargin: {
+    height: 50
   },
   avatar: {
     height: 40,
@@ -34,8 +66,8 @@ const Styles = EStyleSheet.create({
   memoryDataModelCollectionList: {
     marginBottom: 10,
     paddingBottom: 10,
-    borderBottomColor: Colors.timeLinebackground,
-    borderBottomWidth: 2
+    // borderBottomColor: Colors.timeLinebackground,
+    // borderBottomWidth: 2
   },
   collectionContainer: {
     padding: 10,
@@ -55,7 +87,7 @@ const Styles = EStyleSheet.create({
     minHeight: 50,
     marginTop: Platform.OS == 'ios' ? deviceInfoModule.hasNotch() ? -10 : -15 : 0,
     marginBottom: -10,
-    backgroundColor: Colors.timeLinebackground,
+    backgroundColor: Colors.white,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -291,8 +323,12 @@ const Styles = EStyleSheet.create({
   borderStyle: {
     height: 1,
     backgroundColor: Colors.bottomTabColor,
-    marginBottom: 5,
+    // marginBottom: 5,
     opacity: 1,
+  },
+  memoryTagsMainContainerStyle: {
+    marginTop: 16,
+    paddingHorizontal: 16,
   },
   MemoryTagsContainer: {
     paddingRight: 10,
@@ -335,15 +371,26 @@ const Styles = EStyleSheet.create({
   },
   userDetailsContainer: {
     width: '100%',
-    height: 68,
+    height: 74,
     paddingHorizontal: 16,
-    marginBottom: 16,
+    // marginBottom: 16,
+  },
+  collectionTypeContainerStyle: {
+    flexDirection: 'row',
+    marginBottom: 16
+  },
+  flexRowStyle: {
+    flexDirection: 'row',
+  },
+  flexRowMarginVerticalStyle: {
+    flexDirection: 'row',
+    marginVertical: 16
   },
   userDetailsSubContainer: {
     flexDirection: 'row',
-    height: 68,
+    height: 74,
     width: '100%',
-    paddingTop: 16,
+    // paddingTop: 16,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -359,11 +406,26 @@ const Styles = EStyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
+  InternalQueueContainer: {
+    width: '100%',
+    paddingHorizontal: 16,
+    backgroundColor: Colors.white,
+  },
+  memoryTitleStyle: {
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
+    lineHeight: 37.5,
+    ...fontSize(30),
+    color: Colors.bordercolor,
+    fontWeight: '600',
+    width: '100%',
+    textAlign: 'left',
+  },
   userDetailsNameTextStyle: {
     color: Colors.newTextColor,
     fontWeight: '500',
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-    ...(fontSize(17)),
+    fontSize: 17,
+    lineHeight: 18.7,
     marginLeft: 8,
   },
   ShowSharedaetilsDetailsContainer: {
@@ -410,6 +472,10 @@ const Styles = EStyleSheet.create({
   },
   marginBottomStyle: {
     marginBottom: 10
+  },
+  imageCarouselContainerStyle: {
+    height: 219.38,
+    marginBottom: 20
   },
   commonPDFContainer: {
     elevation: 2,
@@ -498,12 +564,12 @@ const Styles = EStyleSheet.create({
     width: '100%',
     padding: 15
   },
-  LikeViewContainer:{ 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    flex: 1 
+  LikeViewContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1
   },
-  LikeViewTextStyle:{
+  LikeViewTextStyle: {
     ...fontSize(16),
     marginLeft: 5,
     fontWeight: '500',
@@ -511,21 +577,21 @@ const Styles = EStyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.bordercolor,
   },
-  LikeCommentShareContainer:{
+  LikeCommentShareContainer: {
     flexDirection: 'row',
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
-    height: 48, 
-    width: 48, 
+    height: 48,
+    width: 48,
     borderRadius: 100,
     backgroundColor: Colors.timeLinebackground,
   },
-  titleandValueTextStyle:{
+  titleandValueTextStyle: {
     ...fontSize(18),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
-  
+
 });
 
 export default Styles;

@@ -1206,7 +1206,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
   CommonBottomSection = () => {
     return (
-      <View style={{ paddingRight: 15, paddingLeft: 15 }}>
+      <View style={{ paddingRight: 15, paddingLeft: 15, marginBottom: 50 }}>
         {/* View for showing memory tags */}
         {/* {this.memoryDataModel.memoryTags.length > 0 &&  */}
         {/* <MemoryTags memoryTags={this.memoryDataModel.memoryTags}></MemoryTags>}    */}
@@ -1233,7 +1233,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginBottom: 10,
+            marginVertical: 10,
           }}>
           <Animated.View
             style={{
@@ -1281,7 +1281,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           {/* <View style={{flex: 1, justifyContent: "center"}}> 
                         {this.memoryDataModel.likesComments.viewCount > 0 && <LikeCommentShare  icon={""} name={this.memoryDataModel.likesComments.viewCount+ (this.memoryDataModel.likesComments.viewCount > 1 ? " views" : " view")}></LikeCommentShare>}
                     </View>    */}
-          <View>
+          {/* <View>
             <TouchableWithoutFeedback
               onPress={() => this.focusCommentView()}
             >
@@ -1306,7 +1306,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
               </View>
 
             </TouchableWithoutFeedback>
-          </View>
+          </View> */}
           {/* <TouchableOpacity onPress={()=>{}} style={{flexDirection : "row", flex: 1, justifyContent : "flex-end", alignItems: "center"}}>
                         <LikeCommentShare name="Share" icon={icon_share}/>
                     </TouchableOpacity> */}
@@ -1318,7 +1318,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         {this.memoryDataModel.likesComments.noOfComments > 2 && (
           <TouchableWithoutFeedback
             onPress={() => this.getAllComments()}>
-            <View style={{ marginTop: 10, marginBottom: 10 }}>
+            <View style={{ marginVertical: 10 }}>
               {this.state.viewAllComments ? (
                 <Text
                   style={{
@@ -1521,66 +1521,56 @@ export default class MemoryDetails extends React.Component<Props, State> {
       this.memoryDataModel.externalQueue.collection[this.state.activeSlide];
 
     return (
-      <View>
-        <View style={{ padding: 15 }}>
+      <>
+        <View style={style.padding16}>
           <Text
-            style={{ ...fontSize(18), lineHeight: 26, color: Colors.TextColor }}>
+            style={style.collectionTitleTextSTyle}>
             {this.memoryDataModel.externalQueue.collectionTitle}
           </Text>
           <Text
-            style={{
-              ...fontSize(30),
-              paddingTop: 5,
-              fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-              color: Colors.TextColor,
-            }}>
+            style={style.memoryTitleStyle}>
             {currentSelectedItem.title}
           </Text>
           {this.memoryDataModel.externalQueue.collectionType == kNews && (
-            <Text style={{ ...fontSize(16), paddingTop: 5, color: '#595959' }}>
+            <Text style={style.fileDescriptionTextStyle}>
               {currentSelectedItem.date.length > 0
                 ? currentSelectedItem.date
                 : 'None'}
             </Text>
           )}
         </View>
-        <View style={{ width: '100%', height: 350 }}>
+        <View style={style.caraousalcontainerStyle}>
           <View
-            style={{
-              height: 350,
-              width: Dimensions.get('window').width,
-              backgroundColor: Colors.NewLightThemeColor,
-            }}>
+            style={style.caraousalcontainerStyle}>
             <PlaceholderImageView
               uri={currentSelectedItem.image}
-              style={{ height: 350, width: Dimensions.get('window').width }}
+              style={style.caraousalcontainerStyle}
             />
           </View>
         </View>
-        <View style={{ padding: 15 }}>
+        <View >
           {
             currentSelectedItem.description.length > 0 && (
-              // <HTML
-              //   tagsStyles={{ p: { ...fontSize(19), marginBottom: 10, fontFamily: fontFamily.Inter, fontWeight: '400', lineHeight: 24 } }}
-              //   html={currentSelectedItem.description}
-              //   style={HTMLStyleSheet}></HTML>
-              <RenderHtml
-                tagsStyles={{ p: style.RenderHtmlStyle, li: style.RenderHtmlStyle, span: style.RenderHtmlStyle }}
-                source={{ html: currentSelectedItem.description }}
-                // ignoredDomTags={['br']}
+              <>
+                <RenderHtml
+                  tagsStyles={{ p: style.RenderHtmlStyle, li: style.RenderHtmlStyle, span: style.RenderHtmlStyle }}
+                  source={{ html: currentSelectedItem.description }}
+                  ignoredDomTags={['br']}
 
-                enableExperimentalBRCollapsing={true}
-                contentWidth={Dimensions.get('window').width}
-                enableExperimentalMarginCollapsing={true}
-              ></RenderHtml>
+                  enableExperimentalBRCollapsing={true}
+                  contentWidth={Dimensions.get('window').width}
+                  enableExperimentalMarginCollapsing={true}
+                ></RenderHtml>
+                <View style={style.bottomMargin} />
+              </>
             )
             // <Text style={{...fontSize(18), lineHeight: 26, paddingBottom: 15, color: "#000"}}>{currentSelectedItem.description}</Text>
           }
-          {!(this.memoryDataModel.externalQueue.collectionType == kNews) && (
-            <View>
+          {/* {!(this.memoryDataModel.externalQueue.collectionType == kNews) && (
+            <>
               <Border />
               <View
-                style={{ flexDirection: 'row', marginBottom: 20, marginTop: 15 }}>
+                style={style.flexRowMarginVerticalStyle}>
                 <TitleAndValue
                   title={currentSelectedItem.details[0].title}
                   description={currentSelectedItem.details[0].value}
@@ -1593,8 +1583,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
               {!(
                 this.memoryDataModel.externalQueue.collectionType == kSports
               ) && (
-                  <View>
-                    <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+                  <>
+                    <View style={style.collectionTypeContainerStyle}>
                       <TitleAndValue
                         title={currentSelectedItem.details[2].title}
                         description={currentSelectedItem.details[2].value}
@@ -1604,18 +1594,18 @@ export default class MemoryDetails extends React.Component<Props, State> {
                         description={currentSelectedItem.details[3].value}
                       />
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={style.flexRowStyle}>
                       <TitleAndValue
                         title={currentSelectedItem.details[4].title}
                         description={currentSelectedItem.details[4].value}
                       />
                     </View>
-                  </View>
+                  </>
                 )}
-            </View>
-          )}
+            </>
+          )} */}
         </View>
-      </View>
+      </>
     );
   };
 
@@ -1639,7 +1629,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           />
         </View>
         {currentSelectedItem.memoryTags.length > 0 && (
-          <View style={{ marginTop: 20, paddingRight: 20, paddingLeft: 20 }}>
+          <View style={style.memoryTagsMainContainerStyle}>
             <MemoryTags memoryTags={currentSelectedItem.memoryTags} />
           </View>
         )}
@@ -1878,20 +1868,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
         dotsLength={this.memoryDataModel.externalQueue.collection.length}
         activeDotIndex={activeSlide}
         containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
-        dotStyle={{
-          width: 8,
-          height: 8,
-          borderRadius: 4,
-          marginHorizontal: 0,
-          backgroundColor: Colors.NewTitleColor,
-        }}
-        inactiveDotStyle={{
-          width: 8,
-          height: 8,
-          borderRadius: 4,
-          marginHorizontal: 0,
-          backgroundColor: '#909090',
-        }}
+        dotStyle={style.dotStyle}
+        inactiveDotStyle={style.inactiveDotStyle}
         inactiveDotOpacity={0.4}
         inactiveDotScale={0.6}
       />
@@ -1900,25 +1878,16 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
   InternalQueue = () => {
     return (
-      <View style={{ width: '100%', paddingRight: 16, paddingLeft: 16, marginTop: 20 }}>
+      <View style={style.InternalQueueContainer}>
 
         <Text
-          style={{
-            fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
-            lineHeight: 37,
-            ...fontSize(30),
-            color: Colors.bordercolor,
-            fontWeight: '600',
-            width: '100%',
-            textAlign: 'left',
-            // marginBottom: 5,
-          }}>
+          style={style.memoryTitleStyle}>
           {this.memoryDataModel.memory.memoryTitle}
         </Text>
 
         <Border width={'100%'} paddingLeft={16} paddingTop={8} />
-        <Text style={[style.normalText, { paddingTop: 8, }]}>
-          A memory from {this.memoryDataModel.memory.memoryDate}{'\n'}Published on {this.memoryDataModel.userDetails.createdOn}
+        <Text style={[style.normalText, { marginVertical: 8 }]}>
+          A memory from {this.memoryDataModel.memory.memoryDateDisplay}{'\n'}Published on {this.memoryDataModel.userDetails.createdOn}
         </Text>
         {/* <Text style={[style.normalText,{paddingLeft:5,lineHeight:18, backgroundColor:'pink'}]}>
           Published on {this.memoryDataModel.userDetails.createdOn}
@@ -2032,7 +2001,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         )} */}
 
         {this.memoryDataModel.memory.description.length > 0 && (
-          <View >
+          < >
             {/* <Border /> */}
             {/* <HTML
               tagsStyles={{ p: { ...fontSize(18), marginBottom: 10, fontFamily: fontFamily.Inter, fontWeight: '400', lineHeight: 24 } }}
@@ -2041,16 +2010,17 @@ export default class MemoryDetails extends React.Component<Props, State> {
             <RenderHtml
               tagsStyles={{ p: style.RenderHtmlStyle, li: style.RenderHtmlStyle, span: style.RenderHtmlStyle }}//Colors.newDescTextColor
               source={{ html: this.memoryDataModel.memory.description }}
-              // ignoredDomTags={['br']}
+              ignoredDomTags={['br']}
 
               contentWidth={Dimensions.get('window').width}
               enableExperimentalBRCollapsing={true}
               enableExperimentalMarginCollapsing={true}
             ></RenderHtml>
-          </View>
+            <View style={style.bottomMargin} />
+          </>
         )}
 
-        {this.memoryDataModel.collection_list.length > 0 && (
+        {/* {this.memoryDataModel.collection_list.length > 0 && (
           <View style={style.memoryDataModelCollectionList}>
             <Text style={style.normalText}>
               {'Collections '}
@@ -2074,7 +2044,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
             />
 
           </View>
-        )}
+        )} */}
       </View>
     );
   };
@@ -2099,8 +2069,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
         <>
           {this.state.memoryDetailAvailable && (
             <NavigationHeaderSafeArea
-              // heading={'Filters'}
-              // padding={20}
               heading={''}
               cancleText={'Back'}
               showCommunity={false}
@@ -2197,23 +2165,25 @@ export default class MemoryDetails extends React.Component<Props, State> {
                         this,
                       )}></WebView>
                   </ScrollView>
-                ) : (
-                  <View>
-                    <CarousalFilesView
-                      files={this.memoryDataModel.files.images}
-                      type={kImage}
-                    />
-                    {this.audioView()}
-                    <CarousalFilesView
-                      files={this.memoryDataModel.files.pdf}
-                      type={kPDF}
-                    />
-                    {/* <FilesView
+                )
+                  :
+                  (
+                    <>
+                      <CarousalFilesView
+                        files={this.memoryDataModel.files.images}
+                        type={kImage}
+                      />
+                      {this.audioView()}
+                      <CarousalFilesView
+                        files={this.memoryDataModel.files.pdf}
+                        type={kPDF}
+                      />
+                      {/* <FilesView
                       files={this.memoryDataModel.files.pdf}
                       type={kPDF}
                     /> */}
-                  </View>
-                )}
+                    </>
+                  )}
 
                 {/* <ShowSharedaetilsDetails
                   userDetails={this.memoryDataModel.userDetails}
@@ -2238,16 +2208,17 @@ export default class MemoryDetails extends React.Component<Props, State> {
                   : this.InternalQueue()}
 
 
-                <View style={style.paddingHorizontal}>
+                {/* <View style={style.paddingHorizontal}>
                   {this.memoryDataModel.memoryTags.length > 0 && (
                     <MemoryTags
                       memoryTags={this.memoryDataModel.memoryTags}></MemoryTags>
                   )}
-                </View>
+                </View> */}
                 {/* Includes memory tags and like comment share section */}
-                {!this.props.previewDraft && this.CommonBottomSection()}
+                {/* {!this.props.previewDraft && this.CommonBottomSection()} */}
+                
                 {/* If memory is associated with any collection */}
-                {!this.props.previewDraft &&
+                {/* {!this.props.previewDraft &&
                   this.memoryDataModel.collection_list.length > 0 && (
                     <MemoryCollections
                       collectionList={this.memoryDataModel.collection_list}
@@ -2257,7 +2228,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                       changeIndex={(index: any) =>
                         this.setState({ selectedCollectionIndex: index })
                       }></MemoryCollections>
-                  )}
+                  )} */}
 
                 {/* Blank view for extended scrolling */}
                 {
@@ -2302,8 +2273,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
         </>
 
         <LinearGradient
-          // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
-          // locations={[0, 0.6]}
           colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
           style={{ height: 34, width: '100%', position: 'absolute', bottom: 0 }}>
         </LinearGradient>

@@ -13,6 +13,13 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
     borderWidth: 0
   },
+  shadowBox:{
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 2,
+    shadowColor: Colors.black
+  },
   buttonStyle: {
     fontFamily: fontFamily.Inter,
     textAlign: 'center',
@@ -30,6 +37,8 @@ const Styles = EStyleSheet.create({
     fontFamily: fontFamily.Inter,
     fontWeight: '400',
     marginRight: 10.5,
+    ...fontSize(19),
+    lineHeight: 23.75,
   }
 });
 

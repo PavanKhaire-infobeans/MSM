@@ -55,7 +55,7 @@ const Recent = (props: Props) => {
     })
 
     const [scrolling, setScrolling] = useState(false)
-    
+
     let selectedPrompt: any = {};
     let memoryUpdateListener: EventManager;
 
@@ -66,7 +66,7 @@ const Recent = (props: Props) => {
         props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
     }, [])
-  
+
     const onRefresh = () => {
         props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
         // this.props.fetchMemoryList({type: ListType.Recent, isRefresh : true, filters : this.props.filters});
@@ -137,7 +137,7 @@ const Recent = (props: Props) => {
                             <Text
                                 style={styles.moreTextStyle}>
                                 {'+'}
-                                {item.audios.length - 1+" more"}
+                                {item.audios.length - 1 + " more"}
                             </Text>
                         </TouchableOpacity>
                         // <View style={[{ width: 56, marginLeft: 7, elevation: 2, backgroundColor: Colors.AudioViewBg, borderColor: Colors.AudioViewBorderColor, borderWidth: 2, borderRadius: 10 }, styles.boxShadow]}>
@@ -309,44 +309,34 @@ const Recent = (props: Props) => {
             <SafeAreaView style={styles.container}>
                 <View style={styles.subcontainer}>
                     {/* {filterView(props.filterClick(ListType.Recent), ListType.Recent)} */}
-                    {
+                    {/* {
                         !scrolling ?
                         <View style={styles.renderSeparator} />
                         :
                         null
-                    }
+                    } */}
                     <FlatList
                         data={props.recentList}
                         // ref={flatListRef}
                         style={styles.flatlistStyle}
                         extraData={state}
-                        onScroll={(e) => {
-                            debugger;
-                            if (e?.nativeEvent?.contentOffset?.y && (e?.nativeEvent?.contentOffset?.y > 9)) {
-                                setScrolling(true)
-                            }
-                            if (e?.nativeEvent?.contentOffset?.y && (e?.nativeEvent?.contentOffset?.y < 9)) {
-                                setScrolling(false)
-                            }
-                            Keyboard.dismiss()
-                        }}
-                        // on = {(viewableItems) => {
-                        //     console.log("viewableItems < ",JSON.stringify(viewableItems))
-                        // }}
                         renderItem={(item: any) => (
-                            <MemoryListItem
-                                item={item}
-                                animate={state.animateValue}
-                                previousItem={null}
-                                like={like}
-                                listType={ListType.Recent}
-                                audioView={audioView}
-                                openMemoryActions={openMemoryActions}
-                                MemoryActions={MemoryActions}
-                                addMemoryFromPrompt={(firstIndex: any, secondIndex: any) =>
-                                    _onAddProptToMemoryAction(firstIndex, secondIndex)
-                                }
-                            />
+                            <>
+                                {(item.index === 0) && <View style={styles.renderSeparator} />}
+                                <MemoryListItem
+                                    item={item}
+                                    animate={state.animateValue}
+                                    previousItem={null}
+                                    like={like}
+                                    listType={ListType.Recent}
+                                    audioView={audioView}
+                                    openMemoryActions={openMemoryActions}
+                                    MemoryActions={MemoryActions}
+                                    addMemoryFromPrompt={(firstIndex: any, secondIndex: any) =>
+                                        _onAddProptToMemoryAction(firstIndex, secondIndex)
+                                    }
+                                />
+                            </>
                         )}
                         // maxToRenderPerBatch={50}
                         indicatorStyle='white'
@@ -384,7 +374,7 @@ const Recent = (props: Props) => {
                 </View>
                 <AudioPlayer ref={audioPlayer} playerCallback={(event: any) => playerCallback(event)} files={state.audioFile.file} memoryTitle={state.audioFile.memoryTitle} by={"by " + state.audioFile.by} bottom={10}></AudioPlayer>
             </SafeAreaView>
-            
+
             <MemoryActionsSheet
                 ref={_actionSheet}
                 width={DeviceInfo.isTablet() ? "65%" : "100%"}

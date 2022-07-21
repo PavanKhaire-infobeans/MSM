@@ -144,13 +144,7 @@ export default class TabIcon extends React.Component<{ [x: string]: any }> {
             backgroundColor: this.props.focused ? Colors.white : Colors.bottomTabColor,
           },
           this.props.focused ?
-            {
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.1,
-              shadowRadius: 10,
-              elevation:5,
-              shadowColor: Colors.black
-            }
+            style.shadowBox
             :
             {}]}>
 
@@ -158,7 +152,6 @@ export default class TabIcon extends React.Component<{ [x: string]: any }> {
             <>
               <Text
                 style={[style.titleTextStyle, {
-                  ...fontSize(font),
                   color: this.props.focused ? Colors.bordercolor : Colors.newTextColor,
                 }]}>
                 {this.props.title}

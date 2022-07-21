@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     height: 56,
     backgroundColor: Colors.white,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: Colors.bottomTabColor,
     borderRadius: 8,
     justifyContent: 'center',
@@ -27,8 +27,8 @@ export const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'column',
-    marginBottom: 5,
-    height:65,
+    // marginBottom: 5,
+    height:72,
   },
   subContainer: {
     flex: 1,
@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
     zIndex: 99999,
     // padding: 5,
     // paddingTop: 10,
-    paddingRight: 8,
+    paddingRight: 24,
     // width: 70,
     // height: 50,
     justifyContent: 'center',
@@ -78,6 +78,7 @@ export const styles = StyleSheet.create({
   textInputStyle: {
     color: Colors.bordercolor,
     ...fontSize(19),
+    height:56,
     fontWeight:'400',
     lineHeight:23.75,
     fontFamily: fontFamily.Inter,

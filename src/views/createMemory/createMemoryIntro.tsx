@@ -50,7 +50,8 @@ export default class CreateMemoryIntro extends React.Component<Props> {
         Animated.timing(this.state.fadeIn, {
           toValue: 1,
           duration: 500,
-        }).start();
+              useNativeDriver: true,
+            }).start();
       },
     );
   };
@@ -59,7 +60,8 @@ export default class CreateMemoryIntro extends React.Component<Props> {
     Animated.timing(this.state.fadeIn, {
       toValue: 0,
       duration: 200,
-    }).start();
+              useNativeDriver: true,
+            }).start();
   };
 
   renderCreateMemoryIntro = (item: any) => {

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Animated,
@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Text from '../Text';
 import DeviceInfo from 'react-native-device-info';
-import {fontFamily, fontSize} from '../../constants';
+import { fontFamily, fontSize } from '../../constants';
 type State = {
   backgroundColor: string;
   message: string;
@@ -26,11 +26,11 @@ class MessageDialogue extends Component<{}, State> {
   };
 
   static showMessage = (message: string, color: string) => {
-    DeviceEventEmitter.emit('showMessage', {message, color});
+    DeviceEventEmitter.emit('showMessage', { message, color });
   };
 
   static showMessageWithoutClose = (message: string, color: string) => {
-    DeviceEventEmitter.emit('showListenerWithoutClose', {message, color});
+    DeviceEventEmitter.emit('showListenerWithoutClose', { message, color });
   };
 
   static hideMessage = () => {
@@ -56,34 +56,38 @@ class MessageDialogue extends Component<{}, State> {
     );
   }
 
-  _showWithOutClose = ({message, color}: {message: string; color: string}) => {
-    this.setState({showClose: false, backgroundColor: color, message}, () => {
+  _showWithOutClose = ({ message, color }: { message: string; color: string }) => {
+    this.setState({ showClose: false, backgroundColor: color, message }, () => {
       if ((this.state.height as any)._value == 0) {
         Animated.parallel([
           Animated.timing(this.state.height, {
             toValue: 45,
             duration: 0.1,
+            useNativeDriver: true,
           }),
           Animated.timing(this.state.opacity, {
             toValue: 1,
             duration: 0.1,
+            useNativeDriver: true,
           }),
         ]).start();
       }
     });
   };
 
-  _show = ({message, color}: {message: string; color: string}) => {
-    this.setState({backgroundColor: color, message}, () => {
+  _show = ({ message, color }: { message: string; color: string }) => {
+    this.setState({ backgroundColor: color, message }, () => {
       if ((this.state.height as any)._value == 0) {
         Animated.parallel([
           Animated.timing(this.state.height, {
             toValue: 45,
             duration: 0.1,
+            useNativeDriver: true,
           }),
           Animated.timing(this.state.opacity, {
             toValue: 1,
             duration: 0.1,
+            useNativeDriver: true,
           }),
         ]).start();
       }
@@ -95,23 +99,25 @@ class MessageDialogue extends Component<{}, State> {
       Animated.timing(this.state.height, {
         toValue: 0,
         duration: 0.1,
+        useNativeDriver: true,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 0,
         duration: 0.1,
+        useNativeDriver: true,
       }),
     ]).start(() => {
-      this.setState({showClose: true, message: '', backgroundColor: 'black'});
+      this.setState({ showClose: true, message: '', backgroundColor: 'black' });
     });
   };
 
-  No_Internet = () => {};
+  No_Internet = () => { };
 
-  showToast = () => {};
+  showToast = () => { };
 
   render() {
     if (this.state.message != undefined && this.state.message.length == 0) {
-      return <View style={{height: 0, width: 0, position: 'absolute'}} />;
+      return <View style={{ height: 0, width: 0, position: 'absolute' }} />;
     }
     return (
       <Animated.View

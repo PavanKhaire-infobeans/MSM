@@ -76,9 +76,9 @@ const style = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
   },
   avatar: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
+    height: 42,
+    width: 42,
+    borderRadius: 21,
     alignContent: 'center',
   },
 });
@@ -240,7 +240,7 @@ export const Border = (props: { paddingTop?: any; padding?: any; paddingLeft?: a
         marginTop: props.paddingTop ? props.paddingTop : 0,
         marginRight: props.padding ? props.padding : 0,
         marginLeft: props.padding ? props.padding : 0,
-        paddingLeft: props.paddingLeft ? props.paddingLeft : 0
+        paddingLeft: props.paddingLeft ? props.paddingLeft : 0,
       }]}
     />
   );
@@ -503,7 +503,7 @@ export const CarousalFilesView = (props: {
 }) => {
   if (props.files.length > 0)
     return (
-      <View style={[Styles.marginBottomStyle, { height: 220 }]}>
+      <View style={Styles.imageCarouselContainerStyle}>
         {props.type == kImage && props.files ?
           <Carousel
             data={props.files}

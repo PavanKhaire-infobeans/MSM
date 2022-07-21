@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Image,
@@ -13,7 +13,7 @@ import {
   ImageBackground,
 } from 'react-native';
 //@ts-ignore
-import Carousel, {Pagination} from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 import {
   appIntroBg1,
   appIntroBg2,
@@ -27,17 +27,17 @@ import {
   app_intro_msm,
   appIntroBg,
 } from '../../images';
-import {ToastMessage} from '../../common/component/Toast';
+import { ToastMessage } from '../../common/component/Toast';
 import Text from '../../common/component/Text';
-import {fontSize, Colors} from '../../common/constants';
-import {Actions} from 'react-native-router-flux';
+import { fontSize, Colors } from '../../common/constants';
+import { Actions } from 'react-native-router-flux';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 import Utility from '../../common/utility';
 import style from './styles';
 export default class AppIntro extends React.Component {
   _externalQueue: Carousel;
-  _appIntroData: any = [{text: 'first'}, {text: 'second'}];
+  _appIntroData: any = [{ text: 'first' }, { text: 'second' }];
   images = [
     {
       image: appIntro1,
@@ -75,7 +75,7 @@ export default class AppIntro extends React.Component {
     scrolling: false,
   };
   onDoneTap = () => {
-    DefaultPreference.set('hide_app_intro', 'true').then(function () {});
+    DefaultPreference.set('hide_app_intro', 'true').then(function () { });
     Actions.prologue();
   };
 
@@ -99,7 +99,7 @@ export default class AppIntro extends React.Component {
               <View
                 style={style.animatedViewContainer}>
                 <Animated.View
-                  style={[style.AnimatedViewStyle,{
+                  style={[style.AnimatedViewStyle, {
                     flex: 1,
                     width: '100%',
                     justifyContent: 'center',
@@ -108,7 +108,7 @@ export default class AppIntro extends React.Component {
                   {this.state.currentIndex == index && (
                     <Image
                       source={item.image}
-                      style={[style.ScrollImagesStyle,{
+                      style={[style.ScrollImagesStyle, {
                         resizeMode: this.state.currentIndex == 1 ? 'stretch' : 'contain',
                       }]}></Image>
                   )}
@@ -120,7 +120,7 @@ export default class AppIntro extends React.Component {
             <View
               style={style.descriptionContainer}>
               <Animated.View
-                style={[style.descriptionAnimatedViewStyle,{
+                style={[style.descriptionAnimatedViewStyle, {
                   opacity: this.state.fadeIn,
                 }]}>
                 {this.state.currentIndex == index && (
@@ -146,11 +146,12 @@ export default class AppIntro extends React.Component {
 
   fadeIn = (index: any) => {
     this.setState(
-      {currentIndex: index, fadeIn: new Animated.Value(0), scrolling: false},
+      { currentIndex: index, fadeIn: new Animated.Value(0), scrolling: false },
       () => {
         Animated.timing(this.state.fadeIn, {
           toValue: 1,
           duration: 500,
+          useNativeDriver: true
         }).start();
       },
     );
@@ -160,6 +161,7 @@ export default class AppIntro extends React.Component {
     Animated.timing(this.state.fadeIn, {
       toValue: 0,
       duration: 1500,
+      useNativeDriver: true
     }).start();
   }
 
@@ -187,7 +189,7 @@ export default class AppIntro extends React.Component {
         <SafeAreaView
           style={style.mainContainer}>
           <StatusBar
-            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <View
@@ -201,11 +203,13 @@ export default class AppIntro extends React.Component {
             <Carousel
               data={this.images}
               renderItem={(item: any) => this.renderAppIntro(item)}
+              // contentContainerCustomStyle={{alignItems: 'center', justifyContent: 'center', width:'100%'}}
               onSnapToItem={(i: any) => this.fadeIn(i)}
               sliderWidth={Dimensions.get('window').width}
               itemWidth={Dimensions.get('window').width}
-              slideStyle={{width: Dimensions.get('window').width, flex: 1}}
+              slideStyle={{ width: Dimensions.get('window').width, flex: 1 }}
               inactiveSlideOpacity={1}
+              removeClippedSubviews={false}
               inactiveSlideScale={1}
               useScrollView={false}
               onScroll={(event: any) => {
@@ -213,17 +217,17 @@ export default class AppIntro extends React.Component {
                   this.setState({
                     fadeIn: new Animated.Value(
                       1 -
-                        Math.abs(
-                          this.state.currentIndex -
-                            event.nativeEvent.contentOffset.x /
-                              Dimensions.get('window').width,
-                        ),
+                      Math.abs(
+                        this.state.currentIndex -
+                        event.nativeEvent.contentOffset.x /
+                        Dimensions.get('window').width,
+                      ),
                     ),
                   });
                 }
               }}
               onScrollBeginDrag={() =>
-                this.setState({scrolling: true, fadeIn: new Animated.Value(1)})
+                this.setState({ scrolling: true, fadeIn: new Animated.Value(1) })
               }
             />
             <View style={style.paginationContainer}>

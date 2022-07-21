@@ -101,7 +101,7 @@ export class MemoryDataModel {
                             this.shareOption.shareText = 'Shared with ' + share_count + (share_count > 1 ? " members": " member");
                             this.shareOption.color = "#0077B2" ;
                     break;        
-            case "cueback" : this.shareOption.shareText = 'Shared with Public';
+            case "cueback" : this.shareOption.shareText = 'Public';//Shared with 
                              this.shareOption.color = "#BE6767";
                     break;
         }

@@ -56,6 +56,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
         Animated.timing(this.state.bottom, {
           toValue: 0,
           duration: 200,
+          useNativeDriver: true,
         }).start();
       });
     } else {
@@ -67,6 +68,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
     Animated.timing(this.state.bottom, {
       toValue: -height,
       duration: 50,
+      useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
         this.setState({ hidden: true });
@@ -131,9 +133,9 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                             <Image source={data.image} resizeMode="contain" />
                           </View>
                           <TextNew
-                            style={[styles.textStyle,{
+                            style={[styles.textStyle, {
                               color: data.isDestructive == 1 ? Colors.NewRadColor : Colors.black,
-                             
+
                             }]}>
                             {data.text}
                           </TextNew>

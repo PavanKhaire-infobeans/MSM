@@ -1,6 +1,7 @@
 import { Dimensions, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
+import Utility from '../../common/utility';
 
 const Styles = EStyleSheet.create({
 
@@ -17,6 +18,29 @@ const Styles = EStyleSheet.create({
   flex1Width90: {
     flex: 1,
     width: '90%'
+  },
+  nextTextStyle: {
+    marginLeft: 0,
+    marginRight: 10,
+    color: Colors.white
+  },
+  nameContainer:{ 
+    height: '100%', 
+    width: '100%', 
+    zIndex: 99, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderRadius: 12, 
+    // backgroundColor: Colors.white, 
+    overflow: 'hidden' 
+  },
+  nameSubContainer:{ 
+    backgroundColor: Colors.white, 
+    height: '100%', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    width: '100%', 
+    borderRadius: 12 
   },
   titleDescContainer: {
     justifyContent: "center",
@@ -185,7 +209,7 @@ const Styles = EStyleSheet.create({
     borderColor: Colors.BtnBgColor,
     borderWidth: 2,
     marginRight: 16,
-    borderRadius: 5
+    borderRadius: 8,
   },
   newBackContainer: {
     alignItems: 'flex-start',
@@ -293,6 +317,14 @@ const Styles = EStyleSheet.create({
     shadowRadius: 2,
     elevation: 3,
   },
+  shadowBoxStyle:{
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    elevation: 3,
+    shadowRadius: 3.22,
+    borderColor: Colors.decadeFilterBorder
+  },
   justifyContentSpaceBetween: {
     justifyContent: 'space-between'
   },
@@ -311,7 +343,7 @@ const Styles = EStyleSheet.create({
     flexWrap: 'wrap'
   },
   jumptoScreenContainer: {
-    height: '100%',
+    height: Utility.getDeviceHeight() - 112,
     width: '100%',
     // backgroundColor: Colors.blacknew, 
     borderTopLeftRadius: 12,
@@ -321,6 +353,34 @@ const Styles = EStyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: Colors.white
+  },
+  jumptoCancelContainerStyle: {
+    height: 82,
+    width: '100%',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    backgroundColor: Colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.bottomTabColor,
+  },
+  jumptoCancelSubContainerStyle: {
+    height: 46,
+    width: 60,
+    marginTop: 17,
+    marginLeft: 16,
+    justifyContent: 'space-between'
+  },
+  cancelImageStyle: {
+    height: 24,
+    width: 24,
+    alignSelf: 'center'
+  },
+  cancelTextStyle: {
+    textAlign: 'center',
+    ...fontSize(14),
+    lineHeight: 17.5,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    fontWeight: '500'
   },
   filterItemJumpto: {
     width: Dimensions.get('window').width * 0.18,
@@ -332,18 +392,18 @@ const Styles = EStyleSheet.create({
   },
   newFilterItem: {
     width: (Dimensions.get('window').width - 48) / 2,
-    height: 120,
+    height: 119,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 16,
-    backgroundColor: Colors.unSelectedFilterbg,
+    backgroundColor: Colors.timeLinebackground,
     borderWidth: 2,
-    borderColor: Colors.decadeFilterBorder,
+    borderColor: Colors.bottomTabColor,
   },
   filterTextJumpto: {
     ...fontSize(19),
-    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    fontFamily: fontFamily.Inter ,
     fontWeight: '400',
     lineHeight: 23,
     color: Colors.bordercolor

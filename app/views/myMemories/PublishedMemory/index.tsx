@@ -1146,18 +1146,7 @@ export const _onOpenImages = (items: any, index: any) => {
 const MemoryActionsListArray = (item: any) => {
   var i = 0;
   let memoryActions: any = [];
-  memoryActions.push(
-    {
-      text: "Share memory",
-      title: "Share memory",
-      // image: add_icon_small,
-      nid: item.nid,
-      memory_url: item.memory_url,
-      memoryType: item.type,
-      actionType: MemoryActionKeys.shareActionKey,
-      uid: item.user_details.uid,
-    }
-  );
+
   for (var value in item.actions_on_memory) {
     i += 1;
     switch (value) {
@@ -1279,6 +1268,18 @@ const MemoryActionsListArray = (item: any) => {
         break;
     }
   }
+  memoryActions.push(
+    {
+      text: "Share memory",
+      title: "Share memory",
+      // image: add_icon_small,
+      nid: item.nid,
+      memory_url: item.memory_url,
+      memoryType: item.type,
+      actionType: MemoryActionKeys.shareActionKey,
+      uid: item.user_details.uid,
+    }
+  );
   return memoryActions;
 };
 
@@ -1291,75 +1292,79 @@ export const MemoryBasicDetails = (
 
   let memoryActions = MemoryActionsListArray(item);
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (Utility.isInternetConnected) {
-        Actions.jump('newmemoryDetails', { nid: item.nid, type: item.type, height: 80 });
-      } else {
-        No_Internet_Warning();
-      }
-    }}>
+    <>
       <View
         style={styles.authorNameContainer}>
-        <View style={styles.flexRow}>
-          <Image
-            style={styles.userImageStyle}
-            source={
-              userDetails.userProfilePic && userDetails.userProfilePic != '' ? { uri: userDetails.userProfilePic } : profile_placeholder
-            }
-          ></Image>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 8, }}>
-            <View>
-              <Text
-                style={styles.userNameTextStyle}>
-                {userDetails.name}
-              </Text>
+        <>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              if (Utility.isInternetConnected) {
+                Actions.jump('newmemoryDetails', { nid: item.nid, type: item.type, height: 80 });
+              } else {
+                No_Internet_Warning();
+              }
+            }}>
+            <View style={[styles.flexRow, { width: Utility.getDeviceWidth() - 112 }]}>
+              <Image
+                style={styles.userImageStyle}
+                source={
+                  userDetails.userProfilePic && userDetails.userProfilePic != '' ? { uri: userDetails.userProfilePic } : profile_placeholder
+                }
+              ></Image>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 8, }}>
+                <View>
+                  <Text
+                    style={styles.userNameTextStyle}>
+                    {userDetails.name}
+                  </Text>
 
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
-        <TouchableWithoutFeedback
+          </TouchableWithoutFeedback>
+        </>
+        {/* <TouchableWithoutFeedback
           onPress={() => {
             // openMemoryActions(item);
-          }}>
-          <View style={styles.moreoptionStyle}>
+          }}> */}
+        <View style={styles.moreoptionStyle}>
 
-            {/* {
-              Platform.OS === 'ios' ?
-                <ContextMenu
-                  actions={memoryActions}
-                  dropdownMenuMode={true}
-                  previewBackgroundColor="transparent"
-                  onPress={(e) => {
-                    let data = memoryActions.filter((itm) => itm.title === e.nativeEvent.name)
-                    if (data && data[0]) {
-                      onActionItemClicked(e.nativeEvent.index, data[0])
-                    }
-                  }}
-                >
-                  <Image source={moreoptions} />
-                </ContextMenu>
-                : */}
-                <SelectDropdown
-                  // ref={this.dropDownRef}
-                  dropdownStyle={{ borderRadius: Platform.OS === 'ios' ? 12 : 4 }}
-                  rowTextStyle={{ textAlign: 'left', fontSize: Platform.OS === 'ios' ? 17 : 16, color: Platform.OS === 'ios' ? Colors.black : Colors.blackOpacity60, fontWeight: '400', paddingLeft: 16 }}
-                  dropdownOverlayColor={Colors.contextBackground}
-                  rowStyle={{ backgroundColor: Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white, opacity: Platform.OS === 'ios' ? 0.8 : 1, height: Platform.OS === 'ios' ? 44 : 48, borderBottomColor: '#939396', marginRight: Platform.OS === 'ios' ? undefined : 22, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0 }}
-                  buttonStyle={{ backgroundColor: Colors.white, width: 40 }}
-                  data={MemoryActionsListArray(item)}
-                  onSelect={(selectedItem, index) => {
-                    onActionItemClicked(index, selectedItem)
-                  }}
-                  renderCustomizedButtonChild={() => <Image style={{ alignSelf: 'flex-end' }} source={moreoptions} />}
-                />
-            {/* } */}
+          {/* {
+              Platform.OS === 'ios' ? */}
+          <ContextMenu
+            actions={memoryActions}
+            dropdownMenuMode={true}
+            previewBackgroundColor="transparent"
+            onPress={(e) => {
+              let data = memoryActions.filter((itm) => itm.title === e.nativeEvent.name)
+              if (data && data[0]) {
+                onActionItemClicked(e.nativeEvent.index, data[0])
+              }
+            }}
+          >
+            <Image source={moreoptions} />
+          </ContextMenu>
+          {/* :
+                 <SelectDropdown
+                   dropdownStyle={{ borderRadius: Platform.OS === 'ios' ? 12 : 4 }}
+                   rowTextStyle={{ textAlign: 'left', fontSize: Platform.OS === 'ios' ? 17 : 16, color: Platform.OS === 'ios' ? Colors.black : Colors.blackOpacity60, fontWeight: '400', paddingLeft: 16 }}
+                   dropdownOverlayColor={Colors.contextBackground}
+                   rowStyle={{ backgroundColor: Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white, opacity: Platform.OS === 'ios' ? 0.8 : 1, height: Platform.OS === 'ios' ? 44 : 48, borderBottomColor: '#939396', marginRight: Platform.OS === 'ios' ? undefined : 22, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0 }}
+                   buttonStyle={{ backgroundColor: Colors.white, width: 40 }}
+                   data={MemoryActionsListArray(item)}
+                   onSelect={(selectedItem, index) => {
+                     onActionItemClicked(index, selectedItem)
+                   }}
+                   renderCustomizedButtonChild={() => <Image style={{ alignSelf: 'flex-end' }} source={moreoptions} />}
+                 />
+             } */}
 
 
-            {/* <Image source={greenDotsButton} /> */}
-          </View>
-        </TouchableWithoutFeedback>
+          {/* <Image source={greenDotsButton} /> */}
+        </View>
+        {/* </TouchableWithoutFeedback> */}
       </View>
-    </TouchableWithoutFeedback>
+    </>
   );
 };
 

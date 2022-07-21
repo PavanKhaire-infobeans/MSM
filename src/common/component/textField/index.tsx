@@ -82,10 +82,12 @@ export default class TextField extends React.Component<Props, State> {
         Animated.timing(this.state.height, {
           toValue: 56,
           duration: 100,
+          useNativeDriver: true,
         }),
         Animated.timing(this.state.opacity, {
           toValue: nextProps.showError ? 1 : 0,
           duration: 100,
+          useNativeDriver: true,
         }),
       ]).start();
     }
@@ -108,10 +110,12 @@ export default class TextField extends React.Component<Props, State> {
         Animated.timing(this.state.sizeFnt, {
           toValue: kPlaceHolderFontSize,
           duration: 300,
+          useNativeDriver: true,
         }),
         Animated.timing(this.state.top, {
           toValue: this.props.inputFieldForPayment ? kTopAnimated : kTop,
           duration: 300,
+          useNativeDriver: true,
         }),
       ]).start();
     }
@@ -122,10 +126,12 @@ export default class TextField extends React.Component<Props, State> {
       Animated.timing(this.state.sizeFnt, {
         toValue: 13,
         duration: 300,
+        useNativeDriver: true,
       }),
       Animated.timing(this.state.top, {
         toValue: kTopAnimated,
         duration: 300,
+        useNativeDriver: true,
       }),
     ]).start();
     this.isBlurred = false;
@@ -174,7 +180,7 @@ export default class TextField extends React.Component<Props, State> {
       <View
         style={[this.props.style, styles.container]}>
 
-        <View style={[styles.subContainer, ]}>
+        <View style={[styles.subContainer,]}>
           {/* <Animated.View
             style={[{
               height: this.state.height,

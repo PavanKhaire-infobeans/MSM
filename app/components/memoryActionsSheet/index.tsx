@@ -61,6 +61,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
         Animated.timing(this.state.bottom, {
           toValue: 0,
           duration: 200,
+          useNativeDriver: true
         }).start();
       });
     } else {
@@ -72,6 +73,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
     Animated.timing(this.state.bottom, {
       toValue: -height,
       duration: 50,
+      useNativeDriver: true
     }).start(() => {
       setTimeout(() => {
         this.setState({ hidden: true }, () => this.firstpart = false);
@@ -100,7 +102,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
             <TouchableWithoutFeedback style={styles.ActionView}
               onPress={() => this.hideSheet()}
             >
-              <View style={styles.ActionView}/>
+              <View style={styles.ActionView} />
             </TouchableWithoutFeedback>
 
             <Animated.View
@@ -145,9 +147,9 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                           onPress={() => {
                             this.props.memoryActions
                               ? this.props.onActionClick &&
-                              this.props.onActionClick(data.index, data , data.memory_url)
+                              this.props.onActionClick(data.index, data, data.memory_url)
                               : this.props.onActionClick &&
-                              this.props.onActionClick(data.index, data , data.memory_url);
+                              this.props.onActionClick(data.index, data, data.memory_url);
                             this.hideSheet();
                             Keyboard.dismiss();
 
@@ -157,7 +159,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                             }
                           }}>
                           <View
-                            style={[styles.flatlistContainer,{
+                            style={[styles.flatlistContainer, {
                               borderTopLeftRadius: data.index == 1 ? 10 : 0,
                               borderTopRightRadius: data.index == 1 ? 10 : 0,
                             }]}>
@@ -165,10 +167,10 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                             {
                               Platform.OS == 'android' ?
                                 <View
-                                  style={[styles.ioSContainer,{
+                                  style={[styles.ioSContainer, {
                                     borderTopLeftRadius: data.index == 0 ? 10 : 0,
                                     borderTopRightRadius: data.index == 0 ? 10 : 0,
-                                    }]}>
+                                  }]}>
                                   {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
                                   {/* <Image source={ data.isDestructive == 1 ? redstar : blackStar } resizeMode="contain" /> */}
                                 </View>
@@ -185,7 +187,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                             {
                               Platform.OS == 'ios' ?
                                 <View
-                                  style={[styles.iosTextStyle,{
+                                  style={[styles.iosTextStyle, {
                                     borderTopLeftRadius: data.index == 0 ? 10 : 0,
                                     borderTopRightRadius: data.index == 0 ? 10 : 0,
                                   }]}>

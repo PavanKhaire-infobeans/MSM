@@ -199,7 +199,7 @@ const NavigationBar = (props: Props) => {
               </View>
               <View style={{ height: 4 }} />
               <View style={{ height: 32, justifyContent: 'center' }}>
-                <Text style={styles.cancleText}>Cancle</Text>
+                <Text style={styles.JumptoText}>Cancle</Text>
               </View>
             </View>
           ) : (
@@ -209,7 +209,7 @@ const NavigationBar = (props: Props) => {
               </View>
               <View style={{ height: 4 }} />
               <View style={{ height: 32, alignItems: 'center', justifyContent: 'center', paddingTop: 8 }}>
-                <Text style={styles.cancleText}>Profile</Text>
+                <Text style={styles.JumptoText}>Profile</Text>
               </View>
             </View>
           )}

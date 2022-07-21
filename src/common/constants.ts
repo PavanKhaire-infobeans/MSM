@@ -22,8 +22,8 @@ export const fontFamily = {
   InterBold: 'Inter-Bold',
   Lora: 'Lora-Regular',
   LoraMedium: 'Lora-Medium',
-  LoraBold:'Lora-Bold',
-  LoraSemiBold:'Lora-SemiBold',
+  LoraBold: 'Lora-Bold',
+  LoraSemiBold: 'Lora-SemiBold',
   // SFPro:"SFPro-Regular"
 };
 
@@ -74,7 +74,7 @@ export const Colors = {
   underlay33OpacityColor: '#ffffff33',
   underlayBlackOpacityColor: '#00000011',
   redgray: '#A3A3A3',
-  NewThemeColor: Appearance.getColorScheme() == 'light' ? '#ffffff' : '#2E313E',//'#94D6DB',
+  NewThemeColor: '#ffffff',//'#94D6DB',
   Theme51D1FF: '#51D1FF',
   NewDarkThemeColor: '#31C7DB',
   NewLightThemeColor: '#F2F8F8',
@@ -85,7 +85,7 @@ export const Colors = {
   NewLightCommentHeader: '#DFF3F4',
   NewYellowColor: '#DE8B00',
   NewTitleColor: '#207D89',
-  TextColor: Appearance.getColorScheme() == 'light' ? '#373852' : '#ffffff',
+  TextColor: '#373852',
   AudioViewBg: '#F8D5DA',
   AudioViewBorderColor: '#EB8898',
   BtnBgColor: '#207D89',
@@ -108,24 +108,24 @@ export const Colors = {
   backrgba: 'rgba(0, 0, 0, 0.25)',
   backColorWith75OPacity: "rgba(0.216, 0.22, 0.322, 0.75)",
   selectedFilter: '#BCDDE0',
-  white: Appearance.getColorScheme() == 'light' ? '#ffffff' : '#2E313E',
+  white: '#ffffff',
   newBagroundColor: '#C4C8D4',
   lightGray: '#CED0CE',
   f5f5f5: '#F5F5F5',
   e0e0e0: '#e0e0e0',
-  bordercolor: Appearance.getColorScheme() == 'light' ? '#0B0C0F' : '#ffffff',
-  timeLinebackground: Appearance.getColorScheme() == 'light' ? '#F3F5F7' : "#2E313E",
-  newTextColor: Appearance.getColorScheme() == 'light' ? '#4C5367' : '#ffffff',
-  newDescTextColor: Appearance.getColorScheme() == 'light' ? '#2E313E' : '#ffffff',
+  bordercolor: '#0B0C0F',
+  timeLinebackground: '#F3F5F7',
+  newTextColor: '#4C5367',
+  newDescTextColor: '#2E313E',
   selectedFilterbg: 'rgba(173, 135, 0, 0.07)',
   unSelectedFilterbg: 'rgba(6, 36, 81, 0.07)',
   filterborder: '#4D3C00',
-  bottomTabColor: Appearance.getColorScheme() == 'light' ? '#E2E4E9' : '#ffffff',
+  bottomTabColor: '#E2E4E9',
   actionBg: 'rgba(237, 237, 237, 0.8)',
   actionBgHex: '#EDEDED',
   decadeFilterBorder: '#052747',
   actionlistSeparater: 'rgba(0.35, 0.35, 0.35, 0.2)',
-  black: Appearance.getColorScheme() == 'light' ? '#000000' : '#ffffff',
+  black: '#000000',
   darkGray: '#909090',
   c3c3c3: '#3c3c3c',
   a5a5a7: '#a5a5a7',
@@ -471,11 +471,17 @@ export const CommonTextStyles = {
     ...fontSize(19),
     fontFamily: fontFamily.Inter
   },
+  fontWeight500Size17Inter: {
+    fontWeight: '400',
+    ...fontSize(17),
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    lineHeight: 18.7
+  },
   fontWeight500Size13Inter: {
     fontWeight: '500',
     ...fontSize(14),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-    lineHeight: 17
+    lineHeight: 17.5
   },
 };
 /*export const requestPermission = async (type: string): Promise<boolean> => {

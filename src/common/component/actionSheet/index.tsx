@@ -56,6 +56,7 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
     Animated.timing(state.bottom, {
       toValue: 0,
       duration: 200,
+      useNativeDriver: true,
     }).start();
   };
 
@@ -63,6 +64,7 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
     Animated.timing(state.bottom, {
       toValue: -height,
       duration: 200,
+      useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
         setState(prevState =>
@@ -87,12 +89,14 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
         Animated.timing(state.bottom, {
           toValue: 0,
           duration: 200,
+          useNativeDriver: true,
         }).start();
       },
       hideSheet: () => {
         Animated.timing(state.bottom, {
           toValue: -height,
           duration: 200,
+          useNativeDriver: true,
         }).start(() => {
           setTimeout(() => {
             setState(prevState =>

@@ -93,8 +93,8 @@ export default class Animator extends Component{
     Animated.spring(this.position, {
       toValue: position,
       speed: 6,
-      easing: Easing.linear
-      // useNativeDriver: true,
+      easing: Easing.linear,
+      useNativeDriver: true,
     }).start(() => this.props.onExpanded);    
     this.props.setCurrentPosition(position);
   }
@@ -113,8 +113,8 @@ export default class Animator extends Component{
     Animated.spring(this.position, {
       toValue: this.props.currentPosition,
       speed: 6,
-      easing: Easing.linear
-      // useNativeDriver: true,
+      easing: Easing.linear,
+      useNativeDriver: true,
     }).start();    
   }
 }

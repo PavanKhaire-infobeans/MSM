@@ -53,10 +53,12 @@ export default class DropDownSelector extends React.Component<Props, State> {
         Animated.timing(this.state.height, {
           toValue: 56,
           duration: 100,
+          useNativeDriver: true,
         }),
         Animated.timing(this.state.opacity, {
           toValue: nextProps.showError ? 1 : 0,
           duration: 100,
+          useNativeDriver: true,
         }),
       ]).start();
     }
@@ -65,10 +67,12 @@ export default class DropDownSelector extends React.Component<Props, State> {
     // 		Animated.timing(this.state.sizeFnt, {
     // 			toValue: (nextSelectedValue.length > 0) ? 13 : kPlaceHolderFontSize,
     // 			duration: 300
+    // useNativeDriver:true,
     // 		}),
     // 		Animated.timing(this.state.top, {
     // 			toValue: (nextSelectedValue.length > 0) ? kTopAnimated : kTop,
     // 			duration: 300
+    // useNativeDriver:true,
     // 		})
     // 	]).start();
     // }

@@ -208,19 +208,14 @@ const AppRouter = () => (
             }}
             tabBarStyle={{
               height: 40,
-              // paddingHorizontal:20,
-              // justifyContent: 'flex-start',
-              // alignItems: 'flex-start',
               backgroundColor: Colors.white,
               borderWidth: 1,
               borderTopWidth: 3,
-              borderTopColor: 'white',
-              // paddingBottom: Platform.OS === 'android' ? 25 : 25,
-              // overflow: 'hidden',
+              borderTopColor:  Colors.white,
               width: '94%',
               borderRadius: 12,
-              borderColor: 'white',
-              marginVertical: 4,
+              borderColor:  Colors.white,
+              marginBottom: 4,
               alignSelf: 'center'
             }}>
             <Stack title={NewTabItems.Read} tabBarIcon={TabIcon}>
