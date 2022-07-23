@@ -1,30 +1,22 @@
 import React from 'react';
 import {
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Animated,
-  StatusBar,
+  Keyboard, SafeAreaView, StatusBar, TextInput, View
 } from 'react-native';
-import {SubmitButton} from '../../common/component/button';
-import EventManager from '../../common/eventManager';
-import {styles} from './styles';
-//@ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
-import TextField from '../../common/component/textField';
-import {Colors} from '../../common/constants';
-import Utility from '../../common/utility';
+import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { SubmitButton } from '../../common/component/button';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
+import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import TextField from '../../common/component/textField';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import { Colors } from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import Utility from '../../common/utility';
 import {
   ChangePasswordService,
-  kChangePassword,
+  kChangePassword
 } from '../changePassword/changePasswordWebService';
-import {Actions} from 'react-native-router-flux';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import { styles } from './styles';
 
 export default class ChangePassword extends React.Component {
   _newPasswordField?: TextInput = null;
@@ -141,7 +133,6 @@ export default class ChangePassword extends React.Component {
   };
 
   onClick() {
-    let hasError = false;
     if (Utility.isInternetConnected) {
       const {currentPassword, newPassword, confirmPassword} = this.state;
       let hasError = false;

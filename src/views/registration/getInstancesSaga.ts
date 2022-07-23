@@ -1,16 +1,16 @@
-import {takeLatest, put, call} from 'redux-saga/effects';
-import {GetInstances} from './reducer';
-import {getAllIntances as getAllInstances} from '../../common/webservice/loginServices';
-import {getValue, CueBackInsatance} from '../../common/constants';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { CueBackInsatance, getValue } from '../../common/constants';
+import { getAllIntances as getAllInstances } from '../../common/webservice/loginServices';
+import { GetInstances } from './reducer';
 //import { AsyncStorage } from "react-native";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { No_Internet_Warning } from '../../common/component/Toast';
 import Utility from '../../common/utility';
-import {No_Internet_Warning} from '../../common/component/Toast';
 
-// export const kAdmin: string = 'https://admin.cueback.com'; //production
+export const kAdmin: string = 'https://admin.cueback.com'; //production
 //export const kAdmin: string = 'https://qa-admin.cueback.com';
-export const kAdmin: string = 'https://admin.cuebackqa.com';
+// export const kAdmin: string = 'https://admin.cuebackqa.com';
 const qaURL: string = 'https://admin.cueback.com';
 export const isCueBackInstance = (kAdmin == qaURL) ? true : false;
 const kStoreInstance = 'StoreInstanceData';

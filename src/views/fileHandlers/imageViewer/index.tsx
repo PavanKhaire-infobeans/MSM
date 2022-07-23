@@ -1,38 +1,18 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  FlatList,
-  View,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-  Dimensions,
-  StatusBar,
-  Platform,
-  Alert,
-  Keyboard,
-  ScrollView,
+  Image, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Text from '../../../common/component/Text';
-import {Actions} from 'react-native-router-flux';
-import {fontSize, Colors, fontFamily} from '../../../common/constants';
-import DeviceInfo from 'react-native-device-info';
+import { Colors, fontFamily, fontSize } from '../../../common/constants';
 //@ts-ignore
-import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {
-  close_white,
-  profile_placeholder,
-  default_placeholder,
-  close_white_,
+  close_white_, default_placeholder
 } from '../../../images';
 //@ts-ignore
-import NavigationHeader from '../../../common/component/navigationHeader';
-import PlaceholderImageView from '../../../common/component/placeHolderImageView';
 // import ImageViewerWithZoom from 'react-native-image-zoom-viewer';
 import ImageViewerWithZoom from '../../../common/component/ImageZoomViewer/src/index';
-import {Modal} from 'react-native';
 //@ts-ignore
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Utility from '../../../common/utility';
 type Props = {[x: string]: any};
 type State = {[x: string]: any};

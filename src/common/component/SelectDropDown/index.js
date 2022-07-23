@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, I18nManager, Platform, Animated, Easing } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, Platform, Animated, Easing } from 'react-native';
 import styles from './styles';
 // import findIndexInArr from './helpers/findIndexInArr';
 import calculateDropdownHeight from './helpers/calculateDropdownHeight';
@@ -100,7 +100,7 @@ const SelectDropdown = (
       {
         toValue: 1,
         duration: 500,
-        easing:Easing.inOut(Easing.cubic),
+        easing: Easing.inOut(Easing.cubic),
         useNativeDriver: true
       }
     ).start();
@@ -125,7 +125,7 @@ const SelectDropdown = (
       {
         toValue: 0,
         duration: 1000,
-        easing:Easing.inOut(Easing.cubic),
+        easing: Easing.inOut(Easing.cubic),
         useNativeDriver: true
       }
     ).start();
@@ -186,7 +186,7 @@ const SelectDropdown = (
   const fadeAnim = useRef(new Animated.Value(0)).current
 
   // useEffect(() => {
-   
+
   // }, [fadeAnim])
 
 

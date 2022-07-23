@@ -1,39 +1,23 @@
-import React, {Component} from 'react';
+import NetInfo from '@react-native-community/netinfo';
+import React, { Component } from 'react';
 import {
-  SafeAreaView,
-  View,
-  FlatList,
-  TouchableHighlight,
-  ListRenderItemInfo,
-  TouchableOpacity,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Dimensions,
-  StatusBar,
-  Image,
-  Platform,
+  Dimensions, FlatList, Image, Keyboard, ListRenderItemInfo, Platform, SafeAreaView, StatusBar, TouchableHighlight, View
 } from 'react-native';
-import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
-import AlphabetFlatList from 'react-native-alphabetflatlist';
-import Text from '../../common/component/Text';
+import { connect } from 'react-redux';
 import SearchBar from '../../common/component/SearchBar';
-import {SubmitButton} from '../../common/component/button';
-import {connect} from 'react-redux';
-import {Account} from '../../common/loginStore';
-import {Actions} from 'react-native-router-flux';
+import Text from '../../common/component/Text';
+import { Colors, fontSize, Size } from '../../common/constants';
+import { Account, LoginStore, UserData } from '../../common/loginStore';
 import InstanceView from './instanceView';
-import {LoginStore, UserData} from '../../common/loginStore';
-import {Size, fontSize, Colors} from '../../common/constants';
 
-import {ToastMessage, No_Internet_Warning} from '../../common/component/Toast';
-import GetFormData from './getFormData';
-import {GetInstances} from './reducer';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import {backBlkBtn, search_illustration} from '../../images';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import Utility from '../../common/utility';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MessageDialogue from '../../common/component/messageDialogue';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import Utility from '../../common/utility';
+import { search_illustration } from '../../images';
+import GetFormData from './getFormData';
+import { GetInstances } from './reducer';
 
 type Item = {
   InstanceID: string;

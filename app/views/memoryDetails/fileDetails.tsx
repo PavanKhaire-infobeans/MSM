@@ -1,23 +1,14 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  FlatList,
-  View,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-  StatusBar,
-  ScrollView,
-  Keyboard,
-  TouchableWithoutFeedback,
+  Image, Keyboard, SafeAreaView, ScrollView, StatusBar, TouchableWithoutFeedback, View
 } from 'react-native';
 import Text from './../../../src/common/component/Text';
 // import NavigationBar from '../dashboard/NavigationBar';
-import NavigationBarForEdit from './../../../src/common/component/navigationBarForEdit';
-import {Actions} from 'react-native-router-flux';
-import {Colors, fontSize} from './../../../src/common/constants';
-import {kImage, kAudio, kPDF} from './componentsMemoryDetails';
+import { Actions } from 'react-native-router-flux';
 import Utility from '../../../src/common/utility';
+import NavigationBarForEdit from './../../../src/common/component/navigationBarForEdit';
+import { Colors } from './../../../src/common/constants';
+import { kImage, kPDF } from './componentsMemoryDetails';
 import styles from './styles';
 
 type Props = {[x: string]: any};

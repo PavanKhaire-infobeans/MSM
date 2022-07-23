@@ -1,5 +1,4 @@
 import { Platform } from 'react-native';
-import deviceInfoModule from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../../../src/common/constants';
 
@@ -121,31 +120,31 @@ const Styles = EStyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around'
     },
-    fullFlex:{
-        flex:1
+    fullFlex: {
+        flex: 1
     },
-    moreImagesContainer:{
+    moreImagesContainer: {
         backgroundColor: Colors.moreViewBg,
         paddingVertical: 4,
-        paddingHorizontal:8,
+        paddingHorizontal: 8,
         position: 'absolute',
         bottom: 12,
         right: 16,
-        borderRadius:4,
+        borderRadius: 4,
         alignItems: 'center',
         justifyContent: 'center',
-      },
-      moreImageTextStyle:{
+    },
+    moreImageTextStyle: {
         color: Colors.white,
         ...fontSize(15),
-        fontWeight:'400',
-        fontFamily:fontFamily.Inter,
+        fontWeight: '400',
+        fontFamily: fontFamily.Inter,
         textAlign: 'center',
-      },
-      fullHeight:{
-          height:'100%'
-        },
-        
+    },
+    fullHeight: {
+        height: '100%'
+    },
+
 });
 
 export default Styles;

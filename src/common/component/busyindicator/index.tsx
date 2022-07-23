@@ -1,30 +1,26 @@
-import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {fontSize} from '../../constants';
+import React, { useEffect, useState } from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  DeviceEventEmitter,
-  ActivityIndicator,
+  ActivityIndicator, DeviceEventEmitter, StyleSheet, Text, View
 } from 'react-native';
-import styles from './styles'
+import { fontSize } from '../../constants';
+import styles from './styles';
 
- const BusyIndicator = (props)=> {
-  
-    const [state,setState] = useState({
-                                    isVisible: props.startVisible,
-                                  });
+const BusyIndicator = (props) => {
 
-    useEffect(()=>{
+  const [state, setState] = useState({
+    isVisible: props.startVisible,
+  });
 
-      return ()=>{
-        emitter.remove();
-      }
-    },[])
+  useEffect(() => {
+
+    return () => {
+      emitter.remove();
+    }
+  }, [])
 
   const changeLoadingEffect = (state) => {
-    setState(prev=>({
+    setState(prev => ({
       ...prev,
       isVisible: state?.isVisible,
       text: state.title ? state.title : props.text,
@@ -36,39 +32,39 @@ import styles from './styles'
     changeLoadingEffect,
   );
 
-    const customStyles = StyleSheet.create({
-      overlay: {
-        backgroundColor: props.overlayColor,
-        minWidth: props.overlayWidth,
-        height: props.overlayHeight,
-      },
+  const customStyles = StyleSheet.create({
+    overlay: {
+      backgroundColor: props.overlayColor,
+      minWidth: props.overlayWidth,
+      height: props.overlayHeight,
+    },
 
-      text: {
-        color: props.textColor,
-        ...fontSize(props.textFontSize),
-      },
-    });
+    text: {
+      color: props.textColor,
+      ...fontSize(props.textFontSize),
+    },
+  });
 
-    return (
-        !state.isVisible ?
-         null
-         :
-         <View style={styles.container}>
-         <View style={[styles.overlay, customStyles.overlay]}>
-           <ActivityIndicator
-             color={props.color}
-             size={props.size}
-             style={styles.progressBar}
-           />
- 
-           <Text
-             numberOfLines={props.textNumberOfLines}
-             style={[styles.text, customStyles.text]}>
-             {state.text}
-           </Text>
-         </View>
-       </View>
-    );
+  return (
+    !state.isVisible ?
+      null
+      :
+      <View style={styles.container}>
+        <View style={[styles.overlay, customStyles.overlay]}>
+          <ActivityIndicator
+            color={props.color}
+            size={props.size}
+            style={styles.progressBar}
+          />
+
+          <Text
+            numberOfLines={props.textNumberOfLines}
+            style={[styles.text, customStyles.text]}>
+            {state.text}
+          </Text>
+        </View>
+      </View>
+  );
 }
 
 BusyIndicator.propTypes = {

@@ -1,9 +1,5 @@
-import {takeLatest} from 'redux-saga';
-import {Alert} from 'react-native';
+import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
-import EventManager from '../../common/eventManager';
-import {kNotificationIndicator} from '../../common/component/TabBarIcons';
-import {Account} from '../../common/loginStore';
 
 export const GetActivity = 'getActivity';
 export const SeenFlag = 'seenFlag';

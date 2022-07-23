@@ -1,8 +1,8 @@
-import {getValue, Storage} from '../../common/constants';
-import Utility from '../../common/utility';
-import {Alert, DeviceEventEmitter} from 'react-native';
-import {Account, LoginStore} from '../../common/loginStore';
+import { DeviceEventEmitter } from 'react-native';
+import { getValue, Storage } from '../../common/constants';
 import EventManager from '../../common/eventManager';
+import { Account, LoginStore } from '../../common/loginStore';
+import Utility from '../../common/utility';
 
 export const kProfilePicUpdated = 'ProfilePicUpdated';
 export type ContactInfo = {

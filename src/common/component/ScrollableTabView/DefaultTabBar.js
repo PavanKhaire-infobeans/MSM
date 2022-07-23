@@ -1,5 +1,5 @@
 import { Colors, fontFamily } from '../../constants';
-import { bottomcalendar, calender, clock, editOff, editOn, newMemory, ontimelineClickclock, promptOn, promptsOff, timelinecalendar } from './../../../../app/images'
+import { bottomcalendar, clock, editOff, editOn, newMemory, ontimelineClickclock, promptOn, promptsOff, timelinecalendar } from './../../../../app/images'
 const React = require('react');
 const { ViewPropTypes } = ReactNative = require('react-native');
 const PropTypes = require('prop-types');
@@ -60,10 +60,10 @@ const DefaultTabBar = createReactClass({
               <Image source={editOn} />
               :
               name == 'Prompts' && isTabActive ?
-              <Image source={promptOn} />
-              :
-    
-              <Image  style={name == 'New' ?{ height: 56, width: 56 ,elevation: 3,shadowOpacity: 0.05, shadowColor: '(46, 49, 62, 1)', shadowRadius: 9, shadowOffset: { width: -2, height: 2 }}:{}} source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : name == 'Edit' ? editOff : name == 'Prompts' ? promptsOff : name == 'New' ? newMemory : isTabActive ? timelinecalendar : bottomcalendar} />
+                <Image source={promptOn} />
+                :
+
+                <Image style={name == 'New' ? { height: 56, width: 56, elevation: 3, shadowOpacity: 0.05, shadowColor: '(46, 49, 62, 1)', shadowRadius: 9, shadowOffset: { width: -2, height: 2 } } : {}} source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : name == 'Edit' ? editOff : name == 'Prompts' ? promptsOff : name == 'New' ? newMemory : isTabActive ? timelinecalendar : bottomcalendar} />
         }
         <View style={{ height: 8 }} />
         <Text style={[{ color: textColor, fontWeight, fontFamily: fontFamily.Inter, fontSize: 17, lineHeight: 21.25 },]}>

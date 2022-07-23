@@ -76,7 +76,7 @@ const Styles = EStyleSheet.create({
   },
   rightContainer: {
     flex: 1.5,
-    height:60,
+    height: 60,
     width: 100,
     alignItems: 'flex-end',
     justifyContent: 'center',
@@ -159,7 +159,7 @@ const Styles = EStyleSheet.create({
   cancleTextContainer: {
     justifyContent: 'center',
     width: 72,
-    height:32,
+    height: 32,
     marginLeft: 8,
     marginBottom: 8,
   },

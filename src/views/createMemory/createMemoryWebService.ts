@@ -1,17 +1,13 @@
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
-  Storage,
   asyncGen,
-  getValue,
-  uploadTask,
-  TimeStampMilliSeconds,
+  getValue, Storage, uploadTask
 } from '../../common/constants';
+import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
 import { MemoryService } from '../../common/webservice/memoryServices';
-import EventManager from '../../common/eventManager';
 import { TempFile } from '../mindPop/edit';
 import { CollaboratorsAction } from './inviteCollaborators';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import { Alert } from 'react-native';
 
 export const kCollectionMemories = 'CollectionMemories';
 export const kCollectionUpdated = 'CollectionUpdated';

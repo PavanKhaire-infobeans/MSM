@@ -1,28 +1,11 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
 import React from 'react';
+import {
+  ActivityIndicator, Keyboard, SafeAreaView, StatusBar, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import WebView from 'react-native-webview';
-import {Actions} from 'react-native-router-flux';
-import {Colors, fontSize} from '../../common/constants';
-import NavigationThemeBar from '../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import {pdf_icon, icon_collaborators, close_white} from '../../images';
-import AccessoryView from '../../common/component/accessoryView';
-import Text from '../../common/component/Text';
-import NavigationBar from '../dashboard/NavigationBar';
-import {TabItems} from '../../common/component/TabBarIcons';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import { Colors } from '../../common/constants';
 import Utility from '../../common/utility';
 type Props = {[x: string]: any};
 

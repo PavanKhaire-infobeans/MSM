@@ -1,7 +1,7 @@
-import {MemoryService} from '../../common/webservice/memoryServices';
-import {Storage} from '../../common/constants';
+import { MemoryService } from '../../common/webservice/memoryServices';
+import { Storage } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 
 export const kChangePassword = 'MemoryActionPerformed';
 
@@ -12,15 +12,14 @@ export const ChangePasswordService = async (
   try {
     let data = await Storage.get('userData');
     let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/alumni/change_password`,
       [
         {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {oldPassword: oldPassword, newPassword: newPassword},
+        { oldPassword: oldPassword, newPassword: newPassword },
       ],
     )
       .then((response: Response) => response.json())

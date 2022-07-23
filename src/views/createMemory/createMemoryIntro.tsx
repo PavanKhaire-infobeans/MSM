@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
-import {View, Image, Dimensions, Animated, Modal} from 'react-native';
+import React from 'react';
+import { Animated, Dimensions, Image, Modal, View } from 'react-native';
 //@ts-ignore
+import { Colors } from '../../common/constants';
 import {
   add_content_step1,
   add_content_step2,
-  add_content_step3,
+  add_content_step3
 } from '../../images';
-import {fontSize, Colors} from '../../common/constants';
 //@ts-ignore
-import Carousel, {Pagination} from 'react-native-snap-carousel';
-import {Props} from '../login/loginController';
+import Carousel from 'react-native-snap-carousel';
+import { SubmitButton } from '../../common/component/button';
 import TextNew from '../../common/component/Text';
-import {SubmitButton} from '../../common/component/button';
+import { Props } from '../login/loginController';
 import styles from './styles';
 export default class CreateMemoryIntro extends React.Component<Props> {
   _carousal: any;

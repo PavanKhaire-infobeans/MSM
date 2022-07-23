@@ -1,52 +1,26 @@
 import React from 'react';
-import Text from './../../../../src/common/component/Text';
 import {
-  SafeAreaView,
-  FlatList,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Image,
-  StatusBar,
-  TouchableHighlight,
-  ImageBackground,
-  RefreshControl,
-  ActivityIndicator,
-  Alert,
-  Platform,
-  Keyboard,
-  TouchableWithoutFeedback,
+  ActivityIndicator, Alert, FlatList, Image, ImageBackground, Keyboard, RefreshControl, SafeAreaView, StatusBar,
+  TouchableHighlight, TouchableWithoutFeedback, View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { DeleteDraftService, kDeleteDraft } from '../../../../src/views/createMemory/createMemoryWebService';
+import { Border } from '../../memoryDetails/componentsMemoryDetails';
 import { GetMemoryDrafts, kMemoryDraftsFetched } from '../myMemoriesWebService';
-import { MemoryDraftsDataModel } from './memoryDraftsDataModel';
+import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
+import Text from './../../../../src/common/component/Text';
 import {
-  ToastMessage,
-  No_Internet_Warning,
+  No_Internet_Warning, ToastMessage
 } from './../../../../src/common/component/Toast';
 import {
-  Colors,
-  fontSize,
-  getValue,
-  DraftType,
-  DraftActions,
-  NO_INTERNET,
+  Colors, DraftActions, DraftType, getValue
 } from './../../../../src/common/constants';
-import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
 import EventManager from './../../../../src/common/eventManager';
-import { profile_placeholder } from './../../../../src/images';
-import Utility from './../../../../src/common/utility';
-import { Border } from '../../memoryDetails/componentsMemoryDetails';
-import {
-  delete_comment,
-  collaborative,
-  downImage,
-  upImage,
-  itemSelectedCheckMark,
-} from './../../../../src/images';
-import styles from './styles'
 import { Account } from './../../../../src/common/loginStore';
-import { DeleteDraftService, kDeleteDraft } from '../../../../src/views/createMemory/createMemoryWebService';
+import Utility from './../../../../src/common/utility';
+import { collaborative, delete_comment, downImage, itemSelectedCheckMark, profile_placeholder, upImage } from './../../../../src/images';
+import { MemoryDraftsDataModel } from './memoryDraftsDataModel';
+import styles from './styles';
 
 type State = { [x: string]: any };
 type Props = { [x: string]: any };

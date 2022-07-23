@@ -1,20 +1,14 @@
 import React from 'react';
 import {
-  Dimensions,
-  Modal,
-  View,
-  Animated,
-  SafeAreaView,
-  TouchableHighlight,
-  Image,
-  TouchableOpacity,
+  Animated, Dimensions, Image, Modal, SafeAreaView,
+  TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
-import {Props} from '../login/loginController';
+import { Props } from '../login/loginController';
 //@ts-ignore
-import Carousel, {Pagination} from 'react-native-snap-carousel';
+import Carousel from 'react-native-snap-carousel';
 import TextNew from '../../common/component/Text';
-import {Colors, fontSize} from '../../common/constants';
-import {arrow2, arrow5, arrow6, arrow7, close_guide_tour} from '../../images';
+import { Colors } from '../../common/constants';
+import { arrow2, arrow5, arrow6, arrow7, close_guide_tour } from '../../images';
 import Styles from './styles';
 
 export default class MemoryDraftIntro extends React.Component<Props> {
@@ -154,7 +148,7 @@ export default class MemoryDraftIntro extends React.Component<Props> {
                 {item.item.desc}
               </TextNew>
               <View style={Styles.createMemoryIntroStyle}>
-                {this.circleStyles.map((obj: any, index1: any) => {
+                {this.circleStyles.map((_obj: any, index1: any) => {
                   return (
                     <View
                       style={[Styles.createMemoryIntroContainerStyle,{

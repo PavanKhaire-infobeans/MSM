@@ -1,18 +1,8 @@
-import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import {
-  View,
-  Image,
-  Animated,
-  Dimensions,
-  FlatList,
-  TouchableOpacity,
-  Keyboard,
-  Platform,
-  TouchableWithoutFeedback,
-  Modal,
+  Animated,Dimensions,FlatList, Keyboard, Modal, TouchableWithoutFeedback, View
 } from 'react-native';
-import { fontSize, Colors } from '../../constants';
-import { Actions } from 'react-native-router-flux';
+import { Colors, fontSize } from '../../constants';
 import TextNew from '../Text';
 import styles from './styles';
 
@@ -125,7 +115,7 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
         <View
           style={styles.container}>
           <Animated.View
-            style={[styles.cellContainer, { width: props.width, bottom: state.bottom, borderRadius: 13 }]}>
+            style={[styles.cellContainer, { width: props.width,bottom: 0, borderRadius: 13 }]}>
 
             <View>
               {props.title && props.title.length > 0 ? (
@@ -219,6 +209,7 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
               />
             </View>
           </Animated.View>
+          {/* <View style={{height: parseInt(state.bottom)}}></View> */}
         </View>
       </Modal>
     );

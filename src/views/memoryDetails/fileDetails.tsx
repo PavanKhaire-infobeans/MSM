@@ -1,31 +1,13 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  FlatList,
-  View,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-  StatusBar,
-  ScrollView,
-  Keyboard,
+  Image, Keyboard, SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View
 } from 'react-native';
-import Text from '../../common/component/Text';
-import {
-  icon_people,
-  icon_events,
-  icon_settings,
-  icon_faq,
-  icon_info,
-  icon_headset,
-  pdf_icon,
-} from '../../images';
-import NavigationBar from '../dashboard/NavigationBar';
+import { Actions } from 'react-native-router-flux';
 import NavigationBarForEdit from '../../common/component/navigationBarForEdit';
-import {Actions} from 'react-native-router-flux';
-import {Colors, fontSize} from '../../common/constants';
-import {kImage, kAudio, kPDF} from './componentsMemoryDetails';
+import Text from '../../common/component/Text';
+import { Colors, fontSize } from '../../common/constants';
 import Utility from '../../common/utility';
+import { kImage, kPDF } from './componentsMemoryDetails';
 
 type Props = {[x: string]: any};
 export default class FilesDetail extends React.Component<Props> {

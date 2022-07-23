@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
-  Alert,
   Dimensions,
   Image,
   Platform,
@@ -10,17 +9,17 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View,
+  View
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextNew from '../../common/component/Text';
-import {Colors, fontFamily, fontSize} from '../../common/constants';
+import { Colors, fontFamily, fontSize } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {action_close, check, plus, topics_filter} from '../../images';
-import {GetPrompts} from '../myMemories/myMemoriesWebService';
+import { action_close, check, plus } from '../../images';
+import { GetPrompts } from '../myMemories/myMemoriesWebService';
 
 type Props = {[x: string]: any};
 type State = {[x: string]: any};

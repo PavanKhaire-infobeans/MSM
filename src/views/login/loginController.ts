@@ -1,29 +1,22 @@
-import ViewProtocol from '../../common/interfaces/viewProtocol';
-import {
-  testEmail,
-  getValue,
-  Storage,
-  ERROR_MESSAGE,
-  Colors,
-  NO_INTERNET,
-  CueBackInsatance,
-} from '../../common/constants';
-import { Keyboard, Alert, DeviceEventEmitter, Platform } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import { ToastMessage, No_Internet_Warning } from '../../common/component/Toast';
-import { LoginStore, Account, UserData } from '../../common/loginStore';
+import { Keyboard } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {
+  Colors, CueBackInsatance, ERROR_MESSAGE, getValue, NO_INTERNET, testEmail
+} from '../../common/constants';
+import ViewProtocol from '../../common/interfaces/viewProtocol';
+import { Account, LoginStore, UserData } from '../../common/loginStore';
 import Utility from '../../common/utility';
 // @ts-ignore
-import DefaultPreference from 'react-native-default-preference';
 import {
   GoogleSignin,
-  statusCodes,
+  statusCodes
 } from '@react-native-google-signin/google-signin';
-import { SSOLogin, kSSOLogin } from '../../common/webservice/loginServices';
+import { NativeEventEmitter, NativeModules } from 'react-native';
+import DefaultPreference from 'react-native-default-preference';
 import EventManager from '../../common/eventManager';
-import { NativeModules, NativeEventEmitter } from 'react-native';
+import { kSSOLogin, SSOLogin } from '../../common/webservice/loginServices';
 
 let userInfo: any = {};
 export const kAppleCredentials = 'appleUserCredentials';

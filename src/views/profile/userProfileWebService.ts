@@ -1,20 +1,16 @@
-import {
-  userProfile,
-  removeProfilePicture,
-} from '../../common/webservice/userProfile';
-import EventManager from '../../common/eventManager';
-import {
-  Storage,
-  getValue,
-  uploadTask,
-  ERROR_MESSAGE,
-} from '../../common/constants';
-import {Account} from '../../common/loginStore';
+import { Platform } from 'react-native';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {Alert, Platform} from 'react-native';
-import {TempFile} from '../mindPop/edit';
-import {ToastMessage} from '../../common/component/Toast';
+import { ToastMessage } from '../../common/component/Toast';
+import {
+  ERROR_MESSAGE, getValue, Storage, uploadTask
+} from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
+import {
+  removeProfilePicture, userProfile
+} from '../../common/webservice/userProfile';
+import { TempFile } from '../mindPop/edit';
 
 export const kGetUserProfileData = 'GetUserProfileData';
 export const kSetUserProfileData = 'SetUserProfileData';

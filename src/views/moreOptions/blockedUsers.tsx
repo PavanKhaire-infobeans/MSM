@@ -1,45 +1,16 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  FlatList,
-  View,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-  TouchableHighlight,
-  StatusBar,
-  Keyboard,
-  Alert,
-} from 'react-native';
-import Text from '../../common/component/Text';
-import {
-  icon_people,
-  icon_events,
-  icon_settings,
-  icon_faq,
-  icon_info,
-  icon_headset,
-  profile_placeholder,
-  action_close,
-} from '../../images';
-import NavigationBar from '../dashboard/NavigationBar';
-import NavigationBarForEdit from '../../common/component/navigationBarForEdit';
-import {Actions} from 'react-native-router-flux';
-import {Colors, MemoryActionKeys} from '../../common/constants';
+import { Actions } from 'react-native-router-flux';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import { MemoryActionKeys } from '../../common/constants';
+import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {Account} from '../../common/loginStore';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import CustomListView from '../memoryDetails/customListView';
 import {
   GetBlockedUsersAndMemory,
   kBlockedUsers,
-  kBlockedUsersFetched,
-  MemoryAction,
-  kUserUnblocked,
+  kBlockedUsersFetched, kUserUnblocked, MemoryAction
 } from '../myMemories/myMemoriesWebService';
-import EventManager from '../../common/eventManager';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {ToastMessage, No_Internet_Warning} from '../../common/component/Toast';
 
 type Props = {[x: string]: any};
 export default class BlockedUsers extends React.Component<Props> {

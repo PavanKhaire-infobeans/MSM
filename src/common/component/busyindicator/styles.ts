@@ -1,5 +1,4 @@
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { fontSize } from '../../../common/constants';
 
 const Styles = EStyleSheet.create({
     container: {

@@ -1,13 +1,9 @@
-import {Account} from './../../../../src/common/loginStore';
-import {
-  getValue,
-  getDetails,
-  keyInt,
-  keyArray,
-  TimeStampMilliSeconds,
-} from './../../../../src/common/constants';
-import Utility from './../../../../src/common/utility';
 import { months } from '../../../../src/views/createMemory';
+import {
+  getDetails, getValue, keyArray, keyInt, TimeStampMilliSeconds
+} from './../../../../src/common/constants';
+import { Account } from './../../../../src/common/loginStore';
+import Utility from './../../../../src/common/utility';
 // import {months} from '../../createMemory';
 var memoryDraftsArray: any[] = [];
 var data_count = 0;

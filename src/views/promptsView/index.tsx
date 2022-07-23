@@ -1,48 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  Platform,
-  StatusBar,
-  Text,
-  Alert,
-  Keyboard,
-  ActivityIndicator,
-  ImageBackground,
-  TouchableHighlight,
+  ActivityIndicator, Alert, FlatList, Image, ImageBackground, Keyboard, Platform, SafeAreaView, StatusBar,
+  Text, TouchableOpacity, View
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Actions } from 'react-native-router-flux';
 import { plus, sampleimage } from '../../../app/images';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import { TabItems } from '../../common/component/TabBarIcons';
 import TextNew from '../../common/component/Text';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import { Colors, decode_utf8, fontFamily, fontSize } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import {
-  close_big,
-  edit_icon,
-  edit_prompt,
-  filter_icon,
-  topics_filter,
-} from '../../images';
-import {
   CreateUpdateMemory,
-  promptIdListener,
+  promptIdListener
 } from '../createMemory/createMemoryWebService';
 import { DefaultDetailsMemory } from '../createMemory/dataHelper';
-import NavigationBar from '../dashboard/NavigationBar';
-import edit from '../mindPop/edit';
 import {
-  GetPrompts,
-  kPromptsList,
-  kHidePrompt,
-  HidePrompt,
+  GetPrompts, HidePrompt, kHidePrompt, kPromptsList
 } from '../myMemories/myMemoriesWebService';
 type Props = { [x: string]: any };
 type State = { [x: string]: any };

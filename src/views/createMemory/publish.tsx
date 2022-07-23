@@ -1,53 +1,27 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableHighlight,
-  StyleSheet,
-  Alert,
-  Modal,
-  Animated,
-  Dimensions,
-} from 'react-native';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
+import {
+  Alert, Animated,
+  Dimensions, Image, Keyboard, Modal, SafeAreaView, ScrollView, StatusBar, Text, TouchableHighlight, TouchableOpacity, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
 // @ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import Confetti from 'react-native-confetti';
+import DefaultPreference from 'react-native-default-preference';
+import { connect } from 'react-redux';
+import { kPublish } from '.';
+import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import TextNew from '../../common/component/Text';
+import { No_Internet_Warning } from '../../common/component/Toast';
 import {
   Colors,
-  fontSize,
   getValue,
-  ShareOptions,
-  NO_INTERNET,
+  ShareOptions
 } from '../../common/constants';
-import NavigationThemeBar from '../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import {
-  pdf_icon,
-  add_icon_small,
-  edit_icon,
-  close_guide_tour,
-  arrow7,
-} from '../../images';
-import {connect} from 'react-redux';
-import TextNew from '../../common/component/Text';
-import whoCanSee from './whoCanSee';
-import {kPublish} from '.';
-import {getUserCount} from './dataHelper';
-import Utility from '../../common/utility';
-import {ToastMessage, No_Internet_Warning} from '../../common/component/Toast';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import DefaultPreference from 'react-native-default-preference';
-import Confetti from 'react-native-confetti';
-import ConfettiCannon from 'react-native-confetti-cannon';
 import EventManager from '../../common/eventManager';
+import Utility from '../../common/utility';
+import {
+  add_icon_small, arrow7, edit_icon
+} from '../../images';
 import Styles from './styles';
 
 export const kTags = 'kTags';

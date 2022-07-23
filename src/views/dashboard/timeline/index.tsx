@@ -1,28 +1,27 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { SafeAreaView, FlatList, TouchableHighlight, TouchableOpacity, Modal, View, StatusBar, Text, ActivityIndicator, Keyboard, RefreshControl, Platform, Alert, Image, Dimensions } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, FlatList, Image, Keyboard, Platform, RefreshControl, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
+import DeviceInfo from "react-native-device-info";
 import { connect } from 'react-redux';
+import MemoryListItem from '../../../../app/components/memoryListItem';
 import AudioPlayer, { kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious } from '../../../common/component/audio_player/audio_player';
 import { MemoryActionsSheetItem } from '../../../common/component/memoryActionsSheet';
-import MemoryActionsSheet from './../../../../app/components/memoryActionsSheet';
 import { No_Internet_Warning } from '../../../common/component/Toast';
-import { Colors, fontFamily, fontSize, MemoryActionKeys } from '../../../common/constants';
+import { Colors, MemoryActionKeys } from '../../../common/constants';
 import Utility from '../../../common/utility';
 import { cancelActions } from '../../../images';
 import { Like, Unlike } from '../../memoryDetails/detailsWebService';
 import { kLiked, kUnliked } from '../../myMemories/myMemoriesWebService';
-import { MemoryActionsList, onActionItemClicked, renderSeparator, _onShowMemoryDetails } from '../../myMemories/PublishedMemory';
+import { MemoryActionsList, onActionItemClicked, _onShowMemoryDetails } from '../../myMemories/PublishedMemory';
+import { GET_TIMELINE_LIST, JUMP_TO_VIEW_SHOW, ListType } from '../dashboardReducer';
+import MemoryActionsSheet from './../../../../app/components/memoryActionsSheet';
 import styles from './styles';
-import { GET_MEMORY_LIST, GET_TIMELINE_LIST, JUMP_TO_VIEW_SHOW, ListType } from '../dashboardReducer';
-import DeviceInfo from "react-native-device-info";
-import MemoryListItem from '../../../../app/components/memoryListItem';
 // import MemoryListItem from '../../../common/component/memoryListItem';
-import { SvgXml } from 'react-native-svg';
-import JumpToScreen from '../jumpToScreen';
+import ActionSheet from "react-native-actions-sheet";
+import LinearGradient from 'react-native-linear-gradient';
+import { chevronleftfilter, leftgradient } from '../../../../app/images';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import EventManager from '../../../common/eventManager';
-import { chevronleftfilter, leftgradient } from '../../../../app/images';
-import LinearGradient from 'react-native-linear-gradient';
-import ActionSheet from "react-native-actions-sheet";
+import JumpToScreen from '../jumpToScreen';
 type State = { [x: string]: any };
 type Props = { [x: string]: any };
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
@@ -32,7 +31,6 @@ const Timeline = (props: Props) => {
     let flatListRef = useRef(null);
     const audioPlayer = useRef(null);
     const actionSheetRef = useRef(null);
-    const timelineYearRef = useRef(null);
 
     const [state, setState] = useState({
         showNoInternetView: false,
@@ -57,6 +55,7 @@ const Timeline = (props: Props) => {
     const [currentItemYear, setCurrentItemYear] = useState('')
     const [previousItemYear, setPreviousItemYear] = useState('')
     const [nextItemYear, setNextItemYear] = useState('')
+    const [timelineBarNextPrevClick, setTimelineBarNextPrevClick] = useState(false)
     let memoryTimelineUpdateListener: EventManager;
 
     useEffect(() => {
@@ -75,9 +74,22 @@ const Timeline = (props: Props) => {
             });
 
             setMemoryYears(yearsArr);
-            setAllYears(allYearsTemp.reverse());
+            setAllYears(allYearsTemp);//.reverse()
         }, 500);
     }, [props.jumpToYears])
+
+    useEffect(() => {
+        if (props.timelineList && props.timelineList.length && timelineBarNextPrevClick) {
+
+            let currentYear = props.timelineList[0].memoryYear
+            let next = '', prev = '', currentIndex = memoryYears.indexOf(currentYear);
+            prev = memoryYears[currentIndex] ? memoryYears[currentIndex + 1] : null;
+            next = currentIndex > 0 ? memoryYears[currentIndex - 1] : null;
+            setCurrentItemYear(currentYear);
+            setPreviousItemYear(prev);
+            setNextItemYear(next);
+        }
+    }, [props.timelineList])
 
     useEffect(() => {
         if (props.isJumptoShow) {
@@ -298,6 +310,14 @@ const Timeline = (props: Props) => {
 
     const jumpToClicked = (selectedYear: any, selectedMonth: any) => {
         loaderHandler.showLoader("Loading...")
+        setCurrentItemYear(selectedYear);
+        let next = '', prev = '', currentIndex = memoryYears.indexOf(selectedYear);
+        prev = memoryYears[currentIndex] ? memoryYears[currentIndex + 1] : null//memoryYears[0]
+        next = currentIndex > 0 ? memoryYears[currentIndex - 1] : null
+
+        setPreviousItemYear(prev);
+        setNextItemYear(next);
+
         props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, jumpTo: true, selectedYear, selectedMonth });
     }
 
@@ -371,9 +391,10 @@ const Timeline = (props: Props) => {
                                                 if (flatListRef.current) {
                                                     flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
                                                 }
-                                                setCurrentItemYear(null)
-                                                setPreviousItemYear(null)
-                                                setNextItemYear(null)
+                                                // setCurrentItemYear(null)
+                                                // setPreviousItemYear(null)
+                                                // setNextItemYear(null)
+                                                setTimelineBarNextPrevClick(true);
                                             }}
                                             underlayColor={Colors.transparent}
                                             style={{ width: 48, justifyContent: 'center', alignItems: 'flex-end' }}>
@@ -442,9 +463,10 @@ const Timeline = (props: Props) => {
                                                         if (flatListRef.current) {
                                                             flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
                                                         }
-                                                        setCurrentItemYear(null)
-                                                        setPreviousItemYear(null)
-                                                        setNextItemYear(null)
+                                                        // setCurrentItemYear(null)
+                                                        // setPreviousItemYear(null)
+                                                        // setNextItemYear(null)
+                                                        setTimelineBarNextPrevClick(true);
                                                     }}
                                                     underlayColor={Colors.transparent}
                                                     style={{ width: 48, justifyContent: 'center', alignItems: 'flex-start' }}>
@@ -466,6 +488,7 @@ const Timeline = (props: Props) => {
                         ref={flatListRef}
                         style={styles.flatlistStyle}
                         extraData={state}
+                        nestedScrollEnabled={true}
                         keyExtractor={(_, index: number) => `${index}`}
                         onViewableItemsChanged={onViewableItemsChanged}
                         viewabilityConfig={{

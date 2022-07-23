@@ -1,50 +1,26 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableHighlight,
-  FlatList,
-  StyleSheet,
-  SegmentedControlIOSBase,
-  Alert,
-} from 'react-native';
 import React from 'react';
+import {
+  FlatList, Image, Keyboard, Platform, SafeAreaView,
+  StatusBar, Text, TouchableHighlight, View
+} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 // @ts-ignore
-import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
-import { Colors, fontSize } from '../../common/constants';
-import NavigationThemeBar from '../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import { pdf_icon, add_icon_small, edit_icon, action_close } from '../../images';
 import { connect } from 'react-redux';
-import TextNew from '../../common/component/Text';
+import PlaceholderImageView from '../../common/component/placeHolderImageView';
+import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import SearchBar from '../../common/component/SearchBar';
-import { kTags, kWhoElseWhereThere } from './publish';
-import { MemoryTags } from '../memoryDetails/componentsMemoryDetails';
+import { Colors, fontSize } from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import Utility from '../../common/utility';
+import { action_close } from '../../images';
+import { kTags } from './publish';
 import {
-  SaveMemoryTagsList,
-  SaveWhoElseWhereThere,
-  SaveSearchList,
+  SaveMemoryTagsList, SaveSearchList, SaveWhoElseWhereThere
 } from './reducer';
 import {
-  MemoryTagsAPI,
-  kSearchTags,
-  UserSearchAPI,
-  kUsers,
-  kRecentTags,
+  kRecentTags, kSearchTags, kUsers, MemoryTagsAPI, UserSearchAPI
 } from './saga';
-import EventManager from '../../common/eventManager';
-import PlaceholderImageView from '../../common/component/placeHolderImageView';
-import Utility from '../../common/utility';
 import style from './styles';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 
 type State = { [x: string]: any };
 type Props = {

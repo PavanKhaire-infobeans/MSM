@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import {
-  Animated,
-  EventSubscription,
-  Keyboard,
-  Platform,
-  Easing,
+  Animated, Easing, EventSubscription, Keyboard, Platform
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
@@ -46,7 +42,7 @@ const AccessoryView = (props: any) => {
         event.endCoordinates.height -
         (Platform.OS == 'ios' && DeviceInfo.hasNotch() ? 35 : 0),
       duration: 450,
-      useNativeDriver:true,
+      useNativeDriver: true,
       easing: Easing.out(Easing.cubic),
     }).start();
   };
@@ -54,7 +50,7 @@ const AccessoryView = (props: any) => {
   const _onHide = () => {
     Animated.timing(state.bottom, {
       toValue: 0,
-      useNativeDriver:true,
+      useNativeDriver: true,
       duration: 0,
     }).start();
   };

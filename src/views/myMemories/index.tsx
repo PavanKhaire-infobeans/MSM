@@ -1,31 +1,16 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  StatusBar,
-  Alert,
-  Platform,
+  Platform, SafeAreaView, StatusBar, StyleSheet, View
 } from 'react-native';
-import Text from '../../common/component/Text';
 // @ts-ignore
-import ScrollableTabView from '../../common/component/ScrollableTabView';
-import {
-  Colors,
-  MyMemoriesTapBarOptions,
-  fontSize,
-  fontFamily,
-} from '../../common/constants';
-import MemoryDrafts from './MemoryDrafts/index';
-import PublishedMemory from './PublishedMemory/index';
-import EventManager from '../../common/eventManager';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import Activities from './Activities';
-import NavigationBar from '../dashboard/NavigationBar';
-import {TabItems} from '../../common/component/TabBarIcons';
-import Utility from '../../common/utility';
 import CustomAlert from '../../common/component/customeAlert';
-import { ListType } from '../dashboard/dashboardReducer';
+import {
+  Colors, fontFamily, MyMemoriesTapBarOptions
+} from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import Utility from '../../common/utility';
+import MemoryDrafts from './MemoryDrafts/index';
 type Props = {[x: string]: any};
 
 const FirstRoute = () => (

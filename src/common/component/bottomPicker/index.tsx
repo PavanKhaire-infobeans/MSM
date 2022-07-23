@@ -1,36 +1,18 @@
 import React, { useState } from 'react';
 import {
-  View,
-  Image,
-  Animated,
-  Dimensions,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-  Keyboard,
-  Platform,
-  StatusBar,
-  DeviceEventEmitter,
-  TouchableHighlight,
+  Animated,Dimensions,FlatList, Image, Keyboard,Platform,StatusBar, TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
-import Text from '../Text';
-import DeviceInfo from 'react-native-device-info';
-import { fontSize, Colors } from '../../constants';
-const { height } = Dimensions.get('screen');
-import {
-  checkbox,
-  checkbox_active,
-  action_close,
-  icon_close_black,
-} from '../../../images';
 import SearchBar from '../../../common/component/SearchBar';
-import { ToastMessage } from '../Toast';
+import {
+  checkbox,checkbox_active, icon_close_black
+} from '../../../images';
+import { Colors } from '../../constants';
 import ProfileEditHeader from '../profileEditHeader';
-import { StyleSheet } from 'react-native';
-import MessageDialogue from '../messageDialogue';
+import Text from '../Text';
+const { height } = Dimensions.get('screen');
 
-import styles from './styles';
 import Utility from '../../utility';
+import styles from './styles';
 
 export type ActionSheetItem = {
   key: any;
@@ -58,22 +40,6 @@ type Props = {
   hideCallBack?: () => void;
 };
 
-type State = {
-  showError: boolean;
-  errorMessage: any;
-  selectedIndex: any;
-  bottom: any;
-  hidden: boolean;
-  selectedValueObject: any;
-  allSelected: boolean;
-  selectedValues: Array<any>;
-  isMultiSelect: boolean;
-  selectedValueObjects: Object;
-  filteredList: Array<ActionSheetItem>;
-  isSearching: boolean;
-  searchText: string;
-  availableHeight: any;
-};
 
 const BottomPicker = (props: Props) => {
   let keyboardDidShowListener: any;
@@ -97,48 +63,6 @@ const BottomPicker = (props: Props) => {
     showError: false,
   });
 
-  const showPicker = () => {
-    initializePreselectedValues();
-    let height = Dimensions.get('window').height;
-    if (Platform.OS === 'android') {
-      height = height - 20;
-      keyboardDidShowListener = Keyboard.addListener(
-        'keyboardDidShow',
-        _keyboardDidShow,
-      );
-      keyboardDidHideListener = Keyboard.addListener(
-        'keyboardDidHide',
-        _keyboardDidHide,
-      );
-    }
-    setState(
-      prev =>
-      ({
-        ...prev,
-        availableHeight: height,
-        filteredList: props.actions,
-        hidden: false,
-        showError: false,
-        isMultiSelect: props.selectionType ? true : false,
-      }));
-
-    Animated.timing(state.bottom, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver:true,
-    }).start();
-
-    // setTimeout(() => {
-    //     if(!state.isMultiSelect && props.selectedValues.length == 1){
-    //         let currentList = [...state.filteredList]
-    //         let currentItem = currentList.filter((element : any) => element.text == props.selectedValues[0])
-    //         let initialIndex = state.filteredList.indexOf(currentItem[0])
-    //         if(initialIndex > -1){
-    //             listRef.scrollToOffset({animated: false, offset : 56 * index})
-    //         }
-    //     }
-    // }, 100);
-  };
 
   const hidePicker = () => {
     Animated.timing(state.bottom, {
@@ -190,7 +114,7 @@ const BottomPicker = (props: Props) => {
     }));
   };
 
-  const _keyboardDidHide = (e: any) => {
+  const _keyboardDidHide = () => {
     setState(prev => ({
       ...prev,
       availableHeight: Dimensions.get('window').height - 20,
@@ -305,14 +229,7 @@ const BottomPicker = (props: Props) => {
     }));
   };
 
-  const selectNone = () => {
-    setStateForAllSelected(!state.allSelected);
-    setStateForSelectedIndex([], []);
-  };
 
-  const createHeader = () => {
-    return <ProfileEditHeader />;
-  };
   const searchInFilteredList = () => {
     if (state.isSearching) {
       let filteredList: Array<ActionSheetItem> = [];

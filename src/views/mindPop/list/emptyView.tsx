@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {View, Image, Platform} from 'react-native';
-import Text from '../../../common/component/Text';
-import {SubmitButton} from '../../../common/component/button';
-import {emptyMindPop as EmptyMindPop} from '../../../images';
+import React, { Component } from 'react';
+import { Image, Platform, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import {Actions} from 'react-native-router-flux';
-import {Size, fontSize, Colors, fontFamily} from '../../../common/constants';
+import { Actions } from 'react-native-router-flux';
+import { SubmitButton } from '../../../common/component/button';
+import Text from '../../../common/component/Text';
+import { Colors, fontFamily, fontSize, Size } from '../../../common/constants';
+import { emptyMindPop as EmptyMindPop } from '../../../images';
 
 export default class EmptyView extends Component<{
   resetEdit: Function;

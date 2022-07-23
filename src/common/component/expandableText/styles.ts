@@ -1,6 +1,5 @@
-import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontSize, fontFamily, Size} from '../../constants';
+import { Colors, fontSize, Size} from '../../constants';
 
 const Styles = EStyleSheet.create({
   $buttonColor: Colors.ThemeColor,

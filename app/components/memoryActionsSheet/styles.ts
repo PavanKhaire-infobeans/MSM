@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontFamily, fontSize } from '../../../src/common/constants';
+import { Colors, fontSize } from '../../../src/common/constants';
 
 const Styles = EStyleSheet.create({
   hiddenView: {

@@ -1,30 +1,19 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  StatusBar,
-  View,
-  TouchableHighlight,
-  FlatList,
-  Keyboard,
-  ActivityIndicator,
-  Image,
-  Alert,
-  Platform,
+  ActivityIndicator, Alert, FlatList, Image, Keyboard, Platform, SafeAreaView,
+  StatusBar, TouchableHighlight, View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import Text from '../../common/component/Text';
+import { No_Internet_Warning } from '../../common/component/Toast';
 import { Colors, fontFamily, fontSize } from '../../common/constants';
+import { backBlkBtn, user_drawable } from '../../images';
+import InstanceView from '../registration/instanceView';
 import { styles } from './designs';
 import { Props } from './loginController';
-import { backBlkBtn, user_drawable } from '../../images';
-import Text from '../../common/component/Text';
-import InstanceView from '../registration/instanceView';
-import { ToastMessage, No_Internet_Warning } from '../../common/component/Toast';
 // @ts-ignore
-import BusyIndicator from '../../common/component/busyindicator';
 import Utility from '../../common/utility';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import { Account } from '../../common/loginStore';
 
 export enum ListType {
   Login = 'login',

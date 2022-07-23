@@ -1,30 +1,21 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  StatusBar,
-  Alert,
-  Platform,
+  Platform, SafeAreaView, StatusBar, View
 } from 'react-native';
-import Text from './../../../src/common/component/Text';
 // @ts-ignore
+import loaderHandler from './../../../src/common/component/busyindicator/LoaderHandler';
 import ScrollableTabView from './../../../src/common/component/ScrollableTabView';
 import {
-  Colors,
-  MyMemoriesTapBarOptions,
-  fontSize,
-  fontFamily,
+  Colors, fontFamily, fontSize, MyMemoriesTapBarOptions
 } from './../../../src/common/constants';
+import EventManager from './../../../src/common/eventManager';
+import Activities from './Activities';
 import MemoryDrafts from './MemoryDrafts/index';
 import PublishedMemory from './PublishedMemory/index';
-import EventManager from './../../../src/common/eventManager';
-import loaderHandler from './../../../src/common/component/busyindicator/LoaderHandler';
-import Activities from './Activities';
 // import NavigationBar from '../dashboard/NavigationBar';
-import {TabItems} from './../../../src/common/component/TabBarIcons';
-import NavigationBar from '../../../src/views/dashboard/NavigationBar';
 import Utility from '../../../src/common/utility';
+import NavigationBar from '../../../src/views/dashboard/NavigationBar';
+import { TabItems } from './../../../src/common/component/TabBarIcons';
 import styles from './styles';
 
 type Props = {[x: string]: any};

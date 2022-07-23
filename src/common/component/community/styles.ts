@@ -1,6 +1,5 @@
-import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontSize, fontFamily, Size} from '../../constants';
+import { fontSize, Size} from '../../constants';
 
 const Styles = EStyleSheet.create({
   $size: Size.byWidth(43),

@@ -1,48 +1,26 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableHighlight,
-  FlatList,
-} from 'react-native';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
-// @ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
 import {
-  Colors,
-  fontSize,
-  decode_utf8,
-  getValue,
-} from '../../../common/constants';
-import NavigationThemeBar from '../../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import {add_icon, visibility_theme, move_arrow} from '../../../images';
-import {connect} from 'react-redux';
-import {LocationAPI, MemoryTagsAPI, CollectinAPI} from '../saga';
-import {ResetLocation, MemoryInitialsUpdate, SaveCollection} from '../reducer';
-import {
-  GetCollectionDetails,
-  kCollectionMemories,
-  UpdateMemoryCollection,
-  kCollectionUpdated,
-} from '../createMemoryWebService';
+  Keyboard, SafeAreaView,
+  StatusBar,
+  Text,
+  TextInput, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
+import {
+  Colors, decode_utf8, fontSize, getValue
+} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
-// @ts-ignore
-import DraggableFlatList from 'react-native-draggable-flatlist';
-import {ToastMessage} from '../../../common/component/Toast';
+import {
+  kCollectionUpdated, UpdateMemoryCollection
+} from '../createMemoryWebService';
+import { SaveCollection } from '../reducer';
+import { CollectinAPI } from '../saga';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
 
-type State = {[x: string]: any};
+type State = { [x: string]: any };
 type Props = {
   tid?: any;
   isRename: any;
@@ -60,7 +38,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
 
   componentDidMount() {
     if (this.props.isRename) {
-      this.setState({content: this.props.collectionName});
+      this.setState({ content: this.props.collectionName });
     }
     this.collectionUpdated = EventManager.addListener(
       kCollectionUpdated,
@@ -79,7 +57,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
         this.props.callback(this.state.content);
         this.props.collectionAPI();
       } else {
-        newCollection = {...newCollection, memory_count: 0};
+        newCollection = { ...newCollection, memory_count: 0 };
         this.props.setCollection(newCollection);
         this.props.collectionList.unshift(newCollection);
         this.props.callback(newCollection);
@@ -107,12 +85,12 @@ class CreateRenameCollection extends React.Component<Props, State> {
         );
       } else {
         UpdateMemoryCollection(
-          {name: decode_utf8(this.state.content.trim())},
+          { name: decode_utf8(this.state.content.trim()) },
           false,
         );
       }
     } else {
-      this.setState({showError: true});
+      this.setState({ showError: true });
     }
   };
 
@@ -123,7 +101,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <SafeAreaView
           style={{
             width: '100%',
@@ -131,8 +109,8 @@ class CreateRenameCollection extends React.Component<Props, State> {
             backgroundColor: Colors.NewThemeColor,
           }}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1}}>
+        <SafeAreaView style={{ width: '100%', flex: 1, backgroundColor: '#fff' }}>
+          <View style={{ flex: 1 }}>
             <NavigationHeaderSafeArea
               heading={
                 this.props.isRename
@@ -146,7 +124,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <View
@@ -159,7 +137,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
                 placeholder="Enter collection name"
                 autoFocus={true}
                 onChangeText={text => {
-                  this.setState({content: text, showError: false});
+                  this.setState({ content: text, showError: false });
                 }}
                 value={this.state.content}
                 multiline={false}
@@ -183,7 +161,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
                 }}
               />
               {this.state.showError && (
-                <Text style={{...fontSize(12), color: Colors.ErrorColor}}>
+                <Text style={{ ...fontSize(12), color: Colors.ErrorColor }}>
                   *Please enter collection name
                 </Text>
               )}
@@ -194,7 +172,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
     );
   }
 }
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     collectionList: state.MemoryInitials.collectionList,
     collection: state.MemoryInitials.collection,
@@ -203,9 +181,9 @@ const mapState = (state: {[x: string]: any}) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    collectionAPI: () => dispatch({type: CollectinAPI}),
+    collectionAPI: () => dispatch({ type: CollectinAPI }),
     setCollection: (payload: any) =>
-      dispatch({type: SaveCollection, payload: payload}),
+      dispatch({ type: SaveCollection, payload: payload }),
   };
 };
 

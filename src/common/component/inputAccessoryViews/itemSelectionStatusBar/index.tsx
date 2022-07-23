@@ -1,10 +1,9 @@
-import React, {Component} from 'react';
-import {View, TouchableOpacity, Image} from 'react-native';
+import React, { Component } from 'react';
+import { Image, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
 import Text from '../../Text';
-import {connect} from 'react-redux';
 
-import {rubbish} from '../../../../images';
-import {Colors, fontSize} from '../../../constants';
+import { rubbish } from '../../../../images';
 import styles from './styles';
 
 class SelectionStatusBar extends Component<{[x: string]: any}> {

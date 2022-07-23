@@ -7,11 +7,8 @@ const {
   Dimensions,
   View,
   Animated,
-  ScrollView,
   Platform,
   StyleSheet,
-
-  InteractionManager,
 } = ReactNative;
 import ViewPagerAndroid from 'react-native-pager-view';
 import { Colors } from '../../constants';

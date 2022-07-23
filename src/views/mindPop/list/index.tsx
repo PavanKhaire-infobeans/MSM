@@ -1,57 +1,41 @@
 import React from "react";
 
-import { SafeAreaView, View, TouchableOpacity, Image, TouchableWithoutFeedback, Alert, DeviceEventEmitter, EmitterSubscription, Keyboard, Platform } from "react-native";
-import Text from "../../../common/component/Text";
+import { Alert, DeviceEventEmitter, EmitterSubscription, Image, Keyboard, Platform, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Actions } from "react-native-router-flux";
+import Text from "../../../common/component/Text";
 //@ts-ignore
-import EStyleSheet from "react-native-extended-stylesheet";
-import { Size, getValue, TimeStampMilliSeconds, Colors, fontSize, NO_INTERNET, ERROR_MESSAGE, decode_utf8, MindPopsInProgress, fontFamily } from "../../../common/constants";
 import DeviceInfo from "react-native-device-info";
-import { GetMindPopStatus, MindPopListSelectionState, MindPopListCount, MindPopSelectedItemCount } from "./reducer";
+import EStyleSheet from "react-native-extended-stylesheet";
 import { connect } from "react-redux";
+import { Colors, decode_utf8, ERROR_MESSAGE, fontFamily, fontSize, getValue, MindPopsInProgress, NO_INTERNET, Size, TimeStampMilliSeconds } from "../../../common/constants";
+import { GetMindPopStatus, MindPopListCount, MindPopListSelectionState, MindPopSelectedItemCount } from "./reducer";
 //@ts-ignore
-import { SwipeListView } from "react-native-swipe-list-view";
-import SearchBar from "../../../common/component/SearchBar";
-import AccordionView from "../../../common/component/accordionView";
-import SelectionStatusBar from "../../../common/component/inputAccessoryViews/itemSelectionStatusBar";
-import LoaderHandler from "../../../common/component/busyindicator/LoaderHandler";
-import MindPopIPadNavigationBar from "../iPad/NavigationBar";
-import MindPopNavigationBar from "./NavigationBar";
 import DefaultPreference from 'react-native-default-preference';
-import {
-	mindPopListCell_DeleteIcon,
-	mindPopListCell_EditIcon,
-	mindPopListCell_MindPopIcon,
-	sound_wave,
-	cell_selected,
-	cell_unselected,
-	thumb_text_mindpop,
-	thumb_audio_mindpop,
-	audio_play,
-	pdf_icon,
-	delete_icon,
-	delete_memory,
-	icon_drafts,
-	mindPopListCell_DeleteIcon_White
-} from "../../../images";
-import { DeleteMindPopOperation } from "./deleteMindPopReducer";
-import { ToastMessage, No_Internet_Warning } from "../../../common/component/Toast";
-import { EditMode } from "../edit/reducer";
-import MindPopStore, { FileType, MindPopAttachment, Convert } from "../../../common/database/mindPopStore/mindPopStore";
-import { Account } from "../../../common/loginStore";
-import EmptyView from "./emptyView";
-import Utility from "../../../common/utility";
-import loaderHandler from "../../../common/component/busyindicator/LoaderHandler";
-import EventManager from "../../../common/eventManager";
-import { kMindPopUploadedIdentifier } from "../edit/addMindPopflow";
-import { DefaultDetailsMemory } from "../../createMemory/dataHelper";
-import { CreateUpdateMemory } from "../../createMemory/createMemoryWebService";
-import { createNew } from "../../createMemory";
-import { MemoryDraftsDataModel } from "../../myMemories/MemoryDrafts/memoryDraftsDataModel";
-import MindPopIntro from "./mindPopIntro";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import { SwipeListView } from "react-native-swipe-list-view";
+import AccordionView from "../../../common/component/accordionView";
+import { default as LoaderHandler, default as loaderHandler } from "../../../common/component/busyindicator/LoaderHandler";
 import CustomAlert from "../../../common/component/customeAlert";
+import SelectionStatusBar from "../../../common/component/inputAccessoryViews/itemSelectionStatusBar";
+import SearchBar from "../../../common/component/SearchBar";
+import { ToastMessage } from "../../../common/component/Toast";
+import MindPopStore, { FileType } from "../../../common/database/mindPopStore/mindPopStore";
+import EventManager from "../../../common/eventManager";
+import Utility from "../../../common/utility";
+import {
+	cell_selected,
+	cell_unselected, mindPopListCell_DeleteIcon_White, pdf_icon, thumb_audio_mindpop, thumb_text_mindpop
+} from "../../../images";
+import { createNew } from "../../createMemory";
+import { CreateUpdateMemory } from "../../createMemory/createMemoryWebService";
+import { DefaultDetailsMemory } from "../../createMemory/dataHelper";
 import { showCustomAlert } from "../../createMemory/reducer";
+import { EditMode } from "../edit/reducer";
+import MindPopIPadNavigationBar from "../iPad/NavigationBar";
+import { DeleteMindPopOperation } from "./deleteMindPopReducer";
+import EmptyView from "./emptyView";
+import MindPopIntro from "./mindPopIntro";
+import MindPopNavigationBar from "./NavigationBar";
 
 export type ListItem = {
 	id: string;

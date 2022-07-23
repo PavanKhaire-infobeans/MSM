@@ -1,95 +1,44 @@
 import React from 'react';
+import {
+  ActivityIndicator, Alert, Animated, FlatList, Image, Keyboard,
+  Platform, RefreshControl, SafeAreaView, StyleSheet, TouchableHighlight,  TouchableOpacity, View
+} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import Text from '../../../common/component/Text';
 import {
-  SafeAreaView,
-  ImageBackground,
-  RefreshControl,
-  ActivityIndicator,
-  View,
-  FlatList,
-  Dimensions,
-  StyleSheet,
-  Image,
-  TouchableHighlight,
-  TouchableOpacity,
-  DeviceEventEmitter,
-  Alert,
-  Keyboard,
-  Platform,
-  Animated,
-} from 'react-native';
-import {
-  Colors,
-  fontSize,
-  encode_utf8,
-  MemoryActionKeys,
-  fontFamily,
+  Colors, encode_utf8, fontFamily, fontSize, MemoryActionKeys
 } from '../../../common/constants';
+import { GetAllLikes, Like, Unlike } from '../../memoryDetails/detailsWebService';
 import {
-  GetPublishedMemories,
-  MemoryAction,
-  kPublishedMemoriesFetched,
-  kAllLikes,
-  kLiked,
-  kUnliked,
-  kMemoryActionPerformed,
-  kUpdateMemoryOnPublised,
-  kUpdateMemoryOnTimeline,
-  kMemoryActionPerformedPublished,
+  GetPublishedMemories, kAllLikes, kLiked, kMemoryActionPerformedPublished, kPublishedMemoriesFetched, kUnliked, MemoryAction
 } from '../myMemoriesWebService';
-import {Like, Unlike, GetAllLikes} from '../../memoryDetails/detailsWebService';
-import DeviceInfo from 'react-native-device-info';
 
-import Utility from '../../../common/utility';
-import {
-  No_Internet_Warning,
-  ToastMessage,
-} from '../../../common/component/Toast';
+import { Actions } from 'react-native-router-flux';
+import { block, flag, flagandroid, personxmark, redstar, report } from '../../../../app/images';
+import AudioPlayer, {
+  kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious
+} from '../../../common/component/audio_player/audio_player';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
-import EventManager from '../../../common/eventManager';
-import {PublishedMemoryDataModel} from './publishedMemoryDataModel';
+import MemoryActionsSheet, {
+  MemoryActionsSheetItem
+} from '../../../common/component/memoryActionsSheet';
+import MemoryListItem from '../../../common/component/memoryListItem';
 import PlaceholderImageView from '../../../common/component/placeHolderImageView';
 import {
-  Border,
-  LikeCommentShare,
-} from '../../memoryDetails/componentsMemoryDetails';
+  No_Internet_Warning, ToastMessage
+} from '../../../common/component/Toast';
+import EventManager from '../../../common/eventManager';
+import Utility from '../../../common/utility';
 import {
-  icon_like,
-  icon_like_selected,
-  icon_comment,
-  profile_placeholder,
-  icon_send,
-  greenDotsButton,
-  delete_memory,
-  edit_memory,
-  move_to_draft,
-  remove_me_from_this_post,
-  block_memory,
-  block_user,
-  cancelActions,
-  report_user,
-  block_and_report,
-  add_icon,
-  add_icon_small,
+  add_icon_small, block_memory, cancelActions, delete_memory, edit_memory, greenDotsButton, icon_comment, icon_like,
+  icon_like_selected, icon_send, move_to_draft, remove_me_from_this_post
 } from '../../../images';
-import {Actions} from 'react-native-router-flux';
-import AudioPlayer, {
-  kPlaying,
-  kPaused,
-  kEnded,
-  kNext,
-  kPrevious,
-  kClosed,
-} from '../../../common/component/audio_player/audio_player';
-import {any, element} from 'prop-types';
-import {type} from 'os';
-import MemoryActionsSheet, {
-  MemoryActionsSheetItem,
-} from '../../../common/component/memoryActionsSheet';
-import {ListType} from '../../dashboard/dashboardReducer';
-import MemoryListItem from '../../../common/component/memoryListItem';
-import * as Animatable from 'react-native-animatable';
-import { block, flag, flagandroid, personxmark, redstar, report } from '../../../../app/images';
+import { ListType } from '../../dashboard/dashboardReducer';
+import {
+  Border,
+  LikeCommentShare
+} from '../../memoryDetails/componentsMemoryDetails';
+import { PublishedMemoryDataModel } from './publishedMemoryDataModel';
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
 ];

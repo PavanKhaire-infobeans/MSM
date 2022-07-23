@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useContext, useState } from 'react';
-import { View, StyleSheet, Modal, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { Calendar, SelectMonth, SelectTime } from './components';

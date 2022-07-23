@@ -19,7 +19,7 @@ const Styles = EStyleSheet.create({
         width: 42,
         borderRadius: 21,
         marginRight: 21,
-        overflow: 'hidden',
+        overflow: 'hidden',̦
     },
     authorImageStyle: {
         height: 42,
@@ -91,19 +91,19 @@ const Styles = EStyleSheet.create({
         fontFamily: fontFamily.Inter,
         ...fontSize(18)
     },
-    activityIndicatorContainer:{
-        width: '100%', 
+    activityIndicatorContainer: {
+        width: '100%',
         height: 50
     },
-    flatlistStyle:{
-        width: '100%', 
+    flatlistStyle: {
+        width: '100%',
         backgroundColor: Colors.white
     },
-    mainContainer:{
-        flex: 1, 
+    mainContainer: {
+        flex: 1,
         backgroundColor: Colors.white
     },
-    noActivityCOntainerStyle:{
+    noActivityCOntainerStyle: {
         flex: 1,
         width: '100%',
         height: '100%',
@@ -113,15 +113,15 @@ const Styles = EStyleSheet.create({
         alignSelf: 'center',
         top: 0,
         position: 'absolute',
-      },
-      noActivityTextStyle:{
+    },
+    noActivityTextStyle: {
         ...fontSize(18),
         color: Colors.darkGray,
-        fontFamily:fontFamily.Inter,
+        fontFamily: fontFamily.Inter,
         textAlign: 'center',
         paddingLeft: 16,
         paddingRight: 16,
-      }
+    }
 });
 
 export default Styles;

@@ -1,37 +1,22 @@
 import React, { Component } from "react";
-import { SafeAreaView, View, TouchableOpacity, Keyboard, TextInput, StatusBar, TouchableHighlight, Image, Dimensions, Platform, TouchableWithoutFeedback, ScrollView, Alert, Animated } from "react-native";
-import { connect } from "react-redux";
-import InstanceView from "./instanceView";
-import { Account } from "../../common/loginStore";
+import { Alert, Animated, Dimensions, Image, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 //@ts-ignore
-import { KeyboardAwareScrollView } from "../../common/component/keyboardaware-scrollview";
-import { SubmitButton } from "../../common/component/button";
-import TextField from "../../common/component/textField";
-import Text from "../../common/component/Text";
-import DropDown from "../../common/component/dropDown";
-import { Size, Colors, fontSize, ERROR_MESSAGE, testEmail, TimeStampMilliSeconds, getValue, validBirthYear, CommonTextStyles, fontFamily } from "../../common/constants";
 import { Actions } from "react-native-router-flux";
-import EventManager from "../../common/eventManager";
-import { ToastMessage } from "../../common/component/Toast";
-import BottomPicker, { ActionSheetItem } from "../../common/component/bottomPicker";
-import {
-	FormStruct,
-	checkUserRegistration,
-	submitRegistration,
-	kCheckUserProfile,
-	kSubmitFormItem
-} from "./registrationWebService";
-import NavigationHeaderSafeArea from "../../common/component/profileEditHeader/navigationHeaderSafeArea";
-import { backBlkBtn, icon_arrow, black_arrow, backArrowWhite, registration_vector, info_icon, info_icon_ } from "../../images";
-import DeviceInfo from 'react-native-device-info';
-import Login from "../login";
-import TextNew from "../../common/component/Text";
-import MessageDialogue from "../../common/component/messageDialogue";
-import { loginDrawerRef } from "./prologue";
 import StaticSafeAreaInsets from "react-native-static-safe-area-insets";
-import Utility from "../../common/utility";
-import Styles from "./styles";
 import { arrowRightCircle } from "../../../app/images";
+import { ActionSheetItem } from "../../common/component/bottomPicker";
+import { SubmitButton } from "../../common/component/button";
+import NavigationHeaderSafeArea from "../../common/component/profileEditHeader/navigationHeaderSafeArea";
+import Text from "../../common/component/Text";
+import TextField from "../../common/component/textField";
+import { Colors, CommonTextStyles, ERROR_MESSAGE, fontFamily, fontSize, getValue, Size, testEmail, TimeStampMilliSeconds, validBirthYear } from "../../common/constants";
+import EventManager from "../../common/eventManager";
+import Utility from "../../common/utility";
+import { registration_vector } from "../../images";
+import {
+	checkUserRegistration, FormStruct, kCheckUserProfile, kSubmitFormItem, submitRegistration
+} from "./registrationWebService";
+import Styles from "./styles";
 
 type State = { [key: string]: any | string; error: { [x: string]: { error: boolean; message: string } } };
 type Props = { formList: FormStruct[] } & any;

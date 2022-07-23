@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors } from '../../../src/common/constants';
 

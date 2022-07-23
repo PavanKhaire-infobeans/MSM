@@ -1,20 +1,11 @@
 import React, { RefObject } from 'react';
 import {
-  TextInput,
-  View,
-  StyleSheet,
-  Image,
-  Platform,
-  Dimensions,
-  TouchableOpacity,
-  ViewStyle,
-  StyleProp,
-  ImageStyle,
+  Image, ImageStyle, Platform, StyleProp, TextInput, TouchableOpacity, View
 } from 'react-native';
+import { icon_close_black, searchIcon } from '../../../images';
+import { Colors } from '../../constants';
 import Text from '../Text';
 import searchStyle from './styles';
-import { searchIcon, icon_close_black } from '../../../images';
-import { Colors, fontFamily, fontSize } from '../../constants';
 
 type Props = { [x: string]: any; placeholder: string };
 export default class SearchBar extends React.Component<Props> {

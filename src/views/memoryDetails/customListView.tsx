@@ -1,39 +1,21 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  FlatList,
-  View,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-  TouchableHighlight,
-  StatusBar,
-  Keyboard,
-  Platform,
+  FlatList, Image, ImageBackground, Keyboard, Platform, SafeAreaView, StatusBar, TouchableHighlight, View
 } from 'react-native';
-import Text from '../../common/component/Text';
-import {
-  icon_people,
-  icon_events,
-  icon_settings,
-  icon_faq,
-  icon_info,
-  icon_headset,
-  profile_placeholder,
-  action_close,
-} from '../../images';
-import NavigationBar from '../dashboard/NavigationBar';
-import NavigationBarForEdit from '../../common/component/navigationBarForEdit';
-import {Actions} from 'react-native-router-flux';
-import {Colors, fontFamily, fontSize, Size} from '../../common/constants';
-import Utility from '../../common/utility';
-import {Account} from '../../common/loginStore';
+import { Actions } from 'react-native-router-flux';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import Text from '../../common/component/Text';
+import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
+import { Account } from '../../common/loginStore';
+import Utility from '../../common/utility';
+import {
+  action_close, profile_placeholder
+} from '../../images';
 
-type Props = {[x: string]: any};
+type Props = { [x: string]: any };
 export default class CustomListView extends React.Component<Props> {
   componentDidMount() {
-    this.setState({itemList: this.props.itemList});
+    this.setState({ itemList: this.props.itemList });
   }
 
   cancelAction = () => {
@@ -46,8 +28,8 @@ export default class CustomListView extends React.Component<Props> {
       item.item.uid == Account.selectedData().userID
         ? 'You'
         : item.item.field_first_name_value +
-          ' ' +
-          item.item.field_last_name_value;
+        ' ' +
+        item.item.field_last_name_value;
     return (
       <TouchableHighlight
         underlayColor={'#cccccc3e'}
@@ -67,18 +49,18 @@ export default class CustomListView extends React.Component<Props> {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <ImageBackground
               source={profile_placeholder}
-              style={{height: 50, width: 50}}
-              imageStyle={{borderRadius: 25}}>
+              style={{ height: 50, width: 50 }}
+              imageStyle={{ borderRadius: 25 }}>
               <Image
                 source={
                   item.item.uri && item.item.uri != ''
-                    ? {uri: Utility.getFileURLFromPublicURL(item.item.uri)}
+                    ? { uri: Utility.getFileURLFromPublicURL(item.item.uri) }
                     : profile_placeholder
                 }
-                style={{height: 50, width: 50, borderRadius: 25}}></Image>
+                style={{ height: 50, width: 50, borderRadius: 25 }}></Image>
             </ImageBackground>
             <Text
               style={{
@@ -121,8 +103,8 @@ export default class CustomListView extends React.Component<Props> {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
-        <View style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <View style={{ flex: 1 }}>
           <NavigationHeaderSafeArea
             heading={this.props.heading}
             showCommunity={false}
@@ -133,7 +115,7 @@ export default class CustomListView extends React.Component<Props> {
           />
 
           <StatusBar
-            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <FlatList

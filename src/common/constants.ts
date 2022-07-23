@@ -1,12 +1,10 @@
-import { GetMemoryDrafts } from '../views/myMemories/myMemoriesWebService';
-import { PixelRatio, Platform, Dimensions, Appearance } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dimensions, PixelRatio, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import {
-  kAdmin,
-  isCueBackInstance,
+  isCueBackInstance
 } from '../views/registration/getInstancesSaga';
 import loaderHandler from './component/busyindicator/LoaderHandler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 const Permissions = require('react-native-permissions').default;
 
 //const punycode = require('punycode');
@@ -517,8 +515,7 @@ export const CommonTextStyles = {
     return false;
   }
 }; */
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import Utility from './utility';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
 const checkPermissionFor = (data) => {
   check(data)

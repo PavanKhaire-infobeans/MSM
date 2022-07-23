@@ -1,18 +1,13 @@
-import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
-import {Colors, fontSize} from '../../constants';
+import React, { Component } from 'react';
+import { Image } from 'react-native';
 import {
-  warning_icon,
   default_placeholder,
   default_error_img,
   profile_placeholder,
   pdf_icon,
 } from '../../../images';
-import TextNew from '../Text';
-import {any} from 'prop-types';
-import {Url} from 'url';
 
-type State = {[x: string]: any};
+type State = { [x: string]: any };
 type Props = {
   uri: any;
   style: any;
@@ -31,7 +26,7 @@ export default class PlaceholderImageView extends Component<Props> {
 
   componentDidMount() {
     setTimeout(() => {
-      this.setState({showDefaultImage: false});
+      this.setState({ showDefaultImage: false });
     }, 100);
   }
 
@@ -48,7 +43,7 @@ export default class PlaceholderImageView extends Component<Props> {
       return this.props.profilePic ? profile_placeholder : default_placeholder;
     } else {
       if (this.props.uri != '') {
-        return {uri: this.props.uri};
+        return { uri: this.props.uri };
       } else {
         return this.props.profilePic ? profile_placeholder : default_error_img;
       }
@@ -74,9 +69,9 @@ export default class PlaceholderImageView extends Component<Props> {
           this.state.resizeMode.length > 0
             ? this.state.resizeMode
             : this.props.profilePic
-            ? 'stretch'
-            : 
-            'contain'
+              ? 'stretch'
+              :
+              'contain'
         }
       />
     );

@@ -1,58 +1,29 @@
 import React from 'react';
+import {
+  ActivityIndicator,
+  Alert, FlatList, Image, ImageBackground, Keyboard, Platform, RefreshControl, SafeAreaView, StatusBar, StyleSheet, TouchableHighlight, TouchableOpacity, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
+import { styles } from '../../../common/component/multipleDropDownView/styles';
 import Text from '../../../common/component/Text';
 import {
-  SafeAreaView,
-  FlatList,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Image,
-  StatusBar,
-  TouchableHighlight,
-  ImageBackground,
-  RefreshControl,
-  ActivityIndicator,
-  Alert,
-  Platform,
-  Keyboard,
-} from 'react-native';
-import {GetMemoryDrafts, kMemoryDraftsFetched} from '../myMemoriesWebService';
-import {MemoryDraftsDataModel} from './memoryDraftsDataModel';
-import {
-  ToastMessage,
-  No_Internet_Warning,
+  No_Internet_Warning, ToastMessage
 } from '../../../common/component/Toast';
 import {
-  Colors,
-  fontSize,
-  getValue,
-  DraftType,
-  DraftActions,
-  NO_INTERNET,
-  fontFamily,
+  Colors, DraftActions, DraftType, fontFamily, fontSize,
+  getValue
 } from '../../../common/constants';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import EventManager from '../../../common/eventManager';
-import DefaultListItem from '../../../common/component/defaultListItem';
-import {profile_placeholder} from '../../../images';
+import { Account } from '../../../common/loginStore';
 import Utility from '../../../common/utility';
-import {Border} from '../../memoryDetails/componentsMemoryDetails';
+import { collaborative, delete_comment, downImage, itemSelectedCheckMark, profile_placeholder, upImage } from '../../../images';
 import {
-  delete_comment,
-  collaborative,
-  downImage,
-  upImage,
-  itemSelectedCheckMark,
-} from '../../../images';
-import {Account} from '../../../common/loginStore';
-import {styles} from '../../../common/component/multipleDropDownView/styles';
-import {setFlagsFromString} from 'v8';
-import {
-  kDeleteDraft,
-  DeleteDraftService,
+  DeleteDraftService, kDeleteDraft
 } from '../../createMemory/createMemoryWebService';
-import PlaceholderImageView from '../../../common/component/placeHolderImageView';
-import {Actions} from 'react-native-router-flux';
+import { Border } from '../../memoryDetails/componentsMemoryDetails';
+import { GetMemoryDrafts, kMemoryDraftsFetched } from '../myMemoriesWebService';
+import { MemoryDraftsDataModel } from './memoryDraftsDataModel';
 
 // import {CommonImageView} from '../../memoryDetails/index'
 

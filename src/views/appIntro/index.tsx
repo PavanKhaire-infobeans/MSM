@@ -1,31 +1,16 @@
 import React from 'react';
 import {
-  View,
-  Image,
-  StatusBar,
-  Dimensions,
-  Animated,
-  SafeAreaView,
-  TouchableHighlight,
-  ImageBackground,
-  FlatList,
+  Animated, Dimensions, FlatList, Image, ImageBackground, SafeAreaView, StatusBar, TouchableHighlight, View
 } from 'react-native';
-//@ts-ignore
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import {
-  appIntro1,
-  appIntro2,
-  appIntro3,
-  appIntro4,
-  app_intro_msm,
-  appIntroBg,
-} from '../../images';
-import Text from '../../common/component/Text';
-import {Colors} from '../../common/constants';
-import {Actions} from 'react-native-router-flux';
-// @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
+import { Actions } from 'react-native-router-flux';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Text from '../../common/component/Text';
+import { Colors } from '../../common/constants';
 import Utility from '../../common/utility';
+import {
+  appIntro1, appIntro2, appIntro3, appIntro4, appIntroBg, app_intro_msm
+} from '../../images';
 import style from './styles';
 export default class AppIntro extends React.Component {
   _externalQueue: Carousel;
@@ -73,7 +58,6 @@ export default class AppIntro extends React.Component {
   renderAppIntro = (item: any) => {
     let index = item.index;
     item = item.item;
-    console.log('Render Item : ',index)
     return (
       <View
         style={style.renderAppIntroContainer}>
@@ -96,8 +80,8 @@ export default class AppIntro extends React.Component {
                     width: '100%',
                     justifyContent: 'center',
                     alignItems: 'center',
-                  },{
-                    opacity:this.state.fadeInOut
+                  }, {
+                    opacity: this.state.fadeInOut
                   }]}>
                   {this.state.currentIndex == index && (
                     <Image
@@ -153,12 +137,12 @@ export default class AppIntro extends React.Component {
 
   fadeIn = () => {
     this.setState(
-      {fadeIn: new Animated.Value(0)},
+      { fadeIn: new Animated.Value(0) },
       () => {
         Animated.timing(this.state.fadeIn, {
           toValue: 1,
           duration: 1500,
-          useNativeDriver:false
+          useNativeDriver: false
         }).start();
       },
     );
@@ -168,18 +152,18 @@ export default class AppIntro extends React.Component {
     Animated.timing(this.state.fadeIn, {
       toValue: 0,
       duration: 100,
-      useNativeDriver:false
+      useNativeDriver: false
     }).start();
   }
 
   onScroll(e: any) {
     let page = Math.ceil(e.nativeEvent.contentOffset.x / Dimensions.get('window').width);
-    if (page !==  this.state.currentIndex) {
-      if(page >= this.images.length){
-         page = this.images.length-1;
+    if (page !== this.state.currentIndex) {
+      if (page >= this.images.length) {
+        page = this.images.length - 1;
       }
       this.setState({
-        currentIndex:page
+        currentIndex: page
       })
     }
   }
@@ -204,16 +188,16 @@ export default class AppIntro extends React.Component {
             <Image
               source={app_intro_msm}
               style={style.appIntroImageStyle}></Image>
-              <FlatList
-                data={this.images}
-                initialNumToRender={this.images.length}
-                renderItem={this.renderAppIntro}
-                horizontal
-                pagingEnabled={true}
-                showsHorizontalScrollIndicator={true}
-                keyExtractor={(item, index) => index + ''}
-                onScroll={(e)=>this.onScroll(e)}
-              />
+            <FlatList
+              data={this.images}
+              initialNumToRender={this.images.length}
+              renderItem={this.renderAppIntro}
+              horizontal
+              pagingEnabled={true}
+              showsHorizontalScrollIndicator={true}
+              keyExtractor={(_item, index) => index + ''}
+              onScroll={(e) => this.onScroll(e)}
+            />
             <View style={style.paginationContainer}>
               {this.pagination}
             </View>

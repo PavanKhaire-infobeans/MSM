@@ -2,34 +2,25 @@ import React from 'react';
 import {
   FlatList,
   Image,
-  ImageBackground,
-  SafeAreaView,
-  TouchableOpacity,
-  View,
-  TouchableHighlight,
-  StatusBar,
-  Platform,
+  ImageBackground, Platform, SafeAreaView, StatusBar, TouchableHighlight, View
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import DefaultListItem from '../../common/component/defaultListItem';
 import TextNew from '../../common/component/Text';
-import {Colors, fontFamily, fontSize} from '../../common/constants';
+import { Colors, fontFamily, fontSize } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
+import Utility from '../../common/utility';
 import {
   icon_drafts,
   icon_idea,
   icon_logout,
-  icon_memories,
-  icon_messages,
   icon_password,
-  icon_tickets,
-  profile_placeholder,
+  profile_placeholder
 } from '../../images';
-import {kLogoutPressed} from '../../views/menu';
-import {kProfilePicUpdated} from '../profile/profileDataModel';
+import { kLogoutPressed } from '../../views/menu';
 import NavigationBar from '../dashboard/NavigationBar';
-import Utility from '../../common/utility';
+import { kProfilePicUpdated } from '../profile/profileDataModel';
 type items = {
   title: string;
   showArrow: boolean;

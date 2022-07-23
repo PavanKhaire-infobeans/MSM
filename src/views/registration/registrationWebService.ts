@@ -1,14 +1,13 @@
-import {
-  getRegistrationFor,
-  registrationSubmit,
-  checkPreRegistered,
-} from '../../common/webservice/loginServices';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import { No_Internet_Warning } from '../../common/component/Toast';
+import { getValue } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import { getValue } from '../../common/constants';
 import Utility from '../../common/utility';
-import { No_Internet_Warning } from '../../common/component/Toast';
+import {
+  checkPreRegistered, getRegistrationFor,
+  registrationSubmit
+} from '../../common/webservice/loginServices';
 
 export const kGetFormData = 'GetFormData';
 export const kSubmitFormItem = 'SubmitFormItem';

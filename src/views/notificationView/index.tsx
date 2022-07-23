@@ -1,26 +1,23 @@
 import React from 'react';
-import {SafeAreaView, FlatList, StatusBar, Alert, View} from 'react-native';
-import DefaultListItem from '../../common/component/defaultListItem';
-import {Colors, getValue} from '../../common/constants';
-import {
-  kNotificationTypes,
-  kForegroundNotificationListener,
-} from './notificationServices';
-import Utility from '../../common/utility';
-import NoInternetView from '../../common/component/NoInternetView';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { FlatList, SafeAreaView, StatusBar, View } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import EventManager from '../../common/eventManager';
-import {connect} from 'react-redux';
-import {NotificationsRedux, CurrentList, AddNewNotification} from './reducer';
-import {GetNotificationAPI} from './saga';
-import {Actions} from 'react-native-router-flux';
-import {NotificationDataModel} from './notificationDataModel';
+import DefaultListItem from '../../common/component/defaultListItem';
 import {
-  kNotificationIndicator,
-  TabItems,
+  kNotificationIndicator
 } from '../../common/component/TabBarIcons';
+import { No_Internet_Warning } from '../../common/component/Toast';
+import { Colors } from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import Utility from '../../common/utility';
 import NavigationBar from '../dashboard/NavigationBar';
+import { NotificationDataModel } from './notificationDataModel';
+import {
+  kForegroundNotificationListener
+} from './notificationServices';
+import { AddNewNotification, CurrentList } from './reducer';
+import { GetNotificationAPI } from './saga';
 
 type items = {
   title: string;

@@ -1,8 +1,8 @@
-import Utility from '../../common/utility';
-import { getDetails, keyInt, keyArray, keyString, keyObject } from "../../common/constants";
-import { profile_placeholder } from '../../images';
-import { Account } from '../../common/loginStore';
 import moment from 'moment';
+import { getDetails, keyArray, keyInt, keyObject, keyString } from "../../common/constants";
+import { Account } from '../../common/loginStore';
+import Utility from '../../common/utility';
+import { profile_placeholder } from '../../images';
 
 export class DashboardDataModel {
     static getConvertedData = (memory: any) => {
@@ -80,12 +80,12 @@ export class DashboardDataModel {
                 parsedMemory.memoryDescription = parsedMemory['version_data']['data'][0]['content'];
             }
 
-            const regex = /(<([^>]+)>)/ig;
+            // console.warn("parsedMemory.description > ",parsedMemory.description)
             parsedMemory.description = parsedMemory.description.trim().replace(/<br>/ig, '\n');
             parsedMemory.description = parsedMemory.description.trim().replace(/<br \/>/ig, '\n');
             parsedMemory.description = parsedMemory.description.trim().replace(/<br\/>/ig, '\n');
             parsedMemory.description = parsedMemory.description.trim().replace(/<p>/ig, '\n');
-            parsedMemory.description = parsedMemory.description.trim().replace(/<\/p>/ig, '');
+            parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');
             parsedMemory.description = parsedMemory.description.trim();
             memories.push(parsedMemory);
         });

@@ -1,4 +1,3 @@
-import deviceInfoModule from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../../common/constants';
 

@@ -1,16 +1,10 @@
 import React from 'react';
 import {
-  TouchableHighlight,
-  ViewStyle,
-  Platform,
-  View,
-  Dimensions,
+  Dimensions, TouchableHighlight,
+  View
 } from 'react-native';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 import Text from '../Text';
-//@ts-ignore
-import { Size, Colors, fontSize } from '../../constants';
-//@ts-ignore
-import Carousel,{ Pagination } from 'react-native-snap-carousel';
 // import Carousel from 'react-native-reanimated-carousel';
 import styles from './styles';
 type Props = {

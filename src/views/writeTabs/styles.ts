@@ -29,10 +29,10 @@ const Styles = EStyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     textAlign: 'center'
   },
-  iconStyle:{ 
-    height: 22, 
-    width: 25, 
-    marginBottom: -2 
+  iconStyle: {
+    height: 22,
+    width: 25,
+    marginBottom: -2
   },
   font18Weight400: {
     ...fontSize(18),
@@ -40,11 +40,11 @@ const Styles = EStyleSheet.create({
     fontFamily: fontFamily.Inter,
     textAlign: 'center'
   },
-  font18Weight500:{ 
-    fontWeight: '500', 
+  font18Weight500: {
+    fontWeight: '500',
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-    color: Colors.newTextColor, 
-    ...fontSize(18) 
+    color: Colors.newTextColor,
+    ...fontSize(18)
   },
   textTopStyle: {
     marginTop: 12,
@@ -62,10 +62,10 @@ const Styles = EStyleSheet.create({
     height: "90%",
     backgroundColor: Colors.lightSkyBlue
   },
-  tourContainerStyle:{ 
-    justifyContent: "center", 
-    alignItems: "center", 
-    height: "90%" 
+  tourContainerStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: "90%"
   },
   renderDismissPopUpContainerStyle: {
     flex: 1,
@@ -91,8 +91,8 @@ const Styles = EStyleSheet.create({
   margin10: {
     margin: 10
   },
-  height16:{
-    height:16
+  height16: {
+    height: 16
   },
   submitButnStyle: {
     backgroundColor: Colors.ThemeColor,
@@ -102,7 +102,7 @@ const Styles = EStyleSheet.create({
   submitButnStyleWidth75: {
     backgroundColor: Colors.ThemeColor,
     fontFamily: fontFamily.Inter,
-    justifyContent: "center", 
+    justifyContent: "center",
     width: "75%",
     ...fontSize(22)
   },
@@ -158,54 +158,54 @@ const Styles = EStyleSheet.create({
     top: 0,
     paddingBottom: 10
   },
-  prevBtnContainer:{ 
-    borderColor: Colors.BtnBgColor, 
-    borderWidth: 2, 
-    marginLeft: 16, 
-    borderRadius: 5 
+  prevBtnContainer: {
+    borderColor: Colors.BtnBgColor,
+    borderWidth: 2,
+    marginLeft: 16,
+    borderRadius: 5
   },
-  backBtnContainer:{ 
-    backgroundColor: Colors.white, 
-    paddingTop: 10, 
-    paddingBottom: 10, 
-    paddingLeft: 16, 
-    paddingRight: 16, 
-    flexDirection: 'row', 
-    justifyContent: 'center', 
-    borderRadius: 5, 
-    alignItems: 'center' 
+  backBtnContainer: {
+    backgroundColor: Colors.white,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 16,
+    paddingRight: 16,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 5,
+    alignItems: 'center'
   },
-  backTextStyle:{ 
-    fontWeight: '400', 
-    ...fontSize(17), 
-    color: Colors.BtnBgColor, 
-    marginLeft: 10 
+  backTextStyle: {
+    fontWeight: '400',
+    ...fontSize(17),
+    color: Colors.BtnBgColor,
+    marginLeft: 10
   },
-  nextBtnStyle:{ 
-    borderColor: Colors.BtnBgColor, 
-    borderWidth: 2, 
-    marginRight: 16, 
-    borderRadius: 5 
+  nextBtnStyle: {
+    borderColor: Colors.BtnBgColor,
+    borderWidth: 2,
+    marginRight: 16,
+    borderRadius: 5
   },
-  newBackContainer:{ 
-    alignItems: 'flex-start', 
-    width: "100%", 
-    bottom: Platform.OS == 'ios' ? 20 : 50, 
-    zIndex: 99999 
+  newBackContainer: {
+    alignItems: 'flex-start',
+    width: "100%",
+    bottom: Platform.OS == 'ios' ? 20 : 50,
+    zIndex: 99999
   },
-  saveLaterContainer:{ 
-    width: '100%', 
-    justifyContent: 'center', 
-    alignItems: 'center' 
+  saveLaterContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  closeContainerStyle:{ 
-    alignItems: "flex-end", 
-    paddingRight: 20, 
-    paddingTop: 30 
+  closeContainerStyle: {
+    alignItems: "flex-end",
+    paddingRight: 20,
+    paddingTop: 30
   },
-  closeBtnStyle:{ 
-    alignItems: "flex-end", 
-    paddingRight: 2 
+  closeBtnStyle: {
+    alignItems: "flex-end",
+    paddingRight: 2
   },
   fullFlex: {
     flex: 1
@@ -228,14 +228,14 @@ const Styles = EStyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  filterButnContainerStyle:{ 
-    width: '100%', 
-    height: 40, 
-    backgroundColor: Colors.white, 
-    borderBottomWidth: 0.5, 
-    borderBottomColor: '#dedede' 
+  filterButnContainerStyle: {
+    width: '100%',
+    height: 40,
+    backgroundColor: Colors.white,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#dedede'
   },
-  filterContainerStyle:{
+  filterContainerStyle: {
     height: Dimensions.get('window').height,
     position: 'absolute',
     top: 0,
@@ -293,33 +293,33 @@ const Styles = EStyleSheet.create({
     shadowRadius: 2,
     elevation: 3,
   },
-  justifyContentSpaceBetween:{ 
-    justifyContent: 'space-between' 
+  justifyContentSpaceBetween: {
+    justifyContent: 'space-between'
   },
   justifyContentSpaceevenAlignCenter:
-  { 
-    justifyContent: 'space-evenly', 
-    alignItems: 'center' 
+  {
+    justifyContent: 'space-evenly',
+    alignItems: 'center'
   },
   justifyContentCenterAlignCenter:
-  { 
-    justifyContent: 'center', 
-    alignItems: 'center' 
+  {
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  flexWrapFlexRow:{ 
-    flexDirection: 'row', 
-    flexWrap: 'wrap' 
+  flexWrapFlexRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
-  jumptoScreenContainer:{ 
-    height: '100%', 
-    width: '100%', 
-    backgroundColor: Colors.blacknew, 
-    borderTopLeftRadius: 12, 
-    borderTopRightRadius: 12 
+  jumptoScreenContainer: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: Colors.blacknew,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12
   },
-  jumptoScreenSubContainer:{
-    height: '100%', 
-    width: '100%', 
+  jumptoScreenSubContainer: {
+    height: '100%',
+    width: '100%',
     backgroundColor: Colors.white
   },
   filterItemJumpto: {
@@ -352,22 +352,22 @@ const Styles = EStyleSheet.create({
     ...fontSize(16),
     color: Colors.white
   },
-  commonPaddingContainer:{ 
-    width: '100%', 
-    paddingLeft: 16, 
-    paddingRight: 16 
+  commonPaddingContainer: {
+    width: '100%',
+    paddingLeft: 16,
+    paddingRight: 16
   },
-  imageBackContainerStyle:{ 
-    flex: 1, 
-    flexDirection: 'row', 
-    marginTop: 16.5, 
-    alignItems: 'center' 
+  imageBackContainerStyle: {
+    flex: 1,
+    flexDirection: 'row',
+    marginTop: 16.5,
+    alignItems: 'center'
   },
-  separatorStyle:{ 
-    width: 8, 
-    height: 16 
+  separatorStyle: {
+    width: 8,
+    height: 16
   },
-  height8:{
+  height8: {
     height: 8
   }
 });

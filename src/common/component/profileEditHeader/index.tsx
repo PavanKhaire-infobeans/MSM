@@ -1,13 +1,12 @@
-import {Image, TouchableOpacity, View, StatusBar, Platform} from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import Text from '../Text';
 import React from 'react';
 //@ts-ignore
-import {action_close, backBlkBtn} from '../../../images';
-import {Colors, fontSize} from '../../constants';
+import { backBlkBtn } from '../../../images';
 
 import styles from './styles';
 
-class ProfileEditHeader extends React.Component<{[x: string]: any}> {
+class ProfileEditHeader extends React.Component<{ [x: string]: any }> {
   static defaultProps = {
     showRightText: true,
   };

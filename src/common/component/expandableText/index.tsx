@@ -1,10 +1,8 @@
 import React from 'react';
-import {TouchableOpacity, ViewStyle} from 'react-native';
+import { TouchableOpacity, ViewStyle } from 'react-native';
 import Text from '../../component/Text';
 //@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
-import {Size, Colors, fontSize} from '../../constants';
-import styles from './styles'
+import styles from './styles';
 
 type Props = {
   text: string;

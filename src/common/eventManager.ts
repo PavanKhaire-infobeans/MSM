@@ -3,7 +3,7 @@ type Props = {
   onComplete: Function;
 };
 export default class EventManager {
-  static eventListners: {[id: string]: Function} = {};
+  static eventListners: { [id: string]: Function } = {};
   id?: string;
   constructor(props: Props) {
     EventManager.eventListners = {
@@ -18,7 +18,7 @@ export default class EventManager {
   };
 
   static addListener(identifier: string, onComplete: Function) {
-    return new EventManager({id: identifier, onComplete});
+    return new EventManager({ id: identifier, onComplete });
   }
 
   static callBack(identifier: string, ...args: any[]) {

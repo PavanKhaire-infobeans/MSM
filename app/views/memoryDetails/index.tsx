@@ -1,149 +1,45 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  FlatList,
-  View,
-  TouchableHighlight,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  ImageBackground,
-  ScrollView,
-  Alert,
-  TextInput,
-  Keyboard,
-  Dimensions,
-  StatusBar,
-  Platform,
-  NativeModules,
-  DeviceEventEmitter,
-  Animated,
-  TouchableWithoutFeedback,
+  Alert, Animated, DeviceEventEmitter, Dimensions, FlatList, Image,
+  ImageBackground, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, TextInput, TouchableHighlight, TouchableWithoutFeedback, View
 } from 'react-native';
-import {
-  GetMemoryDetails,
-  GetAllComments,
-  kMemoryDetailsFetched,
-  kAllLikes,
-  GetAllLikes,
-  Like,
-  Unlike,
-  kLiked,
-  kUnliked,
-  kComment,
-  kAllComment,
-  PostComment,
-  DeleteComment,
-  kDeleteComment,
-  EditComment,
-  kEditComment,
-  kLikeOnComment,
-  kUnlikeOnComment,
-} from './detailsWebService';
-import WebView from 'react-native-webview';
-import EventManager from './../../../src/common/eventManager';
-import { ToastMessage, No_Internet_Warning } from './../../../src/common/component/Toast';
-import {
-  Colors,
-  fontSize,
-  getValue,
-  decode_utf8,
-  encode_utf8,
-  NO_INTERNET,
-  TimeStampMilliSeconds,
-  getDetails,
-  keyArray,
-  MemoryActionKeys,
-  keyInt,
-  keyBoolean,
-  keyString,
-  deviceHasNotch,
-  constant,
-  fontFamily,
-} from './../../../src/common/constants';
-import { MemoryDataModel, kNews, kSports } from './memoryDataModel';
-import { Actions } from 'react-native-router-flux';
-import {
-  black_arrow,
-  pdf_icon,
-  icon_like,
-  icon_like_selected,
-  icon_comment,
-  icon_share,
-  icon_send,
-  arrow_theme_left,
-  white_arrow,
-  block_user,
-  report_user,
-  block_and_report,
-  add_icon_small,
-} from './../../../src/images';
-import {
-  profile_placeholder,
-  delete_memory,
-  edit_memory,
-  move_to_draft,
-  remove_me_from_this_post,
-  block_memory,
-  cancelActions,
-} from './../../../src/images';
-
-import { backArrow, heart, liked, penEdit, xcircle } from './../../images'
-import Text from './../../../src/common/component/Text';
 import DeviceInfo from 'react-native-device-info';
-//@ts-ignore
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-//@ts-ignore
-// import HTML from 'react-native-render-html';
-import RenderHtml, { defaultSystemFonts } from 'react-native-render-html';
-
-//@ts-ignore
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import LinearGradient from 'react-native-linear-gradient';
+import RenderHtml, { defaultSystemFonts } from 'react-native-render-html';
+import { Actions } from 'react-native-router-flux';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
+import WebView from 'react-native-webview';
+import NavigationHeaderSafeArea from '../../../src/common/component/profileEditHeader/navigationHeaderSafeArea';
+import { kMemoryActionPerformedOnMemoryDetails, MemoryAction } from '../../../src/views/myMemories/myMemoriesWebService';
+import { kPublishedMemoryUpdated } from '../../../src/views/myMemories/PublishedMemory';
+import AudioPlayer, { kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious } from './../../../src/common/component/audio_player/audio_player';
+import loaderHandler from './../../../src/common/component/busyindicator/LoaderHandler';
+import MemoryActionsSheet, { MemoryActionsSheetItem } from './../../../src/common/component/memoryActionsSheet';
+import PlaceholderImageView from './../../../src/common/component/placeHolderImageView';
+import Text from './../../../src/common/component/Text';
+import { No_Internet_Warning, ToastMessage } from './../../../src/common/component/Toast';
+import {
+  Colors, decode_utf8, encode_utf8, fontSize, getDetails, getValue, keyArray, keyInt, keyString, MemoryActionKeys, TimeStampMilliSeconds
+} from './../../../src/common/constants';
+import EventManager from './../../../src/common/eventManager';
 import { Account } from './../../../src/common/loginStore';
 import Utility from './../../../src/common/utility';
-import loaderHandler from './../../../src/common/component/busyindicator/LoaderHandler';
-import PlaceholderImageView from './../../../src/common/component/placeHolderImageView';
-// import {delete_comment} from '../../images';
-import AudioPlayer, {
-  kPlaying,
-  kPaused,
-  kEnded,
-  kNext,
-  kPrevious,
-  kClosed,
-} from './../../../src/common/component/audio_player/audio_player';
-import NavigationHeader from './../../../src/common/component/navigationHeader';
 import {
-  MemoryCollections,
-  Border,
-  MemoryTags,
-  CollaboratorView,
-  UserDetails,
-  FilesView,
-  CarousalFilesView,
-  kImage,
-  kPDF,
-  LikeCommentShare,
-  TitleAndValue,
-  TitleAndDescription,
-  kAudio,
-  LikeView,
-  ShowSharedaetilsDetails
-} from './componentsMemoryDetails';
-import MemoryActionsSheet, {
-  MemoryActionsSheetItem,
-} from './../../../src/common/component/memoryActionsSheet';
-//@ts-ignore
-import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-import { kPublishedMemoryUpdated, MemoryBasicDetails } from '../../../src/views/myMemories/PublishedMemory';
-import { MemoryAction, kMemoryActionPerformedOnMemoryDetails } from '../../../src/views/myMemories/myMemoriesWebService';
-import NavigationHeaderSafeArea from '../../../src/common/component/profileEditHeader/navigationHeaderSafeArea';
+  add_icon_small, block_and_report, block_memory, block_user, cancelActions, delete_memory, edit_memory, icon_like, icon_like_selected,
+  icon_send, move_to_draft, profile_placeholder, remove_me_from_this_post, report_user
+} from './../../../src/images';
+import { backArrow, heart, liked, penEdit } from './../../images';
+import { Border, CarousalFilesView, kImage, kPDF, MemoryTags, UserDetails } from './componentsMemoryDetails';
+import {
+  DeleteComment, EditComment, GetAllComments, GetAllLikes, GetMemoryDetails, kAllComment, kAllLikes, kComment, kDeleteComment, kEditComment, kLiked, kLikeOnComment, kMemoryDetailsFetched, kUnliked, kUnlikeOnComment, Like, PostComment, Unlike
+} from './detailsWebService';
+import { kNews, MemoryDataModel } from './memoryDataModel';
 import style from './styles';
-import LinearGradient from 'react-native-linear-gradient';
 
-var MemoryActions: Array<MemoryActionsSheetItem> = [
-  // { index: 0, text: "Image", image: action_camera }
-];
+var MemoryActions: Array<MemoryActionsSheetItem> = [];
+
 type State = { [x: string]: any };
 type Props = { [x: string]: any };
 
@@ -271,7 +167,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
   }
 
-
   componentDidMount() {
     if (this.props.previewDraft) {
       this.memoryDataModel = this.props.memoryDetails;
@@ -324,13 +219,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
     });
   };
 
-  _keyboardDidHide = (e?: any) => {
+  _keyboardDidHide = () => {
     this.setState({
       bottomToolbar: 0,
     });
   };
 
-  likeCallback = (fetched: boolean, responseMessage: any, nid?: any) => {
+  likeCallback = (fetched: boolean, responseMessage: any) => {
     if (!fetched) {
       this.memoryDataModel.likesComments.noOfLikes =
         this.memoryDataModel.likesComments.noOfLikes - 1;
@@ -341,7 +236,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     }
   };
 
-  unlikeCallback = (fetched: boolean, responseMessage: any, nid?: any) => {
+  unlikeCallback = (fetched: boolean, responseMessage: any) => {
     if (!fetched) {
       this.memoryDataModel.likesComments.noOfLikes =
         this.memoryDataModel.likesComments.noOfLikes + 1;
@@ -351,6 +246,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       this.forwardDataToNative();
     }
   };
+
   deleteCommentCallback = (
     fetched: boolean,
     responseMessage: any,
@@ -380,6 +276,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       }
     }
   };
+
   editCommentCallback = (fetched: boolean, responseMessage: any, cid?: any) => {
     loaderHandler.hideLoader();
     if (cid != '') {
@@ -540,10 +437,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
       }
     }
   };
+
   getLastTwoComments = () => {
     GetAllComments(this.memoryDataModel.nid, this.storyType, '2', true);
   };
-  hideAllComments = () => { };
 
   allLikesFetched = (fetched?: boolean, getAllLikes?: any) => {
     loaderHandler.hideLoader();
@@ -584,7 +481,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
     try {
       this.audioPlayer.current.hidePlayer();
     } catch (e) {
-      //console.log(e);
     }
     this.memoryDetailsListener.removeListener();
   }
@@ -623,8 +519,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
       No_Internet_Warning();
     }
   };
-
-  showCollection = () => { };
 
   toggleCollaboratorView = () => {
     this.setState({
@@ -928,6 +822,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       No_Internet_Warning();
     }
   };
+
   editComment = (item: any) => {
     this.setState({
       commentId: item.cid,
@@ -939,7 +834,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   deleteComment = (item: any) => {
-    // DeleteComment(cid: item.)
     Alert.alert('Delete Comment?', `You wish to delete this Comment ?`, [
       {
         text: 'No',
@@ -956,6 +850,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       },
     ]);
   };
+
   postcomment = () => {
     if (Utility.isInternetConnected) {
       let commentText = this.state.commentValue.trim();
@@ -1025,8 +920,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
     Keyboard.dismiss();
   };
 
-  share = () => { };
-
   focusCommentView = () => {
     this._commentBoxRef &&
       this._commentBoxRef.focus &&
@@ -1053,7 +946,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       <View>
         <Carousel
           data={this.memoryDataModel.files.audios}
-          renderItem={(file: any, index: number) => {
+          renderItem={(file: any) => {
             return (<View
               style={[
                 {
@@ -1516,7 +1409,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     );
   };
 
-  renderExternalQueueItem = (items: any) => {
+  renderExternalQueueItem = () => {
     let currentSelectedItem =
       this.memoryDataModel.externalQueue.collection[this.state.activeSlide];
 
@@ -1549,6 +1442,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
           </View>
         </View>
         <View >
+          <View style={{ height: 16 }} />
+
           {
             currentSelectedItem.description.length > 0 && (
               <>
@@ -1644,6 +1539,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     this.memoryDataModel.nid = currentSelectedItem.nid;
     this.memoryDataModel.likesComments = currentSelectedItem.likesComments;
   };
+
   openMemoryActions = () => {
     MemoryActions = [];
     var i = 0;
@@ -1761,6 +1657,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       Keyboard.dismiss();
     }, 1000);
   };
+
   onActionItemClicked = (index: number, data: any): void => {
 
     switch (data.actionType) {
@@ -1802,11 +1699,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
             ]);
           }, 250);
           break;
-        } else {
+        }
+        else {
           No_Internet_Warning();
         }
     }
   };
+  
   _addToCollection = (nid?: any) => {
     if (Utility.isInternetConnected) {
       Actions.push('memoryCollectionList', {
@@ -1817,6 +1716,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       No_Internet_Warning();
     }
   };
+
   _onEditMemory(event: any, nid?: any) {
     event = event.nativeEvent;
     // this.getDraftDetails(event)
@@ -1845,7 +1745,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
     responseMessage: any,
     nid?: any,
     type?: any,
-    uid?: any,
   ) => {
     if (Actions.currentScene == 'memoryDetails') {
       loaderHandler.hideLoader();
@@ -1861,13 +1760,14 @@ export default class MemoryDetails extends React.Component<Props, State> {
       }
     }
   };
+
   get pagination() {
     let activeSlide = this.state.activeSlide;
     return (
       <Pagination
         dotsLength={this.memoryDataModel.externalQueue.collection.length}
         activeDotIndex={activeSlide}
-        containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
+        containerStyle={{ backgroundColor: Colors.transparent }}
         dotStyle={style.dotStyle}
         inactiveDotStyle={style.inactiveDotStyle}
         inactiveDotOpacity={0.4}
@@ -1877,6 +1777,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   }
 
   InternalQueue = () => {
+    console.log("descmem :", this.memoryDataModel.memory.description)
     return (
       <View style={style.InternalQueueContainer}>
 
@@ -1887,11 +1788,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
         <Border width={'100%'} paddingLeft={16} paddingTop={8} />
         <Text style={[style.normalText, { marginVertical: 8 }]}>
-          A memory from {this.memoryDataModel.memory.memoryDateDisplay}{'\n'}Published on {this.memoryDataModel.userDetails.createdOn}
+          A memory from <Text style={{ color: Colors.newDescTextColor }}>{this.memoryDataModel.memory.memoryDateDisplay}</Text>{'\n'}Published on <Text style={{ color: Colors.newDescTextColor }}>{this.memoryDataModel.userDetails.createdOn}</Text>
         </Text>
-        {/* <Text style={[style.normalText,{paddingLeft:5,lineHeight:18, backgroundColor:'pink'}]}>
-          Published on {this.memoryDataModel.userDetails.createdOn}
-        </Text> */}
+
         <Border width={'100%'} paddingLeft={16} />
 
         {/* <View style={{flexDirection: 'row'}}>
@@ -1999,6 +1898,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
               this.memoryDataModel.memory.collaborators
             }></CollaboratorView>
         )} */}
+        <View style={{ height: 16 }} />
 
         {this.memoryDataModel.memory.description.length > 0 && (
           < >
@@ -2216,7 +2116,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 </View> */}
                 {/* Includes memory tags and like comment share section */}
                 {/* {!this.props.previewDraft && this.CommonBottomSection()} */}
-                
+
                 {/* If memory is associated with any collection */}
                 {/* {!this.props.previewDraft &&
                   this.memoryDataModel.collection_list.length > 0 && (
@@ -2279,5 +2179,5 @@ export default class MemoryDetails extends React.Component<Props, State> {
       </SafeAreaView>
     );
   }
-}
 
+}

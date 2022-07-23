@@ -1,6 +1,6 @@
-import { Dimensions, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
+import { Colors, fontFamily, fontSize } from '../../common/constants';
 import Utility from '../../common/utility';
 
 const Styles = EStyleSheet.create({

@@ -1,20 +1,10 @@
 import React, { createRef } from 'react';
 import {
   Alert,
-  Dimensions,
   FlatList,
   Image,
-  ImageBackground,
-  Keyboard,
-  SafeAreaView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-  ScrollView,
-  TouchableHighlight,
-  Platform,
-  StatusBar,
+  Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, TextInput, TouchableHighlight, TouchableOpacity,
+  View
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { Actions } from 'react-native-router-flux';
@@ -23,112 +13,72 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 // @ts-ignore
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Text from '../../common/component/Text';
-import styles from './styles';
 import {
-  Colors,
-  fontSize,
-  GenerateRandomID,
-  decode_utf8,
+  Colors, decode_utf8,
   DraftActions,
-  NO_INTERNET,
-  fontFamily,
+  fontFamily, GenerateRandomID
 } from '../../common/constants';
 import {
-  FileType,
-  MindPopAttachment,
+  MindPopAttachment
 } from '../../common/database/mindPopStore/mindPopStore';
-import EtherPadEditing from './etherpadWebView';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
 import {
-  action_camera,
+  action_audio, action_camera,
   action_close,
   camera,
   delete_icon,
   edit_icon,
   icon_collaborators,
-  icon_upload_file,
-  record,
-  action_audio,
-  action_pdf,
-  pdf_icon,
-  save_memory_draft,
-  publish_memory_draft,
-  profile_placeholder,
+  icon_upload_file, pdf_icon, profile_placeholder, publish_memory_draft, record, save_memory_draft
 } from '../../images';
 import { TempFile } from '../mindPop/edit';
+import EtherPadEditing from './etherpadWebView';
 import { kSaveDraft, kShowHideMenu } from './header';
+import styles from './styles';
 // @ts-ignore
 import { connect } from 'react-redux';
 import {
-  MemoryInitials,
-  ResetLocation,
-  MemoryInitialsUpdate,
-  SaveNid,
-  SaveAttachedFile,
-  ResetALL,
-  SaveDescription,
-  EditContent,
-  showCustomAlert,
-  showCustomAlertData,
-} from './reducer';
-import {
-  PickImage,
-  PickAudio,
-  PickPDF,
-  CaptureImage,
+  CaptureImage, PickImage
 } from '../../common/component/filePicker/filePicker';
-import SearchBar from '../../common/component/SearchBar';
-import BottomPicker from '../../common/component/bottomPicker';
-import {
-  CreateMemoryHelper,
-  DefaultDetailsMemory,
-  DefaultCreateMemoryObj,
-  getEtherPadUrl,
-  getUserName,
-} from './dataHelper';
-import { ToastMessage, No_Internet_Warning } from '../../common/component/Toast';
+import PlaceholderImageView from '../../common/component/placeHolderImageView';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import { MemoryDataModel } from '../memoryDetails/memoryDataModel';
 import {
   CreateUpdateMemory,
-  kDeleteDraft,
-  DeleteDraftService,
-  UpdateAttachments,
-  kFilesUpdated,
-  GetDraftsDetails,
-  kDraftDetailsFetched,
-  CollaboratorActionAPI,
-  kDeleteDraftCreateMemo,
+  DeleteDraftService, GetDraftsDetails, kDeleteDraftCreateMemo, kDraftDetailsFetched, kFilesUpdated, UpdateAttachments
 } from './createMemoryWebService';
-import { Border } from '../memoryDetails/componentsMemoryDetails';
-import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import {
-  LocationAPI,
-  MemoryTagsAPI,
-  kRecentTags,
-  kSearchTags,
+  CreateMemoryHelper,
+  DefaultCreateMemoryObj,
+  getUserName
+} from './dataHelper';
+import { kCollaborators, kTags, kWhoElseWhereThere } from './publish';
+import {
+  EditContent, MemoryInitialsUpdate, ResetALL, ResetLocation, SaveAttachedFile, SaveDescription, SaveNid, showCustomAlert,
+  showCustomAlertData
+} from './reducer';
+import {
   CollectinAPI,
-  EtherPadContentAPI,
+  EtherPadContentAPI, kRecentTags, LocationAPI,
+  MemoryTagsAPI
 } from './saga';
-import { kTags, kWhoElseWhereThere, kCollaborators } from './publish';
-import { MemoryDataModel } from '../memoryDetails/memoryDataModel';
 //@ts-ignore
 import DefaultPreference from 'react-native-default-preference';
-import { kReloadDraft } from '../myMemories/MemoryDrafts';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import { MemoryDraftsDataModel } from '../myMemories/MemoryDrafts/memoryDraftsDataModel';
 //@ts-ignore
+import { DatePickerOptions } from '@react-native-community/datetimepicker';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-import { DateTimePickerAndroid, DatePickerOptions } from '@react-native-community/datetimepicker';
 import DateTimePicker from '../../common/component/DateTimePicker';
 
-import MemoryDraftIntro from './memoryDraftIntro';
-import Styles from './styles';
-import { calender, image, arrowRight, calendarsmall, calendarWrite } from '../../../app/images';
-import CustomAlert from '../../common/component/customeAlert';
-import DatePicker from './../../common/component/datePicker';
-import { GET_MEMORY_LIST, ListType } from '../dashboard/dashboardReducer';
 import moment from 'moment';
+import { arrowRight, calendarWrite, image } from '../../../app/images';
+import CustomAlert from '../../common/component/customeAlert';
+import { GET_MEMORY_LIST, ListType } from '../dashboard/dashboardReducer';
+import DatePicker from './../../common/component/datePicker';
+import Styles from './styles';
 
 export const createNew = 'Create New';
 export const editDraft = 'Edit Draft';
@@ -1396,7 +1346,7 @@ class CreateMemory extends React.Component<Props> {
         }
         setTimeout(() => {
           this.saveORPublish('save');
-        }, 500);
+        }, 2500);
         break;
       case 2:
         this._actionSheet && this._actionSheet.current && this._actionSheet.current.hideSheet();
@@ -1405,7 +1355,7 @@ class CreateMemory extends React.Component<Props> {
         loaderHandler.showLoader('Publishing...');
         setTimeout(() => {
           this.saveORPublish(kPublish);
-        }, 500);
+        }, 2500);
         break;
 
     }

@@ -1,11 +1,11 @@
-import {Image, TouchableOpacity, View, StatusBar, Platform} from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import Text from '../Text';
 import React from 'react';
 //@ts-ignore
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {action_close, close_white} from '../../../images';
-import {Colors, fontSize} from '../../constants';
-import {Account} from '../../loginStore';
+import { close_white } from '../../../images';
+import { Colors, fontSize } from '../../constants';
+import { Account } from '../../loginStore';
 
 const styles = EStyleSheet.create({
   name: {
@@ -60,13 +60,13 @@ const styles = EStyleSheet.create({
   },
 
   rightButtonsTouchable: {
-    padding: 0, 
+    padding: 0,
     paddingRight: 10
   },
-  
+
 });
 
-class ThemeHeader extends React.Component<{[x: string]: any}> {
+class ThemeHeader extends React.Component<{ [x: string]: any }> {
   static defaultProps = {
     showRightText: true,
   };
@@ -78,13 +78,13 @@ class ThemeHeader extends React.Component<{[x: string]: any}> {
             style={[styles.leftButtonTouchableContainer]}
             onPress={() => this.props.cancelAction()}>
             <Image
-              style={{height: 28, width: 28}}
+              style={{ height: 28, width: 28 }}
               resizeMode="center"
               source={close_white}
             />
           </TouchableOpacity>
         ) : (
-          <View style={{height: 10, width: 15}}></View>
+          <View style={{ height: 10, width: 15 }}></View>
         )}
       </View>
     );
@@ -169,7 +169,7 @@ class ThemeHeader extends React.Component<{[x: string]: any}> {
           justifyContent: 'space-between',
         }}>
         <View
-          style={{flexDirection: 'row', justifyContent: 'flex-start', flex: 1}}>
+          style={{ flexDirection: 'row', justifyContent: 'flex-start', flex: 1 }}>
           {this._renderLeft()}
           {this._renderMiddle()}
         </View>

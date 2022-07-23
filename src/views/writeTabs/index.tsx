@@ -1,39 +1,34 @@
 import React from 'react';
-import { DeviceEventEmitter, TouchableHighlight, Image, SafeAreaView, StatusBar, StyleSheet, View, Alert, Platform } from 'react-native';
+import { Image, Platform, SafeAreaView, StatusBar, TouchableHighlight, View } from 'react-native';
 import { connect } from 'react-redux';
 import { kNotificationIndicator, TabItems } from '../../common/component/TabBarIcons';
-import { Colors, decode_utf8, fontFamily, fontSize, getDetails, Storage } from '../../common/constants';
+import { Colors, decode_utf8, fontFamily, fontSize } from '../../common/constants';
 import Utility from '../../common/utility';
-import { configurations } from '../../common/webservice/loginServices';
 // import { ACTIVE_TAB_ON_DASHBOARD, GET_FILTERS_DATA, GET_FILTERS_DATA_TIMELINE, GET_MEMORY_LIST, ListType, MEMORY_ACTIONS_DASHBOARD } from './dashboardReducer';
 import NewNavigationBar from '../../../app/components/NewNavigationBarWrite';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore
-import ScrollableTabViewForWrite from "../../common/component/ScrollableTabViewForWrite";
-import { MonthObj, months } from '../createMemory';
-import { Account } from '../../common/loginStore';
-import EventManager from '../../common/eventManager';
-import { kProfilePicUpdated } from '../profile/profileDataModel';
-import MyMemories from './../myMemories';
-import AddContent from './../addContent';
-import Prompts from './../promptsView';
-import TextNew from '../../common/component/Text';
-import { filter_icon } from '../../images';
-import { Actions, Modal } from 'react-native-router-flux';
-import { kMemoryActionPerformedOnDashboard, kUpdateMemoryOnTimeline } from '../myMemories/myMemoriesWebService';
+import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import CustomAlert from '../../common/component/customeAlert';
+import ScrollableTabViewForWrite from "../../common/component/ScrollableTabViewForWrite";
+import TextNew from '../../common/component/Text';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import EventManager from '../../common/eventManager';
+import { Account } from '../../common/loginStore';
+import { filter_icon } from '../../images';
+import { CreateUpdateMemory, promptIdListener } from '../createMemory/createMemoryWebService';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
+import { showCustomAlert } from '../createMemory/reducer';
+import { ACTIVE_TAB_ON_DASHBOARD } from '../dashboard/dashboardReducer';
+import { kMemoryActionPerformedOnDashboard } from '../myMemories/myMemoriesWebService';
 import { NotificationDataModel } from '../notificationView/notificationDataModel';
 import { GetActivities, kActivityListener, kBackgroundNotice, kForegroundNotice, kForegroundNotificationListener, kGetInvidualNotification, SetSeenActivity } from '../notificationView/notificationServices';
 import AppGuidedTour from './../dashboard/appGuidedTour';
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
-import { DefaultDetailsMemory } from '../createMemory/dataHelper';
-import { CreateUpdateMemory, promptIdListener } from '../createMemory/createMemoryWebService';
-import { ACTIVE_TAB_ON_DASHBOARD, ListType } from '../dashboard/dashboardReducer';
+import MyMemories from './../myMemories';
+import Prompts from './../promptsView';
 import Styles from './styles';
-import CustomAlert from '../../common/component/customeAlert';
-import { showCustomAlert } from '../createMemory/reducer';
 
 const options = {
     enableVibrateFallback: true,

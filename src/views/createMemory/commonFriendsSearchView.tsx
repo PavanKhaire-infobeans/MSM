@@ -1,52 +1,34 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableHighlight,
-  FlatList,
-} from 'react-native';
 import React from 'react';
+import {
+  FlatList, Image, Keyboard, Platform, SafeAreaView,
+  StatusBar, Text, TouchableHighlight, TouchableOpacity, View
+} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 // @ts-ignore
-import { Colors, fontSize } from '../../common/constants';
-import NavigationThemeBar from '../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import {
-  action_close,
-  icon_info,
-} from '../../images';
 import { connect } from 'react-redux';
 import SearchBar from '../../common/component/SearchBar';
-import { kTags, kWhoElseWhereThere, kCollaborators } from './publish';
+import { Colors, fontSize } from '../../common/constants';
+import {
+  action_close,
+  icon_info
+} from '../../images';
+import { kCollaborators, kTags } from './publish';
 import style from './styles';
 
+import GroupPicHolder from '../../common/component/group_pic_holder/group_pic_holder';
+import PlaceholderImageView from '../../common/component/placeHolderImageView';
+import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import EventManager from '../../common/eventManager';
+import Utility from '../../common/utility';
+import { kSaveInvite } from './inviteCollaborators/noteToCollaborators';
 import {
-  SaveMemoryTagsList,
   SaveSearchList,
-  SaveCollaborators,
-  SaveWhoCanSeeIds,
+  SaveWhoCanSeeIds
 } from './reducer';
 import {
-  MemoryTagsAPI,
-  kSearchTags,
-  UserSearchAPI,
-  kUsers,
-  kUserCircles,
+  kUserCircles, kUsers, UserSearchAPI
 } from './saga';
-import EventManager from '../../common/eventManager';
-import PlaceholderImageView from '../../common/component/placeHolderImageView';
-import Utility from '../../common/utility';
 import { kWhoCanSeeThisMemory } from './whoCanSee';
-import { kSaveInvite } from './inviteCollaborators/noteToCollaborators';
-import GroupPicHolder from '../../common/component/group_pic_holder/group_pic_holder';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 
 type State = { [x: string]: any };
 type Props = {

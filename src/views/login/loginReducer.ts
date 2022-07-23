@@ -1,9 +1,7 @@
+import { all, call, put, takeLatest } from 'redux-saga/effects';
 import {
-  loginRequest,
-  loginInstanceRequest,
+  loginInstanceRequest, loginRequest
 } from '../../common/webservice/loginServices';
-import { takeLatest, put, call, all } from 'redux-saga/effects';
-import { Account } from '../../common/loginStore';
 import { kAdmin } from '../registration/getInstancesSaga';
 
 export enum LoginServiceStatus {

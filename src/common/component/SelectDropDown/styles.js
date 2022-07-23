@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, I18nManager, Platform } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
 import { Colors } from "../../constants";
 const { width, height } = Dimensions.get("window");
 

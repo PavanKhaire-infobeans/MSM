@@ -45,7 +45,7 @@ const Styles = EStyleSheet.create({
     color: Colors.bordercolor,
     lineHeight: 30,
     flex: 1,
-    fontWeight:'600',
+    fontWeight: '600',
     textAlign: 'left',
   },
   playContainer: {
@@ -122,7 +122,7 @@ const Styles = EStyleSheet.create({
   memoryTitle: {
     ...fontSize(24),
     color: Colors.bordercolor,
-    fontWeight:'600' ,
+    fontWeight: '600',
     marginLeft: 16,
     marginRight: 16,
     textAlign: 'left',
@@ -189,11 +189,11 @@ const Styles = EStyleSheet.create({
     height: 18,
   },
   imageTopMargin: {
-    top:-1,
+    top: -1,
     height: 16,
     width: 16
   },
-  height16:{
+  height16: {
     height: 16,
   }
 });

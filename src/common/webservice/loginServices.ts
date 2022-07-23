@@ -1,7 +1,6 @@
-import Webservice from './webservice';
-import {kAdmin} from '../../views/registration/getInstancesSaga';
-import {CueBackInsatance} from '../constants';
+import { CueBackInsatance } from '../constants';
 import EventManager from '../eventManager';
+import Webservice from './webservice';
 
 export const kSSOLogin = 'ssoLoginCallback';
 function loginRequest(url: string, params: Array<any>) {

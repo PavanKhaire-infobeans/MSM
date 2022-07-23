@@ -1,17 +1,13 @@
-import Utility from '../../common/utility';
 import {
-  getDetails,
-  keyString,
-  keyInt,
-  decode_utf8,
+  decode_utf8, getDetails, keyInt, keyString
 } from '../../common/constants';
+import Utility from '../../common/utility';
 
 export class NotificationDataModel {
   getNotificationDetails(activities: any, isActivity: any) {
     let activityList: any = [];
     activities.forEach((item: any) => {
       let activity: any = {};
-      let count = getDetails(item, ['count'], keyInt);
       var userArray = getDetails(item, ['from_uid'], keyString);
       userArray = userArray.split(',');
       userArray = [...new Set(userArray)];

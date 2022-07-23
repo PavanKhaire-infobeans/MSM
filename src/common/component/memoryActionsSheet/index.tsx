@@ -1,20 +1,12 @@
 import React from 'react';
 import {
-  View,
-  Image,
-  Animated,
-  Dimensions,
-  FlatList,
-  TouchableOpacity,
-  Modal,
-  Keyboard,
-  TouchableWithoutFeedback,
+  Animated,Dimensions,FlatList, Image, Keyboard, Modal, TouchableWithoutFeedback, View
 } from 'react-native';
-import { fontSize, Colors } from '../../constants';
 import { Actions } from 'react-native-router-flux';
-import TextNew from '../Text';
-import Utility from '../../../common/utility';
 import { No_Internet_Warning } from '../../../common/component/Toast';
+import Utility from '../../../common/utility';
+import { Colors } from '../../constants';
+import TextNew from '../Text';
 import styles from './styles';
 const { height } = Dimensions.get('window');
 

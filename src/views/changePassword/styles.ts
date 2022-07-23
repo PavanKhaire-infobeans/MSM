@@ -1,5 +1,5 @@
-import {StyleSheet, Platform} from 'react-native';
-import {Size, fontSize, fontFamily} from '../../common/constants';
+import { Platform, StyleSheet } from 'react-native';
+import { fontFamily, fontSize, Size } from '../../common/constants';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
   titleText: {
     ...fontSize(Size.byWidth(24)),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
-    fontWeight:'600',
+    fontWeight: '600',
   },
 
   loginContainer: {
@@ -49,16 +49,16 @@ export const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 
-  fullFlex:{
-    flex: 1, 
+  fullFlex: {
+    flex: 1,
     width: '100%'
   },
 
-  scrollViewContainerStyle:{
-    width: '100%', 
-    height: '100%', 
+  scrollViewContainerStyle: {
+    width: '100%',
+    height: '100%',
     padding: 16
   },
 
-  
+
 });

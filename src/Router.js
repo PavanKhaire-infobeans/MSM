@@ -1,85 +1,63 @@
 import React, { useEffect } from 'react';
 import {
-  BackHandler,
-  Platform,
-  Text,
-  View,
-  Alert,
-  DeviceEventEmitter,
-  Linking,
-  useWindowDimensions,
-  Image,
-  Appearance,
-  SafeAreaView
+  Appearance, BackHandler, Linking, Platform, Text
 } from 'react-native';
-import DeviceInfo, { hasNotch } from 'react-native-device-info';
+import DeviceInfo from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {
-  ActionConst,
-  Actions,
-  Drawer,
-  Router,
-  Scene,
-  Stack,
-  Tabs,
+  ActionConst, Actions, Drawer, Router, Scene, Stack, Tabs
 } from 'react-native-router-flux';
 import { Provider } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Busyindicator from './common/component/busyindicator';
-import TabIcon, { NewTabItems, TabItems } from './common/component/TabBarIcons';
-import { Colors, constant } from './common/constants';
+import TabIcon, { NewTabItems } from './common/component/TabBarIcons';
+import { Colors } from './common/constants';
 import EventManager from './common/eventManager';
-import Utility, { networkConnectivitySaga, themechanges, getFontScale } from './common/utility';
 import store from './common/reducer/reducers';
+import Utility, { getFontScale, networkConnectivitySaga, themechanges } from './common/utility';
 
 import CreateMemory from './views/createMemory';
-import PublishMemoryDraft from './views/createMemory/publish';
-import CommonListCreateMemory from './views/createMemory/commonTagsView';
-import CreateMemoryHeader from './views/createMemory/header';
-import FileDescription from './views/createMemory/fileDescription';
 import CollectionList from './views/createMemory/collection';
-import MemoryCollectionList from './views/createMemory/collection/memoryCollection';
 import CollectionDetails from './views/createMemory/collection/collectionDetails';
 import CreateRenameCollection from './views/createMemory/collection/createRename';
-import WhoCanSee from './views/createMemory/whoCanSee';
+import MemoryCollectionList from './views/createMemory/collection/memoryCollection';
+import CommonFriendsSearchView from './views/createMemory/commonFriendsSearchView';
+import CommonListCreateMemory from './views/createMemory/commonTagsView';
+import EtherPadEditing from './views/createMemory/etherpadWebView';
+import FileDescription from './views/createMemory/fileDescription';
 import InviteCollaborators from './views/createMemory/inviteCollaborators';
 import NotesToCollaborators from './views/createMemory/inviteCollaborators/noteToCollaborators';
-import CommonFriendsSearchView from './views/createMemory/commonFriendsSearchView';
-import EtherPadEditing from './views/createMemory/etherpadWebView';
+import PublishMemoryDraft from './views/createMemory/publish';
+import WhoCanSee from './views/createMemory/whoCanSee';
 
-import Dashboard from './views/dashboard';
-import NavigationBar from './views/dashboard/NavigationBar';
+import AddContentView from './views/addContent';
+import CommonAudioRecorder from './views/fileHandlers/audioRecorder';
+import ImageViewer from './views/fileHandlers/imageViewer';
+import PDFViewer from './views/fileHandlers/pdfViewer';
 import ForgotPassword from './views/forgotPassword';
 import LoginView from './views/login';
 import CommonInstanceListsSelection from './views/login/commonInstanceListSelection';
 import MemoryDetails from './views/memoryDetails';
 import CustomListView from './views/memoryDetails/customListView';
 import FilesDetail from './views/memoryDetails/fileDetails';
-import ImageViewer from './views/fileHandlers/imageViewer';
-import PDFViewer from './views/fileHandlers/pdfViewer';
-import AddContentView from './views/addContent';
-import CommonAudioRecorder from './views/fileHandlers/audioRecorder';
 
-//new routes
 import NewMemoryDetails from './../app/views/memoryDetails';
 import NewCustomListView from './../app/views/memoryDetails/customListView';
 import NewFilesDetail from './../app/views/memoryDetails/fileDetails';
 
 import Menu from './views/menu';
 import {
-  EditHeader,
   iPadList,
   MindPopEdit,
   MindPopList,
-  PreviewImage,
+  PreviewImage
 } from './views/mindPop';
-import AudioRecorder from './views/mindPop/audioRecorder';
-import MoreOptions from './views/moreOptions';
 import BlockedUsers from './views/moreOptions/blockedUsers';
 import CommonWebView from './views/moreOptions/commonWebView';
 import MyAccount from './views/myAccount';
 // import MyMemoriesContainer from './views/myMemories';
 //import AllMemoriesContainer from "./views/newDashboard"
+import SplashScreen from 'react-native-splash-screen';
+import ChangePassword from './views/changePassword';
 import NotificationView from './views/notificationView';
 import NotificationListing from './views/notificationView/notificationListing';
 import Profile from './views/profile';
@@ -90,30 +68,23 @@ import Prologue from './views/registration/prologue';
 import RegFinalStep from './views/registration/regFinalStep';
 import RegFirstStep from './views/registration/regFirstStep';
 import UserRegistrationStatus from './views/registration/userRegistrationStatus';
-import ChangePassword from './views/changePassword';
 import Splash from './views/splashscreen';
 import TipsAndTricks from './views/tipsAndTricks';
-import SplashScreen from 'react-native-splash-screen';
 // import firebase from "react-native-firebase";
-import messaging, {
-  FirebaseMessagingTypes,
-} from '@react-native-firebase/messaging';
-import DefaultPreference from 'react-native-default-preference';
+import messaging from '@react-native-firebase/messaging';
 import DeepLinking from 'react-native-deep-linking';
+import DefaultPreference from 'react-native-default-preference';
 // import { Notification, NotificationOpen } from 'react-native-firebase';
-import {
-  kForegroundNotice,
-  kBackgroundNotice,
-} from './views/notificationView/notificationServices';
-import { kNotificationIndicator } from './common/component/TabBarIcons';
-import AppIntro from './views/appIntro';
 import analytics from '@segment/analytics-react-native';
 import loaderHandler from './common/component/busyindicator/LoaderHandler';
+import AppIntro from './views/appIntro';
 import DashboardIndex from './views/dashboard/dashboardIndex';
-import WriteTabs from './views/writeTabs';
 import FilterScreen from './views/dashboard/filtersScreen';
-import PromptsView from './views/promptsView';
+import {
+  kBackgroundNotice, kForegroundNotice
+} from './views/notificationView/notificationServices';
 import TopicsFilter from './views/promptsView/topicsFilter';
+import WriteTabs from './views/writeTabs';
 EStyleSheet.build();
 
 if (Text.defaultProps == null) Text.defaultProps = {};
@@ -211,10 +182,10 @@ const AppRouter = () => (
               backgroundColor: Colors.white,
               borderWidth: 1,
               borderTopWidth: 3,
-              borderTopColor:  Colors.white,
+              borderTopColor: Colors.white,
               width: '94%',
               borderRadius: 12,
-              borderColor:  Colors.white,
+              borderColor: Colors.white,
               marginBottom: 4,
               alignSelf: 'center'
             }}>
@@ -396,7 +367,7 @@ const AppRouter = () => (
   </Router>
 );
 
-function navigateToParticular(navigation, defaultHandler) {
+function navigateToParticular(_navigation, defaultHandler) {
   try {
     // if (navigation.state.routeName == 'key3') {
     //   EventManager.callBack('addContentTabPressed');
@@ -408,9 +379,8 @@ function navigateToParticular(navigation, defaultHandler) {
   }
 }
 
-const App = (props) => {
+const App = (_props) => {
   let backEvent: EventManager;
-  let eventListener: EventManager;
 
   // alert(useWindowDimensions().fontScale)
 
@@ -501,7 +471,7 @@ const App = (props) => {
               }
             });
         })
-        .catch(error => {
+        .catch(_error => {
           //console.log("Error fetching token " + error)
         });
     } catch (error) {
@@ -546,18 +516,13 @@ const App = (props) => {
     /*
      * Triggered for data only payload in foreground
      * */
-    messageListener = messaging().onMessage(message => {
+    messageListener = messaging().onMessage(_message => {
       //   //process data message
       //   //console.log(JSON.stringify(message));
       //   showAlert("Alert", "message arrived");
     });
   }
 
-  const showAlert = (title, body) => {
-    Alert.alert(title, body, [{ text: 'OK', onPress: () => { } }], {
-      cancelable: false,
-    });
-  }
 
   //Back event handler
   const _backPressAnd = () => {

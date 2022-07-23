@@ -1,7 +1,7 @@
 import React from 'react';
-import { Image, View, Platform, Text, Dimensions, Alert } from 'react-native';
+import { Dimensions, Image, Text, View } from 'react-native';
 //@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
+import { book, write } from '../../../app/images';
 import {
   add_content,
   all_memories_selected,
@@ -9,19 +9,12 @@ import {
   more_options_selected,
   more_options_unselected,
   my_memories_selected,
-  my_memories_unselected,
-  notification_selected_active,
-  notification_selected,
-  notification_unselected,
-  notification_unselected_active,
-  prompts_selected,
-  prompts_nonselected,
+  my_memories_unselected, prompts_nonselected, prompts_selected
 } from '../../images';
-import { book, write } from '../../../app/images';
-import { fontSize, Colors, constant, fontFamily } from '../constants';
+import { Colors } from '../constants';
 import EventManager from '../eventManager';
-import style from './styles';
 import { Account } from '../loginStore';
+import style from './styles';
 
 export enum TabItems {
   AllMemories = 'All Memories',

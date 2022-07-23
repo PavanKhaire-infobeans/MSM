@@ -1,10 +1,6 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
+  View,Image,TouchableWithoutFeedback,
 } from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 

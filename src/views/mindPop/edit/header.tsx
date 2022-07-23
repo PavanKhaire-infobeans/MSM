@@ -1,12 +1,10 @@
 import React from 'react';
-import {View, TouchableOpacity, Image, Platform} from 'react-native';
-import Text from '../../../common/component/Text';
-import {connect} from 'react-redux';
-import {Actions} from 'react-native-router-flux';
-import {EditMode} from './reducer';
+import { Image, Platform, TouchableOpacity, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import NavigationHeader from '../../../common/component/navigationHeader';
-import {Colors, fontFamily, fontSize} from '../../../common/constants';
+import { connect } from 'react-redux';
+import Text from '../../../common/component/Text';
+import { Colors, fontFamily, fontSize } from '../../../common/constants';
+import { EditMode } from './reducer';
 
 class EditHeader extends React.Component<{
   navigation: {[x: string]: any};

@@ -1,72 +1,31 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableHighlight,
-  FlatList,
-  StyleSheet,
-  Alert,
-} from 'react-native';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
+import {
+  Alert, Keyboard, Platform, SafeAreaView,
+  StatusBar,
+  TextInput, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
 // @ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import { connect } from 'react-redux';
+import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import {
   Colors,
-  fontSize,
-  decode_utf8,
-  getValue,
-  ShareOptions,
+  fontSize
 } from '../../../common/constants';
-import NavigationThemeBar from '../../../common/component/navigationBarForEdit/navigationBarWithTheme';
+import EventManager from '../../../common/eventManager';
 import {
-  add_icon,
-  visibility_theme,
-  move_arrow,
-  radio_active,
-  radio,
-  team_icon,
-} from '../../../images';
-import {connect} from 'react-redux';
+  InviteCollaborators, kCollaboratorsAdded
+} from '../createMemoryWebService';
 import {
-  LocationAPI,
-  MemoryTagsAPI,
-  CollectinAPI,
-  CollaboratorsAPI,
-} from '../saga';
-import {
-  ResetLocation,
-  MemoryInitialsUpdate,
-  SaveCollection,
-  SaveShareOption,
-  SaveCollaborators,
-  SaveCollaboratorNotes,
+  SaveCollaboratorNotes
 } from '../reducer';
 import {
-  GetCollectionDetails,
-  kCollectionMemories,
-  UpdateMemoryCollection,
-  kCollectionUpdated,
-  kCollaboratorsAdded,
-  InviteCollaborators,
-} from '../createMemoryWebService';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
-import EventManager from '../../../common/eventManager';
+  CollaboratorsAPI
+} from '../saga';
 // @ts-ignore
-import DraggableFlatList from 'react-native-draggable-flatlist';
-import {ToastMessage} from '../../../common/component/Toast';
-import {kCollaborators} from '../publish';
-import {getCommaSeparatedArray} from '../dataHelper';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
+import { getCommaSeparatedArray } from '../dataHelper';
 
 type State = {[x: string]: any};
 type Props = {

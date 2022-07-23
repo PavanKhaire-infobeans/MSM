@@ -1,4 +1,3 @@
-import {Module} from 'module';
 
 /**
  * ENUM:DatabaseName---- Database Names

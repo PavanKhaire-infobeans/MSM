@@ -1,7 +1,7 @@
-import {Storage, MemoryActionKeys} from '../../common/constants';
-import {Account} from '../../common/loginStore';
-import {MemoryService} from '../../common/webservice/memoryServices';
+import { MemoryActionKeys, Storage } from '../../common/constants';
 import EventManager from '../../common/eventManager';
+import { Account } from '../../common/loginStore';
+import { MemoryService } from '../../common/webservice/memoryServices';
 export const kMemoryDraftsFetched = 'memoryDrafts';
 export const kPublishedMemoriesFetched = 'publishedMemories';
 export const kPublishedMemoryCollections = 'publishedMemoryCollections';

@@ -1,24 +1,16 @@
 import React from 'react';
-import { SafeAreaView, FlatList, StatusBar, View } from "react-native";
-import WebView from "react-native-webview";
-import {icon_people, 
-        icon_events, 
-        icon_settings,
-        icon_faq, 
-        icon_info, 
-        icon_headset,
-        block_user,
-        icon_tickets,
-        guide_tour_icon} from '../../images'
+import { FlatList, SafeAreaView, StatusBar, View } from "react-native";
+import DefaultPreference from 'react-native-default-preference';
+import { Actions } from 'react-native-router-flux';
 import DefaultListItem from '../../common/component/defaultListItem';
 import { Colors } from '../../common/constants';
-import { Actions } from 'react-native-router-flux';
 import { Account } from '../../common/loginStore';
-import NavigationBar from '../dashboard/NavigationBar';
-import { TabItems } from '../../common/component/TabBarIcons';
-import { GetBlockedUsersAndMemory, kBlockedUsers } from '../myMemories/myMemoriesWebService';
-import DefaultPreference from 'react-native-default-preference';
 import Utility from '../../common/utility';
+import {
+    block_user, guide_tour_icon, icon_faq,
+    icon_info, icon_tickets
+} from '../../images';
+import NavigationBar from '../dashboard/NavigationBar';
 
 type items = {
     title : string,

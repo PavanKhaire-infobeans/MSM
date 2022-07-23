@@ -1,24 +1,19 @@
-import {
-  requestPermission,
-  GenerateRandomID,
-  Colors,
-  encode_utf8,
-  decode_utf8,
-} from '../../constants';
 import ImageCropPicker, {
-  Image as PickerImage, openPicker
+  Image as PickerImage
 } from 'react-native-image-crop-picker';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { TempFile } from '../../../views/mindPop/edit';
+import {
+  Colors, decode_utf8, encode_utf8, GenerateRandomID, requestPermission
+} from '../../constants';
 import { FileType } from '../../database/mindPopStore/mindPopStore';
 import { ToastMessage } from '../Toast';
 //@ts-ignore
+import { Platform } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
-import { Alert, Platform } from 'react-native';
+import RNFetchBlob from 'rn-fetch-blob';
 import { Account } from '../../loginStore';
 import Utility from '../../utility';
-import RNFetchBlob from 'rn-fetch-blob';
-import { Console } from 'console';
 let options: any = {
   multiple: true,
   mediaType: 'photo',

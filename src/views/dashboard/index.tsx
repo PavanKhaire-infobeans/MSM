@@ -1,109 +1,19 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  TouchableOpacity,
-  NativeModules,
-  NativeEventEmitter,
-  requireNativeComponent,
-  UIManager,
-  Platform,
-  View,
-  Dimensions,
   Alert,
-  DeviceEventEmitter,
-  StatusBar,
-  Keyboard,
+  DeviceEventEmitter
 } from 'react-native';
 
-import NetInfo from '@react-native-community/netinfo';
-import Text from '../../common/component/Text';
-import {connect} from 'react-redux';
-import {
-  fontSize,
-  Storage,
-  encode_utf8,
-  MemoryActionKeys,
-  getValue,
-  keyInt,
-  getDetails,
-  decode_utf8,
-} from '../../common/constants';
-import {Account} from '../../common/loginStore';
-import {ToastMessage, No_Internet_Warning} from '../../common/component/Toast';
-import {NO_INTERNET, Colors} from '../../common/constants';
-import NoInternetView from '../../common/component/NoInternetView';
-import {kLogoutPressed} from '../../views/menu';
-import EventManager from '../../common/eventManager';
-import {UserProfile} from '../profile/userProfileWebService';
-import {kProfilePicUpdated} from '../profile/profileDataModel';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import BatchedBridge from 'react-native/Libraries/BatchedBridge/BatchedBridge';
-import {eventNames} from 'cluster';
-import AudioPlayer, {
-  kPlaying,
-  kPaused,
-  kEnded,
-  kNext,
-  kPrevious,
-  kClosed,
-} from '../../common/component/audio_player/audio_player';
-import MemoryDetails from '../memoryDetails';
-import {configurations} from '../../common/webservice/loginServices';
+import { connect } from 'react-redux';
 // import {eventEmitter} from '../splashscreen';
-import Utility from '../../common/utility';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {MemoryDraftsDataModel} from '../myMemories/MemoryDrafts/memoryDraftsDataModel';
-import {
-  delete_memory,
-  edit_memory,
-  move_to_draft,
-  remove_me_from_this_post,
-  block_memory,
-  cancelActions,
-  block_user,
-  report_user,
-  block_and_report,
-} from '../../images';
-import DeviceInfo from 'react-native-device-info';
-import {kReloadDraft} from '../myMemories/MemoryDrafts';
-import BottomPicker, {
-  ActionSheetItem,
-} from '../../common/component/bottomPicker';
 
 // @ts-ignore
-import DefaultPreference from 'react-native-default-preference';
-import {MonthObj, months} from '../createMemory';
-import MemoryActionsSheet, {
-  MemoryActionsSheetItem,
+import {
+  MemoryActionsSheetItem
 } from '../../common/component/memoryActionsSheet';
-import {
-  MemoryAction,
-  kMemoryActionPerformedOnTimeline,
-  kUpdateMemoryOnTimeline,
-  kUpdateMemoryOnPublised,
-} from '../myMemories/myMemoriesWebService';
-import {
-  GetActivities,
-  kGetInvidualNotification,
-  SetSeenActivity,
-  kForegroundNotice,
-  kActivityListener,
-  kForegroundNotificationListener,
-  kBackgroundNotice,
-} from '../notificationView/notificationServices';
-import {NotificationDataModel} from '../notificationView/notificationDataModel';
-import {any} from 'prop-types';
-import {
-  kNotificationIndicator,
-  TabItems,
-} from '../../common/component/TabBarIcons';
-import NavigationBar from './NavigationBar';
-import {DefaultDetailsMemory} from '../createMemory/dataHelper';
-import {
-  CreateUpdateMemory,
-  promptIdListener,
-} from '../createMemory/createMemoryWebService';
-import WebserviceCall, {logout} from '../../common/webservice/webservice';
+import { logout } from '../../common/webservice/webservice';
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }

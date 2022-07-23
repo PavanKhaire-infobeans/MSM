@@ -1,40 +1,21 @@
 import React from 'react';
+import {
+  ActivityIndicator, FlatList, Keyboard, RefreshControl, SafeAreaView, StatusBar, TouchableWithoutFeedback, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { NotificationDataModel } from '../../../../src/views/notificationView/notificationDataModel';
+import { GetActivities, kActivities, kActivityListener } from '../../../../src/views/notificationView/notificationServices';
+import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
+import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
 import Text from './../../../../src/common/component/Text';
 import {
-  SafeAreaView,
-  FlatList,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Image,
-  StatusBar,
-  RefreshControl,
-  ActivityIndicator,
-  Alert,
-  Platform,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from 'react-native';
-import {
-  ToastMessage,
-  No_Internet_Warning,
+  No_Internet_Warning, ToastMessage
 } from './../../../../src/common/component/Toast';
 import {
-  Colors,
-  fontSize,
-  getValue,
-  DraftType,
-  DraftActions,
-  NO_INTERNET,
-  fontFamily,
+  Colors
 } from './../../../../src/common/constants';
-import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
-import Utility from './../../../../src/common/utility';
 import EventManager from './../../../../src/common/eventManager';
-import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
-import { Actions } from 'react-native-router-flux';
-import { GetActivities, kActivities, kActivityListener } from '../../../../src/views/notificationView/notificationServices';
-import { NotificationDataModel } from '../../../../src/views/notificationView/notificationDataModel';
+import Utility from './../../../../src/common/utility';
 import styles from './styles';
 
 type State = { [x: string]: any };

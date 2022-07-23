@@ -186,12 +186,12 @@ const SelectTime = () => {
     <Animated.View style={containerStyle}>
       <TimeScroller
         title={utils.config.hour}
-        data={Array.from({length: 24}, (x, i) => i)}
+        data={Array.from({length: 24}, (_x, i) => i)}
         onChange={hour => setTime({...time, hour})}
       />
       <TimeScroller
         title={utils.config.minute}
-        data={Array.from({length: 60 / minuteInterval}, (x, i) => i * minuteInterval)}
+        data={Array.from({length: 60 / minuteInterval}, (_x, i) => i * minuteInterval)}
         onChange={minute => setTime({...time, minute})}
       />
       <View style={style.footer}>

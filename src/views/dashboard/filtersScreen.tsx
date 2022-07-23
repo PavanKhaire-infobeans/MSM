@@ -1,45 +1,33 @@
-import { group } from 'console';
 import React, { useEffect, useState } from 'react';
 import {
-  Dimensions,
-  TouchableHighlight,
   Image,
   Keyboard,
   SafeAreaView,
   StatusBar,
-  StyleSheet,
-  Text,
-  View,
-  Platform,
+  Text, TouchableHighlight, View
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
+import BottomPicker, {
+  ActionSheetItem
+} from '../../common/component/bottomPicker';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MultipleDropDownSelector from '../../common/component/multipleDropDownView';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { TabItems } from '../../common/component/TabBarIcons';
 import TextNew from '../../common/component/Text';
-import { Colors, fontSize, Size } from '../../common/constants';
+import { Colors } from '../../common/constants';
+import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
-import { action_close, check, icon_arrow, plus } from '../../images';
+import Utility from '../../common/utility';
+import { action_close } from '../../images';
+import { globe, lock, usercheck, users } from './../../../app/images';
 import {
   GET_MEMORY_LIST,
-  GET_TIMELINE_LIST,
-  SET_RECENT_FILTERS,
-  SET_TIMELINE_FILTERS,
-  ListType,
-  SET_FILTERS_NAME,
-  JUMP_TO_TO_DATE,
-  JUMP_TO_FROM_DATE
+  GET_TIMELINE_LIST, JUMP_TO_FROM_DATE, JUMP_TO_TO_DATE, ListType,
+  SET_FILTERS_NAME, SET_RECENT_FILTERS,
+  SET_TIMELINE_FILTERS
 } from './dashboardReducer';
-import NavigationBar from './NavigationBar';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import BottomPicker, {
-  ActionSheetItem,
-} from '../../common/component/bottomPicker';
-import EventManager from '../../common/eventManager';
-import { ScrollView } from 'react-native-gesture-handler';
-import { lock, users, globe, usercheck } from './../../../app/images'
-import Utility from '../../common/utility';
 import styles from './styles';
 
 type Props = { [x: string]: any };

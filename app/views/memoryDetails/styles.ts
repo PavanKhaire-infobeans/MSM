@@ -435,7 +435,7 @@ const Styles = EStyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: Colors.white,
     paddingHorizontal: 10,
-    marginBottom: 15,
+    marginBottom: 16,
     marginTop: 10,
     flexDirection: 'row',
   },
@@ -480,7 +480,7 @@ const Styles = EStyleSheet.create({
   commonPDFContainer: {
     elevation: 2,
     backgroundColor: Colors.timeLinebackground,
-    marginBottom: 15,
+    marginBottom: 20,
     borderWidth: 1,
     borderColor: Colors.timeLinebackground,
   },

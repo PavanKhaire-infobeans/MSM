@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {Colors, fontFamily, fontSize} from '../../constants';
+import { StyleSheet } from 'react-native';
+import { Colors, fontFamily, fontSize } from '../../constants';
 
 export const styles = StyleSheet.create({
   inputViewStyle: {
@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     borderColor: 'transparent',
     borderRadius: 3,
     justifyContent: 'center',
-    alignItems:'center',
+    alignItems: 'center',
     paddingLeft: 8,
     paddingRight: 3,
     paddingTop: 3,
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     ...fontSize(18),
     height: '100%',
     color: Colors.black,
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
     lineHeight: 24,
     letterSpacing: -0.1,
     paddingRight: 20,
@@ -31,42 +31,42 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     alignContent: 'center',
   },
-  mainContainer:{ 
-    justifyContent: 'flex-start', 
-    flexDirection: 'column' 
+  mainContainer: {
+    justifyContent: 'flex-start',
+    flexDirection: 'column'
   },
-  placeholderContainer:{ 
-    minWidth: 180, 
-    flexDirection: 'row', 
-    marginBottom: 5 
+  placeholderContainer: {
+    minWidth: 180,
+    flexDirection: 'row',
+    marginBottom: 5
   },
-  placeholderTextStyle:{ 
-    lineHeight: 26, 
-    fontFamily:fontFamily.Inter,
-    fontSize: 18, 
+  placeholderTextStyle: {
+    lineHeight: 26,
+    fontFamily: fontFamily.Inter,
+    fontSize: 18,
     color: Colors.newDescTextColor,//'#6B6B6B' 
   },
-  dropDownContainer:{
+  dropDownContainer: {
     height: 100,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
   },
-  animatedViewContainer:{
+  animatedViewContainer: {
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
-  minWidth:{ 
-    minWidth: 180 
+  minWidth: {
+    minWidth: 180
   },
-  errormessageTextStyle:{
+  errormessageTextStyle: {
     ...fontSize(11),
     color: Colors.ErrorColor,
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
     marginTop: 1,
     lineHeight: 13,
     letterSpacing: -0.1,
   },
-  
+
 });

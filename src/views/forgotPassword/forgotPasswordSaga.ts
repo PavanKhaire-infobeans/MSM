@@ -1,8 +1,7 @@
-import {takeLatest, put, call} from 'redux-saga/effects';
-import {ForgotPasswordServiceStatus} from './forgotPasswordReducer';
-import {forgotPasswordRequest} from '../../common/webservice/forgotPasswordService';
-import {Account} from '../../common/loginStore';
-import {kAdmin} from '../registration/getInstancesSaga';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { forgotPasswordRequest } from '../../common/webservice/forgotPasswordService';
+import { kAdmin } from '../registration/getInstancesSaga';
+import { ForgotPasswordServiceStatus } from './forgotPasswordReducer';
 
 /**
  * ForgotPassword Request Generator
@@ -30,7 +29,7 @@ function* ForgotPasswordService(...action: any[]) {
     });
   } catch (err) {
     //console.log("Login Service Error: ", err);
-    yield put({type: ForgotPasswordServiceStatus.RequestFailed, payload: err});
+    yield put({ type: ForgotPasswordServiceStatus.RequestFailed, payload: err });
   }
 }
 

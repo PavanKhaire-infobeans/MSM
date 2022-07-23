@@ -1,19 +1,12 @@
 import React from 'react';
 import {
-  TextInput,
-  TouchableOpacity,
-  View,
-  Animated,
-  Platform,
-  Image,
-  TouchableHighlight,
+  Animated, Image, Platform, TextInput, TouchableOpacity, View
 } from 'react-native';
-import Text from '../Text';
-import { Props, State } from './types';
-import { styles } from './styles';
-import { visibility, visibility_off } from '../../../images';
-import { Colors, fontFamily, fontSize } from '../../constants';
 import { eye, eyeoff } from '../../../../app/images';
+import { Colors } from '../../constants';
+import Text from '../Text';
+import { styles } from './styles';
+import { Props, State } from './types';
 
 const kTop = 19,
   kTopAnimated = 5;

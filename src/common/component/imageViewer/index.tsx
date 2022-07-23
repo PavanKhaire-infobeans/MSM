@@ -1,13 +1,9 @@
 import React from 'react';
 import {
-  Image,
-  Dimensions,
+  Dimensions, Image
 } from 'react-native';
-import Text from '../Text';
-import DeviceInfo from 'react-native-device-info';
-import {fontSize, Colors} from '../../constants';
-const {height} = Dimensions.get('screen');
 import ImageZoom from 'react-native-image-pan-zoom';
+const {height} = Dimensions.get('screen');
 //@ts-ignore
 import Carousel from 'react-native-snap-carousel';
 import styles from './styles';
@@ -26,7 +22,7 @@ export default class ImageViewer extends React.Component<Props> {
     actions: [],
   };
 
-  renderItem = (data: any) => {
+  renderItem = () => {
     <ImageZoom
       cropWidth={Dimensions.get('window').width}
       cropHeight={Dimensions.get('window').height}

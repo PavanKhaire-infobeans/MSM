@@ -1,34 +1,17 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  FlatList,
-  View,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-  TouchableHighlight,
-  StatusBar,
-  Keyboard,
-  Platform,
+  FlatList, Image, ImageBackground, Keyboard, SafeAreaView, StatusBar, TouchableHighlight, View
 } from 'react-native';
 import Text from './../../../src/common/component/Text';
 import {
-  icon_people,
-  icon_events,
-  icon_settings,
-  icon_faq,
-  icon_info,
-  icon_headset,
-  profile_placeholder,
-  action_close,
+  action_close, profile_placeholder
 } from './../../../src/images';
 // import NavigationBar from '../dashboard/NavigationBar';
-import NavigationBarForEdit from './../../../src/common/component/navigationBarForEdit';
 import { Actions } from 'react-native-router-flux';
-import { Colors, fontSize, Size } from './../../../src/common/constants';
-import Utility from './../../../src/common/utility';
-import { Account } from './../../../src/common/loginStore';
 import NavigationHeaderSafeArea from './../../../src/common/component/profileEditHeader/navigationHeaderSafeArea';
+import { Colors } from './../../../src/common/constants';
+import { Account } from './../../../src/common/loginStore';
+import Utility from './../../../src/common/utility';
 import styles from './styles';
 
 type Props = { [x: string]: any };

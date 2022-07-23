@@ -33,89 +33,89 @@ const Styles = EStyleSheet.create({
     resizeMode: 'center',
     marginTop: 20
   },
-  paginationContainer:{
-    position: 'absolute', 
-    bottom: 0, 
+  paginationContainer: {
+    position: 'absolute',
+    bottom: 0,
     width: '100%'
   },
-  startButtonContainer:{
-    position: 'absolute', 
+  startButtonContainer: {
+    position: 'absolute',
     bottom: 50
   },
-  startButtonStyle:{
-    padding: 5, 
-    paddingRight: 15, 
+  startButtonStyle: {
+    padding: 5,
+    paddingRight: 15,
     paddingLeft: 15
   },
-  startTextStyle:{
+  startTextStyle: {
     ...fontSize(22),
     fontWeight: '500',
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.TextColor,
   },
-  dotStyle:{
+  dotStyle: {
     width: 8,
     height: 8,
     borderRadius: 4,
     marginHorizontal: 0,
     backgroundColor: Colors.TextColor,
   },
-  inactiveDotStyle:{
+  inactiveDotStyle: {
     width: 8,
     height: 8,
     borderRadius: 4,
     marginHorizontal: 0,
     backgroundColor: Colors.lightGreen,
   },
-  renderAppIntroContainer:{
+  renderAppIntroContainer: {
     paddingTop: 30,
     width: Dimensions.get('window').width,
     flex: 1,
     marginBottom: 50,
   },
-  imageBgContainer:{
+  imageBgContainer: {
     width: '100%',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imageBgSubContainer:{
+  imageBgSubContainer: {
     flex: 2,
     width: Dimensions.get('window').width,
     justifyContent: 'center',
   },
-  imageStyle:{
+  imageStyle: {
     resizeMode: 'stretch',
     width: Dimensions.get('window').width,
   },
-  containtContainerStyle:{
+  containtContainerStyle: {
     position: 'absolute',
     width: Dimensions.get('window').width,
     height: '100%',
     bottom: 0,
   },
-  animatedViewContainer:{
+  animatedViewContainer: {
     flex: 2,
     maxHeight: '72%',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  AnimatedViewStyle:{
+  AnimatedViewStyle: {
     flex: 1,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  ScrollImagesStyle:{
+  ScrollImagesStyle: {
     maxHeight: '100%',
     width: Dimensions.get('window').width,
   },
-  emptyView:{
-    flex: 0.5, 
+  emptyView: {
+    flex: 0.5,
     width: '100%'
   },
-  descriptionContainer:{
+  descriptionContainer: {
     flex: 1,
     maxHeight: '28%',
     justifyContent: 'flex-start',
@@ -123,19 +123,19 @@ const Styles = EStyleSheet.create({
     width: '100%',
     paddingTop: 0,
   },
-  descriptionAnimatedViewStyle:{
+  descriptionAnimatedViewStyle: {
     width: '100%',
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
-  descTextContainer:{
+  descTextContainer: {
     flex: 1,
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
-  titleTextStyle:{
+  titleTextStyle: {
     ...fontSize(24),
     color: Colors.TextColor,
     width: Dimensions.get('window').width,
@@ -143,10 +143,10 @@ const Styles = EStyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
   },
-  descTextStyle:{
+  descTextStyle: {
     ...fontSize(18),
     color: Colors.TextColor,
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
     width: Dimensions.get('window').width,
     textAlign: 'center',
     padding: 10,

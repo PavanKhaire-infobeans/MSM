@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import {
-  View,
-  Animated,
-  TouchableHighlight,
-  Text as DefText,
-  Platform,
-  DeviceEventEmitter,
+  Animated, DeviceEventEmitter, Platform, Text as DefText, TouchableHighlight, View
 } from 'react-native';
-import Text from '../Text';
-import DeviceInfo from 'react-native-device-info';
 import { fontFamily, fontSize } from '../../constants';
+import Text from '../Text';
 type State = {
   backgroundColor: string;
   message: string;

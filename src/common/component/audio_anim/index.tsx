@@ -4,7 +4,7 @@ import { Animated, View } from 'react-native';
 import Styles from './styles';
 const duration = 44;
 const multiPlier = 1.96;
-const Animator = (props: any) => {
+const Animator = () => {
   let views: Array<string> = [
     'first',
     'second',

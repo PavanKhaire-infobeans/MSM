@@ -1,7 +1,7 @@
 import { Platform, Alert, DeviceEventEmitter } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { Actions } from 'react-native-router-flux';
-import { Storage, NO_INTERNET, Colors } from '../constants';
+import { Storage } from '../constants';
 import Utility from '../utility';
 import loaderHandler from '../component/busyindicator/LoaderHandler';
 import { LoginStore, Account, UserData } from '../loginStore';

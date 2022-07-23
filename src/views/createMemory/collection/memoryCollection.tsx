@@ -1,44 +1,28 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableHighlight,
-  FlatList,
-  Alert,
-} from 'react-native';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
+import {
+  FlatList, Image, Keyboard, Platform, SafeAreaView,
+  StatusBar, Text, TouchableHighlight, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
 // @ts-ignore
-import {Colors, fontSize, decode_utf8, fontFamily} from '../../../common/constants';
-import {
-  add_icon,
-  settings_icon,
-  checkbox_active,
-  checkbox,
-} from '../../../images';
-import {connect} from 'react-redux';
-import {CollectinAPI} from '../saga';
-import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import { connect } from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
+import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import {
-  No_Internet_Warning,
-  ToastMessage,
+  No_Internet_Warning
 } from '../../../common/component/Toast';
+import { Colors, decode_utf8, fontFamily, fontSize } from '../../../common/constants';
+import EventManager from '../../../common/eventManager';
 import Utility from '../../../common/utility';
+import {
+  add_icon, checkbox, checkbox_active, settings_icon
+} from '../../../images';
 import {
   GetPublishedMemoryCollections,
   kPublishedMemoryCollections,
-  MemoryAction,
+  MemoryAction
 } from '../../myMemories/myMemoriesWebService';
-import EventManager from '../../../common/eventManager';
+import { CollectinAPI } from '../saga';
 
 type State = {[x: string]: any};
 type Props = {[x: string]: any};

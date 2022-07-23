@@ -1,25 +1,13 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  Alert,
-} from 'react-native';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
-import {Colors, fontSize} from '../../common/constants';
-import NavigationThemeBar from '../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import {pdf_icon} from '../../images';
-import EventManager from '../../common/eventManager';
+import {
+  Alert, Image, Keyboard, Platform, SafeAreaView, Text,
+  TextInput, TouchableOpacity, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import Utility from '../../common/utility';
+import { Colors } from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import { pdf_icon } from '../../images';
 import Styles from './styles';
 
 type State = {[x: string]: any};

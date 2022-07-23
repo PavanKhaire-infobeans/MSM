@@ -1,4 +1,3 @@
-import {ReturnKeyTypeOptions} from 'react-native';
 export type Props = {
   style?: {[x: string]: any};
   placeholderText: string;

@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, StatusBar, Keyboard, Platform} from 'react-native';
-import {Account} from '../../common/loginStore';
-import InstanceView from './instanceView';
-import Text from '../../common/component/Text';
-import {Colors, getValue, fontSize, fontFamily} from '../../common/constants';
-import {Actions} from 'react-native-router-flux';
-import {SubmitButton} from '../../common/component/button';
+import React, { Component } from 'react';
+import { Keyboard, Platform, SafeAreaView, StatusBar, View } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { SubmitButton } from '../../common/component/button';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import {backBlkBtn} from '../../images';
-import {loginDrawerRef} from './prologue';
+import Text from '../../common/component/Text';
+import { Colors, fontFamily, fontSize, getValue } from '../../common/constants';
+import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
+import { backBlkBtn } from '../../images';
+import InstanceView from './instanceView';
+import { loginDrawerRef } from './prologue';
 
 export default class UserRegistrationStatus extends Component<{
   userDetails: any;

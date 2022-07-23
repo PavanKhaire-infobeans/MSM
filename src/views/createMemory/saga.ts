@@ -1,16 +1,12 @@
-import {takeLatest, put, call, all, delay} from 'redux-saga/effects';
-import {MemoryService} from '../../common/webservice/memoryServices';
-import {Storage, getValue, TimeStampMilliSeconds} from '../../common/constants';
-import {Account} from '../../common/loginStore';
+import { all, call, delay, put, takeLatest } from 'redux-saga/effects';
+import { getValue, Storage, TimeStampMilliSeconds } from '../../common/constants';
+import { Account } from '../../common/loginStore';
+import { MemoryService } from '../../common/webservice/memoryServices';
 import {
-  LocationListUpdated,
-  RecentTags,
-  SaveSearchList,
-  CollectionList,
-  SaveCollaborators,
-  SaveDescription,
+  CollectionList, LocationListUpdated,
+  RecentTags, SaveCollaborators,
+  SaveDescription, SaveSearchList
 } from './reducer';
-import EtherPadEditing from './etherpadWebView';
 
 export const kLocationFetched = 'fetchLocation';
 export const LocationAPI = 'locationAPI';

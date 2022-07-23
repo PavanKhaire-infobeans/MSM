@@ -1,5 +1,5 @@
 import { Colors, fontFamily } from '../../constants';
-import { bottomcalendar, calender, clock, editOff, editOn, newMemory, ontimelineClickclock, promptOn, promptsOff, timelinecalendar } from './../../../../app/images'
+import { bottomcalendar, clock, editOff, editOn, newMemory, ontimelineClickclock, promptOn, promptsOff, timelinecalendar } from './../../../../app/images'
 const React = require('react');
 const { ViewPropTypes } = ReactNative = require('react-native');
 const PropTypes = require('prop-types');

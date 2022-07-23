@@ -1,8 +1,7 @@
-import {Storage} from './../../../src/common/constants';
-import {Account} from './../../../src/common/loginStore';
-import {MemoryService} from './../../../src/common/webservice/memoryServices';
+import { Storage } from './../../../src/common/constants';
 import EventManager from './../../../src/common/eventManager';
-import {string} from 'prop-types';
+import { Account } from './../../../src/common/loginStore';
+import { MemoryService } from './../../../src/common/webservice/memoryServices';
 
 export const kMemoryDetailsFetched = 'memoryDetails';
 export const kAllLikes = 'allLikesData';

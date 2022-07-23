@@ -1,14 +1,9 @@
-import Utility from '../../../common/utility';
 import {
-  getValue,
-  getDetails,
-  keyInt,
-  keyArray,
-  keyString,
-  keyObject,
+  getDetails, keyArray, keyInt, keyObject, keyString
 } from '../../../common/constants';
-import {Account} from '../../../common/loginStore';
-import {profile_placeholder} from '../../../images';
+import { Account } from '../../../common/loginStore';
+import Utility from '../../../common/utility';
+import { profile_placeholder } from '../../../images';
 
 var publishedMemoriesArray: any[] = [];
 var data_count = 0;

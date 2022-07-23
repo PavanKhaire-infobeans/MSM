@@ -1,25 +1,17 @@
-import {
-  Image,
-  TouchableOpacity,
-  View,
-  StatusBar,
-  Dimensions,
-  Keyboard,
-  Platform,
-  TouchableWithoutFeedback,
-} from 'react-native';
 import React from 'react';
+import {
+  Image, Keyboard, StatusBar, TouchableWithoutFeedback, View
+} from 'react-native';
 //@ts-ignore
-import { fontSize, Colors, Size, fontFamily } from '../../constants';
-import { close_white, action_close, black_arrow } from '../../../images';
-import { moreoptions, penEdit } from '../../../../app/images';
-import Text from '../Text';
-import { Account } from '../../loginStore';
-import MessageDialogue from '../messageDialogue';
-import { Actions } from 'react-native-router-flux';
-import TextNew from '../Text';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import { Actions } from 'react-native-router-flux';
+import { penEdit } from '../../../../app/images';
+import { black_arrow, close_white } from '../../../images';
+import { Colors } from '../../constants';
+import { Account } from '../../loginStore';
 import Utility from '../../utility';
+import MessageDialogue from '../messageDialogue';
+import { default as Text, default as TextNew } from '../Text';
 import styles from './styles';
 
 const options = {

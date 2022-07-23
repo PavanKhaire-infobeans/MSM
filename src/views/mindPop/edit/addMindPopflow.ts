@@ -1,24 +1,14 @@
+import { TempFile } from '.';
+import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import {
-  getValue,
-  Storage,
-  TimeStampMilliSeconds,
-  uploadTask,
-  ERROR_MESSAGE,
-  asyncGen,
-  MindPopsInProgress,
-  decode_utf8,
+  asyncGen, ERROR_MESSAGE, getValue, Storage, TimeStampMilliSeconds, uploadTask
 } from '../../../common/constants';
 import MindPopStore from '../../../common/database/mindPopStore/mindPopStore';
 import EventManager from '../../../common/eventManager';
 import { Account } from '../../../common/loginStore';
 import {
-  addMindPops,
-  getMindPopWithId,
+  addMindPops, getMindPopWithId
 } from '../../../common/webservice/mindPopServices';
-import { action_picture } from '../../../images';
-import { TempFile } from '.';
-import { Platform } from 'react-native';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 
 export const kAddEditIdentifier = 'kAddEditIdentifier';
 export const kMindpopContentIdentifier = 'kMindpopContentIdentifier';

@@ -1,56 +1,22 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  Image,
-  Slider,
-  Alert,
-  Platform,
-  StatusBar,
-  Modal,
-  TextInput,
-  TouchableHighlight,
-  AppState,
-  AppStateStatus,
-  Keyboard,
+  AppState, AppStateStatus, Image, Modal, Platform, SafeAreaView, Slider, StatusBar, TextInput, TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import { Actions } from 'react-native-router-flux';
 import Text from '../../../common/component/Text';
 import {
-  Size,
-  requestPermission,
-  Colors,
-  getValue,
-  fontSize,
-  validFileName,
-  encode_utf8,
-  decode_utf8,
+  Colors, fontSize, getValue, requestPermission, Size, validFileName
 } from '../../../common/constants';
-import {Actions} from 'react-native-router-flux';
-//@ts-ignore
-import {Recorder, Player} from '@react-native-community/audio-toolkit';
-import {
-  recordStart,
-  audio_play,
-  audio_stop,
-  audio_pause,
-  rubbish,
-} from '../../../images';
+import { Player, Recorder } from '@react-native-community/audio-toolkit';
 import MainView from '../../../common/component/audio_anim';
-//@ts-ignore
-import SoundRecorder, {
-  FORMAT_MPEG4AAC,
-  ENCODER_HE_AAC,
-  ENCODER_AAC,
-} from 'react-native-sound-recorder';
-import {FileType} from '../../../common/database/mindPopStore/mindPopStore';
-import {Account} from '../../../common/loginStore';
-import Utility from '../../../common/utility';
 import {
-  ToastMessage,
-  No_Internet_Warning,
-} from '../../../common/component/Toast';
+  audio_pause, audio_play, recordStart, rubbish
+} from '../../../images';
+import SoundRecorder, {
+  ENCODER_AAC, ENCODER_HE_AAC, FORMAT_MPEG4AAC
+} from 'react-native-sound-recorder';
+import { FileType } from '../../../common/database/mindPopStore/mindPopStore';
 
 type AudioState =
   | 'none'
@@ -67,20 +33,20 @@ type State = {
   modalVisible: boolean;
   changedName: string;
   sliderValue: number;
-  error: {errMsg: string; show: boolean};
+  error: { errMsg: string; show: boolean };
 };
 
 type Props = {
   mindPopID: number | string;
   deleteItem?: Function;
   reset?: Function;
-  selectedItem?: {uri: string; [x: string]: any};
-  editRefresh: (data: {[x: string]: any}[]) => void;
+  selectedItem?: { uri: string;[x: string]: any };
+  editRefresh: (data: { [x: string]: any }[]) => void;
   recordingFromAddContent?: boolean;
   hideDelete?: boolean;
 };
 
-type Upload = {uploadTask: Function};
+type Upload = { uploadTask: Function };
 
 export default class CommonAudioRecorder extends React.Component<
   Props & Upload,
@@ -119,7 +85,7 @@ export default class CommonAudioRecorder extends React.Component<
       sliderValue: 0,
       modalVisible: false,
       changedName: '',
-      error: {errMsg: '', show: false},
+      error: { errMsg: '', show: false },
     };
     if (this.props.selectedItem) {
       this.state = {
@@ -128,17 +94,17 @@ export default class CommonAudioRecorder extends React.Component<
         path: this.props.selectedItem.uri || this.props.selectedItem.filePath,
       };
     } else {
-      this.state = {...this.state, audioState: 'none', path: ''};
+      this.state = { ...this.state, audioState: 'none', path: '' };
     }
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => { };
   isBackground = (state: AppStateStatus) => {
     if (state == 'background') {
       if (this.player && this.player.isPlaying) {
         this.processing = false;
         this.player.pause();
-        this.setState({audioState: 'paused'});
+        this.setState({ audioState: 'paused' });
       }
     } else {
       if (state == 'active') {
@@ -186,9 +152,8 @@ export default class CommonAudioRecorder extends React.Component<
       }
       this.setState({
         totalTime: this.state.totalTime + 1,
-        time: `${minInt < 10 ? 0 : ''}${minInt}:${
-          secInt < 10 ? 0 : ''
-        }${secInt}`,
+        time: `${minInt < 10 ? 0 : ''}${minInt}:${secInt < 10 ? 0 : ''
+          }${secInt}`,
       });
       setTimeout(this.time, 1000);
     }
@@ -223,9 +188,8 @@ export default class CommonAudioRecorder extends React.Component<
               ? this.state.sliderValue
               : sliderValue
             : 0,
-        time: `${minInt < 10 ? 0 : ''}${minInt}:${
-          secInt < 10 ? 0 : ''
-        }${secInt}`,
+        time: `${minInt < 10 ? 0 : ''}${minInt}:${secInt < 10 ? 0 : ''
+          }${secInt}`,
       });
       setTimeout(() => this.playTime(), 1000);
     }
@@ -238,8 +202,7 @@ export default class CommonAudioRecorder extends React.Component<
   audioActions = () => {
     if (this.state.audioState == 'none') {
       let today = new Date();
-      this.recording = `Rec${
-        today.getMonth() +
+      this.recording = `Rec${today.getMonth() +
         1 +
         '' +
         today.getFullYear() +
@@ -250,21 +213,21 @@ export default class CommonAudioRecorder extends React.Component<
         today.getMinutes() +
         '' +
         today.getSeconds()
-      }.m4a`;
+        }.m4a`;
 
       requestPermission('microphone').then(success => {
         if (success) {
           let path = SoundRecorder.PATH_CACHE + `/${this.recording}`;
-          var options: {[key: string]: any} = {
+          var options: { [key: string]: any } = {
             format: Platform.OS == 'ios' ? FORMAT_MPEG4AAC : ENCODER_HE_AAC,
           };
           if (Platform.OS == 'android') {
-            options = {...options, encoder: ENCODER_AAC};
+            options = { ...options, encoder: ENCODER_AAC };
           }
           SoundRecorder.start(path, options)
             .then(() => {
               this.processing = true;
-              this.setState({path, audioState: 'recording'});
+              this.setState({ path, audioState: 'recording' });
               this.time();
             })
             .catch((err: Error) => {
@@ -295,7 +258,7 @@ export default class CommonAudioRecorder extends React.Component<
       // } else {
       SoundRecorder.pause().then(() => {
         this.processing = false;
-        this.setState({audioState: 'record-pause'});
+        this.setState({ audioState: 'record-pause' });
       });
       // }
       // this.recorder = null;
@@ -308,7 +271,7 @@ export default class CommonAudioRecorder extends React.Component<
     } else if (this.state.audioState == 'record-pause') {
       SoundRecorder.resume().then(() => {
         this.processing = true;
-        this.setState({audioState: 'recording'});
+        this.setState({ audioState: 'recording' });
         this.time();
       });
     } else {
@@ -340,7 +303,7 @@ export default class CommonAudioRecorder extends React.Component<
       } else if (this.state.audioState == 'playing') {
         this.player.pause(() => {
           this.processing = false;
-          this.setState({audioState: 'paused'}, () => {
+          this.setState({ audioState: 'paused' }, () => {
             this.playTime();
           });
         });
@@ -350,7 +313,7 @@ export default class CommonAudioRecorder extends React.Component<
         }
         this.player.play(() => {
           this.processing = true;
-          this.setState({audioState: 'playing'}, () => {
+          this.setState({ audioState: 'playing' }, () => {
             this.playTime();
           });
         });
@@ -453,7 +416,7 @@ export default class CommonAudioRecorder extends React.Component<
    */
   uploadAudio = () => {
     if (this.state.changedName.length == 0) {
-      this.setState({error: {errMsg: 'No name entered', show: true}});
+      this.setState({ error: { errMsg: 'No name entered', show: true } });
       return;
     }
     if (!validFileName(this.state.changedName)) {
@@ -466,7 +429,7 @@ export default class CommonAudioRecorder extends React.Component<
       return;
     }
 
-    this.setState({modalVisible: false});
+    this.setState({ modalVisible: false });
     let timeVal = this.state.totalTime / 1000;
     let minInt = parseInt(`${parseInt(`${timeVal}`) / 60}`),
       secInt = parseInt(`${timeVal}`) % 60;
@@ -476,9 +439,8 @@ export default class CommonAudioRecorder extends React.Component<
         isLocal: true,
         filename: `${this.state.changedName}.${this.recording.split('.')[1]}`,
         type: `${FileType[FileType.audio]}s`,
-        time: `time1-${minInt < 10 ? 0 : ''}${minInt}:${
-          secInt < 10 ? 0 : ''
-        }${secInt}`,
+        time: `time1-${minInt < 10 ? 0 : ''}${minInt}:${secInt < 10 ? 0 : ''
+          }${secInt}`,
       },
     ]);
     Actions.pop();
@@ -507,13 +469,13 @@ export default class CommonAudioRecorder extends React.Component<
               this.state.audioState == 'record-pause'
             }
             onPress={() => this.back()}
-            style={{padding: 16, width: 100, alignItems: 'center'}}>
-            <Text style={{...fontSize(18), color: Colors.ThemeColor}}>
+            style={{ padding: 16, width: 100, alignItems: 'center' }}>
+            <Text style={{ ...fontSize(18), color: Colors.ThemeColor }}>
               Cancel
             </Text>
           </TouchableOpacity>
         ) : null}
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <View
             style={{
               alignSelf: 'center',
@@ -524,15 +486,15 @@ export default class CommonAudioRecorder extends React.Component<
             {(this.state.audioState == 'recorded' ||
               this.state.audioState == 'playing' ||
               this.state.audioState == 'paused') &&
-            !this.props.selectedItem ? (
+              !this.props.selectedItem ? (
               <Slider
                 value={this.state.sliderValue}
                 minimumTrackTintColor={Colors.ThemeColor}
                 maximumTrackTintColor={'#909090'}
                 thumbImage={require('../../../images/audio_kit/thumb.png')}
-                style={{width: 300}}
+                style={{ width: 300 }}
                 onValueChange={(value: number) => {
-                  this.setState({sliderValue: value});
+                  this.setState({ sliderValue: value });
                 }}
                 onSlidingComplete={() => {
                   this.seek();
@@ -541,12 +503,12 @@ export default class CommonAudioRecorder extends React.Component<
             ) : (
               <MainView
                 play={this.state.audioState == 'recording'}
-                style={{width: 320, height: 38, alignItems: 'center'}}
+                style={{ width: 320, height: 38, alignItems: 'center' }}
               />
             )}
           </View>
-          <View style={{flex: 1, alignItems: 'center'}}>
-            <Text style={{...fontSize(24), color: '#595959'}}>
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <Text style={{ ...fontSize(24), color: '#595959' }}>
               {this.state.time}
             </Text>
             <TouchableHighlight
@@ -559,14 +521,14 @@ export default class CommonAudioRecorder extends React.Component<
                   this.state.audioState == 'recording'
                     ? Colors.NewRadColor
                     : this.state.audioState == 'playing'
-                    ? Colors.NewRadColor
-                    : Colors.ThemeColor,
+                      ? Colors.NewRadColor
+                      : Colors.ThemeColor,
                 height: Size.byWidth(153),
                 width: Size.byWidth(153),
                 borderRadius: Size.byWidth(153) / 2,
                 marginTop: 30,
               }}>
-              <View style={{alignItems: 'center', height: '70%'}}>
+              <View style={{ alignItems: 'center', height: '70%' }}>
                 <View
                   style={{
                     width: 85,
@@ -577,13 +539,13 @@ export default class CommonAudioRecorder extends React.Component<
                     justifyContent: 'center',
                     paddingLeft:
                       this.state.audioState == 'recorded' ||
-                      this.state.audioState == 'paused'
+                        this.state.audioState == 'paused'
                         ? 10
                         : 0,
                   }}>
                   <Image source={this.buttonImage} />
                 </View>
-                <Text style={{...fontSize(16), color: '#fff', bottom: 0}}>
+                <Text style={{ ...fontSize(16), color: '#fff', bottom: 0 }}>
                   {this.buttonTitle}
                 </Text>
               </View>
@@ -602,31 +564,31 @@ export default class CommonAudioRecorder extends React.Component<
                   : this.state.audioState !== 'none' &&
                     this.state.audioState !== 'recording' &&
                     this.state.audioState !== 'record-pause'
-                  ? 'space-around'
-                  : 'center',
+                    ? 'space-around'
+                    : 'center',
               }}>
               {/** If Device is not tablet or state is recording */}
               {!DeviceInfo.isTablet() ||
-              this.state.audioState == 'recording' ||
-              this.state.audioState == 'record-pause' ? (
+                this.state.audioState == 'recording' ||
+                this.state.audioState == 'record-pause' ? (
                 <TouchableOpacity
-                  style={{padding: 16, width: 150, alignItems: 'center'}}
+                  style={{ padding: 16, width: 150, alignItems: 'center' }}
                   onPress={
                     this.state.audioState == 'recording' ||
-                    this.state.audioState == 'record-pause'
+                      this.state.audioState == 'record-pause'
                       ? () => {
-                          SoundRecorder.stop().then(
-                            (result: {path: string; duration: number}) => {
-                              this.processing = false;
-                              this.setState({
-                                audioState: 'recorded',
-                                path: result.path,
-                                totalTime: result.duration,
-                              });
-                              //this.recorder && this.recorder.destroy && this.recorder.destroy();
-                            },
-                          );
-                        }
+                        SoundRecorder.stop().then(
+                          (result: { path: string; duration: number }) => {
+                            this.processing = false;
+                            this.setState({
+                              audioState: 'recorded',
+                              path: result.path,
+                              totalTime: result.duration,
+                            });
+                            //this.recorder && this.recorder.destroy && this.recorder.destroy();
+                          },
+                        );
+                      }
                       : () => this.back()
                   }>
                   <Text
@@ -638,19 +600,19 @@ export default class CommonAudioRecorder extends React.Component<
                           : '#595959',
                     }}>
                     {this.state.audioState == 'recording' ||
-                    this.state.audioState == 'record-pause'
+                      this.state.audioState == 'record-pause'
                       ? 'Done'
                       : 'Cancel'}
                   </Text>
                 </TouchableOpacity>
               ) : null}
               {this.state.audioState !== 'none' &&
-              this.state.audioState !== 'recording' &&
-              this.state.audioState !== 'record-pause' ? (
+                this.state.audioState !== 'recording' &&
+                this.state.audioState !== 'record-pause' ? (
                 <TouchableOpacity
                   onPress={this.openModal}
-                  style={{padding: 16, width: 150, alignItems: 'center'}}>
-                  <Text style={{...fontSize(24), color: Colors.ThemeColor}}>
+                  style={{ padding: 16, width: 150, alignItems: 'center' }}>
+                  <Text style={{ ...fontSize(24), color: Colors.ThemeColor }}>
                     Save
                   </Text>
                 </TouchableOpacity>
@@ -702,7 +664,7 @@ export default class CommonAudioRecorder extends React.Component<
                 width: 80,
                 height: 44,
               }}>
-              <Text style={{...fontSize(18), color: Colors.ThemeColor}}>
+              <Text style={{ ...fontSize(18), color: Colors.ThemeColor }}>
                 Close
               </Text>
             </TouchableOpacity>
@@ -711,7 +673,7 @@ export default class CommonAudioRecorder extends React.Component<
         <Modal
           transparent={true}
           animationType="slide"
-          onRequestClose={() => {}}
+          onRequestClose={() => { }}
           presentationStyle="overFullScreen"
           visible={this.state.modalVisible}>
           <View
@@ -734,13 +696,13 @@ export default class CommonAudioRecorder extends React.Component<
                 justifyContent: 'space-around',
               }}>
               <View
-                style={{width: '100%', height: 44, justifyContent: 'center'}}>
-                <Text style={{...fontSize(16), color: '#1c1c1c'}}>Save as</Text>
+                style={{ width: '100%', height: 44, justifyContent: 'center' }}>
+                <Text style={{ ...fontSize(16), color: '#1c1c1c' }}>Save as</Text>
                 <TouchableOpacity
                   onPress={() => {
                     this.setState({
                       modalVisible: false,
-                      error: {errMsg: '', show: false},
+                      error: { errMsg: '', show: false },
                     });
                   }}
                   style={{
@@ -757,7 +719,7 @@ export default class CommonAudioRecorder extends React.Component<
                     style={{
                       ...fontSize(15),
                       color: 'black',
-                      fontWeight:'600',
+                      fontWeight: '600',
                     }}>
                     ✕
                   </Text>
@@ -770,7 +732,7 @@ export default class CommonAudioRecorder extends React.Component<
                   flexDirection: 'row',
                   padding: 10,
                 }}>
-                <View style={{width: '84%'}}>
+                <View style={{ width: '84%' }}>
                   <TextInput
                     style={{
                       width: '100%',
@@ -786,7 +748,7 @@ export default class CommonAudioRecorder extends React.Component<
                     onChangeText={(text: string) => {
                       this.setState({
                         changedName: text,
-                        error: {errMsg: '', show: false},
+                        error: { errMsg: '', show: false },
                       });
                     }}
                   />
@@ -799,7 +761,7 @@ export default class CommonAudioRecorder extends React.Component<
                       }}>
                       <Text
                         numberOfLines={2}
-                        style={{...fontSize(11), color: Colors.ErrorColor}}>
+                        style={{ ...fontSize(11), color: Colors.ErrorColor }}>
                         {'*' + this.state.error.errMsg}
                       </Text>
                     </View>
@@ -812,12 +774,12 @@ export default class CommonAudioRecorder extends React.Component<
                     height: 45,
                     justifyContent: 'center',
                   }}>
-                  <Text style={{...fontSize(14), color: 'black'}}>
+                  <Text style={{ ...fontSize(14), color: 'black' }}>
                     {this.recording ? this.recording.split('.')[1] : ''}
                   </Text>
                 </View>
               </View>
-              <View style={{width: '100%', alignItems: 'center'}}>
+              <View style={{ width: '100%', alignItems: 'center' }}>
                 <TouchableOpacity
                   style={{
                     borderRadius: 4,
@@ -830,7 +792,7 @@ export default class CommonAudioRecorder extends React.Component<
                   onPress={() => {
                     this.uploadAudio();
                   }}>
-                  <Text style={{...fontSize(15), color: 'white'}}>Save</Text>
+                  <Text style={{ ...fontSize(15), color: 'white' }}>Save</Text>
                 </TouchableOpacity>
               </View>
             </View>

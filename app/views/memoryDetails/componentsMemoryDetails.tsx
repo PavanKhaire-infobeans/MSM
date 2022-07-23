@@ -1,61 +1,30 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  View,
-  Text,
-  TouchableHighlight,
-  Dimensions,
-  StyleSheet,
-  FlatList,
-  ImageBackground,
-  Image,
-  TouchableOpacity,
-  Platform,
-  StatusBar,
-  Alert,
-  Keyboard,
-  Animated,
-  Share,
-  TouchableWithoutFeedback,
+  Animated, Dimensions, FlatList, Image, ImageBackground, Share, StatusBar, StyleSheet, Text,
+  TouchableHighlight, TouchableWithoutFeedback, View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import PlaceholderImageView from './../../../src/common/component/placeHolderImageView';
 import {
-  Colors,
-  fontSize,
-  decode_utf8,
-  NO_INTERNET,
-  constant,
-  MemoryActionKeys,
-  fontFamily,
+  Colors, fontSize, MemoryActionKeys, NO_INTERNET
 } from './../../../src/common/constants';
 import Utility from './../../../src/common/utility';
-import PlaceholderImageView from './../../../src/common/component/placeHolderImageView';
 //@ts-ignore
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Carousel from 'react-native-snap-carousel';
 import {
-  profile_placeholder,
-  black_arrow,
-  pdf_icon,
-  icon_arrow,
-  cue_back_white_bg,
-  white_arrow,
-  cueback_logo,
-  greenDotsButton,
-  white_head_icon,
-  blue_head_icon,
+  blue_head_icon, pdf_icon, profile_placeholder, white_head_icon
 } from './../../../src/images';
 
-import { calendarsmall, editbutton, globesmall, heart, moreoptions, pen, share, shareAndroid, sharebutton, shareiOS } from './../../images'
+import { pen, share } from './../../images';
 // import NavigationHeader from '../../common/component/navigationHeader';
-import DeviceInfo from 'react-native-device-info';
-import { ToastMessage, No_Internet_Warning } from './../../../src/common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from './../../../src/common/component/Toast';
 // import {getUserName} from '../createMemory/dataHelper';
-import itemSelectionStatusBar from './../../../src/common/component/inputAccessoryViews/itemSelectionStatusBar';
 import { Account } from './../../../src/common/loginStore';
 // import PublishedMemory from '../myMemories/PublishedMemory';
 import * as Animatable from 'react-native-animatable';
-import EventManager from './../../../src/common/eventManager';
 import { getUserName } from '../../../src/views/createMemory/dataHelper';
 import PublishedMemory from '../../../src/views/myMemories/PublishedMemory';
+import EventManager from './../../../src/common/eventManager';
 import Styles from './styles';
 export const kImage = 'image';
 export const kAudio = 'audio';

@@ -1,25 +1,12 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  Dimensions,
-  StatusBar,
-  Platform,
-  Alert,
-  WebView,
-  ActivityIndicator,
-  Keyboard,
-  Image,
-  View,
-  TouchableOpacity,
+  Dimensions, Keyboard, SafeAreaView, StatusBar
 } from 'react-native';
-import Text from '../../../common/component/Text';
-import {Actions} from 'react-native-router-flux';
-import {ToastMessage} from '../../../common/component/Toast';
+import { Actions } from 'react-native-router-flux';
+import { ToastMessage } from '../../../common/component/Toast';
 //@ts-ignore
-import {close_white, close_white_, profile_placeholder} from '../../../images';
-import DeviceInfo from 'react-native-device-info';
-import {Colors, decode_utf8} from '../../../common/constants';
 import Pdf from 'react-native-pdf';
+import { Colors, decode_utf8 } from '../../../common/constants';
 import Utility from '../../../common/utility';
 type Props = {[x: string]: any};
 type State = {[x: string]: any};

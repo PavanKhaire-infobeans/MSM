@@ -1,84 +1,40 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableHighlight,
-  FlatList,
-  StyleSheet,
-  Alert,
-} from 'react-native';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
-// @ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
 import {
-  Colors,
-  fontSize,
-  decode_utf8,
-  getValue,
-  ShareOptions,
-  NO_INTERNET,
-  fontFamily,
-} from '../../../common/constants';
-import NavigationThemeBar from '../../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import {
-  add_icon,
-  visibility_theme,
-  move_arrow,
-  radio_active,
-  radio,
-  team_icon,
-  checkbox_active,
-  checkbox,
-} from '../../../images';
-import {connect} from 'react-redux';
-import {
-  LocationAPI,
-  MemoryTagsAPI,
-  CollectinAPI,
-  CollaboratorsAPI,
-} from '../saga';
-import {
-  ResetLocation,
-  MemoryInitialsUpdate,
-  SaveCollection,
-  SaveShareOption,
-  SaveCollaborators,
-} from '../reducer';
-import {
-  GetCollectionDetails,
-  kCollectionMemories,
-  UpdateMemoryCollection,
-  kCollectionUpdated,
-  CollaboratorActionAPI,
-  kCollaboratorsActions,
-} from '../createMemoryWebService';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
-import EventManager from '../../../common/eventManager';
-// @ts-ignore
-import DraggableFlatList from 'react-native-draggable-flatlist';
-import {
-  ToastMessage,
-  No_Internet_Warning,
-} from '../../../common/component/Toast';
-import {kCollaborators} from '../publish';
-import Utility from '../../../common/utility';
-import {kSaveNotes} from './noteToCollaborators';
-import PlaceholderImageView from '../../../common/component/placeHolderImageView';
-import GroupPicHolder from '../../../common/component/group_pic_holder/group_pic_holder';
+  FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableHighlight, TouchableOpacity, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
-import {Account} from '../../../common/loginStore';
-import {kReloadDraft} from '../../myMemories/MemoryDrafts';
+import { connect } from 'react-redux';
+import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
+import GroupPicHolder from '../../../common/component/group_pic_holder/group_pic_holder';
+import PlaceholderImageView from '../../../common/component/placeHolderImageView';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import {
+  No_Internet_Warning, ToastMessage
+} from '../../../common/component/Toast';
+import {
+  Colors, fontFamily, fontSize
+} from '../../../common/constants';
+import EventManager from '../../../common/eventManager';
+import { Account } from '../../../common/loginStore';
+import Utility from '../../../common/utility';
+import {
+  checkbox, checkbox_active, team_icon
+} from '../../../images';
+import { kReloadDraft } from '../../myMemories/MemoryDrafts';
+import {
+  CollaboratorActionAPI,
+  kCollaboratorsActions
+} from '../createMemoryWebService';
+import { kCollaborators } from '../publish';
+import {
+  SaveCollaborators
+} from '../reducer';
+import {
+  CollaboratorsAPI
+} from '../saga';
+import { kSaveNotes } from './noteToCollaborators';
 
 type State = {[x: string]: any};
 type Props = {

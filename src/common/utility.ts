@@ -1,12 +1,8 @@
-import {Dimensions, Appearance} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
-import {call, take, cancelled} from 'redux-saga/effects';
-import {eventChannel} from 'redux-saga';
-import {Account} from './loginStore';
-import {constant} from '../common/constants';
-import DeviceInfo from 'react-native-device-info';
+import { Appearance, Dimensions } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
-import {MemoryActionKeys} from '../common/constants';
+import DeviceInfo from 'react-native-device-info';
+import { constant, MemoryActionKeys } from '../common/constants';
 
 export default class Utility {
   static shortMonths = [
@@ -140,7 +136,7 @@ export default class Utility {
           } else {
             return year;
           }
-        } catch (err) {}
+        } catch (err) { }
       }
     } catch (execption) {
       return '';
@@ -334,10 +330,10 @@ export default class Utility {
     return value * (Dimensions.get('window').width / constant.deviceWidth);
   };
 
-  static getDeviceWidth = () =>{
+  static getDeviceWidth = () => {
     return Dimensions.get('window').width;
   }
-  static getDeviceHeight = () =>{
+  static getDeviceHeight = () => {
     return Dimensions.get('window').height;
   }
 
@@ -369,15 +365,15 @@ export function* networkConnectivitySaga() {
     }*/
 }
 
-export function themechanges(data:string) {
+export function themechanges(data: string) {
   Utility.currentTheme = data;
-  let theme = Appearance.addChangeListener((listener) =>{
+  let theme = Appearance.addChangeListener((listener) => {
     Utility.currentTheme = listener.colorScheme;
-  }) 
+  })
 }
 
 export function getFontScale() {
-   DeviceInfo.getFontScale().then((fontScale) => {
+  DeviceInfo.getFontScale().then((fontScale) => {
     Utility.fontScale = fontScale;
   });
 }

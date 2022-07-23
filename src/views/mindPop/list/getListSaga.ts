@@ -1,9 +1,9 @@
-import {getMindPops} from '../../../common/webservice/mindPopServices';
-import {takeLatest, put, call} from 'redux-saga/effects';
-import {GetMindPopStatus} from './reducer';
-import {Storage, getValue, encode_utf8} from '../../../common/constants';
-import {Account} from '../../../common/loginStore';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { encode_utf8, getValue, Storage } from '../../../common/constants';
 import MindPopStore from '../../../common/database/mindPopStore/mindPopStore';
+import { Account } from '../../../common/loginStore';
+import { getMindPops } from '../../../common/webservice/mindPopServices';
+import { GetMindPopStatus } from './reducer';
 
 function* getListCall(params: any) {
   return getMindPops(`https://${Account.selectedData().instanceURL}`, params)
@@ -26,7 +26,7 @@ function* getListFlow(requestData: any) {
     });
     let value = getValue(responseBody, ['Details', 'totalItems']);
     // PARSE MINDPOP HERE
-    responseBody.Details.mindPopList.forEach((element: any, index: any) => {
+    responseBody.Details.mindPopList.forEach((_element: any, index: any) => {
       responseBody.Details.mindPopList[index].message = encode_utf8(
         responseBody.Details.mindPopList[index].message,
       );

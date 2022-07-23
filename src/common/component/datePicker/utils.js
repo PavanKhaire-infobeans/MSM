@@ -170,7 +170,7 @@ class utils {
     const dayOfMonth = (firstDay.day() + Number(!isGregorian)) % 7;
     return [
       ...new Array(dayOfMonth),
-      ...[...new Array(currentMonthDays)].map((i, n) => {
+      ...[...new Array(currentMonthDays)].map((_i, n) => {
         const thisDay = isGregorian ? date.date(n + 1) : date.jDate(n + 1);
         let disabled = false;
         if (minimumDate) {

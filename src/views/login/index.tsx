@@ -1,71 +1,36 @@
 import React from 'react';
 import {
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  TextInput,
-  KeyboardAvoidingView,
-  DeviceEventEmitter,
-  Keyboard,
-  Animated,
-  StatusBar,
-  Dimensions,
-  Modal,
-  Image,
-  TouchableHighlight,
-  Alert,
-  Platform,
-  ImageBackground,
-  TouchableWithoutFeedback,
-  KeyboardType,
-  KeyboardEvent,
-  ScrollView,
+  Alert, Animated, DeviceEventEmitter, Image, Keyboard, SafeAreaView,
+  TextInput, TouchableWithoutFeedback, View
 } from 'react-native';
-import Text from '../../common/component/Text';
-import CommunityBanner from '../../common/component/community/communityBanner';
-import { styles } from './designs';
-import { SubmitButton } from '../../common/component/button';
-import {
-  LoginControllerProtocol,
-  LoginController,
-  LoginViewProtocol,
-  Props,
-} from './loginController';
-import { connect } from 'react-redux';
-import {
-  LoginState,
-  LoginServiceStatus,
-  LoginInstanceStatus,
-} from './loginReducer';
-import TextField from '../../common/component/textField';
-import { Size, Colors, fontSize, fontFamily, CommonTextStyles } from '../../common/constants';
-import { LoginStore, Account } from '../../common/loginStore';
-import { UserData } from '../../common/loginStore/database';
 import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
+import Text from '../../common/component/Text';
+import TextField from '../../common/component/textField';
+import { Colors, CommonTextStyles } from '../../common/constants';
+import { Account, LoginStore } from '../../common/loginStore';
+import { UserData } from '../../common/loginStore/database';
 import { UserAccount } from '../menu/reducer';
+import { styles } from './designs';
+import {
+  LoginController, LoginControllerProtocol, LoginViewProtocol,
+  Props
+} from './loginController';
+import {
+  LoginInstanceStatus, LoginServiceStatus, LoginState
+} from './loginReducer';
 //@ts-ignore
-import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
-import GetFormData from '../registration/getFormData';
-import Utility from '../../common/utility';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import DeviceInfo from 'react-native-device-info';
-import CommonInstanceListsSelection, {
-  ListType,
-} from './commonInstanceListSelection';
+import { ToastMessage } from '../../common/component/Toast';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import { checkbox_active, checkbox, google_icon, apple_icon } from '../../images';
 // @ts-ignore
-import ToggleSwitch from 'toggle-switch-react-native';
+import { arrowRightCircle } from '../../../app/images';
+import MessageDialogue from '../../common/component/messageDialogue';
 import EventManager from '../../common/eventManager';
 import { RESET_ON_LOGIN, SET_KEYBOARD_HEIGHT } from '../dashboard/dashboardReducer';
-import { arrowRightCircle, loginBack, Rectangle } from '../../../app/images';
-export const kRegSignUp = 'Registration SignUp';
-import LinearGradient from 'react-native-linear-gradient';
 import Styles from './styles';
-import MessageDialogue from '../../common/component/messageDialogue';
+export const kRegSignUp = 'Registration SignUp';
 export enum loginType {
   googleLogin = 'Google',
   appleLogin = 'Apple',

@@ -1,50 +1,32 @@
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  StatusBar,
-  Alert,
-  ImageBackground,
-  DeviceEventEmitter,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from 'react-native';
-import Text from '../../../src/common/component/Text';
 import React, { useEffect, useState } from 'react';
-import { Actions } from 'react-native-router-flux';
 import {
-  mindpopBarIcon,
-  close_white,
-  instanceLogo,
-  profile_placeholder,
-  cueback_logo,
-  white_head_icon,
-  icon_notification,
-  calendar,
+  Alert,
+  DeviceEventEmitter, Image, Keyboard,
+  TouchableWithoutFeedback, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import Text from '../../../src/common/component/Text';
+import {
+  close_white
 } from '../../../src/images';
 
-import { calendarsmall, jumptocalendar, user } from '../../images'
+import { jumptocalendar, user } from '../../images';
 //@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontSize } from '../../../src/common/constants';
-import NavigationHeader from '../../../src/common/component/navigationHeader';
-import { Account } from '../../../src/common/loginStore';
-import EventManager from '../../../src/common/eventManager';
-import { kProfilePicUpdated } from '../../../src/views/profile/profileDataModel';
-import TabIcon, {
-  kNotificationIndicator,
-} from '../../../src/common/component/TabBarIcons';
-import Utility from '../../../src/common/utility';
-import { kForegroundNotificationListener } from '../../../src/views/notificationView/notificationServices';
-import { NotificationDataModel } from '../../../src/views/notificationView/notificationDataModel';
 import { connect } from 'react-redux';
+import {
+  kNotificationIndicator
+} from '../../../src/common/component/TabBarIcons';
+import { Colors } from '../../../src/common/constants';
+import EventManager from '../../../src/common/eventManager';
+import { Account } from '../../../src/common/loginStore';
+import Utility from '../../../src/common/utility';
+import { NotificationDataModel } from '../../../src/views/notificationView/notificationDataModel';
+import { kForegroundNotificationListener } from '../../../src/views/notificationView/notificationServices';
 import { AddNewNotification } from '../../../src/views/notificationView/reducer';
+import { kProfilePicUpdated } from '../../../src/views/profile/profileDataModel';
 import styles from './styles';
 
-import { chevrondown } from './../../images';
-import { JUMP_TO_VIEW_SHOW, ListType } from '../../../src/views/dashboard/dashboardReducer';
+import { JUMP_TO_VIEW_SHOW } from '../../../src/views/dashboard/dashboardReducer';
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
   leftButtons: { menu: 'navbar_leftbtn_menu' },

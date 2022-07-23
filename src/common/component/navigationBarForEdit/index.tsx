@@ -1,12 +1,12 @@
-import {StatusBar, Platform} from 'react-native';
+import { StatusBar } from 'react-native';
 import React from 'react';
 //@ts-ignore
 import NavigationHeader from '../navigationHeader';
 import ProfileEditHeader from '../profileEditHeader';
-import {Colors} from '../../constants';
+import { Colors } from '../../constants';
 import Utility from '../../utility';
 
-class NavigationBarForEdit extends React.Component<{[x: string]: any}> {
+class NavigationBarForEdit extends React.Component<{ [x: string]: any }> {
   render() {
     return (
       <NavigationHeader
@@ -16,7 +16,7 @@ class NavigationBarForEdit extends React.Component<{[x: string]: any}> {
           borderBottomColor: Colors.backrgba,
         }}>
         <StatusBar
-          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+          barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
         <ProfileEditHeader

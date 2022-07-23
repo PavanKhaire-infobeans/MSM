@@ -1,32 +1,22 @@
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  StatusBar,
-  Alert,
-  Keyboard,
-} from 'react-native';
-import Text from '../../common/component/Text';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
 import {
-  mindpopBarIcon,
-  close_white,
-  instanceLogo,
-  profile_placeholder,
+  Image, Keyboard, StatusBar, TouchableOpacity,
+  View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import Text from '../../common/component/Text';
+import {
+  close_white
 } from '../../images';
 //@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
-import {Colors, fontSize} from '../../common/constants';
 import NavigationHeader from '../../common/component/navigationHeader';
-import {Account} from '../../common/loginStore';
+import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
+import { Account } from '../../common/loginStore';
+import styles from './styles';
 
 export const kShowHideMenu = 'show_or_hide_menu';
 export const kSaveDraft = 'save_memory_draft';
-import styles from './styles';
 
 export default class CreateMemoryHeader extends React.Component<{
   [x: string]: any;

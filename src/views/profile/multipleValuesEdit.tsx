@@ -1,62 +1,42 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Text,
-  Keyboard,
-  StatusBar,
+  Image, Keyboard, SafeAreaView, StatusBar, TextInput, TouchableOpacity, View
 } from 'react-native';
-import {profile_placeholder} from '../../images';
-import TextField from '../../common/component/textField';
-import DropDown from '../../common/component/dropDown';
 import DeviceInfo from 'react-native-device-info';
+import DropDown from '../../common/component/dropDown';
+import TextField from '../../common/component/textField';
+import { profile_placeholder } from '../../images';
 
-import {action_camera, action_close, action_picture} from '../../images';
-import {
-  requestPermission,
-  Colors,
-  GenerateRandomID,
-  getValue,
-  testEmail,
-  testPhone,
-  NO_INTERNET,
-  fontSize,
-} from '../../common/constants';
 import ImageCropPicker, {
-  Image as PickerImage,
+  Image as PickerImage
 } from 'react-native-image-crop-picker';
-import {Actions} from 'react-native-router-flux';
-import {
-  UpdateFormValues,
-  UploadProfilePic,
-  PhotoType,
-  RemoveProfilePic,
-  UserProfile,
-} from './userProfileWebService';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import Utility from '../../common/utility';
-import BottomPicker, {
-  ActionSheetItem,
-} from '../../common/component/bottomPicker';
+import { Actions } from 'react-native-router-flux';
 import ActionSheet, {
-  ActionSheetItem as ImageSelectionSheetItem,
+  ActionSheetItem as ImageSelectionSheetItem
 } from '../../common/component/actionSheet';
+import BottomPicker, {
+  ActionSheetItem
+} from '../../common/component/bottomPicker';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import {
+  Colors, fontSize, GenerateRandomID, getValue, requestPermission, testEmail, testPhone
+} from '../../common/constants';
+import Utility from '../../common/utility';
+import { action_camera, action_close, action_picture } from '../../images';
+import {
+  RemoveProfilePic, UpdateFormValues, UploadProfilePic, UserProfile
+} from './userProfileWebService';
 //@ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
 // import DatePickerView from "../../common/component/DatePicker";
-import DateTimePicker from '../../common/component/DateTimePicker';
-import {kSetUserProfileData} from './userProfileWebService';
-import EventManager from '../../common/eventManager';
-import {ToastMessage, No_Internet_Warning} from '../../common/component/Toast';
-import NavigationBarForEdit from '../../common/component/navigationBarForEdit';
 import ActivityIndicatorView from '../../common/component/ActivityIndicatorView';
+import DateTimePicker from '../../common/component/DateTimePicker';
 import MultipleDropDownSelector from '../../common/component/multipleDropDownView';
-import TextNew from '../../common/component/Text';
-import {Account} from '../../common/loginStore';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import TextNew from '../../common/component/Text';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import EventManager from '../../common/eventManager';
+import { kSetUserProfileData } from './userProfileWebService';
 
 type Props = {
   sectionHeading: any;

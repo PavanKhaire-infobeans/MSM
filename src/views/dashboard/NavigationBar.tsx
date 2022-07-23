@@ -1,43 +1,29 @@
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  StatusBar,
-  Alert,
-  ImageBackground,
-  DeviceEventEmitter,
-  Keyboard,
-} from 'react-native';
-import Text from '../../common/component/Text';
 import React from 'react';
-import { Actions } from 'react-native-router-flux';
 import {
-  mindpopBarIcon,
-  close_white,
-  instanceLogo,
-  profile_placeholder,
-  cueback_logo,
-  white_head_icon,
-  icon_notification,
+  Alert, DeviceEventEmitter, Image, ImageBackground, Keyboard, Platform,
+  TouchableOpacity,
+  View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import Text from '../../common/component/Text';
+import {
+  close_white, icon_notification, instanceLogo, mindpopBarIcon, profile_placeholder,
+  white_head_icon
 } from '../../images';
 //@ts-ignore
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontFamily, fontSize } from '../../common/constants';
-import NavigationHeader from '../../common/component/navigationHeader';
-import { Account } from '../../common/loginStore';
-import EventManager from '../../common/eventManager';
-import { kProfilePicUpdated } from '../profile/profileDataModel';
-import TabIcon, {
-  isNotification,
-  kNotificationIndicator,
-} from '../../common/component/TabBarIcons';
-import Utility from '../../common/utility';
-import { kForegroundNotificationListener } from '../notificationView/notificationServices';
-import { NotificationDataModel } from '../notificationView/notificationDataModel';
 import { connect } from 'react-redux';
+import {
+  kNotificationIndicator
+} from '../../common/component/TabBarIcons';
+import { Colors, fontFamily, fontSize } from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import { Account } from '../../common/loginStore';
+import Utility from '../../common/utility';
+import { NotificationDataModel } from '../notificationView/notificationDataModel';
+import { kForegroundNotificationListener } from '../notificationView/notificationServices';
 import { AddNewNotification } from '../notificationView/reducer';
+import { kProfilePicUpdated } from '../profile/profileDataModel';
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
   leftButtons: { menu: 'navbar_leftbtn_menu' },

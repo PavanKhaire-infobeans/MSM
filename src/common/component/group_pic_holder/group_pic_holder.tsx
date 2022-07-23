@@ -1,23 +1,7 @@
 import React, {Component} from 'react';
 import {
   View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ImageBackground,
-  Platform,
 } from 'react-native';
-import {Colors, fontSize} from '../../constants';
-import {
-  warning_icon,
-  default_placeholder,
-  default_error_img,
-  profile_placeholder,
-} from '../../../images';
-import TextNew from '../Text';
-import {any} from 'prop-types';
-import {Url} from 'url';
-import {Account} from '../../loginStore';
 import PlaceholderImageView from '../placeHolderImageView';
 import Utility from '../../utility';
 import styles from './styles';

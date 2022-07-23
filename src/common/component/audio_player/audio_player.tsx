@@ -1,31 +1,17 @@
-import React, { Component, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  TouchableHighlight,
-  Slider,
-  Platform,
-  Alert,
-  TouchableWithoutFeedback,
+  Image, Slider, Text, TouchableHighlight, TouchableWithoutFeedback, View
 } from 'react-native';
 //@ts-ignore
-import { Recorder, Player } from '@react-native-community/audio-toolkit';
+import { Player } from '@react-native-community/audio-toolkit';
 import {
-  small_close_white,
-  music_note,
-  audio_details_open,
-  audio_details_close,
-  close_white_,
-  small_close_white_,
+  audio_details_close, audio_details_open, music_note, small_close_white_
 } from '../../../images';
-import { fontSize, encode_utf8, NO_INTERNET, Colors } from '../../constants';
-import { ToastMessage, No_Internet_Warning } from '../Toast';
+import { Colors, encode_utf8 } from '../../constants';
 import Utility from '../../utility';
-import styles from './styles'
+import { No_Internet_Warning, ToastMessage } from '../Toast';
+import styles from './styles';
 
-type State = { [x: string]: any };
 type Props = {
   files?: any;
   memoryTitle?: any;
@@ -170,12 +156,12 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
                         );
                       }, 2000);
                     },
-                    (err: any) => {
+                    () => {
                     },
                   );
                   setPlayer(newplayer);
                 },
-                (err: any) => {
+                () => {
                 },
               );
               totalDuration = setInterval(setTotalTime, 500);
@@ -300,12 +286,12 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
                     );
                   }, 2000);
                 },
-                (err: any) => {
+                () => {
                   //console.log(err)
                 },
               );
             },
-            (err: any) => {
+            () => {
               //console.log(err)
             },
           );
@@ -340,7 +326,6 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
   };
 
   const setCurrentTime = () => {
-    let newplayer = player;
 
     if (
       playershow?.currentTime > 0 &&

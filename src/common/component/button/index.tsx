@@ -1,8 +1,8 @@
 import React from 'react';
-import {TouchableOpacity, ViewStyle, Platform} from 'react-native';
+import { TouchableOpacity, ViewStyle } from 'react-native';
 import Text from '../../component/Text';
 //@ts-ignore
-import styles from './styles'
+import styles from './styles';
 
 type Props = {
   text: string;

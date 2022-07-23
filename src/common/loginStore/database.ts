@@ -1,7 +1,5 @@
-import {DatabaseName} from '../database';
+import { DatabaseName } from '../database';
 import MindPopStore from '../database/mindPopStore/mindPopStore';
-import Utility from '../utility';
-import {Account} from '.';
 
 const SQLite = require('react-native-sqlite-storage');
 
@@ -33,11 +31,11 @@ const LoginStore = (() => {
       db.transaction((tx: any) => {
         tx.executeSql(
           'CREATE TABLE IF NOT EXISTS accounts_table ' +
-            '(instanceID INTEGER, email VARCHAR(50), ' +
-            'userAuthToken VARCHAR(100), name VARCHAR(40), instanceURL VARCHAR(100), userID VARCHAR(12), ' +
-            'firstName VARCHAR(20), lastName VARCHAR(30), ' +
-            'profileImage VARCHAR(120), ' +
-            'instanceImage VARCHAR(100), isSSOLogin BOOLEAN, is_public_site BOOLEAN, PRIMARY KEY (instanceID, userID));',
+          '(instanceID INTEGER, email VARCHAR(50), ' +
+          'userAuthToken VARCHAR(100), name VARCHAR(40), instanceURL VARCHAR(100), userID VARCHAR(12), ' +
+          'firstName VARCHAR(20), lastName VARCHAR(30), ' +
+          'profileImage VARCHAR(120), ' +
+          'instanceImage VARCHAR(100), isSSOLogin BOOLEAN, is_public_site BOOLEAN, PRIMARY KEY (instanceID, userID));',
           [],
           (_: any, results: any) => {
             if (results) {

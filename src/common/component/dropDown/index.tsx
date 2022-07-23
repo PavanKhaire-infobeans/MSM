@@ -1,15 +1,11 @@
 import React from 'react';
 import {
-  View,
-  Animated,
-  Platform,
-  TouchableHighlight,
-  Picker,
+  Animated,Platform,TouchableHighlight, View
 } from 'react-native';
+import { Colors } from '../../constants';
 import Text from '../Text';
-import { Props, State } from './types';
 import { styles } from './styles';
-import { Colors, fontSize } from '../../constants';
+import { Props, State } from './types';
 
 const kTop = 19,
   kTopAnimated = 5;

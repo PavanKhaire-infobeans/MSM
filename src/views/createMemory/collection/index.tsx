@@ -1,50 +1,22 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableHighlight,
-  FlatList,
-  Alert,
-} from 'react-native';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
-// @ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
-import {Colors, fontSize, decode_utf8, fontFamily} from '../../../common/constants';
-import NavigationThemeBar from '../../../common/component/navigationBarForEdit/navigationBarWithTheme';
 import {
-  pdf_icon,
-  add_icon,
-  radio,
-  radio_active,
-  settings_icon,
-  checkbox_active,
-  checkbox,
-} from '../../../images';
-import {connect} from 'react-redux';
-import {
-  LocationAPI,
-  MemoryTagsAPI,
-  CollectinAPI,
-  MemoryCollectionsAPI,
-} from '../saga';
-import {ResetLocation, MemoryInitialsUpdate, SaveCollection} from '../reducer';
+  FlatList, Image, Keyboard, Platform, SafeAreaView, StatusBar, Text, TouchableHighlight, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
-import {No_Internet_Warning} from '../../../common/component/Toast';
+import { Colors, decode_utf8, fontFamily, fontSize } from '../../../common/constants';
 import Utility from '../../../common/utility';
-import {MemoryAction} from '../../myMemories/myMemoriesWebService';
+import {
+  add_icon, checkbox, checkbox_active, settings_icon
+} from '../../../images';
+import { SaveCollection } from '../reducer';
+import {
+  CollectinAPI
+} from '../saga';
 
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 class CollectionList extends React.Component<Props, State> {
   _listRef: any;
@@ -132,7 +104,7 @@ class CollectionList extends React.Component<Props, State> {
       if (!found) {
         collections.push(item);
       }
-      this.setState({collections: collections});
+      this.setState({ collections: collections });
     } catch (error) {
       console.log(error);
     }
@@ -148,7 +120,7 @@ class CollectionList extends React.Component<Props, State> {
     }
 
     return (
-      <View style={{minHeight: 80, flex: 1}}>
+      <View style={{ minHeight: 80, flex: 1 }}>
         <TouchableHighlight
           underlayColor={'#ffffffff'}
           onPress={() => this.setCollection(item.item)}
@@ -169,22 +141,22 @@ class CollectionList extends React.Component<Props, State> {
               justifyContent: 'space-between',
             }}>
             <View
-              style={{flex: 1, alignItems: 'flex-start', flexDirection: 'row'}}>
+              style={{ flex: 1, alignItems: 'flex-start', flexDirection: 'row' }}>
               <Image
-                style={{height: 25, width: 25, marginRight: 10}}
+                style={{ height: 25, width: 25, marginRight: 10 }}
                 resizeMode="contain"
                 source={isSelected ? checkbox_active : checkbox}></Image>
-              <View style={{paddingRight: 30}}>
+              <View style={{ paddingRight: 30 }}>
                 <Text
                   style={{
                     ...fontSize(16),
-                    fontWeight:'500',
+                    fontWeight: '500',
                     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                     color: Colors.TextColor,
                   }}>
                   {decode_utf8(item.item.name)}
                 </Text>
-                <Text style={{...fontSize(16), color: Colors.TextColor}}>
+                <Text style={{ ...fontSize(16), color: Colors.TextColor }}>
                   {'('}
                   {item.item.memory_count}
                   {' memories)'}
@@ -192,7 +164,7 @@ class CollectionList extends React.Component<Props, State> {
               </View>
             </View>
             <TouchableHighlight
-              style={{height: '100%', padding: 15}}
+              style={{ height: '100%', padding: 15 }}
               underlayColor={'#ffffff44'}
               onPress={() =>
                 Actions.push('collectionDetails', {
@@ -209,12 +181,12 @@ class CollectionList extends React.Component<Props, State> {
   };
 
   newCollectionCreated = (collection: any) => {
-    this.setState({collection: collection});
+    this.setState({ collection: collection });
   };
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <SafeAreaView
           style={{
             width: '100%',
@@ -222,8 +194,8 @@ class CollectionList extends React.Component<Props, State> {
             backgroundColor: Colors.NewThemeColor,
           }}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1}}>
+        <SafeAreaView style={{ width: '100%', flex: 1, backgroundColor: '#fff' }}>
+          <View style={{ flex: 1 }}>
             <NavigationHeaderSafeArea
               heading={'Add to Collections'}
               cancelAction={() => this.cancelAction()}
@@ -232,12 +204,12 @@ class CollectionList extends React.Component<Props, State> {
               saveValues={this.saveValue}
             />
             <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <TouchableHighlight
               underlayColor={'#ffffff55'}
-              style={{height: 70, width: '100%'}}
+              style={{ height: 70, width: '100%' }}
               onPress={() =>
                 Actions.push('createRenameCollection', {
                   isRename: false,
@@ -259,7 +231,7 @@ class CollectionList extends React.Component<Props, State> {
                   style={{
                     ...fontSize(16),
                     marginLeft: 10,
-                    fontWeight:'500',
+                    fontWeight: '500',
                     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                     color: Colors.NewTitleColor,
                   }}>
@@ -270,7 +242,7 @@ class CollectionList extends React.Component<Props, State> {
             <FlatList
               extraData={this.state}
               ref={ref => (this._listRef = ref)}
-              style={{width: '100%', flex: 1}}
+              style={{ width: '100%', flex: 1 }}
               onScroll={() => {
                 Keyboard.dismiss();
               }}
@@ -287,7 +259,7 @@ class CollectionList extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     collections: state.MemoryInitials.collections,
     collectionList: state.MemoryInitials.collectionList,
@@ -297,10 +269,10 @@ const mapState = (state: {[x: string]: any}) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    collectionAPI: () => dispatch({type: CollectinAPI}),
+    collectionAPI: () => dispatch({ type: CollectinAPI }),
     //   MemoryCollectionsAPI : (payload: any) => dispatch({type: MemoryCollectionsAPI, payload : payload}),
     setCollection: (payload: any) =>
-      dispatch({type: SaveCollection, payload: payload}),
+      dispatch({ type: SaveCollection, payload: payload }),
   };
 };
 

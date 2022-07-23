@@ -1,10 +1,8 @@
 import React from 'react';
 //@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
+import { Image, View } from 'react-native';
+import { UserData } from '../../loginStore/database';
 import Text from '../Text';
-import {View, Image} from 'react-native';
-import {Size, fontSize} from '../../constants';
-import {UserData} from '../../loginStore/database';
 import styles from './styles';
 
 type Props = {communityInfo: UserData; style?: any};

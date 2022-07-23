@@ -1,16 +1,10 @@
 import React from 'react';
 import {
-  TouchableOpacity,
-  ViewStyle,
-  View,
-  Image,
-  TouchableHighlight,
-  Platform,
+  Image,TouchableHighlight, View
 } from 'react-native';
 import Text from '../../component/Text';
 //@ts-ignore
-import {fontSize, Colors} from '../../constants';
-import {icon_arrow} from '../../../images';
+import { icon_arrow } from '../../../images';
 import styles from './styles';
 
 type Props = {

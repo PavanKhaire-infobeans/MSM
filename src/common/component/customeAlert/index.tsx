@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View, Platform } from "react-native";
+import { Modal, Platform, Pressable, Text, View } from "react-native";
 import { Colors } from "../../constants";
 import styles from './styles';
 

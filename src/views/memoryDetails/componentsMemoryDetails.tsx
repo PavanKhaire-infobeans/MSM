@@ -1,53 +1,28 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
-  View,
-  Text,
-  TouchableHighlight,
-  Dimensions,
-  StyleSheet,
-  FlatList,
-  ImageBackground,
-  Image,
-  TouchableOpacity,
-  Platform,
-  StatusBar,
-  Alert,
-  Keyboard,
-  Animated,
+  Animated, Dimensions, FlatList, Image, ImageBackground, Keyboard, Platform,
+  StatusBar, StyleSheet, Text,
+  TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
-import {
-  Colors,
-  fontSize,
-  decode_utf8,
-  NO_INTERNET,
-  fontFamily,
-} from '../../common/constants';
-import {Actions} from 'react-native-router-flux';
-import Utility from '../../common/utility';
+import { Actions } from 'react-native-router-flux';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
-//@ts-ignore
-import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {
-  profile_placeholder,
-  black_arrow,
-  pdf_icon,
-  icon_arrow,
-  cue_back_white_bg,
-  white_arrow,
-  cueback_logo,
-  greenDotsButton,
-  white_head_icon,
-  blue_head_icon,
-} from '../../images';
-import NavigationHeader from '../../common/component/navigationHeader';
-import DeviceInfo from 'react-native-device-info';
-import {ToastMessage, No_Internet_Warning} from '../../common/component/Toast';
-import {getUserName} from '../createMemory/dataHelper';
-import itemSelectionStatusBar from '../../common/component/inputAccessoryViews/itemSelectionStatusBar';
-import {Account} from '../../common/loginStore';
-import PublishedMemory from '../myMemories/PublishedMemory';
+  Colors, fontFamily, fontSize,
+  NO_INTERNET
+} from '../../common/constants';
+import Utility from '../../common/utility';
+//@ts-ignore
 import * as Animatable from 'react-native-animatable';
+import Carousel from 'react-native-snap-carousel';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
+import { Account } from '../../common/loginStore';
+import {
+  black_arrow, blue_head_icon, pdf_icon, profile_placeholder, white_arrow,
+  white_head_icon
+} from '../../images';
+import { getUserName } from '../createMemory/dataHelper';
+import PublishedMemory from '../myMemories/PublishedMemory';
 export const kImage = 'image';
 export const kAudio = 'audio';
 export const kPDF = 'pdf';

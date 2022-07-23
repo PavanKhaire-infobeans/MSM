@@ -1,43 +1,28 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-  View,
-  Image,
-  StatusBar,
-  NativeEventEmitter,
-  NativeModules,
-  Alert,
-  DeviceEventEmitter,
-  Linking,
-  ImageBackground,
+  ImageBackground, Linking, NativeEventEmitter, NativeModules, StatusBar, View
 } from 'react-native';
-import Text from '../../common/component/Text';
-import {
-  splashText,
-  msm_banner_white,
-  msm_coloured_banner,
-  splash_bg,
-} from '../../images';
-import {Storage, Colors, fontSize, decode_utf8} from '../../common/constants';
-import {Account} from '../../common/loginStore';
-import {Actions} from 'react-native-router-flux';
-import LoginStore, {UserData} from '../../common/loginStore/database';
-import {connect} from 'react-redux';
-import {UserAccount} from '../menu/reducer';
-import DeviceInfo from 'react-native-device-info';
-import EventManager from '../../common/eventManager';
-// @ts-ignore
-import DefaultPreference from 'react-native-default-preference';
 import base64 from 'react-native-base64';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {constants} from 'buffer';
-import Utility from '../../common/utility';
-import { DefaultDetailsMemory } from '../createMemory/dataHelper';
-import { CreateUpdateMemory, promptIdListener } from '../createMemory/createMemoryWebService';
-import { any } from 'prop-types';
+import DefaultPreference from 'react-native-default-preference';
+import DeviceInfo from 'react-native-device-info';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import Text from '../../common/component/Text';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
-import { GetPromptBYPromptId, GetPrompts, kGetPromptByID, kPromptsList } from '../myMemories/myMemoriesWebService';
+import { decode_utf8, fontSize } from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import { Account } from '../../common/loginStore';
+import LoginStore, { UserData } from '../../common/loginStore/database';
+import Utility from '../../common/utility';
+import {
+  splash_bg
+} from '../../images';
+import { CreateUpdateMemory, promptIdListener } from '../createMemory/createMemoryWebService';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
 import { GET_FILTERS_DATA_TIMELINE, ListType } from '../dashboard/dashboardReducer';
+import { UserAccount } from '../menu/reducer';
+import { GetPromptBYPromptId, kGetPromptByID } from '../myMemories/myMemoriesWebService';
 export const eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);
 
 type Props = {getUser: Function; user: UserData & {notLoggedIn: boolean}; fetchFiltersDataTimeline:Function};
@@ -138,6 +123,7 @@ class Splash extends Component<Props> {
             No_Internet_Warning();
           }
       }
+      
     }).catch(err => console.log('An error occurred'+ err));
  
     LoginStore.listAllAccounts().then((resp: any) => {
@@ -298,6 +284,7 @@ class Splash extends Component<Props> {
       });
     }
   }
+
   render() {
     let versionNumber = DeviceInfo.getVersion();
     return (

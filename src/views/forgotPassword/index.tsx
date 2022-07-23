@@ -1,48 +1,35 @@
 import React from 'react';
 import {
-  View,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  TextInput,
-  StatusBar,
-  Keyboard,
+  Keyboard, KeyboardAvoidingView,
+  SafeAreaView, StatusBar, TextInput, TouchableOpacity, View
 } from 'react-native';
+import { connect } from 'react-redux';
+import { SubmitButton } from '../../common/component/button';
 import Text from '../../common/component/Text';
-import CommunityBanner from '../../common/component/community/communityBanner';
-import {styles} from './designs';
-import {SubmitButton} from '../../common/component/button';
+import { styles } from './designs';
 import {
-  ForgotPasswordState,
-  ForgotPasswordServiceStatus,
+  ForgotPasswordServiceStatus, ForgotPasswordState
 } from './forgotPasswordReducer';
-import {connect} from 'react-redux';
 
-import TextField from '../../common/component/textField';
-import {
-  Size,
-  testEmail,
-  getValue,
-  Colors,
-  fontSize,
-  Storage,
-} from '../../common/constants';
-import {Actions} from 'react-native-router-flux';
-import {Account} from '../../common/loginStore';
-import {Props} from '../login/loginController';
+import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {ToastMessage, No_Internet_Warning} from '../../common/component/Toast';
+import TextField from '../../common/component/textField';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {
+  Colors,
+  fontSize, getValue, Size,
+  testEmail
+} from '../../common/constants';
+import { Account } from '../../common/loginStore';
+import { Props } from '../login/loginController';
 //@ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
-import Utility from '../../common/utility';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import {backBlkBtn} from '../../images';
-import {MemoryService} from '../../common/webservice/memoryServices';
-import {type} from 'os';
-import EventManager from '../../common/eventManager';
-import {loginInstanceRequest} from '../../common/webservice/loginServices';
-import {kAdmin} from '../registration/getInstancesSaga';
-import {ListType} from '../login/commonInstanceListSelection';
+import Utility from '../../common/utility';
+import { loginInstanceRequest } from '../../common/webservice/loginServices';
+import { backBlkBtn } from '../../images';
+import { ListType } from '../login/commonInstanceListSelection';
+import { kAdmin } from '../registration/getInstancesSaga';
 //Login Component
 class ForgotPassword extends React.Component<Props> {
   //Password Field Reference

@@ -1,35 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {
-  TouchableHighlight,
-  Dimensions,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
   FlatList,
-  Image,
-  Platform,
+  Image, ScrollView,
+  Text, TouchableHighlight, View
 } from 'react-native';
-import { SvgXml } from 'react-native-svg';
-import { Colors, fontFamily, fontSize } from '../../common/constants';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { action_close, black_arrow } from '../../images';
-import Image2020 from './../../../app/images/dashboard/timeline/2020.svg';
+import { Colors } from '../../common/constants';
+import { chevronleft, x, year1930, year1940, year1950, year1960, year1970, year1980, year1990, year2000, year2020 } from './../../../app/images';
 import Image2010 from './../../../app/images/dashboard/timeline/2010.svg';
-import Image2000 from './../../../app/images/dashboard/timeline/2000.svg';
-import Image1990 from './../../../app/images/dashboard/timeline/1990.svg';
-import Image1980 from './../../../app/images/dashboard/timeline/1980.svg';
-import Image1970 from './../../../app/images/dashboard/timeline/1970.svg';
-import Image1960 from './../../../app/images/dashboard/timeline/1960.svg';
-import Image1950 from './../../../app/images/dashboard/timeline/1950.svg';
-import Image1940 from './../../../app/images/dashboard/timeline/1940.svg';
-import Image1930 from './../../../app/images/dashboard/timeline/1930.svg';
-import { chevronleft, x, year1930, year1940, year1950, year1960, year1970, year1980, year1990, year2000, year2010, year2020 } from './../../../app/images'
-import styles from './styles';
-import Styles from './styles';
+import { default as styles, default as Styles } from './styles';
+
 type Props = { [x: string]: any };
 type State = { [x: string]: any };
 enum fieldType {

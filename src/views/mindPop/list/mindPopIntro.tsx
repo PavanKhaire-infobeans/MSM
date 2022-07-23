@@ -1,28 +1,15 @@
 import React from 'react';
 import {
-  Dimensions,
-  Modal,
-  View,
-  Animated,
-  SafeAreaView,
-  TouchableHighlight,
-  Image,
-  TouchableOpacity,
-  Alert,
-  Platform,
+  Animated, Dimensions, Image, Modal, Platform, SafeAreaView,
+  TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
 import { Props } from '../../login/loginController';
 //@ts-ignore
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Carousel from 'react-native-snap-carousel';
 import TextNew from '../../../common/component/Text';
 import { Colors, fontFamily, fontSize } from '../../../common/constants';
 import {
-  arrow1,
-  arrow2,
-  arrow5,
-  arrow6,
-  arrow7,
-  close_guide_tour,
+  arrow1, arrow2, arrow5, close_guide_tour
 } from '../../../images';
 
 export default class MindPopIntro extends React.Component<Props> {

@@ -1,23 +1,15 @@
 import React from 'react';
 import {
-  View,
-  Image,
   Animated,
   Dimensions,
-  FlatList,
-  TouchableOpacity,
-  Modal,
-  Keyboard,
-  Platform,
+  FlatList, Keyboard, Modal, Platform, TouchableOpacity, View
 } from 'react-native';
 // import {fontSize, Colors} from '../../constants';
 import { Actions } from 'react-native-router-flux';
 // import TextNew from '../Text';
-import Utility from './../../../src/common/utility';
-import { No_Internet_Warning } from './../../../src/common/component/Toast';
-import { blackStar, redstar } from './../../images'
 import TextNew from '../../../src/common/component/Text';
-import { Colors, fontFamily, fontSize } from '../../../src/common/constants';
+import { No_Internet_Warning } from './../../../src/common/component/Toast';
+import Utility from './../../../src/common/utility';
 import styles from './styles';
 const { height } = Dimensions.get('window');
 

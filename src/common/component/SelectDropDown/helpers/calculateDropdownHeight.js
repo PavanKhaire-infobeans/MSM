@@ -1,5 +1,5 @@
 import { Dimensions } from "react-native";
-const { width, height } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 const DROPDOWN_MAX_HEIGHT = height * 0.4;
 
 export default calculateDropdownHeight = (

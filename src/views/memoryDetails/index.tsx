@@ -1,140 +1,47 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  FlatList,
-  View,
-  TouchableHighlight,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  ImageBackground,
-  ScrollView,
-  Alert,
-  TextInput,
-  Keyboard,
-  Dimensions,
-  StatusBar,
-  Platform,
-  NativeModules,
-  DeviceEventEmitter,
-  Animated,
+  Alert, Animated, DeviceEventEmitter, Dimensions, FlatList, Image, ImageBackground, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, TextInput, TouchableHighlight,
+  TouchableOpacity, View
 } from 'react-native';
-import {
-  GetMemoryDetails,
-  GetAllComments,
-  kMemoryDetailsFetched,
-  kAllLikes,
-  GetAllLikes,
-  Like,
-  Unlike,
-  kLiked,
-  kUnliked,
-  kComment,
-  kAllComment,
-  PostComment,
-  DeleteComment,
-  kDeleteComment,
-  EditComment,
-  kEditComment,
-  kLikeOnComment,
-  kUnlikeOnComment,
-} from './detailsWebService';
-import WebView from 'react-native-webview';
-import EventManager from '../../common/eventManager';
-import { ToastMessage, No_Internet_Warning } from '../../common/component/Toast';
-import {
-  Colors,
-  fontSize,
-  getValue,
-  decode_utf8,
-  encode_utf8,
-  NO_INTERNET,
-  TimeStampMilliSeconds,
-  getDetails,
-  keyArray,
-  MemoryActionKeys,
-  keyInt,
-  keyBoolean,
-  keyString,
-  fontFamily,
-} from '../../common/constants';
-import { MemoryDataModel, kNews, kSports } from './memoryDataModel';
-import { Actions } from 'react-native-router-flux';
-import {
-  black_arrow,
-  pdf_icon,
-  icon_like,
-  icon_like_selected,
-  icon_comment,
-  icon_share,
-  icon_send,
-  arrow_theme_left,
-  white_arrow,
-  block_user,
-  report_user,
-  block_and_report,
-  add_icon_small,
-} from '../../images';
-import {
-  profile_placeholder,
-  delete_memory,
-  edit_memory,
-  move_to_draft,
-  remove_me_from_this_post,
-  block_memory,
-  cancelActions,
-} from '../../images';
-import Text from '../../common/component/Text';
 import DeviceInfo from 'react-native-device-info';
-//@ts-ignore
+import { Actions } from 'react-native-router-flux';
+import WebView from 'react-native-webview';
+import Text from '../../common/component/Text';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {
+  Colors, decode_utf8, encode_utf8, fontFamily, fontSize, getDetails, getValue, keyArray, keyInt,
+  keyString, MemoryActionKeys, TimeStampMilliSeconds
+} from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import {
+  add_icon_small, block_and_report, block_memory, block_user, cancelActions, delete_memory,
+  edit_memory, icon_comment, icon_like, icon_like_selected, icon_send, move_to_draft, profile_placeholder, remove_me_from_this_post, report_user
+} from '../../images';
+import {
+  DeleteComment, EditComment, GetAllComments, GetAllLikes, GetMemoryDetails, kAllComment, kAllLikes, kComment, kDeleteComment, kEditComment, kLiked, kLikeOnComment, kMemoryDetailsFetched, kUnliked, kUnlikeOnComment, Like, PostComment, Unlike
+} from './detailsWebService';
+import { kNews, kSports, MemoryDataModel } from './memoryDataModel';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-//@ts-ignore
-// import HTML from 'react-native-render-html';
 import RenderHtml from 'react-native-render-html';
-
-//@ts-ignore
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import AudioPlayer, {
+  kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious
+} from '../../common/component/audio_player/audio_player';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import MemoryActionsSheet, {
+  MemoryActionsSheetItem
+} from '../../common/component/memoryActionsSheet';
+import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import PlaceholderImageView from '../../common/component/placeHolderImageView';
-import { delete_comment } from '../../images';
-import AudioPlayer, {
-  kPlaying,
-  kPaused,
-  kEnded,
-  kNext,
-  kPrevious,
-  kClosed,
-} from '../../common/component/audio_player/audio_player';
-import NavigationHeader from '../../common/component/navigationHeader';
 import {
-  MemoryCollections,
-  Border,
-  MemoryTags,
-  CollaboratorView,
-  UserDetails,
-  FilesView,
-  kImage,
-  kPDF,
-  LikeCommentShare,
-  TitleAndValue,
-  TitleAndDescription,
-  kAudio,
-  LikeView,
-} from './componentsMemoryDetails';
-import { type } from 'os';
+  kMemoryActionPerformedOnMemoryDetails, MemoryAction
+} from '../myMemories/myMemoriesWebService';
 import { kPublishedMemoryUpdated } from '../myMemories/PublishedMemory/index';
 import {
-  MemoryAction,
-  kMemoryActionPerformedOnMemoryDetails,
-  kUpdateMemoryOnTimeline,
-  kUpdateMemoryOnPublised,
-} from '../myMemories/myMemoriesWebService';
-import MemoryActionsSheet, {
-  MemoryActionsSheetItem,
-} from '../../common/component/memoryActionsSheet';
-//@ts-ignore
+  Border, CollaboratorView, FilesView, kAudio, kImage, kPDF,
+  LikeCommentShare, LikeView, MemoryCollections, MemoryTags, TitleAndDescription, TitleAndValue, UserDetails
+} from './componentsMemoryDetails';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }

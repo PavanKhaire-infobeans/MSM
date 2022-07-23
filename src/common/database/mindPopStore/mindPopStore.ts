@@ -1,6 +1,6 @@
-import {DatabaseName, Table} from '../';
-import {getValue} from '../../constants';
-import {Account} from '../../loginStore';
+import { DatabaseName, Table } from '../';
+import { getValue } from '../../constants';
+import { Account } from '../../loginStore';
 
 const SQLite = require('react-native-sqlite-storage');
 
@@ -150,7 +150,7 @@ const MindPopStore = (() => {
     onOpened(db);
   }
 
-  async function close() {}
+  async function close() { }
 
   function _getAttachmentEntities(
     attachementArray: any[],
@@ -176,7 +176,7 @@ const MindPopStore = (() => {
     return attachment;
   }
 
-  function _createDBEntities(dataObj: {[x: string]: any}): MindPop[] {
+  function _createDBEntities(dataObj: { [x: string]: any }): MindPop[] {
     let itemsWebservice: any[] =
       getValue(dataObj, ['Details', 'mindPopList']) || [];
     var mindpopItems: MindPop[] = [];
@@ -235,11 +235,9 @@ const MindPopStore = (() => {
     var arrayOfAttachmentValue: string[] = [];
     for (var i = 0; i < attachments.length; i++) {
       let file = attachments[i];
-      var values = `(${file.instanceID}, ${file.mindpopID}, '${file.id}', '${
-        file.fileName
-      }', ${file.type},'${file.fileMime}', '${file.url}', '${
-        file.thumbnailURL
-      }', '${file.title}', '${Account.selectedData().userID}')`;
+      var values = `(${file.instanceID}, ${file.mindpopID}, '${file.id}', '${file.fileName
+        }', ${file.type},'${file.fileMime}', '${file.url}', '${file.thumbnailURL
+        }', '${file.title}', '${Account.selectedData().userID}')`;
       arrayOfAttachmentValue.push(values);
     }
     return arrayOfAttachmentValue;
@@ -299,27 +297,19 @@ const MindPopStore = (() => {
     let instanceID = Account.selectedData().instanceID;
 
     if (ids != null && ids.length !== 0) {
-      query = `DELETE FROM ${Table.Names.MindPopAttachments} WHERE ${
-        Table.MindPopAttachment.id
-      } IN (${ids.join(',')}) AND ${
-        Table.MindPopAttachment.instanceID
-      } = ${instanceID} AND ${Table.MindPopAttachment.userId} = ${
-        Account.selectedData().userID
-      }`;
+      query = `DELETE FROM ${Table.Names.MindPopAttachments} WHERE ${Table.MindPopAttachment.id
+        } IN (${ids.join(',')}) AND ${Table.MindPopAttachment.instanceID
+        } = ${instanceID} AND ${Table.MindPopAttachment.userId} = ${Account.selectedData().userID
+        }`;
     } else if (mindPopIDs != null && mindPopIDs.length != 0) {
-      query = `DELETE FROM ${Table.Names.MindPopAttachments} WHERE ${
-        Table.MindPopAttachment.mindPopID
-      } IN (${mindPopIDs.join(',')}) AND ${
-        Table.MindPopAttachment.instanceID
-      } = ${instanceID}  AND ${Table.MindPopAttachment.userId} = ${
-        Account.selectedData().userID
-      }`;
+      query = `DELETE FROM ${Table.Names.MindPopAttachments} WHERE ${Table.MindPopAttachment.mindPopID
+        } IN (${mindPopIDs.join(',')}) AND ${Table.MindPopAttachment.instanceID
+        } = ${instanceID}  AND ${Table.MindPopAttachment.userId} = ${Account.selectedData().userID
+        }`;
     } else {
-      query = `DELETE FROM ${Table.Names.MindPopAttachments}  WHERE ${
-        Table.MindPopAttachment.instanceID
-      } = ${instanceID}  AND ${Table.MindPopAttachment.userId} = ${
-        Account.selectedData().userID
-      }`;
+      query = `DELETE FROM ${Table.Names.MindPopAttachments}  WHERE ${Table.MindPopAttachment.instanceID
+        } = ${instanceID}  AND ${Table.MindPopAttachment.userId} = ${Account.selectedData().userID
+        }`;
     }
 
     let promise = new Promise((resolve: Function, reject: Function) => {
@@ -349,7 +339,7 @@ const MindPopStore = (() => {
   };
 
   return {
-    saveMindPop: (dataObj: {[x: string]: any}) => {
+    saveMindPop: (dataObj: { [x: string]: any }) => {
       //Delete from MindPopAttachments where instanceID = 649
       //AND mindPopID = 5670 AND id NOT IN (13112)
 
@@ -375,9 +365,8 @@ const MindPopStore = (() => {
                   var arrayOfAttachmentValue: string[] = [];
                   for (var i = 0; i < mindPopDBEntities.length; i++) {
                     let obj = mindPopDBEntities[i];
-                    var values = `(${obj.instanceID}, ${obj.id}, "${
-                      obj.message
-                    }", ${obj.lastModified}, ${Account.selectedData().userID})`;
+                    var values = `(${obj.instanceID}, ${obj.id}, "${obj.message
+                      }", ${obj.lastModified}, ${Account.selectedData().userID})`;
                     arrayOfValues.push(values);
                     let attachments: string[] =
                       getAttachmentInsertionStatement(obj);
@@ -437,8 +426,7 @@ const MindPopStore = (() => {
       var arrayOfValues = [];
       for (let obj of itemList) {
         arrayOfValues.push(
-          `(${obj.instanceID}, ${obj.id}, '${obj.message}', ${
-            obj.lastModified
+          `(${obj.instanceID}, ${obj.id}, '${obj.message}', ${obj.lastModified
           }, ${Account.selectedData().userID})`,
         );
       }
@@ -479,8 +467,7 @@ const MindPopStore = (() => {
       var arrayOfValues = [];
       for (let obj of itemList) {
         arrayOfValues.push(
-          `(${obj.instanceID}, ${obj.id}, '${obj.message}', ${
-            obj.lastModified
+          `(${obj.instanceID}, ${obj.id}, '${obj.message}', ${obj.lastModified
           }, ${Account.selectedData().userID})`,
         );
       }
@@ -515,15 +502,11 @@ const MindPopStore = (() => {
           if (db) {
             db.transaction((tx: any) => {
               if (tx) {
-                let query = `SELECT mp.instanceID, mp.id, mp.message, mp.lastModified, mpa.id as attachmentID, mpa.fileName, mpa.url, mpa.type, mpa.fileMime, mpa.thumbnailURL from ${
-                  Table.Names.MindPop
-                } mp LEFT JOIN ${
-                  Table.Names.MindPopAttachments
-                } mpa on mp.id = mpa.mindPopID WHERE mp.message  like '%${searchKeyword}%' and mp.instanceID = ${
-                  Account.selectedData().instanceID
-                }  and mp.userId = ${
-                  Account.selectedData().userID
-                } ORDER BY mp.id DESC, mpa.id DESC`;
+                let query = `SELECT mp.instanceID, mp.id, mp.message, mp.lastModified, mpa.id as attachmentID, mpa.fileName, mpa.url, mpa.type, mpa.fileMime, mpa.thumbnailURL from ${Table.Names.MindPop
+                  } mp LEFT JOIN ${Table.Names.MindPopAttachments
+                  } mpa on mp.id = mpa.mindPopID WHERE mp.message  like '%${searchKeyword}%' and mp.instanceID = ${Account.selectedData().instanceID
+                  }  and mp.userId = ${Account.selectedData().userID
+                  } ORDER BY mp.id DESC, mpa.id DESC`;
                 console.log('Query to search mindpop', query);
                 tx.executeSql(query, [], (_: any, results: any) => {
                   console.log('Query completed', results);
@@ -548,19 +531,14 @@ const MindPopStore = (() => {
       var query: String = '';
       let instanceID = Account.selectedData().instanceID;
       if (ids == null || ids.length == 0) {
-        query = `DELETE FROM ${Table.Names.MindPop} WHERE ${
-          Table.MindPop.instanceID
-        } = ${instanceID} AND ${Table.MindPop.userId} = ${
-          Account.selectedData().userID
-        }`;
+        query = `DELETE FROM ${Table.Names.MindPop} WHERE ${Table.MindPop.instanceID
+          } = ${instanceID} AND ${Table.MindPop.userId} = ${Account.selectedData().userID
+          }`;
       } else {
-        query = `DELETE FROM ${Table.Names.MindPop} WHERE ${
-          Table.MindPop.id
-        } IN (${ids.join(',')}) AND ${
-          Table.MindPop.instanceID
-        } = ${instanceID} AND ${Table.MindPop.userId} = ${
-          Account.selectedData().userID
-        }`;
+        query = `DELETE FROM ${Table.Names.MindPop} WHERE ${Table.MindPop.id
+          } IN (${ids.join(',')}) AND ${Table.MindPop.instanceID
+          } = ${instanceID} AND ${Table.MindPop.userId} = ${Account.selectedData().userID
+          }`;
       }
 
       let promise = new Promise((resolve: Function, reject: Function) => {
@@ -603,13 +581,10 @@ const MindPopStore = (() => {
 
     _getMindPopAttachments: (id: string) => {
       let instanceID = Account.selectedData().instanceID;
-      let query: string = `SELECT * FROM ${
-        Table.Names.MindPopAttachments
-      } WHERE ${Table.MindPopAttachment.mindPopID} = "${id}" AND ${
-        Table.MindPopAttachment.instanceID
-      } = ${instanceID} AND ${Table.MindPop.userId} = ${
-        Account.selectedData().userID
-      }`;
+      let query: string = `SELECT * FROM ${Table.Names.MindPopAttachments
+        } WHERE ${Table.MindPopAttachment.mindPopID} = "${id}" AND ${Table.MindPopAttachment.instanceID
+        } = ${instanceID} AND ${Table.MindPop.userId} = ${Account.selectedData().userID
+        }`;
 
       let promise = new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
@@ -639,13 +614,10 @@ const MindPopStore = (() => {
     deleteMindPopAttachment(ids: number[]) {
       var query: string = '';
       let instanceID = Account.selectedData().instanceID;
-      query = `DELETE FROM ${Table.Names.MindPopAttachments} WHERE ${
-        Table.MindPopAttachment.id
-      } IN (${ids.join(',')}) AND ${
-        Table.MindPopAttachment.instanceID
-      } = ${instanceID} AND ${Table.MindPopAttachment.userId} = ${
-        Account.selectedData().userID
-      }`;
+      query = `DELETE FROM ${Table.Names.MindPopAttachments} WHERE ${Table.MindPopAttachment.id
+        } IN (${ids.join(',')}) AND ${Table.MindPopAttachment.instanceID
+        } = ${instanceID} AND ${Table.MindPopAttachment.userId} = ${Account.selectedData().userID
+        }`;
       let promise = new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
           if (db) {

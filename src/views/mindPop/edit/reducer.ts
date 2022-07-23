@@ -1,8 +1,6 @@
-import {all, put, takeLatest} from 'redux-saga/effects';
+import { all, put, takeLatest } from 'redux-saga/effects';
 import MindPopStore, {
-  FileType,
-  MindPopAttachment,
-  Convert,
+  Convert, FileType, MindPopAttachment
 } from '../../../common/database/mindPopStore/mindPopStore';
 export enum AddMindPopStatus {
   RequestStarted = 'AddMindPopRequestStarted',

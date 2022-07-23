@@ -1,23 +1,20 @@
-import {combineReducers, createStore, applyMiddleware} from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import {loginStatus} from '../../views/login/loginReducer';
+import { forgotPassword } from '../../views/forgotPassword/forgotPasswordReducer';
+import { loginStatus } from '../../views/login/loginReducer';
+import { account } from '../../views/menu/reducer';
+import { addMindPop, editScreenMode } from '../../views/mindPop/edit/reducer';
+import { deleteMindPop } from '../../views/mindPop/list/deleteMindPopReducer';
 import {
-  getMindPop,
-  listState,
-  listCount,
-  selectedItemCount,
+  getMindPop, listCount, listState, selectedItemCount
 } from '../../views/mindPop/list/reducer';
-import {addMindPop, editScreenMode} from '../../views/mindPop/edit/reducer';
-import {intanceList, requestInstances} from '../../views/registration/reducer';
-import {deleteMindPop} from '../../views/mindPop/list/deleteMindPopReducer';
-import {account} from '../../views/menu/reducer';
-import {forgotPassword} from '../../views/forgotPassword/forgotPasswordReducer';
+import { intanceList, requestInstances } from '../../views/registration/reducer';
 //@ts-ignore
+import { MemoryInitials } from '../../views/createMemory/reducer';
+import { dashboardReducer } from '../../views/dashboard/dashboardReducer';
+import { NotificationsRedux } from '../../views/notificationView/reducer';
 import root from './sagas';
-import {MemoryInitials} from '../../views/createMemory/reducer';
-import {NotificationsRedux} from '../../views/notificationView/reducer';
-import {dashboardReducer} from '../../views/dashboard/dashboardReducer';
 
 const reducers = combineReducers({
   loginStatus,

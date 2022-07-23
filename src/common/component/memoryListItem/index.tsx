@@ -1,13 +1,6 @@
 import React from 'react';
 import {
-  Dimensions,
-  Image,
-  Platform,
-  View,
-  TouchableHighlight,
-  TouchableOpacity,
-  Alert,
-  TouchableWithoutFeedback,
+  Dimensions, Image, Platform, TouchableHighlight, TouchableWithoutFeedback, View
 } from 'react-native';
 import { ListType } from '../../../views/dashboard/dashboardReducer';
 import { Border } from '../../../views/memoryDetails/componentsMemoryDetails';
@@ -16,7 +9,7 @@ import {
   MediaView,
   MemoryBasicDetails,
   RenderLikeAndCommentSection,
-  _onShowMemoryDetails,
+  _onShowMemoryDetails
 } from '../../../views/myMemories/PublishedMemory';
 import { PublishedMemoryDataModel } from '../../../views/myMemories/PublishedMemory/publishedMemoryDataModel';
 import { Colors, fontFamily, fontSize } from '../../constants';
@@ -28,7 +21,6 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import WebView from 'react-native-webview';
 import { calendar } from '../../../images';
 import Prompts from '../prompts/prompts';
-import styles from './styles';
 
 type Props = {
   addMemoryFromPrompt?: (firstIndex: any, secondIndex: any) => void;

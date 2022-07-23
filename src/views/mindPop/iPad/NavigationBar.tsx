@@ -1,14 +1,14 @@
-import {Image, Platform, TouchableOpacity, View, StatusBar} from 'react-native';
-import Text from '../../../common/component/Text';
 import React from 'react';
+import { Image, Platform, StatusBar, TouchableOpacity, View } from 'react-native';
+import Text from '../../../common/component/Text';
 //@ts-ignore
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {backBtn, navBarCrossIconWhite} from '../../../images';
-import {connect} from 'react-redux';
-import {EditMode} from '../edit/reducer';
-import {Actions} from 'react-native-router-flux';
-import {Colors, fontFamily, fontSize} from '../../../common/constants';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 import NavigationHeader from '../../../common/component/navigationHeader';
+import { Colors, fontFamily, fontSize } from '../../../common/constants';
+import { backBtn, navBarCrossIconWhite } from '../../../images';
+import { EditMode } from '../edit/reducer';
 
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',

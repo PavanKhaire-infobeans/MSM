@@ -1,29 +1,23 @@
 import React, { Component } from "react";
-import { SafeAreaView, View, Image, Platform, StatusBar, TouchableOpacity, Alert, Keyboard, StyleSheet, Button, Dimensions, Animated, TouchableHighlight, TouchableWithoutFeedback, ImageBackground } from "react-native";
-import DeviceInfo from 'react-native-device-info';
-import { Size, fontSize, Colors, fontFamily, CommonTextStyles } from "../../common/constants";
-import Text from "../../common/component/Text";
+import { Dimensions, Image, ImageBackground, Keyboard, Platform, SafeAreaView, StatusBar, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { connect } from "react-redux";
+import Text from "../../common/component/Text";
+import { Colors, CommonTextStyles, fontFamily, fontSize } from "../../common/constants";
 import { GetInstances } from "./reducer";
 //@ts-ignore
-import BottomDrawer from '../../common/component/rn-bottom-drawer';
-import FindCommunity from "./findCommunity";
-import Login, { kRegSignUp, loginType } from "../login";
-import RegFirstStep from "./regFirstStep";
-import GetFormData, { kCueBackRegistration, kCueBackFormData } from "./getFormData";
 import LinearGradient from 'react-native-linear-gradient';
-import { No_Internet_Warning, ToastMessage } from "../../common/component/Toast";
-import RegistrationBackground from "./registrationBackground";
-import { search_theme, login_icon, recordRegistration, icon_arrow, backArrowWhite, apple_icon, google_icon, icon_mail, background_msm } from "../../images";
-import EventManager from "../../common/eventManager";
-import NavigationHeaderSafeArea from "../../common/component/profileEditHeader/navigationHeaderSafeArea";
-import { Account } from "../../common/loginStore";
 import { Actions } from "react-native-router-flux";
-import Utility from "../../common/utility";
-import loaderHandler from "../../common/component/busyindicator/LoaderHandler";
-import MessageDialogue from "../../common/component/messageDialogue";
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import { apple, google, loginBack, Rectangle } from "../../../app/images";
+import loaderHandler from "../../common/component/busyindicator/LoaderHandler";
+import MessageDialogue from "../../common/component/messageDialogue";
+import BottomDrawer from '../../common/component/rn-bottom-drawer';
+import { No_Internet_Warning, ToastMessage } from "../../common/component/Toast";
+import EventManager from "../../common/eventManager";
+import Utility from "../../common/utility";
+import { kRegSignUp, loginType } from "../login";
+import GetFormData, { kCueBackFormData, kCueBackRegistration } from "./getFormData";
+import RegFirstStep from "./regFirstStep";
 import Styles from "./styles";
 
 export enum Direction {

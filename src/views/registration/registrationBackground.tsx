@@ -1,12 +1,11 @@
 import React from 'react';
 
-import {View, Image} from 'react-native';
+import { Image, View } from 'react-native';
 
 import {
-  registrationOrangeDark,
-  registrationOrangeLight,
   registrationGreenDark,
-  registrationGreenLight,
+  registrationGreenLight, registrationOrangeDark,
+  registrationOrangeLight
 } from '../../images';
 
 export default class RegistrationBackground extends React.Component {

@@ -1,16 +1,16 @@
 import React from "react";
-import { Dimensions, Modal, View, Animated, TouchableHighlight, Image, TouchableOpacity, ScrollView, Platform, BackHandler, SafeAreaView } from "react-native";
+import { Animated, BackHandler, Dimensions, Image, Modal, Platform, SafeAreaView, ScrollView, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Props } from "../login/loginController";
 //@ts-ignore
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import TextNew from "../../common/component/Text";
-import { Colors, fontFamily, fontSize, Size } from "../../common/constants";
-import { add_content, arrow_left, arrow_right, close_big_grey, exit_tour, more_options_selected, msm_allPages_mindPop, msm_logo, msm_preserveYourMemories, progress_dot, progress_dot_check } from "../../images";
-import { SubmitButton } from "../../common/component/button";
 import LottieView from 'lottie-react-native';
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
-import Sound from "react-native-sound";
 import { Actions } from "react-native-router-flux";
+import Carousel from 'react-native-snap-carousel';
+import Sound from "react-native-sound";
+import { SubmitButton } from "../../common/component/button";
+import TextNew from "../../common/component/Text";
+import { Colors, fontFamily } from "../../common/constants";
+import { add_content, arrow_left, arrow_right, close_big_grey, exit_tour, more_options_selected, msm_allPages_mindPop, msm_logo, msm_preserveYourMemories, progress_dot, progress_dot_check } from "../../images";
 import styles from "./styles";
 const options = {
 	enableVibrateFallback: true,
@@ -53,7 +53,6 @@ export default class AppGuidedTour extends React.Component<Props> {
 			<TextNew>to get started.</TextNew></>, imageSource: require('../../common/lottieFiles/msm_guidedTour_animation5_part1.json')
 	},
 	]
-
 	_scrollView: ScrollView;
 	_timerId: any;
 	_childrenCount = 5;
@@ -116,7 +115,6 @@ export default class AppGuidedTour extends React.Component<Props> {
 			}
 		).start();
 	}
-
 
 	fadeOut = () => {
 		Animated.timing(
@@ -392,19 +390,6 @@ export default class AppGuidedTour extends React.Component<Props> {
 		);
 	}
 }
-// const styles = StyleSheet.create({
-//     bottomView:{
-//         height : Platform.OS == "ios" ? 70 : 100, 
-// 		  width:"100%",
-//         borderTopWidth : 0.5,
-//         borderColor: '#fff',
-//         shadowColor: '#000',
-//         shadowOffset: { width: 0, height: 2 },
-//         shadowOpacity: 4,
-//         shadowRadius: 2,  
-//         elevation: 15,		
-//     },
-// })
 
 function e(_e: any): (event: import("react-native").LayoutChangeEvent) => void {
 	throw new Error("Function not implemented.");

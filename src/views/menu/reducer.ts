@@ -1,6 +1,6 @@
-import {put, call, takeLatest} from 'redux-saga/effects';
-import {UserData, Account} from '../../common/loginStore';
-import {Storage} from '../../common/constants';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { Storage } from '../../common/constants';
+import { Account, UserData } from '../../common/loginStore';
 
 type Action = {
   type: UserAccount;
@@ -15,26 +15,26 @@ export enum UserAccount {
 }
 
 export const account = (
-  state: UserData & {notLoggedIn?: boolean} = {instanceID: 0, name: ''},
+  state: UserData & { notLoggedIn?: boolean } = { instanceID: 0, name: '' },
   action: Action,
-): UserData & {notLoggedIn?: boolean} => {
-  var copy = {...state};
+): UserData & { notLoggedIn?: boolean } => {
+  var copy = { ...state };
   if (typeof copy.notLoggedIn != 'undefined') {
     delete copy.notLoggedIn;
   }
   switch (action.type) {
     case UserAccount.Get:
-      return {...copy};
+      return { ...copy };
     case UserAccount.Store:
 
       Storage.save('userData', action.payload);
     case UserAccount.Set:
       Account.selectedData().values = action.payload;
-      return {...action.payload};
+      return { ...action.payload };
     case UserAccount.NotLoggedIn:
-      return {...copy, notLoggedIn: true};
+      return { ...copy, notLoggedIn: true };
     default:
-      return {...copy};
+      return { ...copy };
   }
 };
 
@@ -48,9 +48,9 @@ function* getUserData() {
       return await Storage.get('userData');
     });
     if (userData != null) {
-      yield put({type: UserAccount.Set, payload: userData});
+      yield put({ type: UserAccount.Set, payload: userData });
     } else {
-      yield put({type: UserAccount.NotLoggedIn});
+      yield put({ type: UserAccount.NotLoggedIn });
     }
   } catch (err) {
     //console.log("Error getting user data", err)

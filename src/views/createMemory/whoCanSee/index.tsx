@@ -1,62 +1,26 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableHighlight,
-  FlatList,
-  StyleSheet,
-} from 'react-native';
 import React from 'react';
-import {Actions} from 'react-native-router-flux';
+import {
+  FlatList, Image, Keyboard, Platform, SafeAreaView,
+  StatusBar, TouchableHighlight, View
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Text from '../../../common/component/Text';
 // @ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import { connect } from 'react-redux';
 import {
-  Colors,
-  fontSize,
-  decode_utf8,
-  getValue,
-  ShareOptions,
-  fontFamily,
+  Colors, fontFamily, fontSize,
+  ShareOptions
 } from '../../../common/constants';
-import NavigationThemeBar from '../../../common/component/navigationBarForEdit/navigationBarWithTheme';
 import {
-  add_icon,
-  visibility_theme,
-  move_arrow,
-  radio_active,
-  radio,
+  add_icon, radio, radio_active
 } from '../../../images';
-import {connect} from 'react-redux';
-import {LocationAPI, MemoryTagsAPI, CollectinAPI} from '../saga';
 import {
-  ResetLocation,
-  MemoryInitialsUpdate,
-  SaveCollection,
-  SaveShareOption,
+  SaveShareOption
 } from '../reducer';
-import {
-  GetCollectionDetails,
-  kCollectionMemories,
-  UpdateMemoryCollection,
-  kCollectionUpdated,
-} from '../createMemoryWebService';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
-import EventManager from '../../../common/eventManager';
 // @ts-ignore
-import DraggableFlatList from 'react-native-draggable-flatlist';
-import {ToastMessage} from '../../../common/component/Toast';
-import {getUserCount} from '../dataHelper';
-import NavigationHeader from '../../../common/component/navigationHeader';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
+import { getUserCount } from '../dataHelper';
 export const kWhoCanSeeThisMemory = 'whoCanSeeThisMemoryScreen';
 type State = {[x: string]: any};
 type Props = {

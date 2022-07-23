@@ -1,8 +1,8 @@
-import {DeleteMindPopOperation} from './deleteMindPopReducer';
-import {deleteMindPops} from '../../../common/webservice/mindPopServices';
-import {takeLatest, put, call} from 'redux-saga/effects';
-import {Storage} from '../../../common/constants';
-import {Account} from '../../../common/loginStore';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { Storage } from '../../../common/constants';
+import { Account } from '../../../common/loginStore';
+import { deleteMindPops } from '../../../common/webservice/mindPopServices';
+import { DeleteMindPopOperation } from './deleteMindPopReducer';
 
 function* getDeleteMindPopService(params: any) {
   return deleteMindPops(

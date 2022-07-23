@@ -12,10 +12,10 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  marginBottomImageStyle: { 
-    marginBottom: 15 
+  marginBottomImageStyle: {
+    marginBottom: 15
   },
-  noInternetTextStyle:{
+  noInternetTextStyle: {
     ...fontSize(18),
     fontWeight: '500',
     paddingBottom: 10,
@@ -23,14 +23,14 @@ const Styles = EStyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
-  normalTextStyle:{
+  normalTextStyle: {
     ...fontSize(16),
     fontWeight: 'normal',
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
     color: Colors.newDescTextColor,
     textAlign: 'center',
   },
-  tryAgainTextStyle:{
+  tryAgainTextStyle: {
     marginTop: 20,
     textAlign: 'center',
     fontSize: 16,

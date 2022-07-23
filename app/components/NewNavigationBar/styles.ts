@@ -20,7 +20,7 @@ const Styles = EStyleSheet.create({
     },
     cancleText: {
         color: Colors.newDescTextColor,
-        fontSize:16,
+        fontSize: 16,
         width: '100%',
         textAlign: 'center',
         fontWeight: '500',
@@ -29,11 +29,11 @@ const Styles = EStyleSheet.create({
     },
     JumptoText: {
         color: Colors.newDescTextColor,
-        fontSize:16,
+        fontSize: 16,
         width: '100%',
         textAlign: 'center',
         fontWeight: '400',
-        fontFamily: fontFamily.Inter ,
+        fontFamily: fontFamily.Inter,
         lineHeight: 16
     },
     titleContainer: {
@@ -98,9 +98,9 @@ const Styles = EStyleSheet.create({
         alignItems: 'center',
     },
 
-    rightButtonsTouchable: { 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+    rightButtonsTouchable: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     avatar: { height: 30, width: 30, borderRadius: 15, alignContent: 'center' },
 
@@ -135,7 +135,7 @@ const Styles = EStyleSheet.create({
     },
     rightContainer: {
         flex: 1.5,
-        height:60,
+        height: 60,
         // justifyContent: 'center',
         marginRight: 8,
     },
@@ -152,8 +152,8 @@ const Styles = EStyleSheet.create({
         borderWidth: 1,
         borderColor: Colors.bordercolor
     },
-    marginBottom:{ 
-        marginBottom: 8 
+    marginBottom: {
+        marginBottom: 8
     }
 });
 

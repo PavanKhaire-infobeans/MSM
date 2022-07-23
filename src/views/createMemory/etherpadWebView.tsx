@@ -1,31 +1,17 @@
-import {
-  View,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  Alert,
-  ActivityIndicator,
-  ColorPropType,
-} from 'react-native';
-import { WebView } from 'react-native-webview';
 import React from 'react';
+import {
+  ActivityIndicator, Image, Keyboard, Platform, TouchableOpacity, View
+} from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { Colors, fontSize } from '../../common/constants';
-import NavigationThemeBar from '../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import { pdf_icon, icon_collaborators, close_white } from '../../images';
-import AccessoryView from '../../common/component/accessoryView';
+import { WebView } from 'react-native-webview';
 import Text from '../../common/component/Text';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import { Colors } from '../../common/constants';
+import { close_white, icon_collaborators } from '../../images';
 //@ts-ignore
-import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Styles from './styles';
+import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import Utility from '../../common/utility';
+import Styles from './styles';
 
 type State = { [x: string]: any };
 type Props = { [x: string]: any };

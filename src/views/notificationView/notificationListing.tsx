@@ -1,46 +1,26 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  FlatList,
-  StatusBar,
-  Alert,
-  View,
-  Platform,
-  Text,
-  TouchableOpacity,
-  RefreshControl,
-  TouchableHighlight,
-  Image,
-  ActivityIndicator,
-  Keyboard,
+  ActivityIndicator, FlatList, Image, Keyboard, Platform, RefreshControl, SafeAreaView, StatusBar, Text, TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
-import DefaultListItem from '../../common/component/defaultListItem';
-import {Colors, getValue, fontSize, fontFamily} from '../../common/constants';
-import {
-  kNotificationTypes,
-  kForegroundNotificationListener,
-} from './notificationServices';
-import Utility from '../../common/utility';
-import NoInternetView from '../../common/component/NoInternetView';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import EventManager from '../../common/eventManager';
-import {connect} from 'react-redux';
-import {
-  NotificationsRedux,
-  SeenFlag,
-  MarkAllRead,
-  AddNewNotification,
-} from './reducer';
-import {GetNotificationAPI, SetSeenFlag, LoadMoreNotifications} from './saga';
-import NavigationThemeBar from '../../common/component/navigationBarForEdit/navigationBarWithTheme';
-import {NotificationDataModel} from './notificationDataModel';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
+import { NotificationListener } from '.';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
-import {memory_read, memory_unread, memory_read_all} from '../../images';
-import {NotificationListener} from '.';
-import {kNotificationIndicator} from '../../common/component/TabBarIcons';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import { kNotificationIndicator } from '../../common/component/TabBarIcons';
+import { No_Internet_Warning } from '../../common/component/Toast';
+import { Colors, fontFamily, fontSize } from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import Utility from '../../common/utility';
+import { memory_read, memory_read_all, memory_unread } from '../../images';
+import { NotificationDataModel } from './notificationDataModel';
+import {
+  kForegroundNotificationListener
+} from './notificationServices';
+import {
+  AddNewNotification, MarkAllRead, SeenFlag
+} from './reducer';
+import { GetNotificationAPI, LoadMoreNotifications, SetSeenFlag } from './saga';
 
 type Props = {[x: string]: any};
 type State = {[x: string]: any};

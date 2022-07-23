@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Animated, Platform, Dimensions } from 'react-native';
+import { View, Animated, Platform } from 'react-native';
 import Text from '../Text';
-import { Props, State } from './types';
+import { Props } from './types';
 import { styles } from './styles';
-import { fontSize, Colors } from '../../constants';
+import { Colors } from '../../constants';
 import BottomPicker, { ActionSheetItem } from '../bottomPicker';
 import DropDownSelector from '../dropDown';
 const defaultProps = {
@@ -23,28 +23,28 @@ const MultipleDropDownSelector = (props: Props) => {
   let bottomPicker: React.RefObject<BottomPicker> = React.useRef<BottomPicker>();
 
   const [state, setState] = useState({
-                              opacity: new Animated.Value(0),
-                              animatedViewHeight: Platform.OS === 'ios' ? 16 : 26,
-                              showClearImage: false,
-                              text: '',
-                              numericValue: 0,
-                              selectionData: {
-                                actions: [],
-                                selectionValue: '',
-                                selectionType: {},
-                                fieldName: '',
-                                label: '',
-                                selectedValues: {},
-                                maxLimit: 0,
-                              },
-                            });
+    opacity: new Animated.Value(0),
+    animatedViewHeight: Platform.OS === 'ios' ? 16 : 26,
+    showClearImage: false,
+    text: '',
+    numericValue: 0,
+    selectionData: {
+      actions: [],
+      selectionValue: '',
+      selectionType: {},
+      fieldName: '',
+      label: '',
+      selectedValues: {},
+      maxLimit: 0,
+    },
+  });
 
   const [selectedOption, setSelectedOption] = useState('');
   useEffect(() => {
     Animated.timing(state.opacity, {
       toValue: props.showError ? 1 : 0,
       duration: 100,
-      useNativeDriver:true,
+      useNativeDriver: true,
     }).start();
   }, [props.showError])
   // componentWillReceiveProps(nextProps: Props) {
@@ -74,22 +74,24 @@ const MultipleDropDownSelector = (props: Props) => {
           value={[props.view1Value]}
           placeholderText={props.view1Title}
           selectedValue={props.view1Value}
-          onOptionSelected={() =>{
+          onOptionSelected={() => {
             setSelectedOption(props.view1Title);
-            props.onOptionSelected(props.view1Title)}
+            props.onOptionSelected(props.view1Title)
+          }
           }></DropDownSelector>
         <DropDownSelector
           value={[props.view2Value]}
           placeholderText={props.view2Title}
           selectedValue={props.view2Value}
-          onOptionSelected={() =>{
+          onOptionSelected={() => {
             setSelectedOption(props.view2Title);
-            props.onOptionSelected(props.view2Title)}
+            props.onOptionSelected(props.view2Title)
+          }
           }></DropDownSelector>
       </View>
 
       <Animated.View
-        style={[styles.animatedViewContainer,{ height: props.animatedViewHeight, opacity: state.opacity,}]}>
+        style={[styles.animatedViewContainer, { height: props.animatedViewHeight, opacity: state.opacity, }]}>
         <View style={styles.minWidth}>
           <Text
             style={styles.errormessageTextStyle}>

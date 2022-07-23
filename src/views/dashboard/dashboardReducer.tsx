@@ -1,14 +1,10 @@
-import { loginRequest, loginInstanceRequest } from '../../common/webservice/loginServices';
-import { takeLatest, put, call, all, delay, join } from "redux-saga/effects";
 import DefaultPreference from 'react-native-default-preference';
-import { kAdmin } from '../registration/getInstancesSaga';
-import WebserviceCall from '../../common/webservice/webservice';
+import { all, call, put, takeLatest } from "redux-saga/effects";
 import { MemoryActionKeys, Storage } from '../../common/constants';
-import { MemoryService } from '../../common/webservice/memoryServices';
-import { Account } from '../../common/loginStore';
-import { DashboardDataModel } from './dashboardDataModel';
 import EventManager from '../../common/eventManager';
-import { Alert } from 'react-native';
+import { Account } from '../../common/loginStore';
+import { MemoryService } from '../../common/webservice/memoryServices';
+import { DashboardDataModel } from './dashboardDataModel';
 
 export const SET_FILTERS_NAME = "SET_FILTERS_NAME";
 export const SET_TIMELINE_FILTERS = "SET_TIMELINE_FILTERS";

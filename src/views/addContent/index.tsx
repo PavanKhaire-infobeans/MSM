@@ -1,97 +1,45 @@
 import React from 'react';
 import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  TouchableHighlight,
-  Alert,
-  SafeAreaView,
-  TextInput,
-  Keyboard,
-  FlatList,
-  ImageBackground,
-  ScrollView,
-  DeviceEventEmitter,
-  Platform,
-  StatusBar,
-  TouchableWithoutFeedback,
+  Alert, FlatList, Image, ImageBackground, Keyboard, Platform, SafeAreaView, StatusBar, TextInput, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View
 } from 'react-native';
 import {
-  icon_add_content_audio,
+  action_audio, action_camera,
+  action_close, action_pdf, audio_play, camera, icon_add_content_audio,
   icon_add_content_camera,
-  icon_add_content_upload,
-  icon_add_content_write,
-  camera,
-  record,
-  action_camera,
-  action_picture,
-  action_close,
-  sound_wave,
-  audio_play,
-  icon_upload_file,
-  pdf_icon,
-  small_close_white_,
-  mindpopBarWhiteIcon,
-  memory_draft,
-  action_audio,
-  action_pdf,
-  keyboard_hide,
-  profile_placeholder,
-  icon_send,
+  icon_add_content_upload, icon_upload_file, keyboard_hide, pdf_icon, record, sound_wave
 } from '../../images';
 // @ts-ignore
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Text from '../../common/component/Text';
 import DeviceInfo from 'react-native-device-info';
-import {
-  fontSize,
-  Colors,
-  GenerateRandomID,
-  TimeStampMilliSeconds,
-  encode_utf8,
-  NO_INTERNET,
-  fontFamily,
-} from '../../common/constants';
-import AccessoryView from '../../common/component/accessoryView';
-import { addListener } from 'cluster';
-import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
-import {
-  PickImage,
-  CaptureImage,
-  PickAudio,
-  PickPDF,
-} from '../../common/component/filePicker/filePicker';
-import { element } from 'prop-types';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Actions } from 'react-native-router-flux';
-import { TempFile } from '../mindPop/edit';
-import { FileType } from '../../common/database/mindPopStore/mindPopStore';
-import {
-  addEditMindPop,
-  kMindpopContentIdentifier,
-  kAddEditIdentifier,
-  kMindPopUploadedIdentifier,
-} from '../mindPop/edit/addMindPopflow';
-import EventManager from '../../common/eventManager';
-import { ToastMessage, No_Internet_Warning } from '../../common/component/Toast';
+import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import {
+  CaptureImage, PickAudio, PickImage, PickPDF
+} from '../../common/component/filePicker/filePicker';
+import Text from '../../common/component/Text';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {
+  Colors, encode_utf8, fontFamily, GenerateRandomID, TimeStampMilliSeconds
+} from '../../common/constants';
+import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import NoInternetView from '../../common/component/NoInternetView';
 import { createNew } from '../createMemory';
 import { CreateUpdateMemory } from '../createMemory/createMemoryWebService';
 import { DefaultDetailsMemory, DefaultDetailsWithoutTitleMemory } from '../createMemory/dataHelper';
-//@ts-ignore
-import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-import { Account } from '../../common/loginStore';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import CreateMemoryIntro from '../createMemory/createMemoryIntro';
+import { TempFile } from '../mindPop/edit';
+import {
+  addEditMindPop, kMindPopUploadedIdentifier
+} from '../mindPop/edit/addMindPopflow';
 import DefaultPreference from 'react-native-default-preference';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import style from './styles';
-import { xcircle } from '../../../app/images';
-import CustomAlert from '../../common/component/customeAlert';
+import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import { connect } from 'react-redux';
+import CustomAlert from '../../common/component/customeAlert';
+import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import CreateMemoryIntro from '../createMemory/createMemoryIntro';
 import { showCustomAlert, showCustomAlertData } from '../createMemory/reducer';
+import style from './styles';
 
 type State = { [key: string]: any };
 
@@ -475,7 +423,7 @@ class AddContentDetails extends React.Component {
     }
   };
 
-  createMemory = async() => {
+  createMemory = async () => {
     this.setState({
       showNextDialog: false,
     });
@@ -488,7 +436,7 @@ class AddContentDetails extends React.Component {
       }
       loaderHandler.showLoader('Loading...');
       CreateUpdateMemory(this.draftDetails, [], 'addContentCreateMemory');
-      
+
     } else {
       No_Internet_Warning();
     }

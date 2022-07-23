@@ -1,18 +1,12 @@
 import React from 'react';
 import {
-  View,
-  Image,
-  SafeAreaView,
-  TouchableOpacity,
-  Alert,
-  ActivityIndicator,
-  Keyboard,
+  ActivityIndicator, Image, Keyboard, SafeAreaView, TouchableOpacity, View
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Text from '../../../common/component/Text';
-import {rubbish} from '../../../images';
-import {Actions} from 'react-native-router-flux';
-import {Colors, fontSize, getValue} from '../../../common/constants';
+import { Colors, fontSize, getValue } from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
+import { rubbish } from '../../../images';
 
 type Props = {
   selectedItem: {

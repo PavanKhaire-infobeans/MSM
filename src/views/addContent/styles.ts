@@ -20,7 +20,7 @@ const Styles = EStyleSheet.create({
     height: 400,
     width: 300,
   },
-  saveAsDraftButtonContainer:{
+  saveAsDraftButtonContainer: {
     flex: 1,
     height: '50%',
     borderBottomColor: Colors.backrgba,
@@ -28,7 +28,7 @@ const Styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  mindPopButtonContainer:{
+  mindPopButtonContainer: {
     flex: 1,
     height: '50%',
     borderTopColor: Colors.backrgba,
@@ -36,7 +36,7 @@ const Styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  canclebuttonStyle:{
+  canclebuttonStyle: {
     top: -10,
     right: -10,
     position: 'absolute',
@@ -49,22 +49,22 @@ const Styles = EStyleSheet.create({
     shadowColor: Colors.black,
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    shadowOffset: {height: 1, width: 1},
+    shadowOffset: { height: 1, width: 1 },
     borderColor: Colors.white,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cancleImageStyle:{
-    height: 11, 
+  cancleImageStyle: {
+    height: 11,
     width: 11
   },
-  selectorButtonContainer:{
+  selectorButtonContainer: {
     backgroundColor: Colors.ThemeColor,
     width: 250,
     height: 50,
     borderRadius: 35,
   },
-  selectorButtonStyle:{
+  selectorButtonStyle: {
     width: '100%',
     height: '100%',
     flexDirection: 'row',
@@ -72,12 +72,12 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textStyle:{
+  textStyle: {
     ...fontSize(18),
     marginLeft: 10,
     lineHeight: 20,
     textAlign: 'center',
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
     color: Colors.white,
   },
   bottomRowView: {
@@ -93,11 +93,11 @@ const Styles = EStyleSheet.create({
     lineHeight: 20,
     textAlign: 'center',
     color: Colors.newTextColor,
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
     paddingTop: 20,
     width: 250,
   },
-  toolbarContainer:{
+  toolbarContainer: {
     position: 'absolute',
     left: 0,
     right: 0,
@@ -114,50 +114,50 @@ const Styles = EStyleSheet.create({
     borderTopColor: Colors.backrgba,
     borderTopWidth: 1,
   },
-  keyboardVisible:{
+  keyboardVisible: {
     width: '100%',
     height: 130,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-around',
-  }, 
-  cameraImageStyle:{ 
-    height: 35, 
-    resizeMode: 'contain', 
-    padding: 15 
   },
-  audioImageStyle:{ 
-    height: 35, 
-    resizeMode: 'contain' 
+  cameraImageStyle: {
+    height: 35,
+    resizeMode: 'contain',
+    padding: 15
   },
-  bottomTextStyle:{ 
-    ...fontSize(16), 
-    fontFamily:fontFamily.Inter,
-    color: Colors.white, 
-    paddingTop: 10 
+  audioImageStyle: {
+    height: 35,
+    resizeMode: 'contain'
   },
-  toolbarSubContainer:{
+  bottomTextStyle: {
+    ...fontSize(16),
+    fontFamily: fontFamily.Inter,
+    color: Colors.white,
+    paddingTop: 10
+  },
+  toolbarSubContainer: {
     width: '100%',
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-  bottomBarContainer:{ 
-    justifyContent: 'flex-start', 
-    flexDirection: 'row' 
+  bottomBarContainer: {
+    justifyContent: 'flex-start',
+    flexDirection: 'row'
   },
-  buttonContainerStyle:{
+  buttonContainerStyle: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 40,
     height: 40,
   },
-  keyboardHideImageStyle:{
+  keyboardHideImageStyle: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 25,
     height: 25,
   },
-  subContainerStyle:{
+  subContainerStyle: {
     backgroundColor: Colors.white,
     position: 'absolute',
     width: '100%',
@@ -168,9 +168,9 @@ const Styles = EStyleSheet.create({
     borderBottomWidth: 1,
     borderColor: Colors.backrgba,
   },
-  keyboardAccesoryContainer:{
+  keyboardAccesoryContainer: {
     width: '100%',
-    flex:1,
+    flex: 1,
     minHeight: 40,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -180,26 +180,26 @@ const Styles = EStyleSheet.create({
     borderTopColor: Colors.backrgba,
     borderTopWidth: 1,
   },
-  buttonSubContainer:{ 
-    justifyContent: 'flex-start', 
-    flexDirection: 'row' 
+  buttonSubContainer: {
+    justifyContent: 'flex-start',
+    flexDirection: 'row'
   },
-  padding15:{ 
-    padding: 15 
+  padding15: {
+    padding: 15
   },
-  RecordContainer:{
+  RecordContainer: {
     borderWidth: 1,
     height: 120,
     borderRadius: 5,
     overflow: 'hidden',
   },
-  RecordContainerImgBackgrounStyle:{
+  RecordContainerImgBackgrounStyle: {
     width: '100%',
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  playButtonMainContainer:{
+  playButtonMainContainer: {
     backgroundColor: Colors.ThemeColor,
     borderRadius: 20,
     width: 40,
@@ -207,31 +207,31 @@ const Styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  playButtonContainer:{
+  playButtonContainer: {
     height: 20,
     width: 22,
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
-  audioImage:{ 
-    height: 18, 
-    width: 17.5 
+  audioImage: {
+    height: 18,
+    width: 17.5
   },
-  filenameTextStyle:{
+  filenameTextStyle: {
     color: Colors.newTextColor,
     ...fontSize(12),
-    fontFamily:fontFamily.Inter,
+    fontFamily: fontFamily.Inter,
     bottom: 5,
     position: 'absolute',
     alignSelf: 'center',
     textAlign: 'center',
   },
-  pdfImageStyle:{ 
-    width: '85%', 
-    height: '85%', 
-    marginLeft: 10 
+  pdfImageStyle: {
+    width: '85%',
+    height: '85%',
+    marginLeft: 10
   },
-  deletefileContainer:{
+  deletefileContainer: {
     width: 36,
     height: 36,
     position: 'absolute',
@@ -240,7 +240,7 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  deletefileSubContainer:{
+  deletefileSubContainer: {
     width: 32,
     height: 32,
     borderWidth: 2,
@@ -250,56 +250,56 @@ const Styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  crossTextStyle:{
+  crossTextStyle: {
     color: 'white',
     fontWeight: '500',
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     ...fontSize(12),
     lineHeight: 14,
   },
-  mainConTainer:{
+  mainConTainer: {
     width: '100%',
     flex: 1,
     backgroundColor: Colors.NewThemeColor,
     flexDirection: 'row',
   },
-  container:{ 
-    flex: 1, 
-    backgroundColor: Colors.white 
-  }, 
-  fullWidth:{ 
-    width: '100%', 
-    flex: 1 
+  container: {
+    flex: 1,
+    backgroundColor: Colors.white
   },
-  inputContainer:{
+  fullWidth: {
+    width: '100%',
+    flex: 1
+  },
+  inputContainer: {
     padding: 15,
     paddingTop: 24,
     paddingBottom: 25,
     width: '100%',
     flex: 1,
   },
-  textInputStyle:{
+  textInputStyle: {
     fontFamily: fontFamily.Inter,
     ...fontSize(19),
     textAlignVertical: 'top',
-    fontWeight:'400',
-    lineHeight:23.75,
-    color:Colors.bordercolor,
-    fontStyle: 'normal' ,
+    fontWeight: '400',
+    lineHeight: 23.75,
+    color: Colors.bordercolor,
+    fontStyle: 'normal',
     minHeight: 150,
     textAlign: 'left',
     flex: 1,
   },
-  attachmentContainer:{ 
-    height: 1, 
-    backgroundColor: Colors.white 
+  attachmentContainer: {
+    height: 1,
+    backgroundColor: Colors.white
   },
-  flatlistStyle:{
+  flatlistStyle: {
     height: 160,
     width: '100%',
     backgroundColor: Colors.white,
   },
-  emptyView:{
+  emptyView: {
     position: 'absolute',
     width: '100%',
     height: 100,

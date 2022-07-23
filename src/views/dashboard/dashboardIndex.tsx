@@ -1,39 +1,37 @@
-import React from 'react';
-import { DeviceEventEmitter, TouchableHighlight, Image, SafeAreaView, StatusBar, StyleSheet, View, Alert, Platform } from 'react-native';
+import React, { createRef } from 'react';
+import { DeviceEventEmitter, Image, Platform, SafeAreaView, StatusBar, TouchableHighlight, View } from 'react-native';
 import { connect } from 'react-redux';
+import NewNavigationBar from '../../../app/components/NewNavigationBar';
 import { kNotificationIndicator, TabItems } from '../../common/component/TabBarIcons';
-import { Colors, decode_utf8, fontFamily, fontSize, getDetails, Storage } from '../../common/constants';
+import { Colors, decode_utf8, fontFamily, fontSize, Storage } from '../../common/constants';
 import Utility from '../../common/utility';
 import { configurations } from '../../common/webservice/loginServices';
 import { ACTIVE_TAB_ON_DASHBOARD, GET_FILTERS_DATA, GET_FILTERS_DATA_TIMELINE, GET_MEMORY_LIST, ListType, MEMORY_ACTIONS_DASHBOARD } from './dashboardReducer';
-import FilterScreen from './filtersScreen';
-import NavigationBar from './NavigationBar';
-import NewNavigationBar from '../../../app/components/NewNavigationBar';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore
-import ScrollableTabView from "../../common/component/ScrollableTabView";
-import { MonthObj, months } from '../createMemory';
-import { Account } from '../../common/loginStore';
-import EventManager from '../../common/eventManager';
-import { kProfilePicUpdated } from '../profile/profileDataModel';
-import Timeline from './timeline';
-import Recent from './recent';
-import TextNew from '../../common/component/Text';
-import { filter_icon } from '../../images';
-import { Actions, Modal } from 'react-native-router-flux';
-import { kMemoryActionPerformedOnDashboard, kUpdateMemoryOnTimeline } from '../myMemories/myMemoriesWebService';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import CustomAlert from '../../common/component/customeAlert';
+import ScrollableTabView from "../../common/component/ScrollableTabView";
+import TextNew from '../../common/component/Text';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import EventManager from '../../common/eventManager';
+import { Account } from '../../common/loginStore';
+import { filter_icon } from '../../images';
+import { MonthObj, months } from '../createMemory';
+import { CreateUpdateMemory, promptIdListener } from '../createMemory/createMemoryWebService';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
+import { showCustomAlert } from '../createMemory/reducer';
+import { kMemoryActionPerformedOnDashboard } from '../myMemories/myMemoriesWebService';
 import { NotificationDataModel } from '../notificationView/notificationDataModel';
 import { GetActivities, kActivityListener, kBackgroundNotice, kForegroundNotice, kForegroundNotificationListener, kGetInvidualNotification, SetSeenActivity } from '../notificationView/notificationServices';
+import { kProfilePicUpdated } from '../profile/profileDataModel';
 import AppGuidedTour from './appGuidedTour';
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
-import { DefaultDetailsMemory } from '../createMemory/dataHelper';
-import { CreateUpdateMemory, promptIdListener } from '../createMemory/createMemoryWebService';
+import Recent from './recent';
 import Styles from './styles';
-import CustomAlert from '../../common/component/customeAlert';
-import { showCustomAlert } from '../createMemory/reducer';
+import Timeline from './timeline';
 
 const options = {
     enableVibrateFallback: true,
@@ -58,6 +56,7 @@ class DashboardIndex extends React.Component<Props>{
     };
     memoryFromPrompt: EventManager;
     screen = '';
+    timelineRef = createRef()
     constructor(props: Props) {
         super(props);
         this.FetchConfigurations();
@@ -221,15 +220,12 @@ class DashboardIndex extends React.Component<Props>{
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-
-    }
-
     onFilterClick = () => {
         this.setState({ currentScreen: this.screen }, () => {
             Actions.push("filtersScreen", { currentScreen: this.screen });
         })
     }
+
     render() {
         return (
             <View style={Styles.fullFlex}>
@@ -300,11 +296,13 @@ class DashboardIndex extends React.Component<Props>{
                                 :
                                 null
                         }
+
                         <NewNavigationBar
                             isWhite={true} filterClick={() => this.onFilterClick()}
                             title={this.props.filterName ? this.props.filterName : TabItems.AllMemories}
                             showRight={this.screen == ListType.Timeline ? true : false}
                         />
+
                         <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} backgroundColor='#ffffff' />
                         <ScrollableTabView
                             ref={(ref: any) => { this.scrollableTabView = ref; }}
@@ -321,19 +319,20 @@ class DashboardIndex extends React.Component<Props>{
                             tabBarTextStyle={{ ...fontSize(16), fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium }}
                             tabBarActiveTextColor={Colors.TextColor}
                             // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
-                            tabBarUnderlineStyle={{ backgroundColor: Colors.white, height: 0 }} 
-                            >
+                            tabBarUnderlineStyle={{ backgroundColor: Colors.white, height: 0 }}
+                        >
                             <Recent tabLabel={'Recent'} filterClick={() => this.onFilterClick.bind(this)} />
-                            <Timeline tabLabel={'Timeline'} filterClick={() => this.onFilterClick.bind(this)} />
+                            <Timeline ref={this.timelineRef} tabLabel={'Timeline'} filterClick={() => this.onFilterClick.bind(this)} />
                         </ScrollableTabView>
                         {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
                     </View>
                 </SafeAreaView>
-                {this.state.appTourVisibility && <AppGuidedTour cancelAppTour={() => {
-                    this.setState({ appTourVisibility: false });
-                    DefaultPreference.set('hide_guide_tour', "true").then(function () { })
+                {this.state.appTourVisibility &&
+                    <AppGuidedTour cancelAppTour={() => {
+                        this.setState({ appTourVisibility: false });
+                        DefaultPreference.set('hide_guide_tour', "true").then(function () { })
+                    }} />
                 }
-                } />}
             </View>);
     }
 

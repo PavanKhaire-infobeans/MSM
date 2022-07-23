@@ -1,18 +1,14 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, StatusBar, Keyboard, ScrollView} from 'react-native';
+import React, { Component } from 'react';
+import { Keyboard, SafeAreaView, ScrollView, StatusBar, View } from 'react-native';
+import { connect } from 'react-redux';
 import Text from '../../common/component/Text';
-import {connect} from 'react-redux';
-import InstanceView from './instanceView';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 //@ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
-import {SubmitButton} from '../../common/component/button';
-import TextField from '../../common/component/textField';
-import {Size, fontSize, Colors} from '../../common/constants';
-import {Actions} from 'react-native-router-flux';
-import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import {backBlkBtn} from '../../images';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { SubmitButton } from '../../common/component/button';
+import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import TextField from '../../common/component/textField';
+import { Colors, fontSize, Size } from '../../common/constants';
 import Utility from '../../common/utility';
 
 export class RegFinalStep extends Component {

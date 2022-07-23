@@ -1,10 +1,9 @@
-import { getValue, getDetails, keyInt, keyString, keyArray, keyObject } from "./../../../src/common/constants";
-import Utility from './../../../src/common/utility';
-import { Account } from "./../../../src/common/loginStore";
-import { profile_placeholder } from "./../../../src/images";
-import { any } from "prop-types";
-import { Alert } from "react-native";
 import moment from "moment";
+import { any } from "prop-types";
+import { getDetails, keyArray, keyInt, keyObject, keyString } from "./../../../src/common/constants";
+import { Account } from "./../../../src/common/loginStore";
+import Utility from './../../../src/common/utility';
+import { profile_placeholder } from "./../../../src/images";
 
 export const kNews = "news";
 export const kSports = "sports";

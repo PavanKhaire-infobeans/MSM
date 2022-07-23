@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image, StatusBar} from 'react-native';
+import { Image, StatusBar, View } from 'react-native';
 type Props = {
   communityInfo: {name: string; instanceURL?: string; instanceImage?: string};
   style?: any;
@@ -8,10 +8,10 @@ type Props = {
 };
 //@ts-ignore
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {Size, fontSize, Colors} from '../../common/constants';
 import TextNew from '../../common/component/Text';
-import {checkbox_active, checkbox} from '../../images';
+import { Colors, fontSize, Size } from '../../common/constants';
 import Utility from '../../common/utility';
+import { checkbox, checkbox_active } from '../../images';
 
 const InstanceView = ({
   communityInfo,

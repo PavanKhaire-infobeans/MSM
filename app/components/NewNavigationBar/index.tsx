@@ -1,50 +1,22 @@
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  StatusBar,
-  Alert,
-  ImageBackground,
-  DeviceEventEmitter,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from 'react-native';
-import Text from '../../../src/common/component/Text';
 import React, { useEffect, useState } from 'react';
+import { DeviceEventEmitter, Image, TouchableWithoutFeedback, View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import {
-  mindpopBarIcon,
-  close_white,
-  instanceLogo,
-  profile_placeholder,
-  cueback_logo,
-  white_head_icon,
-  icon_notification,
-  calendar,
-} from '../../../src/images';
-
-import { calendarsmall, jumptocalendar, user } from '../../images'
-//@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontSize } from '../../../src/common/constants';
-import NavigationHeader from '../../../src/common/component/navigationHeader';
-import { Account } from '../../../src/common/loginStore';
-import EventManager from '../../../src/common/eventManager';
-import { kProfilePicUpdated } from '../../../src/views/profile/profileDataModel';
-import TabIcon, {
-  kNotificationIndicator,
-} from '../../../src/common/component/TabBarIcons';
-import Utility from '../../../src/common/utility';
-import { kForegroundNotificationListener } from '../../../src/views/notificationView/notificationServices';
-import { NotificationDataModel } from '../../../src/views/notificationView/notificationDataModel';
 import { connect } from 'react-redux';
+import { kNotificationIndicator } from '../../../src/common/component/TabBarIcons';
+import Text from '../../../src/common/component/Text';
+import { Colors } from '../../../src/common/constants';
+import EventManager from '../../../src/common/eventManager';
+import { Account } from '../../../src/common/loginStore';
+import Utility from '../../../src/common/utility';
+import { close_white } from '../../../src/images';
+import { JUMP_TO_VIEW_SHOW, ListType } from '../../../src/views/dashboard/dashboardReducer';
+import { NotificationDataModel } from '../../../src/views/notificationView/notificationDataModel';
+import { kForegroundNotificationListener } from '../../../src/views/notificationView/notificationServices';
 import { AddNewNotification } from '../../../src/views/notificationView/reducer';
+import { kProfilePicUpdated } from '../../../src/views/profile/profileDataModel';
+import { jumptocalendar, user } from '../../images';
 import styles from './styles';
 
-import { chevrondown } from './../../images';
-import { JUMP_TO_VIEW_SHOW, ListType } from '../../../src/views/dashboard/dashboardReducer';
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
   leftButtons: { menu: 'navbar_leftbtn_menu' },
@@ -58,11 +30,8 @@ const testID = {
 };
 
 type Props = { [x: string]: any };
-type State = { [x: string]: any };
 const NavigationBar = (props: Props) => {
   let key = Account.selectedData().instanceID + '_' + Account.selectedData().userID;
-  let profilePicUpdate: EventManager;
-  let test = true;
   let notificationReceivedForeground: EventManager;
   let notificationReceived;
   const [state, setState] = useState({ showBadge: false });
@@ -114,14 +83,7 @@ const NavigationBar = (props: Props) => {
     );
   }
 
-  const _mindPopAction = () => {
-    Actions.push('mindPop');
-  };
 
-  const _closeAction = () => {
-    Keyboard.dismiss();
-    Actions.pop();
-  };
 
   const _renderRight = () => {
 
@@ -156,32 +118,12 @@ const NavigationBar = (props: Props) => {
     );
   }
 
-  const _userProfileSection = () => {
-    if (Actions.currentScene != 'myAccount') {
-      Actions.push('myAccount');
-    }
-  };
 
-  const _notificationAction = () => {
-    if (Actions.currentScene != 'notificationView') {
-      Actions.push('notificationView');
-    }
-  };
 
-  const _showAlert = (title: string = '', message: string = '') => {
-    Alert.alert(title, message, [
-      {
-        text: 'OK',
-        style: 'cancel',
-        onPress: () => { },
-      },
-    ]);
-  };
 
   let showClose: boolean = props.showClose
     ? props.showClose
     : false;
-  let isPublicInstance: any = Account.selectedData().is_public_site;
   return (
     <View
       style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
@@ -202,17 +144,19 @@ const NavigationBar = (props: Props) => {
                 <Text style={styles.JumptoText}>Cancle</Text>
               </View>
             </View>
-          ) : (
-            <View style={styles.closeButton}>
-              <View style={{ height: 24 }} >
-                <Image source={user} />
+          )
+            :
+            (
+              <View style={styles.closeButton}>
+                <View style={{ height: 24 }} >
+                  <Image source={user} />
+                </View>
+                <View style={{ height: 4 }} />
+                <View style={{ height: 32, alignItems: 'center', justifyContent: 'center', paddingTop: 8 }}>
+                  <Text style={styles.JumptoText}>Profile</Text>
+                </View>
               </View>
-              <View style={{ height: 4 }} />
-              <View style={{ height: 32, alignItems: 'center', justifyContent: 'center', paddingTop: 8 }}>
-                <Text style={styles.JumptoText}>Profile</Text>
-              </View>
-            </View>
-          )}
+            )}
         </View>
 
       </TouchableWithoutFeedback>

@@ -1,11 +1,8 @@
 import React from 'react';
-import MindPopList from '../list';
+import { SafeAreaView, View } from 'react-native';
+import { connect } from 'react-redux';
 import MindPopEdit from '../edit';
-import {SafeAreaView, View} from 'react-native';
-import {connect} from 'react-redux';
-import {EditMode, AddMindPopStatus} from '../edit/reducer';
-import {GetMindPopStatus} from '../list/reducer';
-import {DeleteMindPopOperation} from '../list/deleteMindPopReducer';
+import MindPopList from '../list';
 
 type Props = {
   listCount: number;

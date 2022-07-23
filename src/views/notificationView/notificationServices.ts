@@ -1,8 +1,8 @@
-import {Storage} from '../../common/constants';
-import {Account} from '../../common/loginStore';
-import {MemoryService} from '../../common/webservice/memoryServices';
-import EventManager from '../../common/eventManager';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import { Storage } from '../../common/constants';
+import EventManager from '../../common/eventManager';
+import { Account } from '../../common/loginStore';
+import { MemoryService } from '../../common/webservice/memoryServices';
 export const kActivities = 'activitiesFetched';
 export const kSeenData = 'seenData';
 export const kNotificationTypes = 'notificationTypes';

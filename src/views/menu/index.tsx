@@ -1,36 +1,19 @@
 import React from 'react';
 import {
-  View,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-  Image,
-  DeviceEventEmitter,
-  EmitterSubscription,
-  SafeAreaView,
+  Alert, DeviceEventEmitter, EmitterSubscription, FlatList, Image, SafeAreaView, TouchableOpacity, View
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Text from '../../common/component/Text';
-import {Actions} from 'react-native-router-flux';
 import {
-  Storage,
-  Size,
-  ERROR_MESSAGE,
-  Colors,
-  fontSize,
+  Colors, fontSize, Size
 } from '../../common/constants';
-import {LoginStore, Account, UserData} from '../../common/loginStore';
-//@ts-ignore
+import { Account, LoginStore, UserData } from '../../common/loginStore';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {logout} from '../../common/webservice/loginServices';
-import {ToastMessage} from '../../common/component/Toast';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {connect} from 'react-redux';
-import {UserAccount} from './reducer';
-import {logoutMethod, logoutMultiple} from '../../common/webservice/webservice';
+import { connect } from 'react-redux';
 import EventManager from '../../common/eventManager';
-import ListType from '../login/commonInstanceListSelection';
-import {cueback_logo, user_drawable} from '../../images';
-import CommonInstanceListsSelection from '../login/commonInstanceListSelection';
+import { logoutMethod, logoutMultiple } from '../../common/webservice/webservice';
+import { user_drawable } from '../../images';
+import { UserAccount } from './reducer';
 
 type MenuProps = {
   user: UserData;
@@ -40,7 +23,7 @@ const kOnLogout = 'UserLogoutListener';
 export const kLogoutPressed = 'logoutPressed';
 export const kUserAccountUpdated = 'userAccountUpdated';
 class Menu extends React.Component<MenuProps> {
-  state: {list: any} = {
+  state: { list: any } = {
     list: [],
   };
   listener?: EmitterSubscription = null;
@@ -58,7 +41,7 @@ class Menu extends React.Component<MenuProps> {
           list: list.filter((it: UserData) => it.userAuthToken != ''),
         });
       })
-      .catch((err: Error) => {
+      .catch(() => {
         //console.log(err);
       });
   }
@@ -70,7 +53,7 @@ class Menu extends React.Component<MenuProps> {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <View
           style={{
             width: '100%',
@@ -81,7 +64,7 @@ class Menu extends React.Component<MenuProps> {
             alignItems: 'center',
             padding: 15,
           }}>
-          <Text style={{color: 'black', ...fontSize(16)}}>
+          <Text style={{ color: 'black', ...fontSize(16) }}>
             Your communities
           </Text>
           {false ? (
@@ -93,14 +76,14 @@ class Menu extends React.Component<MenuProps> {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{color: Colors.NewTitleColor, ...fontSize(16)}}>
+              <Text style={{ color: Colors.NewTitleColor, ...fontSize(16) }}>
                 Edit
               </Text>
             </TouchableOpacity>
           ) : null}
         </View>
         <FlatList
-          data={[...this.state.list, {type: 'AddCommunity'}]}
+          data={[...this.state.list, { type: 'AddCommunity' }]}
           keyExtractor={(_: any, index: number) => `${index}`}
           keyExtractor={(_, index: number) => `${index}`}
           renderItem={this.renderRow}
@@ -124,15 +107,15 @@ class Menu extends React.Component<MenuProps> {
               backgroundColor: '#9a3427',
               width: '80%',
             }}>
-            <Text style={{color: '#fff'}}>Logout</Text>
+            <Text style={{ color: '#fff' }}>Logout</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
   }
 
-  updateUser = ({accounts, user}: {accounts: UserData[]; user: UserData}) => {
-    this.setState({list: accounts});
+  updateUser = ({ accounts, user }: { accounts: UserData[]; user: UserData }) => {
+    this.setState({ list: accounts });
     this.props.setUser(user);
     Actions.replace('prologue');
     Actions.dashBoard();
@@ -155,7 +138,7 @@ class Menu extends React.Component<MenuProps> {
             {
               text: 'No',
               style: 'cancel',
-              onPress: () => {},
+              onPress: () => { },
             },
             {
               text: 'Yes',
@@ -173,7 +156,7 @@ class Menu extends React.Component<MenuProps> {
                       Actions.reset('prologue');
                     }
                   })
-                  .catch(err => {
+                  .catch(() => {
                     Actions.reset('prologue');
                   });
               },
@@ -181,7 +164,7 @@ class Menu extends React.Component<MenuProps> {
           ]);
         }
       })
-      .catch((err: Error) => {
+      .catch(() => {
         //console.log(err);
       });
   };
@@ -192,7 +175,7 @@ class Menu extends React.Component<MenuProps> {
     this.showAlert(lastInstanceName);
 
     let user: UserData = accounts[accounts.length - 1];
-    this.setState({list: accounts});
+    this.setState({ list: accounts });
     this.props.setUser(user);
     if (accounts.length > 0) {
       EventManager.callBack(kUserAccountUpdated);
@@ -231,7 +214,7 @@ class Menu extends React.Component<MenuProps> {
               marginBottom: 10,
               backgroundColor: '#DDDDDD',
             }}></View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source={user_drawable}></Image>
             <Text
               style={{
@@ -248,7 +231,7 @@ class Menu extends React.Component<MenuProps> {
     return null;
   };
 
-  renderRow = (data: {item: UserData & {type: string}; index: number}) => {
+  renderRow = (data: { item: UserData & { type: string }; index: number }) => {
     if (data.item.type == 'AddCommunity') {
       return null;
       // return (
@@ -283,7 +266,7 @@ class Menu extends React.Component<MenuProps> {
             onPress={() => {
               this.props.setUser(data.item);
               EventManager.callBack(kUserAccountUpdated);
-              Actions.push('dashBoard', {animationEnabled: false});
+              Actions.push('dashBoard', { animationEnabled: false });
             }}>
             <Banner communityInfo={data.item} style={[styles.row]} />
           </TouchableOpacity>
@@ -304,12 +287,12 @@ const logoutWorkFlow = (selectedAccounts: any) => {
         Actions.reset('prologue');
       }
     })
-    .catch(err => {
+    .catch(() => {
       Actions.reset('prologue');
     });
 };
 
-const mapState = (state: {[x: string]: any}) => ({
+const mapState = (state: { [x: string]: any }) => ({
   user: state.account,
 });
 
@@ -317,7 +300,7 @@ const mapDispatch = (dispatch: Function) => ({
   /**
    * Save selected user to reducer and AsyncStorage
    */
-  setUser: (payload: UserData) => dispatch({type: UserAccount.Store, payload}),
+  setUser: (payload: UserData) => dispatch({ type: UserAccount.Store, payload }),
 });
 export default connect(mapState, mapDispatch)(Menu);
 
@@ -356,7 +339,7 @@ const styles = EStyleSheet.create({
     elevation: 3,
     shadowRadius: 5,
     shadowColor: 'rgb(210,210,210)',
-    shadowOffset: {height: 0, width: 1},
+    shadowOffset: { height: 0, width: 1 },
     width: '100%',
   },
 
@@ -416,16 +399,15 @@ const styles = EStyleSheet.create({
   },
 });
 
-type Props = {communityInfo: UserData; style?: any};
+type Props = { communityInfo: UserData; style?: any };
 
-const Banner = ({communityInfo, style}: Props) => {
+const Banner = ({ communityInfo, style }: Props) => {
   let name = communityInfo.name;
   let url =
     communityInfo.instanceURL == '192.168.2.6'
       ? 'calpoly.cueback.com'
       : communityInfo.instanceURL;
   let imageURL = communityInfo.instanceImage;
-  let is_public_site: boolean = communityInfo.is_public_site;
   return (
     <View style={style || styles.container}>
       {/* {!is_public_site  ? 
@@ -440,7 +422,7 @@ const Banner = ({communityInfo, style}: Props) => {
 			/> */}
       <View style={styles.image}>
         <Image
-          source={{uri: imageURL}}
+          source={{ uri: imageURL }}
           style={styles.imageIcon}
           resizeMode="cover"
         />

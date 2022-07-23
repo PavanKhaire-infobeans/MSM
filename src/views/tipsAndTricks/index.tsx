@@ -1,22 +1,15 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  Image,
-  StatusBar,
-  Keyboard,
-  Platform,
+  Image, Keyboard, Platform, SafeAreaView, StatusBar, TouchableOpacity, View
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Text from '../../common/component/Text';
-import {Actions} from 'react-native-router-flux';
-import {backBtn} from '../../images';
-import {Colors, fontFamily, fontSize} from '../../common/constants';
+import { Colors, fontFamily, fontSize } from '../../common/constants';
 import Utility from '../../common/utility';
+import { backBtn } from '../../images';
 
 export default class TipsAndTricks extends React.Component<{[x: string]: any}> {
   static navigationOptions = ({
-    navigation,
   }: {
     navigation: {getParam: (param: string) => () => void};
   }) => {

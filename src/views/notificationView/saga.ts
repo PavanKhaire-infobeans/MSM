@@ -1,10 +1,9 @@
-import {takeLatest, put, call, all, delay} from 'redux-saga/effects';
-import {MemoryService} from '../../common/webservice/memoryServices';
-import {Account} from '../../common/loginStore';
-import {Storage} from '../../common/constants';
-import {NotificationsRedux, GetActivity, LoadMore} from './reducer';
-import {Alert} from 'react-native';
-import {NotificationDataModel} from './notificationDataModel';
+import { all, call, delay, put, takeLatest } from 'redux-saga/effects';
+import { Storage } from '../../common/constants';
+import { Account } from '../../common/loginStore';
+import { MemoryService } from '../../common/webservice/memoryServices';
+import { NotificationDataModel } from './notificationDataModel';
+import { GetActivity, LoadMore } from './reducer';
 
 export const GetNotificationAPI = 'getNotificationAPI';
 export const SetSeenFlag = 'setSeenFlag';

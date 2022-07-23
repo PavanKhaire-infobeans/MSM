@@ -1,12 +1,7 @@
-import { Account } from '../../../common/loginStore';
 import {
-  getValue,
-  getDetails,
-  keyInt,
-  keyArray,
-  TimeStampMilliSeconds,
-  keyString,
+  getDetails, getValue, keyArray, keyInt, keyString, TimeStampMilliSeconds
 } from '../../../common/constants';
+import { Account } from '../../../common/loginStore';
 import Utility from '../../../common/utility';
 import { months } from '../../createMemory';
 var memoryDraftsArray: any[] = [];

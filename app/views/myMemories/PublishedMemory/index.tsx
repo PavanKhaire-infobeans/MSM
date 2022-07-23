@@ -1,93 +1,43 @@
 import React from 'react';
-import Text from './../../../../src/common/component/Text';
 import {
-  SafeAreaView,
-  ImageBackground,
-  RefreshControl,
-  ActivityIndicator,
-  View,
-  FlatList,
-  Dimensions,
-  Share,
-  Image,
-  TouchableHighlight,
-  TouchableOpacity,
-  DeviceEventEmitter,
-  Alert,
-  Keyboard,
-  Platform,
-  Animated,
-  TouchableWithoutFeedback,
+  ActivityIndicator, Alert, Animated, FlatList, Image, ImageBackground, Keyboard,
+  Platform, RefreshControl, SafeAreaView, Share, TouchableHighlight, TouchableWithoutFeedback, View
 } from 'react-native';
-import {
-  Colors,
-  fontSize,
-  encode_utf8,
-  MemoryActionKeys,
-  fontFamily,
-} from './../../../../src/common/constants';
-import {
-  GetPublishedMemories,
-  MemoryAction,
-  kPublishedMemoriesFetched,
-  kAllLikes,
-  kLiked,
-  kUnliked,
-  kMemoryActionPerformed,
-  kUpdateMemoryOnPublised,
-  kUpdateMemoryOnTimeline,
-  kMemoryActionPerformedPublished,
-} from '../myMemoriesWebService';
-import { Like, Unlike, GetAllLikes } from '../../memoryDetails/detailsWebService';
-import DeviceInfo from 'react-native-device-info';
-import SelectDropdown from './../../../../src/common/component/SelectDropDown';
 import ContextMenu from "react-native-context-menu-view";
-import Utility from './../../../../src/common/utility';
-import {
-  No_Internet_Warning,
-  ToastMessage,
-} from './../../../../src/common/component/Toast';
-import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
-import EventManager from './../../../../src/common/eventManager';
-import { PublishedMemoryDataModel } from './publishedMemoryDataModel';
-import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
-import {
-  Border,
-  LikeCommentShare,
-} from '../../memoryDetails/componentsMemoryDetails';
-import {
-  icon_like,
-  icon_like_selected,
-  icon_comment,
-  profile_placeholder,
-  icon_send,
-  greenDotsButton,
-  delete_memory,
-  edit_memory,
-  move_to_draft,
-  remove_me_from_this_post,
-  block_memory,
-  block_user,
-  cancelActions,
-  report_user,
-  block_and_report,
-  add_icon,
-  add_icon_small,
-} from './../../../../src/images';
-import { moreoptions, heart, liked } from './../../../images';
+import DeviceInfo from 'react-native-device-info';
 import { Actions } from 'react-native-router-flux';
-import AudioPlayer, {
-  kPlaying,
-  kPaused,
-  kEnded,
-  kNext,
-  kPrevious,
-  kClosed,
-} from './../../../../src/common/component/audio_player/audio_player';
-import MemoryListItem from './../../../components/memoryListItem';
-import styles from './styles';
 import { ListType } from '../../../../src/views/dashboard/dashboardReducer';
 import MemoryActionsSheet, { MemoryActionsSheetItem } from '../../../components/memoryActionsSheet';
+import {
+  LikeCommentShare
+} from '../../memoryDetails/componentsMemoryDetails';
+import { GetAllLikes, Like, Unlike } from '../../memoryDetails/detailsWebService';
+import {
+  GetPublishedMemories, kAllLikes,
+  kLiked, kMemoryActionPerformedPublished, kPublishedMemoriesFetched, kUnliked, MemoryAction
+} from '../myMemoriesWebService';
+import AudioPlayer, {
+  kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious
+} from './../../../../src/common/component/audio_player/audio_player';
+import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
+import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
+import Text from './../../../../src/common/component/Text';
+import {
+  No_Internet_Warning, ToastMessage
+} from './../../../../src/common/component/Toast';
+import {
+  Colors, encode_utf8, fontSize, MemoryActionKeys
+} from './../../../../src/common/constants';
+import EventManager from './../../../../src/common/eventManager';
+import Utility from './../../../../src/common/utility';
+import {
+  add_icon_small, block_and_report, block_memory, block_user, cancelActions, delete_memory,
+  edit_memory, icon_send, move_to_draft, profile_placeholder, remove_me_from_this_post, report_user
+} from './../../../../src/images';
+import MemoryListItem from './../../../components/memoryListItem';
+import { heart, liked, moreoptions } from './../../../images';
+import { PublishedMemoryDataModel } from './publishedMemoryDataModel';
+import styles from './styles';
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }

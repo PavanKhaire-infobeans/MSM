@@ -1,8 +1,6 @@
 import { kPublish, MonthObj } from '.';
-import { getValue, decode_utf8 } from '../../common/constants';
+import { decode_utf8, getValue } from '../../common/constants';
 import { Account } from '../../common/loginStore';
-import { get } from 'http';
-import collection from './collection';
 
 export const DefaultDetailsMemory = (title: any) => {
   let description = title;
@@ -157,7 +155,7 @@ export const DefaultCreateMemoryObj = (
       // },
       location: initialState.location,
       nid: initialState.nid,
-      share_option: initialState.shareOption,
+      share_option: "'allfriends'",// initialState.shareOption,
       description: description,
     };
     if (

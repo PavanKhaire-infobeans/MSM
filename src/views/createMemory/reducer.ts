@@ -1,8 +1,3 @@
-import { takeLatest } from 'redux-saga';
-import { decode_utf8 } from '../../common/constants';
-import { kPublish } from '.';
-import { getCommaSeparatedArray } from './dataHelper';
-import { Alert } from 'react-native';
 
 export const ResetLocation = 'resetLocation';
 export const LocationListUpdated = 'locationListUpdated';
@@ -38,7 +33,7 @@ const initialState: any = {
   whoElseWhereThere: [],
   whoCanSeeMemoryUids: [],
   whoCanSeeMemoryGroupIds: [],
-  shareOption: 'allfriends',
+  shareOption: 'only_me',
   files: [],
   collectionList: [],
   collections: {},

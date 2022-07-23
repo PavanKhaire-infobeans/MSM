@@ -10,4 +10,4 @@ function removeProfilePicture(url: string, params: Array<any>) {
   return Webservice.postRequest(url, headers, request);
 }
 
-export {userProfile, removeProfilePicture};
+export { userProfile, removeProfilePicture };

@@ -1,47 +1,4 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  Image,
-  Slider,
-  Alert,
-  Platform,
-  StatusBar,
-  Modal,
-  TextInput,
-  TouchableHighlight,
-  AppState,
-  AppStateStatus,
-} from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import Text from '../../../common/component/Text';
-import {
-  Size,
-  requestPermission,
-  Colors,
-  getValue,
-  fontSize,
-  validFileName,
-} from '../../../common/constants';
-import {Actions} from 'react-native-router-flux';
-//@ts-ignore
-import {Recorder, Player} from 'react-native-audio-toolkit';
-import {
-  recordStart,
-  audio_play,
-  audio_stop,
-  audio_pause,
-  rubbish,
-} from '../../../images';
-import MainView from '../../../common/component/audio_anim';
-//@ts-ignore
-import SoundRecorder, {
-  FORMAT_MPEG4AAC,
-  ENCODER_HE_AAC,
-  ENCODER_AAC,
-} from 'react-native-sound-recorder';
-import {FileType} from '../../../common/database/mindPopStore/mindPopStore';
 
 type AudioState =
   | 'none'
