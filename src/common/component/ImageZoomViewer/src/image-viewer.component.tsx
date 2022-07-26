@@ -6,6 +6,7 @@ import {
 import ImageZoom from 'react-native-image-pan-zoom';
 import styles from './image-viewer.style';
 import { IImageInfo, IImageSize, Props, State } from './image-viewer.type';
+import Styles from './styles';
 import stylesnew from './styles';
 export default class ImageViewer extends React.Component<Props, State> {
   public static defaultProps = new Props();
@@ -655,7 +656,7 @@ export default class ImageViewer extends React.Component<Props, State> {
             )}
           <View
             style={[
-              { bottom: 0, position: 'absolute', zIndex: 9 },
+              Styles.footerStyle,
               this.props.footerContainerStyle,
             ]}>
             {this!.props!.renderFooter!(this.state.currentShowIndex || -1)}

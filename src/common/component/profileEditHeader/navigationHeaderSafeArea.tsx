@@ -90,7 +90,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
                 source={penEdit}
                 resizeMode="contain"
               />
-              <View style={{ height: 4 }} />
+              <View style={styles.height4} />
               <Text style={styles.cancleText}>{this.props.rightText}</Text>
             </View>  
           </TouchableWithoutFeedback>

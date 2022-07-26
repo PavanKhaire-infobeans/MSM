@@ -5,6 +5,7 @@ import {
 import PlaceholderImageView from '../placeHolderImageView';
 import Utility from '../../utility';
 import styles from './styles';
+import Styles from './styles';
 
 type Props = {items: any};
 export default class GroupPicHolder extends Component<Props> {
@@ -33,18 +34,12 @@ export default class GroupPicHolder extends Component<Props> {
   render() {
     return (
       <View
-        style={{
-          height: 50,
-          width: 50,
-          marginRight: 5,
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        style={Styles.container}>
+        <View style={Styles.rowSpaceBetween}>
           {this.renderItem(0)}
           {this.renderItem(1)}
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={Styles.rowSpaceBetween}>
           {this.renderItem(2)}
           {this.renderItem(3)}
         </View>

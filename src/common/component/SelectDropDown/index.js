@@ -220,7 +220,6 @@ const SelectDropdown = (
                 top: dropdownPY,
                 height: dropdownHEIGHT,
                 width: Platform.OS === 'ios' ? 254 : undefined,//dropdownWIDTH
-                // left:(width-254)/2,
                 right: 40,
                 elevation: 10,
                 borderWidth: 1,

@@ -116,7 +116,8 @@ export class MemoryDraftsDataModel {
       date.month = season.charAt(0).toUpperCase() + season.slice(1);
     } else {
       date.year = memoryDate.getFullYear();
-      date.month = months[memoryDate.getMonth()].name;
+      date.month = memoryDate.getMonth()+1;
+      // date.month = months[memoryDate.getMonth()].name;
       date.day = memoryDate.getDate();
     }
     let tags = getDetails(draftDetails, ['memory_tags']).map(

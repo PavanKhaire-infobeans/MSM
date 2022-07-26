@@ -1,7 +1,7 @@
-import { StyleSheet } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../constants';
 
-export const styles = StyleSheet.create({
+const Styles = EStyleSheet.create({
   inputViewStyle: {
     flex: 1,
     height: 50,
@@ -70,3 +70,5 @@ export const styles = StyleSheet.create({
   },
 
 });
+
+export default Styles;

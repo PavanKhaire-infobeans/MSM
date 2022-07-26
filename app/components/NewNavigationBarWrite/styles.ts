@@ -28,6 +28,9 @@ const Styles = EStyleSheet.create({
         lineHeight: 17
         // fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     },
+    height4:{
+        height:4
+    },
     titleContainer: {
         justifyContent: 'center',
         // paddingTop: 10,

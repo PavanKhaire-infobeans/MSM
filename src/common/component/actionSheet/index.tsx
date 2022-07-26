@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import {
-  Animated,Dimensions,FlatList, Keyboard, Modal, TouchableWithoutFeedback, View
+  Animated, Dimensions, FlatList, Keyboard, Modal, TouchableWithoutFeedback, View
 } from 'react-native';
 import { Colors, fontSize } from '../../constants';
 import TextNew from '../Text';
@@ -101,7 +101,7 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
     }));
 
   if (state.hidden || props.actions.length == 0) {
-    return <View style={{ height: 0, width: 0 }} />;
+    return <View style={styles.hiddenView} />;
   }
   else {
     return (
@@ -109,13 +109,13 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
         animationType="none"
         transparent={true}
         // onRequestClose={() => { setShowModal(false)}}
-        style={{ backgroundColor: Colors.blacknewrgb, flex: 1 }}
+        style={styles.modalStyle}
         visible={true}//showModal
       >
         <View
           style={styles.container}>
           <Animated.View
-            style={[styles.cellContainer, { width: props.width,bottom: 0, borderRadius: 13 }]}>
+            style={[styles.cellContainer, { width: props.width, bottom: 0 }]}>
 
             <View>
               {props.title && props.title.length > 0 ? (
@@ -131,26 +131,16 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
                 data={props.actions}
                 keyExtractor={(_, index: number) => `${index}`}
                 scrollEnabled={false}
-                style={{ borderRadius: 13 }}
+                style={styles.borderRadius13}
                 onScroll={() => {
                   Keyboard.dismiss();
                 }}
                 ListHeaderComponent={() => (
                   <View
-                    style={[styles.listContainer, {
-                      borderTopLeftRadius: 13,
-                      borderTopRightRadius: 13,
-                      borderBottomColor: Colors.a5a5a7,
-                      height: 42,
-                      borderBottomWidth: 1
-                    }]}>
+                    style={[styles.listContainer, styles.listHeaderStyle]}>
                     {/* <Image source={data.image} resizeMode="contain" /> */}
                     <TextNew
-                      style={[styles.listText, {
-                        color: Colors.c3c3c3,
-                        ...fontSize(13),
-                        textAlign: 'center'
-                      }]}>
+                      style={[styles.listText, styles.actionSheetHeaderText]}>
                       {props.actions && props.actions.length && props.actions[0] && props.actions[0].text.includes('Yes,') ? `Are you done writing this memory?` : `Save for later?`}
                     </TextNew>
                   </View>

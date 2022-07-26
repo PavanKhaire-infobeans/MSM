@@ -3,6 +3,7 @@ import EventManager from './../../../src/common/eventManager';
 import { Account } from './../../../src/common/loginStore';
 import { MemoryService } from './../../../src/common/webservice/memoryServices';
 export const kMemoryDraftsFetched = 'memoryDrafts';
+export const kMemoryMoveToDrafts = 'memoryMoveToDrafts';
 export const kPublishedMemoriesFetched = 'publishedMemories';
 export const kPublishedMemoryCollections = 'publishedMemoryCollections';
 export const kAllLikes = 'allLikesDataFromPublished';
@@ -141,8 +142,7 @@ export const GetPublishedMemoryCollections = async (requestId: any) => {
   try {
     let data = await Storage.get('userData');
     let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/collection/list_memory_collections`,
       [
         {
@@ -189,15 +189,14 @@ export const GetBlockedUsersAndMemory = async (type: any) => {
   try {
     let data = await Storage.get('userData');
     let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/get/users_blocked_data`,
       [
         {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0', details: {type: type}},
+        { configurationTimestamp: '0', details: { type: type } },
       ],
     )
       .then((response: Response) => response.json())
@@ -304,11 +303,11 @@ export const MemoryAction = async (
     };
 
     if (actionType == MemoryActionKeys.blockAndReportKey) {
-      details = {...details, memory_id: nid};
+      details = { ...details, memory_id: nid };
     }
 
     if (actionType == MemoryActionKeys.addToCollection) {
-      details = {...details, collections_nids: collections_nids};
+      details = { ...details, collections_nids: collections_nids };
     }
     let response = await MemoryService(
       `https://${Account.selectedData().instanceURL}/api/actions/memory`,
@@ -317,7 +316,7 @@ export const MemoryAction = async (
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0', details},
+        { configurationTimestamp: '0', details },
       ],
     )
       .then((response: Response) => response.json())
@@ -326,9 +325,15 @@ export const MemoryAction = async (
       });
     if (response != undefined && response != null) {
       if (response.ResponseCode == 200) {
-        if (listner) {
+        if (listner == kMemoryMoveToDrafts) {
+          console.log("response lisner> ", listner)
+          return response;
+        }
+        else if (listner) {
           EventManager.callBack(listner, true, 'Data', nid, actionType, uid);
-        } else {
+        }
+        else {
+          console.log("response no listner> ", listner)
           EventManager.callBack(
             kMemoryActionPerformedPublished,
             true,
@@ -355,7 +360,10 @@ export const MemoryAction = async (
           );
         }
       } else {
-        if (listner) {
+        if (listner == kMemoryMoveToDrafts) {
+          return response;
+        }
+        else if (listner) {
           EventManager.callBack(listner, false, response['ResponseMessage']);
         } else {
           EventManager.callBack(
@@ -410,7 +418,7 @@ export const GetPrompts = async (
 ) => {
   try {
 
-    console.log("categories: categories, ",categories)
+    console.log("categories: categories, ", categories)
     let data = await Storage.get('userData');
     let response = await MemoryService(
       `https://${Account.selectedData().instanceURL}/api/prompts/list`,
@@ -473,10 +481,10 @@ export const GetPromptBYPromptId = async (
           'Content-Type': 'application/json',
         },
         {
-          "details" : {
-              "nid": nid    //"2042"
-          }                       
-      },
+          "details": {
+            "nid": nid    //"2042"
+          }
+        },
       ],
     )
       .then((response: Response) => response.json())
@@ -484,7 +492,7 @@ export const GetPromptBYPromptId = async (
         Promise.reject(err);
       });
     if (response != undefined && response != null) {
-      console.log("ResponseMessage > ",JSON.stringify(response))
+      console.log("ResponseMessage > ", JSON.stringify(response))
       if (response.ResponseCode == 200) {
         EventManager.callBack(
           kGetPromptByID,
@@ -518,7 +526,7 @@ export const HidePrompt = async (promptId: any) => {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0', prompt_nid: promptId},
+        { configurationTimestamp: '0', prompt_nid: promptId },
       ],
     )
       .then((response: Response) => response.json())

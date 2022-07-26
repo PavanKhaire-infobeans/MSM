@@ -163,16 +163,16 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     );
   };
 
-  _show = (message: any, color: any) => {
-    this.messageRef && this.messageRef._show({ message: message, color: color })
-    setTimeout(() => {
-      this.messageRef && this.messageRef._hide();
-    }, 4000);
-  }
+  // _show = (message: any, color: any) => {
+  //   this.messageRef && this.messageRef._show({ message: message, color: color })
+  //   setTimeout(() => {
+  //     this.messageRef && this.messageRef._hide();
+  //   }, 4000);
+  // }
 
-  _hide = () => {
-    this.messageRef && this.messageRef._hide();
-  }
+  // _hide = () => {
+  //   this.messageRef && this.messageRef._hide();
+  // }
 
   componentDidMount() {
     LoginStore.listAllAccounts()
@@ -236,14 +236,14 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   showErrorMessage = (show: boolean, message?: string) => {
     let height = 0;
     if (show) {
-      // height = 70;
-      this.messageRef._show(message, Colors.ErrorColor);
-      setTimeout(() => {
-        this.messageRef && this.messageRef._hide();
-      }, 4000);
-      Alert.alert(message)
-    } else {
-      this.messageRef._hide();
+    //   // height = 70;
+    //   this.messageRef._show(message, Colors.ErrorColor);
+    //   setTimeout(() => {
+    //     this.messageRef && this.messageRef._hide();
+    //   }, 4000);
+    //   Alert.alert(message)
+    // } else {
+    //   this.messageRef._hide();
     }
     this.updateState({ errorViewHeight: height });
   };
@@ -311,7 +311,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.6)']}
             style={{ height: '100%', width: '100%' }}> */}
         <SafeAreaView style={Styles.flexContainer}>
-          <MessageDialogue ref={(ref: any) => this.messageRef = ref} />
+          {/* <MessageDialogue ref={(ref: any) => this.messageRef = ref} /> */}
          
 
             <View style={Styles.LoginHeader}>

@@ -68,7 +68,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
           !this.props.item.item.isPrompt ?
             (
               <View
-                style={[styles.promptContainer, { shadowColor: '(7, 53, 98, 0.05)', }]}>
+                style={[styles.promptContainer]}>
 
                 {this.externalCueItems.includes(this.props.item.item.type) ? (
                   this.props.item.item.type == 'songs' ?
@@ -247,7 +247,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
             (
               this.props.item.item.active_prompts.length > 0 && (
                 <View
-                  style={[styles.activepromptsContainer, { shadowColor: '(7, 53, 98, 0.05)', }]}>
+                  style={[styles.activepromptsContainer]}>
                   <View
                     style={styles.activepromptsSubContainer}>
                     <Prompts

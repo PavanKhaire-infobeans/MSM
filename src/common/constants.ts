@@ -125,6 +125,7 @@ export const Colors = {
   actionlistSeparater: 'rgba(0.35, 0.35, 0.35, 0.2)',
   black: '#000000',
   darkGray: '#909090',
+  cardShadowColor:'#073562',
   c3c3c3: '#3c3c3c',
   a5a5a7: '#a5a5a7',
   underlayColor: '#00000000',

@@ -18,6 +18,25 @@ const Styles = EStyleSheet.create({
         textAlign: 'left',
         // fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     },
+    imageStyle: {
+        height: 24,
+        width: 24
+    },
+    imageSeparator: {
+        height: 4
+    },
+    height32: {
+        height: 32
+    },
+    height24: {
+        height: 24
+    },
+    profileImgSeparator:{ 
+        height: 32, 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        paddingTop: 8 
+    },
     cancleText: {
         color: Colors.newDescTextColor,
         fontSize: 16,

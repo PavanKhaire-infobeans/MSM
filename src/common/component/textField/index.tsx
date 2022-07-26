@@ -182,15 +182,7 @@ export default class TextField extends React.Component<Props, State> {
             }, styles.animatedView]}> */}
 
           <View style={[this.props.inputViewStyle,
-          this.state.inputFocused ? {
-            borderColor: "#0B0C0F",
-            borderWidth: 2,
-            shadowColor: Colors.black,
-            shadowOffset: { width: 2, height: 3 },
-            shadowOpacity: 0.2,
-            shadowRadius: 3.22,
-            elevation: 3,
-          }
+          this.state.inputFocused ? styles.onFocusStyle
             :
             // this.props.secureTextEntry ? { width: '90%' } :
             {}
@@ -216,11 +208,8 @@ export default class TextField extends React.Component<Props, State> {
               <View style={[
                 this.props.inputTextStyle,
                 styles.textInputStyle,
-                {
+                styles.textwrapStyle,{
                   left: this.state.leftTextInput,
-                  justifyContent: 'center',
-                  flexGrow: 0,
-                  flexWrap: 'nowrap'
                 },
               ]}>
                 <TextInput
@@ -309,7 +298,7 @@ export default class TextField extends React.Component<Props, State> {
 
               <TouchableOpacity
                 onPress={this.props.onPressClear}
-                style={[styles.crossContainer, this.props.secureTextEntry ? { width: '10%', position: 'absolute', right: 5, top: 3 } : { width: 0 }]}>
+                style={[styles.crossContainer, this.props.secureTextEntry ? styles.secureTextView : styles.width0]}>
                 <Image
                   source={require('../../../images/cross/cross_icon.png')}
                   style={styles.crossImageStyle}

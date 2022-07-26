@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native';
 import {fontSize, Colors} from '../../../constants';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-export const styles = StyleSheet.create({
+const Styles = EStyleSheet.create({
   container:{
     width: '100%',
     height: 53,
@@ -26,5 +26,14 @@ export const styles = StyleSheet.create({
   countTextStyle:{
     ...fontSize(16), 
     color: Colors.darkGray
+  },
+  imageContainerStyle:{
+    marginLeft: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 44,
+    height: 44,
   }
 });
+
+export default Styles;

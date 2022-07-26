@@ -19,9 +19,31 @@ const Styles = EStyleSheet.create({
     maxWidth: 768,
     position: 'absolute',
     paddingBottom: 25,
+    borderRadius: 13 
   },
-
-
+  borderRadius13:{ 
+    borderRadius: 13 
+  },
+  listHeaderStyle:{
+    borderTopLeftRadius: 13,
+    borderTopRightRadius: 13,
+    borderBottomColor: Colors.a5a5a7,
+    height: 42,
+    borderBottomWidth: 1
+  },
+  actionSheetHeaderText:{
+    color: Colors.c3c3c3,
+    ...fontSize(13),
+    textAlign: 'center'
+  },
+  hiddenView:{ 
+    height: 0, 
+    width: 0 
+  },
+  modalStyle:{ 
+    backgroundColor: Colors.blacknewrgb, 
+    flex: 1 
+  },
   textTitle: {
     color: '#595959',
     paddingTop: 15,

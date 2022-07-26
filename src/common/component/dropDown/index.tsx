@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import { Colors } from '../../constants';
 import Text from '../Text';
-import { styles } from './styles';
+import styles from './styles';
 import { Props, State } from './types';
 
 const kTop = 19,

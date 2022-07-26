@@ -100,12 +100,12 @@ const NavigationBar = (props: Props) => {
               testID={testID.rightButtons.mindpop}>
               <View style={styles.rightButtonsTouchable}>
                 <Image
-                  style={{ height: 24, width: 24 }}
+                  style={styles.imageStyle}
                   source={jumptocalendar}
                   resizeMode="contain"
                 />
-                <View style={{ height: 4 }} />
-                <View style={{ height: 32 }} >
+                <View style={styles.imageSeparator} />
+                <View style={styles.height32} >
                   <Text style={styles.JumptoText}>{'Jump to\nYear'}</Text>
                 </View>
               </View>
@@ -136,11 +136,11 @@ const NavigationBar = (props: Props) => {
         <View style={styles.leftButtonTouchableContainer}>
           {showClose ? (
             <View style={styles.closeButton}>
-              <View style={{ height: 24 }}  >
+              <View style={styles.height24}  >
                 <Image source={close_white} />
               </View>
-              <View style={{ height: 4 }} />
-              <View style={{ height: 32, justifyContent: 'center' }}>
+              <View style={styles.imageSeparator} />
+              <View style={[styles.height32,{ justifyContent: 'center' }]}>
                 <Text style={styles.JumptoText}>Cancle</Text>
               </View>
             </View>
@@ -148,11 +148,11 @@ const NavigationBar = (props: Props) => {
             :
             (
               <View style={styles.closeButton}>
-                <View style={{ height: 24 }} >
+                <View style={styles.height24} >
                   <Image source={user} />
                 </View>
-                <View style={{ height: 4 }} />
-                <View style={{ height: 32, alignItems: 'center', justifyContent: 'center', paddingTop: 8 }}>
+                <View style={styles.imageSeparator} />
+                <View style={styles.profileImgSeparator}>
                   <Text style={styles.JumptoText}>Profile</Text>
                 </View>
               </View>

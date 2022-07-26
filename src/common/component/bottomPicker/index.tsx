@@ -277,7 +277,7 @@ const BottomPicker = (props: Props) => {
 
   var deviceHeight = state.availableHeight;
   if (state.hidden || props.actions.length == 0) {
-    return <View style={{ height: 0, width: 0 }} />;
+    return <View style={styles.invisibleView} />;
   }
   else {
     return (

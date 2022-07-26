@@ -4,20 +4,25 @@ import {
 } from 'react-native';
 import { fontFamily, fontSize } from '../../constants';
 import Text from '../Text';
+import Styles from './styles';
 type State = {
   backgroundColor: string;
   message: string;
-  height: Animated.Value;
+  // height: Animated.Value;
   showClose: boolean;
 };
 class MessageDialogue extends Component<{}, State> {
-  state = {
-    backgroundColor: 'black',
-    message: '',
-    height: new Animated.Value(0),
-    opacity: new Animated.Value(0),
-    showClose: true,
-  };
+  height = new Animated.Value(0);
+  opacity = new Animated.Value(0);
+  constructor(props) {
+    super(props)
+    this.state = {
+      backgroundColor: 'black',
+      message: '',
+      showClose: true,
+    };
+
+  }
 
   static showMessage = (message: string, color: string) => {
     DeviceEventEmitter.emit('showMessage', { message, color });
@@ -52,14 +57,14 @@ class MessageDialogue extends Component<{}, State> {
 
   _showWithOutClose = ({ message, color }: { message: string; color: string }) => {
     this.setState({ showClose: false, backgroundColor: color, message }, () => {
-      if ((this.state.height as any)._value == 0) {
+      if ((this.height as any)._value == 0) {
         Animated.parallel([
-          Animated.timing(this.state.height, {
+          Animated.timing(this.height, {
             toValue: 45,
             duration: 0.1,
             useNativeDriver: true,
           }),
-          Animated.timing(this.state.opacity, {
+          Animated.timing(this.opacity, {
             toValue: 1,
             duration: 0.1,
             useNativeDriver: true,
@@ -71,14 +76,14 @@ class MessageDialogue extends Component<{}, State> {
 
   _show = ({ message, color }: { message: string; color: string }) => {
     this.setState({ backgroundColor: color, message }, () => {
-      if ((this.state.height as any)._value == 0) {
+      if ((this.height as any)._value == 0) {
         Animated.parallel([
-          Animated.timing(this.state.height, {
+          Animated.timing(this.height, {
             toValue: 45,
             duration: 0.1,
             useNativeDriver: true,
           }),
-          Animated.timing(this.state.opacity, {
+          Animated.timing(this.opacity, {
             toValue: 1,
             duration: 0.1,
             useNativeDriver: true,
@@ -90,12 +95,12 @@ class MessageDialogue extends Component<{}, State> {
 
   _hide = () => {
     Animated.parallel([
-      Animated.timing(this.state.height, {
+      Animated.timing(this.height, {
         toValue: 0,
         duration: 0.1,
         useNativeDriver: true,
       }),
-      Animated.timing(this.state.opacity, {
+      Animated.timing(this.opacity, {
         toValue: 0,
         duration: 0.1,
         useNativeDriver: true,
@@ -115,73 +120,30 @@ class MessageDialogue extends Component<{}, State> {
     }
     return (
       <Animated.View
-        style={{
-          zIndex: 3,
-          elevation: 3,
-          opacity: this.state.opacity,
-          left: 0,
-          right: 0,
+        style={[Styles.container, {
+          opacity: this.opacity,
           backgroundColor: this.state.backgroundColor,
-          maxHeight: 45,
-          height: this.state.height,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
+          height: this.height,
+        }]}>
         <View
-          style={{
-            flex: 1,
-            height: '100%',
-            justifyContent: 'center',
-            paddingLeft: 10,
-          }}>
+          style={Styles.messageContainer}>
           <Text
             numberOfLines={2}
-            style={{
-              ...fontSize(14),
-              lineHeight: 16,
-              textAlign: 'left',
-              color: '#fff',
-              paddingBottom: 5,
-              paddingTop: 5,
-            }}>
+            style={Styles.messageTextStyle}>
             {this.state.message}
           </Text>
         </View>
         {this.state.showClose && (
           <View
-            style={{
-              width: 70,
-              height: '100%',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 1,
-            }}>
+            style={Styles.closeContainer}>
             <TouchableHighlight
               underlayColor="transparent"
               onPress={this._hide}
-              style={{
-                width: 44,
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+              style={Styles.cancleButtonContainer}>
               <View
-                style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: 11,
-                  backgroundColor: 'white',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
+                style={Styles.imageContainer}>
                 <DefText
-                  style={{
-                    color: this.state.backgroundColor,
-                    ...fontSize(16),
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                  }}>
+                  style={[Styles.textStyle, { color: this.state.backgroundColor, }]}>
                   ✕
                 </DefText>
               </View>

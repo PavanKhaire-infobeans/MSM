@@ -1,14 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { fontFamily, fontSize } from '../../constants';
+import { Colors, fontFamily, fontSize } from '../../constants';
 
-export const styles = StyleSheet.create({
+const Styles = StyleSheet.create({
   inputViewStyle: {
     flex: 1,
     height: 100,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.transparent,
     borderWidth: 0.3,
-    borderColor: 'transparent',
+    borderColor: Colors.transparent,
     borderRadius: 3,
     justifyContent: 'center',
     paddingLeft: 8,
@@ -19,7 +18,7 @@ export const styles = StyleSheet.create({
     top: 12,
     ...fontSize(18),
     height: '100%',
-    color: 'black',
+    color: Colors.black,
     lineHeight: 24,
     letterSpacing: -0.1,
     paddingRight: 20,
@@ -66,3 +65,4 @@ export const styles = StyleSheet.create({
     letterSpacing: -0.1,
   }
 });
+export default Styles;

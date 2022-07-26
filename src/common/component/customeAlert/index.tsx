@@ -136,18 +136,7 @@ const CustomAlert = (props) => {
               defaultButtonText = 'CANCEL';
             const singleButtonWrapperStyle = {}
             let singleButtonWeight = iOSDefaults.button.fontWeight;
-            //   if(index === buttonProps.length - 1){
-            //       singleButtonWeight = '700';
-            //   }
-            //   if(buttonLayoutHorizontal === 1){
-            //     singleButtonWrapperStyle.minWidth = '50%';
-            //     if(index === 0){
-            //       singleButtonWrapperStyle.borderStyle = 'solid';
-            //       singleButtonWrapperStyle.borderRightWidth = 0.55;
-            //       singleButtonWrapperStyle.borderRightColor = '#dbdbdf';
-            //     }
-
-            //   }
+       
             return (
               <View key={index + "" + (item.text || defaultButtonText)} style={[styles.iOSButton, singleButtonWrapperStyle]}>
                 <Pressable onPress={() => {

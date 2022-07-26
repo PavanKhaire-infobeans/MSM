@@ -63,6 +63,7 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       break;
     case MemoryInitialsUpdate:
       newState.title = action.payload.title;
+      console.log("custom action.payload.memory_date :", action.payload.memory_date)
       newState.date = action.payload.memory_date;
       // {
       //   year: action.payload.memory_date.year,
@@ -119,7 +120,7 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       break;
     case showCustomAlertData:
       newState.showAlertData = action.payload;
-      console.log("custom Alert:", newState.showAlert)
+      // console.log("custom Alert:", newState.showAlert)
       break;
   }
   return newState;

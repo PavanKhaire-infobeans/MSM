@@ -131,362 +131,209 @@ const Animator = () => {
 
   return (
     <View
-      style={{
-        height: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: 320,
-        justifyContent: 'space-between',
-      }}>
+      style={Styles.audioContainer}>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.first,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.second,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.third,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fourth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fifth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.sixth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.seventh,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
 
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.first,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.second,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.third,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fourth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fifth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.sixth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.seventh,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
 
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.first,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.second,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.third,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fourth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fifth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.sixth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.seventh,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
 
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.first,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.second,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.third,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fourth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fifth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.sixth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.seventh,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
 
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.first,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.second,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.third,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fourth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fifth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.sixth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.seventh,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
 
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.first,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.second,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.third,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fourth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fifth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.sixth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.seventh,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
 
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.first,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.second,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.third,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fourth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.fifth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.sixth,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
       <Animated.View
-        style={{
+        style={[Styles.commonStyle, {
           height: state.anim.seventh,
-          width: 3,
-          borderRadius: 20,
-          backgroundColor: 'darkgray',
-        }}></Animated.View>
+        }]}></Animated.View>
     </View>
   );
 }

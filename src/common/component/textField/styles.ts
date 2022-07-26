@@ -14,6 +14,27 @@ export const styles = StyleSheet.create({
     // paddingRight: 3,
     // paddingTop: 3,
   },
+  onFocusStyle:{
+    borderColor: Colors.bordercolor,
+    borderWidth: 2,
+    shadowColor: Colors.black,
+    shadowOffset: { width: 2, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3.22,
+    elevation: 3,
+  },
+  textwrapStyle:{
+    justifyContent: 'center',
+    flexGrow: 0,
+    flexWrap: 'nowrap'
+  },
+  secureTextView:{ 
+    width: '10%', 
+    position: 'absolute', 
+    right: 5, 
+    top: 3 
+  },
+  width0:{ width: 0 },
   inputTextStyle: {
     // paddingTop: Platform.OS == 'ios' ? 15 : 30,
     height: 56,

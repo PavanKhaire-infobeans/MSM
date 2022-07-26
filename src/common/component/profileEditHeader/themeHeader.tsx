@@ -2,69 +2,10 @@ import { Image, TouchableOpacity, View } from 'react-native';
 import Text from '../Text';
 import React from 'react';
 //@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
 import { close_white } from '../../../images';
 import { Colors, fontSize } from '../../constants';
 import { Account } from '../../loginStore';
-
-const styles = EStyleSheet.create({
-  name: {
-    color: Colors.white,
-    ...fontSize(10),
-    lineHeight: 15,
-    textAlign: 'left',
-    fontWeight: "500",
-  },
-  titleText: {
-    color: Colors.white,
-    ...fontSize(18),
-    lineHeight: 20,
-    textAlign: 'left',
-    fontWeight: "500",
-  },
-
-  titleContainer: {
-    justifyContent: 'center',
-    paddingTop: 10,
-    flex: 1,
-    paddingRight: 10,
-  },
-
-  leftButtonTouchableContainer: {
-    justifyContent: 'center',
-    padding: 15,
-    marginTop: 5,
-  },
-
-  leftButtonContainer: {
-    backgroundColor: 'transparent',
-    height: 28,
-    width: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  leftCrossButtonContainer: {
-    backgroundColor: Colors.NewRadColor,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  rightButtonsContainer: {
-    paddingTop: 10,
-    paddingRight: 0,
-    height: '100%',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-
-  rightButtonsTouchable: {
-    padding: 0,
-    paddingRight: 10
-  },
-
-});
+import styles from './styles';
 
 class ThemeHeader extends React.Component<{ [x: string]: any }> {
   static defaultProps = {
@@ -111,12 +52,7 @@ class ThemeHeader extends React.Component<{ [x: string]: any }> {
             onPress={() => this.props.saveValues()}
             style={styles.rightButtonsTouchable}>
             <Text
-              style={{
-                ...fontSize(16),
-                fontWeight: "500",
-                color: Colors.white,
-                paddingRight: 10,
-              }}>
+              style={styles.rightTextStyle}>
               {this.props.rightText}
             </Text>
           </TouchableOpacity>
@@ -124,35 +60,13 @@ class ThemeHeader extends React.Component<{ [x: string]: any }> {
         {this.props.rightIcon && (
           <TouchableOpacity onPress={() => this.props.showHideMenu()}>
             <View
-              style={{
-                justifyContent: 'space-between',
-                height: '100%',
-                width: 30,
-                padding: 13.5,
-                paddingLeft: 3,
-                alignItems: 'center',
-              }}>
+              style={styles.rightIconContainer}>
               <View
-                style={{
-                  backgroundColor: 'white',
-                  height: 4,
-                  width: 4,
-                  borderRadius: 2,
-                }}></View>
+                style={styles.menuStyle}></View>
               <View
-                style={{
-                  backgroundColor: 'white',
-                  height: 4,
-                  width: 4,
-                  borderRadius: 2,
-                }}></View>
+                style={styles.menuStyle}></View>
               <View
-                style={{
-                  backgroundColor: 'white',
-                  height: 4,
-                  width: 4,
-                  borderRadius: 2,
-                }}></View>
+                style={styles.menuStyle}></View>
             </View>
           </TouchableOpacity>
         )}
@@ -163,13 +77,9 @@ class ThemeHeader extends React.Component<{ [x: string]: any }> {
   render() {
     return (
       <View
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          justifyContent: 'space-between',
-        }}>
+        style={styles.headerContainerStyle}>
         <View
-          style={{ flexDirection: 'row', justifyContent: 'flex-start', flex: 1 }}>
+          style={styles.centerandLeftContainer}>
           {this._renderLeft()}
           {this._renderMiddle()}
         </View>

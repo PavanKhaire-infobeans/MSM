@@ -123,7 +123,7 @@ const NavigationBar = (props: Props) => {
                   source={jumptocalendar}
                   resizeMode="contain"
                 />
-                <View style={{ height: 4 }} />
+                <View style={styles.height4} />
                 <Text style={styles.cancleText}>{'Jump to Year'}</Text>
               </View>
             </TouchableWithoutFeedback>

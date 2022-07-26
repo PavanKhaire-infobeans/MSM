@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Animated, Platform } from 'react-native';
 import Text from '../Text';
 import { Props } from './types';
-import { styles } from './styles';
+import styles  from './styles';
 import { Colors } from '../../constants';
 import BottomPicker, { ActionSheetItem } from '../bottomPicker';
 import DropDownSelector from '../dropDown';

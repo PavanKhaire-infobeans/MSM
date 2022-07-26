@@ -6,10 +6,10 @@ import {
 } from 'react-native';
 // import {fontSize, Colors} from '../../constants';
 import { Actions } from 'react-native-router-flux';
+import Utility from '../../utility';
 // import TextNew from '../Text';
-import TextNew from '../../../src/common/component/Text';
-import { No_Internet_Warning } from './../../../src/common/component/Toast';
-import Utility from './../../../src/common/utility';
+import TextNew from '../Text';
+import { No_Internet_Warning } from './../Toast';
 import styles from './styles';
 const { height } = Dimensions.get('window');
 

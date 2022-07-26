@@ -184,7 +184,7 @@ const filteredList = (payload: any, list: any) => {
     else {
         list = list.filter((element: any) => element.nid != payload.nid)
     }
-    console.log('This is list refractoring : ', payload, list);
+    // console.log('This is list refractoring : ', payload, list);
     return list;
 }
 

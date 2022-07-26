@@ -26,13 +26,7 @@ class SelectionStatusBar extends Component<{[x: string]: any}> {
 
         <TouchableOpacity
           key="rubbish"
-          style={{
-            marginLeft: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 44,
-            height: 44,
-          }}
+          style={styles.imageContainerStyle}
           onPress={() => {
             this.props.onPress();
           }}>

@@ -48,11 +48,11 @@ const Styles = EStyleSheet.create({
   },
 
   textSize18: {
-    ...(fontSize(18)),
+    ...fontSize(18),
     fontFamily:fontFamily.Inter
   },
   textSize16: {
-    ...(fontSize(16)),
+    ...fontSize(16),
     fontFamily:fontFamily.Inter
   },
   });

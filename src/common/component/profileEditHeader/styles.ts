@@ -27,6 +27,7 @@ const Styles = EStyleSheet.create({
     justifyContent: 'flex-start',
     flex: 1,
   },
+  height4:{ height: 4 },
   innerContainer: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
@@ -133,7 +134,6 @@ const Styles = EStyleSheet.create({
     borderRadius: 1000,
     paddingHorizontal: 12,
     // backgroundColor:Colors.bottomTabColor,
-
   },
 
   registrationContainerStyle: {
@@ -213,7 +213,30 @@ const Styles = EStyleSheet.create({
     color: Colors.newTextColor,
     fontFamily: fontFamily.Inter,
   },
-
+  rightIconContainer:{
+    justifyContent: 'space-between',
+    height: '100%',
+    width: 30,
+    padding: 13.5,
+    paddingLeft: 3,
+    alignItems: 'center',
+  },
+  menuStyle:{
+    backgroundColor: 'white',
+    height: 4,
+    width: 4,
+    borderRadius: 2,
+  },
+  headerContainerStyle:{
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  centerandLeftContainer:{ 
+    flexDirection: 'row', 
+    justifyContent: 'flex-start', 
+    flex: 1 
+  }
 });
 
 export default Styles;

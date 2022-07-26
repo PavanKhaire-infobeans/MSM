@@ -21,6 +21,10 @@ const Styles = EStyleSheet.create({
   fullScreenAnimatedView: {
     top: 0,
   },
+  invisibleView:{
+    height:0,
+    width:0
+  },
   halfScreenAnimatedView: {
     borderRadius: 15,
     bottom: -10,

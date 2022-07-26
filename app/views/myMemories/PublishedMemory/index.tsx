@@ -6,6 +6,8 @@ import {
 import ContextMenu from "react-native-context-menu-view";
 import DeviceInfo from 'react-native-device-info';
 import { Actions } from 'react-native-router-flux';
+import { Account } from '../../../../src/common/loginStore';
+import { MemoryService } from '../../../../src/common/webservice/memoryServices';
 import { ListType } from '../../../../src/views/dashboard/dashboardReducer';
 import MemoryActionsSheet, { MemoryActionsSheetItem } from '../../../components/memoryActionsSheet';
 import {
@@ -14,7 +16,7 @@ import {
 import { GetAllLikes, Like, Unlike } from '../../memoryDetails/detailsWebService';
 import {
   GetPublishedMemories, kAllLikes,
-  kLiked, kMemoryActionPerformedPublished, kPublishedMemoriesFetched, kUnliked, MemoryAction
+  kLiked, kMemoryActionPerformedPublished, kMemoryMoveToDrafts, kPublishedMemoriesFetched, kUnliked, MemoryAction
 } from '../myMemoriesWebService';
 import AudioPlayer, {
   kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious
@@ -26,7 +28,7 @@ import {
   No_Internet_Warning, ToastMessage
 } from './../../../../src/common/component/Toast';
 import {
-  Colors, encode_utf8, fontSize, MemoryActionKeys
+  Colors, encode_utf8, fontSize, MemoryActionKeys, Storage
 } from './../../../../src/common/constants';
 import EventManager from './../../../../src/common/eventManager';
 import Utility from './../../../../src/common/utility';
@@ -98,6 +100,11 @@ export default class PublishedMemory extends React.Component<Props, State> {
       kMemoryActionPerformedPublished,
       this.memoryActionCallBack,
     );
+    this.memoryActionsListener = EventManager.addListener(
+      kMemoryMoveToDrafts,
+      this.memoryActionCallBack,
+    );
+
   }
 
   componentDidMount() {
@@ -269,6 +276,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     type?: any,
     uid?: any,
   ) => {
+    console.log("response no listner next> ", nid)
     loaderHandler.hideLoader();
     if (fetched) {
       if (type == MemoryActionKeys.removeMeFromThisPostKey) {
@@ -278,7 +286,8 @@ export default class PublishedMemory extends React.Component<Props, State> {
               .remove_me_from_this_post;
           }
         });
-      } else if (
+      }
+      else if (
         type == MemoryActionKeys.blockAndReportKey ||
         type == MemoryActionKeys.blockUserKey
       ) {
@@ -286,7 +295,11 @@ export default class PublishedMemory extends React.Component<Props, State> {
           (element: any) => element.user_details.uid != uid,
         );
       } else if (type == MemoryActionKeys.addToCollection) {
-      } else {
+      }
+      else if (type == MemoryActionKeys.editMemoryKey) {
+        _onEditMemory(nid);
+      }
+      else {
         publishedMemoriesArray = publishedMemoriesArray.filter(
           (element: any) => element.nid != nid,
         );
@@ -720,14 +733,38 @@ const _onShareMemory = async (url: any) => {
   }
 }
 
-export const onActionItemClicked = (index: number, data: any): void => {
+export const onActionItemClicked = async (index: number, data: any): void => {
   // console.log(JSON.stringify(data));
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
       _addToCollection(data.nid);
       break;
     case MemoryActionKeys.editMemoryKey:
-      _onEditMemory(data.nid);
+
+      let details: any = {
+        action_type: MemoryActionKeys.moveToDraftKey,
+        type: data.memoryType,
+        id: data.nid
+      };
+      let userdata = await Storage.get('userData');
+
+      let response = await MemoryService(
+        `https://${Account.selectedData().instanceURL}/api/actions/memory`,
+        [
+          {
+            'X-CSRF-TOKEN': userdata.userAuthToken,
+            'Content-Type': 'application/json',
+          },
+          { configurationTimestamp: '0', details },
+        ],
+      )
+        .then((response: Response) => response.json())
+        .catch((err: Error) => {
+          Promise.reject(err);
+        });
+      if (response.ResponseCode == 200) {
+        _onEditMemory(data.nid);
+      }
       break;
     case MemoryActionKeys.cancelActionKey:
       break;

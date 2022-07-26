@@ -12,6 +12,7 @@ const Styles = EStyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1,
+    shadowColor: Colors.cardShadowColor
   },
   RenderHtmlStyle: {
     ...fontSize(19),
@@ -164,6 +165,7 @@ const Styles = EStyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1,
+    shadowColor: Colors.cardShadowColor
   },
   activepromptsSubContainer: {
     width: '100%',
