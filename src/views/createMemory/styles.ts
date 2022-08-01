@@ -141,6 +141,7 @@ const Styles = EStyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: Colors.backrgba,
+    
   },
   fullWidth: {
     width: '100%'
@@ -309,8 +310,24 @@ const Styles = EStyleSheet.create({
     width: '100%',
     fontFamily: fontFamily.Inter
   },
-  padding15: {
+  imagebuttonStyle: {
     padding: 15
+  },
+  searchListItemStyle:{
+    paddingTop: 10,
+    width: '100%',
+    paddingBottom: 10,
+    height: 60,
+    borderBottomColor: Colors.colorBlack,
+    borderBottomWidth: 1,
+  },
+  searchListItemContainerStyle:{
+    paddingLeft: 15,
+    width: '100%',
+    flex: 1,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   paddingHorizontal24: {
     paddingHorizontal: 24
@@ -490,11 +507,34 @@ const Styles = EStyleSheet.create({
     fontFamily: fontFamily.Inter,
     color: Colors.white,
   },
+  tagName: {
+    ...fontSize(14),
+    fontWeight: 'normal',
+    color: Colors.darkGray,
+    marginBottom: 5
+  },
   normalText: {
     ...fontSize(16),
     fontWeight: 'normal',
     color: Colors.darkGray,
     marginBottom: 10,
+  },
+  itemName:{ 
+    ...fontSize(16), 
+    fontWeight: 'normal', 
+    color: Colors.newTextColor
+  },
+  addButtonStyle:{
+    color: Colors.NewTitleColor,
+    ...fontSize(16),
+    paddingRight: 15,
+  },
+  userCountText:{
+    ...fontSize(14),
+    fontStyle: 'italic',
+    fontFamily: fontFamily.Inter ,
+    marginBottom: 10,
+    paddingTop: 5,
   },
   tabsContainer: {
     width: '100%',
@@ -609,13 +649,13 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  textStyle18Weight700: {
+  introTitle: {
     ...fontSize(18),
     fontWeight: '700',
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterBold,
     textAlign: 'center'
   },
-  textStyle18Weight400: {
+  introdesc: {
     ...fontSize(18),
     fontWeight: '400',
     fontFamily: fontFamily.Inter,
@@ -627,7 +667,7 @@ const Styles = EStyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     textAlign: 'center'
   },
-  margin20: {
+  introImgStyle: {
     margin: 20
   },
   containerMemoIntro: {

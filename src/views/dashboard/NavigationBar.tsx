@@ -242,7 +242,7 @@ class NavigationBar extends React.Component<Props> {
           style={styles.rightButtonsTouchable}
           testID={testID.rightButtons.notification}>
           <ImageBackground
-            style={[styles.avatar]}
+            style={styles.avatar}
             imageStyle={{ borderRadius: 15 }}
             source={profile_placeholder}>
             {loadProfileImage ? (

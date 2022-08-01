@@ -20,6 +20,7 @@ import {
 import {
   kRecentTags, kSearchTags, kUsers, MemoryTagsAPI, UserSearchAPI
 } from './saga';
+import Styles from './styles';
 import style from './styles';
 
 type State = { [x: string]: any };
@@ -153,27 +154,12 @@ class CommonListCreateMemory extends React.Component<Props, State> {
   renderRow = (item: any, searchList: boolean) => {
     return (
       <View
-        style={{
-          paddingTop: 10,
-          width: '100%',
-          paddingBottom: 10,
-          backgroundColor: searchList ? '#E6F0EF' : '#fff',
-          height: 60,
-          borderBottomColor: 'rgba(0,0,0,0.2)',
-          borderBottomWidth: 1,
-        }}>
+        style={Styles.searchListItemStyle}>
         <View
-          style={{
-            paddingLeft: 15,
-            width: '100%',
-            flex: 1,
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
+          style={Styles.searchListItemContainerStyle}>
           {this.state.isMemoryTags ? (
             <Text
-              style={{ ...fontSize(16), fontWeight: 'normal', color: '#595959' }}>
+              style={Styles.itemName}>
               {item.item.name}
             </Text>
           ) : (
@@ -186,11 +172,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
                   underlayColor={'#ffffff22'}
                   onPress={() => this.addToList(item.item)}>
                   <Text
-                    style={{
-                      color: Colors.NewTitleColor,
-                      ...fontSize(16),
-                      paddingRight: 15,
-                    }}>
+                    style={Styles.addButtonStyle}>
                     Add
                   </Text>
                 </TouchableHighlight>
@@ -198,7 +180,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
             </View>
           ) : (
             <TouchableHighlight
-              style={{ padding: 15 }}
+              style={Styles.imagebuttonStyle}
               underlayColor={'#ffffff22'}
               onPress={() => this.removeFromList(item.item)}>
               <Image source={action_close}></Image>
@@ -235,7 +217,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
         underlayColor={Colors.underlay33OpacityColor}
         onPress={() => this.addToList(item.item)}
         style={style.tagContainerStyle}>
-        <Text style={[style.normalText, { ...fontSize(14), marginBottom: 5 }]}>
+        <Text style={style.tagName}>
           {item.item.name}
         </Text>
       </TouchableHighlight>
@@ -253,7 +235,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
               keyExtractor={(_, index: number) => `${index}`}
               showsHorizontalScrollIndicator={false}
               data={this.props.recentTags}
-              style={style.padding15}
+              style={style.imagebuttonStyle}
               renderItem={(item: any) => this.renderTagsItem(item)}
             />
           </View>

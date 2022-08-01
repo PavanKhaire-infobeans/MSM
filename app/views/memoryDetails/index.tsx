@@ -12,6 +12,7 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import WebView from 'react-native-webview';
 import NavigationHeaderSafeArea from '../../../src/common/component/profileEditHeader/navigationHeaderSafeArea';
+import { MemoryService } from '../../../src/common/webservice/memoryServices';
 import { kMemoryActionPerformedOnMemoryDetails, MemoryAction } from '../../../src/views/myMemories/myMemoriesWebService';
 import { kPublishedMemoryUpdated } from '../../../src/views/myMemories/PublishedMemory';
 import AudioPlayer, { kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious } from './../../../src/common/component/audio_player/audio_player';
@@ -21,7 +22,7 @@ import PlaceholderImageView from './../../../src/common/component/placeHolderIma
 import Text from './../../../src/common/component/Text';
 import { No_Internet_Warning, ToastMessage } from './../../../src/common/component/Toast';
 import {
-  Colors, decode_utf8, encode_utf8, fontSize, getDetails, getValue, keyArray, keyInt, keyString, MemoryActionKeys, TimeStampMilliSeconds
+  Colors, decode_utf8, encode_utf8, fontSize, getDetails, getValue, keyArray, keyInt, keyString, MemoryActionKeys, Storage, TimeStampMilliSeconds
 } from './../../../src/common/constants';
 import EventManager from './../../../src/common/eventManager';
 import { Account } from './../../../src/common/loginStore';
@@ -36,6 +37,7 @@ import {
   DeleteComment, EditComment, GetAllComments, GetAllLikes, GetMemoryDetails, kAllComment, kAllLikes, kComment, kDeleteComment, kEditComment, kLiked, kLikeOnComment, kMemoryDetailsFetched, kUnliked, kUnlikeOnComment, Like, PostComment, Unlike
 } from './detailsWebService';
 import { kNews, MemoryDataModel } from './memoryDataModel';
+import Styles from './styles';
 import style from './styles';
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
@@ -163,7 +165,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       this.memoryActionCallBack,
     );
 
-    this._onEditMemory = this._onEditMemory.bind(this);
+    // this._onEditMemory = this._onEditMemory.bind(this);
 
   }
 
@@ -531,7 +533,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     return (
       <FlatList
         data={lastComments}
-        style={{ paddingBottom: 10 }}
+        style={Styles.MemoryTagsFlatlistStyle}
         keyExtractor={(_, index: number) => `${index}`}
         renderItem={(item: any) => this.renderCommentView(item)}
       />
@@ -646,15 +648,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
     return (
       <View
         ref={(ref: any) => (this._lastComment = ref)}
-        style={{
-          flexDirection: 'row',
-          paddingTop: 5,
-          justifyContent: 'flex-start',
-          alignItems: 'flex-start',
-        }}>
+        style={style.renderCommentViewStyle}>
         <ImageBackground
           style={[style.avatar]}
-          imageStyle={{ borderRadius: 20 }}
+          imageStyle={style.CollaboratorImageStyle}
           source={profile_placeholder}>
           <Image
             source={
@@ -662,73 +659,37 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 ? { uri: Utility.getFileURLFromPublicURL(item.item.uri) }
                 : profile_placeholder
             }
-            style={{ height: 40, width: 40, borderRadius: 20 }}></Image>
+            style={style.CollaboratorProfileImageStyle}></Image>
         </ImageBackground>
         <View
-          style={{
-            marginBottom: 10,
-            marginLeft: 10,
-            backgroundColor: Colors.NewLightThemeColor,
-            borderRadius: 5,
-            flex: 1,
-          }}>
+          style={style.fieldFirstnameContainerStyle}>
           <View
-            style={{
-              flexDirection: 'row',
-              flex: 1,
-              padding: 10,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              backgroundColor: Colors.NewLightCommentHeader,
-            }}>
+            style={style.fieldFirstnameSubContainerStyle}>
             <Text
               numberOfLines={1}
-              style={{
-                lineHeight: 20,
-                flex: 1,
-                fontSize: 16,
-                color: Colors.NewTitleColor,
-                backgroundColor: item.item.backgroundColor,
-              }}>
+              style={[style.fieldFirstnameTextStyle, { backgroundColor: item.item.backgroundColor, }]}>
               {item.item.field_first_name_value}{' '}
               {item.item.field_last_name_value}
             </Text>
             <Text
-              style={{
-                color: Colors.TextColor,
-                paddingLeft: 10,
-                fontSize: 14,
-                lineHeight: 20,
-              }}>
+              style={style.createdOnTextStyle}>
               {createdOn}
             </Text>
           </View>
           <View
-            style={{
-              flexDirection: 'row',
-              padding: 10,
-              paddingBottom: 5,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <Text style={{ ...fontSize(16), color: Colors.TextColor }}>
+            style={style.commentbodyContainer}>
+            <Text style={style.commentbodyTextStyle}>
               {decode_utf8(item.item.comment_body_value)}
             </Text>
           </View>
           <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: 5,
-              paddingBottom: 10,
-            }}>
+            style={style.likebuttonContainer}>
             <TouchableWithoutFeedback
               onPress={() => this.likeOnComment(item)}>
-              <View style={{ flexDirection: 'row', padding: 5 }}>
+              <View style={style.likeButtonStyle}>
                 <Image
                   source={likeFlag ? icon_like_selected : icon_like}
-                  style={{ marginRight: 5, marginLeft: 5 }}></Image>
+                  style={style.likeImageStyle}></Image>
                 <TouchableHighlight
                   underlayColor={'#ffffffff'}
                   onPress={() =>
@@ -736,7 +697,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                       ? this.getAllLikes(item.item.cid, 'comment')
                       : this.likeOnComment(item)
                   }>
-                  <Text style={{ ...fontSize(16), color: Colors.NewTitleColor }}>
+                  <Text style={style.likeTextStyle}>
                     {likeText}
                   </Text>
                 </TouchableHighlight>
@@ -744,23 +705,18 @@ export default class MemoryDetails extends React.Component<Props, State> {
             </TouchableWithoutFeedback>
             {shouldShowDeleteButton ? (
               <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                  paddingRight: 10,
-                }}>
+                style={style.deleteButtonContainer}>
                 {shouldShowEditButton && (
                   <TouchableWithoutFeedback onPress={() => this.editComment(item.item)}>
                     <Text
-                      style={{ ...fontSize(16), color: Colors.NewTitleColor }}>
+                      style={style.likeTextStyle}>
                       Edit
                     </Text>
                   </TouchableWithoutFeedback>
                 )}
                 <TouchableWithoutFeedback
                   onPress={() => this.deleteComment(item.item)}>
-                  <Text style={{ ...fontSize(16), color: Colors.ErrorColor, marginLeft: 27 }}>
+                  <Text style={style.deleteTextStyle}>
                     Delete
                   </Text>
                 </TouchableWithoutFeedback>
@@ -949,14 +905,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           renderItem={(file: any) => {
             return (<View
               style={[
-                {
-                  backgroundColor: Colors.timeLinebackground,
-                  marginBottom: 15,
-                  borderWidth: 2,
-                  borderColor: Colors.bordercolor,
-                  borderRadius: 10,
-                  marginHorizontal: 10,
-                },
+                style.audioViewContainer,
                 style.boxShadow,
               ]}>
               {((file.item.url && file.item.url != '') ||
@@ -964,77 +913,34 @@ export default class MemoryDetails extends React.Component<Props, State> {
                   <TouchableWithoutFeedback onPress={() => this.togglePlayPause(file.index)}>
                     {/* <> */}
                     <View
-                      style={{
-                        width: '100%',
-                        paddingVertical: 10,
-                        justifyContent: 'flex-start',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}>
+                      style={style.playPauseContainer}>
                       <View
-                        style={{
-                          width: 55,
-                          height: 55,
-                          marginLeft: 15,
-                          backgroundColor: Colors.white,
-                          borderRadius: 30,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          borderWidth: 4,
-                          borderColor: Colors.bordercolor,
-                        }}>
+                        style={style.playButtonContainer}>
                         {this.state.audioFile.index == file.index &&
                           this.state.audioFile.isPlaying ? (
                           <View
-                            style={{
-                              height: 20,
-                              width: 16,
-                              justifyContent: 'space-between',
-                              flexDirection: 'row',
-                            }}>
+                            style={style.playingSubContainer}>
                             <View
-                              style={{
-                                backgroundColor: Colors.bordercolor,
-                                flex: 1,
-                                width: 5,
-                              }}
+                              style={style.playButtonStyle}
                             />
                             <View
-                              style={{
-                                backgroundColor: 'transparent',
-                                flex: 1,
-                                width: 2,
-                              }}
+                              style={style.playButtonTransparentStyle}
                             />
                             <View
-                              style={{
-                                backgroundColor: Colors.bordercolor,
-                                flex: 1,
-                                width: 5,
-                              }}
+                              style={style.playButtonStyle}
                             />
                           </View>
                         ) : (
                           <View
-                            style={{
-                              height: 24,
-                              width: 24,
-                              marginLeft: 10,
-                              borderLeftColor: Colors.bordercolor,
-                              borderLeftWidth: 18,
-                              borderTopColor: 'transparent',
-                              borderTopWidth: 12,
-                              borderBottomColor: 'transparent',
-                              borderBottomWidth: 12,
-                            }}
+                            style={style.pauseButtonStyle}
                           />
                         )}
                       </View>
-                      <View style={{ marginLeft: 10 }}>
+                      <View style={style.durationContainer}>
                         <Text
                           style={[
                             style.normalText,
-                            { color: '#000', marginBottom: 5, paddingRight: 80 },
+                            style.fileNameStyle
                           ]}
                           numberOfLines={1}
                           ellipsizeMode="tail">
@@ -1044,7 +950,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                               ? file.item.filename
                               : ''}
                         </Text>
-                        <Text style={[style.normalText, { color: '#000' }]}>
+                        <Text style={[style.normalText, { color: Colors.black }]}>
                           {file.item.duration}
                         </Text>
                       </View>
@@ -1099,7 +1005,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
   CommonBottomSection = () => {
     return (
-      <View style={{ paddingRight: 15, paddingLeft: 15, marginBottom: 50 }}>
+      <View style={style.CommonBottomSectionContainer}>
         {/* View for showing memory tags */}
         {/* {this.memoryDataModel.memoryTags.length > 0 &&  */}
         {/* <MemoryTags memoryTags={this.memoryDataModel.memoryTags}></MemoryTags>}    */}
@@ -1123,14 +1029,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
         {/* View for Like comment and share section */}
         <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginVertical: 10,
-          }}>
+          style={style.likeImageContainer}>
           <Animated.View
             style={{
-
               transform: [{ translateX: this.shakeAnimation }],
             }}>
             <TouchableWithoutFeedback onPress={() => { this.memoryDataModel.likesComments.noOfLikes > 0 && this.memoryDataModel.likesComments.showLikeCount ? this.getAllLikes() : this.like() }}>
@@ -1214,22 +1115,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
             <View style={{ marginVertical: 10 }}>
               {this.state.viewAllComments ? (
                 <Text
-                  style={{
-                    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                    lineHeight: 20,
-                    fontSize: 16,
-                    color: Colors.NewYellowColor,
-                  }}>
+                  style={style.hideCommentText}>
                   {'Hide previous comments'}
                 </Text>
               ) : (
                 <Text
-                  style={{
-                    fontWeight: 'bold',
-                    lineHeight: 20,
-                    fontSize: 16,
-                    color: Colors.NewYellowColor,
-                  }}>
+                  style={style.hideCommentText}>
                   {'View previous comments ('}
                   {this.memoryDataModel.likesComments.noOfComments - 2}
                   {')'}
@@ -1245,14 +1136,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           this.prepareViewForComments()
         ) : (
           <Text
-            style={{
-              width: '100%',
-              textAlign: 'center',
-              ...fontSize(16),
-              color: Colors.TextColor,
-              padding: 5,
-              marginTop: 5,
-            }}>
+            style={style.noCommenttextStyle}>
             {'No comments yet, be the first to comment.'}
           </Text>
         )}
@@ -1264,40 +1148,16 @@ export default class MemoryDetails extends React.Component<Props, State> {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: '#F5F5F5',
-        }}>
+        style={style.CommentBoxContainer}>
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingLeft: 10,
-          }}>
+          style={style.CommentBoxSubContainer}>
           {/* <ImageBackground style={[style.avatar]} imageStyle={{ borderRadius: 20}} source={profile_placeholder}>
                         <Image style={{height: 40, width: 40, borderRadius: 20, alignContent: "center"}} source={Account.selectedData().profileImage != "" ? {uri : Account.selectedData().profileImage} : profile_placeholder}/>                    
                     </ImageBackground>   */}
 
           <TextInput
             ref={(ref: any) => (this._commentBoxRef = ref)}
-            style={{
-              ...fontSize(16),
-              flex: 1,
-              borderWidth: 1,
-              maxHeight: 100,
-              borderColor: Colors.TextColor,
-              margin: 8,
-              borderRadius: 5,
-              padding: 10,
-              paddingBottom: 8,
-              paddingTop: 8,
-              color: Colors.TextColor,
-            }}
+            style={style.commentBoxTextInput}
             value={this.state.commentValue}
             onChangeText={text => this.setState({ commentValue: text })}
             returnKeyLabel={'Enter'}
@@ -1310,19 +1170,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
           <TouchableWithoutFeedback
             onPress={() => this.postcomment()}>
-            <View style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingRight: 10,
-            }}>
+            <View style={style.postContainer}>
               <Image source={icon_send} />
               <Text
-                style={{
-                  fontSize: 12,
-                  textAlign: 'center',
-                  color: Colors.NewTitleColor,
-                  padding: 1,
-                }}
+                style={style.postStyle}
                 autoCorrect={false}>
                 {'Post'}
               </Text>
@@ -1331,82 +1182,45 @@ export default class MemoryDetails extends React.Component<Props, State> {
           </TouchableWithoutFeedback>
         </View>
       </KeyboardAwareScrollView>
-    ) : (
-      <KeyboardAccessory
-        style={{
-          backgroundColor: '#ffffff',
-          position: 'absolute',
-          width: '100%',
-          flexDirection: 'row',
-          paddingRight: 15,
-          paddingLeft: 15,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderTopWidth: 1,
-          borderBottomWidth: 1,
-          borderColor: 'rgba(0,0,0,0.4)',
-        }}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingLeft: 10,
-          }}>
-          {/* <ImageBackground style={[style.avatar]} imageStyle={{ borderRadius: 20}} source={profile_placeholder}>
+    )
+      :
+      (
+        <KeyboardAccessory
+          style={style.commentContainer}>
+          <View
+            style={style.CommentBoxSubContainer}>
+            {/* <ImageBackground style={[style.avatar]} imageStyle={{ borderRadius: 20}} source={profile_placeholder}>
                             <Image style={{height: 40, width: 40, borderRadius: 20, alignContent: "center"}} source={Account.selectedData().profileImage != "" ? {uri : Account.selectedData().profileImage} : profile_placeholder}/>                    
                         </ImageBackground>   */}
 
-          <TextInput
-            ref={(ref: any) => (this._commentBoxRef = ref)}
-            style={{
-              ...fontSize(16),
-              flex: 1,
-              borderWidth: 1,
-              maxHeight: 100,
-              borderColor: Colors.TextColor,
-              margin: 8,
-              borderRadius: 5,
-              padding: 10,
-              paddingBottom: 8,
-              paddingTop: 8,
-              color: Colors.TextColor,
-            }}
-            value={this.state.commentValue}
-            onChangeText={text => this.setState({ commentValue: text })}
-            returnKeyLabel={'Enter'}
-            onContentSizeChange={event => {
-              this.setState({ height: event.nativeEvent.contentSize.height });
-            }}
-            placeholder={'Write a comment..'}
-            multiline={true}
-            placeholderTextColor={Colors.TextColor}></TextInput>
+            <TextInput
+              ref={(ref: any) => (this._commentBoxRef = ref)}
+              style={style.commentBoxTextInput}
+              value={this.state.commentValue}
+              onChangeText={text => this.setState({ commentValue: text })}
+              returnKeyLabel={'Enter'}
+              onContentSizeChange={event => {
+                this.setState({ height: event.nativeEvent.contentSize.height });
+              }}
+              placeholder={'Write a comment..'}
+              multiline={true}
+              placeholderTextColor={Colors.TextColor}></TextInput>
 
-          <TouchableWithoutFeedback
-            onPress={() => this.postcomment()}>
-            <View style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingRight: 10,
-            }}>
-              <Image source={icon_send} />
-              <Text
-                style={{
-                  fontSize: 12,
-                  textAlign: 'center',
-                  color: Colors.NewTitleColor,
-                  padding: 1,
-                }}
-                autoCorrect={false}>
-                {'Post'}
-              </Text>
-            </View>
+            <TouchableWithoutFeedback
+              onPress={() => this.postcomment()}>
+              <View style={style.postContainer}>
+                <Image source={icon_send} />
+                <Text
+                  style={style.postStyle}
+                  autoCorrect={false}>
+                  {'Post'}
+                </Text>
+              </View>
 
-          </TouchableWithoutFeedback>
-        </View>
-      </KeyboardAccessory>
-    );
+            </TouchableWithoutFeedback>
+          </View>
+        </KeyboardAccessory>
+      );
   };
 
   renderExternalQueueItem = () => {
@@ -1415,7 +1229,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
     return (
       <>
-        <View style={style.padding16}>
+        <View style={style.renderExternalQueueItemContainer}>
           <Text
             style={style.collectionTitleTextSTyle}>
             {this.memoryDataModel.externalQueue.collectionTitle}
@@ -1442,7 +1256,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           </View>
         </View>
         <View >
-          <View style={{ height: 16 }} />
+          <View style={style.descreptionContainer} />
 
           {
             currentSelectedItem.description.length > 0 && (
@@ -1450,13 +1264,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 <RenderHtml
                   tagsStyles={{ p: style.RenderHtmlStyle, li: style.RenderHtmlStyle, span: style.RenderHtmlStyle }}
                   source={{ html: currentSelectedItem.description }}
-                  ignoredDomTags={['br']}
+                  // ignoredDomTags={['br']}
 
                   enableExperimentalBRCollapsing={true}
                   contentWidth={Dimensions.get('window').width}
                   enableExperimentalMarginCollapsing={true}
                 ></RenderHtml>
-                <View style={style.bottomMargin} />
+                <View style={style.descriptionSpaceStyle} />
               </>
             )
             // <Text style={{...fontSize(18), lineHeight: 26, paddingBottom: 15, color: "#000"}}>{currentSelectedItem.description}</Text>
@@ -1508,8 +1322,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
     let currentSelectedItem =
       this.memoryDataModel.externalQueue.collection[this.state.activeSlide];
     return (
-      <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, backgroundColor: Colors.white }}>
+      <View style={style.TitleAndValueContainer}>
+        <View style={style.container}>
           <Carousel
             ref={(c: any) => {
               this._externalQueue = c;
@@ -1658,14 +1472,41 @@ export default class MemoryDetails extends React.Component<Props, State> {
     }, 1000);
   };
 
-  onActionItemClicked = (index: number, data: any): void => {
+  onActionItemClicked = async (index: number, data: any): void => {
 
     switch (data.actionType) {
       case MemoryActionKeys.addToCollection:
         this._addToCollection(data.nid);
         break;
       case MemoryActionKeys.editMemoryKey:
-        this._onEditMemory(data, data.nid);
+        loaderHandler.showLoader("Loading");
+          let details: any = {
+          action_type: MemoryActionKeys.moveToDraftKey,
+          type: this.storyType,
+          id: data.nid
+        };
+        let userdata = await Storage.get('userData');
+
+        let response = await MemoryService(
+          `https://${Account.selectedData().instanceURL}/api/actions/memory`,
+          [
+            {
+              'X-CSRF-TOKEN': userdata.userAuthToken,
+              'Content-Type': 'application/json',
+            },
+            { configurationTimestamp: '0', details },
+          ],
+        )
+          .then((response: Response) => response.json())
+          .catch((err: Error) => {
+            Promise.reject(err);
+          });
+        if (response.ResponseCode == 200) {
+          this._onEditMemory(data.nid);
+        }
+        else{
+          loaderHandler.hideLoader();
+        } // _onEditMemory(data, data.nid);
         break;
       case MemoryActionKeys.cancelActionKey:
         break;
@@ -1705,7 +1546,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         }
     }
   };
-  
+
   _addToCollection = (nid?: any) => {
     if (Utility.isInternetConnected) {
       Actions.push('memoryCollectionList', {
@@ -1717,8 +1558,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
     }
   };
 
-  _onEditMemory(event: any, nid?: any) {
-    event = event.nativeEvent;
+  _onEditMemory = (nid?: any) => {
+    // event = event.nativeEvent;
     // this.getDraftDetails(event)
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader();
@@ -1731,7 +1572,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
       } else {
         Actions.push('createMemory', {
           editMode: true,
-          draftNid: event.nid,
+          draftNid: nid,
+          // draftNid: event.nid,
           editPublsihedMemory: true,
         });
       }
@@ -1898,7 +1740,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
               this.memoryDataModel.memory.collaborators
             }></CollaboratorView>
         )} */}
-        <View style={{ height: 16 }} />
+        <View style={style.descreptionContainer} />
 
         {this.memoryDataModel.memory.description.length > 0 && (
           < >
@@ -1910,13 +1752,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
             <RenderHtml
               tagsStyles={{ p: style.RenderHtmlStyle, li: style.RenderHtmlStyle, span: style.RenderHtmlStyle }}//Colors.newDescTextColor
               source={{ html: this.memoryDataModel.memory.description }}
-              ignoredDomTags={['br']}
+              // ignoredDomTags={['br']}
 
               contentWidth={Dimensions.get('window').width}
               enableExperimentalBRCollapsing={true}
               enableExperimentalMarginCollapsing={true}
             ></RenderHtml>
-            <View style={style.bottomMargin} />
+            <View style={style.descriptionSpaceStyle} />
           </>
         )}
 
@@ -2174,7 +2016,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
         <LinearGradient
           colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
-          style={{ height: 34, width: '100%', position: 'absolute', bottom: 0 }}>
+          style={style.linearGradStyle}>
         </LinearGradient>
       </SafeAreaView>
     );

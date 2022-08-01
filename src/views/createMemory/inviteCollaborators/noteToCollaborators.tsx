@@ -26,6 +26,7 @@ import {
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
 import { getCommaSeparatedArray } from '../dataHelper';
+import Styles from './styles';
 
 type State = {[x: string]: any};
 type Props = {
@@ -145,16 +146,12 @@ class NotesToCollaborators extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={Styles.container}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={Styles.invisibleContainer}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1}}>
+        <SafeAreaView style={Styles.safeAreaContainer}>
+          <View style={Styles.container}>
             <NavigationHeaderSafeArea
               heading={'Notes to Collaborators'}
               showCommunity={true}
@@ -168,22 +165,9 @@ class NotesToCollaborators extends React.Component<Props, State> {
               backgroundColor={Colors.ThemeColor}
             />
             <View
-              style={{
-                flex: 1,
-                paddingRight: 15,
-                paddingLeft: 15,
-                paddingTop: 15,
-                paddingBottom: 0,
-              }}>
+              style={Styles.textInputContainer}>
               <TextInput
-                style={{
-                  flex: 1,
-                  textAlignVertical: 'top',
-                  fontFamily: 'Rubik',
-                  ...fontSize(16),
-                  paddingBottom: 0,
-                  marginBottom: 0,
-                }}
+                style={Styles.TextInputStyle}
                 autoFocus={this.props.isOwner}
                 multiline={true}
                 editable={this.props.isOwner}

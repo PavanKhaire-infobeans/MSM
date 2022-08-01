@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
-import { styles } from '../../../common/component/multipleDropDownView/styles';
+// import { styles } from '../../../common/component/multipleDropDownView/styles';
 import Text from '../../../common/component/Text';
 import {
   No_Internet_Warning, ToastMessage
@@ -775,7 +775,7 @@ const UserDetails = (item: any) => {
               borderColor: 'rgba(0,0,0,0.2)',
             }}>
             <ImageBackground
-              style={[styles.avatar]}
+              style={style.avatar}
               imageStyle={{borderRadius: 20}}
               source={profile_placeholder}>
               <Image
@@ -881,5 +881,11 @@ const style = StyleSheet.create({
     shadowColor: '#CACACA',
     shadowRadius: 2,
     shadowOffset: {width: 0, height: 2},
+  },
+  avatar: {
+    height: 42,
+    width: 42,
+    borderRadius: 21,
+    alignContent: 'center',
   },
 });

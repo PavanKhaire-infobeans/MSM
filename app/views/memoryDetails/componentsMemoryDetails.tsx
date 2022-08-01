@@ -30,27 +30,9 @@ export const kImage = 'image';
 export const kAudio = 'audio';
 export const kPDF = 'pdf';
 
-const style = StyleSheet.create({
-  normalText: {
-    ...fontSize(16),
-    fontWeight: 'normal',
-    color: Colors.newTextColor,
-    marginBottom: 10,
-  },
-  boxShadow: {
-    shadowOpacity: 1,
-    elevation: 1,
-    shadowColor: '#D9D9D9',
-    shadowRadius: 2,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  avatar: {
-    height: 42,
-    width: 42,
-    borderRadius: 21,
-    alignContent: 'center',
-  },
-});
+// const style = StyleSheet.create({
+
+// });
 
 export const MemoryCollections = (props: {
   collectionList: any;
@@ -60,7 +42,7 @@ export const MemoryCollections = (props: {
   return (
     <View
       style={[
-        style.boxShadow,
+        Styles.boxShadow,
         Styles.MemoryCollectionsContainer,
       ]}>
       <View style={Styles.MemoryCollectionsContainerSub}>
@@ -222,7 +204,7 @@ export const MemoryTags = (props: { memoryTags: any; onPressCallback?: any }) =>
       keyExtractor={(_, index: number) => `${index}`}
       showsHorizontalScrollIndicator={false}
       data={props.memoryTags}
-      style={{ paddingBottom: 10 }}
+      style={Styles.MemoryTagsFlatlistStyle}
       renderItem={(item: any) => (
         <TouchableHighlight
           underlayColor={'#ffffff33'}
@@ -235,7 +217,7 @@ export const MemoryTags = (props: { memoryTags: any; onPressCallback?: any }) =>
             }
           }}
           style={Styles.MemoryTagsContainer}>
-          <Text style={[style.normalText, { ...fontSize(14), marginBottom: 0 }]}>
+          <Text style={[Styles.normalText, Styles.MemoryTagsNamestyle]}>
             {item.item.name ? item.item.name : item.item}
           </Text>
         </TouchableHighlight>
@@ -250,7 +232,7 @@ export const CollaboratorView = (props: { collaborators: any }) => {
       horizontal
       showsHorizontalScrollIndicator={false}
       data={props.collaborators}
-      style={{ paddingBottom: 10 }}
+      style={Styles.MemoryTagsFlatlistStyle}
       keyExtractor={(_, index: number) => `${index}`}
       renderItem={(item: any) => (
         <View
@@ -308,8 +290,8 @@ export const UserDetails = (props: {
           </View>
         ) : (
           <ImageBackground
-            style={[style.avatar]}
-            imageStyle={{ borderRadius: 21 }}
+            style={[Styles.avatar]}
+            imageStyle={Styles.userImageBackgrounStyle}
             source={profile_placeholder}>
             <Image
               style={Styles.userImageStyle}
@@ -417,7 +399,7 @@ export const ShowSharedaetilsDetails = (props: {
           <TouchableWithoutFeedback
             onPress={() => { _onShareMemory(props.memoryDetails.memory_url) }}
           >
-            <View style={[Styles.ShareContainer, { backgroundColor: Colors.timeLinebackground, borderColor: Colors.bottomTabColor, }]}>
+            <View style={Styles.ShareContainer}>
               <Text style={Styles.shareTextStyle}>Share</Text>
               <Image source={share}></Image>
             </View>
@@ -429,7 +411,7 @@ export const ShowSharedaetilsDetails = (props: {
               <TouchableWithoutFeedback
                 onPress={() => props.onActionItemClicked({ nid: props.memoryDetails.nid, actionType: MemoryActionKeys.editMemoryKey })}
               >
-                <View style={[Styles.ShareContainer, { backgroundColor: Colors.decadeFilterBorder, borderColor: Colors.decadeFilterBorder }]}>
+                <View style={Styles.EditContainer}>
                   <Text style={[Styles.shareTextStyle, { color: Colors.white }]}>Edit</Text>
                   <Image source={pen}></Image>
                 </View>
@@ -451,7 +433,7 @@ export const FilesView = (props: {
 }) => {
   if (props.files.length > 0)
     return (
-      <View style={Styles.marginBottomStyle}>
+      <View style={Styles.FilesViewContainerStyle}>
         {props.type == kImage &&
           props.files.map((file: any) => {
             return <CommonImageView file={file} files={props.files} />;
@@ -507,7 +489,7 @@ export const CommonPDFView = (props: { file: any; files: any }) => {
     <View
       style={[
         Styles.commonPDFContainer,
-        style.boxShadow,
+        Styles.boxShadow,
       ]}>
       <TouchableWithoutFeedback
         onPress={() => {
@@ -552,7 +534,7 @@ export const CommonImageView = (props: { file: any; files: any; showDesc?: boole
   return (
     <View
       style={[Styles.CommonImageViewContainer,
-      style.boxShadow,
+      Styles.boxShadow,
       ]}>
       <TouchableWithoutFeedback
         onPress={() => {
@@ -714,7 +696,6 @@ export const LikeCommentShare = (props: {
       <Animatable.View
         style={[Styles.LikeCommentShareContainer, {
           transform: [{ translateX: PublishedMemory.shakeAnimation }],
-          borderColor: Colors.bottomTabColor,
           borderWidth: props.selectedItem ? 0 : 1
         }]}>
         <Image
@@ -733,7 +714,6 @@ export const LikeCommentShare = (props: {
       </Animatable.View>
     ) : (
       <View style={[Styles.LikeCommentShareContainer, {
-        borderColor: Colors.bottomTabColor,
         borderWidth: props.selectedItem ? 0 : 1
       }]}>
         <Image
@@ -757,7 +737,7 @@ export const LikeCommentShare = (props: {
 
 export const TitleAndValue = (props: { title: string; description: string }) => {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={Styles.TitleAndValueContainer}>
       <Text
         style={[Styles.titleandValueTextStyle, { color: Colors.newTextColor }]}>
         {props.title}

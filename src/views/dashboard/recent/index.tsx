@@ -78,7 +78,8 @@ const Recent = (props: Props) => {
                     memoryDetails = props.recentList[props.recentList.length - 1];
                 }
                 // if(props.totalCount > 5)
-                props.fetchMemoryList({ type: ListType.Recent, isLoadMore: true, lastMemoryDate: memoryDetails.memoryDate, filters: props.filters });
+                // console.log("memoryDetails >"+memoryDetails.memoryDate)
+                props.fetchMemoryList({ type: ListType.Recent, isLoadMore: true, lastMemoryDate: memoryDetails.updated, filters: props.filters });
             }
         }
     };

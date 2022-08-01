@@ -340,7 +340,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.mainContainer}>
         <SafeAreaView
           style={styles.container}>
           <View style={styles.flatlistContainer}>
@@ -467,69 +467,28 @@ export default class PublishedMemory extends React.Component<Props, State> {
           style={styles.audioContainer}>
           <View
             style={[
-              {
-                flex: 1,
-                elevation: 2,
-                backgroundColor: Colors.AudioViewBg,
-                borderColor: Colors.AudioViewBorderColor,
-                borderWidth: 2,
-                borderRadius: 10,
-              },
+              styles.audioSubContainer,
               styles.boxShadow,
             ]}>
             {item.audios[0].url && item.audios[0].url != '' && (
               <View
-                style={{
-                  width: '100%',
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  justifyContent: 'flex-start',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
+                style={styles.audioButtonContainer}
                 onStartShouldSetResponder={() => true}
                 onResponderStart={() => this.togglePlayPause(item)}>
                 <View
-                  style={{
-                    width: 55,
-                    height: 55,
-                    marginLeft: 15,
-                    backgroundColor: '#fff',
-                    borderRadius: 30,
-                    borderWidth: 4,
-                    borderColor: Colors.AudioViewBorderColor,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
+                  style={styles.playButtonContainer}>
                   {this.state.audioFile.fid == item.audios[0].fid &&
                     this.state.audioFile.isPlaying ? (
                     <View
-                      style={{
-                        height: 20,
-                        width: 16,
-                        justifyContent: 'space-between',
-                        flexDirection: 'row',
-                      }}>
+                      style={styles.playButtonMainContainer}>
                       <View
-                        style={{
-                          backgroundColor: Colors.AudioViewBorderColor,
-                          flex: 1,
-                          width: 5,
-                        }}
+                        style={styles.playButtonStyle}
                       />
                       <View
-                        style={{
-                          backgroundColor: 'transparent',
-                          flex: 1,
-                          width: 2,
-                        }}
+                        style={styles.playbuttonTransparentView}
                       />
                       <View
-                        style={{
-                          backgroundColor: Colors.AudioViewBorderColor,
-                          flex: 1,
-                          width: 5,
-                        }}
+                        style={styles.playButtonStyle}
                       />
                     </View>
                   ) : (
@@ -735,6 +694,7 @@ const _onShareMemory = async (url: any) => {
 
 export const onActionItemClicked = async (index: number, data: any): void => {
   // console.log(JSON.stringify(data));
+  loaderHandler.showLoader();
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
       _addToCollection(data.nid);
@@ -764,6 +724,9 @@ export const onActionItemClicked = async (index: number, data: any): void => {
         });
       if (response.ResponseCode == 200) {
         _onEditMemory(data.nid);
+      }
+      else{
+        loaderHandler.hideLoader();
       }
       break;
     case MemoryActionKeys.cancelActionKey:

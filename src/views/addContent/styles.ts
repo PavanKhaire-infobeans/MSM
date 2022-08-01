@@ -20,6 +20,12 @@ const Styles = EStyleSheet.create({
     height: 400,
     width: 300,
   },
+  titleError:{ 
+    color: Colors.ErrorColor, 
+    fontFamily: fontFamily.Inter,
+    fontSize: 14, 
+    lineHeight: 15 
+  },
   saveAsDraftButtonContainer: {
     flex: 1,
     height: '50%',

@@ -202,7 +202,7 @@ export default class FileDescription extends React.Component<Props, State> {
               backgroundColor={Colors.ThemeColor}
             /> */}
             {this.renderFileView()}
-            <View style={[Styles.padding15,Styles.fullFlex]}>
+            <View style={[Styles.imagebuttonStyle,Styles.fullFlex]}>
               <TextInput
                 style={Styles.titleTextInputStyle}
                 placeholder="Enter title here..."

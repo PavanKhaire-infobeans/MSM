@@ -15,6 +15,7 @@ const Styles = EStyleSheet.create({
     width: '100%',
     backgroundColor: Colors.white,
   },
+  createdbyNameTextStyle:{ color: Colors.NewYellowColor },
   sideMenu: {
     paddingTop: 15,
     paddingBottom: 15,
@@ -57,10 +58,19 @@ const Styles = EStyleSheet.create({
     paddingRight: 20,
     fontFamily:fontFamily.Inter
   },
+  collaborateMainContainer:{
+    flex: 1,
+    padding: 16,
+    paddingTop: 11,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  deleteImageContainerStyle:{ padding: 16 },
+  ImageBackgroundStyle:{borderRadius: 21},
   avatar: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
+    height: 42,
+    width: 42,
+    borderRadius: 21,
     alignContent: 'center',
   },
   userDetailsContainer:{

@@ -833,39 +833,45 @@ class CreateMemory extends React.Component<Props> {
     }
   };
 
-  saveORPublish = async (key: any) => {
+  saveORPublish =  (key: any) => {
+    this.saveIntitals()
+    loaderHandler.showLoader('Saving');
 
-    if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Saving');
-      // setTimeout(() => {
-      if (this.filesToUpdate.length > 0) {
-        UpdateAttachments(this.props.nid, this.filesToUpdate, key);
+    setTimeout(async() => {
+      if (Utility.isInternetConnected) {
+        // setTimeout(() => {
+        if (this.filesToUpdate.length > 0) {
+          UpdateAttachments(this.props.nid, this.filesToUpdate, key);
+        }
+        // else {
+        let memoryDetails = await DefaultCreateMemoryObj(
+          key,
+          this.props.memoryObject,
+          this.state.isCreatedByUser,
+        );
+        let filesToUpload = this.state.itemList.filter(
+          (element: any) => element.isLocal,
+        );
+  
+        let resp = await CreateUpdateMemory(
+          memoryDetails,
+          filesToUpload,
+          'createMemoryMainListener',
+          key,
+        );
+        if (resp.Status) {
+          this.memorySaveCallback(resp.Status, resp.Status, resp.padid, key)
+  
+        }
+        // }
+        // }, 500);
+      } 
+      else {
+        loaderHandler.hideLoader();
+        No_Internet_Warning();
       }
-      // else {
-      let memoryDetails = await DefaultCreateMemoryObj(
-        key,
-        this.props.memoryObject,
-        this.state.isCreatedByUser,
-      );
-      let filesToUpload = this.state.itemList.filter(
-        (element: any) => element.isLocal,
-      );
-
-      let resp = await CreateUpdateMemory(
-        memoryDetails,
-        filesToUpload,
-        'createMemoryMainListener',
-        key,
-      );
-      if (resp.Status) {
-        this.memorySaveCallback(resp.Status, resp.Status, resp.padid, key)
-
-      }
-      // }
-      // }, 500);
-    } else {
-      No_Internet_Warning();
-    }
+    }, 1000);
+    
   };
 
   saveIntitals = () => {
@@ -878,7 +884,7 @@ class CreateMemory extends React.Component<Props> {
       },
       location: { "description": "", "reference": "" },
       files: this.state.itemList,
-      description: JSON.stringify(this.props.memoryDescription)
+      description: ""
     };
     // {
     //   description: this.state.locationText,
@@ -1341,21 +1347,21 @@ class CreateMemory extends React.Component<Props> {
         break;
       case 1:
         loaderHandler.showLoader('Saving...');
-        if (this.state.padDetails?.padId) {
-          this.setEtherPadContent('get', '', this.state.padDetails.padId);
-        }
-        setTimeout(() => {
-          this.saveORPublish('save');
-        }, 2500);
+        // if (this.state.padDetails?.padId) {
+        //   this.setEtherPadContent('get', '', this.state.padDetails.padId);
+        // }
+        // setTimeout(() => {
+        this.saveORPublish('save');
+        // }, 2500);
         break;
       case 2:
         this._actionSheet && this._actionSheet.current && this._actionSheet.current.hideSheet();
         break;
       case 3:
         loaderHandler.showLoader('Publishing...');
-        setTimeout(() => {
-          this.saveORPublish(kPublish);
-        }, 2500);
+        // setTimeout(() => {
+        this.saveORPublish(kPublish);
+        // }, 2500);
         break;
 
     }
@@ -2061,12 +2067,12 @@ class CreateMemory extends React.Component<Props> {
               text: 'Close and save as draft',
               func: () => {
                 this.setState({ showCustomAlert: false }, () => {
-                  if (this.props.padDetails?.padId) {
-                    this.setEtherPadContent('get', '', this.state.padDetails.padId);
-                  }
-                  setTimeout(() => {
-                    this.saveORPublish('save');
-                  }, 1000);
+                  // if (this.props.padDetails?.padId) {
+                  //   this.setEtherPadContent('get', '', this.state.padDetails.padId);
+                  // }
+                  // setTimeout(() => {
+                  this.saveORPublish('save');
+                  // }, 1000);
                 })
 
                 // ReactNativeHapticFeedback.trigger('impactMedium', options);
@@ -2093,6 +2099,9 @@ class CreateMemory extends React.Component<Props> {
               text: 'Cancel',
               func: () => {
                 this.setState({ showCustomAlert: false }, () => {
+                  this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+                  this.props.fetchMemoryList({ type: ListType.Timeline, isLoading: true });
+                  loaderHandler.showLoader();
                   Actions.pop()
                 })
                 // ReactNativeHapticFeedback.trigger('impactMedium', options);
@@ -2210,12 +2219,7 @@ class CreateMemory extends React.Component<Props> {
                     //   text: 'Close and save as draft',
                     //   func: () => {
                     //     this.setState({ showCustomAlert: false }, () => {
-                    //       if (this.props.padDetails?.padId) {
-                    //         this.setEtherPadContent('get', '', this.state.padDetails.padId);
-                    //       }
-                    //       setTimeout(() => {
                     //         this.saveORPublish('save');
-                    //       }, 1000);
                     //     })
 
                     //     // ReactNativeHapticFeedback.trigger('impactMedium', options);

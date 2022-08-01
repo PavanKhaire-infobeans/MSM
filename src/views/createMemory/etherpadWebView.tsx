@@ -133,7 +133,7 @@ export default class EtherPadEditing extends React.Component<Props, State> {
       </KeyboardAwareScrollView>
     ) : (
       <KeyboardAccessory
-        style={[Styles.keyboardAccessoryStyle, { paddingRight: 0, paddingLeft: 0 }]}>
+        style={Styles.keyboardAccessoryStyle}>
         <View
           style={[Styles.fullWidth, {
             height: this.state.showWarningNote ? 130 : 44,

@@ -64,6 +64,7 @@ export class DashboardDataModel {
             let memDate = parseInt(getDetails(parsedMemory, ["memory_date"])) * 1000;
             parsedMemory.memory_date = Utility.dateObjectToDefaultFormat(new Date(memDate));
             parsedMemory.memoryDateDisplay = moment(memDate).format('ll');
+            console.warn("memoryDate >",parsedMemory.memoryDate)
             parsedMemory.memoryYear = new Date(memDate).getFullYear();
             if (parsedMemory.season && parsedMemory.season.trim().length > 0) {
                 let season = parsedMemory.season.trim();
@@ -81,12 +82,16 @@ export class DashboardDataModel {
             }
 
             // console.warn("parsedMemory.description > ",parsedMemory.description)
-            parsedMemory.description = parsedMemory.description.trim().replace(/<br>/ig, '\n');
-            parsedMemory.description = parsedMemory.description.trim().replace(/<br \/>/ig, '\n');
-            parsedMemory.description = parsedMemory.description.trim().replace(/<br\/>/ig, '\n');
-            parsedMemory.description = parsedMemory.description.trim().replace(/<p>/ig, '\n');
+            parsedMemory.description = parsedMemory.description.replace(/<\/p><br\/><p>/ig, ' \n \n');
+            parsedMemory.description = parsedMemory.description.replace(/<\/p><br><p>/ig, ' \n \n');
+            parsedMemory.description = parsedMemory.description.replace(/<\/p><p>/ig, ' \n');
+            parsedMemory.description = parsedMemory.description.trim().replace(/<br>/ig, ' \n');
+            parsedMemory.description = parsedMemory.description.replace(/<br \/>/ig, ' \n');
+            parsedMemory.description = parsedMemory.description.replace(/<br\/>/ig, ' \n');
+            parsedMemory.description = parsedMemory.description.replace(/<p>/ig, '');
             parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');
             parsedMemory.description = parsedMemory.description.trim();
+            // console.warn("after replace > ",JSON.stringify(parsedMemory.description))
             memories.push(parsedMemory);
         });
         return memories;

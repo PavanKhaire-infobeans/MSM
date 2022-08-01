@@ -11,6 +11,7 @@ import {
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
 import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
+import styles from './styles';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import { ToastMessage } from '../../../common/component/Toast';
 import { Colors, decode_utf8, fontFamily, fontSize } from '../../../common/constants';
@@ -124,36 +125,22 @@ export default class CollectionDetails extends React.Component<Props, State> {
   ) => {
     return (
       <TouchableOpacity
-        style={{
-          height: 60,
-          flex: 1,
-          backgroundColor: isActive ? '#f3f3f3' : '#fff',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        style={[styles.renderRowContainer,{
+          backgroundColor: isActive ? Colors.SerachbarColor : Colors.white,
+        }]}
         onLongPress={move}
         onPressOut={moveEnd}>
         <View
-          style={{
-            flexDirection: 'row',
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+          style={styles.renderSubRowContainer}>
           <View
-            style={{ flex: 1, alignItems: 'flex-start', flexDirection: 'row' }}>
+            style={styles.imageContainer}>
             <Image
-              style={{ height: 25, width: 25, marginRight: 10 }}
+              style={styles.moveImage}
               resizeMode="contain"
               source={move_arrow}></Image>
-            <View style={{ paddingRight: 30 }}>
+            <View style={styles.titleContainer}>
               <Text
-                style={{
-                  ...fontSize(16),
-                  fontWeight: '500',
-                  color: Colors.TextColor,
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                }}>
+                style={styles.titleText}>
                 {decode_utf8(item.item.title)}
               </Text>
               {/* <Text style={{...fontSize(16)}}>{"("}{item.item.memory_count}{" memories)"}</Text> */}
@@ -178,49 +165,29 @@ export default class CollectionDetails extends React.Component<Props, State> {
     return (
       <TouchableOpacity
         onPress={() => { }}
-        style={{
-          borderBottomWidth: 1,
-          flex: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.2)',
-          minHeight: 60,
-          backgroundColor: '#fff',
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
+        style={styles.collectionContainer}
         onLongPress={move}
         onPressOut={moveEnd}>
         <View
-          style={{
-            flexDirection: 'row',
-            height: '100%',
-            flex: 1,
-            padding: 15,
-            paddingRight: 0,
-            backgroundColor: isActive ? 'rgba(2, 109, 96, 0.4)' : '#fff',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+          style={[styles.collectionSubContainer,{
+            backgroundColor: isActive ? 'rgba(2, 109, 96, 0.4)' : Colors.white,
+          }]}>
           <View
-            style={{ flex: 1, alignItems: 'flex-start', flexDirection: 'row' }}>
+            style={styles.collectionTitleContainer}>
             <Image
-              style={{ height: 25, width: 25, marginRight: 10 }}
+              style={styles.moveImage}
               resizeMode="contain"
               source={move_arrow}></Image>
-            <View style={{ paddingRight: 40 }}>
+            <View style={styles.titleContainer}>
               <Text
-                style={{
-                  ...fontSize(16),
-                  fontWeight: '500',
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                  color: Colors.TextColor,
-                }}>
+                style={styles.titleText}>
                 {decode_utf8(item.title)}
               </Text>
             </View>
           </View>
           {item.status != 0 && (
             <TouchableOpacity
-              style={{ padding: 15 }}
+              style={styles.visiblityImageContainer}
               onPress={() =>
                 Actions.push('memoryDetails', {
                   nid: item.id,
@@ -237,12 +204,12 @@ export default class CollectionDetails extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <SafeAreaView
-          style={{ width: '100%', flex: 0, backgroundColor: Colors.ThemeColor }}
+          style={styles.invisibleContainer}
         />
-        <SafeAreaView style={{ width: '100%', flex: 1, backgroundColor: '#fff' }}>
-          <View style={{ flex: 1 }}>
+        <SafeAreaView style={styles.safeAreaContainer}>
+          <View style={styles.container}>
             <NavigationHeaderSafeArea
               heading={'Manage Collection'}
               cancelAction={() => this.cancelAction()}
@@ -256,14 +223,8 @@ export default class CollectionDetails extends React.Component<Props, State> {
               backgroundColor={Colors.ThemeColor}
             />
             <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: 15,
-                backgroundColor: Colors.NewLightThemeColor,
-              }}>
-              <Text style={{ ...fontSize(18), flex: 1 }}>
+              style={styles.collectionNameContainer}>
+              <Text style={styles.collectionText}>
                 {this.state.collectionName}
               </Text>
               <TouchableOpacity
@@ -275,12 +236,12 @@ export default class CollectionDetails extends React.Component<Props, State> {
                     callback: this.renameCollection,
                   })
                 }>
-                <Text style={{ ...fontSize(16), color: Colors.ThemeColor }}>
+                <Text style={styles.titleText}>
                   Rename
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={styles.container}>
               <DraggableFlatList
                 data={this.state.collectionList}
                 renderItem={this.renderItem}

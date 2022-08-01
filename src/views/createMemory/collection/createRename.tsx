@@ -19,6 +19,7 @@ import { SaveCollection } from '../reducer';
 import { CollectinAPI } from '../saga';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
+import styles from './styles';
 
 type State = { [x: string]: any };
 type Props = {
@@ -101,16 +102,12 @@ class CreateRenameCollection extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={styles.invisibleContainer}
         />
-        <SafeAreaView style={{ width: '100%', flex: 1, backgroundColor: '#fff' }}>
-          <View style={{ flex: 1 }}>
+        <SafeAreaView style={styles.safeAreaContainer}>
+          <View style={styles.container}>
             <NavigationHeaderSafeArea
               heading={
                 this.props.isRename
@@ -128,11 +125,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
               backgroundColor={Colors.NewThemeColor}
             />
             <View
-              style={{
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                padding: 15,
-              }}>
+              style={styles.collectionTextinputContainer}>
               <TextInput
                 placeholder="Enter collection name"
                 autoFocus={true}
@@ -142,26 +135,13 @@ class CreateRenameCollection extends React.Component<Props, State> {
                 value={this.state.content}
                 multiline={false}
                 maxLength={30}
-                style={{
-                  width: '100%',
-                  fontFamily: 'Rubik',
-                  ...fontSize(18),
-                  textAlignVertical: 'center',
-                  paddingTop: 15,
-                  paddingBottom: 15,
-                  paddingRight: 10,
-                  paddingLeft: 10,
-                  textAlign: 'left',
-                  color: Colors.TextColor,
-                  backgroundColor: '#F3F3F3',
+                style={[styles.CollectionInputStyle,{
                   borderBottomColor: this.state.showError
-                    ? Colors.ErrorColor
-                    : 'rgba(0,0,0,0.4)',
-                  borderBottomWidth: 1,
-                }}
+                    ? Colors.ErrorColor : 'rgba(0,0,0,0.4)',
+                }]}
               />
               {this.state.showError && (
-                <Text style={{ ...fontSize(12), color: Colors.ErrorColor }}>
+                <Text style={styles.errorMessageStyle}>
                   *Please enter collection name
                 </Text>
               )}

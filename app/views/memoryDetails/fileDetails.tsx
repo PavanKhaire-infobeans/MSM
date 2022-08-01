@@ -35,7 +35,7 @@ export default class FilesDetail extends React.Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.TitleAndValueContainer}>
         <NavigationBarForEdit
           heading={this.props.file.file_title}
           cancelAction={() => this.cancelAction()}

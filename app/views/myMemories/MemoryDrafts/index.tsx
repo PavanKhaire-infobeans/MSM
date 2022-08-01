@@ -20,6 +20,7 @@ import { Account } from './../../../../src/common/loginStore';
 import Utility from './../../../../src/common/utility';
 import { collaborative, delete_comment, downImage, itemSelectedCheckMark, profile_placeholder, upImage } from './../../../../src/images';
 import { MemoryDraftsDataModel } from './memoryDraftsDataModel';
+import Styles from './styles';
 import styles from './styles';
 
 type State = { [x: string]: any };
@@ -136,6 +137,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       loading: false,
     });
   };
+
   deleteDraft = (nid: any, isDeleting: boolean) => {
     if (isDeleting) {
       Alert.alert('Delete Draft?', `You wish to delete this Memory Draft ?`, [
@@ -189,6 +191,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       );
     }
   };
+
   draftOptionSelected(
     type: any,
     showLoader: boolean,
@@ -242,16 +245,19 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       }
     }
   }
+
   showMenu = (showMenu?: boolean) => {
     this.setState({
       draftOptionsVisible: !this.state.draftOptionsVisible,
     });
   };
+
   hideMenu = () => {
     this.setState({
       draftOptionsVisible: false,
     });
   };
+
   onRefresh = () => {
     this.setState({
       isRefreshing: true,
@@ -259,6 +265,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     page = 0;
     this.draftOptionSelected(this.state.draftType, false, true);
   };
+
   deleteDraftCallback = (success: any, response: any, nid: any) => {
     loaderHandler.hideLoader();
     if (success) {
@@ -272,6 +279,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       ToastMessage('Unable to delete draft. Please try again later');
     }
   };
+
   render() {
     return (
       <SafeAreaView
@@ -356,7 +364,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                     <View style={styles.draftOptionSelectedTouchableStyle}>
                       <Text
                         style={[styles.draftTitleTextStyle, {
-                          color: this.state.draftType == data.title ? '#DE8B00' : Colors.newTextColor,
+                          color: this.state.draftType == data.title ? Colors.newTextColor : Colors.newTextColor,
                         }]}>
                         {data.title}
                       </Text>
@@ -491,14 +499,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                 </View>
               ) : null
             ) : null}
+
             <View
-              style={{
-                flex: 1,
-                padding: 16,
-                paddingTop: 11,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
+              style={styles.collaborateMainContainer}>
               {this.state.draftType != DraftType.recentryDeleteDrafts ? (
                 this.state.draftType == DraftType.friendsDrafts ? (
                   <TouchableWithoutFeedback
@@ -544,7 +547,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               {Account.selectedData().userID == item.item.uid &&
                 this.state.draftType != DraftType.recentryDeleteDrafts ? (
                 <TouchableWithoutFeedback
-                  style={[styles.alignSelfCenter, { padding: 16 }]}
+                  style={[styles.alignSelfCenter, styles.deleteImageContainerStyle]}
                   onPress={() => this.deleteDraft(item.item.nid, true)}>
                   <Image
                     style={styles.deleteImageStyle}
@@ -611,8 +614,8 @@ const UserDetails = (item: any) => {
           <View
             style={styles.imagebackgroundContainer}>
             <ImageBackground
-              style={[styles.avatar]}
-              imageStyle={{ borderRadius: 20 }}
+              style={Styles.avatar}
+              imageStyle={styles.ImageBackgroundStyle}
               source={profile_placeholder}>
               <Image
                 style={styles.userImageStyle}
@@ -630,7 +633,7 @@ const UserDetails = (item: any) => {
           <Text
             style={styles.nameTextStyle}>
             {'Created by '}
-            <Text style={{ color: Colors.NewYellowColor }}>{name}</Text>
+            <Text style={styles.createdbyNameTextStyle}>{name}</Text>
           </Text>
           <Text
             style={styles.nameTextStyle}>

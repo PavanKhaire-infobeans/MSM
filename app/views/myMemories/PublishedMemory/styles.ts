@@ -3,6 +3,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../../../src/common/constants';
 
 const Styles = EStyleSheet.create({
+    mainContainer: { flex: 1 },
     container: {
         flex: 1,
         alignItems: 'center',
@@ -43,6 +44,33 @@ const Styles = EStyleSheet.create({
         shadowColor: '#CACACA',
         shadowRadius: 2,
         shadowOffset: { width: 0, height: 2 },
+    },
+    audioSubContainer: {
+        flex: 1,
+        elevation: 2,
+        backgroundColor: Colors.AudioViewBg,
+        borderColor: Colors.AudioViewBorderColor,
+        borderWidth: 2,
+        borderRadius: 10,
+    },
+    playButtonContainer: {
+        width: 55,
+        height: 55,
+        marginLeft: 15,
+        backgroundColor: '#fff',
+        borderRadius: 30,
+        borderWidth: 4,
+        borderColor: Colors.AudioViewBorderColor,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    audioButtonContainer: {
+        width: '100%',
+        paddingTop: 10,
+        paddingBottom: 10,
+        justifyContent: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     flatlistContainer: {
         height: '100%',
@@ -107,6 +135,22 @@ const Styles = EStyleSheet.create({
         lineHeight: 20,
         fontWeight: '500'
     },
+    playButtonMainContainer:{
+        height: 20,
+        width: 16,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+      },
+      playButtonStyle:{
+        backgroundColor: Colors.AudioViewBorderColor,
+        flex: 1,
+        width: 5,
+      },
+      playbuttonTransparentView:{
+        backgroundColor: 'transparent',
+        flex: 1,
+        width: 2,
+      },
     moreoptionStyle: {
         height: '100%',
         maxHeight: 70,

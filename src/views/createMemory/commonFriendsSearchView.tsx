@@ -192,7 +192,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
         }]}>
         <View
           style={style.rowContainerStyle}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={style.searchContainer}>
             {item.uid != -1 && this.state.userTabSelected && (
               <View
                 style={style.placeholderImageViewStyle}>
@@ -220,11 +220,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
               </Text>
               {!this.state.userTabSelected && item.uid != -1 && (
                 <Text
-                  style={[style.normalText,{
-                    ...fontSize(14),
-                    fontStyle: 'italic',
-                    paddingTop: 5,
-                  }]}>
+                  style={[style.userCountText]}>
                   {item.users_count} member{item.users_count > 1 ? 's' : ''}
                 </Text>
               )}
@@ -235,7 +231,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
             {!this.state.userTabSelected && item.uid != -1 && (
               <TouchableOpacity
                 onPress={() => this.navigateToGroupInfo(item)}
-                style={style.padding15}>
+                style={style.imagebuttonStyle}>
                 <Image
                   style={style.infoIconStyle}
                   source={icon_info}
@@ -258,7 +254,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
               </View>
             ) : (
               <TouchableHighlight
-                style={style.padding15}
+                style={style.imagebuttonStyle}
                 underlayColor={Colors.overlayOpacityColor}
                 onPress={() => this.removeFromList(item)}>
                 <Image source={action_close}></Image>
@@ -329,9 +325,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 style={[
                   style.tabs,
                   {
-                    borderBottomColor: this.state.userTabSelected
-                      ? Colors.TextColor
-                      : Colors.NewThemeColor,
+                    borderBottomColor: this.state.userTabSelected ? Colors.TextColor : Colors.NewThemeColor,
                     borderBottomWidth: 3,
                   },
                 ]}
@@ -351,8 +345,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 style={[
                   style.tabs,
                   {
-                    borderBottomColor: !this.state.userTabSelected
-                      ? Colors.TextColor : Colors.NewThemeColor,
+                    borderBottomColor: !this.state.userTabSelected ? Colors.TextColor : Colors.NewThemeColor,
                     borderBottomWidth: 3,
                   },
                 ]}

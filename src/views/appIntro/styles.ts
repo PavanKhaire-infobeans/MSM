@@ -22,6 +22,12 @@ const Styles = EStyleSheet.create({
     backgroundColor: Colors.NewThemeColor,
     alignItems: 'center',
   },
+  imangeconatinerStyle:{
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   absoluteView: {
     position: 'absolute',
     bottom: 0,

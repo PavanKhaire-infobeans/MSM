@@ -23,6 +23,7 @@ import {
   MemoryAction
 } from '../../myMemories/myMemoriesWebService';
 import { CollectinAPI } from '../saga';
+import styles from './styles';
 
 type State = {[x: string]: any};
 type Props = {[x: string]: any};
@@ -119,43 +120,25 @@ class MemoryCollectionList extends React.Component<Props, State> {
     }
 
     return (
-      <View style={{minHeight: 80, flex: 1}}>
+      <View style={styles.collectionListContainer}>
         <TouchableHighlight
-          underlayColor={'#ffffffff'}
+          underlayColor={Colors.white}
           onPress={() => this.setCollection(item.item)}
-          style={{
-            borderBottomWidth: 1,
-            flex: 1,
-            padding: 15,
-            paddingRight: 0,
-            borderBottomColor: 'rgba(0, 0, 0, 0.2)',
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
+          style={styles.collectionListButtonStyle}>
           <View
-            style={{
-              flexDirection: 'row',
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
+            style={styles.collectionListButtonContainerStyle}>
             <View
-              style={{flex: 1, alignItems: 'flex-start', flexDirection: 'row'}}>
+              style={styles.collectionTitleContainer}>
               <Image
-                style={{height: 25, width: 25, marginRight: 10}}
+                style={styles.moveImage}
                 resizeMode="contain"
                 source={isSelected ? checkbox_active : checkbox}></Image>
-              <View style={{paddingRight: 30}}>
+              <View style={styles.titleContainer}>
                 <Text
-                  style={{
-                    ...fontSize(16),
-                    fontWeight: '500',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                    color: Colors.TextColor,
-                  }}>
+                  style={styles.titleText}>
                   {decode_utf8(item.item.name)}
                 </Text>
-                <Text style={{...fontSize(16), color: Colors.TextColor}}>
+                <Text style={styles.titleText}>
                   {'('}
                   {item.item.memory_count}
                   {' memories)'}
@@ -163,7 +146,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
               </View>
             </View>
             <TouchableHighlight
-              style={{height: '100%', padding: 15}}
+              style={styles.nameContainer}
               underlayColor={'#ffffff44'}
               onPress={() =>
                 Actions.push('collectionDetails', {
@@ -185,16 +168,12 @@ class MemoryCollectionList extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.container}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={styles.invisibleContainer}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1}}>
+        <SafeAreaView style={styles.safeAreaContainer}>
+          <View style={styles.container}>
             <NavigationHeaderSafeArea
               heading={'Add to Collections'}
               cancelAction={() => this.cancelAction()}
@@ -208,7 +187,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
             />
             <TouchableHighlight
               underlayColor={'#ffffff55'}
-              style={{height: 70, width: '100%'}}
+              style={styles.addNewCollectionContainer}
               onPress={() =>
                 Actions.push('createRenameCollection', {
                   isRename: false,
@@ -216,24 +195,10 @@ class MemoryCollectionList extends React.Component<Props, State> {
                 })
               }>
               <View
-                style={{
-                  height: 70,
-                  width: '100%',
-                  backgroundColor: Colors.NewLightThemeColor,
-                  flexDirection: 'row',
-                  padding: 15,
-                  justifyContent: 'flex-start',
-                  alignItems: 'center',
-                }}>
+                style={styles.addNewCollectionSubContainer}>
                 <Image source={add_icon}></Image>
                 <Text
-                  style={{
-                    ...fontSize(16),
-                    marginLeft: 10,
-                    fontWeight: '500',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                    color: Colors.NewTitleColor,
-                  }}>
+                  style={styles.NewCollectionTextColor}>
                   Create New Collection
                 </Text>
               </View>
@@ -241,7 +206,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
             <FlatList
               extraData={this.state}
               ref={ref => (this._listRef = ref)}
-              style={{width: '100%', flex: 1}}
+              style={styles.safeAreaContainer}
               onScroll={() => {
                 Keyboard.dismiss();
               }}

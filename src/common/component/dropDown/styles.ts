@@ -65,4 +65,5 @@ const Styles = StyleSheet.create({
     letterSpacing: -0.1,
   }
 });
+
 export default Styles;

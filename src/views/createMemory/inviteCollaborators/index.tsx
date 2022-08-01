@@ -35,6 +35,7 @@ import {
   CollaboratorsAPI
 } from '../saga';
 import { kSaveNotes } from './noteToCollaborators';
+import Styles from './styles';
 
 type State = {[x: string]: any};
 type Props = {
@@ -180,58 +181,25 @@ class InviteCollaborators extends React.Component<Props, State> {
     }
     return (
       <View
-        style={{
-          paddingTop: 5,
-          width: '100%',
-          marginTop: 5,
-          backgroundColor: '#fff',
-          borderBottomColor: 'rgba(0,0,0,0.2)',
-          borderBottomWidth: 1,
-          flexDirection: 'row',
-        }}>
+        style={Styles.collabratorListItemStyle}>
         {item.type == 0 ? (
           <View
-            style={{
-              padding: 15,
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'flex-start',
-            }}>
+            style={Styles.collabratorListItemtype0Style}>
             <View
-              style={{
-                height: 50,
-                width: 50,
-                marginRight: 0,
-                borderRadius: 25,
-                overflow: 'hidden',
-              }}>
+              style={Styles.collabratorListItemtype0ImageContainerStyle}>
               <PlaceholderImageView
                 uri={Utility.getFileURLFromPublicURL(item.uri)}
-                style={{
-                  height: 50,
-                  width: 50,
-                  marginRight: 0,
-                  borderRadius: 25,
-                }}
+                style={Styles.collabratorListItemtype0ImageContainerStyle}
                 profilePic={true}
               />
             </View>
-            <View style={{marginLeft: 10, flex: 1}}>
+            <View style={Styles.collaratorNameContainer}>
               <Text
-                style={{
-                  ...fontSize(18),
-                  fontWeight: '500',
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                  color: Colors.TextColor,
-                }}>
+                style={Styles.collaratorNameStyle}>
                 {item.field_first_name_value} {item.field_last_name_value}
               </Text>
               <Text
-                style={{
-                  ...fontSize(14),
-                  color: Colors.TextColor,
-                  fontStyle: 'italic',
-                }}>
+                style={Styles.collaratorNameTextStyle}>
                 {isOwner ? 'Owner' : this.getTextForActions(item)}
               </Text>
               {!this.state.showLeave && this.getMemoryActions(item)}
@@ -239,21 +207,11 @@ class InviteCollaborators extends React.Component<Props, State> {
           </View>
         ) : item.id && item.name && item.name.length > 0 ? (
           <View
-            style={{
-              padding: 15,
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'flex-start',
-            }}>
+            style={Styles.collabratorListItemtype0Style}>
             <GroupPicHolder items={item.users ? item.users : []} />
-            <View style={{marginLeft: 10, flex: 1}}>
+            <View style={Styles.collaratorNameContainer}>
               <Text
-                style={{
-                  ...fontSize(18),
-                  fontWeight: '500',
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                  color: Colors.TextColor,
-                }}>
+                style={Styles.collaratorNameStyle}>
                 {item.name}
               </Text>
               {!this.state.showLeave && this.getMemoryActions(item)}
@@ -294,12 +252,7 @@ class InviteCollaborators extends React.Component<Props, State> {
 
     return (
       <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginRight: 10,
-        }}>
+        style={Styles.getMemoryActionsContainer}>
         {
           <TouchableHighlight
             underlayColor={'#ffffff11'}
@@ -309,16 +262,10 @@ class InviteCollaborators extends React.Component<Props, State> {
                 : this.memoryAction(CollaboratorsAction.reinvite, item)
             }>
             <Text
-              style={{
-                textDecorationLine: 'underline',
-                paddingTop: 10,
-                paddingBottom: 5,
-                textDecorationColor: showRemove
-                  ? Colors.ErrorColor
-                  : Colors.NewTitleColor,
-                ...fontSize(14),
+              style={[Styles.getMemoryActionsName,{
+                textDecorationColor: showRemove ? Colors.ErrorColor : Colors.NewTitleColor,
                 color: showRemove ? Colors.ErrorColor : Colors.NewTitleColor,
-              }}>
+              }]}>
               {showRemove ? 'Remove' : 'Reinvite'}
             </Text>
           </TouchableHighlight>
@@ -330,14 +277,7 @@ class InviteCollaborators extends React.Component<Props, State> {
               this.memoryAction(CollaboratorsAction.sendReminder, item)
             }>
             <Text
-              style={{
-                textDecorationLine: 'underline',
-                paddingTop: 10,
-                paddingBottom: 5,
-                textDecorationColor: Colors.NewTitleColor,
-                ...fontSize(14),
-                color: Colors.NewTitleColor,
-              }}>
+              style={Styles.sendReminderText}>
               Send Reminder
             </Text>
           </TouchableHighlight>
@@ -360,22 +300,13 @@ class InviteCollaborators extends React.Component<Props, State> {
   };
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={Styles.container}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={Styles.invisibleContainer}
         />
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 1,
-            backgroundColor: '#fff',
-            paddingBottom: 5,
-          }}>
-          <View style={{flex: 1}} onStartShouldSetResponder={() => false}>
+          style={Styles.safeAreaContainer}>
+          <View style={Styles.container} onStartShouldSetResponder={() => false}>
             <NavigationHeaderSafeArea
               heading={'Collaboration'}
               showCommunity={true}
@@ -391,27 +322,17 @@ class InviteCollaborators extends React.Component<Props, State> {
               backgroundColor={Colors.NewThemeColor}
             />
             {this.props.collaborators.length > 0 ? (
-              <View style={{flex: 1}}>
+              <View style={Styles.container}>
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: this.state.showLeave
-                      ? 'center'
-                      : 'space-between',
-                    alignItems: 'center',
-                    padding: 15,
-                  }}>
+                  style={[Styles.collabratorContainer,{
+                      justifyContent: this.state.showLeave ? 'center': 'space-between',
+                  }]}>
                   {!this.state.showLeave && (
                     <TouchableHighlight
                       underlayColor={'#ffffff11'}
                       onPress={() => this.inviteFriendsToCollaborate()}>
                       <Text
-                        style={{
-                          ...fontSize(16),
-                          fontWeight: '500',
-                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                          color: Colors.NewTitleColor,
-                        }}>
+                        style={Styles.NewCollectionTextColor}>
                         Invite More
                       </Text>
                     </TouchableHighlight>
@@ -427,12 +348,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                       })
                     }>
                     <Text
-                      style={{
-                        ...fontSize(16),
-                        fontWeight: '500',
-                        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                        color: Colors.NewTitleColor,
-                      }}>
+                      style={Styles.NewCollectionTextColor}>
                       {this.state.showLeave ? 'View ' : ''}
                       {'Note to collaborators'}
                     </Text>
@@ -440,11 +356,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                 </View>
                 <FlatList
                   extraData={this.state}
-                  style={{
-                    width: '100%',
-                    backgroundColor: '#f3f3f3',
-                    marginTop: 5,
-                  }}
+                  style={Styles.flatListStyle}
                   data={this.props.collaborators}
                   onScroll={() => {
                     Keyboard.dismiss();
@@ -455,38 +367,15 @@ class InviteCollaborators extends React.Component<Props, State> {
                   renderItem={(item: any) => this.renderItem(item)}></FlatList>
                 {this.state.showMenu && (
                   <View
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      height: '100%',
-                      width: '100%',
-                    }}
+                    style={Styles.menuContainer}
                     onStartShouldSetResponder={() => true}
                     onResponderStart={() => this.setState({showMenu: false})}>
                     <View
-                      style={{
-                        right: 10,
-                        backgroundColor: '#fff',
-                        minHeight: 50,
-                        position: 'absolute',
-                        borderRadius: 5,
-                        shadowOpacity: 1,
-                        elevation: 3,
-                        shadowColor: '#CACACA',
-                        shadowRadius: 2,
-                        borderWidth: 0.5,
-                        borderColor: 'rgba(0,0,0,0.2)',
-                        shadowOffset: {width: 0, height: 2},
-                      }}>
+                      style={Styles.menuSubContainer}>
                       <TouchableOpacity
-                        style={{
-                          height: 45,
-                          justifyContent: 'center',
-                          paddingLeft: 15,
-                          paddingRight: 15,
-                        }}
+                        style={Styles.leaveConverSationButtonStyle}
                         onPress={() => this.leaveConversation()}>
-                        <Text style={{fontSize: 16, color: Colors.ErrorColor}}>
+                        <Text style={Styles.errorMessageTextStyle}>
                           Leave Conversation
                         </Text>
                       </TouchableOpacity>
@@ -496,41 +385,24 @@ class InviteCollaborators extends React.Component<Props, State> {
               </View>
             ) : (
               <ScrollView>
-                <View style={{padding: 15, alignItems: 'center'}}>
-                  <Image source={team_icon} style={{padding: 15}} />
+                <View style={Styles.collabrationContainer}>
+                  <Image source={team_icon} style={Styles.visiblityImageContainer} />
                   <Text
-                    style={{
-                      paddingTop: 15,
-                      paddingBottom: 20,
-                      ...fontSize(18),
-                      textAlign: 'center',
-                    }}>
+                    style={Styles.collabrateWithTextStyle}>
                     {
                       "Collaborate with your friends and family to fill in any gaps, add more details, and include everyone's perspectives to record the full story. \n\nChat with each other, edit together in real-time, and collectively contribute photos to piece together your shared memory!"
                     }
                   </Text>
                   <TouchableHighlight
                     underlayColor={'#00000033'}
-                    style={{
-                      paddingRight: 25,
-                      paddingLeft: 25,
-                      paddingTop: 12,
-                      paddingBottom: 12,
-                      backgroundColor: Colors.ThemeColor,
-                      borderRadius: 25,
-                    }}
+                    style={Styles.InviteCollabrateButtonStyle}
                     onPress={() => this.inviteFriendsToCollaborate()}>
-                    <Text style={{color: '#fff', ...fontSize(18)}}>
+                    <Text style={Styles.InviteCollabrateTextStyle}>
                       Invite friends to collaborate
                     </Text>
                   </TouchableHighlight>
                   <TouchableOpacity
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginTop: 20,
-                      flexDirection: 'row',
-                    }}
+                    style={Styles.dontShowbuttonContainer}
                     onPress={() =>
                       this.setState({checked: !this.state.checked})
                     }>
@@ -539,13 +411,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                       resizeMode="contain"
                     />
                     <Text
-                      style={{
-                        marginLeft: 15,
-                        ...fontSize(16),
-                        color: Colors.black,
-                        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                        fontWeight: '500',
-                      }}>
+                      style={Styles.dontShowTextStyle}>
                       Don't show me this again
                     </Text>
                   </TouchableOpacity>

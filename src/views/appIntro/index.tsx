@@ -75,12 +75,7 @@ export default class AppIntro extends React.Component {
               <View
                 style={style.animatedViewContainer}>
                 <Animated.View
-                  style={[style.AnimatedViewStyle, {
-                    flex: 1,
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }, {
+                  style={[style.AnimatedViewStyle, style.imangeconatinerStyle, {
                     opacity: this.state.fadeInOut
                   }]}>
                   {this.state.currentIndex == index && (

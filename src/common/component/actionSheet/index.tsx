@@ -119,10 +119,11 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
 
             <View>
               {props.title && props.title.length > 0 ? (
-                <TextNew
-                  style={styles.textTitle}>
-                  {props.title}
-                </TextNew>
+                <></>
+                // <TextNew
+                //   style={styles.textTitle}>
+                //   {props.title}
+                // </TextNew>
               ) : (
                 <View></View>
               )}

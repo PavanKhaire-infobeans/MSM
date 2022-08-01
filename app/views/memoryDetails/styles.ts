@@ -11,10 +11,13 @@ const Styles = EStyleSheet.create({
     fontWeight: '400',
     lineHeight: 23.75,
     padding: 0,
-    marginTop: 0,
+    marginVertical: 0,
   },
-  padding16: {
+  renderExternalQueueItemContainer: {
     padding: 16
+  },
+  MemoryTagsFlatlistStyle:{
+    paddingBottom: 10
   },
   dotStyle: {
     width: 8,
@@ -54,7 +57,7 @@ const Styles = EStyleSheet.create({
     shadowRadius: 2,
     shadowOffset: { width: 0, height: 2 },
   },
-  bottomMargin: {
+  descriptionSpaceStyle: {
     height: 50
   },
   avatar: {
@@ -68,6 +71,59 @@ const Styles = EStyleSheet.create({
     paddingBottom: 10,
     // borderBottomColor: Colors.timeLinebackground,
     // borderBottomWidth: 2
+  },
+  fieldFirstnameContainerStyle:{
+    marginBottom: 10,
+    marginLeft: 10,
+    backgroundColor: Colors.NewLightThemeColor,
+    borderRadius: 5,
+    flex: 1,
+  },
+  fieldFirstnameSubContainerStyle:{
+    flexDirection: 'row',
+    flex: 1,
+    padding: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: Colors.NewLightCommentHeader,
+  },
+  fieldFirstnameTextStyle:{
+    lineHeight: 20,
+    flex: 1,
+    fontSize: 16,
+    color: Colors.NewTitleColor,
+  },
+  createdOnTextStyle:{
+    color: Colors.TextColor,
+    paddingLeft: 10,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  commentbodyContainer:{
+    flexDirection: 'row',
+    padding: 10,
+    paddingBottom: 5,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  commentbodyTextStyle:{ 
+    ...fontSize(16), 
+    color: Colors.TextColor 
+  },
+  likebuttonContainer:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 5,
+    paddingBottom: 10,
+  },
+  likeButtonStyle:{ 
+    flexDirection: 'row', 
+    padding: 5 
+  },
+  likeImageStyle:{ 
+    marginRight: 5, 
+    marginLeft: 5 
   },
   collectionContainer: {
     padding: 10,
@@ -96,16 +152,64 @@ const Styles = EStyleSheet.create({
     width: '100%',
     marginBottom: 20,
   },
-  paddingHorizontal: {
-    paddingLeft: 15,
-    paddingRight: 15
-  },
   absoluteView: {
     position: 'absolute',
     bottom: -50,
     height: 50,
     width: '100%',
     backgroundColor: Colors.white,
+  },
+  CommentBoxContainer:{
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: Colors.f5f5f5,
+  },
+  commentContainer:{
+    backgroundColor: Colors.white,
+    position: 'absolute',
+    width: '100%',
+    flexDirection: 'row',
+    paddingRight: 15,
+    paddingLeft: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: Colors.blackOpacity60,
+  },
+  CommentBoxSubContainer:{
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 10,
+  },
+  postContainer:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: 10,
+  },
+  descreptionContainer:{ height: 16 },
+  postStyle:{
+    fontSize: 12,
+    textAlign: 'center',
+    color: Colors.NewTitleColor,
+    padding: 1,
+  },
+  commentBoxTextInput:{
+    ...fontSize(16),
+    flex: 1,
+    borderWidth: 1,
+    maxHeight: 100,
+    borderColor: Colors.TextColor,
+    margin: 8,
+    borderRadius: 5,
+    padding: 10,
+    paddingBottom: 8,
+    paddingTop: 8,
+    color: Colors.TextColor,
   },
   fileDetailsContainer: {
     width: '100%',
@@ -137,6 +241,12 @@ const Styles = EStyleSheet.create({
     paddingBottom: 15,
     paddingTop: 15,
     flex: 1,
+  },
+  renderCommentViewStyle:{
+    flexDirection: 'row',
+    paddingTop: 5,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   renderCommentSubViewContainer: {
     flexDirection: 'row',
@@ -382,10 +492,6 @@ const Styles = EStyleSheet.create({
   flexRowStyle: {
     flexDirection: 'row',
   },
-  flexRowMarginVerticalStyle: {
-    flexDirection: 'row',
-    marginVertical: 16
-  },
   userDetailsSubContainer: {
     flexDirection: 'row',
     height: 74,
@@ -454,7 +560,20 @@ const Styles = EStyleSheet.create({
     borderRadius: 100,
     width: (Dimensions.get('window').width - 32) / 2,
     height: 53,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    backgroundColor: Colors.timeLinebackground, 
+    borderColor: Colors.bottomTabColor,
+  },
+  EditContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 100,
+    width: (Dimensions.get('window').width - 32) / 2,
+    height: 53,
+    flexDirection: 'row',
+    backgroundColor: Colors.decadeFilterBorder, 
+    borderColor: Colors.decadeFilterBorder
   },
   shareTextStyle: {
     color: Colors.newTextColor,
@@ -470,7 +589,7 @@ const Styles = EStyleSheet.create({
   shareWidthStyle: {
     width: (Dimensions.get('window').width - 32) / 2
   },
-  marginBottomStyle: {
+  FilesViewContainerStyle: {
     marginBottom: 10
   },
   imageCarouselContainerStyle: {
@@ -564,6 +683,94 @@ const Styles = EStyleSheet.create({
     width: '100%',
     padding: 15
   },
+  deleteButtonContainer:{
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingRight: 10,
+  },
+  deleteTextStyle:{ 
+    ...fontSize(16), 
+    color: Colors.ErrorColor, 
+    marginLeft: 27 
+  },
+  pauseButtonStyle:{
+    height: 24,
+    width: 24,
+    marginLeft: 10,
+    borderLeftColor: Colors.bordercolor,
+    borderLeftWidth: 18,
+    borderTopColor: Colors.transparent,
+    borderTopWidth: 12,
+    borderBottomColor: Colors.transparent,
+    borderBottomWidth: 12,
+  },
+  durationContainer:{ 
+    marginLeft: 10 
+  },
+  CommonBottomSectionContainer:{ 
+    paddingRight: 15, 
+    paddingLeft: 15, 
+    marginBottom: 50 
+  },
+  hideCommentText:{
+    fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+    lineHeight: 20,
+    fontSize: 16,
+    color: Colors.NewYellowColor,
+  },
+  likeImageContainer:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  fileNameStyle:{ 
+    color: Colors.black, 
+    marginBottom: 5, 
+    paddingRight: 80 
+  },
+  playButtonStyle:{
+    backgroundColor: Colors.bordercolor,
+    flex: 1,
+    width: 5,
+  },
+  playButtonTransparentStyle:{
+    backgroundColor: 'transparent',
+    flex: 1,
+    width: 2,
+  },
+  playingSubContainer:{
+    height: 20,
+    width: 16,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  playButtonContainer:{
+    width: 55,
+    height: 55,
+    marginLeft: 15,
+    backgroundColor: Colors.white,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 4,
+    borderColor: Colors.bordercolor,
+  },
+  playPauseContainer:{
+    width: '100%',
+    paddingVertical: 10,
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  audioViewContainer:{
+    backgroundColor: Colors.timeLinebackground,
+    marginBottom: 15,
+    borderWidth: 2,
+    borderColor: Colors.bordercolor,
+    borderRadius: 10,
+    marginHorizontal: 10,
+  },
   LikeViewContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -577,6 +784,14 @@ const Styles = EStyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.bordercolor,
   },
+  noCommenttextStyle:{
+    width: '100%',
+    textAlign: 'center',
+    ...fontSize(16),
+    color: Colors.TextColor,
+    padding: 5,
+    marginTop: 5,
+  },
   LikeCommentShareContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -585,13 +800,28 @@ const Styles = EStyleSheet.create({
     width: 48,
     borderRadius: 100,
     backgroundColor: Colors.timeLinebackground,
+    borderColor: Colors.bottomTabColor,
   },
   titleandValueTextStyle: {
     ...fontSize(18),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
-
+  MemoryTagsNamestyle:{ 
+    ...fontSize(14), 
+    marginBottom: 0 
+  },
+  userImageBackgrounStyle:{ 
+    borderRadius: 21 
+  },
+  TitleAndValueContainer:{
+    flex: 1
+  },
+  linearGradStyle:{ 
+    height: 34, 
+    width: '100%', 
+    position: 'absolute', 
+    bottom: 0 }
 });
 
 export default Styles;

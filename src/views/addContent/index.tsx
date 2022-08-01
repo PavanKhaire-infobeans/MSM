@@ -961,7 +961,7 @@ class AddContentDetails extends React.Component {
                       style={style.textInputStyle}
                     />
                     {
-                      this.state.titleError != "" && <Text style={{ color: Colors.ErrorColor, fontSize: 14 }}>
+                      this.state.titleError != "" && <Text style={style.titleError}>
                         {this.state.titleError}
                       </Text>
                     }

@@ -139,7 +139,7 @@ export const DefaultCreateMemoryObj = (
   isOwner: boolean,
 ) => {
   let details: any = {};
-  let description = initialState.description.replace(/\n/g, '<br>');
+  let description = "";//initialState.description.replace(/\n/g, '<br>');
   if (isOwner) {
     details = {
       title: decode_utf8(initialState.title.trim()),

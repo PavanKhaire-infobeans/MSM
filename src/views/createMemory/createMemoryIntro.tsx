@@ -70,16 +70,16 @@ export default class CreateMemoryIntro extends React.Component<Props> {
       <View
         style={styles.createMemoryIntroContainer}>
         <TextNew
-          style={styles.textStyle18Weight700}>
+          style={styles.introTitle}>
           {this.createMemoryIntro[index].title}
         </TextNew>
         <TextNew
-          style={styles.textStyle18Weight400}>
+          style={styles.introdesc}>
           {this.createMemoryIntro[index].desc}
         </TextNew>
         <Image
           source={this.createMemoryIntro[index].imageSrc}
-          style={styles.margin20}
+          style={styles.introImgStyle}
         />
       </View>
     );
