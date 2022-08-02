@@ -222,7 +222,7 @@ const Timeline = (props: Props) => {
         if (Utility.isInternetConnected) {
             let playing = state.audioFile.isPlaying;
             let fid = state.audioFile.fid;
-            console.log("_onOpenAudios :: ", JSON.stringify(item.audios[0].fid), fid)
+            // console.log("_onOpenAudios :: ", JSON.stringify(item.audios[0].fid), fid)
             if (item.audios[0].fid == fid) {
                 playing = !playing;
             }
@@ -361,13 +361,13 @@ const Timeline = (props: Props) => {
                             // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
                             // locations={[0, 0.6]}
                             colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.9)', 'rgba(255, 255, 255, 1)']}
-                            style={{ height: 50, width: '100%', position: 'absolute', bottom: 18 }}>
+                            style={styles.linearGardStyle}>
                         </LinearGradient>
                         <LinearGradient
                             // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
                             // locations={[0, 0.6]}
                             colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)']}
-                            style={{ height: 20, width: '100%', position: 'absolute', bottom: 0 }}>
+                            style={styles.linearGardBottomStyle}>
                         </LinearGradient>
                     </ActionSheet>
                     {/* </View>
@@ -397,13 +397,13 @@ const Timeline = (props: Props) => {
                                                 setTimelineBarNextPrevClick(true);
                                             }}
                                             underlayColor={Colors.transparent}
-                                            style={{ width: 48, justifyContent: 'center', alignItems: 'flex-end' }}>
+                                            style={styles.leftFilterImageContainerStyle}>
                                             <Image source={chevronleftfilter} />
                                         </TouchableHighlight>
 
-                                        <View style={{ width: Utility.getDeviceWidth() - 96, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingLeft: 16 }}>
-                                            <View style={{ width: 26, height: 22, position: 'absolute', left: 16, zIndex: 9 }} >
-                                                <Image style={{ marginLeft: -5 }} source={leftgradient} />
+                                        <View style={styles.timelineDateContainer}>
+                                            <View style={styles.leftArrowImageContainer} >
+                                                <Image style={styles.imageStyle} source={leftgradient} />
                                             </View>
 
                                             {/* <FlatList
@@ -427,9 +427,9 @@ const Timeline = (props: Props) => {
                                             // onEndReached={(props.timelineList && props.timelineList.length > 2) ? handleLoadMore.bind(this) : () => { }}
                                             /> */}
 
-                                            <Text style={[styles.newnormalText]} numberOfLines={1} ellipsizeMode='tail'>{previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : ''}</Text>
-                                            {<View style={{ height: 1, backgroundColor: Colors.newTextColor, width: 46, marginLeft: 24, marginRight: 17 }}></View>}
-                                            <Text style={[styles.currentYearText]}>{JSON.stringify(currentItemYear)}</Text>
+                                            <Text style={styles.newnormalText} numberOfLines={1} ellipsizeMode='tail'>{previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : ''}</Text>
+                                            {<View style={styles.timelineDateSeparator}></View>}
+                                            <Text style={styles.currentYearText}>{JSON.stringify(currentItemYear)}</Text>
                                             <View style={{ height: 1, backgroundColor: nextItemYear ? Colors.newTextColor : Colors.transparent, width: nextItemYear ? 46 : 64, marginLeft: nextItemYear ? 17 : 0, marginRight: nextItemYear ? 17 : 0 }}></View>
                                             {
                                                 nextItemYear ?
@@ -444,11 +444,11 @@ const Timeline = (props: Props) => {
                                                         {JSON.stringify(nextItemYear)}
                                                     </Text>
                                                     :
-                                                    <View style={{ width: 46 }} />
+                                                    <View style={styles.viewSeparator} />
                                             }
                                             <View
-                                                style={{ width: 26, height: 22, position: 'absolute', right: 0, zIndex: 9, transform: [{ rotate: '180deg' }] }} >
-                                                <Image style={{ marginRight: -5 }} source={leftgradient} />
+                                                style={styles.rightArrowContainer} >
+                                                <Image style={styles.imageRightStyle} source={leftgradient} />
                                             </View>
                                         </View>
 
@@ -469,11 +469,11 @@ const Timeline = (props: Props) => {
                                                         setTimelineBarNextPrevClick(true);
                                                     }}
                                                     underlayColor={Colors.transparent}
-                                                    style={{ width: 48, justifyContent: 'center', alignItems: 'flex-start' }}>
+                                                    style={styles.rightFilterImageContainerStyle}>
                                                     <Image style={{ transform: [{ rotate: '180deg' }] }} source={chevronleftfilter} />
                                                 </TouchableHighlight>
                                                 :
-                                                <View style={{ width: 64, justifyContent: 'center', alignItems: 'center' }} />
+                                                <View style={styles.noTimelineNextYearView} />
                                         }
                                     </>
                                     :

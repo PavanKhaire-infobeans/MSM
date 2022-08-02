@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Text from '../../../common/component/Text';
 import { Colors, fontFamily, fontSize } from '../../../common/constants';
 import { EditMode } from './reducer';
+import Styles from './styles';
 
 class EditHeader extends React.Component<{
   navigation: {[x: string]: any};
@@ -19,81 +20,43 @@ class EditHeader extends React.Component<{
   render() {
     return (
       <View
-        style={{
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          paddingBottom: 8,
-          backgroundColor: Colors.NewThemeColor,
-          flexDirection: 'row',
-        }}>
+        style={Styles.container}>
         {this.props.isEdit ||
         !this.props.selectedItem ||
         DeviceInfo.isTablet() ? (
           <View
-            style={{
-              width: 150,
-              paddingTop: 12,
-              height: 44,
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-            }}>
+            style={Styles.tabletSubContainer}>
             <TouchableOpacity
-              style={{
-                width: 50,
-                marginLeft: 4,
-                marginRight: 4,
-                height: 44,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              style={Styles.backButton}
               onPress={() => {
                 this.props.updatePrev && this.props.updatePrev();
               }}>
               <Image
-                style={{height: 28, width: 28}}
+                style={Styles.backImage}
                 source={require('../../../images/back/back.png')}
               />
             </TouchableOpacity>
             <Text
-              style={{
-                color: Colors.TextColor,
-                ...fontSize(18),
-                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                fontWeight: '500',
-              }}>
+              style={Styles.mindPopText}>
               MindPops
             </Text>
           </View>
         ) : (
           <TouchableOpacity
-            style={{
-              width: 70,
-              marginLeft: 10,
-              paddingTop: 15,
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 44,
-            }}
+            style={Styles.cancelButton}
             onPress={() => {
               // this.props.reset();
               this.props.cancel();
             }}>
-            <Text style={{color: Colors.TextColor, ...fontSize(16)}}>
+            <Text style={Styles.cancelText}>
               Cancel
             </Text>
           </TouchableOpacity>
         )}
         <TouchableOpacity
-          style={{
-            width: 70,
-            paddingTop: 15,
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: 44,
-          }}
+          style={Styles.editButton}
           onPress={this.onRightPress}>
-          <Text style={{color: Colors.TextColor, ...fontSize(16)}}>
+          <Text style={Styles.cancelText}>
             {this.props.isEdit ? 'Edit' : 'Save'}
           </Text>
         </TouchableOpacity>

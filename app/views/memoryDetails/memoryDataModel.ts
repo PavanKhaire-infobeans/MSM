@@ -179,7 +179,7 @@ export class MemoryDataModel {
         }
         this.userDetails.uid = getDetails(memoryDetails, ["user_details", "uid"]);
         this.userDetails.createdOn = parseInt(getDetails(memoryDetails, ["updated"], keyInt));
-        this.userDetails.createdOn = moment((parseInt(this.userDetails.createdOn) * 1000)).format('LL');
+        this.userDetails.createdOn = moment.utc((parseInt(this.userDetails.createdOn) * 1000)).format('LL');
         // this.userDetails.createdOn = Utility.timeDuration("" + this.userDetails.createdOn, "M d, Y");
         this.userDetails.viewCount = getDetails(memoryDetails, ["view_count"], keyInt)
         let uriPic = getDetails(memoryDetails, ["user_details", "uri"]);
@@ -193,7 +193,7 @@ export class MemoryDataModel {
     updateMemoryObj(memoryDetails: any) {
         this.actions_on_memory = getDetails(memoryDetails, ["actions_on_memory"], keyObject)
         this.memory.memoryTitle = getDetails(memoryDetails, ["title"]);
-        this.memory.memoryDateDisplay =  moment((parseInt(getDetails(memoryDetails, ["memory_date"])) * 1000)).format('LL');
+        this.memory.memoryDateDisplay =  moment.utc((parseInt(getDetails(memoryDetails, ["memory_date"])) * 1000)).format('LL');
        
         // this.memory.memoryDate = Utility.dateObjectToDefaultFormat(new Date(parseInt(getDetails(memoryDetails, ["memory_date"])) * 1000));
         // if (memoryDetails.season && memoryDetails.season.trim().length > 0) {

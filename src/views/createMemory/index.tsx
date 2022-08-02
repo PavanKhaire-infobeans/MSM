@@ -833,11 +833,11 @@ class CreateMemory extends React.Component<Props> {
     }
   };
 
-  saveORPublish =  (key: any) => {
+  saveORPublish = (key: any) => {
     this.saveIntitals()
     loaderHandler.showLoader('Saving');
 
-    setTimeout(async() => {
+    setTimeout(async () => {
       if (Utility.isInternetConnected) {
         // setTimeout(() => {
         if (this.filesToUpdate.length > 0) {
@@ -852,7 +852,7 @@ class CreateMemory extends React.Component<Props> {
         let filesToUpload = this.state.itemList.filter(
           (element: any) => element.isLocal,
         );
-  
+
         let resp = await CreateUpdateMemory(
           memoryDetails,
           filesToUpload,
@@ -861,17 +861,17 @@ class CreateMemory extends React.Component<Props> {
         );
         if (resp.Status) {
           this.memorySaveCallback(resp.Status, resp.Status, resp.padid, key)
-  
+
         }
         // }
         // }, 500);
-      } 
+      }
       else {
         loaderHandler.hideLoader();
         No_Internet_Warning();
       }
     }, 1000);
-    
+
   };
 
   saveIntitals = () => {
@@ -1164,7 +1164,7 @@ class CreateMemory extends React.Component<Props> {
             )}
           </View>
           <View>{this.fileHolderView(data)}</View>
-          <View style={[styles.fullWidth, { padding: 10 }]}>
+          <View style={[styles.fullWidth, styles.fileContainerSTyle]}>
             <TouchableHighlight
               disabled={data.by != 'You'}
               underlayColor={'#cccccc11'}
@@ -1585,7 +1585,7 @@ class CreateMemory extends React.Component<Props> {
       // onStartShouldSetResponder={() => true}
       <View >
         {this.state.isCreatedByUser ? (
-          <View style={[styles.paddingHorizontal24]}>
+          <View style={[styles.ViewBeforeStyle]}>
             {/* <Text
               style={styles.whenHappenTextStyle}>
               {'When did it happen? (Approximate)'}
@@ -1662,18 +1662,13 @@ class CreateMemory extends React.Component<Props> {
               this.props.memoryDescription && (this.props.memoryDescription != '') && (this.state.memory_date != "") ?
                 <>
                   <TextInput
-                    style={[styles.textInputStyle, {
+                    style={[styles.memoryDescriptionInput, {
                       borderBottomColor: this.state.titleError.length > 0 ? Colors.ErrorColor : Colors.white,
                       borderBottomWidth: this.state.titleError.length > 0 ? 0.5 : 0,
-                      fontWeight: '600',
-                      fontSize: 22,
-                      lineHeight: 27.5,
-                      color: Colors.newTextColor,
-                      fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
                     }]}
 
                     value={this.state.title}
-                    maxLength={150}
+                    maxLength={250}
                     multiline={false}
                     onChangeText={(text: any) => {
                       this.setState({ title: text, titleError: '' });
@@ -1681,7 +1676,7 @@ class CreateMemory extends React.Component<Props> {
                     placeholder="Tap to title your memory..."
                     placeholderTextColor={Colors.memoryTitlePlaceholderColor}></TextInput>
 
-                  <Text style={{ color: Colors.ErrorColor, fontSize: 14 }}>
+                  <Text style={Styles.errortextStyle}>
                     {this.state.titleError}
                   </Text>
                 </>
@@ -1694,7 +1689,7 @@ class CreateMemory extends React.Component<Props> {
           // this.ownersViewForCollaborators()
         )}
         <View
-          style={[{ height: Utility.getDeviceHeight() * 0.5 }]}>
+          style={{ height: Utility.getDeviceHeight() * 0.5 }}>
           {/* styles.createdByUserContainer */}
           {/* {!this.state.isCreatedByUser && (
             <View>
@@ -1711,7 +1706,7 @@ class CreateMemory extends React.Component<Props> {
             ellipsizeMode={'tail'}>
             {this.props.memoryDescription}
           </Text> */}
-          {/* <View style={styles.paddingHorizontal24}> */}
+          {/* <View style={styles.ViewBeforeStyle}> */}
           {
             this.props.editMode || this.state.showEtherPad ?
               <EtherPadEditing
@@ -1766,11 +1761,11 @@ class CreateMemory extends React.Component<Props> {
           this.state.bottomToolbar ?
             null
             :
-            <View style={{ flexDirection: 'row', marginHorizontal: 16, height: Utility.heightRatio(104), paddingVertical: 16, borderTopColor: Colors.white, borderTopWidth: 2, }}>
+            <View style={Styles.buttonsContainerStyle}>
               {this.props.memoryDescription && (this.props.memoryDescription != '') ?
                 <>
                   <TouchableOpacity
-                    style={{ flex: 1, backgroundColor: Colors.white, borderWidth: 1.5, borderColor: Colors.bottomTabColor, borderRadius: 8, justifyContent: 'space-evenly', alignItems: 'center' }}
+                    style={Styles.buttonsStyle}
                     onPress={() => {
                       // if (Platform.OS === 'android') {
                       //   DateTimePickerAndroid.open(this.dateOptions);
@@ -1782,7 +1777,7 @@ class CreateMemory extends React.Component<Props> {
                     }}>
                     <Image source={calendarWrite} />
                     <Text
-                      style={[styles.editDescriptionTextStyle, { textAlign: 'center' }]}>
+                      style={styles.editDescriptionTextStyle}>
                       Date
                     </Text>
                   </TouchableOpacity>
@@ -1792,21 +1787,21 @@ class CreateMemory extends React.Component<Props> {
                 null
               }
               <TouchableOpacity
-                style={{ flex: 1, backgroundColor: Colors.white, borderWidth: 1.5, borderColor: Colors.bottomTabColor, borderRadius: 8, justifyContent: 'space-evenly', alignItems: 'center' }}
+                style={Styles.buttonsStyle}
                 onPress={() => {
                   // CaptureImage(this.fileCallback);
                   PickImage(this.fileCallback);
                 }}>
                 <Image source={image} />
                 <Text
-                  style={[styles.editDescriptionTextStyle, { textAlign: 'center' }]}>
+                  style={styles.editDescriptionTextStyle}>
                   Image
                 </Text>
               </TouchableOpacity>
 
               <View style={{ width: 8 }} />
               <TouchableOpacity
-                style={{ flex: 1, backgroundColor: Colors.decadeFilterBorder, borderWidth: 1.5, borderColor: Colors.bottomTabColor, borderRadius: 8, justifyContent: 'space-evenly', alignItems: 'center' }}
+                style={[Styles.buttonsStyle, { backgroundColor: Colors.decadeFilterBorder }]}
                 onPress={() => {
                   // if (this.props.padDetails?.padId) {
                   this.setEtherPadContent('get', '', this.state.padDetails.padId);
@@ -1838,7 +1833,7 @@ class CreateMemory extends React.Component<Props> {
                 }}>
                 <Image source={arrowRight} />
                 <Text
-                  style={[styles.editDescriptionTextStyle, { textAlign: 'center', color: Colors.white }]}>
+                  style={[styles.editDescriptionTextStyle, { color: Colors.white }]}>
                   Next
                 </Text>
               </TouchableOpacity>
@@ -1972,31 +1967,10 @@ class CreateMemory extends React.Component<Props> {
           style={styles.SafeAreaViewContainerStyle}>
 
           {Platform.OS === 'ios' && this.state.showCalender && <View
-            style={[{
-              minHeight: 400, borderRadius: 12,
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000,
-              borderWidth: 0.5,
-              backgroundColor: Colors.white,
-              borderColor: Colors.white,
-              position: 'absolute',
-              width: '83%',
-              alignSelf: 'center',
-              top: 100,
-              shadowColor: '(46, 49, 62, 0.05)',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
-            }]}
+            style={Styles.calendarViewStyle}
           >
             <DatePicker
               options={{
-                // ...defaultOptions,
                 backgroundColor: Colors.white,
                 textHeaderColor: Colors.black,
                 textDefaultColor: Colors.systemRed,
@@ -2028,7 +2002,7 @@ class CreateMemory extends React.Component<Props> {
             message={'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'}
             android={{
               container: {
-                backgroundColor: '#ffffff'
+                backgroundColor: Colors.white
               },
               title: {
                 color: Colors.black,
@@ -2046,7 +2020,7 @@ class CreateMemory extends React.Component<Props> {
             }}
             ios={{
               container: {
-                backgroundColor: '#D3D3D3'
+                backgroundColor: Colors.grayColor
               },
               title: {
                 color: Colors.black,
@@ -2136,7 +2110,7 @@ class CreateMemory extends React.Component<Props> {
             // rightIcon={this.state.isCreatedByUser}
             // showHideMenu={() => this.showMenu(!this.state.menuVisibility)}
             />
-            <View style={{ height: 1, width: '100%', backgroundColor: Colors.bottomTabColor }}></View>
+            <View style={styles.borderStyle}></View>
             <StatusBar
               barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
@@ -2160,41 +2134,14 @@ class CreateMemory extends React.Component<Props> {
                   title={this.state.actionSheet.title}
                   message={this.state.actionSheet?.list?.actions && this.state.actionSheet?.list?.actions.length && this.state.actionSheet?.list?.actions[0] && this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,') ? `` : 'Choose to completely discard your work, or save writing this memory for later.'}
                   android={{
-                    container: {
-                      backgroundColor: '#ffffff'
-                    },
-                    title: {
-                      color: Colors.black,
-                      fontFamily: "SF Pro Text",
-                      fontSize: 17,
-                      fontWeight: '600',
-                      lineHeight: 22
-                    },
-                    message: {
-                      color: Colors.black,
-                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                      fontSize: 16,
-                      fontWeight: '500',
-                    },
+                    container: styles.alertContainer,
+                    title: styles.alertTitleStyle,
+                    message: styles.alertmessageStyle
                   }}
                   ios={{
-                    container: {
-                      backgroundColor: '#D3D3D3'
-                    },
-                    title: {
-                      color: Colors.black,
-                      // fontFamily: fontFamily.Inter,
-                      lineHeight: 22,
-                      fontSize: 17,
-                      fontWeight: '600',
-                    },
-                    message: {
-                      color: Colors.black,
-                      // fontFamily: fontFamily.Inter,
-                      fontSize: 13,
-                      lineHeight: 18,
-                      fontWeight: '400',
-                    },
+                    container: styles.alertiOSContainer,
+                    title: styles.alertiOSTitleStyle,
+                    message: styles.alertiOSmessageStyle
                   }}
                   buttons={
                     this.state.actionSheet.list = this.state.actionSheet.list.map((item: any) => {
@@ -2208,11 +2155,7 @@ class CreateMemory extends React.Component<Props> {
                             this.onActionItemClicked(item.index);
                           })
                         },
-                        styles: {
-                          lineHeight: 22,
-                          fontSize: 17,
-                          fontWeight: '600',
-                        }
+                        styles: styles.alerButtonStyle
                       })
                     })
                     //   [{

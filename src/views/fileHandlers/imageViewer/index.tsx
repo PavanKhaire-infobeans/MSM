@@ -14,8 +14,9 @@ import {
 import ImageViewerWithZoom from '../../../common/component/ImageZoomViewer/src/index';
 //@ts-ignore
 import Utility from '../../../common/utility';
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+import Styles from './styles';
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 
 const images = [
   {
@@ -88,11 +89,7 @@ export default class ImageViewer extends React.Component<Props> {
   renderLoadingImage = () => {
     return (
       <View
-        style={{
-          height: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+        style={Styles.renderLoadingImagecontainer}>
         {/* <ImageZoom cropWidth={Dimensions.get('window').width}
                          cropHeight={Dimensions.get('window').height-100}
                          imageWidth={Dimensions.get('window').width}
@@ -110,7 +107,7 @@ export default class ImageViewer extends React.Component<Props> {
   };
   onChange = (index?: number) => {
     // Alert.alert(index+"");
-    this.setState({activeSlide: index});
+    this.setState({ activeSlide: index });
     currentIndex = index;
   };
   changeViewVisibility = () => {
@@ -143,19 +140,14 @@ export default class ImageViewer extends React.Component<Props> {
       if (fl.thumbnail_large_url) {
         fl.url = fl.thumbnail_large_url;
       }
-      let url = {url: fl.url ? fl.url : fl.filePath};
+      let url = { url: fl.url ? fl.url : fl.filePath };
       urls.push(url);
     }
     return (
-      <View style={{flex: 1}}>
-        <SafeAreaView style={{backgroundColor: '#000', flex: 1}}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: '#000',
-              justifyContent: 'center',
-            }}>
-            {/* <Carousel                        
+      <View style={Styles.container}>
+        <SafeAreaView style={Styles.subContainer}>
+
+          {/* <Carousel                        
                         data={this.props.files}
                         renderItem={this.renderItem.bind(this)}
                         sliderWidth={Dimensions.get('window').width}
@@ -164,111 +156,70 @@ export default class ImageViewer extends React.Component<Props> {
                         firstItem={this.props.index}
                         style={{top: 0, position:"absolute", backgroundColor:"red", height: "100%", width:"100%"}}
                       />                             */}
-            {/* <Modal visible={true} transparent={true}> */}
-            <StatusBar barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
+          {/* <Modal visible={true} transparent={true}> */}
+          <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
 
-            <ImageViewerWithZoom
-              style={{marginBottom: 10, backgroundColor: 'transparent'}}
-              imageUrls={urls}
-              index={currentIndex}
-              loadingRender={this.renderLoadingImage.bind(this)}
-              onMove={data => {}}
-              onChange={this.onChange.bind(this)}
-              enablePreload={true}
-              saveToLocalByLongPress={false}
-              onSwipeDown={() => Actions.pop()}
-              enableSwipeDown={true}
-              // pageAnimateTime = {0.05}
-            />
-            {this.state.viewDetails && (
-              <View
-                style={{
-                  width: '100%',
-                  padding: 15,
-                  flex: 1,
-                  backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                  position: 'absolute',
-                  bottom: 50,
-                  left: 0,
-                }}>
-                <ScrollView>
-                  <Text
-                    style={{
-                      ...fontSize(16),
-                      fontWeight: '500',
-                      color: '#D3D3D3',
-                      backgroundColor: 'transparent',
-                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                      marginBottom: 10,
-                    }}>
-                    {this.props.files[this.state.activeSlide].file_title}
-                  </Text>
-                  <Text
-                    style={{
-                      ...fontSize(14),
-                      backgroundColor: 'transparent',
-                      color: '#D3D3D3',
-                    }}>
-                    {this.props.files[this.state.activeSlide].file_description}
-                  </Text>
-                </ScrollView>
-              </View>
-            )}
-            {/* <View style={{backgroundColor :  "#44000000", opacity: 0.7, width:"100%", bottom: 0, left: 0, padding: 15}}>  */}
-            {/* <Text style={{...fontSize(16), fontWeight: "500", color: "#D3D3D3", backgroundColor :  "#00000099", marginBottom: 10}}>{this.props.files[this.state.activeSlide].file_title}</Text>
-                              <Text style={{...fontSize(14), backgroundColor :  "#00000099", color: "#D3D3D3"}}>{this.props.files[this.state.activeSlide].file_description}</Text> */}
-            {/* </View>} */}
-            {!this.props.hideDescription && (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  height: 50,
-                  width: '100%',
-                  backgroundColor: '#fff',
-                  justifyContent: 'space-between',
-                  padding: 15,
-                  alignItems: 'flex-end',
-                }}>
-                <Text style={{...fontSize(16), color: '#000'}}>
-                  {this.props.files.length > 1
-                    ? this.state.activeSlide + 1 + '/' + this.props.files.length
-                    : ''}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => this.changeViewVisibility()}
-                  disabled={!this.checkIfDescriptionIsDisabled()}>
-                  <Text
-                    style={{
-                      ...fontSize(16),
-                      color: this.checkIfDescriptionIsDisabled()
-                        ? Colors.ThemeColor
-                        : '#D3D3D3',
-                    }}>
-                    {'Description'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
+          <ImageViewerWithZoom
+            style={Styles.ImageViewerWithZoomStyle}
+            imageUrls={urls}
+            index={currentIndex}
+            loadingRender={this.renderLoadingImage.bind(this)}
+            onMove={data => { }}
+            onChange={this.onChange.bind(this)}
+            enablePreload={true}
+            saveToLocalByLongPress={false}
+            onSwipeDown={() => Actions.pop()}
+            enableSwipeDown={true}
+          // pageAnimateTime = {0.05}
+          />
+          {this.state.viewDetails && (
             <View
-              style={{
-                backgroundColor: '#595959',
-                height: 40,
-                width: 40,
-                top: 20,
-                borderRadius: 20,
-                position: 'absolute',
-                marginLeft: 20,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity onPress={() => this.cancelAction()}>
-                <Image source={close_white_} style={{padding: 15}} />
+              style={Styles.viewDetailsContainer}>
+              <ScrollView>
+                <Text
+                  style={Styles.fileTitle}>
+                  {this.props.files[this.state.activeSlide].file_title}
+                </Text>
+                <Text
+                  style={Styles.fileDesc}>
+                  {this.props.files[this.state.activeSlide].file_description}
+                </Text>
+              </ScrollView>
+            </View>
+          )}
+          {/* <View style={{backgroundColor :  "#44000000", opacity: 0.7, width:"100%", bottom: 0, left: 0, padding: 15}}>  */}
+          {/* <Text style={{...fontSize(16), fontWeight: "500", color: "#D3D3D3", backgroundColor :  "#00000099", marginBottom: 10}}>{this.props.files[this.state.activeSlide].file_title}</Text>
+                              <Text style={{...fontSize(14), backgroundColor :  "#00000099", color: "#D3D3D3"}}>{this.props.files[this.state.activeSlide].file_description}</Text> */}
+          {/* </View>} */}
+          {!this.props.hideDescription && (
+            <View
+              style={Styles.hideDescriptionContainer}>
+              <Text style={Styles.fileStext}>
+                {this.props.files.length > 1
+                  ? this.state.activeSlide + 1 + '/' + this.props.files.length
+                  : ''}
+              </Text>
+              <TouchableOpacity
+                onPress={() => this.changeViewVisibility()}
+                disabled={!this.checkIfDescriptionIsDisabled()}>
+                <Text
+                  style={[Styles.fileStext,{
+                    color: this.checkIfDescriptionIsDisabled() ? Colors.ThemeColor : Colors.grayColor,
+                  }]}>
+                  {'Description'}
+                </Text>
               </TouchableOpacity>
             </View>
+          )}
 
-            {/* </Modal> */}
+          <View
+            style={Styles.closeContainer}>
+            <TouchableOpacity onPress={() => this.cancelAction()}>
+              <Image source={close_white_} style={Styles.closeImageStyle} />
+            </TouchableOpacity>
           </View>
+
+          {/* </Modal> */}
         </SafeAreaView>
       </View>
     );

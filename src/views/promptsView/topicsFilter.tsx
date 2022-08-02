@@ -20,6 +20,7 @@ import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import { action_close, check, plus } from '../../images';
 import { GetPrompts } from '../myMemories/myMemoriesWebService';
+import Styles from './styles';
 
 type Props = {[x: string]: any};
 type State = {[x: string]: any};
@@ -87,14 +88,8 @@ export default class TopicsFilter extends React.Component<State, Props> {
   render() {
     return (
       <View
-        style={{
-          height: Dimensions.get('window').height,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-        }}>
-        <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+        style={Styles.filterContainer}>
+        <SafeAreaView style={Styles.filterSubContainer}>
           <NavigationHeaderSafeArea
             heading={'Topics'}
             showCommunity={false}
@@ -107,9 +102,9 @@ export default class TopicsFilter extends React.Component<State, Props> {
             barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
-          <ScrollView style={{flex: 1, marginBottom: 30}}>
+          <ScrollView style={Styles.filterSubScroll}>
             <View>
-              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              <View style={Styles.topicContainer}>
                 {this.state.topicsArray.length > 0 &&
                   this.state.topicsArray.map((obj: any, index: any) => {
                     return (
@@ -163,16 +158,9 @@ export default class TopicsFilter extends React.Component<State, Props> {
               underlayColor={'none'}
               onPress={() => this.applyFilters()}>
               <View
-                style={{
-                  backgroundColor: Colors.ThemeColor,
-                  width: 300,
-                  padding: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 20,
-                }}>
+                style={Styles.ApplyContainer}>
                 <TextNew
-                  style={{fontWeight: '400', ...fontSize(16), color: '#fff'}}>
+                  style={Styles.applyText}>
                   Apply Topics
                 </TextNew>
               </View>

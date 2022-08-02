@@ -8,6 +8,52 @@ const Styles = EStyleSheet.create({
   flexContainer: {
     flex: 1
   },
+  scrollViewStyle: {
+    flex: 1,
+    marginBottom: 30
+  },
+  customContainer: {
+    backgroundColor: Colors.white
+  },
+  customTitle: {
+    color: Colors.black,
+    fontFamily: "SF Pro Text",
+    fontSize: 17,
+    fontWeight: '600',
+    lineHeight: 22
+  },
+  globeImageStyle: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginBottom: 5,
+  },
+  customMessage: {
+    color: Colors.black,
+    fontFamily: "SF Pro Text",
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  customiOSContainer: {
+    backgroundColor: Colors.grayColor
+  },
+  customiOSTitle: {
+    color: Colors.black,
+    lineHeight: 22,
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  customiOSMessage: {
+    color: Colors.black,
+    // fontFamily: fontFamily.Inter,
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '400',
+  },
+  buttonStyle: {
+    lineHeight: 22,
+    fontSize: 17,
+    fontWeight: '600',
+  },
   animatedViewContainer: {
     flex: 1,
     width: "100%",
@@ -15,39 +61,44 @@ const Styles = EStyleSheet.create({
     alignItems: "center",
     marginTop: 0
   },
-  flex1Width90: {
+  appIntroContainer: {
     flex: 1,
     width: '90%'
   },
+  textStyles: {
+    marginTop: 16,
+    color: Colors.black
+  },
+  getStartedText: { marginTop: Platform.OS == 'ios' ? 20 : 10 },
   nextTextStyle: {
     marginLeft: 0,
     marginRight: 10,
     color: Colors.white
   },
-  nameContainer:{ 
-    height: '100%', 
-    width: '100%', 
-    zIndex: 99, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    borderRadius: 12, 
+  nameContainer: {
+    height: '100%',
+    width: '100%',
+    zIndex: 99,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
     // backgroundColor: Colors.white, 
-    overflow: 'hidden' 
+    overflow: 'hidden'
   },
-  nameSubContainer:{ 
-    backgroundColor: Colors.white, 
-    height: '100%', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    width: '100%', 
-    borderRadius: 12 
+  nameSubContainer: {
+    backgroundColor: Colors.white,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 12
   },
   titleDescContainer: {
     justifyContent: "center",
     alignItems: "center",
     margin: 16
   },
-  font30Weight500: {
+  appIntroTitleStyle: {
     ...fontSize(30),
     fontWeight: '500',
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
@@ -58,13 +109,16 @@ const Styles = EStyleSheet.create({
     width: 25,
     marginBottom: -2
   },
-  font18Weight400: {
+  appIntroDescStyle: {
     ...fontSize(18),
     fontWeight: '400',
     fontFamily: fontFamily.Inter,
     textAlign: 'center'
   },
-  font18Weight500: {
+  memoryFromContainerStyle: {
+    padding: 16,
+  },
+  memoryFromTextStyle: {
     fontWeight: '500',
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.newTextColor,
@@ -112,18 +166,24 @@ const Styles = EStyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  margin10: {
+  imageLogoStyle: {
     margin: 10
   },
-  height16: {
-    height: 16
+  showMemoryCreationView: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    backgroundColor: Colors.lightSkyBlue
+  },
+  closeImage: {
+    top: Platform.OS == 'ios' ? 20 : 0,
+    zIndex: 99999
   },
   submitButnStyle: {
     backgroundColor: Colors.ThemeColor,
     fontFamily: fontFamily.Inter,
     ...fontSize(22)
   },
-  submitButnStyleWidth75: {
+  submitButtonStyle: {
     backgroundColor: Colors.ThemeColor,
     fontFamily: fontFamily.Inter,
     justifyContent: "center",
@@ -140,7 +200,7 @@ const Styles = EStyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  font20Weight500textStyle: {
+  orTextStyle: {
     ...fontSize(20),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
@@ -169,10 +229,11 @@ const Styles = EStyleSheet.create({
   alignItemsCenter: {
     alignItems: 'center'
   },
-  justifyCentermargin5: {
+  imageContainerStyle: {
     justifyContent: "center",
     margin: 5
   },
+  closeContainerSTyle: { right: -90 },
   butnContainerStyle: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -217,6 +278,7 @@ const Styles = EStyleSheet.create({
     bottom: Platform.OS == 'ios' ? 20 : 50,
     zIndex: 99999
   },
+  newBackbuttonStyle: { marginLeft: 16 },
   saveLaterContainer: {
     width: '100%',
     justifyContent: 'center',
@@ -248,10 +310,13 @@ const Styles = EStyleSheet.create({
     width: '100%',
     flex: 1,
     backgroundColor: Colors.white,
-    flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    flexDirection: 'row',
+    paddingRight: 16,
+    paddingLeft: 16
   },
+  filter: { ...fontSize(16) },
   filterButnContainerStyle: {
     width: '100%',
     height: 40,
@@ -272,6 +337,7 @@ const Styles = EStyleSheet.create({
     backgroundColor: Colors.NewLightCommentHeader,
     padding: 16,
   },
+
   filterHeaderText: {
     ...fontSize(19),
     padding: 10,
@@ -317,7 +383,7 @@ const Styles = EStyleSheet.create({
     shadowRadius: 2,
     elevation: 3,
   },
-  shadowBoxStyle:{
+  shadowBoxStyle: {
     shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
@@ -337,6 +403,16 @@ const Styles = EStyleSheet.create({
   {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 12
+  },
+  jumptoYearContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 52
   },
   flexWrapFlexRow: {
     flexDirection: 'row',
@@ -403,8 +479,15 @@ const Styles = EStyleSheet.create({
   },
   filterTextJumpto: {
     ...fontSize(19),
-    fontFamily: fontFamily.Inter ,
+    fontFamily: fontFamily.Inter,
     fontWeight: '400',
+    lineHeight: 23,
+    color: Colors.bordercolor
+  },
+  backTextJumpto: {
+    ...fontSize(19),
+    fontFamily: Platform.OS == 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    fontWeight: '500',
     lineHeight: 23,
     color: Colors.bordercolor
   },
@@ -427,9 +510,11 @@ const Styles = EStyleSheet.create({
     width: 8,
     height: 16
   },
-  height8: {
+  iconSeparator: {
     height: 8
-  }
+  },
+  ScrollToendView: { height: 140 },
+  imageBackgrounStyle:{borderRadius: 15 }
 });
 
 export default Styles;

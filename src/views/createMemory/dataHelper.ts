@@ -146,7 +146,7 @@ export const DefaultCreateMemoryObj = (
       memory_date: initialState.date && initialState.date.year ? {
         year: initialState.date.year,
         month: initialState.date.month,
-        day: initialState.date.day != 'Day' ? initialState.date.day : undefined,
+        day: initialState.date.day != 'Day' ? !isNaN(parseInt(initialState.date.day)) ? parseInt(initialState.date.day).toString() : undefined : undefined,
       } : undefined,
       // {
       //   year: initialState.date.year,

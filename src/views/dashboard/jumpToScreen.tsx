@@ -173,7 +173,7 @@ const JumpToScreen = (props: Props) => {
             {/* {props.jumpToYears.map((obj: any, index: any) => {
               return ( */}
             <View style={[styles.fullWidth, styles.justifyalignCenetr]}>
-              <View style={styles.height16}></View>
+              <View style={styles.separatorStyle}></View>
               <View style={styles.commonPaddingContainer} >
                 <Text
                   style={[styles.filterTextJumpto, { textAlign: 'left' }]}>
@@ -192,9 +192,7 @@ const JumpToScreen = (props: Props) => {
                       <>
                         <Image source={chevronleft} />
                         <Text
-                          style={[
-                            styles.filterTextJumpto, { fontWeight: '500' }
-                          ]}>
+                          style={ styles.backTextJumpto }>
                           {'Back'}
                         </Text>
                       </>
@@ -202,7 +200,7 @@ const JumpToScreen = (props: Props) => {
                 }
 
               </View>
-              <View style={styles.height16}></View>
+              <View style={styles.separatorStyle}></View>
               {
                 backPress ?
                   <FlatList
@@ -237,18 +235,17 @@ const JumpToScreen = (props: Props) => {
                             {},
                         ]}>
                         <>
-                          <View style={[styles.justifyContentCenterAlignCenter, { paddingTop: 12 }]}>
+                          <View style={styles.iconContainer}>
                             {/* <SvgXml xml={xml} /> */}
                             {item.icon}
                           </View>
 
-                          <View style={styles.height8}></View>
+                          <View style={styles.iconSeparator}></View>
 
-                          <View style={[styles.justifyContentCenterAlignCenter, { height: 52 }]}>
+                          <View style={styles.jumptoYearContainer}>
                             <Text
                               style={[
                                 styles.filterTextJumpto,
-                                // { margin: 8 }
                               ]}>
                               {item.year}
                             </Text>
@@ -461,7 +458,7 @@ const JumpToScreen = (props: Props) => {
             {/* );
             })} */}
           </View>
-          <View style={{ height: 140 }} />
+          <View style={Styles.ScrollToendView} />
         </ScrollView>
         {/* <View style={styles.bottomView}>
           <TouchableHighlight

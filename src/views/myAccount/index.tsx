@@ -21,6 +21,7 @@ import {
 import { kLogoutPressed } from '../../views/menu';
 import NavigationBar from '../dashboard/NavigationBar';
 import { kProfilePicUpdated } from '../profile/profileDataModel';
+import Styles from './styles';
 type items = {
   title: string;
   showArrow: boolean;
@@ -147,49 +148,34 @@ export default class MyAccount extends React.Component {
   render() {
     let profilePic = Account.selectedData().profileImage;
     return (
-      <View style={{flex: 1}}>
+      <View style={Styles.container}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={Styles.noViewStyle}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1}}>
+        <SafeAreaView style={Styles.safeAreaContextStyle}>
+          <View style={Styles.container}>
             <NavigationBar title={'My Account'} showClose={true} />
             <StatusBar
               barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <View
-              style={{
-                width: '100%',
-                height: 115,
-                backgroundColor: '#E6F0EF',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
+              style={Styles.profileImage}>
               <ImageBackground
-                style={{width: 75, height: 75, marginLeft: 16}}
-                imageStyle={{borderRadius: 40}}
+                style={Styles.imagebackGroundStyle}
+                imageStyle={Styles.imageStyle}
                 source={profile_placeholder}>
                 <Image
                   source={
                     profilePic != '' ? {uri: profilePic} : profile_placeholder
                   }
-                  style={{width: 75, height: 75, borderRadius: 40}}
+                  style={Styles.imageStyle}
                 />
               </ImageBackground>
 
-              <View style={{alignItems: 'flex-start', paddingLeft: 10}}>
+              <View style={Styles.fullNameContainer}>
                 <TextNew
-                  style={{
-                    fontWeight: '500',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                    ...fontSize(18),
-                    color: Colors.TextColor,
-                  }}>
+                  style={Styles.fullName}>
                   {this.fullname}
                 </TextNew>
                 <TouchableHighlight
@@ -198,13 +184,7 @@ export default class MyAccount extends React.Component {
                     Actions.push('profile');
                   }}>
                   <TextNew
-                    style={{
-                      paddingTop: 6,
-                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                      fontWeight: '500',
-                      ...fontSize(16),
-                      color: Colors.NewTitleColor,
-                    }}>
+                    style={Styles.viewProfile}>
                     View your Profile
                   </TextNew>
                 </TouchableHighlight>
@@ -213,7 +193,7 @@ export default class MyAccount extends React.Component {
             <FlatList
               data={this.state.Items}
               keyExtractor={(_, index: number) => `${index}`}
-              style={{width: '100%', backgroundColor: 'white'}}
+              style={Styles.flatListStyle}
               renderItem={({item: data}) => {
                 return (
                   <DefaultListItem

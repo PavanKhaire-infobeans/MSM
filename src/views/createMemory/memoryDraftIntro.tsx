@@ -32,7 +32,7 @@ export default class MemoryDraftIntro extends React.Component<Props> {
       title: 'Collaborators ',
       desc: 'If your Memory was shared with others, add collaborators to capture each perspective',
     },
-    {title: 'Memory Save', desc: 'Tap Done to save or publish your Memory'},
+    { title: 'Memory Save', desc: 'Tap Done to save or publish your Memory' },
   ];
 
   circleStyles = [
@@ -82,17 +82,17 @@ export default class MemoryDraftIntro extends React.Component<Props> {
     },
   ];
   arrowStyles = [
-    {position: 'absolute', imageSource: arrow2, top: 150, left: 110},
-    {position: 'absolute', imageSource: arrow6, top: 250, left: 110},
-    {position: 'absolute', imageSource: arrow5, bottom: 90, left: 310},
-    {position: 'absolute', imageSource: arrow7, top: 75, left: 230},
+    { position: 'absolute', imageSource: arrow2, top: 150, left: 110 },
+    { position: 'absolute', imageSource: arrow6, top: 250, left: 110 },
+    { position: 'absolute', imageSource: arrow5, bottom: 90, left: 310 },
+    { position: 'absolute', imageSource: arrow7, top: 75, left: 230 },
   ];
 
   viewStyle = [
-    {position: 'absolute', width: this.width - 130, top: 190, left: 70},
-    {position: 'absolute', width: this.width - 110, top: 310, left: 60},
-    {position: 'absolute', width: this.width - 100, bottom: 70, left: 70},
-    {position: 'absolute', width: this.width - 100, top: 150, left: 100},
+    { position: 'absolute', width: this.width - 130, top: 190, left: 70 },
+    { position: 'absolute', width: this.width - 110, top: 310, left: 60 },
+    { position: 'absolute', width: this.width - 100, bottom: 70, left: 70 },
+    { position: 'absolute', width: this.width - 100, top: 150, left: 100 },
   ];
 
   constructor(props: Props) {
@@ -101,13 +101,13 @@ export default class MemoryDraftIntro extends React.Component<Props> {
 
   fadeIn = (index: any) => {
     this.setState(
-      {currentIndex: index, fadeIn: new Animated.Value(0), scrolling: false},
+      { currentIndex: index, fadeIn: new Animated.Value(0), scrolling: false },
       () => {
         Animated.timing(this.state.fadeIn, {
           toValue: 1,
           duration: 500,
-              useNativeDriver: true,
-            }).start();
+          useNativeDriver: true,
+        }).start();
       },
     );
   };
@@ -116,17 +116,17 @@ export default class MemoryDraftIntro extends React.Component<Props> {
     Animated.timing(this.state.fadeIn, {
       toValue: 0,
       duration: 200,
-              useNativeDriver: true,
-            }).start();
+      useNativeDriver: true,
+    }).start();
   };
 
   renderAppIntro = (item: any) => {
     let index = item.index;
     return (
       <Animated.View
-        style={[Styles.animatedContainer,{ opacity: this.state.fadeIn }]}>
+        style={[Styles.animatedContainer, { opacity: this.state.fadeIn }]}>
         {this.state.currentIndex == index && (
-          <View style={[Styles.fullWidth,Styles.fullFlex]}>
+          <View style={[Styles.fullWidth, Styles.fullFlex]}>
             {index != this.memoryDraftIntro.length - 1 && (
               <TouchableOpacity
                 style={Styles.closeGuidButtonStyle}
@@ -151,7 +151,7 @@ export default class MemoryDraftIntro extends React.Component<Props> {
                 {this.circleStyles.map((_obj: any, index1: any) => {
                   return (
                     <View
-                      style={[Styles.createMemoryIntroContainerStyle,{
+                      style={[Styles.createMemoryIntroContainerStyle, {
                         backgroundColor: index1 <= index ? Colors.white : Colors.brownrgba,
                       }]}
                     />
@@ -174,7 +174,7 @@ export default class MemoryDraftIntro extends React.Component<Props> {
                   <View
                     style={Styles.prevBtnContainer}>
                     <TextNew
-                      style={[Styles.textStyle18Weight500,{
+                      style={[Styles.textStyle18Weight500, {
                         color: index == 0 ? Colors.newBagroundColor : Colors.NewYellowColor,
                       }]}>
                       Prev
@@ -233,17 +233,17 @@ export default class MemoryDraftIntro extends React.Component<Props> {
                 this.setState({
                   fadeIn: new Animated.Value(
                     1 -
-                      Math.abs(
-                        this.state.currentIndex -
-                          event.nativeEvent.contentOffset.x /
-                            Dimensions.get('window').width,
-                      ),
+                    Math.abs(
+                      this.state.currentIndex -
+                      event.nativeEvent.contentOffset.x /
+                      Dimensions.get('window').width,
+                    ),
                   ),
                 });
               }
             }}
             onScrollBeginDrag={() =>
-              this.setState({scrolling: true, fadeIn: new Animated.Value(1)})
+              this.setState({ scrolling: true, fadeIn: new Animated.Value(1) })
             }
           />
         </SafeAreaView>

@@ -248,10 +248,9 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
         <TouchableHighlight
           style={{ opacity: data.isDisabled ? 0.5 : 1 }}
           disabled={data.isDisabled}
-          underlayColor={'#fff'}
+          underlayColor={Colors.white}
           onPress={() => this.cellTapped(index)}>
           <InstanceView
-            style={{}}
             showSelection={true}
             isSelected={
               this.state.selectedIndex.indexOf(index) > -1 ? true : false
@@ -293,9 +292,9 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.mainContainer}>
         <SafeAreaView style={styles.container}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.mainContainer}>
             <NavigationHeaderSafeArea
               ref={ref => (this.navBar = ref)}
               heading={this.props.title}
@@ -315,7 +314,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
             />
             {(this.props.type == ListType.Login ||
               this.props.type == ListType.ForgotPassword) && (
-                <Text style={{ padding: 16, ...fontSize(16), color: 'black' }}>
+                <Text style={styles.emailTextstyle}>
                   {`We have found ${this.props.listAccounts.length} communities that belong to `}
                   {this.props.type == ListType.ForgotPassword
                     ? 'your email address.'
@@ -324,11 +323,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
               )}
             {!this.state.allDisabled && (
               <Text
-                style={{
-                  padding: 16,
-                  color: 'rgba(61, 61, 61, 0.6)',
-                  ...fontSize(16),
-                }}>{`Please select which communities from the list you want to ${this.props.type == ListType.ForgotPassword
+                style={styles.resetPasswordStyle}>{`Please select which communities from the list you want to ${this.props.type == ListType.ForgotPassword
                   ? 'reset your password'
                   : this.props.type == ListType.Logout
                     ? 'logout from'
@@ -336,43 +331,17 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
                   }.`}</Text>
             )}
             <View
-              style={{
-                flexDirection: 'row',
-                height: 35,
-                paddingLeft: 16,
-                paddingRight: 16,
-                paddingBottom: 5,
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-              }}>
+              style={styles.yourComminityContainer}>
               <Text
-                style={{
-                  ...fontSize(16),
-                  fontWeight: '500',
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                  color: '#3D3D3D',
-                }}>
+                style={styles.comminityText}>
                 {'Your Communities'}
               </Text>
               <TouchableHighlight
                 onPress={() => this.selectAllItems()}
                 underlayColor={'#ffffff00'}
-                style={{
-                  flex: 1,
-                  height: 35,
-                  paddingBottom: 5,
-                  position: 'absolute',
-                  right: 16,
-                  justifyContent: 'flex-end',
-                }}>
+                style={styles.selectAllContainer}>
                 <Text
-                  style={{
-                    ...fontSize(14),
-                    fontWeight: '500',
-                    color: Colors.ThemeColor,
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                    textDecorationLine: 'underline',
-                  }}>
+                  style={styles.selectAllText}>
                   {'Select all'}
                 </Text>
               </TouchableHighlight>
@@ -381,7 +350,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
               bounces={false}
               keyExtractor={(_, index: number) => `${index}`}
               data={this.props.listAccounts}
-              style={{ padding: 15, paddingTop: -10, flex: 1, marginBottom: 80 }}
+              style={styles.flatlistStyle}
               keyboardShouldPersistTaps={'handled'}
               onScroll={() => {
                 Keyboard.dismiss();
@@ -393,13 +362,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
 
             <TouchableHighlight
               disabled={this.state.allDisabled}
-              style={{
-                width: '100%',
-                height: 54,
-                padding: 15,
-                position: 'absolute',
-                bottom: 40,
-              }}
+              style={styles.resetMainContainer}
               underlayColor={'#ffffff00'}
               onPress={() =>
                 this.props.type == ListType.Login
@@ -409,26 +372,13 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
                     : this.callLogoutService()
               }>
               <View
-                style={{
-                  height: 60,
+                style={[styles.titleProps,{
                   backgroundColor:
-                    this.props.type == ListType.Login
-                      ? this.state.allDisabled
-                        ? '#cccccc'
-                        : Colors.ThemeColor
-                      : '#9a3427',
-                  width: '100%',
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
+                    this.props.type == ListType.Login ? this.state.allDisabled
+                        ? '#cccccc': Colors.ThemeColor: '#9a3427',
+                }]}>
                 <Text
-                  style={{
-                    ...fontSize(22),
-                    fontWeight: '500',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                    color: Colors.white,
-                  }}>
+                  style={styles.titleTextStyle}>
                   {this.props.type == ListType.ForgotPassword
                     ? 'Reset Password'
                     : this.props.title}
@@ -439,29 +389,16 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
         </SafeAreaView>
         {this.state.showLoader && (
           <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              flex: 1,
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#333333aa',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            style={styles.loaderContainer}>
             <View
-              style={{
-                padding: 10,
-                backgroundColor: Colors.ThemeColor,
-                borderRadius: 10,
-              }}>
+              style={styles.activityContainer}>
               <ActivityIndicator
-                color={'white'}
+                color={Colors.newTextColor}
                 size={'small'}
-                style={{ justifyContent: 'center', alignItems: 'center' }}
+                style={styles.activityStyle}
               />
 
-              <Text style={{ color: '#f5f5f5', ...fontSize(14), marginTop: 10 }}>
+              <Text style={styles.loadingTextStyle}>
                 {'Loading...'}
               </Text>
             </View>

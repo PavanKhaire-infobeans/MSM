@@ -61,9 +61,10 @@ export class DashboardDataModel {
             } else {
                 parsedMemory.showLikeCount = false;
             }
+            console.log("mem date > ",parseInt(getDetails(parsedMemory, ["memory_date"])) * 1000)
             let memDate = parseInt(getDetails(parsedMemory, ["memory_date"])) * 1000;
             parsedMemory.memory_date = Utility.dateObjectToDefaultFormat(new Date(memDate));
-            parsedMemory.memoryDateDisplay = moment(memDate).format('ll');
+            parsedMemory.memoryDateDisplay = moment.utc(memDate).format('ll');
             console.warn("memoryDate >",parsedMemory.memoryDate)
             parsedMemory.memoryYear = new Date(memDate).getFullYear();
             if (parsedMemory.season && parsedMemory.season.trim().length > 0) {

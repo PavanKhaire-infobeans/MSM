@@ -37,6 +37,7 @@ import TextNew from '../../common/component/Text';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
 import { kSetUserProfileData } from './userProfileWebService';
+import Styles from './styles';
 
 type Props = {
   sectionHeading: any;
@@ -482,20 +483,14 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     let isProfilePicAvailable = this.isProfilePicAvailable;
     return (
       <View
-        style={{
-          width: DeviceInfo.isTablet() ? 320 : '90%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingTop: 40,
-          marginBottom: 20,
-        }}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        style={Styles.profilePicContainer}>
+        <View style={Styles.removeTextButton}>
           <Image
             defaultSource={profile_placeholder}
             source={
               isProfilePicAvailable ? {uri: profilePicURL} : profile_placeholder
             }
-            style={{width: 100, height: 100, borderRadius: 50}}
+            style={Styles.profileImage}
             onLoad={() => this.setState({hasLoaded: true})}
             onLoadStart={() => this.setState({hasLoaded: false})}
           />
@@ -505,15 +500,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
         </View>
 
         <TouchableOpacity
-          style={{
-            height: 33,
-            width: 200,
-            margin: 20,
-            backgroundColor: Colors.ThemeColor,
-            borderRadius: 50,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          style={Styles.changeProfileButton}
           onPress={() => {
             this.setState(
               {
@@ -529,29 +516,19 @@ export default class MutilpleValueEdit extends React.Component<Props> {
             );
           }}>
           <TextNew
-            style={{
-              lineHeight: 20,
-              ...fontSize(16),
-              textAlign: 'center',
-              color: '#fff',
-            }}>
+            style={Styles.changeProfile}>
             {'Change Profile Picture'}
           </TextNew>
         </TouchableOpacity>
 
         {profilePicURL != '' ? (
           <TouchableOpacity
-            style={{justifyContent: 'center', alignItems: 'center'}}
+            style={Styles.removeTextButton}
             onPress={() => {
               this.removeImage();
             }}>
             <TextNew
-              style={{
-                lineHeight: 20,
-                ...fontSize(16),
-                textAlign: 'center',
-                color: Colors.NewRadColor,
-              }}>
+              style={Styles.removeText}>
               {'Remove Photo'}
             </TextNew>
           </TouchableOpacity>
@@ -714,14 +691,9 @@ export default class MutilpleValueEdit extends React.Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={Styles.container}>
         <SafeAreaView
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#fff',
-          }}>
+          style={Styles.multipleValueContainer}>
           <StatusBar barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
           <NavigationHeaderSafeArea
             isWhite={true}
@@ -736,20 +708,12 @@ export default class MutilpleValueEdit extends React.Component<Props> {
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="always"
             keyboardDismissMode="on-drag"
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'transparent',
-            }}
+            style={Styles.KeyboardAwareScrollViewStyle}
             contentContainerStyle={{alignItems: 'center'}}
             bounces={false}>
             {this.props.basicInfo && this.generateProfilePicView()}
             <View
-              style={{
-                width: DeviceInfo.isTablet() ? 320 : '90%',
-                paddingTop: 20,
-                marginBottom: 0,
-              }}>
+              style={Styles.basicInfostyle}>
               {this.generateSectionFields()}
               <DateTimePicker
                 isVisible={this.state.isDatePickerVisible}

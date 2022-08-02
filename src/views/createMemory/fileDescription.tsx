@@ -149,9 +149,9 @@ export default class FileDescription extends React.Component<Props, State> {
                 style={Styles.playStyle}
               />
             </TouchableOpacity>
-            <View style={{marginLeft: 10}}>
+            <View style={Styles.durationContainer}>
               <Text
-                style={[Styles.fileNameTextStyle,{ paddingRight: 80 }]}
+                style={Styles.fileNameTextStyle}
                 numberOfLines={1}
                 ellipsizeMode="tail">
                 {file.title ? file.title : file.filename ? file.filename : ''}

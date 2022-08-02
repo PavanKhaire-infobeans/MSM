@@ -11,6 +11,7 @@ import { Colors, fontFamily, fontSize } from '../../../common/constants';
 import {
   arrow1, arrow2, arrow5, close_guide_tour
 } from '../../../images';
+import Styles from './styles';
 
 export default class MindPopIntro extends React.Component<Props> {
   _carousal: any;
@@ -183,19 +184,15 @@ export default class MindPopIntro extends React.Component<Props> {
     let index = item.index;
     return (
       <Animated.View
-        style={{
+  
+    style={[Styles.AppIntroContainer,{
           opacity: this.state.fadeIn,
-          flex: 1,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: 0,
-        }}>
+        }]}>
         {this.state.currentIndex == index && (
-          <View style={{ flex: 1, width: '100%' }}>
+          <View style={Styles.currentIndexStyle}>
             {index != this.mindPopIntro.length - 1 && (
               <TouchableOpacity
-                style={{ height: 50, left: '85%', zIndex: 999, top: 10 }}
+                style={Styles.closeGuideButton}
                 onPress={() => this.props.cancelMindPopIntro()}>
                 <Image source={close_guide_tour} />
               </TouchableOpacity>
@@ -210,33 +207,21 @@ export default class MindPopIntro extends React.Component<Props> {
                 {item.item.title}
               </TextNew>
               <TextNew
-                style={{
-                  ...fontSize(20),
-                  color: Colors.white,
-                  fontWeight: '400',
-                  marginTop: 5,
-                }}>
+                style={Styles.descTextStyle}>
                 {item.item.desc}
               </TextNew>
-              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+              <View style={Styles.circleContainer}>
                 {this.circleStyles.map((obj: any, index1: any) => {
                   return (
                     <View
-                      style={{
-                        height: 5,
-                        borderRadius: 1,
-                        width: 16,
-                        marginRight: 5,
-                        backgroundColor:
-                          index1 <= index
-                            ? Colors.white
-                            : 'rgba(144, 144, 144, 0.85)',
-                      }}
+                      style={[Styles.circleStyle,{
+                        backgroundColor: index1 <= index ? Colors.white : 'rgba(144, 144, 144, 0.85)',
+                      }]}
                     />
                   );
                 })}
               </View>
-              <View style={{ flexDirection: 'row', marginTop: 5 }}>
+              <View style={Styles.circleContainer}>
                 <TouchableHighlight
                   underlayColor={'transparent'}
                   onPress={() => {
@@ -244,23 +229,13 @@ export default class MindPopIntro extends React.Component<Props> {
                       this._carousal.snapToPrev();
                     }
                   }}
-                  style={{ paddingVertical: 20 }}>
+                  style={Styles.buttonhighLightStyle}>
                   <View
-                    style={{
-                      backgroundColor: Colors.white,
-                      width: 80,
-                      paddingVertical: 10,
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
+                    style={Styles.prevContainer}>
                     <TextNew
-                      style={{
-                        ...fontSize(18),
+                      style={[Styles.prevText,{
                         color: index == 0 ? '#c4c4c4' : Colors.NewYellowColor,
-                        fontWeight: '500',
-                        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                      }}>
+                      }]}>
                       Prev
                     </TextNew>
                   </View>
@@ -268,7 +243,7 @@ export default class MindPopIntro extends React.Component<Props> {
 
                 <TouchableHighlight
                   underlayColor={'transparent'}
-                  style={{ paddingVertical: 20, marginLeft: 20 }}
+                  style={Styles.nextButton}
                   onPress={() => {
                     if (index != this.mindPopIntro.length - 1) {
                       // this.fadeOut();
@@ -281,21 +256,11 @@ export default class MindPopIntro extends React.Component<Props> {
                     }
                   }}>
                   <View
-                    style={{
+                    style={[Styles.prevContainer,{
                       backgroundColor: Colors.NewYellowColor,
-                      width: 80,
-                      paddingVertical: 10,
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
+                    }]}>
                     <TextNew
-                      style={{
-                        ...fontSize(18),
-                        color: Colors.white,
-                        fontWeight: '500',
-                        fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                      }}>
+                      style={Styles.nextText}>
                       {index != this.mindPopIntro.length - 1 ? 'Next' : 'Done'}
                     </TextNew>
                   </View>
@@ -311,7 +276,7 @@ export default class MindPopIntro extends React.Component<Props> {
     return (
       <Modal transparent>
         <SafeAreaView
-          style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+          style={Styles.safeAreaContainer}>
           <Carousel
             ref={(c: any) => {
               this._carousal = c;

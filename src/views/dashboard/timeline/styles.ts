@@ -1,6 +1,7 @@
 import { Dimensions, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../../common/constants';
+import Utility from '../../../common/utility';
 
 const Styles = EStyleSheet.create({
     normalText: {
@@ -22,6 +23,65 @@ const Styles = EStyleSheet.create({
         borderWidth: 2,
         borderRadius: 10
     },
+    linearGardStyle:{ 
+        height: 50, 
+        width: '100%', 
+        position: 'absolute', 
+        bottom: 18 
+    },
+    linearGardBottomStyle:{ 
+        height: 20, 
+        width: '100%', 
+        position: 'absolute', 
+        bottom: 0 
+    },
+    leftFilterImageContainerStyle:{ 
+        width: 48, 
+        justifyContent: 'center', 
+        alignItems: 'flex-end' 
+    },
+    rightFilterImageContainerStyle:{ 
+        width: 48, 
+        justifyContent: 'center', 
+        alignItems: 'flex-start' 
+    },
+    noTimelineNextYearView:{ 
+        width: 64, 
+        justifyContent: 'center', 
+        alignItems: 'center' 
+    },
+    timelineDateContainer:{ 
+        width: Utility.getDeviceWidth() - 96, 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        paddingLeft: 16 
+    },
+    leftArrowImageContainer:{ 
+        width: 26, 
+        height: 22, 
+        position: 'absolute', 
+        left: 16, 
+        zIndex: 9 
+    },
+    rightArrowContainer:{ 
+        width: 26, 
+        height: 22, 
+        position: 'absolute', 
+        right: 0, 
+        zIndex: 9, 
+        transform: [{ rotate: '180deg' }] 
+    },
+    imageStyle:{ marginLeft: -5 },
+    imageRightStyle:{ marginRight: -5 },
+    timelineDateSeparator:{ 
+        height: 1, 
+        backgroundColor: Colors.newTextColor, 
+        width: 46, 
+        marginLeft: 24, 
+        marginRight: 17 
+    },
+    viewSeparator:{ width : 46 },
     buttonContainer: {
         backgroundColor: Colors.moreViewBg,
         padding: 5,

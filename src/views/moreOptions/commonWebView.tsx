@@ -7,6 +7,7 @@ import WebView from 'react-native-webview';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import { Colors } from '../../common/constants';
 import Utility from '../../common/utility';
+import Styles from './styles';
 type Props = {[x: string]: any};
 
 export default class CommonWebView extends React.Component<Props> {
@@ -22,23 +23,19 @@ export default class CommonWebView extends React.Component<Props> {
       <ActivityIndicator
         color={Colors.NewThemeColor}
         size="large"
-        style={{flex: 6, justifyContent: 'center'}}
+        style={Styles.activityIndicatorStyle}
       />
     );
   };
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={Styles.container}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={Styles.noViewStyle}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1}}>
+        <SafeAreaView style={Styles.safeAreaContextStyle}>
+          <View style={Styles.container}>
             <StatusBar
               barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
@@ -58,7 +55,7 @@ export default class CommonWebView extends React.Component<Props> {
                 "; path=/'"
               }
             />
-            <View style={{width: '100%', position: 'absolute', top: 0}}>
+            <View style={Styles.navigatopnHeaderContainer}>
               <NavigationHeaderSafeArea
                 backgroundColor={Colors.NewThemeColor}
                 hideClose={false}

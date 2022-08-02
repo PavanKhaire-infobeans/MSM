@@ -2,11 +2,11 @@ import React from 'react';
 import { Image, StatusBar, TouchableOpacity, View } from 'react-native';
 import Text from '../../../common/component/Text';
 //@ts-ignore
-import EStyleSheet from 'react-native-extended-stylesheet';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { Colors, fontSize } from '../../../common/constants';
 import { backBtn, mindpopBarIcon, navBarCrossIconWhite } from '../../../images';
+import styles from './styles'; 
 
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
@@ -19,70 +19,6 @@ const testID = {
   title: { text: 'title' },
 };
 //Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-const styles = EStyleSheet.create({
-  titleText: {
-    color: Colors.TextColor,
-    ...fontSize(18),
-    lineHeight: 20,
-    textAlign: 'left',
-    fontFamily: 'Inter',
-    fontWeight: '500',
-  },
-
-  titleContainer: { justifyContent: 'center', paddingTop: 10 },
-
-  leftButtonTouchableContainer: {
-    justifyContent: 'center',
-    padding: 15,
-    marginTop: 5,
-  },
-
-  leftButtonContainer: {
-    backgroundColor: 'transparent',
-    borderColor: '#ffffff',
-    borderWidth: 2,
-    height: 28,
-    width: 28,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  leftCrossButtonContainer: {
-    backgroundColor: Colors.NewRadColor,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  leftButtonLogo: { width: 20, height: 20 },
-
-  rightButtonsContainer: {
-    flex: 1,
-    paddingTop: 10,
-    paddingRight: 5,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-
-  rightButtonsTouchable: { padding: 5, paddingRight: 10 },
-
-  rightButtonsBackgroundImage: { width: 30, height: 30 },
-
-  rightButtonsBadge: {
-    position: 'absolute',
-    height: 16,
-    right: 5,
-    top: 5,
-    backgroundColor: '#ff0000',
-    borderColor: '#ffffff',
-    borderWidth: 1,
-    borderRadius: 8,
-    alignContent: 'center',
-  },
-
-  rightButtonsBadgeText: { ...fontSize(10), color: '#ffffff' },
-});
 
 class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
   _renderLeft() {
@@ -97,7 +33,7 @@ class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
         onPress={() => Actions.dashBoard()}>
         {/* action() */}
         <Image
-          style={{ height: 28, width: 28 }}
+          style={styles.imageStyle}
           resizeMode="center"
           source={leftImg}
         />
@@ -116,9 +52,9 @@ class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
     let mindPopImg = mindpopBarIcon;
     return (
       <View
-        style={{ alignItems: 'center', justifyContent: 'center', marginEnd: 10 }}>
+        style={styles.iconContainer}>
         <Image
-          style={{ height: 28, width: 28 }}
+          style={styles.imageStyle}
           resizeMode="center"
           source={mindPopImg}
         />
@@ -145,11 +81,7 @@ class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
           style={styles.rightButtonsTouchable}
           testID={testID.rightButtons.mindpop}>
           <Text
-            style={{
-              ...fontSize(16),
-              fontWeight: '400',
-              color: Colors.TextColor,
-            }}>
+            style={styles.titleStyle}>
             {title}
           </Text>
         </TouchableOpacity>
@@ -160,11 +92,7 @@ class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
   render() {
     return (
       <View
-        style={{
-          flexDirection: 'row',
-          backgroundColor: Colors.NewThemeColor,
-          height: 54,
-        }}>
+        style={styles.navigationBarContainer}>
         <StatusBar
           barStyle="dark-content"
           backgroundColor={Colors.NewThemeColor}

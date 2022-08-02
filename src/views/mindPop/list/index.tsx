@@ -36,6 +36,7 @@ import { DeleteMindPopOperation } from "./deleteMindPopReducer";
 import EmptyView from "./emptyView";
 import MindPopIntro from "./mindPopIntro";
 import MindPopNavigationBar from "./NavigationBar";
+import Styles from "./styles";
 
 export type ListItem = {
 	id: string;
@@ -531,17 +532,17 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 	}
 	private _empty = () => (
 		<View style={{ height: 300, width: 300, backgroundColor: "transparent", alignItems: "center", alignSelf: "center" }}>
-			<Text style={{ color: "black", ...fontSize(18), marginTop: 41, fontWeight: '600',fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold, }}>No Results Found</Text>
+			<Text style={{ color: "black", ...fontSize(18), marginTop: 41, fontWeight: '600', fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold, }}>No Results Found</Text>
 			<Text style={{ color: "#1c1c1c", ...fontSize(18), lineHeight: 26, marginTop: 16, textAlign: "center" }}>{`We couldn't find any results for '${this.searchKeyword}'. Try searching for something else`}</Text>
 		</View>
 	);
 
 	render() {
 		return (
-			<View style={{ flex: 1 }}>
-				<SafeAreaView style={{ width: "100%", flex: 0, backgroundColor: Colors.NewThemeColor }} />
-				<SafeAreaView style={{ width: "100%", flex: 1, backgroundColor: "#fff" }}>
-					<View style={{ flex: 1 }}>
+			<View style={Styles.container}>
+				<SafeAreaView style={Styles.noflexContainer} />
+				<SafeAreaView style={Styles.mainContainer}>
+					<View style={Styles.container}>
 						{
 							this.props.showAlert && this.props.showAlertData?.title ?
 								<CustomAlert
@@ -551,54 +552,22 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 									title={this.props.showAlertData?.title}
 									message={this.props.showAlertData?.desc}
 									android={{
-										container: {
-											backgroundColor: '#ffffff'
-										},
-										title: {
-											color: Colors.black,
-											fontFamily: "SF Pro Text",
-											fontSize: 17,
-											fontWeight: '600',
-											lineHeight: 22
-										},
-										message: {
-											color: Colors.black,
-											fontFamily: "SF Pro Text",
-											// fontFamily: fontFamily.Inter,
-											fontSize: 16,
-											fontWeight: '500',
-										},
+										container: Styles.customContainer,
+										title: Styles.customTitle,
+										message: Styles.customMessage,
 									}}
 									ios={{
-										container: {
-											backgroundColor: '#D3D3D3'
-										},
-										title: {
-											color: Colors.black,
-											// fontFamily: fontFamily.Inter,
-											lineHeight: 22,
-											fontSize: 17,
-											fontWeight: '600',
-										},
-										message: {
-											color: Colors.black,
-											// fontFamily: fontFamily.Inter,
-											fontSize: 13,
-											lineHeight: 18,
-											fontWeight: '400',
-										},
+										container: Styles.customiOSContainer,
+										title: Styles.customiOSTitle,
+										message: Styles.customiOSMessage,
 									}}
 									buttons={[
 										{
-											text:  Platform.OS==='android'?'GREAT!':'Great!',
+											text: Platform.OS === 'android' ? 'GREAT!' : 'Great!',
 											func: () => {
 												this.props.showAlertCall(false);
 											},
-											styles: {
-												lineHeight: 22,
-												fontSize: 17,
-												fontWeight: '600',
-											}
+											styles: Styles.buttonStyle
 										}
 									]}
 								/>
@@ -755,7 +724,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 				<View key={data?.item?.id}>
 					<View style={{ opacity: ItemInProgress ? 0.3 : 1.0 }}>
 						<TouchableWithoutFeedback
-							style={{ flex: 1 }}
+							style={Styles.container}
 							disabled={ItemInProgress}
 							onPress={() => {
 								if (DeviceInfo.isTablet()) {
@@ -783,63 +752,33 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 								)}
 
 								<View
-									style={{
+									style={[Styles.messageContainer, {
 										width: frontCellWidth,
 										backgroundColor: DeviceInfo.isTablet() ? (this.state.selectedIndex == data.index ? "#E6F0EF" : "#fff") : "#fff",
-										borderColor: "#DCDCDC",
-										borderWidth: 2,
-										borderTopWidth: 1,
-										borderRadius: 5
-									}}>
+									}]}>
 									<View
-										style={{
-											width: "100%",
-											padding: 16,
-											flexDirection: "row",
-											flex: 1,
-											justifyContent: "space-between"
-										}}>
-										<View style={{ flex: 1, marginLeft: 5 }}>
-											<Text ellipsizeMode="tail" numberOfLines={4} style={{ color: Colors.TextColor, ...fontSize(18), fontWeight: "400" }}>
+										style={Styles.messageSubContainer}>
+										<View style={Styles.mesageSubContainer}>
+											<Text ellipsizeMode="tail" numberOfLines={4} style={Styles.mindpopdesc}>
 												{decode_utf8(data.item.message)}
 											</Text>
 										</View>
 
 										<View
-											style={{
-												height: 64,
-												width: 64,
-												borderRadius: 5,
-												justifyContent: "center",
-												alignItems: "center",
-												backgroundColor: "#F3F3F3"
-											}}>
+											style={Styles.imageContainerStyle}>
 											<Image style={style} resizeMode={"contain"} source={isURL ? { uri: placeHolder } : placeHolder} />
 										</View>
 									</View>
 								</View>
 								{!this.props.isSelectingItem &&
 									<TouchableOpacity onPress={() => this.convertToMemory(data.item.id, decode_utf8(data.item.message), [])}
-										style={{
-											height: 50, width: "100%", backgroundColor: Colors.NewLightThemeColor, position: "absolute", bottom: 0, borderColor: "#DCDCDC",
-											borderWidth: 2,
-											borderTopWidth: 1,
-											borderBottomWidth: 2,
-											justifyContent: "center",
-											borderBottomRadius: 5
-										}}>
-										<Text style={{
-											fontWeight: '500',
-											...fontSize(18),
-											fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-											color: Colors.NewTitleColor,
-											paddingLeft: 15
-										}}>{"Convert to Memory"}</Text>
+										style={Styles.convertoMemoryContainer}>
+										<Text style={Styles.convertoMemory}>{"Convert to Memory"}</Text>
 									</TouchableOpacity>}
 							</View>
 						</TouchableWithoutFeedback>
 					</View>
-					{ItemInProgress && <Text style={{ position: "absolute", width: "100%", textAlign: "center", top: "50%" }}>{"Files are being uploaded..."}</Text>}
+					{ItemInProgress && <Text style={Styles.uploadText}>{"Files are being uploaded..."}</Text>}
 				</View>
 			);
 		} else {
@@ -886,7 +825,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 				}}>
 				<View
 					style={{
-						backgroundColor: DeviceInfo.isTablet() ? Colors.ThemeColor : "#fff",
+						backgroundColor: DeviceInfo.isTablet() ? Colors.ThemeColor :Colors.white,
 						borderRadius: DeviceInfo.isTablet() ? 24 : 5,
 						justifyContent: DeviceInfo.isTablet() ? "center" : "flex-start",
 						alignItems: DeviceInfo.isTablet() ? "center" : "flex-start",
@@ -1023,7 +962,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		if (data.section.title === "0") {
 			return null;
 		} else {
-			return <View style={{ height: 30, width: "100%", backgroundColor: "red" }} />;
+			return <View style={styles.emptyViewStyle} />;
 		}
 	};
 }
@@ -1033,6 +972,11 @@ const styles = EStyleSheet.create({
 		backgroundColor: Colors.white,
 		flex: 1,
 		width: "100%"
+	},
+	emptyViewStyle:{ 
+		height: 30, 
+		width: "100%", 
+		backgroundColor: "red" 
 	},
 	containerSearch: {
 		backgroundColor: Colors.white,

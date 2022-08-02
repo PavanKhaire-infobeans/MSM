@@ -61,6 +61,7 @@ import { AddMindPopStatus, EditMode } from './reducer';
 //@ts-ignore
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
+import Styles from './styles';
 const ScreenWidth = Dimensions.get('window').width;
 
 type MainItem = { [y: string]: string | Array<{ [x: string]: any }> };
@@ -588,16 +589,12 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={Styles.mainContainer}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={Styles.invisibleView}
         />
-        <SafeAreaView style={{ width: '100%', flex: 1, backgroundColor: '#fff' }}>
-          <View style={{ flex: 1 }}>
+        <SafeAreaView style={Styles.containerStyle}>
+          <View style={Styles.mainContainer}>
             <EditHeader
               save={this.props.save}
               updatePrev={this.props.updatePrev}
@@ -732,48 +729,28 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: '#F5F5F5',
-        }}>
+        style={Styles.scrollViewStyle}>
         <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            backgroundColor: '#F3F3F3',
+          style={[Styles.toolBarContainer,{
             justifyContent:
-              this.props.navigation.state.routeName == 'mindPopEdit'
-                ? 'space-between'
-                : 'flex-end',
-            alignItems: 'center',
-            height: 50,
-            paddingLeft: 10,
-            paddingRight: 10,
-            paddingTop: 10,
-            paddingBottom: 10,
-            borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
-            borderTopWidth: 1,
-            ...(DeviceInfo.isTablet() &&
-              this.props.navigation.state.routeName == 'mindPopList'
+              this.props.navigation.state.routeName == 'mindPopEdit' ? 'space-between' : 'flex-end',
+            ...(DeviceInfo.isTablet() && this.props.navigation.state.routeName == 'mindPopList'
               ? {
-                borderLeftColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
+                borderLeftColor: Colors.backrgba,
                 borderLeftWidth: 1,
               }
               : {}),
-          }}>
+          }]}>
           {this.state.bottomToolbar > 0 && (
             <TouchableHighlight
-              underlayColor={'#fffffffff'}
+              underlayColor={Colors.white}
               onPress={() => Keyboard.dismiss()}
-              style={{ position: 'absolute', right: 16, top: -30 }}>
+              style={Styles.keyboardHidContainer}>
               <Image source={keyboard_hide} />
             </TouchableHighlight>
           )}
           {this.props.navigation.state.routeName == 'mindPopEdit' ? (
-            <View style={{ justifyContent: 'flex-start', flexDirection: 'row' }}>
+            <View style={Styles.buttonContainer}>
               {/* <TouchableOpacity
 							onPress={() => {this.cameraAttachmentPress()}}
 							style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
@@ -790,12 +767,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                   Keyboard.dismiss();
                   this.cameraAttachmentPress();
                 }}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                }}>
+                style={Styles.buttonStyle}>
                 <Image source={camera} resizeMode="stretch" />
               </TouchableOpacity>
               <TouchableOpacity
@@ -803,12 +775,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                   Keyboard.dismiss();
                   this.audioAttachmentPress();
                 }}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                }}>
+                style={Styles.buttonStyle}>
                 <Image source={record} resizeMode="stretch" />
               </TouchableOpacity>
               <TouchableOpacity
@@ -816,12 +783,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                   Keyboard.dismiss();
                   this.uploadAttachmentPress();
                 }}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                }}>
+                style={Styles.buttonStyle}>
                 <Image source={icon_upload_file} resizeMode="stretch" />
               </TouchableOpacity>
             </View>
@@ -829,23 +791,11 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           {this.state.id ? (
             <React.Fragment>
               <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
+                style={Styles.converMemoryContainer}>
                 <TouchableOpacity
                   onPress={() => this.convertToMemory(this.state.id)}>
                   <Text
-                    style={{
-                      ...fontSize(18),
-                      marginLeft: 5,
-                      color: Colors.ThemeColor,
-                      ...(this.props.navigation.state.routeName == 'mindPopList'
-                        ? {}
-                        : {}),
-                    }}>
+                    style={Styles.converMemory}>
                     Convert to Memory
                   </Text>
                 </TouchableOpacity>
@@ -877,24 +827,12 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                         ],
                       );
                     }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 44,
-                      height: 44,
-                    }}>
+                    style={Styles.buttonContainerStyle}>
                     <Image source={rubbish} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : (
                   <View
-                    style={{
-                      marginLeft: 10,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'transparent',
-                      width: 44,
-                      height: 44,
-                    }}></View>
+                    style={Styles.emptyContainerStyle}></View>
                 )}
                 {/* {this.state.bottomToolbar > 0 && <TouchableOpacity
 							onPress={() => Keyboard.dismiss()}
@@ -908,52 +846,29 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       </KeyboardAwareScrollView>
     ) : (
       <KeyboardAccessory
-        style={{
-          backgroundColor: '#fff',
-          position: 'absolute',
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderTopWidth: 1,
-          borderBottomWidth: 1,
-          borderColor: 'rgba(0,0,0,0.4)',
-        }}>
+        style={Styles.KeyboardAccessoryStyle}>
         <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            backgroundColor: '#F3F3F3',
+          style={[Styles.toolBarContainer,{
             justifyContent:
-              this.props.navigation.state.routeName == 'mindPopEdit'
-                ? 'space-between'
-                : 'flex-end',
-            alignItems: 'center',
-            height: 50,
-            paddingLeft: 10,
-            paddingRight: 10,
-            paddingTop: 10,
-            paddingBottom: 10,
-            borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
-            borderTopWidth: 1,
+              this.props.navigation.state.routeName == 'mindPopEdit' ? 'space-between' : 'flex-end',
             ...(DeviceInfo.isTablet() &&
               this.props.navigation.state.routeName == 'mindPopList'
               ? {
-                borderLeftColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
+                borderLeftColor: Colors.backrgba,
                 borderLeftWidth: 1,
               }
               : {}),
-          }}>
+          }]}>
           {this.state.bottomToolbar > 0 && (
             <TouchableHighlight
-              underlayColor={'#fffffffff'}
+              underlayColor={Colors.white}
               onPress={() => Keyboard.dismiss()}
-              style={{ position: 'absolute', right: 16, top: -30 }}>
+              style={Styles.keyboardHidContainer}>
               <Image source={keyboard_hide} />
             </TouchableHighlight>
           )}
           {this.props.navigation.state.routeName == 'mindPopEdit' ? (
-            <View style={{ justifyContent: 'flex-start', flexDirection: 'row' }}>
+            <View style={Styles.buttonContainer}>
               {/* <TouchableOpacity
 							onPress={() => {this.cameraAttachmentPress()}}
 							style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
@@ -970,12 +885,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                   Keyboard.dismiss();
                   this.cameraAttachmentPress();
                 }}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                }}>
+                style={Styles.buttonStyle}>
                 <Image source={camera} resizeMode="stretch" />
               </TouchableOpacity>
               <TouchableOpacity
@@ -983,12 +893,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                   Keyboard.dismiss();
                   this.audioAttachmentPress();
                 }}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                }}>
+                style={Styles.buttonStyle}>
                 <Image source={record} resizeMode="stretch" />
               </TouchableOpacity>
               <TouchableOpacity
@@ -996,12 +901,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                   Keyboard.dismiss();
                   this.uploadAttachmentPress();
                 }}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                }}>
+                style={Styles.buttonStyle}>
                 <Image source={icon_upload_file} resizeMode="stretch" />
               </TouchableOpacity>
             </View>
@@ -1009,23 +909,11 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           {this.state.id ? (
             <React.Fragment>
               <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
+                style={Styles.converMemoryContainer}>
                 <TouchableOpacity
                   onPress={() => this.convertToMemory(this.state.id)}>
                   <Text
-                    style={{
-                      ...fontSize(18),
-                      marginLeft: 5,
-                      color: Colors.ThemeColor,
-                      ...(this.props.navigation.state.routeName == 'mindPopList'
-                        ? {}
-                        : {}),
-                    }}>
+                    style={Styles.converMemory}>
                     Convert to Memory
                   </Text>
                 </TouchableOpacity>
@@ -1057,24 +945,12 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                         ],
                       );
                     }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 44,
-                      height: 44,
-                    }}>
+                    style={Styles.buttonStyle}>
                     <Image source={rubbish} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : (
                   <View
-                    style={{
-                      marginLeft: 10,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'transparent',
-                      width: 44,
-                      height: 44,
-                    }}></View>
+                    style={Styles.emptyContainerStyle}></View>
                 )}
                 {/* {this.state.bottomToolbar > 0 && <TouchableOpacity
 							onPress={() => Keyboard.dismiss()}
@@ -1302,22 +1178,16 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
 
   renderHeader = () => {
     return (
-      <View style={{ padding: 15, width: '100%', flex: 1, marginBottom: 20 }}>
+      <View style={Styles.renderHeaderContainer}>
         {this.isEdit ? (
           <View
             onStartShouldSetResponder={() => true}
             onResponderStart={() => this.enterEditMode()}>
             <Text
               multiline={true}
-              style={{
-                paddingTop: 5,
-                paddingBottom: 5,
-                ...fontSize(18),
-                textAlignVertical: 'top',
+              style={[Styles.captureMindPopText,{
                 fontStyle: this.state.content.length > 0 ? 'normal' : 'italic',
-                minHeight: 220,
-                textAlign: 'left',
-              }}>
+              }]}>
               {this.state.content || 'Capture your MindPop...'}
             </Text>
           </View>
@@ -1331,16 +1201,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
             placeholderTextColor="rgba(0, 0, 0, 0.8)"
             value={this.state.content}
             multiline={true}
-            style={{
-              fontFamily: 'Rubik',
-              ...fontSize(18),
-              textAlignVertical: 'top',
+            style={[Styles.textInputStyle,{
               fontStyle: this.state.content.length > 0 ? 'normal' : 'italic',
-              flex: 1,
-              textAlign: 'left',
-              minHeight: 150,
-              paddingBottom: 15,
-            }}
+            }]}
           />
         )}
       </View>
@@ -1354,19 +1217,11 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     }
     return (
       <FlatList
-        style={{
-          width: '100%',
-          maxHeight: 160,
-          backgroundColor: '#fff',
+        style={[Styles.flatListContainer,{
           marginBottom:
-            this.state.bottomToolbar > 0
-              ? this.state.bottomToolbar -
-              (Platform.OS == 'android' ? 230 : 160)
-              : 60,
-          paddingTop: 10,
-          borderTopColor: '#59595931',
-          borderTopWidth: 1,
-        }}
+            this.state.bottomToolbar > 0 ? this.state.bottomToolbar -
+              (Platform.OS == 'android' ? 230 : 160) : 60,
+        }]}
         keyExtractor={(_: any, index: number) => `${index}`}
         keyboardShouldPersistTaps="always"
         horizontal={true}
@@ -1570,46 +1425,22 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
               }}>
               {item.type == 'audios' ? (
                 <ImageBackground
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
+                  style={Styles.imageBackgrounStyle}
                   source={sound_wave}
                   resizeMode="contain">
                   <View
-                    style={{
-                      backgroundColor: Colors.NewTitleColor,
-                      borderRadius: 20,
-                      width: 40,
-                      height: 40,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
+                    style={Styles.imageBackgrounContainerStyle}>
                     <View
-                      style={{
-                        height: 20,
-                        width: 22,
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                      }}>
+                      style={Styles.imageBackgrounsubContainerStyle}>
                       <Image
-                        style={{ height: 18, width: 17.5 }}
+                        style={Styles.audioPlayStyle}
                         source={audio_play}
                       />
                     </View>
                   </View>
                   <Text
                     numberOfLines={1}
-                    style={{
-                      color: '#595959',
-                      ...fontSize(12),
-                      bottom: 5,
-                      position: 'absolute',
-                      alignSelf: 'center',
-                      textAlign: 'center',
-                    }}>{`${item.title ? item.title : item.filename ? item.filename : ''
+                    style={Styles.fileName}>{`${item.title ? item.title : item.filename ? item.filename : ''
                       }`}</Text>
                 </ImageBackground>
               ) : item.type == 'images' ? (
@@ -1620,40 +1451,22 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 />
               ) : item.type == 'files' ? (
                 <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100%',
-                    width: '100%',
-                  }}>
+                  style={Styles.imageBackgrounStyle}>
                   <ImageBackground
-                    style={{ width: '85%', height: '85%', marginLeft: 10 }}
+                    style={Styles.pdfImagebackground}
                     source={pdf_icon}
                     resizeMode="contain"
                   />
                   <Text
                     numberOfLines={1}
-                    style={{
-                      color: '#595959',
-                      ...fontSize(12),
-                      bottom: 5,
-                      position: 'absolute',
-                      alignSelf: 'center',
-                      textAlign: 'center',
-                    }}>
+                    style={Styles.fileName}>
                     {`${item.filename}`}
                   </Text>
                 </View>
               ) : null}
               {found ? (
                 <View
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    borderRadius: 5,
-                    backgroundColor: '#cccccc85',
-                  }}
+                  style={Styles.found}
                 />
               ) : null}
             </View>
@@ -1662,34 +1475,13 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
               this.props.navigation.state.routeName == 'mindPopEdit' ? (
               <TouchableOpacity
                 onPress={() => this._selDelete(item, found)}
-                style={{
-                  width: 36,
-                  height: 36,
-                  position: 'absolute',
-                  right: -3,
-                  top: -3,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
+                style={Styles.deleteContainer}>
                 <View
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderWidth: 2,
-                    borderColor: '#fff',
-                    borderRadius: 16,
-                    backgroundColor: found ? '#ff2315' : '#000000',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
+                  style={[Styles.deleteSubCon,{
+                    backgroundColor: found ? '#ff2315' : Colors.black,
+                  }]}>
                   <Text
-                    style={{
-                      color: Colors.white,
-                      fontWeight: '500',
-                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                      ...fontSize(12),
-                      lineHeight: 14,
-                    }}>{`${found ? '-' : '✕'}`}</Text>
+                    style={Styles.crossText}>{`${found ? '-' : '✕'}`}</Text>
                 </View>
               </TouchableOpacity>
             ) : null}

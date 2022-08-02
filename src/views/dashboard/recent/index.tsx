@@ -302,7 +302,7 @@ const Recent = (props: Props) => {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.mainContainer}>
             <SafeAreaView style={styles.container}>
                 <View style={styles.subcontainer}>
                     {/* {filterView(props.filterClick(ListType.Recent), ListType.Recent)} */}

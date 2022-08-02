@@ -8,7 +8,7 @@ import {
   Colors, fontSize, Size
 } from '../../common/constants';
 import { Account, LoginStore, UserData } from '../../common/loginStore';
-import EStyleSheet from 'react-native-extended-stylesheet';
+import styles from './styles';
 import { connect } from 'react-redux';
 import EventManager from '../../common/eventManager';
 import { logoutMethod, logoutMultiple } from '../../common/webservice/webservice';
@@ -53,21 +53,13 @@ class Menu extends React.Component<MenuProps> {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={styles.mainContainer}>
         <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            paddingTop: 1,
-            backgroundColor: '#fff',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 15,
-          }}>
-          <Text style={{ color: 'black', ...fontSize(16) }}>
+          style={styles.communitiesContainer}>
+          <Text style={styles.communityText}>
             Your communities
           </Text>
-          {false ? (
+          {/* {false ? (
             <TouchableOpacity
               style={{
                 height: 45,
@@ -80,7 +72,7 @@ class Menu extends React.Component<MenuProps> {
                 Edit
               </Text>
             </TouchableOpacity>
-          ) : null}
+          ) : null} */}
         </View>
         <FlatList
           data={[...this.state.list, { type: 'AddCommunity' }]}
@@ -89,25 +81,11 @@ class Menu extends React.Component<MenuProps> {
           renderItem={this.renderRow}
         />
         <View
-          style={{
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 10,
-          }}>
+          style={styles.logoutContainer}>
           <TouchableOpacity
             onPress={() => this._logout()}
-            style={{
-              alignItems: 'center',
-              borderRadius: 5,
-              justifyContent: 'center',
-              height: 45,
-              paddingLeft: 20,
-              paddingRight: 20,
-              backgroundColor: '#9a3427',
-              width: '80%',
-            }}>
-            <Text style={{ color: '#fff' }}>Logout</Text>
+            style={styles.logoutbutton}>
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -198,30 +176,17 @@ class Menu extends React.Component<MenuProps> {
       this.userEmail = data.item.email;
       return (
         <View
-          style={{
-            width: '100%',
-            padding: 15,
+          style={[styles.drawHeaderContainer,{
             paddingTop: data.index == 0 ? 0 : 15,
-            paddingBottom: 7,
-            paddingLeft: 5,
-          }}>
+          }]}>
           <View
-            style={{
+            style={[styles.drawHeaderEmptyContainer,{
               height: data.index != 0 ? 1 : 0,
-              width: '100%',
-              paddingRight: 15,
-              paddingLeft: 15,
-              marginBottom: 10,
-              backgroundColor: '#DDDDDD',
-            }}></View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            }]}></View>
+          <View style={styles.drawerContainer}>
             <Image source={user_drawable}></Image>
             <Text
-              style={{
-                paddingLeft: 10,
-                ...fontSize(14),
-                color: 'rgba(61, 61, 61, 0.8)',
-              }}>
+              style={styles.emailText}>
               {data.item.email}
             </Text>
           </View>
@@ -304,100 +269,6 @@ const mapDispatch = (dispatch: Function) => ({
 });
 export default connect(mapState, mapDispatch)(Menu);
 
-const styles = EStyleSheet.create({
-  $size: Size.byWidth(40),
-  $sizeIcon: Size.byWidth(38),
-  row: {
-    padding: Size.byWidth(10),
-    flexDirection: 'row',
-    flex: 1,
-    margin: 10,
-    backgroundColor: '#F4F1EA',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginBottom: 5,
-  },
-  rowSelected: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    flex: 1,
-    margin: 10,
-    backgroundColor: '#E6F0EF',
-    padding: Size.byWidth(10),
-    borderLeftColor: Colors.ThemeColor,
-    borderLeftWidth: 5,
-    borderRadius: 10,
-    marginBottom: 5,
-  },
-  container: {
-    borderRadius: 5,
-    borderColor: 'rgb(230,230,230)',
-    borderWidth: 2,
-    padding: Size.byWidth(16),
-    flexDirection: 'row',
-    shadowOpacity: 0.75,
-    elevation: 3,
-    shadowRadius: 5,
-    shadowColor: 'rgb(210,210,210)',
-    shadowOffset: { height: 0, width: 1 },
-    width: '100%',
-  },
-
-  actionAdd: {
-    height: 40,
-    width: 40,
-    borderWidth: 1,
-    borderRadius: 20,
-    borderColor: Colors.ThemeColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-
-  innerContainer: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    paddingLeft: Size.byWidth(13),
-  },
-
-  name: {
-    fontStyle: 'normal',
-    ...fontSize(Size.byWidth(16)),
-    color: 'black',
-    textAlign: 'left',
-  },
-
-  url: {
-    fontStyle: 'normal',
-    ...fontSize(Size.byWidth(14)),
-    marginTop: Size.byWidth(5),
-    color: '#595959',
-    textAlign: 'left',
-  },
-  email: {
-    fontStyle: 'normal',
-    ...fontSize(Size.byWidth(11)),
-    marginTop: Size.byWidth(5),
-    marginBottom: Size.byWidth(5),
-    color: '#595959',
-    textAlign: 'left',
-  },
-  image: {
-    width: '$sizeIcon',
-    height: '$sizeIcon',
-    backgroundColor: 'transparent',
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // borderWidth: 2
-  },
-  imageIcon: {
-    width: '$size-8',
-    height: '$size-8',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-  },
-});
 
 type Props = { communityInfo: UserData; style?: any };
 

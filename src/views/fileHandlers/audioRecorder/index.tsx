@@ -17,6 +17,7 @@ import SoundRecorder, {
   ENCODER_AAC, ENCODER_HE_AAC, FORMAT_MPEG4AAC
 } from 'react-native-sound-recorder';
 import { FileType } from '../../../common/database/mindPopStore/mindPopStore';
+import Styles from './styles';
 
 type AudioState =
   | 'none'
@@ -99,6 +100,7 @@ export default class CommonAudioRecorder extends React.Component<
   }
 
   componentDidMount = () => { };
+
   isBackground = (state: AppStateStatus) => {
     if (state == 'background') {
       if (this.player && this.player.isPlaying) {
@@ -449,17 +451,11 @@ export default class CommonAudioRecorder extends React.Component<
   render() {
     return (
       <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: !this.props.selectedItem ? 'white' : '#F3F3F3',
-        }}>
+        style={[Styles.container, {
+          backgroundColor: !this.props.selectedItem ? Colors.white : Colors.SerachbarColor
+        }]}>
         <View
-          style={{
-            position: 'absolute',
-            backgroundColor: 'white',
-            height: '100%',
-            width: '100%',
-          }}
+          style={Styles.ViewFullContainer}
         />
         <StatusBar barStyle="dark-content" />
         {DeviceInfo.isTablet() && !this.props.selectedItem ? (
@@ -469,20 +465,15 @@ export default class CommonAudioRecorder extends React.Component<
               this.state.audioState == 'record-pause'
             }
             onPress={() => this.back()}
-            style={{ padding: 16, width: 100, alignItems: 'center' }}>
-            <Text style={{ ...fontSize(18), color: Colors.ThemeColor }}>
+            style={Styles.cancelContainer}>
+            <Text style={Styles.cancelText}>
               Cancel
             </Text>
           </TouchableOpacity>
         ) : null}
-        <View style={{ flex: 1 }}>
+        <View style={Styles.containerStyle}>
           <View
-            style={{
-              alignSelf: 'center',
-              marginTop: 95,
-              marginBottom: 20,
-              height: 60,
-            }}>
+            style={Styles.sliderContainer}>
             {(this.state.audioState == 'recorded' ||
               this.state.audioState == 'playing' ||
               this.state.audioState == 'paused') &&
@@ -492,7 +483,7 @@ export default class CommonAudioRecorder extends React.Component<
                 minimumTrackTintColor={Colors.ThemeColor}
                 maximumTrackTintColor={'#909090'}
                 thumbImage={require('../../../images/audio_kit/thumb.png')}
-                style={{ width: 300 }}
+                style={Styles.SliderStyle}
                 onValueChange={(value: number) => {
                   this.setState({ sliderValue: value });
                 }}
@@ -503,49 +494,31 @@ export default class CommonAudioRecorder extends React.Component<
             ) : (
               <MainView
                 play={this.state.audioState == 'recording'}
-                style={{ width: 320, height: 38, alignItems: 'center' }}
+                style={Styles.recordingStyle}
               />
             )}
           </View>
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <Text style={{ ...fontSize(24), color: '#595959' }}>
+          <View style={Styles.timeContainer}>
+            <Text style={Styles.timeTextStyle}>
               {this.state.time}
             </Text>
             <TouchableHighlight
               onPress={this.audioActions}
               underlayColor={`${Colors.ThemeColor}ae`}
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
+              style={[Styles.buttonActionContainer, {
                 backgroundColor:
                   this.state.audioState == 'recording'
-                    ? Colors.NewRadColor
-                    : this.state.audioState == 'playing'
-                      ? Colors.NewRadColor
-                      : Colors.ThemeColor,
-                height: Size.byWidth(153),
-                width: Size.byWidth(153),
-                borderRadius: Size.byWidth(153) / 2,
-                marginTop: 30,
-              }}>
-              <View style={{ alignItems: 'center', height: '70%' }}>
+                    ? Colors.NewRadColor : this.state.audioState == 'playing'
+                      ? Colors.NewRadColor : Colors.ThemeColor,
+              }]}>
+              <View style={Styles.recordImageContainer}>
                 <View
-                  style={{
-                    width: 85,
-                    marginTop: 13,
-                    marginBottom: 10,
-                    alignItems: 'center',
-                    height: '60%',
-                    justifyContent: 'center',
-                    paddingLeft:
-                      this.state.audioState == 'recorded' ||
-                        this.state.audioState == 'paused'
-                        ? 10
-                        : 0,
-                  }}>
+                  style={[Styles.recordImageSubContainer, {
+                    paddingLeft: this.state.audioState == 'recorded' || this.state.audioState == 'paused' ? 10 : 0,
+                  }]}>
                   <Image source={this.buttonImage} />
                 </View>
-                <Text style={{ ...fontSize(16), color: '#fff', bottom: 0 }}>
+                <Text style={Styles.buttonTitleStyle}>
                   {this.buttonTitle}
                 </Text>
               </View>
@@ -553,26 +526,17 @@ export default class CommonAudioRecorder extends React.Component<
           </View>
           {this.props.selectedItem ? null : (
             <View
-              style={{
-                position: 'absolute',
-                height: 100,
-                bottom: 0,
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: DeviceInfo.isTablet()
-                  ? 'center'
-                  : this.state.audioState !== 'none' &&
-                    this.state.audioState !== 'recording' &&
-                    this.state.audioState !== 'record-pause'
-                    ? 'space-around'
-                    : 'center',
-              }}>
+              style={[Styles.selectedItemContainer, {
+                justifyContent: DeviceInfo.isTablet() ? 'center'
+                  : this.state.audioState !== 'none' && this.state.audioState !== 'recording' &&
+                    this.state.audioState !== 'record-pause' ? 'space-around' : 'center',
+              }]}>
               {/** If Device is not tablet or state is recording */}
               {!DeviceInfo.isTablet() ||
                 this.state.audioState == 'recording' ||
                 this.state.audioState == 'record-pause' ? (
                 <TouchableOpacity
-                  style={{ padding: 16, width: 150, alignItems: 'center' }}
+                  style={Styles.SoundRecorderContainer}
                   onPress={
                     this.state.audioState == 'recording' ||
                       this.state.audioState == 'record-pause'
@@ -594,10 +558,7 @@ export default class CommonAudioRecorder extends React.Component<
                   <Text
                     style={{
                       ...fontSize(24),
-                      color:
-                        this.state.audioState == 'recording'
-                          ? Colors.NewYellowColor
-                          : '#595959',
+                      color: this.state.audioState == 'recording' ? Colors.NewYellowColor : Colors.newTextColor,
                     }}>
                     {this.state.audioState == 'recording' ||
                       this.state.audioState == 'record-pause'
@@ -611,8 +572,8 @@ export default class CommonAudioRecorder extends React.Component<
                 this.state.audioState !== 'record-pause' ? (
                 <TouchableOpacity
                   onPress={this.openModal}
-                  style={{ padding: 16, width: 150, alignItems: 'center' }}>
-                  <Text style={{ ...fontSize(24), color: Colors.ThemeColor }}>
+                  style={Styles.SoundRecorderContainer}>
+                  <Text style={Styles.savetextStyle}>
                     Save
                   </Text>
                 </TouchableOpacity>
@@ -622,33 +583,16 @@ export default class CommonAudioRecorder extends React.Component<
         </View>
         {this.props.selectedItem ? (
           <View
-            style={{
-              width: '100%',
-              height: 60,
-              flexDirection: 'row',
-              backgroundColor: '#F3F3F3',
-              justifyContent: getValue(this.props.selectedItem, ['isLocal'])
-                ? 'flex-end'
-                : 'space-between',
-              alignItems: 'center',
-              paddingLeft: 10,
-              paddingRight: 10,
-              borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
-              borderTopWidth: 1,
-            }}>
+            style={[Styles.selectedRecordItemContainer,{
+              justifyContent: getValue(this.props.selectedItem, ['isLocal']) ? 'flex-end': 'space-between',
+            }]}>
             {!getValue(this.props.selectedItem, ['isLocal']) ? (
               <TouchableOpacity
                 onPress={() => {
                   this.props.deleteItem();
                   Actions.pop();
                 }}
-                style={{
-                  marginLeft: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 44,
-                  height: 44,
-                }}>
+                style={Styles.selectedRecordItemButton}>
                 <Image source={rubbish} resizeMode="contain" />
               </TouchableOpacity>
             ) : null}
@@ -657,14 +601,8 @@ export default class CommonAudioRecorder extends React.Component<
                 Actions.pop();
                 this.props.reset();
               }}
-              style={{
-                marginLeft: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 80,
-                height: 44,
-              }}>
-              <Text style={{ ...fontSize(18), color: Colors.ThemeColor }}>
+              style={Styles.closeContainer}>
+              <Text style={Styles.cancelText}>
                 Close
               </Text>
             </TouchableOpacity>
@@ -677,27 +615,12 @@ export default class CommonAudioRecorder extends React.Component<
           presentationStyle="overFullScreen"
           visible={this.state.modalVisible}>
           <View
-            style={{
-              height: '100%',
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#0000009f',
-            }}>
+            style={Styles.modalContainer}>
             <View
-              style={{
-                backgroundColor: 'white',
-                height: 200,
-                width: 300,
-                alignItems: 'flex-start',
-                borderRadius: 7,
-                paddingRight: 15,
-                paddingLeft: 15,
-                justifyContent: 'space-around',
-              }}>
+              style={Styles.modalSubContainer}>
               <View
-                style={{ width: '100%', height: 44, justifyContent: 'center' }}>
-                <Text style={{ ...fontSize(16), color: '#1c1c1c' }}>Save as</Text>
+                style={Styles.SaveAsContainer}>
+                <Text style={Styles.buttonTitleStyle}>Save as</Text>
                 <TouchableOpacity
                   onPress={() => {
                     this.setState({
@@ -705,42 +628,18 @@ export default class CommonAudioRecorder extends React.Component<
                       error: { errMsg: '', show: false },
                     });
                   }}
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 22,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    position: 'absolute',
-                    top: -3,
-                    right: -15,
-                  }}>
+                  style={Styles.cancelButton}>
                   <Text
-                    style={{
-                      ...fontSize(15),
-                      color: 'black',
-                      fontWeight: '600',
-                    }}>
+                    style={Styles.crossText}>
                     ✕
                   </Text>
                 </TouchableOpacity>
               </View>
               <View
-                style={{
-                  height: 80,
-                  width: '100%',
-                  flexDirection: 'row',
-                  padding: 10,
-                }}>
-                <View style={{ width: '84%' }}>
+                style={Styles.textInputContainer}>
+                <View style={Styles.textInputSubContainer}>
                   <TextInput
-                    style={{
-                      width: '100%',
-                      borderBottomColor: Colors.ThemeColor,
-                      borderBottomWidth: 2,
-                      height: 45,
-                      ...fontSize(15),
-                    }}
+                    style={Styles.textInputStyle}
                     placeholder="File name"
                     returnKeyType="send"
                     keyboardType="ascii-capable"
@@ -754,45 +653,29 @@ export default class CommonAudioRecorder extends React.Component<
                   />
                   {this.state.error.show ? (
                     <View
-                      style={{
-                        alignItems: 'flex-start',
-                        minHeight: 15,
-                        justifyContent: 'center',
-                      }}>
+                      style={Styles.errorContainer}>
                       <Text
                         numberOfLines={2}
-                        style={{ ...fontSize(11), color: Colors.ErrorColor }}>
+                        style={Styles.errortextStyle}>
                         {'*' + this.state.error.errMsg}
                       </Text>
                     </View>
                   ) : null}
                 </View>
                 <View
-                  style={{
-                    alignItems: 'center',
-                    marginLeft: 6,
-                    height: 45,
-                    justifyContent: 'center',
-                  }}>
-                  <Text style={{ ...fontSize(14), color: 'black' }}>
+                  style={Styles.recordingContainer}>
+                  <Text style={Styles.recordingText}>
                     {this.recording ? this.recording.split('.')[1] : ''}
                   </Text>
                 </View>
               </View>
-              <View style={{ width: '100%', alignItems: 'center' }}>
+              <View style={Styles.saveContainer}>
                 <TouchableOpacity
-                  style={{
-                    borderRadius: 4,
-                    backgroundColor: Colors.ThemeColor,
-                    width: 200,
-                    height: 44,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
+                  style={Styles.saveButton}
                   onPress={() => {
                     this.uploadAudio();
                   }}>
-                  <Text style={{ ...fontSize(15), color: 'white' }}>Save</Text>
+                  <Text style={Styles.saveText}>Save</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -1213,7 +1096,7 @@ export default class CommonAudioRecorder extends React.Component<
   // 					<Text style={{ ...fontSize(18), color: Colors.ThemeColor }}>Cancel</Text>
   // 				</TouchableOpacity>
   // 			) : null}
-  // 			<View style={{ flex: 1 }}>
+  // 			<View style={Styles.containerStyle}>
   // 				<View style={{ alignSelf: "center", marginTop: 95, marginBottom: 20, height: 60 }}>
   // 					{(this.state.audioState == "recorded" || this.state.audioState == "playing" || this.state.audioState == "paused") &&
   // 						!this.props.selectedItem ? (

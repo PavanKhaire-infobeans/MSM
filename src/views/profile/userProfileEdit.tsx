@@ -37,6 +37,7 @@ import TextNew from '../../common/component/Text';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
 import { kSetUserProfileData } from './userProfileWebService';
+import Styles from './styles';
 type State = {
   actionSheet: {
     type: 'none' | 'image' | 'audio';
@@ -449,40 +450,25 @@ export default class UserProfileEdit extends React.Component<Props> {
     let isProfilePicAvailable = this.isProfilePicAvailable;
 
     return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={Styles.safeAreaContextStyle}>
         <NavigationBarForEdit
           rightText="Save"
           saveValues={() => this.saveProfileData()}
           heading={'Basic Info'}
           cancelAction={() => this._closeAction()}></NavigationBarForEdit>
         <SafeAreaView
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#fff',
-          }}>
+          style={[Styles.basicInfoSubContainer,{backgroundColor:Colors.white}]}>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="always"
             keyboardDismissMode="on-drag"
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'transparent',
-            }}
+            style={Styles.KeyboardAwareScrollViewStyle}
             contentContainerStyle={{alignItems: 'center'}}
             bounces={false}>
             {/* <ScrollView contentContainerStyle={{ width: deviceWidth }}> */}
 
             <View
-              style={{
-                width: DeviceInfo.isTablet() ? 320 : '90%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingTop: 40,
-                marginBottom: 20,
-              }}>
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              style={Styles.scrollViewContainer}>
+              <View style={Styles.removeTextButton}>
                 <Image
                   defaultSource={profile_placeholder}
                   source={
@@ -490,7 +476,7 @@ export default class UserProfileEdit extends React.Component<Props> {
                       ? {uri: profilePicURL}
                       : profile_placeholder
                   }
-                  style={{width: 100, height: 100, borderRadius: 50}}
+                  style={Styles.profileImage}
                   onLoad={() => this.setState({hasLoaded: true})}
                   onLoadStart={() => this.setState({hasLoaded: false})}
                 />
@@ -500,15 +486,7 @@ export default class UserProfileEdit extends React.Component<Props> {
               </View>
 
               <TouchableOpacity
-                style={{
-                  height: 33,
-                  width: 200,
-                  margin: 20,
-                  backgroundColor: Colors.NewYellowColor,
-                  borderRadius: 50,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+                style={Styles.changeProfileButton}
                 onPress={() => {
                   this.setState(
                     {
@@ -524,39 +502,26 @@ export default class UserProfileEdit extends React.Component<Props> {
                   );
                 }}>
                 <TextNew
-                  style={{
-                    lineHeight: 20,
-                    ...fontSize(16),
-                    textAlign: 'center',
-                    color: '#fff',
-                  }}>
+                  style={Styles.changeProfile}>
                   {'Change Profile Picture'}
                 </TextNew>
               </TouchableOpacity>
 
               {profilePicURL != '' ? (
                 <TouchableOpacity
-                  style={{justifyContent: 'center', alignItems: 'center'}}
+                  style={Styles.removeTextButton}
                   onPress={() => {
                     this.removeImage();
                   }}>
                   <TextNew
-                    style={{
-                      lineHeight: 20,
-                      ...fontSize(16),
-                      textAlign: 'center',
-                      color: Colors.NewRadColor,
-                    }}>
+                    style={Styles.changeProfile}>
                     {'Remove Photo'}
                   </TextNew>
                 </TouchableOpacity>
               ) : null}
             </View>
             <View
-              style={{
-                width: DeviceInfo.isTablet() ? 320 : '90%',
-                justifyContent: 'center',
-              }}>
+              style={Styles.selectionStyle}>
               {this.generateSectionFields()}
             </View>
           </KeyboardAwareScrollView>

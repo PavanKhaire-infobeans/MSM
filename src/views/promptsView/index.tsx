@@ -20,6 +20,7 @@ import { DefaultDetailsMemory } from '../createMemory/dataHelper';
 import {
   GetPrompts, HidePrompt, kHidePrompt, kPromptsList
 } from '../myMemories/myMemoriesWebService';
+import Styles from './styles';
 type Props = { [x: string]: any };
 type State = { [x: string]: any };
 var promptList: any[] = [];
@@ -173,24 +174,20 @@ export default class PromptsView extends React.Component<State, Props> {
     //it will show indicator at the bottom of the list when data is loading otherwise it returns null
     if (this.state.loadMore == 0) return null;
     return (
-      <View style={{ width: '100%', height: 40, marginTop: 20 }}>
-        <ActivityIndicator color={'white'} />
+      <View style={Styles.footerStyle}>
+        <ActivityIndicator color={Colors.newTextColor} />
       </View>
     );
   };
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={Styles.container}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.timeLinebackground,
-          }}
+          style={Styles.noViewStyle}
         />
-        <SafeAreaView style={{ width: '100%', flex: 1, backgroundColor: Colors.timeLinebackground }}>
-          <View style={{ flex: 1, backgroundColor: Colors.NewThemeColor }}>
+        <SafeAreaView style={Styles.safeAreaContextStyle}>
+          <View style={Styles.subContainer}>
             {/* <NavigationBar title={TabItems.Prompts} /> */}
             <StatusBar
               barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
@@ -254,28 +251,15 @@ export default class PromptsView extends React.Component<State, Props> {
               }}
               maxToRenderPerBatch={50}
               removeClippedSubviews={true}
-              ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+              ItemSeparatorComponent={() => <View style={Styles.separator} />}
               keyExtractor={(_, index: number) => `${index}`}
-              style={{ width: '100%', backgroundColor: Colors.timeLinebackground }}
+              style={Styles.flatlistStyle}
               renderItem={(item: any) => {
                 return (
                   <>
                     <View style={{ height: item?.index == 0 ? 16 : 0 }} />
                     <View
-                      style={{
-                        // margin: 10,
-                        width: Utility.getDeviceWidth() - 48,
-                        borderRadius: 24,
-                        backgroundColor: Colors.white,
-                        height: 350,
-                        flex: 1,
-                        shadowColor: '#073562',
-                        shadowOffset: { height: 1, width: 0 },
-                        borderWidth: 0,
-                        alignSelf: 'center',
-                        shadowOpacity: 0.2,
-                        elevation: 3,
-                      }}>
+                      style={Styles.promptContainer}>
                       {/* <View>
                       <TouchableOpacity
                         underlayColor={'transparent'}
@@ -288,13 +272,17 @@ export default class PromptsView extends React.Component<State, Props> {
                         <Image source={close_big}></Image>
                       </TouchableOpacity>
                     </View> */}
-                      <View style={{ flex: 2, borderTopLeftRadius: 24, borderTopRightRadius: 24, }}>
-                        <ImageBackground borderTopLeftRadius={24} borderTopRightRadius={24} source={item.item.prompt_image ? {uri:item.item.prompt_image} : sampleimage} resizeMode='cover' style={{ flex: 2, height: '100%', width: '100%', borderTopLeftRadius: 24, borderTopRightRadius: 24, alignItems: 'center' }}>
+                      <View style={Styles.imageContainer}>
+                        <ImageBackground 
+                          borderTopLeftRadius={24} borderTopRightRadius={24} 
+                          source={item.item.prompt_image ? {uri:item.item.prompt_image} : sampleimage} 
+                          resizeMode='cover' 
+                          style={Styles.promptImage}>
                           <LinearGradient
                             // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
                             // locations={[0, 0.6]}
                             colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
-                            style={{ height: '100%', width: '100%', borderTopLeftRadius: 24, borderTopRightRadius: 24 }}>
+                            style={Styles.LinearGradientStyle}>
                           </LinearGradient>
                         </ImageBackground>
                       </View>
@@ -309,29 +297,13 @@ export default class PromptsView extends React.Component<State, Props> {
                         {item.item.prompt_category && item.item.prompt_category.length ?
                           item.item.prompt_category.length === 1 ?
                             <Text
-                              style={{
-                                fontSize: 14,
-                                lineHeight: 14,
-                                marginBottom: 22,
-                                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                                fontWeight: '500',
-                                color: Colors.newTextColor,
-                                textAlign: 'center',
-                              }}>
+                              style={Styles.promptLable}>
                               {item.item.prompt_category[0].label}
                             </Text>
                             :
                             item.item.prompt_category.map((category, categoryIndex) => (
                               <Text
-                                style={{
-                                  fontSize: 14,
-                                  lineHeight: 14,
-                                  marginBottom: 22,
-                                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                                  fontWeight: '500',
-                                  color: Colors.newTextColor,
-                                  textAlign: 'center',
-                                }}>
+                                style={Styles.promptCtegory}>
                                 {category.label} {categoryIndex + 1 != item.item.prompt_category.length ? ',' : null}
                               </Text>
                             ))
@@ -341,19 +313,7 @@ export default class PromptsView extends React.Component<State, Props> {
 
                         <TextNew
                           numberOfLines={3}
-                          style={{
-                            fontSize: 22,
-                            lineHeight: 27.5,
-                            color: Colors.newDescTextColor,
-                            fontWeight: '600',
-                            // marginLeft: 20,
-                            flex: 1,
-                            // marginRight: 20,
-                            // marginBottom: 16,
-                            fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
-                            textAlign: 'center',
-                            paddingHorizontal: 15,
-                          }}>
+                          style={Styles.desc}>
                           {item.item.desc}
                         </TextNew>
                         <View>
@@ -362,28 +322,10 @@ export default class PromptsView extends React.Component<State, Props> {
                               this.convertToMemory(item.item.id, item.item.desc)
                             }>
                             <View
-                              style={{
-                                flexDirection: 'row',
-                                backgroundColor: Colors.timeLinebackground,
-                                marginHorizontal: 16,
-                                marginBottom: 24,
-                                height: 40,
-                                borderColor: Colors.bottomTabColor,
-                                borderWidth: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderRadius: 1000,
-                              }}>
+                              style={Styles.addmemoryContainer}>
                               <Image source={plus}></Image>
                               <TextNew
-                                style={{
-                                  fontSize: 14,
-                                  lineHeight: 17,
-                                  marginLeft: 5,
-                                  fontWeight: '500',
-                                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                                  color: Colors.newDescTextColor,
-                                }}>
+                                style={Styles.AnsPrompt}>
                                 Answer Prompt
                               </TextNew>
                             </View>
@@ -401,27 +343,16 @@ export default class PromptsView extends React.Component<State, Props> {
             />
             {this.state.items.length == 0 && (
               <View
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  alignContent: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'white',
-                }}>
+                style={Styles.noPromptContainer}>
                 {this.state.loading ? (
                   <ActivityIndicator
                     color={Colors.newTextColor}
                     size="large"
-                    style={{ flex: 1, justifyContent: 'center' }}
+                    style={Styles.activityStyle}
                   />
                 ) : (
                   <Text
-                    style={{
-                      ...fontSize(16),
-                      fontFamily: fontFamily.Inter,
-                      color: Colors.newDescTextColor,
-                      textAlign: 'center',
-                    }}>
+                    style={Styles.noPrompt}>
                     There are no prompts to display at this moment
                   </Text>
                 )}

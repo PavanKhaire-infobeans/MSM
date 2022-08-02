@@ -26,6 +26,7 @@ import {
 } from '../../images';
 import NavigationBar from '../dashboard/NavigationBar';
 import { ProfileDataModel } from './profileDataModel';
+import Styles from './styles';
 import {
   kGetUserProfileData, PhotoType, RemoveProfilePic, UploadProfilePic, UserProfile
 } from './userProfileWebService';
@@ -161,7 +162,7 @@ export default class Profile extends React.Component<object> {
           this.editForMultipleValues({ heading: heading, fields: fields }, false)
         }
         heading={heading}>
-        <View style={{ paddingLeft: 10, paddingRight: 7 }}>
+        <View style={Styles.cardContainer}>
           {fields.map((field: any, index) => {
             let default_value: string = '';
             let type = field.type;
@@ -234,42 +235,23 @@ export default class Profile extends React.Component<object> {
     // this.props.updateName();
     return (
       <View
-        style={{
-          width: '100%',
-          minHeight: 330,
-          backgroundColor: '#fff',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}>
+        style={Styles.prepareBasicInfoContainer}>
         <ImageBackground
           defaultSource={default_cover_img}
           source={
             isCoverImageAvailable ? { uri: coverImageURL } : default_cover_img
           }
-          style={{ resizeMode: 'stretch', width: '100%', height: 170 }}>
+          resizeMode="stretch"
+          style={Styles.ImageBackgroundStyle}>
           <View
-            style={{
-              width: '100%',
-              height: 170,
-              position: 'absolute',
-              top: 0,
-              backgroundColor: '#cccccc56',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            style={Styles.imageCoontainer}>
             <Image
               source={
                 isCoverImageAvailable ? { uri: coverImageURL } : default_cover_img
               }
-              style={{
-                height: '100%',
-                width: '100%',
-                position: 'absolute',
-                top: 0,
+              style={[Styles.imageSTyle,{
                 resizeMode: isCoverImageAvailable ? 'cover' : 'stretch',
-                backgroundColor: 'transparent',
-              }}
+              }]}
               onLoad={() => this.setState({ hasCoverPicLoaded: true })}
               onLoadStart={() => this.setState({ hasCoverPicLoaded: false })}
             />
@@ -279,14 +261,7 @@ export default class Profile extends React.Component<object> {
           </View>
         </ImageBackground>
         <TouchableOpacity
-          style={{
-            borderRadius: 20,
-            backgroundColor: '#fff',
-            padding: 10,
-            position: 'absolute',
-            top: 10,
-            right: 5,
-          }}
+          style={Styles.editButtonStyle}
           onPress={() => {
             this.setState(
               {
@@ -304,15 +279,7 @@ export default class Profile extends React.Component<object> {
           <Image source={edit_icon} />
         </TouchableOpacity>
         <View
-          style={{
-            flex: 1,
-            width: '100%',
-            marginTop: 0,
-            alignItems: 'flex-end',
-            justifyContent: 'flex-start',
-            paddingTop: 10,
-            paddingRight: 5,
-          }}>
+          style={Styles.editButtonContainer}>
           <TouchableOpacity
             style={cardStyles.buttonStyle}
             onPress={() => {
@@ -325,15 +292,9 @@ export default class Profile extends React.Component<object> {
           </TouchableOpacity>
         </View>
         <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            width: '80%',
-            minHeight: 240,
-            alignItems: 'center',
-          }}>
+          style={Styles.basicInfoContainer}>
           <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            style={Styles.basicInfoSubContainer}>
             <Image
               defaultSource={profile_placeholder}
               source={
@@ -341,7 +302,7 @@ export default class Profile extends React.Component<object> {
                   ? { uri: profilePicURL }
                   : profile_placeholder
               }
-              style={{ width: 150, height: 150, borderRadius: 75 }}
+              style={Styles.profileimage}
               onLoad={() => this.setState({ hasProfilePicLoaded: true })}
               onLoadStart={() => this.setState({ hasProfilePicLoaded: false })}
             />
@@ -350,19 +311,13 @@ export default class Profile extends React.Component<object> {
             ) : null}
           </View>
           <Text
-            style={{
-              fontWeight: '500',
-              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-              marginTop: 7,
-              ...fontSize(18),
-              color: Colors.TextColor,
-            }}>
+            style={Styles.usernameStyle}>
             {' '}
             {this.profileData.basicInfo.first_name}{' '}
             {this.profileData.basicInfo.last_name}
           </Text>
           <Text
-            style={{ ...fontSize(16), marginTop: 7, color: Colors.TextColor }}>
+            style={Styles.birthDate}>
             {' '}
             Birthday:{' '}
             {this.profileData.basicInfo.birthday != undefined
@@ -371,7 +326,7 @@ export default class Profile extends React.Component<object> {
                 : 'None'
               : 'None'}
           </Text>
-          <Text style={{ ...fontSize(16), padding: 5, color: Colors.TextColor }}>
+          <Text style={Styles.relationStatus}>
             {' '}
             Relationship Status:{' '}
             {this.profileData.basicInfo.relationship_status.length > 0
@@ -394,7 +349,7 @@ export default class Profile extends React.Component<object> {
           });
         }}
         heading="Contact Info">
-        <View style={{ paddingLeft: 10, paddingRight: 7 }}>
+        <View style={Styles.cardContainer}>
           <TextWithIcon
             iconUri={icon_location}
             items={[
@@ -430,16 +385,12 @@ export default class Profile extends React.Component<object> {
     //console.log(Utility.isInternetConnected);
     return (
       //showClose={true} hideNavBar={false} navBar={NavigationBar}
-      <View style={{ flex: 1 }}>
+      <View style={Styles.container}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={Styles.noViewStyle}
         />
-        <SafeAreaView style={{ width: '100%', flex: 1, backgroundColor: '#fff' }}>
-          <View style={{ flex: 1, backgroundColor: Colors.NewThemeColor }}>
+        <SafeAreaView style={Styles.safeAreaContextStyle}>
+          <View style={Styles.safeAreaSubContextStyle}>
             <NavigationBar title={'My Profile'} showClose={true} />
             <StatusBar
               barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
@@ -664,23 +615,12 @@ const FriendListView = (props: {
     <View style={cardStyles.container}>
       <View style={cardStyles.headerComponent}>
         <Text
-          style={{
-            fontWeight: '500',
-            fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-            ...fontSize(18),
-          }}>
+          style={Styles.heading}>
           {props.heading}
         </Text>
         <TouchableOpacity onPress={() => props.viewFriendsList}>
           <Text
-            style={{
-              fontWeight: '500',
-              lineHeight: 20,
-              ...fontSize(16),
-              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-              color: Colors.NewTitleColor,
-              paddingRight: 10,
-            }}>
+            style={Styles.ViewAll}>
             View all
           </Text>
         </TouchableOpacity>
@@ -690,34 +630,19 @@ const FriendListView = (props: {
         horizontal
         keyExtractor={(_, index: number) => `${index}`}
         showsHorizontalScrollIndicator={false}
-        style={{ flexDirection: 'row', marginTop: 15 }}
+        style={Styles.friendListStyle}
         onScroll={() => {
           Keyboard.dismiss();
         }}
         renderItem={({ item }) => (
           <View
-            style={{
-              flexDirection: 'column',
-              marginRight: 50,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            style={Styles.friendlistContainer}>
             <Image
               source={item.uri}
-              style={{
-                height: 50,
-                borderRadius: 25,
-                width: 50,
-                overflow: 'hidden',
-              }}
+              style={Styles.friendIcon}
             />
             <Text
-              style={{
-                ...fontSize(16),
-                marginTop: 10,
-                width: 50,
-                textAlign: 'center',
-              }}>
+              style={Styles.friendName}>
               {' '}
               {item.name}{' '}
             </Text>
@@ -738,12 +663,7 @@ const Card = (props: {
     <View style={cardStyles.container}>
       <View style={cardStyles.headerComponent}>
         <Text
-          style={{
-            color: Colors.TextColor,
-            fontWeight: '500',
-            fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-            ...fontSize(18),
-          }}>
+          style={Styles.heading}>
           {props.heading}
         </Text>
         {props.showEdit ? (
@@ -759,41 +679,16 @@ const Card = (props: {
   );
 };
 
-const TextView = (props: { value: String }) => {
-  return (
-    <Text
-      style={{
-        ...fontSize(18),
-        width: '100%',
-        marginBottom: 10,
-        marginRight: 10,
-      }}>
-      {props.value}
-    </Text>
-  );
-};
-
 const TextViewWithHeading = (props: { heading: String; value: String }) => {
   return (
-    <View style={{ marginBottom: 10, width: '100%' }}>
+    <View style={Styles.TextViewWithHeadingContainer}>
       <Text
-        style={{
-          ...fontSize(16),
-          fontWeight: '500',
-          color: Colors.TextColor,
-          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-        }}>
+        style={Styles.headingText}>
         {' '}
         {props.heading}{' '}
       </Text>
       <Text
-        style={{
-          ...fontSize(16),
-          width: '100%',
-          paddingLeft: 3,
-          textAlign: 'justify',
-          color: Colors.TextColor,
-        }}
+        style={Styles.valueText}
         multiLine={true}>
         {props.value}{' '}
       </Text>
@@ -805,14 +700,9 @@ const TextWithIcon = (props: { iconUri: any; items: Array<String> }) => {
   if (props.iconUri != null)
     return (
       <View
-        style={{
-          flexDirection: 'row',
-          marginBottom: 5,
-          marginTop: 10,
-          width: '100%',
-        }}>
+        style={Styles.TextWithIconContainer}>
         <Image
-          style={{ height: 22, width: 22, resizeMode: 'contain' }}
+          style={Styles.TextWithIconStyle}
           source={props.iconUri}
         />
         <View style={{ flexDirection: 'column' }}>
@@ -820,14 +710,7 @@ const TextWithIcon = (props: { iconUri: any; items: Array<String> }) => {
             return (
               <Text
                 key={`${index}`}
-                style={{
-                  ...fontSize(16),
-                  paddingLeft: 6,
-                  paddingTop: 2,
-                  paddingBottom: 5,
-                  paddingRight: 5,
-                  color: Colors.TextColor,
-                }}>
+                style={Styles.information}>
                 {itemInformation}
               </Text>
             );

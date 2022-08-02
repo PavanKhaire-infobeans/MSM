@@ -237,12 +237,12 @@ const FilterScreen = (props: Props) => {
           barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
-        <ScrollView style={[styles.fullFlex,{ marginBottom: 30 }]}>
+        <ScrollView style={styles.scrollViewStyle}>
           <View style={styles.justifyContentSpaceBetween}>
             <View>
               {props.currentScreen == ListType.Timeline && (
-                <View style={{ padding: 16 }}>
-                  <TextNew style={styles.font18Weight500}>
+                <View style={styles.memoryFromContainerStyle}>
+                  <TextNew style={styles.memoryFromTextStyle}>
                     Memories from
                   </TextNew>
                   <MultipleDropDownSelector
@@ -317,11 +317,7 @@ const FilterScreen = (props: Props) => {
                                 globe
                               }
                               resizeMode='contain'
-                              style={{
-                                alignSelf: 'center',
-                                justifyContent: 'center',
-                                marginBottom: 5,
-                              }}/>
+                              style={styles.globeImageStyle}/>
                             <Text
                               style={[
                                 styles.filterText,
@@ -562,7 +558,7 @@ const FilterScreen = (props: Props) => {
                                     borderWidth: obj.value == 1 ? 1 : 0
                                   },
                                 ]}>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View >
                                   {/* <Image
                                       source={obj.value == 1 ? check : plus}
                                       style={{

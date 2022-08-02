@@ -8,6 +8,7 @@ import { ToastMessage } from '../../../common/component/Toast';
 import Pdf from 'react-native-pdf';
 import { Colors, decode_utf8 } from '../../../common/constants';
 import Utility from '../../../common/utility';
+import Styles from './styles';
 type Props = {[x: string]: any};
 type State = {[x: string]: any};
 export default class PDFViewer extends React.Component<Props> {
@@ -37,7 +38,7 @@ export default class PDFViewer extends React.Component<Props> {
     // }
 
     return (
-      <SafeAreaView style={{flex: 1, width: '100%', backgroundColor: Colors.timeLinebackground}}>
+      <SafeAreaView style={Styles.container}>
         <StatusBar barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
         {/* <WebView 
                         automaticallyAdjustContentInsets={false}
@@ -61,7 +62,7 @@ export default class PDFViewer extends React.Component<Props> {
             // setTimeout(() => this.cancelAction(), 3000);
             ToastMessage('This pdf file is corrupted', Colors.ErrorColor);
           }}
-          style={{flex: 1, width: Dimensions.get('window').width}}
+          style={Styles.pdfStyle}
         />
         {/* <View
           style={{

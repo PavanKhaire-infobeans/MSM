@@ -6,6 +6,7 @@ import { SubmitButton } from '../../../common/component/button';
 import Text from '../../../common/component/Text';
 import { Colors, fontFamily, fontSize, Size } from '../../../common/constants';
 import { emptyMindPop as EmptyMindPop } from '../../../images';
+import Styles from './styles';
 
 export default class EmptyView extends Component<{
   resetEdit: Function;
@@ -15,54 +16,32 @@ export default class EmptyView extends Component<{
   render() {
     return (
       <View
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+        style={Styles.emptyViewContainer}>
         <Text
-          style={{paddingTop: 30, color: Colors.TextColor, ...fontSize(18)}}>
+          style={Styles.noMindpop}>
           {' '}
           Currently there are no MindPops.{' '}
         </Text>
         <View
-          style={{
-            alignItems: 'center',
-            padding: 15,
+          style={[Styles.emptyMindpop, {
             paddingBottom: this.bottomPadding,
-          }}>
-          <Image source={EmptyMindPop} style={{alignSelf: 'center'}} />
+          }]}>
+          <Image source={EmptyMindPop} style={{ alignSelf: 'center' }} />
           <Text
-            style={{
-              padding: 20,
-              paddingTop: 22,
-              paddingBottom: 8,
-              textAlign: 'center',
-              ...fontSize(18),
-              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
-              fontWeight:'600',
-              color: Colors.TextColor,
-            }}>
+            style={Styles.whataremindpopText}>
             What are MindPops?
           </Text>
           <Text
-            style={{
-              textAlign: 'center',
-              paddingBottom: 24,
-              ...fontSize(18),
-              fontWeight: '400',
-              color: Colors.TextColor,
-            }}>
+            style={Styles.mindpopdesc}>
             MindPops are inklings of memories that suddenly pop into your head.
             Quickly jot them down to write about later.
           </Text>
           <SubmitButton
-            style={{width: Size.byWidth(246)}}
+            style={{ width: Size.byWidth(246) }}
             text="Create a MindPop"
             onPress={() => {
               this.props.resetEdit();
-              Actions.mindPopEdit({updateList: this.props.updateList});
+              Actions.mindPopEdit({ updateList: this.props.updateList });
             }}
           />
         </View>

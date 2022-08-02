@@ -1,14 +1,60 @@
 import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize } from '../../common/constants';
+import Utility from '../../common/utility';
 
 const Styles = EStyleSheet.create({
 
   flexContainer: {
     flex: 1
   },
+  alertContainer:{
+    backgroundColor: Colors.white
+  },
+  alertTitleStyle:{
+    color: Colors.black,
+    fontSize: 17,
+    fontWeight: '600',
+    lineHeight: 22
+  },
+  alertmessageStyle:{
+    color: Colors.black,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  previewTextStyle:{ 
+    fontSize: 16, 
+    fontFamily: fontFamily.Inter ,
+    color: Colors.black
+  },
+  deleteTextStyle:{ 
+    fontSize: 16, 
+    fontFamily: fontFamily.Inter ,
+    color: Colors.NewRadColor 
+  },
+  alertiOSContainer:{
+    backgroundColor: Colors.grayColor
+  },
+  alertiOSTitleStyle:{
+    color: Colors.black,
+    lineHeight: 22,
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  alertiOSmessageStyle:{
+    color: Colors.black,
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '400',
+  },
+  alerButtonStyle:{
+    lineHeight: 22,
+    fontSize: 17,
+    fontWeight: '600',
+  },
   containerr: {
-    backgroundColor: '#ffffff',//theme.backgroundColor,
+    backgroundColor: Colors.white,//theme.backgroundColor,
     position: 'relative',
     width: '83%',
     alignSelf: 'center',
@@ -26,6 +72,33 @@ const Styles = EStyleSheet.create({
     shadowOpacity: 4,
     shadowRadius: 2,
     elevation: 3,
+  },
+  borderStyle:{ 
+    height: 1, 
+    width: '100%', 
+    backgroundColor: Colors.bottomTabColor 
+  },
+  calendarViewStyle:{
+    minHeight: 400, 
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+    borderWidth: 0.5,
+    backgroundColor: Colors.white,
+    borderColor: Colors.white,
+    position: 'absolute',
+    width: '83%',
+    alignSelf: 'center',
+    top: 100,
+    shadowColor: 'rgba(46, 49, 62, 1)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   toolbarIcons: {
     marginLeft: 5,
@@ -141,7 +214,7 @@ const Styles = EStyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: Colors.backrgba,
-    
+
   },
   fullWidth: {
     width: '100%'
@@ -270,12 +343,14 @@ const Styles = EStyleSheet.create({
     marginLeft: 10,
     flex: 1
   },
+  durationContainer: { marginLeft: 10 },
   fileNameTextStyle: {
     flex: 1,
     ...fontSize(16),
     fontFamily: fontFamily.Inter,
     color: Colors.TextColor,
     marginBottom: 5,
+    paddingRight: 80
   },
   durationTextStyle: {
     ...fontSize(16),
@@ -313,7 +388,7 @@ const Styles = EStyleSheet.create({
   imagebuttonStyle: {
     padding: 15
   },
-  searchListItemStyle:{
+  searchListItemStyle: {
     paddingTop: 10,
     width: '100%',
     paddingBottom: 10,
@@ -321,7 +396,7 @@ const Styles = EStyleSheet.create({
     borderBottomColor: Colors.colorBlack,
     borderBottomWidth: 1,
   },
-  searchListItemContainerStyle:{
+  searchListItemContainerStyle: {
     paddingLeft: 15,
     width: '100%',
     flex: 1,
@@ -329,11 +404,11 @@ const Styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  paddingHorizontal24: {
+  ViewBeforeStyle: {
     paddingHorizontal: 24
   },
   height22: {
-    height:22
+    height: 22
   },
   whenHappenTextStyle: {
     fontSize: 18,
@@ -394,6 +469,17 @@ const Styles = EStyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
+  memoryDescriptionInput:{
+    width: '100%',
+    height: 50,
+    backgroundColor: Colors.white,
+    borderBottomWidth: 0.5,
+    fontWeight: '600',
+    fontSize: 22,
+    lineHeight: 27.5,
+    color: Colors.newTextColor,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
+  },
   createdByUserContainer: {
     width: '100%',
     backgroundColor: Colors.AudioViewBg,
@@ -422,6 +508,7 @@ const Styles = EStyleSheet.create({
     fontFamily: fontFamily.Inter,
     fontWeight: '400',
     color: Colors.newDescTextColor,
+    textAlign: 'center'
   },
   paddingVerticalStyle: {
     paddingTop: 10,
@@ -465,6 +552,14 @@ const Styles = EStyleSheet.create({
   },
   fullFlex: {
     flex: 1
+  },
+  etherpadContainer: {
+    flex: 1,
+    height: '100%',
+    width: Utility.getDeviceWidth() - 24,
+    paddingLeft: 12,
+    borderBottomColor: Colors.white,
+    borderBottomWidth: 2
   },
   emptySafeAreaStyle: {
     width: '100%',
@@ -519,20 +614,20 @@ const Styles = EStyleSheet.create({
     color: Colors.darkGray,
     marginBottom: 10,
   },
-  itemName:{ 
-    ...fontSize(16), 
-    fontWeight: 'normal', 
+  itemName: {
+    ...fontSize(16),
+    fontWeight: 'normal',
     color: Colors.newTextColor
   },
-  addButtonStyle:{
+  addButtonStyle: {
     color: Colors.NewTitleColor,
     ...fontSize(16),
     paddingRight: 15,
   },
-  userCountText:{
+  userCountText: {
     ...fontSize(14),
     fontStyle: 'italic',
-    fontFamily: fontFamily.Inter ,
+    fontFamily: fontFamily.Inter,
     marginBottom: 10,
     paddingTop: 5,
   },
@@ -616,6 +711,23 @@ const Styles = EStyleSheet.create({
     color: Colors.ErrorColor,
     ...fontSize(14),
     fontFamily: fontFamily.Inter
+  },
+  buttonsContainerStyle:{ 
+    flexDirection: 'row', 
+    marginHorizontal: 16, 
+    height: Utility.heightRatio(104), 
+    paddingVertical: 16, 
+    borderTopColor: Colors.white, 
+    borderTopWidth: 2, 
+  },
+  buttonsStyle:{ 
+    flex: 1, 
+    backgroundColor: Colors.white, 
+    borderWidth: 1.5, 
+    borderColor: Colors.bottomTabColor, 
+    borderRadius: 8, 
+    justifyContent: 'space-evenly', 
+    alignItems: 'center' 
   },
   tagContainerStyle: {
     paddingRight: 10,
@@ -757,6 +869,9 @@ const Styles = EStyleSheet.create({
     ...fontSize(19),
     lineHeight: 23.75,
     flex: 1,
+    paddingTop: 300,
+    borderBottomColor: Colors.white,
+    borderBottomWidth: 2,
   },
   etherpadNavHeaderCOntainerStyle: {
     width: '100%',
@@ -872,6 +987,7 @@ const Styles = EStyleSheet.create({
     borderRadius: 8,
     alignContent: 'center',
   },
+  fileContainerSTyle:{ padding: 10 },
 
   rightButtonsBadgeText: {
     ...fontSize(10),
@@ -972,7 +1088,7 @@ const Styles = EStyleSheet.create({
     borderBottomWidth: 0.5,
     alignItems: 'center',
   },
-  marginBottom30: {
+  commonListComponentButtonContainer: {
     marginBottom: 30
   },
   placeholderContainer: {

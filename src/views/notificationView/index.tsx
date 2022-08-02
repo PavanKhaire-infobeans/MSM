@@ -18,6 +18,7 @@ import {
 } from './notificationServices';
 import { AddNewNotification, CurrentList } from './reducer';
 import { GetNotificationAPI } from './saga';
+import Styles from './styles';
 
 type items = {
   title: string;
@@ -90,16 +91,12 @@ class NotificationView extends React.Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={Styles.container}>
         <SafeAreaView
-          style={{
-            width: '100%',
-            flex: 0,
-            backgroundColor: Colors.NewThemeColor,
-          }}
+          style={Styles.noViewStyle}
         />
-        <SafeAreaView style={{width: '100%', flex: 1, backgroundColor: '#fff'}}>
-          <View style={{flex: 1}}>
+        <SafeAreaView style={Styles.safeAreaContextStyle}>
+          <View style={Styles.container}>
             <NavigationBar title={'Notifications'} showClose={true} />
             {/* <NavigationBar title={TabItems.Notifications}/> */}
             <StatusBar
@@ -109,7 +106,7 @@ class NotificationView extends React.Component<Props> {
             <FlatList
               data={this.props.notificationList}
               keyExtractor={(_, index: number) => `${index}`}
-              style={{width: '100%', backgroundColor: 'white'}}
+              style={Styles.flatListStyle}
               renderItem={(item: any) => {
                 return (
                   <DefaultListItem

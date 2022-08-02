@@ -242,42 +242,14 @@ class DashboardIndex extends React.Component<Props>{
                                     title={this.props.showAlertData?.title}
                                     message={this.props.showAlertData?.desc}
                                     android={{
-                                        container: {
-                                            backgroundColor: '#ffffff'
-                                        },
-                                        title: {
-                                            color: Colors.black,
-                                            fontFamily: "SF Pro Text",
-                                            fontSize: 17,
-                                            fontWeight: '600',
-                                            lineHeight: 22
-                                        },
-                                        message: {
-                                            color: Colors.black,
-                                            fontFamily: "SF Pro Text",
-                                            // fontFamily: fontFamily.Inter,
-                                            fontSize: 16,
-                                            fontWeight: '500',
-                                        },
+                                        container: Styles.customContainer,
+                                        title: Styles.customTitle,
+                                        message: Styles.customMessage,
                                     }}
                                     ios={{
-                                        container: {
-                                            backgroundColor: '#D3D3D3'
-                                        },
-                                        title: {
-                                            color: Colors.black,
-                                            // fontFamily: fontFamily.Inter,
-                                            lineHeight: 22,
-                                            fontSize: 17,
-                                            fontWeight: '600',
-                                        },
-                                        message: {
-                                            color: Colors.black,
-                                            // fontFamily: fontFamily.Inter,
-                                            fontSize: 13,
-                                            lineHeight: 18,
-                                            fontWeight: '400',
-                                        },
+                                        container: Styles.customiOSContainer,
+                                        title: Styles.customiOSTitle,
+                                        message: Styles.customiOSMessage,
                                     }}
                                     buttons={[
                                         {
@@ -285,11 +257,7 @@ class DashboardIndex extends React.Component<Props>{
                                             func: () => {
                                                 this.props.showAlertCall(false);
                                             },
-                                            styles: {
-                                                lineHeight: 22,
-                                                fontSize: 17,
-                                                fontWeight: '600',
-                                            }
+                                            styles: Styles.buttonStyle
                                         }
                                     ]}
                                 />
@@ -404,8 +372,8 @@ class DashboardIndex extends React.Component<Props>{
 export const filterView = (onClick: any, screen: any) => {
     return (
         <TouchableHighlight onPress={() => onClick(screen)} underlayColor={Colors.transparent} style={Styles.filterButnContainerStyle}>
-            <View style={[Styles.navigationHeaderContainer, { flexDirection: 'row', paddingRight: 16, paddingLeft: 16 }]}>
-                <TextNew style={{ ...fontSize(16) }}>Filters</TextNew>
+            <View style={Styles.navigationHeaderContainer}>
+                <TextNew style={Styles.filter}>Filters</TextNew>
                 <Image source={filter_icon}></Image>
             </View>
         </TouchableHighlight>

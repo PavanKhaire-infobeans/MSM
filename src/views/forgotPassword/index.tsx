@@ -6,7 +6,7 @@ import {
 import { connect } from 'react-redux';
 import { SubmitButton } from '../../common/component/button';
 import Text from '../../common/component/Text';
-import { styles } from './designs';
+import { styles } from './styles';
 import {
   ForgotPasswordServiceStatus, ForgotPasswordState
 } from './forgotPasswordReducer';
@@ -111,44 +111,27 @@ class ForgotPassword extends React.Component<Props> {
           <KeyboardAwareScrollView
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-            style={{width: '100%', height: '100%'}}>
+            style={styles.scrollViewStyles}>
             <View
-              style={[
-                styles.loginContainer,
-                {
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  marginTop: Size.byHeight(40),
-                },
-              ]}>
+              style={ styles.loginContainer}>
               {/** Commuity banner UI */}
               <View
-                style={{
-                  width: Size.byWidth(310),
-                  justifyContent: 'flex-start',
-                  alignItems: 'flex-start',
-                }}>
-                <View style={{width: '100%'}}>
+                style={styles.communityBanner}>
+                <View style={styles.subcommunityBanner}>
                   {/* <View style={styles.communityBanner}>
 										<CommunityBanner communityInfo={this.selectedCommunity} />
 									</View> */}
 
                   <Text
-                    style={{
-                      paddingBottom: 15,
-                      textAlign: 'center',
-                      fontWeight: '300',
-                      ...fontSize(Size.byWidth(18)),
-                      color: Colors.TextColor,
-                    }}>
+                    style={styles.enterEmailText}>
                     {this.state.isRequestSubmitted
                       ? 'You will soon receive an email with the instructions to reset the password.'
                       : `Please enter your email address to reset your password`}
                   </Text>
                 </View>
-                <View style={{width: '100%'}}>
+                <View style={styles.subcommunityBanner}>
                   {this.state.isRequestSubmitted ? (
-                    <View style={{flex: 1, height: 100}}>
+                    <View style={styles.doneContainer}>
                       <SubmitButton
                         text="Done"
                         onPress={this.onDoneButtonAction.bind(this)}
@@ -159,7 +142,7 @@ class ForgotPassword extends React.Component<Props> {
                       style={styles.keyboardAvoiding}
                       behavior="padding">
                       <TextField
-                        style={{width: '100%', height: 75}}
+                        style={styles.textFieldStyle}
                         errorMessage={this.state.emailError.text}
                         showError={this.state.emailError.error}
                         onSubmitEditing={() => {
@@ -182,38 +165,22 @@ class ForgotPassword extends React.Component<Props> {
                   )}
                 </View>
               </View>
-              <View style={{width: '100%', alignItems: 'center'}}>
+              <View style={styles.resendContainer}>
                 {this.state.isRequestSubmitted && (
-                  <View style={{paddingBottom: 40}}>
+                  <View style={styles.resendSubContainer}>
                     <Text
-                      style={{
-                        paddingTop: 0,
-                        textAlign: 'center',
-                        fontWeight: '400',
-                        ...fontSize(Size.byWidth(16)),
-                      }}>
+                      style={styles.dintReceivedText}>
                       Didn't receive the Email?
                     </Text>
                     <Text
-                      style={{
-                        color: '#595959',
-                        paddingTop: 25,
-                        textAlign: 'center',
-                        fontWeight: '300',
-                        ...fontSize(Size.byWidth(16)),
-                      }}>
+                      style={styles.spamTextStyle}>
                       Please check your spam folder, or
                     </Text>
                     <TouchableOpacity
-                      style={{paddingTop: 3, paddingBottom: 40}}
+                      style={styles.resendButtonStyle}
                       onPress={this.resetButtonAction.bind(this)}>
                       <Text
-                        style={{
-                          color: Colors.NewTitleColor,
-                          textAlign: 'center',
-                          fontWeight: '400',
-                          ...fontSize(Size.byWidth(16)),
-                        }}>
+                        style={styles.resendTextStyle}>
                         Request to resend email.
                       </Text>
                     </TouchableOpacity>

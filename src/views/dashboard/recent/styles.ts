@@ -10,6 +10,7 @@ const Styles = EStyleSheet.create({
         fontFamily: fontFamily.Inter,
         marginBottom: 10
     },
+    mainContainer: { flex: 1 },
     boxShadow: {
         shadowOpacity: 1,
         // shadowColor: '#D9D9D9',

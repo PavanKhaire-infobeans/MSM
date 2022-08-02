@@ -7,6 +7,7 @@ import Text from '../../../common/component/Text';
 import { Colors, fontSize, getValue } from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
 import { rubbish } from '../../../images';
+import Styles from './styles';
 
 type Props = {
   selectedItem: {
@@ -51,14 +52,7 @@ export default class ImagePreview extends React.Component<Props, State> {
 
   private _view: JSX.Element = (
     <View
-      style={{
-        height: '100%',
-        width: '100%',
-        position: 'absolute',
-        backgroundColor: 'transparent',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
+      style={Styles.ActivityContainer}>
       <ActivityIndicator animating={true} size="large" />
     </View>
   );
@@ -77,18 +71,13 @@ export default class ImagePreview extends React.Component<Props, State> {
       : this.props.selectedItem.filePath;
     return (
       <SafeAreaView
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: Colors.NewLightThemeColor,
-        }}>
-        <View style={{flex: 1, width: '100%'}}>
+        style={Styles.safeAreaContainer}>
+        <View style={Styles.subContainer}>
           {this.state.error ? (
             this._errorView
           ) : (
             <Image
-              style={{flex: 1}}
+              style={Styles.container}
               resizeMode="contain"
               source={{uri: uri}}
               onLoad={() => this.setState({hasLoaded: true})}
@@ -101,20 +90,9 @@ export default class ImagePreview extends React.Component<Props, State> {
           {!this.state.hasLoaded ? this._view : null}
         </View>
         <View
-          style={{
-            width: '100%',
-            height: 60,
-            flexDirection: 'row',
-            backgroundColor: Colors.NewLightThemeColor,
-            justifyContent: this.props.selectedItem.isLocal
-              ? 'flex-end'
-              : 'space-between',
-            alignItems: 'center',
-            paddingLeft: 10,
-            paddingRight: 10,
-            borderTopColor: 'rgba(0.0, 0.0, 0.0, 0.25)',
-            borderTopWidth: 1,
-          }}>
+          style={[Styles.buttonContainer,{
+            justifyContent: this.props.selectedItem.isLocal ? 'flex-end' : 'space-between',
+          }]}>
           {this.props.selectedItem.isLocal ? null : (
             <TouchableOpacity
               onPress={() => {
@@ -122,13 +100,7 @@ export default class ImagePreview extends React.Component<Props, State> {
                 Keyboard.dismiss();
                 Actions.pop();
               }}
-              style={{
-                marginLeft: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 44,
-                height: 44,
-              }}>
+              style={Styles.buttonStyle}>
               {this.props.isEditMode ? (
                 <Image source={rubbish} resizeMode="contain" />
               ) : null}
@@ -141,14 +113,8 @@ export default class ImagePreview extends React.Component<Props, State> {
               Actions.pop();
               this.props.reset();
             }}
-            style={{
-              marginLeft: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 80,
-              height: 44,
-            }}>
-            <Text style={{...fontSize(18), color: Colors.NewTitleColor}}>
+            style={Styles.closeButton}>
+            <Text style={Styles.closeStyle}>
               Close
             </Text>
           </TouchableOpacity>

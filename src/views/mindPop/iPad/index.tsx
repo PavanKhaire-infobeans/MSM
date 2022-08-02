@@ -3,6 +3,7 @@ import { SafeAreaView, View } from 'react-native';
 import { connect } from 'react-redux';
 import MindPopEdit from '../edit';
 import MindPopList from '../list';
+import Styles from './styles';
 
 type Props = {
   listCount: number;
@@ -22,7 +23,7 @@ class iPadList extends React.Component<Props> {
       style = {flex: 1};
     }
     return (
-      <SafeAreaView style={{flexDirection: 'row', flex: 1}}>
+      <SafeAreaView style={Styles.ipadListContainer}>
         <View style={style}>
           <MindPopList
             ref={(ref: any) => (this._listRef = ref)}
@@ -34,12 +35,7 @@ class iPadList extends React.Component<Props> {
             <MindPopEdit isEdit={true} {...this.props} />
             {this.props.isSelectingItem ? (
               <View
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  position: 'absolute',
-                  backgroundColor: '#00000034',
-                }}
+                style={Styles.ipadselectingItem}
               />
             ) : null}
           </View>

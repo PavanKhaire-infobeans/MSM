@@ -180,17 +180,13 @@ export default class EtherPadEditing extends React.Component<Props, State> {
           style={Styles.emptySafeAreaStyle}
         />
         <SafeAreaView style={Styles.SafeAreaViewContainerStyle}> */}
-        <View style={[Styles.fullFlex, { height: '100%', width: Utility.getDeviceWidth() - 24, paddingLeft: 12, borderBottomColor: Colors.white, borderBottomWidth: 2 }]}>
+        <View style={Styles.etherpadContainer}>
           {/* <View style={{height : 54, width: "100%", backgroundColor: Colors.ThemeColor}}></View> */}
 
           {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>  */}
           <WebView
             source={{ uri: this.props.padDetails.padUrl }}
-            style={[Styles.webViewStyle, {
-              // color:Colors.AudioViewBg
-              paddingTop: 300, borderBottomColor: Colors.white, borderBottomWidth: 2,
-              // marginBottom: Platform.OS == 'ios' ? this.state.bottomToolbar + 20 : 0,
-            }]}
+            style={Styles.webViewStyle}
             javaScriptEnabled={true}
             domStorageEnabled={true}
             renderLoading={this.renderLoader}
