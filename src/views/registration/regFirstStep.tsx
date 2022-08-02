@@ -174,9 +174,9 @@ export default class RegFirstStep extends Component<Props> {
 			if (form.form.length > 0) {
 				let formLength = form.form.length;
 				return (
-					<View key={form.field_name} style={{ flexDirection: "column", justifyContent: 'flex-start' }}>
+					<View key={form.field_name} style={Styles.getFormEntityStyle}>
 						{/* <Text style={{ marginLeft: 8, color: Colors.newTextColor }}>{form.label.toUpperCase()}</Text> */}
-						<View style={{ flexDirection: "column", marginTop: form.label.toLowerCase().includes("year") ? 0 : -10, width: '100%' }}>
+						<View style={[Styles.getFormEntityContainerStyle,{ marginTop: form.label.toLowerCase().includes("year") ? 0 : -10}]}>
 							{form.form.map((form: FormStruct, index: number) => {
 								return this.getFormEntity(form, { fieldID: `${index}`, isLast: formLength - 1 == index, hasParent: true, parentType });
 							})}
@@ -251,7 +251,7 @@ export default class RegFirstStep extends Component<Props> {
 		// }
 		var txtF = (
 			<View>
-				<Text style={{ marginLeft: 8, marginBottom: 4, color: this.props.isCuebackRegistration ? Colors.newTextColor : Colors.newTextColor }}>{form.text.toUpperCase()}</Text>
+				<Text style={Styles.inputLableStyle}>{form.text.toUpperCase()}</Text>
 				<TextField
 					key={form.field_name}
 					isCuebackRegistration={this.props.isCuebackRegistration}
@@ -382,7 +382,7 @@ export default class RegFirstStep extends Component<Props> {
 		}
 
 		return (
-			<View style={{ height: Dimensions.get('window').height - 100, paddingHorizontal: 24, paddingBottom: 20 + (Platform.OS == "ios" && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom + 50 : 0) }}>
+			<View style={Styles.regFirstStepSubContainer}>
 				<ScrollView
 					// keyboardShouldPersistTaps="always"
 					showsVerticalScrollIndicator={true}
@@ -395,7 +395,7 @@ export default class RegFirstStep extends Component<Props> {
 							return this.getFormEntity(form, { fieldID: `${index}`, isLast: formLength - 1 == index });
 						})} */}
 
-					<View style={{ width: '100%' }}>
+					<View style={Styles.formContainer}>
 
 						{
 							this.state.regFirstStep ?
@@ -557,7 +557,6 @@ export default class RegFirstStep extends Component<Props> {
 					>
 						<View style={[Styles.loginSSOButtonStyle, {
 							// position:'absolute', bottom:58,
-							alignSelf: 'center',
 							backgroundColor: this.state.regFirstStep ? (this.state["field_first_name"] && (this.state["field_last_name"]) && (this.state["emailAddress"]) && (this.state["default_value"])) ? Colors.decadeFilterBorder : Colors.newTextColor : (this.state["password"] && (this.state["repeat_password"])) ? Colors.decadeFilterBorder : Colors.newTextColor,
 							// opacity: this.state.regFirstStep ? (this.state["field_first_name"] && (this.state["field_last_name"]) && (this.state["emailAddress"]) && (this.state["default_value"])) ? 1: 0.5 : (this.state["password"] && (this.state["repeat_password"])) ? 1: 0.5,
 							flexDirection: 'row'
@@ -570,7 +569,7 @@ export default class RegFirstStep extends Component<Props> {
 						</View>
 					</TouchableWithoutFeedback>
 
-					<View style={{ height: 500 }}></View>
+					<View style={Styles.ScrollViewBottomView}></View>
 					{/* <SubmitButton style={{backgroundColor: "#fff"}} text="Join" onPress={this.onSubmit} />									 */}
 				</ScrollView>
 				{/* <BottomPicker
@@ -623,20 +622,20 @@ export default class RegFirstStep extends Component<Props> {
 			<View style={{ flex: 1 }}>
 				{
 					this.props.isCuebackRegistration ? this.renderCueBackRegistertaion() :
-						<SafeAreaView style={{ flex: 1, backgroundColor: "#fff", alignItems: "center" }}>
-							<View style={{ flex: 1, width: "100%", alignItems: "center" }}>
+						<SafeAreaView style={Styles.firstStepContainer}>
+							<View style={Styles.firstStepSubContainer}>
 								<NavigationHeaderSafeArea isRegisteration={true} ref={(ref) => this.navBar = ref} />
 								<StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} backgroundColor={Colors.NewThemeColor} />
 								<View style={{ height: this.state.errorHeight, width: '100%' }}></View>
 								<ScrollView
 									keyboardShouldPersistTaps="always"
-									style={{ width: "100%", height: "100%", backgroundColor: "transparent" }}
+									style={Styles.ScrollViewStyle}
 									contentContainerStyle={{ alignItems: "center" }}
 									bounces={false}>
-									<View style={{ width: "100%", padding: 15 }}>
-										<View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 15 }}>
+									<View style={Styles.registrationStyles}>
+										<View style={Styles.registrationSubStyles}>
 											<Image source={registration_vector} />
-											<Text style={{ fontWeight: '600', ...fontSize(18), fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold, paddingLeft: 10 }}>Registration</Text>
+											<Text style={Styles.RegistrationText}>Registration</Text>
 										</View>
 										{this.form.map((form: FormStruct, index: number) => {
 											return this.getFormEntity(form, { fieldID: `${index}`, isLast: formLength - 1 == index });
@@ -648,8 +647,8 @@ export default class RegFirstStep extends Component<Props> {
 										</View>} */}
 										<SubmitButton text="Send Request to Join" onPress={this.onSubmit} />
 										{/** Join now UI */}
-										<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: Size.byWidth(32) }}>
-											<Text style={{ alignContent: "center", ...fontSize(Size.byWidth(18)) }}>{"Already a member? "}</Text>
+										<View style={Styles.alreadyMemberContainer}>
+											<Text style={Styles.alreadyMemberText}>{"Already a member? "}</Text>
 											<TouchableOpacity
 												onPress={() => {
 													this.props.openLoginDrawer();
@@ -657,14 +656,8 @@ export default class RegFirstStep extends Component<Props> {
 														Actions.pop();
 													}, 500);
 												}}
-												style={{
-													width: "auto",
-													height: Size.byWidth(44),
-													alignItems: "flex-end",
-													justifyContent: "center",
-													backgroundColor: "transparent"
-												}}>
-												<Text style={{ fontWeight: '600', fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold, color: Colors.NewTitleColor, ...fontSize(Size.byWidth(18)) }}>Login</Text>
+												style={Styles.loginButtonContainer}>
+												<Text style={Styles.loginText}>Login</Text>
 											</TouchableOpacity>
 										</View>
 									</View>

@@ -20,6 +20,11 @@ const Styles = EStyleSheet.create({
     flex: 1, 
     backgroundColor: Colors.NewThemeColor 
   },
+  propmptCategoryContainer:{
+    flex: 3,
+    justifyContent: 'space-between',
+    alignContent: 'space-between'
+  },
   separator:{ height: 16 },
   flatlistStyle:{ 
     width: '100%', 
@@ -158,6 +163,56 @@ const Styles = EStyleSheet.create({
     fontWeight: '400', 
     ...fontSize(16), 
     color: Colors.white
+  },
+  filterHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.NewLightCommentHeader,
+    padding: 16,
+  },
+  filterHeaderText: {
+    ...fontSize(16),
+    fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    color: Colors.TextColor,
+  },
+  filterItem: {
+    margin: 10,
+    padding: 12,
+    paddingBottom: 7,
+    paddingTop: 7,
+    borderRadius: 5,
+  },
+  filterText: {
+    ...fontSize(16),
+    fontWeight:'600',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
+    paddingLeft: 6,
+    paddingTop: 2,
+    paddingBottom: 5,
+    paddingRight: 5,
+  },
+  bottomView: {
+    height: Platform.OS == 'ios' ? 70 : 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopWidth: 0.5,
+    borderColor: '#fff',
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 4,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  checkBoximageSTyle:{
+    width: 15,
+    height: 15,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginRight: 5,
+    marginBottom: 3,
   }
 });
 

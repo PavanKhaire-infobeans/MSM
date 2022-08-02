@@ -23,6 +23,7 @@ import { DefaultDetailsMemory } from '../createMemory/dataHelper';
 import { GET_FILTERS_DATA_TIMELINE, ListType } from '../dashboard/dashboardReducer';
 import { UserAccount } from '../menu/reducer';
 import { GetPromptBYPromptId, kGetPromptByID } from '../myMemories/myMemoriesWebService';
+import Styles from './styles';
 export const eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);
 
 type Props = {getUser: Function; user: UserData & {notLoggedIn: boolean}; fetchFiltersDataTimeline:Function};
@@ -289,12 +290,7 @@ class Splash extends Component<Props> {
     let versionNumber = DeviceInfo.getVersion();
     return (
       <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-        }}>
+        style={Styles.container}>
         <StatusBar
           barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           translucent
@@ -306,21 +302,14 @@ class Splash extends Component<Props> {
         /> */}
         <ImageBackground
           source={splash_bg}
-          style={{flex: 1, width: '100%', height: '100%'}}>
+          style={Styles.imageBackGroundStyle}>
           {/*<View style={{ maxWidth: 240, alignItems: "center", alignSelf: 'center', paddingTop : 30 }}>
 					<Image style={{ width: 300, height: 100 }} resizeMode="contain" source={msm_coloured_banner} />
 					<Image style={{ width: 240, height: 65, marginTop: 24, tintColor: "#000"}}resizeMode="center" source={splashText}/>
 		</View>*/}
           <View
-            style={{
-              position: 'absolute',
-              bottom: 15,
-              alignItems: 'center',
-              width: '100%',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-            }}>
-            <Text style={{...fontSize(16), color: '#fff', textAlign: 'center'}}>
+            style={Styles.versionContainer}>
+            <Text style={Styles.Version}>
               Version: {versionNumber}
             </Text>
           </View>

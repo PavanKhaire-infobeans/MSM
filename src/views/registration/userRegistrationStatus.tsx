@@ -10,6 +10,7 @@ import Utility from '../../common/utility';
 import { backBlkBtn } from '../../images';
 import InstanceView from './instanceView';
 import { loginDrawerRef } from './prologue';
+import Styles from './styles';
 
 export default class UserRegistrationStatus extends Component<{
   userDetails: any;
@@ -28,8 +29,8 @@ export default class UserRegistrationStatus extends Component<{
       ]) || '';
     return (
       <SafeAreaView
-        style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
-        <View style={{flex: 1, width: '100%', alignItems: 'center'}}>
+        style={Styles.safeAreaViewContainer}>
+        <View style={Styles.regFirstStepContainer}>
           <NavigationHeaderSafeArea
             heading={`Join ${Account.tempData().name}`}
             showCommunity={false}
@@ -46,53 +47,29 @@ export default class UserRegistrationStatus extends Component<{
             backgroundColor={Colors.NewThemeColor}
           />
           {this.props.isAlreadyRegistered ? (
-            <View style={{width: 310}}>
+            <View style={Styles.ScrollViewStyleContainer}>
               <InstanceView
                 communityInfo={{
                   instanceURL: accData.instanceURL,
                   instanceImage: accData.instanceImage,
                   name: accData.name,
                 }}
-                style={{
-                  borderRadius: 5,
-                  borderBottomColor: 'rgb(230,230,230)',
-                  borderBottomWidth: 2,
-                  borderTopColor: 'rgb(230,230,230)',
-                  borderTopWidth: 2,
-                  marginBottom: 24,
-                  marginTop: 32,
-                }}
+                style={Styles.InstanceViewContainer}
               />
               <Text
-                style={{
-                  lineHeight: 26,
-                  ...fontSize(18),
-                  textAlign: 'center',
-                  color: '#000000',
-                }}>
+                style={Styles.helloText}>
                 {`Hello ${name}, an account with the email `}
                 <Text
-                  style={{fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,fontWeight:'600'}}>
-                  {this.props.userDetails.authorizationInfo.emailAddress}
+                  style={Styles.emailText}>
+                  {this.props?.userDetails?.authorizationInfo?.emailAddress}
                 </Text>
                 {` already exists on ${accData.name}`}
               </Text>
               <Text
-                style={{
-                  lineHeight: 32,
-                  ...fontSize(18),
-                  textAlign: 'center',
-                  color: '#000000',
-                  marginTop: 39,
-                }}>
+                style={Styles.knowpassword}>
                 {`If you know your password,\n`}
                 <Text
-                  style={{
-                    fontWeight:'600',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
-                    ...fontSize(22),
-                    color: Colors.ThemeColor,
-                  }}
+                  style={Styles.loginAccountButton}
                   onPress={() => {
                     loginDrawerRef.refDrawer.expand();
                     Actions.pop();
@@ -101,21 +78,10 @@ export default class UserRegistrationStatus extends Component<{
                 </Text>
               </Text>
               <Text
-                style={{
-                  lineHeight: 32,
-                  ...fontSize(18),
-                  textAlign: 'center',
-                  color: '#000000',
-                  marginTop: 39,
-                }}>
+                style={Styles.forgotten}>
                 {`If you have forgotten your password,\n`}
                 <Text
-                  style={{
-                    fontWeight:'600',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
-                    ...fontSize(22),
-                    color: Colors.ThemeColor,
-                  }}
+                  style={Styles.loginAccountButton}
                   onPress={() => {
                     Actions.replace('forgotPassword');
                   }}>
@@ -126,14 +92,8 @@ export default class UserRegistrationStatus extends Component<{
           ) : (
             <View style={{width: 311, alignItems: 'center'}}>
               <Text
-                style={{
-                  lineHeight: 32,
-                  ...fontSize(18),
-                  textAlign: 'center',
-                  color: '#000000',
-                  marginTop: 32,
-                }}>
-                <Text style={{...fontSize(24), lineHeight: 45}}>
+                style={Styles.knowpassword}>
+                <Text style={Styles.requesSent}>
                   Request Sent
                 </Text>
                 {`\nThank you for your request to join\n${accData.name}.\n${this.props.message}`}
@@ -145,21 +105,9 @@ export default class UserRegistrationStatus extends Component<{
                   Actions.pop();
                 }}
               />
-              <Text
-                style={{
-                  lineHeight: 32,
-                  ...fontSize(18),
-                  textAlign: 'center',
-                  color: '#000000',
-                  marginTop: 39,
-                }}>
+              <Text style={Styles.forgotten}>
                 <Text
-                  style={{
-                    fontWeight:'600',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
-                    ...fontSize(22),
-                    color: Colors.ThemeColor,
-                  }}
+                  style={Styles.loginAccountButton}
                   onPress={() => {
                     Keyboard.dismiss();
                     Actions.pop();

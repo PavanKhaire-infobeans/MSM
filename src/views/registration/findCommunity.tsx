@@ -18,6 +18,7 @@ import Utility from '../../common/utility';
 import { search_illustration } from '../../images';
 import GetFormData from './getFormData';
 import { GetInstances } from './reducer';
+import Styles from './styles';
 
 type Item = {
   InstanceID: string;
@@ -146,21 +147,15 @@ class FindCommunity extends Component<FindProps, State> {
   render() {
     return (
       <SafeAreaView
-        style={{flex: 1, alignItems: 'center', backgroundColor: '#fff'}}>
+        style={Styles.safeAreaViewContainer}>
         <StatusBar
           barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
         {/* <TouchableHighlight onPress={() => Keyboard.dismiss()} underlayColor="#fff" style={{ width: "100%", flex: 1, alignItems: "center" }}> */}
         <View
-          style={{
-            flex: 1,
-            padding: 16,
-            paddingTop: 10,
-            alignItems: 'center',
-            backgroundColor: Colors.transparent
-          }}>
-          <Text style={{...fontSize(15), color: '#777777', paddingBottom: 10}}>
+          style={Styles.communityContainer}>
+          <Text style={Styles.communitytext}>
             Search for your private community by organization or URL
           </Text>
           <SearchBar
@@ -179,18 +174,10 @@ class FindCommunity extends Component<FindProps, State> {
             style={{backgroundColor: Colors.NewLightThemeColor}}
           />
           <View
-            style={{
-              flex: 1,
-              padding: 16,
-              paddingTop: 24,
+            style={[Styles.communityListContainer,{
               width: this.screenSize.width,
-              marginBottom:
-                60 +
-                (Platform.OS == 'ios' &&
-                StaticSafeAreaInsets.safeAreaInsetsBottom
-                  ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10
-                  : 0),
-            }}>
+              marginBottom: 60 + (Platform.OS == 'ios' && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10 : 0),
+            }]}>
             {this.state.isSearching ? (
               <ListItems
                 list={this.filteredList}
@@ -199,12 +186,7 @@ class FindCommunity extends Component<FindProps, State> {
             ) : (
               !this.state.selectedItem && (
                 <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom: 150,
-                  }}>
+                  style={Styles.selectedItemStyle}>
                   <Image source={search_illustration} />
                 </View>
               )
@@ -239,7 +221,7 @@ class ListItems extends React.Component<{
     let style = {};
     return (
       <TouchableHighlight
-        underlayColor={'#fff'}
+        underlayColor={Colors.white}
         onPress={() => {
           this.props.onSelect(rowData);
         }}>
@@ -263,10 +245,10 @@ class ListItems extends React.Component<{
   render() {
     return (
       <View
-        style={{flex: 1, height: '100%', width: '100%'}}
+        style={Styles.findCommunityContainer}
         onMoveShouldSetResponder={() => false}
         onTouchStart={() => Keyboard.dismiss()}>
-        <Text style={{...fontSize(15), color: '#000'}}>
+        <Text style={Styles.communitytext}>
           Select the community you want to log into or send a request to join
         </Text>
         <FlatList
@@ -282,19 +264,9 @@ class ListItems extends React.Component<{
           extraData={this.props}
           ListEmptyComponent={() => (
             <View
-              style={{
-                height: 120,
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+              style={Styles.noCommunityContainer}>
               <Text
-                style={{
-                  fontStyle: 'normal',
-                  ...fontSize(Size.byWidth(16)),
-                  color: 'black',
-                  textAlign: 'left',
-                }}>
+                style={Styles.noCommunity}>
                 No Community Available
               </Text>
             </View>

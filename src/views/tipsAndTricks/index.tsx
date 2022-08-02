@@ -7,6 +7,7 @@ import Text from '../../common/component/Text';
 import { Colors, fontFamily, fontSize } from '../../common/constants';
 import Utility from '../../common/utility';
 import { backBtn } from '../../images';
+import Styles from './styles';
 
 export default class TipsAndTricks extends React.Component<{[x: string]: any}> {
   static navigationOptions = ({
@@ -14,31 +15,13 @@ export default class TipsAndTricks extends React.Component<{[x: string]: any}> {
     navigation: {getParam: (param: string) => () => void};
   }) => {
     return {
-      headerStyle: {
-        backgroundColor: Colors.ThemeColor,
-        height: 54,
-        paddingTop: 1,
-      },
-      headerTintColor: '#fff',
+      headerStyle: Styles.headerStyle,
+      headerTintColor: Colors.white,
       headerLeft: (
         <View
-          style={{
-            width: 158,
-            marginLeft: 8,
-            height: 44,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'flex-end',
-          }}>
+          style={Styles.headerLeftContainer}>
           <TouchableOpacity
-            style={{
-              width: 50,
-              marginLeft: 6,
-              bottom: -2,
-              height: 44,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            style={Styles.backbutton}
             onPress={() => {
               Keyboard.dismiss();
               Actions.pop();
@@ -46,14 +29,7 @@ export default class TipsAndTricks extends React.Component<{[x: string]: any}> {
             <Image source={backBtn} />
           </TouchableOpacity>
           <Text
-            style={{
-              color: Colors.white,
-              ...fontSize(18),
-              fontWeight:'600',
-              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
-              marginLeft: 30,
-              marginBottom: 8,
-            }}>
+            style={Styles.tips}>
             Tips and Tricks
           </Text>
         </View>
@@ -64,12 +40,7 @@ export default class TipsAndTricks extends React.Component<{[x: string]: any}> {
   render() {
     return (
       <SafeAreaView
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: Colors.NewThemeColor,
-        }}>
+        style={Styles.container}>
         <StatusBar
           barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewDarkThemeColor}

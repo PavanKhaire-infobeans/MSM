@@ -1,12 +1,9 @@
 import React from 'react';
 import {
-  Dimensions,
   Image,
-  Platform,
   SafeAreaView,
   ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
   TouchableHighlight,
   View
@@ -15,7 +12,7 @@ import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextNew from '../../common/component/Text';
-import { Colors, fontFamily, fontSize } from '../../common/constants';
+import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import { action_close, check, plus } from '../../images';
@@ -114,34 +111,20 @@ export default class TopicsFilter extends React.Component<State, Props> {
                           this.topicItemClicked(obj.value, obj.checked)
                         }
                         style={[
-                          styles.filterItem,
+                          Styles.filterItem,
                           {
-                            backgroundColor:
-                              obj.checked == 1
-                                ? Colors.selectedFilter
-                                : Colors.filterBG,
+                            backgroundColor: obj.checked == 1 ? Colors.selectedFilter : Colors.filterBG,
                           },
                         ]}>
                         <View style={{flexDirection: 'row'}}>
                           <Image
                             source={obj.checked == 1 ? check : plus}
-                            style={{
-                              width: 15,
-                              height: 15,
-                              resizeMode: 'contain',
-                              alignSelf: 'center',
-                              justifyContent: 'center',
-                              marginRight: 5,
-                              marginBottom: 3,
-                            }}></Image>
+                            style={Styles.checkBoximageSTyle}></Image>
                           <Text
                             style={[
-                              styles.filterText,
+                              Styles.filterText,
                               {
-                                color:
-                                  obj.checked == 1
-                                    ? Colors.TextColor
-                                    : Colors.TextColor,
+                                color: obj.checked == 1 ? Colors.TextColor : Colors.TextColor,
                               },
                             ]}>
                             {obj.label}
@@ -153,7 +136,7 @@ export default class TopicsFilter extends React.Component<State, Props> {
               </View>
             </View>
           </ScrollView>
-          <View style={styles.bottomView}>
+          <View style={Styles.bottomView}>
             <TouchableHighlight
               underlayColor={'none'}
               onPress={() => this.applyFilters()}>
@@ -172,46 +155,3 @@ export default class TopicsFilter extends React.Component<State, Props> {
     );
   }
 }
-const styles = StyleSheet.create({
-  filterHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.NewLightCommentHeader,
-    padding: 16,
-  },
-  filterHeaderText: {
-    ...fontSize(16),
-    fontWeight: '500',
-    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-    color: Colors.TextColor,
-  },
-  filterItem: {
-    margin: 10,
-    padding: 12,
-    paddingBottom: 7,
-    paddingTop: 7,
-    borderRadius: 5,
-  },
-  filterText: {
-    ...fontSize(16),
-    fontWeight:'600',
-    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
-    paddingLeft: 6,
-    paddingTop: 2,
-    paddingBottom: 5,
-    paddingRight: 5,
-  },
-  bottomView: {
-    height: Platform.OS == 'ios' ? 70 : 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTopWidth: 0.5,
-    borderColor: '#fff',
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 4,
-    shadowRadius: 2,
-    elevation: 3,
-  },
-});

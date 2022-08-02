@@ -287,13 +287,7 @@ export default class PromptsView extends React.Component<State, Props> {
                         </ImageBackground>
                       </View>
                       <View
-                        style={{
-                          flex: 3,
-                          justifyContent: 'space-between',
-                          alignContent: 'space-between'
-                        }}>
-
-
+                        style={Styles.propmptCategoryContainer}>
                         {item.item.prompt_category && item.item.prompt_category.length ?
                           item.item.prompt_category.length === 1 ?
                             <Text

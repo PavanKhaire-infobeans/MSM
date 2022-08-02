@@ -4,6 +4,53 @@ import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
 
 const Styles = EStyleSheet.create({
 
+  alertContainer: {
+    backgroundColor: Colors.white
+  },
+  alerContainerTitle: {
+    color: Colors.black,
+    fontFamily: "SF Pro Text",
+    fontSize: 17,
+    fontWeight: '600',
+    lineHeight: 22
+  },
+  alerContainerMessage:{
+    color: Colors.black,
+    fontFamily: "SF Pro Text",
+    // fontFamily: fontFamily.Inter,
+    fontSize: 16,
+    fontWeight: '500',
+},
+alertiOSContainer: {
+  backgroundColor: Colors.grayColor
+},
+alertiOSContainerTitle: {
+  color: Colors.black,
+  // fontFamily: fontFamily.Inter,
+  lineHeight: 22,
+  fontSize: 17,
+  fontWeight: '600',
+},
+alertiOSContainerMessage:{
+  color: Colors.black,
+  // fontFamily: fontFamily.Inter,
+  fontSize: 13,
+  lineHeight: 18,
+  fontWeight: '400',
+},
+alertButn:{
+  lineHeight: 22,
+  fontSize: 17,
+  fontWeight: '600',
+},
+tabBarUnderlineStyle:{ 
+  backgroundColor: Colors.white, 
+  height: 2 
+},
+tabBarTextStyle:{ 
+  ...fontSize(16), 
+  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium 
+},
   flexContainer: {
     flex: 1
   },

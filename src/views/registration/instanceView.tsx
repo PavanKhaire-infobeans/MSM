@@ -12,6 +12,7 @@ import TextNew from '../../common/component/Text';
 import { Colors, fontSize, Size } from '../../common/constants';
 import Utility from '../../common/utility';
 import { checkbox, checkbox_active } from '../../images';
+import styles from './styles';
 
 const InstanceView = ({
   communityInfo,
@@ -32,7 +33,7 @@ const InstanceView = ({
         barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
         backgroundColor={Colors.NewThemeColor}
       />
-      <View style={{flexDirection: 'row', flex: 1}}>
+      <View style={styles.instanceContainer}>
         <View style={styles.imageContainer}>
           <Image source={{uri: imageURL}} style={styles.image} />
         </View>
@@ -44,7 +45,7 @@ const InstanceView = ({
       </View>
       {showSelection && (
         <Image
-          style={{borderRadius: 5, tintColor: Colors.ThemeLight}}
+          style={styles.checkboxStyle}
           source={isSelected ? checkbox_active : checkbox}></Image>
       )}
     </View>
@@ -52,52 +53,3 @@ const InstanceView = ({
 };
 
 export default InstanceView;
-
-const styles = EStyleSheet.create({
-  $size: Size.byWidth(43),
-  container: {
-    padding: Size.byWidth(10),
-    borderWidth: 1,
-    borderColor: '#EAE7DF',
-    flexDirection: 'row',
-    backgroundColor: '#F4F1EA',
-    width: '100%',
-    borderRadius: 8,
-    marginTop: 20,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  innerContainer: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    paddingLeft: Size.byWidth(13),
-    flex: 1,
-  },
-
-  name: {
-    fontStyle: 'normal',
-    ...fontSize(Size.byWidth(16)),
-    color: 'black',
-  },
-
-  url: {
-    fontStyle: 'normal',
-    ...fontSize(Size.byWidth(14)),
-    marginTop: Size.byWidth(5),
-    color: '#595959',
-    textAlign: 'left',
-  },
-  imageContainer: {
-    width: '$size',
-    height: '$size',
-    backgroundColor: Colors.NewLightThemeColor,
-    justifyContent: 'center',
-  },
-
-  image: {
-    width: '$size - 16',
-    height: '$size - 16',
-    alignSelf: 'center',
-  },
-});

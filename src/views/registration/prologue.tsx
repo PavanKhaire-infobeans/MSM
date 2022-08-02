@@ -247,9 +247,9 @@ class Prologue extends Component<Props> {
 
 	render() {
 		let heightScreenHeight = Dimensions.get('window').height
-		console.log("Device interensic height is : ", StaticSafeAreaInsets.safeAreaInsetsBottom);
+		// console.log("Device interensic height is : ", StaticSafeAreaInsets.safeAreaInsetsBottom);
 		return (
-			<View style={{ flex: 1 }}>
+			<View style={Styles.flexContainer}>
 				<StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} backgroundColor={Colors.AudioViewBg} />
 				<View style={{ flex: 1, backgroundColor: Colors.NewThemeColor }}>
 					{/* <ImageBackground source={background_msm} style={{flex: 1, justifyContent: "center"}}>	 */}
@@ -258,25 +258,27 @@ class Prologue extends Component<Props> {
 							// start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
 							// locations={[0, 0.6]}
 							colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.6)']}
-							style={{ flex: 1, height: '100%', width: '100%' }}>
-							<SafeAreaView style={{ flex: 1 }}>
+							style={Styles.findCommunityContainer}>
+							<SafeAreaView style={Styles.flexContainer}>
 
 								{/*<RegistrationBackground/>*/}
 								{/* <NavigationHeaderSafeArea height={0} ref={(ref)=> this.navBar = ref} showCommunity={false} cancelAction={()=> Actions.pop()} 
                                       hideClose={true} showRightText={false} isWhite={false}/>	 */}
 								{/* <View style={{ height: "100%", width: "100%", position: "absolute", top: "50%" }}></View> */}
-								<View style={{ flex: 1, width: "100%", }}>
+								<View style={Styles.prologSubContainer}>
 									{this.state.isRegistrationOpen ?
 										<View>
-											<View style={{ height: 77, width: Utility.getDeviceWidth() - 48, flexDirection: 'row', justifyContent: 'space-between', marginLeft: 24, marginTop: 68 }}>
-												<TouchableOpacity onPress={() => this.setState({ isRegistrationOpen: false })}><Image source={loginBack} /></TouchableOpacity>
-												<Text style={{ fontWeight: '500', ...fontSize(31), lineHeight: 45,fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium, color: Colors.bordercolor, textAlign: 'center' }}>Sign up</Text>
-												<View style={{ width: 40 }} />
+											<View style={Styles.prologHeaderContainer}>
+												<TouchableOpacity onPress={() => this.setState({ isRegistrationOpen: false })}>
+													<Image source={loginBack} />
+												</TouchableOpacity>
+												<Text style={Styles.signUp}>Sign up</Text>
+												<View style={Styles.prologHeaderContainerEmpty} />
 											</View>
 
 											<View style={Styles.separatorHeightStyle16} />
 
-											<View style={{ flex: 1, height: 400, backgroundColor: 'red' }} />
+											<View style={Styles.prologHeaderEmptyView} />
 											<RegFirstStep ref={(ref: any) => { this.regStep = ref }}
 												formList={this.state.registrationFormData} isCuebackRegistration={true}
 												navBar={this} bottomPicker={(isVisible: any) => this.bottomPicker(isVisible)} />
@@ -286,13 +288,12 @@ class Prologue extends Component<Props> {
 											{/* <Image style={{ margin: 16, marginBottom: 0 }} source={recordRegistration}></Image> */}
 
 											{/* <Text style={{ padding: 16, paddingBottom: 10, fontWeight: '500', ...fontSize(24), color: Colors.TextColor }}>'New to{"\n"}My Stories Matter?'</Text> */}
-											<View style={{ height: Utility.getDeviceHeight() * 0.36, width: Utility.getDeviceWidth() - 48, justifyContent: 'center', alignItems: 'center', marginLeft: 24, marginTop: 68 }}>
-
-												<Text style={{ fontWeight: '500', ...fontSize(31), lineHeight: 45,fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium, color: Colors.bordercolor, textAlign: 'center' }}>Ready to start reminiscing?</Text>
+											<View style={Styles.ReadyContainer}>
+												<Text style={Styles.readyText}>Ready to start reminiscing?</Text>
 											</View>
 											<View style={Styles.separatorHeightStyle16} />
 
-											<View style={{ width: Utility.getDeviceWidth() - 48, marginLeft: 24 }}>
+											<View style={Styles.prologSubContainerStyle}>
 												{Platform.OS == "ios" && (Platform.Version >= 13 || Platform.Version >= "13") &&
 													<TouchableHighlight underlayColor={"#ffffff00"} onPress={() => { EventManager.callBack(kRegSignUp, loginType.appleLogin) }}>
 														<View style={Styles.loginSSOButtonStyle}>
@@ -311,7 +312,7 @@ class Prologue extends Component<Props> {
 												</TouchableHighlight>
 
 												<View style={Styles.separatorHeightStyle32} />
-												<View style={{ width: '100%', alignItems: 'center' }}>
+												<View style={Styles.orContainer}>
 													<Text style={[CommonTextStyles.fontWeight400Size19Inter, Styles.ssoTextStyle]}>or</Text>
 												</View>
 												<View style={Styles.separatorHeightStyle32} />
@@ -333,7 +334,7 @@ class Prologue extends Component<Props> {
 													Actions.login()
 													// Actions.push("login")
 												}} >
-													<View style={[Styles.loginSSOButtonStyle, { borderColor: Colors.bordercolor, borderWidth: 1, backgroundColor: Colors.transparent }]}>
+													<View style={[Styles.loginSSOButtonStyle, Styles.loginContainer]}>
 														<Text style={[CommonTextStyles.fontWeight400Size19Inter, Styles.ssoTextStyle]}>Login</Text>
 													</View>
 												</TouchableWithoutFeedback>
