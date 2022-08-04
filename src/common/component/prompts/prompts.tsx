@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  Dimensions, TouchableHighlight,
+  Dimensions, FlatList, TouchableHighlight,
   View
 } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import Text from '../Text';
 // import Carousel from 'react-native-reanimated-carousel';
-import styles from './styles';
+import Styles from './styles';
 type Props = {
   data: any;
   onAddToMemory?: (activeIndex: any) => void;
@@ -56,56 +56,69 @@ export default class Prompts extends React.Component<Props, State> {
       <Pagination
         dotsLength={this.props.data.length}
         activeDotIndex={activeSlide}
-        containerStyle={styles.paginationContainerStyle}
-        dotStyle={styles.dotStyle}
+        containerStyle={Styles.paginationContainerStyle}
+        dotStyle={Styles.dotStyle}
         inactiveDotOpacity={0.4}
         inactiveDotScale={0.7}
       />
     );
   }
 
+  renderAppIntro = (item: any) => {
+    item = item.item;
+    return (
+      <View
+        style={Styles.carouselContainer}>
+        <Text
+          style={Styles.promptTextStyle}
+          numberOfLines={3}>
+          {item?.prompt_title}
+        </Text>
+      </View>
+    )
+  }
+
+  onScroll(e: any) {
+    let page = Math.ceil(e.nativeEvent.contentOffset.x / (Dimensions.get('window').width-48));
+    if (page !== this.state.activeIndex) {
+      if (page >= this.props.data.length) {
+        page = this.props.data.length - 1;
+      }
+      this.setState({
+        activeIndex: page
+      })
+    }
+  }
+
   render() {
     return (
       <View>
-        <Carousel
-          ref={(ref: any) => (promptCarousel = ref)}
-          data={this.props.data}
-          extraData={this.state}
-          removeClippedSubviews={false}
-          renderItem={(item: any) => (
-            <View
-              style={styles.carouselContainer}>
-              <Text
-                style={styles.promptTextStyle}
-                numberOfLines={3}>
-                {item.item?.prompt_title}
-              </Text>
-            </View>
-          )}
-          onSnapToItem={(i: any) => this.setState({ activeIndex: i })}
-          // initialNumToRender={this.props.data?.length}
-          sliderWidth={Dimensions.get('window').width - 48}
-          itemWidth={Dimensions.get('window').width - 48}
-          slideStyle={{ width: Dimensions.get('window').width - 48, flex: 1 }}
-          inactiveSlideOpacity={1}
-          inactiveSlideScale={1}
-          useScrollView={false}
-        />
+        <FlatList
+              data={this.props.data}
+              initialNumToRender={this.props.data.length}
+              renderItem={this.renderAppIntro}
+              horizontal
+              pagingEnabled={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(_item, index) => index + ''}
+              onScroll={(e) => this.onScroll(e)}
+            />
         {this.pagination}
         <TouchableHighlight
           underlayColor={'none'}
           onPress={() => {
-            this.props.onAddToMemory(this.state.activeIndex);
+            const {activeIndex} = this.state
+            this.props.onAddToMemory(activeIndex);
             if (
-              this.state.activeIndex == this.props.data.length - 1 &&
-              this.state.activeIndex != 0
+              activeIndex == this.props.data.length - 1 &&
+              activeIndex != 0
             ) {
-              this.setState({ activeIndex: this.state.activeIndex - 1 });
+              this.setState({ activeIndex: activeIndex - 1 });
             }
           }}>
           <View
-            style={styles.buttonContainer}>
-            <Text style={styles.buttonTextColor}>
+            style={Styles.buttonContainer}>
+            <Text style={Styles.buttonTextColor}>
               Add your memory
             </Text>
           </View>

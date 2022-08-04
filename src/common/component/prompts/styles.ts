@@ -1,3 +1,4 @@
+import { Dimensions } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontSize, fontFamily } from '../../constants';
 
@@ -14,17 +15,9 @@ const Styles = EStyleSheet.create({
     marginHorizontal: -5,
     backgroundColor: Colors.white,
   },
-  // carousel: {
-  //   height: 150,
-  //   backgroundColor: 'white',
-  //   borderWidth: 1,
-  //   borderColor: 'red',
-  // },
   carouselContainer: {
-    flexGrow: 0,
-    width: '100%',
-    paddingHorizontal: 16,
-    paddingTop: 0,
+    width: Dimensions.get('screen').width-50,
+    paddingHorizontal:16,
     alignItems: 'center',
     height: 100,
     justifyContent: 'center',
@@ -37,7 +30,7 @@ const Styles = EStyleSheet.create({
     paddingVertical: 10 // for custom animation
   },
   promptTextStyle: {
-    margin: 1,
+    width:'100%',
     textAlign: 'center',
     ...fontSize(22),
     fontFamily: fontFamily.Inter,

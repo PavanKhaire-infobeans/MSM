@@ -189,7 +189,7 @@ export default class AppIntro extends React.Component {
               renderItem={this.renderAppIntro}
               horizontal
               pagingEnabled={true}
-              showsHorizontalScrollIndicator={true}
+              showsHorizontalScrollIndicator={false}
               keyExtractor={(_item, index) => index + ''}
               onScroll={(e) => this.onScroll(e)}
             />

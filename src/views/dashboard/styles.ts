@@ -55,11 +55,9 @@ const Styles = EStyleSheet.create({
     fontWeight: '600',
   },
   animatedViewContainer: {
-    flex: 1,
-    width: "100%",
+    width: Dimensions.get('screen').width,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 0
   },
   appIntroContainer: {
     flex: 1,
