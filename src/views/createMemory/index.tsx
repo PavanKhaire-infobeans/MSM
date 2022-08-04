@@ -10,7 +10,6 @@ import DeviceInfo from 'react-native-device-info';
 import { Actions } from 'react-native-router-flux';
 import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-// @ts-ignore
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Text from '../../common/component/Text';
 import {
@@ -242,7 +241,8 @@ class CreateMemory extends React.Component<Props> {
     padDetails: {},
     showCustomAlert: false,
     showCalender: false,
-    showEtherPad: true
+    showEtherPad: true,
+    placeholder: "Tap to title your memory..."
   };
 
   isEdit: boolean = false;
@@ -1583,15 +1583,18 @@ class CreateMemory extends React.Component<Props> {
   viewBeforList = () => {
     return (
       // onStartShouldSetResponder={() => true}
-      <View >
-        {this.state.isCreatedByUser ? (
-          <View style={[styles.ViewBeforeStyle]}>
-            {/* <Text
+      <View style={Styles.viewBeforListContainerStyle}>
+        <View >
+
+          {this.state.isCreatedByUser ?
+            (
+              <View style={styles.ViewBeforeStyle}>
+                {/* <Text
               style={styles.whenHappenTextStyle}>
               {'When did it happen? (Approximate)'}
               <Text style={{ color: Colors.ErrorColor }}>{' *'}</Text>
             </Text> */}
-            {/* <View
+                {/* <View
               style={styles.createLableSelectorContainerStyle}
               onStartShouldSetResponder={() => true}>
               {this.createLabelSelector(this.state.year, 10, 2, 'year')}
@@ -1608,7 +1611,7 @@ class CreateMemory extends React.Component<Props> {
               {this.state.dateError}
             </Text> */}
 
-            {/* <Text
+                {/* <Text
               style={styles.whereHappenTextStyle}>
               {'Where did it happen?'}
               <Text style={{ color: Colors.ErrorColor }}>{' *'}</Text>
@@ -1637,7 +1640,7 @@ class CreateMemory extends React.Component<Props> {
               showCancelClearButton={false}
               value={this.state.locationText}
             /> */}
-            {/* {this.props.locationList.length > 0 && (
+                {/* {this.props.locationList.length > 0 && (
               <FlatList
                 keyExtractor={(_, index: number) => `${index}`}
                 keyboardShouldPersistTaps={'handled'}
@@ -1658,40 +1661,42 @@ class CreateMemory extends React.Component<Props> {
             <Text style={styles.locationErrorTextStyle}>
               {this.state.locationError}
             </Text> */}
-            {
-              this.props.memoryDescription && (this.props.memoryDescription != '') && (this.state.memory_date != "") ?
-                <>
-                  <TextInput
-                    style={[styles.memoryDescriptionInput, {
-                      borderBottomColor: this.state.titleError.length > 0 ? Colors.ErrorColor : Colors.white,
-                      borderBottomWidth: this.state.titleError.length > 0 ? 0.5 : 0,
-                    }]}
+                {
+                  <>
+                    <TextInput
+                      style={[styles.memoryDescriptionInput, {
+                        borderBottomColor: this.state.titleError.length > 0 ? Colors.ErrorColor : Colors.white,
+                        borderBottomWidth: this.state.titleError.length > 0 ? 0.5 : 0,
+                      }]}
 
-                    value={this.state.title}
-                    maxLength={250}
-                    multiline={false}
-                    onChangeText={(text: any) => {
-                      this.setState({ title: text, titleError: '' });
-                    }}
-                    placeholder="Tap to title your memory..."
-                    placeholderTextColor={Colors.memoryTitlePlaceholderColor}></TextInput>
+                      value={this.state.title}
+                      maxLength={250}
+                      multiline={false}
+                      onChangeText={(text: any) => {
+                        this.setState({ title: text, titleError: '' });
+                      }}
+                      placeholder={this.state.placeholder}
+                      placeholderTextColor={Colors.memoryTitlePlaceholderColor}></TextInput>
 
-                  <Text style={Styles.errortextStyle}>
-                    {this.state.titleError}
-                  </Text>
-                </>
-                :
-                null
-            }
-          </View>
-        ) : (
-          null
-          // this.ownersViewForCollaborators()
-        )}
-        <View
-          style={{ height: Utility.getDeviceHeight() * 0.5 }}>
-          {/* styles.createdByUserContainer */}
-          {/* {!this.state.isCreatedByUser && (
+                    <Text style={Styles.errortextStyle}>
+                      {this.state.titleError}
+                    </Text>
+                  </>
+
+                }
+              </View>
+            )
+            :
+            (
+              <View style={styles.ViewBeforeStyle}>
+                <Text style={styles.memoryDescriptionInput}>{this.state.title}</Text>
+              </View>
+              // this.ownersViewForCollaborators()
+            )}
+          <View
+            style={Styles.etherPadStyle}>
+            {/* styles.createdByUserContainer */}
+            {/* {!this.state.isCreatedByUser && (
             <View>
               <Text
                 style={styles.titletextContainer}>
@@ -1700,34 +1705,34 @@ class CreateMemory extends React.Component<Props> {
               <Border />
             </View>
           )} */}
-          {/* <Text
+            {/* <Text
             style={styles.memoryDescriptionTextStyle}
             numberOfLines={3}
             ellipsizeMode={'tail'}>
             {this.props.memoryDescription}
           </Text> */}
-          {/* <View style={styles.ViewBeforeStyle}> */}
-          {
-            this.props.editMode || this.state.showEtherPad ?
-              <EtherPadEditing
-                editMode={this.props.editMode}
-                title={this.state.title.trim()}
-                padDetails={this.state.padDetails}
-                updateContent={this.setEtherPadContent.bind(this)}
-                inviteCollaboratorFlow={this.inviteCollaboratorFlow.bind(this)}
-              />
-              :
-              <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    showEtherPad: true
-                  })
-                }>
-                <Text style={Styles.etherpadTextInputStyle}>{"|Tap to start writing..."}</Text>
-              </TouchableOpacity>
-          }
-          {/* </View> */}
-          {/* <TouchableOpacity
+            {/* <View style={styles.ViewBeforeStyle}> */}
+            {
+              this.props.editMode || this.state.showEtherPad ?
+                <EtherPadEditing
+                  editMode={this.props.editMode}
+                  title={this.state.title.trim()}
+                  padDetails={this.state.padDetails}
+                  updateContent={this.setEtherPadContent.bind(this)}
+                  inviteCollaboratorFlow={this.inviteCollaboratorFlow.bind(this)}
+                />
+                :
+                <TouchableOpacity
+                  onPress={() =>
+                    this.setState({
+                      showEtherPad: true
+                    })
+                  }>
+                  <Text style={Styles.etherpadTextInputStyle}>{"|Tap to start writing..."}</Text>
+                </TouchableOpacity>
+            }
+            {/* </View> */}
+            {/* <TouchableOpacity
             onPress={() =>
               Actions.push('etherPadEditing', {
                 title: this.state.title.trim(),
@@ -1742,104 +1747,106 @@ class CreateMemory extends React.Component<Props> {
             </Text>
           </TouchableOpacity> */}
 
+          </View>
+
+          {Platform.OS === 'android' && this.state.showCalender && <DateTimePicker
+            isVisible={this.state.showCalender}
+            onCancel={() => {
+              this.setState({ showCalender: false });
+              //console.log("cancelled")
+            }}
+            onDateSelection={(date: any) => {
+              this.setState({
+                showCalender: false,
+                memory_date: moment(date).format('DD/MM/YYYY')
+              })
+            }}
+          />}
         </View>
 
-        {Platform.OS === 'android' && this.state.showCalender && <DateTimePicker
-          isVisible={this.state.showCalender}
-          onCancel={() => {
-            this.setState({ showCalender: false });
-            //console.log("cancelled")
-          }}
-          onDateSelection={(date: any) => {
-            this.setState({
-              showCalender: false,
-              memory_date: moment(date).format('DD/MM/YYYY')
-            })
-          }}
-        />}
-        {
+        {/* {
           this.state.bottomToolbar ?
             null
-            :
-            <View style={Styles.buttonsContainerStyle}>
-              {this.props.memoryDescription && (this.props.memoryDescription != '') ?
-                <>
-                  <TouchableOpacity
-                    style={Styles.buttonsStyle}
-                    onPress={() => {
-                      // if (Platform.OS === 'android') {
-                      //   DateTimePickerAndroid.open(this.dateOptions);
-                      // } else {
-                      this.setState({
-                        showCalender: true
-                      })
-                      // }
-                    }}>
-                    <Image source={calendarWrite} />
-                    <Text
-                      style={styles.editDescriptionTextStyle}>
-                      Date
-                    </Text>
-                  </TouchableOpacity>
-                  <View style={{ width: 8 }} />
-                </>
-                :
-                null
-              }
+            : */}
+        <View style={Styles.buttonsContainerStyle}>
+          {this.props.memoryDescription && (this.props.memoryDescription != '') ?
+            <>
               <TouchableOpacity
                 style={Styles.buttonsStyle}
                 onPress={() => {
-                  // CaptureImage(this.fileCallback);
-                  PickImage(this.fileCallback);
+                  // if (Platform.OS === 'android') {
+                  //   DateTimePickerAndroid.open(this.dateOptions);
+                  // } else {
+                  this.setState({
+                    showCalender: true
+                  })
+                  // }
                 }}>
-                <Image source={image} />
+                <Image source={calendarWrite} />
                 <Text
                   style={styles.editDescriptionTextStyle}>
-                  Image
+                  Date
                 </Text>
               </TouchableOpacity>
-
               <View style={{ width: 8 }} />
-              <TouchableOpacity
-                style={[Styles.buttonsStyle, { backgroundColor: Colors.decadeFilterBorder }]}
-                onPress={() => {
-                  // if (this.props.padDetails?.padId) {
-                  this.setEtherPadContent('get', '', this.state.padDetails.padId);
-                  // }
-                  if ((this.state.description != '') && (this.state.memory_date == "")) {
-                    ToastMessage('Please select Date first', Colors.ErrorColor);
-                  }
+            </>
+            :
+            null
+          }
+          <TouchableOpacity
+            style={Styles.buttonsStyle}
+            onPress={() => {
+              // CaptureImage(this.fileCallback);
+              PickImage(this.fileCallback);
+            }}>
+            <Image source={image} />
+            <Text
+              style={styles.editDescriptionTextStyle}>
+              Image
+            </Text>
+          </TouchableOpacity>
 
-                  if ((this.state.title != '') && (this.state.memory_date != '') && (this.state.description != '')) {
-                    Keyboard.dismiss();
-                    this.hideMenu();
-                    this.setState({
-                      actionSheet: {
-                        title: 'Memory Draft',
-                        type: this.kSaveAction,
-                        list: publishActions,
-                      }
-                    }, () => {
-                      if (Platform.OS == 'ios') {
-                        this._actionSheet && this._actionSheet.current && this._actionSheet.current.showSheet();
-                      }
-                      else {
-                        this.setState({
-                          showActionAndroid: true
-                        });
-                      }
-                    })
+          <View style={{ width: 8 }} />
+          <TouchableOpacity
+            style={[Styles.buttonsStyle, { backgroundColor: Colors.decadeFilterBorder }]}
+            onPress={() => {
+              // if (this.props.padDetails?.padId) {
+              this.setEtherPadContent('get', '', this.state.padDetails.padId);
+              // }
+              if ((this.state.description != '') && (this.state.memory_date == "")) {
+                ToastMessage('Please select Date first', Colors.ErrorColor);
+              }
+
+              if ((this.state.title != '') && (this.state.memory_date != '') && (this.state.description != '')) {
+                Keyboard.dismiss();
+                this.hideMenu();
+                this.setState({
+                  actionSheet: {
+                    title: 'Memory Draft',
+                    type: this.kSaveAction,
+                    list: publishActions,
                   }
-                }}>
-                <Image source={arrowRight} />
-                <Text
-                  style={[styles.editDescriptionTextStyle, { color: Colors.white }]}>
-                  Next
-                </Text>
-              </TouchableOpacity>
-              {/* <View style={{ width: 8 }} /> */}
-            </View>
-        }
+                }, () => {
+                  if (Platform.OS == 'ios') {
+                    this._actionSheet && this._actionSheet.current && this._actionSheet.current.showSheet();
+                  }
+                  else {
+                    this.setState({
+                      showActionAndroid: true
+                    });
+                  }
+                })
+              }
+            }}>
+            <Image source={arrowRight} />
+            <Text
+              style={[styles.editDescriptionTextStyle, { color: Colors.white }]}>
+              Next
+            </Text>
+          </TouchableOpacity>
+          {/* <View style={{ width: 8 }} /> */}
+        </View>
+        {/* } */}
 
         {/* {this.state.itemList.length > 0 && (
           <View style={{ marginTop: 15 }}>
@@ -1957,7 +1964,7 @@ class CreateMemory extends React.Component<Props> {
   };
 
   render() {
-    console.log("desc: ", JSON.stringify(this.props.memoryDescription))
+    // console.log("desc: ", JSON.stringify(this.props.memoryDescription))
     return (
       <View style={styles.fullFlex}>
         <SafeAreaView
@@ -2117,113 +2124,119 @@ class CreateMemory extends React.Component<Props> {
             />
             <View style={styles.height22} />
 
-            <ScrollView
-              style={[styles.fullWidth, { paddingBottom: 0 }]}
-            // onStartShouldSetResponder={() => true}
-            >
-              {/* {this.state.itemList.length == 0 ? ( */}
-              {this.viewBeforList()}
-              {/* ) : ( */}
-
-
-
-              {
-                <CustomAlert
-                  modalVisible={this.state.showActionAndroid}
-                  setModalVisible={this.state.actionSheet?.list?.actions && this.state.actionSheet?.list?.actions.length && this.state.actionSheet?.list?.actions[0] && this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,') ? `Are you done writing this memory?` : `Save for later?`}
-                  title={this.state.actionSheet.title}
-                  message={this.state.actionSheet?.list?.actions && this.state.actionSheet?.list?.actions.length && this.state.actionSheet?.list?.actions[0] && this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,') ? `` : 'Choose to completely discard your work, or save writing this memory for later.'}
-                  android={{
-                    container: styles.alertContainer,
-                    title: styles.alertTitleStyle,
-                    message: styles.alertmessageStyle
-                  }}
-                  ios={{
-                    container: styles.alertiOSContainer,
-                    title: styles.alertiOSTitleStyle,
-                    message: styles.alertiOSmessageStyle
-                  }}
-                  buttons={
-                    this.state.actionSheet.list = this.state.actionSheet.list.map((item: any) => {
-                      return ({
-                        text: item.text,
-                        index: item.index,
-                        func: () => {
-                          this.setState({
-                            showActionAndroid: false
-                          }, () => {
-                            this.onActionItemClicked(item.index);
-                          })
-                        },
-                        styles: styles.alerButtonStyle
+            <CustomAlert
+              modalVisible={this.state.showActionAndroid}
+              setModalVisible={this.state.actionSheet?.list?.actions && this.state.actionSheet?.list?.actions.length && this.state.actionSheet?.list?.actions[0] && this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,') ? `Are you done writing this memory?` : `Save for later?`}
+              title={this.state.actionSheet.title}
+              message={this.state.actionSheet?.list?.actions && this.state.actionSheet?.list?.actions.length && this.state.actionSheet?.list?.actions[0] && this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,') ? `` : 'Choose to completely discard your work, or save writing this memory for later.'}
+              android={{
+                container: styles.alertContainer,
+                title: styles.alertTitleStyle,
+                message: styles.alertmessageStyle
+              }}
+              ios={{
+                container: styles.alertiOSContainer,
+                title: styles.alertiOSTitleStyle,
+                message: styles.alertiOSmessageStyle
+              }}
+              buttons={
+                this.state.actionSheet.list = this.state.actionSheet.list.map((item: any) => {
+                  return ({
+                    text: item.text,
+                    index: item.index,
+                    func: () => {
+                      this.setState({
+                        showActionAndroid: false
+                      }, () => {
+                        this.onActionItemClicked(item.index);
                       })
-                    })
-                    //   [{
-                    //   text: 'Close and save as draft',
-                    //   func: () => {
-                    //     this.setState({ showCustomAlert: false }, () => {
-                    //         this.saveORPublish('save');
-                    //     })
+                    },
+                    styles: styles.alerButtonStyle
+                  })
+                })
+                //   [{
+                //   text: 'Close and save as draft',
+                //   func: () => {
+                //     this.setState({ showCustomAlert: false }, () => {
+                //         this.saveORPublish('save');
+                //     })
 
-                    //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                    //   },
-                    //   styles: {
-                    //     lineHeight: 22,
-                    //     fontSize: 17,
-                    //     fontWeight: '600',
-                    //   }
-                    // },
-                    // {
-                    //   text: 'Continue editing',
-                    //   func: () => {
-                    //     this.setState({ showCustomAlert: false })
-                    //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                    //   },
-                    //   styles: {
-                    //     lineHeight: 22,
-                    //     fontSize: 17,
-                    //     fontWeight: '400',
-                    //   }
-                    // },
-                    // {
-                    //   text: 'Cancel',
-                    //   func: () => {
-                    //     this.setState({ showActionAndroid: false }, () => {
+                //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+                //   },
+                //   styles: {
+                //     lineHeight: 22,
+                //     fontSize: 17,
+                //     fontWeight: '600',
+                //   }
+                // },
+                // {
+                //   text: 'Continue editing',
+                //   func: () => {
+                //     this.setState({ showCustomAlert: false })
+                //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+                //   },
+                //   styles: {
+                //     lineHeight: 22,
+                //     fontSize: 17,
+                //     fontWeight: '400',
+                //   }
+                // },
+                // {
+                //   text: 'Cancel',
+                //   func: () => {
+                //     this.setState({ showActionAndroid: false }, () => {
 
-                    //     })
-                    //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                    //   },
-                    //   styles: {
-                    //     lineHeight: 22,
-                    //     fontSize: 17,
-                    //     fontWeight: '400',
-                    //   }
-                    // }
-                    // ]
+                //     })
+                //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+                //   },
+                //   styles: {
+                //     lineHeight: 22,
+                //     fontSize: 17,
+                //     fontWeight: '400',
+                //   }
+                // }
+                // ]
+              }
+            />
+
+            {
+              this.state.itemList.length ?
+
+                <ScrollView
+                  contentContainerStyle={Styles.viewBeforListContentContainerStyle}
+                  style={styles.fullWidth}
+                // onStartShouldSetResponder={() => true}
+                >
+                  {/* {this.state.itemList.length == 0 ? ( */}
+                  {this.viewBeforList()}
+                  {/* ) : ( */}
+
+
+                  {
+                    this.state.bottomToolbar ?
+                      null
+                      :
+                      <FlatList
+                        ref={ref => (this._mainItemList = ref)}
+                        extraData={this.state}
+                        nestedScrollEnabled={true}
+                        keyExtractor={(_, index: number) => `${index}`}
+                        style={[styles.fullWidth, { marginBottom: 100 }]}
+                        onScroll={() => Keyboard.dismiss()}
+                        // keyboardShouldPersistTaps={'handled'}
+                        showsHorizontalScrollIndicator={false}
+                        // showsVerticalScrollIndicator={false}
+                        data={this.state.itemList}
+                        renderItem={(item: any) => this.renderRow(item)}
+                      />
                   }
-                />
-              }
-              {
-                this.state.bottomToolbar ?
-                  null
-                  :
-                  <FlatList
-                    ref={ref => (this._mainItemList = ref)}
-                    extraData={this.state}
-                    nestedScrollEnabled={true}
-                    keyExtractor={(_, index: number) => `${index}`}
-                    style={[styles.fullWidth, { marginBottom: 100 }]}
-                    onScroll={() => Keyboard.dismiss()}
-                    // keyboardShouldPersistTaps={'handled'}
-                    showsHorizontalScrollIndicator={false}
-                    // showsVerticalScrollIndicator={false}
-                    data={this.state.itemList}
-                    renderItem={(item: any) => this.renderRow(item)}
-                  />
-              }
-
-              {/* )} */}
-            </ScrollView>
+                  {/* )} */}
+                </ScrollView>
+                :
+                <View style={styles.fullWidth} >
+                  {this.viewBeforList()}
+                </View>
+            }
             {/* {this.state.menuVisibility && (
               <View
                 style={styles.menuVisibleContainer}

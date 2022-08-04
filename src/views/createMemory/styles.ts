@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import { Colors, fontFamily, fontSize } from '../../common/constants';
 import Utility from '../../common/utility';
 
@@ -8,47 +9,56 @@ const Styles = EStyleSheet.create({
   flexContainer: {
     flex: 1
   },
-  alertContainer:{
+  alertContainer: {
     backgroundColor: Colors.white
   },
-  alertTitleStyle:{
+  alertTitleStyle: {
     color: Colors.black,
     fontSize: 17,
     fontWeight: '600',
     lineHeight: 22
   },
-  alertmessageStyle:{
+  alertmessageStyle: {
     color: Colors.black,
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontSize: 16,
     fontWeight: '500',
   },
-  previewTextStyle:{ 
-    fontSize: 16, 
-    fontFamily: fontFamily.Inter ,
+  previewTextStyle: {
+    fontSize: 16,
+    fontFamily: fontFamily.Inter,
     color: Colors.black
   },
-  deleteTextStyle:{ 
-    fontSize: 16, 
-    fontFamily: fontFamily.Inter ,
-    color: Colors.NewRadColor 
+  viewBeforListContentContainerStyle: {
+    minHeight: Utility.getDeviceHeight() - 140,
+    justifyContent: 'space-between'
   },
-  alertiOSContainer:{
+  viewBeforListContainerStyle: {
+    justifyContent: 'space-between',
+    height: Utility.getDeviceHeight() - (80 + (Platform.OS == "ios" ? (StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0) + (StaticSafeAreaInsets.safeAreaInsetsTop ? StaticSafeAreaInsets.safeAreaInsetsTop : 0) : 0))
+  },
+  etherPadStyle: { height: Utility.getDeviceHeight() * 0.6 },
+  deleteTextStyle: {
+    fontSize: 16,
+    fontFamily: fontFamily.Inter,
+    color: Colors.NewRadColor
+  },
+  alertiOSContainer: {
     backgroundColor: Colors.grayColor
   },
-  alertiOSTitleStyle:{
+  alertiOSTitleStyle: {
     color: Colors.black,
     lineHeight: 22,
     fontSize: 17,
     fontWeight: '600',
   },
-  alertiOSmessageStyle:{
+  alertiOSmessageStyle: {
     color: Colors.black,
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '400',
   },
-  alerButtonStyle:{
+  alerButtonStyle: {
     lineHeight: 22,
     fontSize: 17,
     fontWeight: '600',
@@ -73,13 +83,13 @@ const Styles = EStyleSheet.create({
     shadowRadius: 2,
     elevation: 3,
   },
-  borderStyle:{ 
-    height: 1, 
-    width: '100%', 
-    backgroundColor: Colors.bottomTabColor 
+  borderStyle: {
+    height: 1,
+    width: '100%',
+    backgroundColor: Colors.bottomTabColor
   },
-  calendarViewStyle:{
-    minHeight: 400, 
+  calendarViewStyle: {
+    minHeight: 400,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -469,7 +479,7 @@ const Styles = EStyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
-  memoryDescriptionInput:{
+  memoryDescriptionInput: {
     width: '100%',
     height: 50,
     backgroundColor: Colors.white,
@@ -712,22 +722,22 @@ const Styles = EStyleSheet.create({
     ...fontSize(14),
     fontFamily: fontFamily.Inter
   },
-  buttonsContainerStyle:{ 
-    flexDirection: 'row', 
-    marginHorizontal: 16, 
-    height: Utility.heightRatio(104), 
-    paddingVertical: 16, 
-    borderTopColor: Colors.white, 
-    borderTopWidth: 2, 
+  buttonsContainerStyle: {
+    flexDirection: 'row',
+    marginHorizontal: 16,
+    height: Utility.heightRatio(104),
+    paddingVertical: 16,
+    borderTopColor: Colors.white,
+    borderTopWidth: 2,
   },
-  buttonsStyle:{ 
-    flex: 1, 
-    backgroundColor: Colors.white, 
-    borderWidth: 1.5, 
-    borderColor: Colors.bottomTabColor, 
-    borderRadius: 8, 
-    justifyContent: 'space-evenly', 
-    alignItems: 'center' 
+  buttonsStyle: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    borderWidth: 1.5,
+    borderColor: Colors.bottomTabColor,
+    borderRadius: 8,
+    justifyContent: 'space-evenly',
+    alignItems: 'center'
   },
   tagContainerStyle: {
     paddingRight: 10,
@@ -987,7 +997,7 @@ const Styles = EStyleSheet.create({
     borderRadius: 8,
     alignContent: 'center',
   },
-  fileContainerSTyle:{ padding: 10 },
+  fileContainerSTyle: { padding: 10 },
 
   rightButtonsBadgeText: {
     ...fontSize(10),

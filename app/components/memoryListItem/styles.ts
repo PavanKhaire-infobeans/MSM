@@ -12,6 +12,7 @@ const Styles = EStyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1,
+    // overflow:'hidden',
     shadowColor: Colors.cardShadowColor
   },
   RenderHtmlStyle: {

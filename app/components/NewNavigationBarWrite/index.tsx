@@ -124,7 +124,7 @@ const NavigationBar = (props: Props) => {
                   resizeMode="contain"
                 />
                 <View style={styles.height4} />
-                <Text style={styles.cancleText}>{'Jump to Year'}</Text>
+                <Text style={styles.cancleText}>{props.showRightText }</Text>
               </View>
             </TouchableWithoutFeedback>
             :
@@ -171,26 +171,29 @@ const NavigationBar = (props: Props) => {
           // showClose ? _closeAction() : Actions.drawerOpen();
         }}>
         <View style={styles.leftButtonTouchableContainer}>
-          {showClose ? (
+        {showClose ? (
             <View style={styles.closeButton}>
-              <View >
+              <View style={styles.imageContainer}  >
                 <Image source={close_white} />
               </View>
-              <View >
-                <Text style={styles.cancleText}>Cancle</Text>
+              <View style={styles.imageSeparator} />
+              <View style={[styles.textContainer,{ justifyContent: 'center' }]}>
+                <Text style={styles.JumptoText}>Cancle</Text>
               </View>
             </View>
-          ) : (
-            <View style={styles.closeButton}>
-              <View style={styles.marginBottom} >
-                <Image source={user} />
+          )
+            :
+            (
+              <View style={styles.closeButton}>
+                <View style={styles.imageContainer} >
+                  <Image source={user} />
+                </View>
+                <View style={styles.imageSeparator} />
+                <View style={styles.profileImgSeparator}>
+                  <Text style={styles.JumptoText}>Profile</Text>
+                </View>
               </View>
-              {/* <View style={{ height: 20 }} /> */}
-              <View >
-                <Text style={styles.cancleText}>Profile</Text>
-              </View>
-            </View>
-          )}
+            )}
         </View>
 
       </TouchableWithoutFeedback>

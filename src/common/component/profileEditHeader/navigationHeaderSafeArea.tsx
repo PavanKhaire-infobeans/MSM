@@ -32,7 +32,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
             onPress={() => this.props.cancelAction()}>
             <View style={styles.leftButtonTouchableContainer}>
               <Image
-                style={styles.marginleft}
+                style={this.props.showRightText ? styles.cancelImage : styles.cancelImageConditional}
                 resizeMode="center"
                 source={
                   this.props.backIcon ? this.props.backIcon : this.props.isWhite ? black_arrow : close_white
@@ -92,7 +92,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
               />
               <View style={styles.height4} />
               <Text style={styles.cancleText}>{this.props.rightText}</Text>
-            </View>  
+            </View>
           </TouchableWithoutFeedback>
 
         </View>

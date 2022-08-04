@@ -25,10 +25,10 @@ const Styles = EStyleSheet.create({
     imageSeparator: {
         height: 4
     },
-    height32: {
+    textContainer: {
         height: 32
     },
-    height24: {
+    imageContainer: {
         height: 24
     },
     profileImgSeparator:{ 

@@ -31,6 +31,25 @@ const Styles = EStyleSheet.create({
     height4:{
         height:4
     },
+    imageStyle: {
+        height: 24,
+        width: 24
+    },
+    imageSeparator: {
+        height: 4
+    },
+    textContainer: {
+        height: 32
+    },
+    imageContainer: {
+        height: 24
+    },
+    profileImgSeparator:{ 
+        height: 32, 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        paddingTop: 8 
+    },
     titleContainer: {
         justifyContent: 'center',
         // paddingTop: 10,
@@ -121,7 +140,7 @@ const Styles = EStyleSheet.create({
     container: {
         flexDirection: 'row',
         width: '100%',
-        height: 85,
+        height: 68,
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomWidth: 2,

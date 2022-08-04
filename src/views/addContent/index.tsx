@@ -79,7 +79,8 @@ class AddContentDetails extends React.Component {
     content: '',
     showNextDialog: false,
     mindPopClick: false,
-    titleError: ""
+    titleError: "",
+    placeholder:"|Tap to start writing..."
   };
 
   constructor(props: any) {
@@ -950,10 +951,13 @@ class AddContentDetails extends React.Component {
                     this.state.mindPopClick ? */}
                   <>
                     <TextInput
-                      placeholder="|Tap to start writing..."
+                      placeholder={this.state.placeholder}
                       autoFocus={false}
                       onChangeText={text => {
-                        this.setState({ content: text, titleError: "" });
+                        this.setState({ content: text, titleError: "",placeholder:'Start writing...' });
+                      }}
+                      onFocus={()=>{
+                        this.setState({ placeholder:'Start writing...' });
                       }}
                       placeholderTextColor={Colors.bordercolor}
                       value={this.state.content}

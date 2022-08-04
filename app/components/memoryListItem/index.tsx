@@ -271,7 +271,6 @@ export default class MemoryListItem extends React.Component<Props, State> {
                         </View>
                         <View
                           style={styles.carouselContainer}>
-                          <>
                             <Carousel
                               data={this.props.item.item.collection}
                               renderItem={(collection: any) => (
@@ -311,7 +310,6 @@ export default class MemoryListItem extends React.Component<Props, State> {
                               inactiveDotOpacity={0.4}
                               inactiveDotScale={0.6}
                             />
-                          </>
                         </View>
                       </View>
                     )

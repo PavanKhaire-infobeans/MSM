@@ -19,6 +19,12 @@ const Styles = EStyleSheet.create({
   MemoryTagsFlatlistStyle:{
     paddingBottom: 10
   },
+  externalQueueItemContainer:{
+    width: Dimensions.get('screen').width, 
+  },
+  externalQueueItemDescriptionContainer:{
+    paddingHorizontal: 24
+  },
   dotStyle: {
     width: 8,
     height: 8,

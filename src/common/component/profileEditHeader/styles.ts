@@ -150,7 +150,13 @@ const Styles = EStyleSheet.create({
     width: 60,
     alignItems: 'center'
   },
-  marginleft: {
+  cancelImage: {
+    // marginBottom: 4,
+    height: 24,
+    width: 24,
+    marginLeft: 30
+  },
+  cancelImageConditional: {
     marginBottom: 4,
     height: 24,
     width: 24,

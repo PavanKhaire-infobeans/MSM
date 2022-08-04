@@ -105,7 +105,7 @@ const NavigationBar = (props: Props) => {
                   resizeMode="contain"
                 />
                 <View style={styles.imageSeparator} />
-                <View style={styles.height32} >
+                <View style={styles.textContainer} >
                   <Text style={styles.JumptoText}>{'Jump to\nYear'}</Text>
                 </View>
               </View>
@@ -136,11 +136,11 @@ const NavigationBar = (props: Props) => {
         <View style={styles.leftButtonTouchableContainer}>
           {showClose ? (
             <View style={styles.closeButton}>
-              <View style={styles.height24}  >
+              <View style={styles.imageContainer}  >
                 <Image source={close_white} />
               </View>
               <View style={styles.imageSeparator} />
-              <View style={[styles.height32,{ justifyContent: 'center' }]}>
+              <View style={[styles.textContainer,{ justifyContent: 'center' }]}>
                 <Text style={styles.JumptoText}>Cancle</Text>
               </View>
             </View>
@@ -148,7 +148,7 @@ const NavigationBar = (props: Props) => {
             :
             (
               <View style={styles.closeButton}>
-                <View style={styles.height24} >
+                <View style={styles.imageContainer} >
                   <Image source={user} />
                 </View>
                 <View style={styles.imageSeparator} />

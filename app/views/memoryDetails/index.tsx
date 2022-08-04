@@ -1223,10 +1223,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
       );
   };
 
-  renderExternalQueueItem = (item,index) => {
+  renderExternalQueueItem = (item, index) => {
     let currentSelectedItem = item;
     return (
-      <View >
+      <View style={style.externalQueueItemContainer} >
         <View style={style.renderExternalQueueItemContainer}>
           <Text
             style={style.collectionTitleTextSTyle}>
@@ -1253,8 +1253,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
             />
           </View>
         </View>
-    
-        <View style={{paddingHorizontal: 24}}>
+
+        <View style={style.externalQueueItemDescriptionContainer}>
           <View style={style.descreptionSeparatorContainer} />
 
           {
@@ -1264,7 +1264,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
                   tagsStyles={{ p: style.RenderHtmlStyle, li: style.RenderHtmlStyle, span: style.RenderHtmlStyle }}
                   source={{ html: currentSelectedItem.description }}
                   // ignoredDomTags={['br']}
-
                   enableExperimentalBRCollapsing={true}
                   contentWidth={Dimensions.get('window').width}
                   enableExperimentalMarginCollapsing={true}
@@ -1323,9 +1322,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
       if (page >= this.memoryDataModel.externalQueue.collection.length) {
         page = this.memoryDataModel.externalQueue.collection.length - 1;
       }
-      // this.setState({
-      //   currentIndex: page
-      // })
       this.modifyCommentsAndLikesData(page)
     }
   }
@@ -1349,16 +1345,16 @@ export default class MemoryDetails extends React.Component<Props, State> {
             }
           /> */}
 
-            <FlatList
-              data={this.memoryDataModel.externalQueue.collection}
-              initialNumToRender={this.memoryDataModel.externalQueue.collection.length}
-              renderItem={({item,index})=>this.renderExternalQueueItem(item,index)}
-              horizontal
-              pagingEnabled={true}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(_item, index) => index + ''}
-              onScroll={(e) => this.onScroll(e)}
-            />
+          <FlatList
+            data={this.memoryDataModel.externalQueue.collection}
+            initialNumToRender={this.memoryDataModel.externalQueue.collection.length}
+            renderItem={({ item, index }) => this.renderExternalQueueItem(item, index)}
+            horizontal
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(_item, index) => index + ''}
+            onScroll={(e) => this.onScroll(e)}
+          />
         </View>
         {currentSelectedItem.memoryTags.length > 0 && (
           <View style={style.memoryTagsMainContainerStyle}>
@@ -1503,7 +1499,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         break;
       case MemoryActionKeys.editMemoryKey:
         loaderHandler.showLoader("Loading");
-          let details: any = {
+        let details: any = {
           action_type: MemoryActionKeys.moveToDraftKey,
           type: this.storyType,
           id: data.nid
@@ -1527,7 +1523,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         if (response.ResponseCode == 200) {
           this._onEditMemory(data.nid);
         }
-        else{
+        else {
           loaderHandler.hideLoader();
         } // _onEditMemory(data, data.nid);
         break;
@@ -1880,7 +1876,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           {this.state.memoryDetailAvailable && (
             <View style={style.memoryDetailAvailable}>
 
-              <View style={style.descreptionSeparatorContainer}/>
+              <View style={style.descreptionSeparatorContainer} />
               {this.state.isExternalQueue &&
                 this.memoryDataModel.externalQueue.collection.length > 1 && (
                   <View
