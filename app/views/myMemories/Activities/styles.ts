@@ -19,7 +19,7 @@ const Styles = EStyleSheet.create({
         width: 42,
         borderRadius: 21,
         marginRight: 21,
-        overflow: 'hidden',̦
+        overflow: 'hidden'
     },
     authorImageStyle: {
         height: 42,

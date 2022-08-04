@@ -24,7 +24,7 @@ const Styles = EStyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginHorizontal: 0,
-    backgroundColor: Colors.NewTitleColor,
+    backgroundColor: Colors.newTextColor,
   },
   inactiveDotStyle: {
     width: 8,
@@ -41,6 +41,8 @@ const Styles = EStyleSheet.create({
   collectionTitleTextSTyle: {
     ...fontSize(18),
     lineHeight: 26,
+    fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.newTextColor
   },
   normalText: {
@@ -143,7 +145,7 @@ const Styles = EStyleSheet.create({
     minHeight: 50,
     marginTop: Platform.OS == 'ios' ? deviceInfoModule.hasNotch() ? -10 : -15 : 0,
     marginBottom: -10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.bottomTabColor,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -191,7 +193,13 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
     paddingRight: 10,
   },
-  descreptionContainer:{ height: 16 },
+  descreptionContainer:{ 
+    paddingHorizontal: 24
+  },
+  descreptionSeparatorContainer:{ 
+    height: 16 , 
+    paddingHorizontal: 24
+  },
   postStyle:{
     fontSize: 12,
     textAlign: 'center',

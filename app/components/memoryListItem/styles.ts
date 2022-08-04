@@ -31,18 +31,19 @@ const Styles = EStyleSheet.create({
   },
   titleContainer: {
     // padding: 5,
-    paddingTop: 10,
+    paddingTop: 16,
+    paddingHorizontal: 16,
     width: '100%',
     flexDirection: 'row',
     backgroundColor: Colors.white,
-    borderTopEndRadius: 5,
-    borderTopStartRadius: 5,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
     justifyContent: 'space-between',
   },
   titleText: {
     ...fontSize(24),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold,
-    paddingLeft: 5,
+    // paddingLeft: 16,
     color: Colors.bordercolor,
     lineHeight: 30,
     flex: 1,
@@ -71,6 +72,8 @@ const Styles = EStyleSheet.create({
   carouselContainer: {
     flex: 1,
     backgroundColor: Colors.white,
+    borderBottomRightRadius: 12,
+    borderBottomLeftRadius: 12,
     paddingLeft: 0
   },
   PlaceholderImageView: {
@@ -81,6 +84,7 @@ const Styles = EStyleSheet.create({
   collectionTitle: {
     width: '100%',
     ...fontSize(14),
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     paddingTop: 10,
     fontWeight: '500',
     textAlign: 'center',
@@ -90,7 +94,7 @@ const Styles = EStyleSheet.create({
     height: 10,
     borderRadius: 5,
     marginHorizontal: 2,
-    backgroundColor: Colors.NewThemeColor,
+    backgroundColor: Colors.newTextColor,
   },
   shareTextContainerStyle: {
     alignItems: 'center',

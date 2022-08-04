@@ -1223,12 +1223,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
       );
   };
 
-  renderExternalQueueItem = () => {
-    let currentSelectedItem =
-      this.memoryDataModel.externalQueue.collection[this.state.activeSlide];
-
+  renderExternalQueueItem = (item,index) => {
+    let currentSelectedItem = item;
     return (
-      <>
+      <View >
         <View style={style.renderExternalQueueItemContainer}>
           <Text
             style={style.collectionTitleTextSTyle}>
@@ -1250,13 +1248,14 @@ export default class MemoryDetails extends React.Component<Props, State> {
           <View
             style={style.caraousalcontainerStyle}>
             <PlaceholderImageView
-              uri={currentSelectedItem.image}
+              uri={currentSelectedItem.image?.thumbnail_url}
               style={style.caraousalcontainerStyle}
             />
           </View>
         </View>
-        <View >
-          <View style={style.descreptionContainer} />
+    
+        <View style={{paddingHorizontal: 24}}>
+          <View style={style.descreptionSeparatorContainer} />
 
           {
             currentSelectedItem.description.length > 0 && (
@@ -1270,7 +1269,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                   contentWidth={Dimensions.get('window').width}
                   enableExperimentalMarginCollapsing={true}
                 ></RenderHtml>
-                <View style={style.descriptionSpaceStyle} />
+                {/* <View style={style.descriptionSpaceStyle} /> */}
               </>
             )
             // <Text style={{...fontSize(18), lineHeight: 26, paddingBottom: 15, color: "#000"}}>{currentSelectedItem.description}</Text>
@@ -1314,9 +1313,22 @@ export default class MemoryDetails extends React.Component<Props, State> {
             </>
           )} */}
         </View>
-      </>
+      </View>
     );
   };
+
+  onScroll(e: any) {
+    let page = Math.ceil(e.nativeEvent.contentOffset.x / Dimensions.get('window').width);
+    if (page !== this.state.activeSlide) {
+      if (page >= this.memoryDataModel.externalQueue.collection.length) {
+        page = this.memoryDataModel.externalQueue.collection.length - 1;
+      }
+      // this.setState({
+      //   currentIndex: page
+      // })
+      this.modifyCommentsAndLikesData(page)
+    }
+  }
 
   ExternalQueue = () => {
     let currentSelectedItem =
@@ -1324,18 +1336,29 @@ export default class MemoryDetails extends React.Component<Props, State> {
     return (
       <View style={style.TitleAndValueContainer}>
         <View style={style.container}>
-          <Carousel
+          {/* <Carousel
             ref={(c: any) => {
               this._externalQueue = c;
             }}
             data={this.memoryDataModel.externalQueue.collection}
-            renderItem={this.renderExternalQueueItem.bind(this)}
+            renderItem={({item,index})=>this.renderExternalQueueItem(item,index)}
             sliderWidth={Dimensions.get('window').width}
             itemWidth={Dimensions.get('window').width}
             onSnapToItem={(index: any) =>
               this.modifyCommentsAndLikesData(index)
             }
-          />
+          /> */}
+
+            <FlatList
+              data={this.memoryDataModel.externalQueue.collection}
+              initialNumToRender={this.memoryDataModel.externalQueue.collection.length}
+              renderItem={({item,index})=>this.renderExternalQueueItem(item,index)}
+              horizontal
+              pagingEnabled={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(_item, index) => index + ''}
+              onScroll={(e) => this.onScroll(e)}
+            />
         </View>
         {currentSelectedItem.memoryTags.length > 0 && (
           <View style={style.memoryTagsMainContainerStyle}>
@@ -1619,7 +1642,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   }
 
   InternalQueue = () => {
-    console.log("descmem :", this.memoryDataModel.memory.description)
+    // console.log("descmem :", this.memoryDataModel.memory.description)
     return (
       <View style={style.InternalQueueContainer}>
 
@@ -1856,6 +1879,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
           {/* <StatusBar barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'} /> */}
           {this.state.memoryDetailAvailable && (
             <View style={style.memoryDetailAvailable}>
+
+              <View style={style.descreptionSeparatorContainer}/>
               {this.state.isExternalQueue &&
                 this.memoryDataModel.externalQueue.collection.length > 1 && (
                   <View

@@ -4,11 +4,11 @@ import {
 } from 'react-native';
 import PlaceholderImageView from './../../../src/common/component/placeHolderImageView';
 import TextNew from './../../../src/common/component/Text';
-import { Colors } from './../../../src/common/constants';
+import { Colors, MemoryActionKeys } from './../../../src/common/constants';
 import Utility from './../../../src/common/utility';
 import { PublishedMemoryDataModel } from './../../../src/views/myMemories/PublishedMemory/publishedMemoryDataModel';
 import {
-  MediaView, MemoryBasicDetails, RenderLikeAndCommentSection, _onShowMemoryDetails
+  MediaView, MemoryBasicDetails, onActionItemClicked, RenderLikeAndCommentSection, _onShowMemoryDetails
 } from './../../views/myMemories/PublishedMemory';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import WebView from 'react-native-webview';
@@ -17,6 +17,7 @@ import WebView from 'react-native-webview';
 import Prompts from './../../../src/common/component/prompts/prompts';
 import { calendarsmall, globesmall, moreoptions } from './../../images';
 import styles from './styles';
+import ContextMenu from 'react-native-context-menu-view';
 type Props = {
   addMemoryFromPrompt?: (firstIndex: any, secondIndex: any) => void;
   item: any;
@@ -59,8 +60,150 @@ export default class MemoryListItem extends React.Component<Props, State> {
     })
   }
 
+  MemoryActionsListArray = (item: any) => {
+    var i = 0;
+    let memoryActions: any = [];
+
+    for (var value in item.actions_on_memory) {
+      i += 1;
+      switch (value) {
+        case MemoryActionKeys.addToCollection:
+          // memoryActions.push(item.actions_on_memory[value])
+          // memoryActions.push(
+          //   {
+          //     index: i,
+          //     text: item.actions_on_memory[value],
+          //     title: item.actions_on_memory[value],
+          //     // image: add_icon_small,
+          //     nid: item.nid,
+          //     memoryType: item.type,
+          //     actionType: MemoryActionKeys.addToCollection,
+          //     uid: item.user_details.uid,
+          //   }
+          // );
+          break;
+        case MemoryActionKeys.blockUserKey:
+          // memoryActions.push(item.actions_on_memory[value])
+          // memoryActions.push({
+          //   index: i,
+          //   text: item.actions_on_memory[value],
+          //   title: item.actions_on_memory[value],
+          //   // image: Platform.OS == 'ios' ? personxmark :block,
+          //   nid: item.nid,
+          //   memoryType: item.type,
+          //   actionType: MemoryActionKeys.blockUserKey,
+          //   uid: item.user_details.uid,
+          //   isDestructive: 1,
+          // });
+          break;
+        case MemoryActionKeys.reportMemoryKey:
+          // memoryActions.push(item.actions_on_memory[value])
+          // memoryActions.push({
+          //   index: i,
+          //   text: item.actions_on_memory[value],
+          //   title: item.actions_on_memory[value],
+          //   // image: Platform.OS == 'ios' ? flagandroid : flag,
+          //   nid: item.nid,
+          //   memoryType: item.type,
+          //   actionType: MemoryActionKeys.reportMemoryKey,
+          //   isDestructive: 1,
+          // });
+          break;
+        case MemoryActionKeys.blockAndReportKey:
+          // memoryActions.push(item.actions_on_memory[value])
+          // memoryActions.push({
+          //   index: i,
+          //   text: item.actions_on_memory[value],
+          //   title: item.actions_on_memory[value],
+          //   // image: Platform.OS == 'ios' ? redstar : report,
+          //   nid: item.nid,
+          //   memoryType: item.type,
+          //   actionType: MemoryActionKeys.blockAndReportKey,
+          //   uid: item.user_details.uid,
+          //   isDestructive: 1,
+          // });
+          break;
+        case MemoryActionKeys.editMemoryKey:
+          // memoryActions.push(item.actions_on_memory[value])
+          memoryActions.push({
+            index: i,
+            text: item.actions_on_memory[value],
+            title: item.actions_on_memory[value],
+            // image: edit_memory,
+            nid: item.nid,
+            memoryType: item.type,
+            actionType: MemoryActionKeys.editMemoryKey,
+          });
+          break;
+        case MemoryActionKeys.deleteMemoryKey:
+          // memoryActions.push(item.actions_on_memory[value])
+          // memoryActions.push({
+          //   index: i,
+          //   text: item.actions_on_memory[value],
+          //   title: item.actions_on_memory[value],
+          //   // image: delete_memory,
+          //   nid: item.nid,
+          //   memoryType: item.type,
+          //   actionType: MemoryActionKeys.deleteMemoryKey,
+          // });
+          break;
+        case MemoryActionKeys.moveToDraftKey:
+          // memoryActions.push(item.actions_on_memory[value])
+          // memoryActions.push({
+          //   index: i,
+          //   text: item.actions_on_memory[value],
+          //   title: item.actions_on_memory[value],
+          //   // image: move_to_draft,
+          //   nid: item.nid,
+          //   memoryType: item.type,
+          //   actionType: MemoryActionKeys.moveToDraftKey,
+          // });
+          break;
+        case MemoryActionKeys.removeMeFromThisPostKey:
+          // memoryActions.push(item.actions_on_memory[value])
+          // memoryActions.push({
+          //   index: i,
+          //   text: item.actions_on_memory[value],
+          //   title: item.actions_on_memory[value],
+          //   // image: remove_me_from_this_post,
+          //   nid: item.nid,
+          //   memoryType: item.type,
+          //   actionType: MemoryActionKeys.removeMeFromThisPostKey,
+          // });
+          break;
+        case MemoryActionKeys.blockMemoryKey:
+          // memoryActions.push(item.actions_on_memory[value])
+          // memoryActions.push({
+          //   index: i,
+          //   text: item.actions_on_memory[value],
+          //   title: item.actions_on_memory[value],
+          //   // image: block_memory,
+          //   nid: item.nid,
+          //   memoryType: item.type,
+          //   actionType: MemoryActionKeys.blockMemoryKey,
+          // });
+          break;
+      }
+    }
+    memoryActions.push(
+      {
+        text: "Share memory",
+        title: "Share memory",
+        // image: add_icon_small,
+        nid: item.nid,
+        memory_url: item.memory_url,
+        memoryType: item.type,
+        actionType: MemoryActionKeys.shareActionKey,
+        uid: item.user_details.uid,
+      }
+    );
+    return memoryActions;
+  };
+
+
   render() {
     let userDetails = !this.props.item.item.isPrompt ? PublishedMemoryDataModel.getUserObj(this.props.item.item) : {};
+    let memoryActions = this.MemoryActionsListArray(this.props.item.item);
 
     return (
       <>
@@ -68,7 +211,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
           !this.props.item.item.isPrompt ?
             (
               <View
-                style={[styles.promptContainer]}>
+                style={styles.promptContainer}>
 
                 {this.externalCueItems.includes(this.props.item.item.type) ? (
                   this.props.item.item.type == 'songs' ?
@@ -76,6 +219,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                       <WebView
                         source={{ uri: this.props.item.item.api_url }}
                         style={styles.WebViewContainerStyle}
+                        containerStyle={{ borderRadius: 12 }}
                         javaScriptEnabled={true}
                         domStorageEnabled={true}
                         startInLoadingState={true}
@@ -84,29 +228,47 @@ export default class MemoryListItem extends React.Component<Props, State> {
                     :
                     (
                       <View >
-                        <TouchableHighlight
-                          underlayColor={Colors.touchableunderlayColor}
-                          style={styles.authorContainer}
-                          onPress={() => {
-                            _onShowMemoryDetails(this.props.item.item, "Recent");
-                          }}>
-                          <View
-                            style={styles.titleContainer}>
+
+                        <View
+                          style={styles.titleContainer}>
+                          <TouchableHighlight
+                            underlayColor={Colors.touchableunderlayColor}
+                            style={styles.authorContainer}
+                            onPress={() => {
+                              _onShowMemoryDetails(this.props.item.item, "Recent");
+                            }}>
                             <TextNew
                               style={styles.titleText}>
                               {this.props.item.item.title}
                             </TextNew>
-                            <TouchableWithoutFeedback
-                              onPress={() =>
-                                this.props.openMemoryActions(this.props.item.item)
+                            {/* <TouchableWithoutFeedback
+                              onPress={() =>{
+
+                              }
+                                // this.props.openMemoryActions(this.props.item.item)
                               }>
                               <View style={styles.playContainer}>
                                 <Image source={moreoptions} />
                               </View>
 
-                            </TouchableWithoutFeedback>
+                            </TouchableWithoutFeedback> */}
+                          </TouchableHighlight>
+                          <View style={styles.moreoptionStyle}>
+                            <ContextMenu
+                              actions={memoryActions}
+                              dropdownMenuMode={true}
+                              previewBackgroundColor="transparent"
+                              onPress={(e) => {
+                                let data = memoryActions.filter((itm) => itm.title === e.nativeEvent.name)
+                                if (data && data[0]) {
+                                  onActionItemClicked(e.nativeEvent.index, data[0])
+                                }
+                              }}
+                            >
+                              <Image source={moreoptions} />
+                            </ContextMenu>
                           </View>
-                        </TouchableHighlight>
+                        </View>
                         <View
                           style={styles.carouselContainer}>
                           <>
@@ -118,13 +280,13 @@ export default class MemoryListItem extends React.Component<Props, State> {
                                   onPress={() => {
                                     _onShowMemoryDetails(this.props.item.item, "Recent");
                                   }}>
-                                  <View>
+                                  <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                                     <PlaceholderImageView
                                       style={styles.PlaceholderImageView}
                                       uri={Utility.getFileURLFromPublicURL(
                                         collection.item.images.thumbnail_url,
                                       )}
-                                      resizeMode={'center'}
+                                      resizeMode={'contain'}
                                     />
                                     <TextNew
                                       style={styles.collectionTitle}>
@@ -133,8 +295,8 @@ export default class MemoryListItem extends React.Component<Props, State> {
                                   </View>
                                 </TouchableHighlight>
                               )}
-                              sliderWidth={Dimensions.get('window').width - 10}
-                              itemWidth={Dimensions.get('window').width - 150}
+                              sliderWidth={Dimensions.get('window').width - 48}
+                              itemWidth={Dimensions.get('window').width - 48}
                               onSnapToItem={(index: any) =>
                                 this.setState({ activeIndex: index })
                               }

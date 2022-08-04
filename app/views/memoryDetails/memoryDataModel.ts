@@ -146,7 +146,7 @@ export class MemoryDataModel {
                 nid: getDetails(element, ["nid"], keyInt),
                 title: getDetails(element, ["title"]),
                 date: Utility.dateAccordingToFormat("" + Utility.dateObjectToDefaultFormat(new Date(parseInt(getDetails(element, ["memory_year"])) * 1000)), "M d, Y"),
-                image: getDetails(element, ["image"]),
+                image: getDetails(element, ["images"]),
                 description: getDetails(element, ["description"]),
                 details: this.externalQueue.collectionType == kSports ? [yearObject, countryObject] : [yearObject, authorActorObject, genreObject, languageObject, countryObject],
                 memoryTags: getDetails(element, ["tags"], keyArray),
