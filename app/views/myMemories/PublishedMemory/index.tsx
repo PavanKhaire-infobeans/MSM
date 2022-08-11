@@ -694,12 +694,12 @@ const _onShareMemory = async (url: any) => {
 
 export const onActionItemClicked = async (index: number, data: any): void => {
   // console.log(JSON.stringify(data));
-  loaderHandler.showLoader();
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
       _addToCollection(data.nid);
       break;
     case MemoryActionKeys.editMemoryKey:
+      loaderHandler.showLoader();
 
       let details: any = {
         action_type: MemoryActionKeys.moveToDraftKey,
@@ -725,7 +725,7 @@ export const onActionItemClicked = async (index: number, data: any): void => {
       if (response.ResponseCode == 200) {
         _onEditMemory(data.nid);
       }
-      else{
+      else {
         loaderHandler.hideLoader();
       }
       break;
@@ -1320,7 +1320,6 @@ export const MemoryBasicDetails = (
 
 export const MediaView = (item: any, audioView: any) => {
   let memoryDetail = item.item;
-
   return (
     <View>
       {memoryDetail.images && memoryDetail.images.length > 0 ? (
@@ -1358,10 +1357,10 @@ export const MediaView = (item: any, audioView: any) => {
                     _onOpenImages(memoryDetail.images, 0);
                   }}>
                   <View style={[styles.fullFlex]}>
-                    <ImageBackground style={{ height: '100%', width: '100%', backgroundColor: '#edeef1', opacity: 0.1, position: 'absolute' }} blurRadius={5} resizeMode='stretch' source={{ uri: Utility.getFileURLFromPublicURL(memoryDetail.images[0].thumbnail_url) }} />
+                    <ImageBackground style={styles.imagebackGroundStyle} blurRadius={5} resizeMode='stretch' source={{ uri: Utility.getFileURLFromPublicURL(memoryDetail.images[0].thumbnail_url) }} />
                     <View style={[styles.fullFlex, { position: 'relative' }]}>
                       <PlaceholderImageView
-                        style={styles.fullFlex}
+                        style={styles.placeholderImageContainer}
                         uri={Utility.getFileURLFromPublicURL(
                           memoryDetail.images[0].thumbnail_url,
                         )}
@@ -1401,6 +1400,7 @@ export const MediaView = (item: any, audioView: any) => {
       }
 
       {audioView(memoryDetail)}
+
       {memoryDetail.pdf && memoryDetail.pdf.length > 0 ? (
         <View
           style={styles.imageContainer}>

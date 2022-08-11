@@ -241,23 +241,12 @@ class DashboardIndex extends React.Component<Props>{
                                     // setModalVisible={setModalVisible}
                                     title={this.props.showAlertData?.title}
                                     message={this.props.showAlertData?.desc}
-                                    android={{
-                                        container: Styles.customContainer,
-                                        title: Styles.customTitle,
-                                        message: Styles.customMessage,
-                                    }}
-                                    ios={{
-                                        container: Styles.customiOSContainer,
-                                        title: Styles.customiOSTitle,
-                                        message: Styles.customiOSMessage,
-                                    }}
                                     buttons={[
                                         {
                                             text: Platform.OS === 'android' ? 'GREAT!' : 'Great!',
                                             func: () => {
                                                 this.props.showAlertCall(false);
                                             },
-                                            styles: Styles.buttonStyle
                                         }
                                     ]}
                                 />

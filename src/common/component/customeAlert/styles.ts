@@ -50,7 +50,9 @@ const styles = StyleSheet.create({
       borderRadius: 4,
     },
     androidTitle: {
-      margin: 24,
+      marginHorizontal: 24,
+      marginTop: 20,
+      marginBottom: 16,
     },
     androidMessage: {
       marginLeft: 24,
@@ -69,7 +71,6 @@ const styles = StyleSheet.create({
     },
     androidButtonInner: {
       padding: 10,
-  
     },
   
     iOSAlertBox: {

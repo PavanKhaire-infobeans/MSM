@@ -9,48 +9,48 @@ const Styles = EStyleSheet.create({
   },
   alerContainerTitle: {
     color: Colors.black,
-    fontFamily: "SF Pro Text",
+    fontFamily: fontFamily.RobotoMedium,
+    fontSize: 20,
+    fontWeight: '600',
+    lineHeight: 24
+  },
+  alerContainerMessage: {
+    color: Colors.blackOpacity60,
+    fontFamily: fontFamily.Roboto,
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+  },
+  alertiOSContainer: {
+    backgroundColor: Colors.grayColor
+  },
+  alertiOSContainerTitle: {
+    color: Colors.black,
+    // fontFamily: fontFamily.Inter,
+    lineHeight: 22,
     fontSize: 17,
     fontWeight: '600',
-    lineHeight: 22
   },
-  alerContainerMessage:{
+  alertiOSContainerMessage: {
     color: Colors.black,
-    fontFamily: "SF Pro Text",
     // fontFamily: fontFamily.Inter,
-    fontSize: 16,
-    fontWeight: '500',
-},
-alertiOSContainer: {
-  backgroundColor: Colors.grayColor
-},
-alertiOSContainerTitle: {
-  color: Colors.black,
-  // fontFamily: fontFamily.Inter,
-  lineHeight: 22,
-  fontSize: 17,
-  fontWeight: '600',
-},
-alertiOSContainerMessage:{
-  color: Colors.black,
-  // fontFamily: fontFamily.Inter,
-  fontSize: 13,
-  lineHeight: 18,
-  fontWeight: '400',
-},
-alertButn:{
-  lineHeight: 22,
-  fontSize: 17,
-  fontWeight: '600',
-},
-tabBarUnderlineStyle:{ 
-  backgroundColor: Colors.white, 
-  height: 2 
-},
-tabBarTextStyle:{ 
-  ...fontSize(16), 
-  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium 
-},
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '400',
+  },
+  alertButn: {
+    lineHeight: Platform.OS === 'ios' ? 22 : 14,
+    fontSize: Platform.OS === 'ios' ? 17 : 16,
+    fontWeight: '600',
+  },
+  tabBarUnderlineStyle: {
+    backgroundColor: Colors.white,
+    height: 2
+  },
+  tabBarTextStyle: {
+    ...fontSize(16),
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium
+  },
   flexContainer: {
     flex: 1
   },

@@ -55,7 +55,15 @@ const Styles = EStyleSheet.create({
         flexDirection: 'row', 
         alignItems: 'center', 
         justifyContent: 'center', 
-        paddingLeft: 16 
+        paddingLeft: 16,
+        zIndex:99
+    },
+    timelineContainer:{ 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        flexDirection: 'row', 
+        height: '100%', 
+        width: 134 
     },
     leftArrowImageContainer:{ 
         width: 26, 
@@ -114,16 +122,31 @@ const Styles = EStyleSheet.create({
     flatlistStyle: {
         width: (Dimensions.get('window').width - 48),
         alignSelf: 'center',
+        height:'100%',
         backgroundColor: Colors.timeLinebackground
+    },
+    timelineFlatlistStyle: {
+        width: (Dimensions.get('window').width - 96),
+        alignSelf: 'center',
+        height:'100%',
+        backgroundColor: Colors.timeLinebackground
+    },
+    timelineYearSeparatorline:{ 
+        height: 1, 
+        alignSelf:'center', 
+        backgroundColor: Colors.newTextColor, 
+        width: 46.5, 
+        marginLeft: 24, 
+        marginRight: 17 
     },
     noItemContainer: {
         position: 'absolute',
-        top: 40,
+        top: 58,
         height: '100%',
         width: '100%',
         alignContent: 'center',
         justifyContent: 'center',
-        backgroundColor: Colors.white
+        backgroundColor: Colors.timeLinebackground
     },
     noItemTextStyle: {
         ...fontSize(16),
@@ -203,6 +226,13 @@ const Styles = EStyleSheet.create({
         borderRadius: 10
     },
     newnormalText: {
+        ...fontSize(15),
+        fontWeight: "400",
+        fontFamily: fontFamily.Inter,
+        color: Colors.newTextColor,
+        lineHeight: 18.75
+    },
+    timelineYearText: {
         ...fontSize(15),
         fontWeight: "400",
         fontFamily: fontFamily.Inter,

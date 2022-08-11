@@ -8,7 +8,7 @@ import Styles from './styles';
 type State = {
   backgroundColor: string;
   message: string;
-  // height: Animated.Value;
+  height: number;
   showClose: boolean;
 };
 class MessageDialogue extends Component<{}, State> {
@@ -20,6 +20,7 @@ class MessageDialogue extends Component<{}, State> {
       backgroundColor: 'black',
       message: '',
       showClose: true,
+      height: 0
     };
 
   }
@@ -75,7 +76,7 @@ class MessageDialogue extends Component<{}, State> {
   };
 
   _show = ({ message, color }: { message: string; color: string }) => {
-    this.setState({ backgroundColor: color, message }, () => {
+    this.setState({ backgroundColor: color, message, height: 45 }, () => {
       if ((this.height as any)._value == 0) {
         Animated.parallel([
           Animated.timing(this.height, {
@@ -106,7 +107,7 @@ class MessageDialogue extends Component<{}, State> {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      this.setState({ showClose: true, message: '', backgroundColor: 'black' });
+      this.setState({ showClose: true, message: '', backgroundColor: 'black', height: 0 });
     });
   };
 
@@ -121,9 +122,9 @@ class MessageDialogue extends Component<{}, State> {
     return (
       <Animated.View
         style={[Styles.container, {
-          opacity: this.opacity,
+          // opacity: this.opacity,
           backgroundColor: this.state.backgroundColor,
-          height: this.height,
+          height: this.state.height//this.height,
         }]}>
         <View
           style={Styles.messageContainer}>

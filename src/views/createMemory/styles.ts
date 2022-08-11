@@ -35,7 +35,7 @@ const Styles = EStyleSheet.create({
   },
   viewBeforListContainerStyle: {
     justifyContent: 'space-between',
-    height: Utility.getDeviceHeight() - (80 + (Platform.OS == "ios" ? (StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0) + (StaticSafeAreaInsets.safeAreaInsetsTop ? StaticSafeAreaInsets.safeAreaInsetsTop : 0) : 0))
+    height: Utility.getDeviceHeight() - (80 + (Platform.OS == "ios" ? (StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0) + (StaticSafeAreaInsets.safeAreaInsetsTop ? StaticSafeAreaInsets.safeAreaInsetsTop : 0) : (StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0)))
   },
   etherPadStyle: { height: Utility.getDeviceHeight() * 0.6 },
   deleteTextStyle: {
@@ -725,7 +725,7 @@ const Styles = EStyleSheet.create({
   buttonsContainerStyle: {
     flexDirection: 'row',
     marginHorizontal: 16,
-    height: Utility.heightRatio(104),
+    height: 104,
     paddingVertical: 16,
     borderTopColor: Colors.white,
     borderTopWidth: 2,
@@ -733,6 +733,7 @@ const Styles = EStyleSheet.create({
   buttonsStyle: {
     flex: 1,
     backgroundColor: Colors.white,
+    height: 72,
     borderWidth: 1.5,
     borderColor: Colors.bottomTabColor,
     borderRadius: 8,

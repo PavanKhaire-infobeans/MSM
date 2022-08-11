@@ -256,23 +256,12 @@ class WriteTabs extends React.Component<Props>{
                                     // setModalVisible={setModalVisible}
                                     title={this.props.showAlertData?.title}
                                     message={this.props.showAlertData?.desc}
-                                    android={{
-                                        container: Styles.alertContainer,
-                                        title: Styles.alerContainerTitle,
-                                        message: Styles.alerContainerMessage,
-                                    }}
-                                    ios={{
-                                        container: Styles.alertiOSContainer,
-                                        title: Styles.alertiOSContainerTitle,
-                                        message: Styles.alertiOSContainerMessage,
-                                    }}
                                     buttons={[
                                         {
                                             text: Platform.OS === 'android' ? 'GREAT!' : 'Great!',
                                             func: () => {
                                                 this.props.showAlertCall(false);
                                             },
-                                            styles: Styles.alertButn
                                         }
                                     ]}
                                 />

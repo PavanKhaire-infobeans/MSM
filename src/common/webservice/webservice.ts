@@ -2,7 +2,7 @@ import { Platform, Alert, DeviceEventEmitter } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { Actions } from 'react-native-router-flux';
 import { Storage } from '../constants';
-import Utility from '../utility';
+import Utility, { getshowLogoutPopUp, setshowLogoutPopUp } from '../utility';
 import loaderHandler from '../component/busyindicator/LoaderHandler';
 import { LoginStore, Account, UserData } from '../loginStore';
 import { ToastMessage } from '../component/Toast';
@@ -34,15 +34,20 @@ export const logoutMultiple = (selectedAccounts: any) => {
   return LoginStore.listAllAccounts();
 };
 
-export function logout() {
+export async function logout() {
   loaderHandler.hideLoader();
-  Alert.alert('', 'Your session is timed out\nPlease login again', [
-    {
-      text: 'Ok',
-      onPress: () => { },
-    },
-  ]);
-  logoutFlow();
+  if (await getshowLogoutPopUp() === false) {
+    console.error("in show alert >>>")
+    Alert.alert('', 'Your session is timed out\nPlease login again', [
+      {
+        text: 'Ok',
+        onPress: () => { },
+      },
+    ]);
+    await setshowLogoutPopUp(true);
+    await logoutFlow();
+  }
+  
 }
 
 function logoutFlow() {

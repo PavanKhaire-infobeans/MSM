@@ -19,14 +19,22 @@ const Styles = EStyleSheet.create({
         // fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     },
     cancleText: {
-        color: Colors.TextColor,
-        ...fontSize(14),
+        color: Colors.newDescTextColor,
+        fontSize: 16,
         width: '100%',
         textAlign: 'center',
         fontWeight: '500',
         fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-        lineHeight: 17
-        // fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
+        lineHeight: 16
+    },
+    JumptoText: {
+        color: Colors.newDescTextColor,
+        fontSize: 16,
+        width: '100%',
+        textAlign: 'center',
+        fontWeight: '400',
+        fontFamily: fontFamily.Inter,
+        lineHeight: 16
     },
     height4:{
         height:4

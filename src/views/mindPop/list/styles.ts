@@ -60,14 +60,14 @@ const Styles = EStyleSheet.create({
   },
   customTitle: {
     color: Colors.black,
-    fontFamily: "SF Pro Text",
+    fontFamily: fontFamily.SFPro,
     fontSize: 17,
     fontWeight: '600',
     lineHeight: 22
   },
   customMessage: {
     color: Colors.black,
-    fontFamily: "SF Pro Text",
+    fontFamily: fontFamily.SFPro,
     fontSize: 16,
     fontWeight: '500',
   },

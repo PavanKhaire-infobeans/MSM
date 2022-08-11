@@ -192,7 +192,7 @@ const JumpToScreen = (props: Props) => {
                       <>
                         <Image source={chevronleft} />
                         <Text
-                          style={ styles.backTextJumpto }>
+                          style={styles.backTextJumpto}>
                           {'Back'}
                         </Text>
                       </>
@@ -252,7 +252,7 @@ const JumpToScreen = (props: Props) => {
 
                           </View>
                         </>
-                        
+
                       </TouchableHighlight>
                     )}
                   />
@@ -270,8 +270,8 @@ const JumpToScreen = (props: Props) => {
                           underlayColor={'none'}
                           onPress={() => {
                             if (item.item.disabled == false) {
+                              loaderHandler.showLoader("Loading...")
                               setSelectedYear(item?.item.name);
-                              loaderHandler.showLoader();
                               setTimeout(() => {
                                 jumpToClicked(item?.item.name)
                               }, 200);
@@ -300,13 +300,13 @@ const JumpToScreen = (props: Props) => {
                                 marginBottom: 16
                               }
                           ]}>
-                             <Text
-                                style={[
-                                  styles.filterTextJumpto, { color: item.item.disabled == undefined ? '#858587' : Colors.bordercolor }
-                                ]}>
-                                {item.item.name}
-                              </Text>
-                           
+                          <Text
+                            style={[
+                              styles.filterTextJumpto, { color: item.item.disabled == undefined ? '#858587' : Colors.bordercolor }
+                            ]}>
+                            {item.item.name}
+                          </Text>
+
                         </TouchableHighlight>
                       )
                     }}

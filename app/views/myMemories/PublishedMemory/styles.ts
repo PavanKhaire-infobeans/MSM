@@ -45,6 +45,13 @@ const Styles = EStyleSheet.create({
         shadowRadius: 2,
         shadowOffset: { width: 0, height: 2 },
     },
+    imagebackGroundStyle:{ 
+        height: '100%', 
+        width: '100%', 
+        backgroundColor: '#edeef1', 
+        opacity: 0.1, 
+        position: 'absolute' 
+    },
     audioSubContainer: {
         flex: 1,
         elevation: 2,
@@ -167,6 +174,11 @@ const Styles = EStyleSheet.create({
     fullFlex: {
         flex: 1
     },
+    placeholderImageContainer: {
+        height:'100%',
+        width:'100%',
+        flex: 1
+    },
     moreImagesContainer: {
         backgroundColor: Colors.moreViewBg,
         paddingVertical: 4,
@@ -186,7 +198,8 @@ const Styles = EStyleSheet.create({
         textAlign: 'center',
     },
     fullHeight: {
-        height: '100%'
+        height: '100%',
+        width: '100%',
     },
 
 });

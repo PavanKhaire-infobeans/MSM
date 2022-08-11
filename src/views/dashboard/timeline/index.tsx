@@ -31,6 +31,7 @@ const Timeline = (props: Props) => {
     let flatListRef = useRef(null);
     const audioPlayer = useRef(null);
     const actionSheetRef = useRef(null);
+    const timelineYearRef = useRef(null);
 
     const [state, setState] = useState({
         showNoInternetView: false,
@@ -74,7 +75,9 @@ const Timeline = (props: Props) => {
             });
 
             setMemoryYears(yearsArr);
-            setAllYears(allYearsTemp);//.reverse()
+
+            let filteredList = [...new Set(allYearsTemp.map(JSON.stringify))].map(JSON.parse);
+            setAllYears(filteredList);
         }, 500);
     }, [props.jumpToYears])
 
@@ -88,6 +91,13 @@ const Timeline = (props: Props) => {
             setCurrentItemYear(currentYear);
             setPreviousItemYear(prev);
             setNextItemYear(next);
+
+            let allYearsArray = [...allYears];
+            let indexToScroll = allYearsArray.findIndex(x => x.year == currentYear);
+            debugger;
+            if (((indexToScroll >= 0) || (indexToScroll < allYears.length)) && timelineYearRef?.current?.scrollToIndex) {
+                timelineYearRef?.current?.scrollToIndex({ animated: false, index: indexToScroll, viewPosition: 0.3 })
+            }
         }
     }, [props.timelineList])
 
@@ -101,18 +111,27 @@ const Timeline = (props: Props) => {
     }, [props.isJumptoShow])
 
     useEffect(() => {
+        let allYearsArray = [...allYears];
+        let indexToScroll = allYearsArray.findIndex(x => x.year == currentItemYear);
+        if (((indexToScroll >= 0) || (indexToScroll < allYears.length)) && timelineYearRef?.current?.scrollToIndex) {
+            timelineYearRef?.current?.scrollToIndex({ animated: false, index: indexToScroll, viewPosition: 0.3 })
+        }
+    }, [currentItemYear])
+
+
+    useEffect(() => {
         memoryTimelineUpdateListener = EventManager.addListener("memoryUpdateTimelineListener", () => {
             // let obj = {type: ListType.Timeline, isRefresh : true, filters : props.filters, loadPrevious : true, lastMemoryDate : props.timelineList[0].updated, filters : props.filters}     
             // props.fetchMemoryList(obj);
-            props.fetchMemoryList({ type: ListType.Timeline, isLoading: true });
+            props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, filters: props.filters });
             loaderHandler.hideLoader();
         });
-        props.fetchMemoryList({ type: ListType.Timeline, isLoading: true });
+        props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, filters: props.filters });
 
     }, [])
 
     const onRefresh = () => {
-        props.fetchMemoryList({ type: ListType.Timeline, isLoading: true });
+        props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, filters: props.filters });
         // let obj = {type: ListType.Timeline, isRefresh : true, filters : props.filters, loadPrevious : true, lastMemoryDate : props.timelineList[0].updated, filters : props.filters}     
         // props.fetchMemoryList(obj);
     }
@@ -120,7 +139,7 @@ const Timeline = (props: Props) => {
     const handleLoadMore = () => {
         if (!props.isLoadMore) {
             let memoryDetails = props.timelineList[props.timelineList.length - 1]
-            props.fetchMemoryList({ type: ListType.Timeline, isLoadMore: true, lastMemoryDate: memoryDetails.memoryDate, filters: props.filters });
+            props.fetchMemoryList({ type: ListType.Timeline, isLoadMore: true, jumpTo: true, lastMemoryDate: memoryDetails.memoryDate, filters: props.filters });
         }
     };
 
@@ -315,6 +334,12 @@ const Timeline = (props: Props) => {
         prev = memoryYears[currentIndex] ? memoryYears[currentIndex + 1] : null//memoryYears[0]
         next = currentIndex > 0 ? memoryYears[currentIndex - 1] : null
 
+        let allYearsArray = [...allYears];
+        let indexToScroll = allYearsArray.findIndex(x => x.year == selectedYear);
+
+        if ((indexToScroll >= 0) && timelineYearRef?.current?.scrollToIndex) {
+            timelineYearRef?.current?.scrollToIndex({ animated: false, index: indexToScroll, viewPosition: 0.3 })
+        }
         setPreviousItemYear(prev);
         setNextItemYear(next);
 
@@ -323,15 +348,9 @@ const Timeline = (props: Props) => {
 
     const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
         if (viewableItems && viewableItems.length) {
-            setCurrentItemYear(viewableItems[0]?.item?.memoryYear)
+            setCurrentItemYear(viewableItems[0]?.item?.memoryYear);
         }
-        // if (changed && changed.length) {
-        //     if (viewableItems && viewableItems.length) {
-        //         if (viewableItems[0]?.item?.memoryYear < changed[0]?.item?.memoryYear) {
-        //             setPreviousItemYear(changed[0]?.item?.memoryYear)
-        //         }
-        //     }
-        // }
+
     }, []);
 
     return (
@@ -386,12 +405,23 @@ const Timeline = (props: Props) => {
                                     <>
                                         <TouchableHighlight
                                             onPress={() => {
+                                                let allYearsArray = [...allYears];
+                                                let indexToScroll = allYearsArray.findIndex(x => x.year == currentItemYear);
+                                                indexToScroll = indexToScroll + 1;
+                                                // alert(indexToScroll)
+                                                if ((indexToScroll >= 0) && timelineYearRef?.current?.scrollToIndex) {
+                                                    timelineYearRef?.current?.scrollToIndex({ animated: false, index: indexToScroll, viewPosition: 0.3 })
+                                                    jumpToClicked(allYearsArray[indexToScroll].year, "");
+                                                    setCurrentItemYear(allYearsArray[indexToScroll].year)
+                                                }
                                                 setScrolling(false);
-                                                jumpToClicked(previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : '', "");
+                                                // jumpToClicked(allYearsArray[indexToScroll].year, "");
+                                                // setCurrentItemYear(allYearsArray[indexToScroll].year)
+                                                // jumpToClicked(previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : '', "");
+
                                                 if (flatListRef.current) {
                                                     flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
                                                 }
-                                                // setCurrentItemYear(null)
                                                 // setPreviousItemYear(null)
                                                 // setNextItemYear(null)
                                                 setTimelineBarNextPrevClick(true);
@@ -406,28 +436,50 @@ const Timeline = (props: Props) => {
                                                 <Image style={styles.imageStyle} source={leftgradient} />
                                             </View>
 
-                                            {/* <FlatList
+                                            <FlatList
                                                 data={allYears}
-                                                // style={styles.flatlistStyle}
-                                                extraData={state}
+                                                style={styles.timelineFlatlistStyle}
+                                                inverted={true}
                                                 horizontal={true}
                                                 snapToAlignment='center'
                                                 ref={timelineYearRef}
+                                                getItemLayout={(data, index) => { return { length: 136, index, offset: 136 * index } }}
+                                                initialNumToRender={allYears.length}
                                                 keyExtractor={(_, index: number) => `${index}`}
-                                                // onViewableItemsChanged={onViewableItemsChanged}
-                                                // viewabilityConfig={{
-                                                //     itemVisiblePercentThreshold: 5
-                                                // }}
+                                                // contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                                                 showsHorizontalScrollIndicator={false}
-                                                ItemSeparatorComponent={() => <View style={{ height: 1, marginTop: 5, backgroundColor: Colors.newTextColor, width: 46.5, marginLeft: 24, marginRight: 17 }}></View>}
+                                                // ItemSeparatorComponent={() => <View style={styles.timelineYearSeparatorline} />}
                                                 renderItem={({ item, index }) => (
-                                                    <Text style={[styles.newnormalText, { color: Colors.newTextColor, fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterBold, ...fontSize(15), lineHeight: 15 }]}>{item.year}</Text>
+                                                    <View style={styles.timelineContainer}>
+                                                        <Text
+                                                            onPress={() => {
+                                                                // jumpToClicked(item.year, "");
+                                                                loaderHandler.showLoader("Loading...")
+                                                                let currentYear = item.year
+                                                                let next = '', prev = '', currentIndex = allYears.indexOf(currentYear => currentYear.year == item.year);
+                                                                prev = allYears[currentIndex] ? allYears[currentIndex + 1] : null;
+                                                                next = currentIndex > 0 ? allYears[currentIndex - 1] : null;
+                                                                setCurrentItemYear(currentYear);
+                                                                setPreviousItemYear(prev);
+                                                                setNextItemYear(next);
+                                                                let month = ""
+                                                                if (flatListRef.current) {
+                                                                    flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
+                                                                }
+                                                                props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, jumpTo: true, selectedYear: currentYear, selectedMonth: month });
+                                                            }}
+                                                            style={item.year == currentItemYear ? styles.currentYearText : styles.newnormalText}>{item.year}</Text>
+                                                        {
+                                                            <View style={[styles.timelineYearSeparatorline, { backgroundColor: index == 0 ? Colors.timeLinebackground : Colors.newTextColor, height: index == 0 ? 0 : 1 }]} />
+                                                            // : <View style={styles.timelineYearSeparatorline} />
+                                                        }
+
+                                                    </View>
                                                 )}
                                                 indicatorStyle='white'
-                                            // onEndReached={(props.timelineList && props.timelineList.length > 2) ? handleLoadMore.bind(this) : () => { }}
-                                            /> */}
+                                            />
 
-                                            <Text style={styles.newnormalText} numberOfLines={1} ellipsizeMode='tail'>{previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : ''}</Text>
+                                            {/* <Text style={styles.newnormalText} numberOfLines={1} ellipsizeMode='tail'>{previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : ''}</Text>
                                             {<View style={styles.timelineDateSeparator}></View>}
                                             <Text style={styles.currentYearText}>{JSON.stringify(currentItemYear)}</Text>
                                             <View style={{ height: 1, backgroundColor: nextItemYear ? Colors.newTextColor : Colors.transparent, width: nextItemYear ? 46 : 64, marginLeft: nextItemYear ? 17 : 0, marginRight: nextItemYear ? 17 : 0 }}></View>
@@ -445,7 +497,7 @@ const Timeline = (props: Props) => {
                                                     </Text>
                                                     :
                                                     <View style={styles.viewSeparator} />
-                                            }
+                                            } */}
                                             <View
                                                 style={styles.rightArrowContainer} >
                                                 <Image style={styles.imageRightStyle} source={leftgradient} />
@@ -453,19 +505,24 @@ const Timeline = (props: Props) => {
                                         </View>
 
                                         {
-                                            nextItemYear ?
+                                            allYears.length && scrolling && ((currentItemYear != allYears[0].year) && (allYears.findIndex(x => x.year == currentItemYear) >= 0)) ?
                                                 <TouchableHighlight
-                                                    disabled={!nextItemYear}
+                                                    // disabled={!nextItemYear}
                                                     onPress={() => {
                                                         setScrolling(false);
-                                                        jumpToClicked(nextItemYear ? JSON.stringify(nextItemYear) : '', "");
+                                                        let allYearsArray = [...allYears];
+                                                        let indexToScroll = allYearsArray.findIndex(x => x.year == currentItemYear);
+                                                        indexToScroll = indexToScroll - 1;
+                                                        if (((indexToScroll >= 0) || (indexToScroll < allYears.length)) && timelineYearRef?.current?.scrollToIndex) {
+                                                            timelineYearRef?.current?.scrollToIndex({ animated: false, index: indexToScroll, viewPosition: 0.3 })
+                                                            jumpToClicked(allYearsArray[indexToScroll].year, "");
+                                                            setCurrentItemYear(allYearsArray[indexToScroll].year)
+                                                        }
 
+                                                        // jumpToClicked(nextItemYear ? JSON.stringify(nextItemYear) : '', "");
                                                         if (flatListRef.current) {
                                                             flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
                                                         }
-                                                        // setCurrentItemYear(null)
-                                                        // setPreviousItemYear(null)
-                                                        // setNextItemYear(null)
                                                         setTimelineBarNextPrevClick(true);
                                                     }}
                                                     underlayColor={Colors.transparent}
@@ -504,22 +561,30 @@ const Timeline = (props: Props) => {
                             }
                             if (currentItemYear) {
 
-                                // if (timelineYearRef.current) {
-                                //     let index = allYears.findIndex(i => i.year === currentItemYear);
-                                //     // alert(index)
-                                //     if (index !== -1) {
-                                //         timelineYearRef.current.scrollToIndex({ animated: false, index: index });
-                                //     }
-                                // }
+                            // if (timelineYearRef.current) {
+                            //     let index = allYears.findIndex(i => i.year === currentItemYear);
+                            //     // alert(index)
+                            //     if (index !== -1) {
+                            //         timelineYearRef.current.scrollToIndex({ animated: false, index: index });
+                            //     }
+                            // }
 
-                                let next = '', prev = '', currentIndex = memoryYears.indexOf(currentItemYear);
-                                prev = memoryYears[currentIndex] ? memoryYears[currentIndex + 1] : memoryYears[0]
-                                next = currentIndex > 0 ? memoryYears[currentIndex - 1] : null
-                                // console.log("aaa :", currentIndex, " ", JSON.stringify(memoryYears), currentItemYear, prev, next)
+                            let allYearsArray = [...allYears];
+                            let indexToScroll = allYearsArray.findIndex(x => x.year == currentItemYear);
+                            if (((indexToScroll >= 0) || (indexToScroll < allYears.length)) && timelineYearRef?.current?.scrollToIndex) {
+                                timelineYearRef?.current?.scrollToIndex({ animated: false, index: indexToScroll, viewPosition: 0.3 })
+                                // setCurrentItemYear(allYearsArray[indexToScroll].year);
+                            }
 
-                                setPreviousItemYear(prev);
-                                setNextItemYear(next);
-                                // console.warn("next : ",next ," prev : ",prev, " ",JSON.stringify(allYears))
+                            // let next = '', prev = '', currentIndex = memoryYears.indexOf(currentItemYear);
+                            // prev = memoryYears[currentIndex] ? memoryYears[currentIndex + 1] : memoryYears[0]
+                            // next = currentIndex > 0 ? memoryYears[currentIndex - 1] : null
+                            // // console.log("aaa :", currentIndex, " ", JSON.stringify(memoryYears), currentItemYear, prev, next)
+
+                            // setPreviousItemYear(prev);
+                            // setNextItemYear(next);
+
+                            // console.warn("next : ",next ," prev : ",prev, " ",JSON.stringify(allYears))
                             }
                             Keyboard.dismiss()
                         }}

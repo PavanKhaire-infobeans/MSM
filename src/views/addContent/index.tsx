@@ -106,55 +106,12 @@ class AddContentDetails extends React.Component {
         // setModalVisible={setModalVisible}
         title={'Save your memory'}
         message={'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'}
-        android={{
-          container: {
-            backgroundColor: '#ffffff'
-          },
-          title: {
-            color: Colors.black,
-            fontFamily: "SF Pro Text",
-            fontSize: 17,
-            fontWeight: '600',
-            lineHeight: 22
-          },
-          message: {
-            color: Colors.black,
-            // fontFamily: fontFamily.Inter,
-            fontSize: 16,
-            fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-            fontWeight: '500',
-          },
-        }}
-        ios={{
-          container: {
-            backgroundColor: '#D3D3D3'
-          },
-          title: {
-            color: Colors.black,
-            // fontFamily: fontFamily.Inter,
-            lineHeight: 22,
-            fontSize: 17,
-            fontWeight: '600',
-          },
-          message: {
-            color: Colors.black,
-            // fontFamily: fontFamily.Inter,
-            fontSize: 13,
-            lineHeight: 18,
-            fontWeight: '400',
-          },
-        }}
         buttons={[{
           text: 'Save as Memory Draft',
           func: () => {
             ReactNativeHapticFeedback.trigger('impactMedium', options);
             this.createMemory();
           },
-          styles: {
-            lineHeight: 22,
-            fontSize: 17,
-            fontWeight: '600',
-          }
         },
         {
           text: 'Save as a MindPop',
@@ -175,11 +132,6 @@ class AddContentDetails extends React.Component {
               }
             })
           },
-          styles: {
-            lineHeight: 22,
-            fontSize: 17,
-            fontWeight: '400',
-          }
         },
         {
           text: 'Cancel',
@@ -191,11 +143,6 @@ class AddContentDetails extends React.Component {
               Actions.pop()
             })
           },
-          styles: {
-            lineHeight: 22,
-            fontSize: 17,
-            fontWeight: '400',
-          }
         }
         ]}
       />

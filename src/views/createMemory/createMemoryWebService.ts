@@ -44,7 +44,6 @@ export const CreateUpdateMemory = async (
         Promise.reject(err);
       });
 
-    // console.warn("daaaaa :" + JSON.stringify(response));
     if (response.ResponseCode == 200) {
       //	Alert.alert("parseInt(getValue(response))"+ JSON.stringify(response));
       let id = parseInt(getValue(response, ['Status'])) || 0;

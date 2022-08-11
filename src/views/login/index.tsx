@@ -234,16 +234,17 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   }
 
   showErrorMessage = (show: boolean, message?: string) => {
+    debugger
     let height = 0;
     if (show) {
-    //   // height = 70;
-    //   this.messageRef._show(message, Colors.ErrorColor);
-    //   setTimeout(() => {
-    //     this.messageRef && this.messageRef._hide();
-    //   }, 4000);
-    //   Alert.alert(message)
-    // } else {
-    //   this.messageRef._hide();
+      // height = 70;
+      this.messageRef._show({ message, color: Colors.ErrorColor });
+      setTimeout(() => {
+        this.messageRef && this.messageRef._hide();
+      }, 4000);
+      // Alert.alert(message)
+    } else {
+      this.messageRef._hide();
     }
     this.updateState({ errorViewHeight: height });
   };
@@ -311,65 +312,65 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.6)']}
             style={{ height: '100%', width: '100%' }}> */}
         <SafeAreaView style={Styles.flexContainer}>
-          {/* <MessageDialogue ref={(ref: any) => this.messageRef = ref} /> */}
-         
+          <MessageDialogue ref={(ref: any) => this.messageRef = ref} />
 
-            <View style={Styles.LoginHeader}>
-              <Text style={Styles.hederText}>Login</Text>
+
+          <View style={Styles.LoginHeader}>
+            <Text style={Styles.hederText}>Login</Text>
+          </View>
+
+          <View style={Styles.separatorHeightStyle16} />
+          <View style={Styles.separatorHeightStyle16} />
+
+
+          <View style={Styles.inputsContainer}>
+
+            <View >
+
+              <Text style={[CommonTextStyles.fontWeight500Size13Inter, Styles.labelStyle]}>
+                EMAIL OR USERNAME
+              </Text>
+
+              <TextField
+                errorMessage={this.state.userNameError.text}
+                showError={this.state.userNameError.error}
+                reference={ref => (this._usernameField = ref)}
+                onSubmitEditing={() => {
+                  this._passwordField && this._passwordField.focus();
+                }}
+                value={this.state.username}
+                placeholder="Email or username..."
+                keyboardType="email-address"
+                returnKeyType="next"
+                onChange={(text: any) =>
+                  this.controller.onTextChange('username', text)
+                }
+              />
+              {/* <View style={Styles.separatorHeightStyle16} /> */}
+              <Text style={[CommonTextStyles.fontWeight500Size13Inter, Styles.labelStyle]}>
+                PASSWORD
+              </Text>
+
+              <TextField
+                passwordToggle={true}
+                errorMessage={this.state.passwordError.text}
+                showError={this.state.passwordError.error}
+                reference={ref => (this._passwordField = ref)}
+                value={this.state.password}
+                placeholder="Password..."
+                secureTextEntry={true}
+                onSubmitEditing={this.controller.onClick.bind(
+                  this.controller,
+                )}
+                returnKeyType="go"
+                onChange={(text: any) =>
+                  this.controller.onTextChange('password', text)
+                }
+              />
+              {/* <View style={{ height: 10 }} /> */}
             </View>
 
-            <View style={Styles.separatorHeightStyle16} />
-            <View style={Styles.separatorHeightStyle16} />
-
-           
-            <View style={Styles.inputsContainer}>
-
-              <View >
-
-                <Text style={[CommonTextStyles.fontWeight500Size13Inter, Styles.labelStyle]}>
-                  EMAIL OR USERNAME
-                </Text>
-
-                <TextField
-                  errorMessage={this.state.userNameError.text}
-                  showError={this.state.userNameError.error}
-                  reference={ref => (this._usernameField = ref)}
-                  onSubmitEditing={() => {
-                    this._passwordField && this._passwordField.focus();
-                  }}
-                  value={this.state.username}
-                  placeholder="Email or username..."
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  onChange={(text: any) =>
-                    this.controller.onTextChange('username', text)
-                  }
-                />
-                {/* <View style={Styles.separatorHeightStyle16} /> */}
-                <Text style={[CommonTextStyles.fontWeight500Size13Inter, Styles.labelStyle]}>
-                  PASSWORD
-                </Text>
-
-                <TextField
-                  passwordToggle={true}
-                  errorMessage={this.state.passwordError.text}
-                  showError={this.state.passwordError.error}
-                  reference={ref => (this._passwordField = ref)}
-                  value={this.state.password}
-                  placeholder="Password..."
-                  secureTextEntry={true}
-                  onSubmitEditing={this.controller.onClick.bind(
-                    this.controller,
-                  )}
-                  returnKeyType="go"
-                  onChange={(text: any) =>
-                    this.controller.onTextChange('password', text)
-                  }
-                />
-                {/* <View style={{ height: 10 }} /> */}
-              </View>
-
-              {/* <View
+            {/* <View
                   // behavior={Platform.OS === "ios" ? "padding" : "height"}
                   // keyboardVerticalOffset={60}
                   style={{
@@ -377,29 +378,30 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                     marginLeft: 24,
                     height: 380 - this.state.keyboardHeight
                   }}> */}
-              <Animated.View style={[Styles.buttonContainer, animStyle]} >
+            <Animated.View style={[Styles.buttonContainer, animStyle]} >
 
-                <TouchableWithoutFeedback
-                  // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
-                  onPress={this.controller.onClick.bind(this.controller)}
-                >
-                  <View style={[Styles.loginSSOButtonStyle, {height:44,
-                    backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.bordercolor : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, 
-                    flexDirection: 'row'
-                    // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
-                  }]}>
-                    <Text style={[CommonTextStyles.fontWeight500Size17Inter, Styles.loginTextStyle]}>
-                      Login
-                    </Text>
-                    <Image source={arrowRightCircle} />
+              <TouchableWithoutFeedback
+                // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                onPress={this.controller.onClick.bind(this.controller)}
+              >
+                <View style={[Styles.loginSSOButtonStyle, {
+                  height: 44,
+                  backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.bordercolor : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1,
+                  flexDirection: 'row'
+                  // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
+                }]}>
+                  <Text style={[CommonTextStyles.fontWeight500Size17Inter, Styles.loginTextStyle]}>
+                    Login
+                  </Text>
+                  <Image source={arrowRightCircle} />
 
-                  </View>
-                </TouchableWithoutFeedback>
-              </Animated.View>
+                </View>
+              </TouchableWithoutFeedback>
+            </Animated.View>
 
-            </View>
-            {/** Sign In section */}
-            {/* <TouchableHighlight
+          </View>
+          {/** Sign In section */}
+          {/* <TouchableHighlight
                   underlayColor={'#ffffffff'}
                   style={styles.forgotPassword}
                   onPress={() =>
@@ -439,8 +441,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                 </TouchableHighlight>
                 */}
 
-            {/** Forgot Passwrod button */}
-            {/* <View style={styles.forgotPasswordContainer}>
+          {/** Forgot Passwrod button */}
+          {/* <View style={styles.forgotPasswordContainer}>
                   <TouchableOpacity
                     style={styles.forgotPassword}
                     onPress={() => {
@@ -459,7 +461,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                 </View> */}
 
 
-            {/* </View> */}
+          {/* </View> */}
           {/* </View> */}
           {/* </View> */}
         </SafeAreaView>

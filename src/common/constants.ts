@@ -22,7 +22,11 @@ export const fontFamily = {
   LoraMedium: 'Lora-Medium',
   LoraBold: 'Lora-Bold',
   LoraSemiBold: 'Lora-SemiBold',
-  // SFPro:"SFPro-Regular"
+  Roboto: 'Roboto-Regular',
+  RobotoMedium: 'Roboto-Medium',
+  RobotoBold: 'Roboto-Bold',
+  // RobotoSemiBold: 'Roboto-SemiBold',
+  SFPro:"SFPro-Regular"
 };
 
 export function testEmail(email: string) {

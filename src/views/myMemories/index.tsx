@@ -55,55 +55,12 @@ export default class MyMemoriesContainer extends React.Component<Props> {
         // setModalVisible={setModalVisible}
         title={title}
         message={message}
-        android={{
-          container: {
-            backgroundColor: '#ffffff'
-          },
-          title: {
-            color: Colors.black,
-            fontFamily: "SF Pro Text",
-            fontSize: 17,
-            fontWeight: '600',
-            lineHeight: 22
-          },
-          message: {
-            color: Colors.black,
-            // fontFamily: fontFamily.Inter,
-            fontSize: 16,
-            fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-            fontWeight: '500',
-          },
-        }}
-        ios={{
-          container: {
-            backgroundColor: '#D3D3D3'
-          },
-          title: {
-            color: Colors.black,
-            // fontFamily: fontFamily.Inter,
-            lineHeight: 22,
-            fontSize: 17,
-            fontWeight: '600',
-          },
-          message: {
-            color: Colors.black,
-            // fontFamily: fontFamily.Inter,
-            fontSize: 13,
-            lineHeight: 18,
-            fontWeight: '400',
-          },
-        }}
         buttons={[
           {
             text:  Platform.OS==='android'?'GREAT!':'Great!',
             func: () => {
 
             },
-            styles: {
-              lineHeight: 22,
-              fontSize: 17,
-              fontWeight: '600',
-            }
           }
         ]}
       />

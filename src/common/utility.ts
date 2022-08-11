@@ -3,6 +3,15 @@ import { Appearance, Dimensions } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
 import DeviceInfo from 'react-native-device-info';
 import { constant, MemoryActionKeys } from '../common/constants';
+let showLogoutPopUp = false;
+
+export const getshowLogoutPopUp = () => {
+  return showLogoutPopUp;
+}
+
+export const setshowLogoutPopUp = (data: boolean) => {
+  showLogoutPopUp = data;
+}
 
 export default class Utility {
   static shortMonths = [

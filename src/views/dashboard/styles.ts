@@ -2,6 +2,7 @@ import { Dimensions, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
 import Utility from '../../common/utility';
+import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 
 const Styles = EStyleSheet.create({
 
@@ -17,7 +18,7 @@ const Styles = EStyleSheet.create({
   },
   customTitle: {
     color: Colors.black,
-    fontFamily: "SF Pro Text",
+    fontFamily: fontFamily.SFPro,
     fontSize: 17,
     fontWeight: '600',
     lineHeight: 22
@@ -29,7 +30,7 @@ const Styles = EStyleSheet.create({
   },
   customMessage: {
     color: Colors.black,
-    fontFamily: "SF Pro Text",
+    fontFamily: fontFamily.SFPro,
     fontSize: 16,
     fontWeight: '500',
   },
@@ -417,7 +418,7 @@ const Styles = EStyleSheet.create({
     flexWrap: 'wrap'
   },
   jumptoScreenContainer: {
-    height: Utility.getDeviceHeight() - 112,
+    height: Utility.getDeviceHeight() - (64 + (StaticSafeAreaInsets.safeAreaInsetsTop ? StaticSafeAreaInsets.safeAreaInsetsTop : 0)),
     width: '100%',
     // backgroundColor: Colors.blacknew, 
     borderTopLeftRadius: 12,
@@ -512,7 +513,7 @@ const Styles = EStyleSheet.create({
     height: 8
   },
   ScrollToendView: { height: 140 },
-  imageBackgrounStyle:{borderRadius: 15 }
+  imageBackgrounStyle: { borderRadius: 15 }
 });
 
 export default Styles;

@@ -2007,43 +2007,6 @@ class CreateMemory extends React.Component<Props> {
             // setModalVisible={setModalVisible}
             title={'Save your memory'}
             message={'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'}
-            android={{
-              container: {
-                backgroundColor: Colors.white
-              },
-              title: {
-                color: Colors.black,
-                fontFamily: "SF Pro Text",
-                fontSize: 17,
-                fontWeight: '600',
-                lineHeight: 22
-              },
-              message: {
-                color: Colors.black,
-                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                fontSize: 16,
-                fontWeight: '500',
-              },
-            }}
-            ios={{
-              container: {
-                backgroundColor: Colors.grayColor
-              },
-              title: {
-                color: Colors.black,
-                // fontFamily: fontFamily.Inter,
-                lineHeight: 22,
-                fontSize: 17,
-                fontWeight: '600',
-              },
-              message: {
-                color: Colors.black,
-                // fontFamily: fontFamily.Inter,
-                fontSize: 13,
-                lineHeight: 18,
-                fontWeight: '400',
-              },
-            }}
             buttons={[{
               text: 'Close and save as draft',
               func: () => {
@@ -2058,11 +2021,6 @@ class CreateMemory extends React.Component<Props> {
 
                 // ReactNativeHapticFeedback.trigger('impactMedium', options);
               },
-              styles: {
-                lineHeight: 22,
-                fontSize: 17,
-                fontWeight: '600',
-              }
             },
             {
               text: 'Continue editing',
@@ -2070,11 +2028,6 @@ class CreateMemory extends React.Component<Props> {
                 this.setState({ showCustomAlert: false })
                 // ReactNativeHapticFeedback.trigger('impactMedium', options);
               },
-              styles: {
-                lineHeight: 22,
-                fontSize: 17,
-                fontWeight: '400',
-              }
             },
             {
               text: 'Cancel',
@@ -2087,11 +2040,6 @@ class CreateMemory extends React.Component<Props> {
                 })
                 // ReactNativeHapticFeedback.trigger('impactMedium', options);
               },
-              styles: {
-                lineHeight: 22,
-                fontSize: 17,
-                fontWeight: '400',
-              }
             }
             ]}
           />
@@ -2129,16 +2077,6 @@ class CreateMemory extends React.Component<Props> {
               setModalVisible={this.state.actionSheet?.list?.actions && this.state.actionSheet?.list?.actions.length && this.state.actionSheet?.list?.actions[0] && this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,') ? `Are you done writing this memory?` : `Save for later?`}
               title={this.state.actionSheet.title}
               message={this.state.actionSheet?.list?.actions && this.state.actionSheet?.list?.actions.length && this.state.actionSheet?.list?.actions[0] && this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,') ? `` : 'Choose to completely discard your work, or save writing this memory for later.'}
-              android={{
-                container: styles.alertContainer,
-                title: styles.alertTitleStyle,
-                message: styles.alertmessageStyle
-              }}
-              ios={{
-                container: styles.alertiOSContainer,
-                title: styles.alertiOSTitleStyle,
-                message: styles.alertiOSmessageStyle
-              }}
               buttons={
                 this.state.actionSheet.list = this.state.actionSheet.list.map((item: any) => {
                   return ({
@@ -2151,7 +2089,6 @@ class CreateMemory extends React.Component<Props> {
                         this.onActionItemClicked(item.index);
                       })
                     },
-                    styles: styles.alerButtonStyle
                   })
                 })
                 //   [{
@@ -2163,11 +2100,6 @@ class CreateMemory extends React.Component<Props> {
 
                 //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
                 //   },
-                //   styles: {
-                //     lineHeight: 22,
-                //     fontSize: 17,
-                //     fontWeight: '600',
-                //   }
                 // },
                 // {
                 //   text: 'Continue editing',
@@ -2175,11 +2107,6 @@ class CreateMemory extends React.Component<Props> {
                 //     this.setState({ showCustomAlert: false })
                 //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
                 //   },
-                //   styles: {
-                //     lineHeight: 22,
-                //     fontSize: 17,
-                //     fontWeight: '400',
-                //   }
                 // },
                 // {
                 //   text: 'Cancel',
@@ -2189,11 +2116,6 @@ class CreateMemory extends React.Component<Props> {
                 //     })
                 //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
                 //   },
-                //   styles: {
-                //     lineHeight: 22,
-                //     fontSize: 17,
-                //     fontWeight: '400',
-                //   }
                 // }
                 // ]
               }

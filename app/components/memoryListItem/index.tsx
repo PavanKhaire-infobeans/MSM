@@ -194,7 +194,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
         memory_url: item.memory_url,
         memoryType: item.type,
         actionType: MemoryActionKeys.shareActionKey,
-        uid: item.user_details.uid,
+        uid: item?.user_details?.uid,
       }
     );
     return memoryActions;
