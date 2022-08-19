@@ -55,9 +55,9 @@ export default class AppIntro extends React.Component {
     Actions.prologue();
   };
 
-  renderAppIntro = (item: any) => {
-    let index = item.index;
-    item = item.item;
+  renderAppIntro = ({item, index}) => {
+    // let index = item.index;
+    // item = item.item;
     return (
       <View
         style={style.renderAppIntroContainer}>
@@ -74,27 +74,27 @@ export default class AppIntro extends React.Component {
               style={style.containtContainerStyle}>
               <View
                 style={style.animatedViewContainer}>
-                <Animated.View
+                <View
                   style={[style.AnimatedViewStyle, style.imangeconatinerStyle, {
-                    opacity: this.state.fadeInOut
+                    // opacity: this.state.fadeInOut
                   }]}>
-                  {this.state.currentIndex == index && (
+                  {/* {this.state.currentIndex == index && ( */}
                     <Image
                       source={item.image}
                       style={[style.ScrollImagesStyle, {
-                        resizeMode: this.state.currentIndex == 1 ? 'stretch' : 'contain',
+                        resizeMode: index == 1 ? 'stretch' : 'contain',
                       }]}></Image>
-                  )}
-                </Animated.View>
+                  {/* )} */}
+                </View>
               </View>
               <View style={style.emptyView}></View>
             </View>
 
             <View
               style={style.descriptionContainer}>
-              <Animated.View
+              <View
                 style={[style.descriptionAnimatedViewStyle]}>
-                {this.state.currentIndex === index && (
+                {/* {this.state.currentIndex === index && ( */}
                   <View
                     style={style.descTextContainer}>
                     <Text
@@ -106,8 +106,8 @@ export default class AppIntro extends React.Component {
                       {item.description}
                     </Text>
                   </View>
-                )}
-              </Animated.View>
+                {/* )} */}
+              </View>
             </View>
           </View>
         </ImageBackground>
@@ -187,7 +187,7 @@ export default class AppIntro extends React.Component {
               data={this.images}
               initialNumToRender={this.images.length}
               renderItem={this.renderAppIntro}
-              horizontal
+              horizontal={true}
               pagingEnabled={true}
               showsHorizontalScrollIndicator={false}
               keyExtractor={(_item, index) => index + ''}

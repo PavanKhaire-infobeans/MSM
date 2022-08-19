@@ -5,9 +5,11 @@ import {
   ImageBackground, Platform, SafeAreaView, StatusBar, TouchableHighlight, View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import DefaultListItem from '../../common/component/defaultListItem';
 import TextNew from '../../common/component/Text';
-import { Colors, fontFamily, fontSize } from '../../common/constants';
+import { No_Internet_Warning } from '../../common/component/Toast';
+import { Colors, fontFamily, fontSize, getValue } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
@@ -20,7 +22,8 @@ import {
 } from '../../images';
 import { kLogoutPressed } from '../../views/menu';
 import NavigationBar from '../dashboard/NavigationBar';
-import { kProfilePicUpdated } from '../profile/profileDataModel';
+import { kProfilePicUpdated, ProfileDataModel } from '../profile/profileDataModel';
+import { kGetUserProfileData, UserProfile } from '../profile/userProfileWebService';
 import Styles from './styles';
 type items = {
   title: string;
@@ -41,12 +44,32 @@ const Logout = 'Logout';
 
 export default class MyAccount extends React.Component {
   profilePicUpdate: EventManager;
+  checkProfile: EventManager;
+  profileData: ProfileDataModel;
   state = {
     Items: [],
   };
 
-  fullname =
-    Account.selectedData().firstName + ' ' + Account.selectedData().lastName;
+  constructor(props: object) {
+    super(props);
+    this.checkProfile = EventManager.addListener(
+      kGetUserProfileData,
+      this.getUserProfileDataCallBack,
+    );
+    // this.userProfileUpdated = EventManager.addListener(kUserAccountUpdated, this.userAccountChanged);
+    this.profileData = new ProfileDataModel();
+    // if ( Actions.currentScene == 'myAccount' || Actions.currentScene == 'profile' ) {
+      this.getUserProfileData();
+    // }
+    
+    this.profilePicUpdate = EventManager.addListener(
+      kProfilePicUpdated,
+      this.updateProfilePic,
+    );
+
+  }
+
+  fullname = Account.selectedData().firstName + ' ' + Account.selectedData().lastName;
 
   segregateItemClick(identifier: any) {
     switch (identifier) {
@@ -56,7 +79,8 @@ export default class MyAccount extends React.Component {
         Actions.push('mindPop');
         break;
       case Drafts:
-        Actions.jump('memoriesDrafts', {isFromMenu: true});
+        // Actions.jump('memoriesDrafts', {isFromMenu: true});
+        Actions.replace('writeTabs')
         break;
       case Memories:
         break;
@@ -132,11 +156,29 @@ export default class MyAccount extends React.Component {
         },
       ];
     }
-    this.setState({Items: items});
-    this.profilePicUpdate = EventManager.addListener(
-      kProfilePicUpdated,
-      this.updateProfilePic,
-    );
+    this.setState({ Items: items });
+   
+  };
+
+  // CallBack for Profile data web service
+  getUserProfileDataCallBack = (success: boolean, profileDetails: any) => {
+    //stop refresh control
+    if (success) {
+      this.profileData.updateValues(profileDetails);
+      // this.setState({ refreshing: false });
+      loaderHandler.hideLoader();
+    }
+    // this.setState({ refreshing: false });
+  };
+
+  // Web-service call to fetch profile data
+  getUserProfileData = () => {
+    if (Utility.isInternetConnected) {
+      // loaderHandler.showLoader('Loading...');
+      UserProfile();
+    } else {
+      No_Internet_Warning();
+    }
   };
 
   updateProfilePic = () => {
@@ -147,6 +189,10 @@ export default class MyAccount extends React.Component {
 
   render() {
     let profilePic = Account.selectedData().profileImage;
+    let imageURL =
+      getValue(this.profileData, ['basicInfo', 'profilePicUri']) || '';
+    let profilePicURL =
+      imageURL != '' ? Utility.getFileURLFromPublicURL(imageURL) : '';
     return (
       <View style={Styles.container}>
         <SafeAreaView
@@ -156,7 +202,7 @@ export default class MyAccount extends React.Component {
           <View style={Styles.container}>
             <NavigationBar title={'My Account'} showClose={true} />
             <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <View
@@ -167,7 +213,7 @@ export default class MyAccount extends React.Component {
                 source={profile_placeholder}>
                 <Image
                   source={
-                    profilePic != '' ? {uri: profilePic} : profile_placeholder
+                    profilePic != '' ? { uri: profilePic } : profile_placeholder
                   }
                   style={Styles.imageStyle}
                 />
@@ -194,7 +240,7 @@ export default class MyAccount extends React.Component {
               data={this.state.Items}
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatListStyle}
-              renderItem={({item: data}) => {
+              renderItem={({ item: data }) => {
                 return (
                   <DefaultListItem
                     title={data.title}

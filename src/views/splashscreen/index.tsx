@@ -148,8 +148,8 @@ class Splash extends Component<Props> {
     ) {
       Account.selectedData().values = nextProps.user;
       // Actions.reset("dashboardIndex")
-      this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
       try {
+        this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
 
         if(this.state.fromDeeplinking){
         

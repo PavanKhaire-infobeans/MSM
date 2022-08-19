@@ -570,7 +570,8 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 							// backAction={this.props.backAction}
 							updateList={this.props.updateList}
 							// cancelAction={this.props.cancelAction}
-							cancelAction={() => Actions.dashboard()}
+							cancelAction={() => Actions.pop()}
+							// cancelAction={() => Actions.dashboard()}
 							clearAllAction={this.props.clearAllAction} /> :
 							<MindPopNavigationBar selectAction={this.props.selectAction}
 								selectAllAction={this.props.selectAllAction}

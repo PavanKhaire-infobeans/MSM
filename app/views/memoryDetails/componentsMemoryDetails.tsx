@@ -183,7 +183,7 @@ export const MemoryCollections = (props: {
   );
 };
 
-export const Border = (props: { paddingTop?: any; padding?: any; paddingLeft?: any; width?: any }) => {
+export const Border = (props: { paddingTop?: any; padding?: any; paddingLeft?: any; width?: any, marginBottom?: any }) => {
   return (
     <View
       style={[Styles.borderStyle, {
@@ -191,6 +191,7 @@ export const Border = (props: { paddingTop?: any; padding?: any; paddingLeft?: a
         marginTop: props.paddingTop ? props.paddingTop : 0,
         marginRight: props.padding ? props.padding : 0,
         marginLeft: props.padding ? props.padding : 0,
+        marginBottom: props.marginBottom ? props.marginBottom : 0,
         paddingLeft: props.paddingLeft ? props.paddingLeft : 0,
       }]}
     />

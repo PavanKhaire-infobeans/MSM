@@ -535,7 +535,7 @@ const checkPermissionFor = (data) => {
           // return false;
           break;
         case RESULTS.LIMITED:
-          Permissions.openSettings();
+          // Permissions.openSettings();
           // return false;
           console.log('The permission is limited: some actions are possible');
           break;
@@ -605,7 +605,7 @@ export const requestPermission = async (type: string): Promise<boolean> => {
       }),
     ).then(result => {
       // …
-      if (result === 'granted') return true;
+      if (result === 'granted' || result === 'limited') return true;
       else return false;
     });
 

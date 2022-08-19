@@ -51,6 +51,7 @@ export default class Account implements UserData {
   isSSOLogin = false;
 
   set values(user: UserData) {
+
     this.instanceID = user.instanceID || this.instanceID;
     this.email = user.email || this.email;
     this.name = user.name || this.name;

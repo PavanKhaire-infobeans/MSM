@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import {
   Alert, FlatList, Image, ImageBackground, Keyboard, Platform, SafeAreaView, StatusBar, TextInput, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View
 } from 'react-native';
@@ -63,6 +63,7 @@ class AddContentDetails extends React.Component {
   backListner: any;
   createMemoryListener: EventManager;
   draftDetails: any = {};
+  inputRef = createRef()
   state: State = {
     memoryIntroVisibility: false,
     textContent: '',
@@ -80,7 +81,7 @@ class AddContentDetails extends React.Component {
     showNextDialog: false,
     mindPopClick: false,
     titleError: "",
-    placeholder:"|Tap to start writing..."
+    placeholder: "|Tap to start writing..."
   };
 
   constructor(props: any) {
@@ -143,6 +144,7 @@ class AddContentDetails extends React.Component {
               Actions.pop()
             })
           },
+          styles: { fontWeight: '400' }
         }
         ]}
       />
@@ -860,7 +862,11 @@ class AddContentDetails extends React.Component {
           backgroundColor={Colors.NewThemeColor}
         />
 
-        <View style={style.container}>
+        <TouchableWithoutFeedback onPress={() => {
+             this.inputRef.focus()
+            }}
+              underlayColor={Colors.white} >
+
           {/* <NavigationHeaderSafeArea
             heading={'New Memory/MindPop'}
             showCommunity={true}
@@ -869,7 +875,7 @@ class AddContentDetails extends React.Component {
             rightText={'Next'}
             saveValues={this.saveMemoryOrMindpop}
           /> */}
-          <>
+          <View style={style.container}>
             <NavigationHeaderSafeArea
               // heading={'Filters'}
               height="120"
@@ -900,11 +906,12 @@ class AddContentDetails extends React.Component {
                     <TextInput
                       placeholder={this.state.placeholder}
                       autoFocus={false}
+                      ref={ref => this.inputRef = ref}
                       onChangeText={text => {
-                        this.setState({ content: text, titleError: "",placeholder:'Start writing...' });
+                        this.setState({ content: text, titleError: "", placeholder: 'Start writing...' });
                       }}
-                      onFocus={()=>{
-                        this.setState({ placeholder:'Start writing...' });
+                      onFocus={() => {
+                        this.setState({ placeholder: 'Start writing...' });
                       }}
                       placeholderTextColor={Colors.bordercolor}
                       value={this.state.content}
@@ -967,8 +974,8 @@ class AddContentDetails extends React.Component {
             />
             <View
               style={style.emptyView}></View>
-          </>
-        </View>
+          </View>
+        </TouchableWithoutFeedback>
 
         {this.state.memoryIntroVisibility && (
           <CreateMemoryIntro

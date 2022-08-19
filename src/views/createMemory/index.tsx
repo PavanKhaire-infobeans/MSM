@@ -1668,7 +1668,7 @@ class CreateMemory extends React.Component<Props> {
                         borderBottomColor: this.state.titleError.length > 0 ? Colors.ErrorColor : Colors.white,
                         borderBottomWidth: this.state.titleError.length > 0 ? 0.5 : 0,
                       }]}
-
+                      // selection={{start:0}}//, end:0
                       value={this.state.title}
                       maxLength={250}
                       multiline={false}
@@ -2028,6 +2028,7 @@ class CreateMemory extends React.Component<Props> {
                 this.setState({ showCustomAlert: false })
                 // ReactNativeHapticFeedback.trigger('impactMedium', options);
               },
+              styles: { fontWeight: '400' }
             },
             {
               text: 'Cancel',
@@ -2040,6 +2041,7 @@ class CreateMemory extends React.Component<Props> {
                 })
                 // ReactNativeHapticFeedback.trigger('impactMedium', options);
               },
+              styles: { fontWeight: '400' }
             }
             ]}
           />

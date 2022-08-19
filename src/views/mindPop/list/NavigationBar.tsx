@@ -22,15 +22,14 @@ const testID = {
 
 class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
   _renderLeft() {
-    let action = this.props.isSelectionOn
-      ? this.props.backAction
-      : this.props.cancelAction;
+    
     let leftImg = this.props.isSelectionOn ? backBtn : navBarCrossIconWhite;
     return (
       <TouchableOpacity
         style={[styles.leftButtonTouchableContainer]}
         testID={testID.leftButtons.menu}
-        onPress={() => Actions.dashBoard()}>
+        onPress={() => Actions.pop()}>
+        {/* onPress={() => Actions.dashBoard()}> */}
         {/* action() */}
         <Image
           style={styles.imageStyle}

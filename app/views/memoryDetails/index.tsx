@@ -1652,7 +1652,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
           A memory from <Text style={{ color: Colors.newDescTextColor }}>{this.memoryDataModel.memory.memoryDateDisplay}</Text>{'\n'}Published on <Text style={{ color: Colors.newDescTextColor }}>{this.memoryDataModel.userDetails.createdOn}</Text>
         </Text>
 
-        <Border width={'100%'} paddingLeft={16} />
+        <Border width={'100%'} marginBottom={16} paddingLeft={16} />
+        {/* <View style={style.descreptionContainer} /> */}
 
         {/* <View style={{flexDirection: 'row'}}>
           {this.memoryDataModel.memory.whoElseWasThere.length > 0 ? (
@@ -1759,7 +1760,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
               this.memoryDataModel.memory.collaborators
             }></CollaboratorView>
         )} */}
-        <View style={style.descreptionContainer} />
 
         {this.memoryDataModel.memory.description.length > 0 && (
           < >
@@ -1872,11 +1872,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
             ListType.Recent,
           )} */}
 
+          {/* <View style={style.descreptionSeparatorContainer} /> */}
+
           {/* <StatusBar barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'} /> */}
           {this.state.memoryDetailAvailable && (
             <View style={style.memoryDetailAvailable}>
 
-              <View style={style.descreptionSeparatorContainer} />
               {this.state.isExternalQueue &&
                 this.memoryDataModel.externalQueue.collection.length > 1 && (
                   <View
