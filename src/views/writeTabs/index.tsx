@@ -241,6 +241,7 @@ class WriteTabs extends React.Component<Props>{
             this.scrollableTabView.goToPage(0);
         }
     }
+    
     render() {
         return (
             <View style={Styles.fullFlex}>
@@ -285,11 +286,17 @@ class WriteTabs extends React.Component<Props>{
                             locked={Platform.OS == 'ios' ? false : true}
                             initialPage={0}
                             currentScreen={(screenName: any) => {
+                                // alert(screenName)
                                 if (screenName == 1) {
                                     if (Actions.currentScene != 'createMemory' && Actions.currentScene != 'mindPopList' && Actions.currentScene != 'addContent' && Actions.currentScene != 'dashboard') {
                                         Actions.push('addContent', {
                                             beforeBack: () => { this.setScreen() }
                                         });
+                                    }
+                                }
+                                if (screenName == 2) {
+                                    if(Actions.currentScene === 'myAccount'){
+                                        this.setScreen()
                                     }
                                 }
                             }}

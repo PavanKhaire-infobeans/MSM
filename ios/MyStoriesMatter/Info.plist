@@ -155,6 +155,8 @@
 		<string>Lora-SemiBold.ttf</string>
 		<string>Lora-Medium.ttf</string>
 		<string>Lora-Regular.ttf</string>
+		<string>SFPro-Regular.ttf</string>
+		<!-- <string>SFPro-Regular.otf</string> -->
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

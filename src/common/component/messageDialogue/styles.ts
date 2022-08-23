@@ -1,6 +1,5 @@
 import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontFamily, fontSize } from '../../constants';
 
 const Styles = EStyleSheet.create({
  
@@ -16,6 +15,7 @@ const Styles = EStyleSheet.create({
   messageContainer:{
     flex: 1,
     height: '100%',
+    width: '100%',
     justifyContent: 'center',
     paddingLeft: 10,
   },
@@ -24,7 +24,7 @@ const Styles = EStyleSheet.create({
     fontSize:14,
     lineHeight: 16,
     textAlign: 'left',
-    color: 'white',
+    color: '#ffffff',
     paddingBottom: 5,
     paddingTop: 5,
   },
@@ -46,7 +46,7 @@ const Styles = EStyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: 11,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },

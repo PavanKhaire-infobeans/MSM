@@ -9,7 +9,7 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import DefaultListItem from '../../common/component/defaultListItem';
 import TextNew from '../../common/component/Text';
 import { No_Internet_Warning } from '../../common/component/Toast';
-import { Colors, fontFamily, fontSize, getValue } from '../../common/constants';
+import { Colors, fontFamily, fontSize, getValue, Storage } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
@@ -48,10 +48,12 @@ export default class MyAccount extends React.Component {
   profileData: ProfileDataModel;
   state = {
     Items: [],
+    userImage: null
   };
 
   constructor(props: object) {
     super(props);
+
     this.checkProfile = EventManager.addListener(
       kGetUserProfileData,
       this.getUserProfileDataCallBack,
@@ -59,9 +61,9 @@ export default class MyAccount extends React.Component {
     // this.userProfileUpdated = EventManager.addListener(kUserAccountUpdated, this.userAccountChanged);
     this.profileData = new ProfileDataModel();
     // if ( Actions.currentScene == 'myAccount' || Actions.currentScene == 'profile' ) {
-      this.getUserProfileData();
+    this.getUserProfileData();
     // }
-    
+
     this.profilePicUpdate = EventManager.addListener(
       kProfilePicUpdated,
       this.updateProfilePic,
@@ -98,6 +100,7 @@ export default class MyAccount extends React.Component {
 
   componentDidMount = () => {
     let items = [{}];
+    this.getUserProfileDataImage();
     if (Account.selectedData().isSSOLogin) {
       items = [
         {
@@ -157,8 +160,13 @@ export default class MyAccount extends React.Component {
       ];
     }
     this.setState({ Items: items });
-   
+
   };
+
+  getUserProfileDataImage = async () => {
+    let userImage = (await Storage.get("user_profile_image"));
+    this.setState({userImage});
+  }
 
   // CallBack for Profile data web service
   getUserProfileDataCallBack = (success: boolean, profileDetails: any) => {
@@ -214,6 +222,7 @@ export default class MyAccount extends React.Component {
                 <Image
                   source={
                     profilePic != '' ? { uri: profilePic } : profile_placeholder
+                    // this.state.userImage ? { uri: this.state.userImage } : profilePic != '' ? { uri: profilePic } : profile_placeholder
                   }
                   style={Styles.imageStyle}
                 />

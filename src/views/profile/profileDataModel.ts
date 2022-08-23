@@ -45,11 +45,11 @@ type ProfilePicSection = {
 export interface FieldStruct {
   label: string;
   type:
-    | 'sub'
-    | 'sub-single'
-    | 'date_select'
-    | 'options_select'
-    | 'text_textfield';
+  | 'sub'
+  | 'sub-single'
+  | 'date_select'
+  | 'options_select'
+  | 'text_textfield';
   default_value?: object;
   module?: 'date' | 'options' | 'text' | 'taxonomy';
   multipleSelection?: MultipleSelection;
@@ -94,10 +94,10 @@ export class ProfileDataModel {
   };
 
   allFormSections: Array<FormSection> = [];
-  basicInfoSection: FormSection = {heading: '', fields: []};
-  contactInfoSection: FormSection = {heading: '', fields: []};
+  basicInfoSection: FormSection = { heading: '', fields: [] };
+  contactInfoSection: FormSection = { heading: '', fields: [] };
 
-  constructor() {}
+  constructor() { }
 
   // updates value in profile data
   updateValues(profileDetails: any) {
@@ -147,7 +147,7 @@ export class ProfileDataModel {
     //console.log(this.allFormSections);
   }
 
-  updateProfilePicSection(fields: any) {
+  updateProfilePicSection = async(fields: any) => {
     for (let key in fields) {
       let currentField = fields[key];
       if (currentField.field_name == 'field_profile_picture') {
@@ -160,6 +160,10 @@ export class ProfileDataModel {
               Utility.getFileURLFromPublicURL(
                 currentField.current_value[ky].thumbnail90,
               );
+            console.log(Utility.getFileURLFromPublicURL(
+              currentField.current_value[ky].thumbnail90,
+            ))
+            await Storage.save("user_profile_image", Utility.getFileURLFromPublicURL( currentField.current_value[ky].thumbnail90,))
             EventManager.callBack(kProfilePicUpdated);
             DeviceEventEmitter.emit(kProfilePicUpdated);
             this.basicInfo.isProfilePicAvailable = true;
@@ -241,13 +245,13 @@ export class ProfileDataModel {
             if (currentObj.length > 0) {
               let ky = Object.keys(currentObj[0]);
               if (ky.length > 0) {
-                default_value = {[currentObj[0][ky[0]]]: currentObj[0][ky[0]]};
+                default_value = { [currentObj[0][ky[0]]]: currentObj[0][ky[0]] };
               }
             }
           } else {
             for (let keys in currentObj) {
               let mappedValue = values[keys];
-              default_value = {...default_value, [keys]: mappedValue};
+              default_value = { ...default_value, [keys]: mappedValue };
             }
           }
         }
@@ -266,7 +270,7 @@ export class ProfileDataModel {
         let value2 = getValue(valueObject, ['value2'])
           ? getValue(valueObject, ['value2'])
           : '';
-        default_value = {value: value, value2: value2};
+        default_value = { value: value, value2: value2 };
       }
       //console.log("fields : ", fields);
       let structuredField: FieldStruct = {
@@ -284,7 +288,7 @@ export class ProfileDataModel {
       };
       structuredFields.push(structuredField);
     }
-    let formSection: FormSection = {heading: heading, fields: structuredFields};
+    let formSection: FormSection = { heading: heading, fields: structuredFields };
     return formSection;
   }
 

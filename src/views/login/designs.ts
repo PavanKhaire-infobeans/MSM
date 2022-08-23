@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
     backgroundColor: Colors.timeLinebackground,
   },
   mainContainer:{ flex: 1 },

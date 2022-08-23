@@ -272,9 +272,9 @@ const JumpToScreen = (props: Props) => {
                             if (item.item.disabled == false) {
                               loaderHandler.showLoader("Loading...")
                               setSelectedYear(item?.item.name);
-                              setTimeout(() => {
+                              // setTimeout(() => {
                                 jumpToClicked(item?.item.name)
-                              }, 200);
+                              // }, 200);
                             }
                           }}
                           disabled={item.item.disabled == undefined ? true : item.item.disabled}

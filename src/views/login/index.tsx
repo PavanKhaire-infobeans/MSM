@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Alert, Animated, DeviceEventEmitter, Image, Keyboard, SafeAreaView,
+  StatusBar,
   TextInput, TouchableWithoutFeedback, View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -30,6 +31,7 @@ import MessageDialogue from '../../common/component/messageDialogue';
 import EventManager from '../../common/eventManager';
 import { RESET_ON_LOGIN, SET_KEYBOARD_HEIGHT } from '../dashboard/dashboardReducer';
 import Styles from './styles';
+import Utility from '../../common/utility';
 export const kRegSignUp = 'Registration SignUp';
 export enum loginType {
   googleLogin = 'Google',
@@ -311,8 +313,12 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             // locations={[0, 0.6]}
             colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.6)']}
             style={{ height: '100%', width: '100%' }}> */}
-        <SafeAreaView style={Styles.flexContainer}>
+        <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} backgroundColor='#ffffff' />
+        <SafeAreaView style={{ width: '100%' }}>
+
           <MessageDialogue ref={(ref: any) => this.messageRef = ref} />
+        </SafeAreaView>
+        <SafeAreaView style={Styles.flexContainer}>
 
 
           <View style={Styles.LoginHeader}>
@@ -328,7 +334,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             <View >
 
               <Text style={[CommonTextStyles.fontWeight500Size13Inter, Styles.labelStyle]}>
-                EMAIL OR USERNAME
+                EMAIL
               </Text>
 
               <TextField
@@ -339,7 +345,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                   this._passwordField && this._passwordField.focus();
                 }}
                 value={this.state.username}
-                placeholder="Email or username..."
+                placeholder="Email..."
                 keyboardType="email-address"
                 returnKeyType="next"
                 onChange={(text: any) =>

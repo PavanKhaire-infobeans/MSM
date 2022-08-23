@@ -73,50 +73,50 @@ const Animator = () => {
       Animated.timing(state.anim.first, {
         toValue: value.first.value,
         duration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(state.anim.second, {
         toValue: value.second.value,
         duration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(state.anim.third, {
         toValue: value.third.value,
         duration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(state.anim.fourth, {
         toValue: value.fourth.value,
         duration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(state.anim.fifth, {
         toValue: value.fifth.value,
         duration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(state.anim.sixth, {
         toValue: value.sixth.value,
         duration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(state.anim.seventh, {
         toValue: value.seventh.value,
         duration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start(_ => {
       var direction: { [x: string]: string } = { ...state.direction };
       for (let key in value) {
         direction[key] = value[key].direction;
       }
-      setState(prev => ({
-        ...prev,
-        direction: direction
-      }));
-      setTimeout(() => {
-        play();
-      }, duration)
+      // setState(prev => ({
+      //   ...prev,
+      //   direction: direction,
+      // }));
+      // setTimeout(() => {
+        // play();
+      // }, duration)
     });
   }
 

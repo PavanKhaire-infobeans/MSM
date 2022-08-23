@@ -106,6 +106,7 @@
 		57B5CAA8ABAB477CBE3A6D59 /* FiraSansExtraCondensed-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSansExtraCondensed-BoldItalic.ttf"; path = "../assets/fonts/FiraSansExtraCondensed-BoldItalic.ttf"; sourceTree = "<group>"; };
 		6143A4A8BDAE42EF8EF0C28A /* Proxima Nova Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Proxima Nova Thin.otf"; path = "../assets/fonts/Proxima Nova Thin.otf"; sourceTree = "<group>"; };
 		64468DEC2865B30A00260205 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
+		64C7E66728AB718A0082D3CB /* SFPro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SFPro-Regular.ttf"; path = "../assets/fonts/SFPro-Regular.ttf"; sourceTree = "<group>"; };
 		64FABF5A280ECD510055408E /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		64FABF5B280ECD510055408E /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		64FABF5C280ECD520055408E /* Inter-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Black.ttf"; sourceTree = "<group>"; };
@@ -305,6 +306,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				64C7E66728AB718A0082D3CB /* SFPro-Regular.ttf */,
 				AB70DA9026F4690000B27DB3 /* complete.mp3 */,
 				AB8C47DD26CA54A3009728E5 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* MyStoriesMatter */,
@@ -446,6 +448,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64C7E66828AB718B0082D3CB /* SFPro-Regular.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				64FABF68280ECD540055408E /* Inter-ExtraBold.ttf in Resources */,
 				64FABF79280ED5E60055408E /* Lora-MediumItalic.ttf in Resources */,
@@ -765,7 +768,7 @@
 				CODE_SIGN_ENTITLEMENTS = MyStoriesMatter/MyStoriesMatterDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = BDV4D9G2U7;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -801,7 +804,7 @@
 				CODE_SIGN_ENTITLEMENTS = MyStoriesMatter/MyStoriesMatter.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = BDV4D9G2U7;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = MyStoriesMatter/Info.plist;

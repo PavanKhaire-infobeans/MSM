@@ -204,7 +204,7 @@ const Styles = EStyleSheet.create({
   },
   descreptionSeparatorContainer:{ 
     height: 16 , 
-    paddingHorizontal: 24
+    paddingHorizontal: 24,
   },
   postStyle:{
     fontSize: 12,
