@@ -554,6 +554,15 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     }
   };
 
+  componentWillUnmount = () => {
+    this.listener.removeListener();
+    this.backListner.removeListener();
+    Keyboard.removeAllListeners("keyboardDidShow")
+    Keyboard.removeAllListeners("keyboardDidHide")
+    Keyboard.removeAllListeners("keyboardWillShow")
+    Keyboard.removeAllListeners("keyboardWillHide")
+  };
+
   saveTempFiles = (filesObjArray: Array<TempFile>) => {
     //Add to fileToUpload Array.. to upload when save button is pressed
     this.filesToUpload = [...this.filesToUpload, ...filesObjArray];
@@ -731,7 +740,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         keyboardShouldPersistTaps="always"
         style={Styles.scrollViewStyle}>
         <View
-          style={[Styles.toolBarContainer,{
+          style={[Styles.toolBarContainer, {
             justifyContent:
               this.props.navigation.state.routeName == 'mindPopEdit' ? 'space-between' : 'flex-end',
             ...(DeviceInfo.isTablet() && this.props.navigation.state.routeName == 'mindPopList'
@@ -848,7 +857,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       <KeyboardAccessory
         style={Styles.KeyboardAccessoryStyle}>
         <View
-          style={[Styles.toolBarContainer,{
+          style={[Styles.toolBarContainer, {
             justifyContent:
               this.props.navigation.state.routeName == 'mindPopEdit' ? 'space-between' : 'flex-end',
             ...(DeviceInfo.isTablet() &&
@@ -982,11 +991,6 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     });
   };
 
-  componentWillUnmount() {
-    this.listener.removeListener();
-    this.backListner && this.backListner.removeListener();
-    // this.createMemoryListener.removeListener();
-  }
   componentDidMount() {
     setTimeout(() => {
       this._inputRef && this._inputRef.focus && this._inputRef.focus();
@@ -1012,52 +1016,54 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         id: data.id,
         content,
         oldcontent: content,
-      });
-      if (data) {
-        this.setupFiles(data);
-        this.updateFiles();
-      }
-      if (this.state.deletedAttachments.length > 0) {
-        let ids = [...this.state.deletedAttachments].map((itm: { fid: string }) =>
-          parseInt(`${itm.fid}`),
-        );
-        MindPopStore.deleteMindPopAttachment(ids)
-          .then((resp: any) => {
-            //console.log("message", resp);
-            // this._prevUpdate();
-            DeviceEventEmitter.emit('updateSelected', 0);
-            this.props.updateList && this.props.updateList();
-            if (DeviceInfo.isTablet()) {
-              Keyboard.dismiss();
-              Actions.pop();
-            } else {
-              this._removeDeletedFiles(ids);
-              this.updateFiles();
-              this.props.setValue(true, data);
-            }
-          })
-          .catch((error: any) => {
-            // this._prevUpdate();
-            DeviceEventEmitter.emit('updateSelected', 0);
-            this.props.updateList && this.props.updateList();
-            //console.log("Error", error);
-            if (DeviceInfo.isTablet()) {
-              Keyboard.dismiss();
-              Actions.pop();
-            } else {
-              this.props.setValue(true, data);
-            }
-          });
-      } else {
-        DeviceEventEmitter.emit('updateSelected', 0);
-        this.props.updateList && this.props.updateList();
-        if (DeviceInfo.isTablet()) {
-          Keyboard.dismiss();
-          Actions.pop();
-        } else {
-          this.props.setValue(true, data);
+      }, () => {
+        if (data) {
+          this.setupFiles(data);
+          this.updateFiles();
         }
-      }
+        if (this.state.deletedAttachments.length > 0) {
+          let ids = [...this.state.deletedAttachments].map((itm: { fid: string }) =>
+            parseInt(`${itm.fid}`),
+          );
+          MindPopStore.deleteMindPopAttachment(ids)
+            .then((resp: any) => {
+              //console.log("message", resp);
+              // this._prevUpdate();
+              DeviceEventEmitter.emit('updateSelected', 0);
+              this.props.updateList && this.props.updateList();
+              if (DeviceInfo.isTablet()) {
+                Keyboard.dismiss();
+                Actions.pop();
+              } else {
+                this._removeDeletedFiles(ids);
+                this.updateFiles();
+                this.props.setValue(true, data);
+              }
+            })
+            .catch((error: any) => {
+              // this._prevUpdate();
+              DeviceEventEmitter.emit('updateSelected', 0);
+              this.props.updateList && this.props.updateList();
+              //console.log("Error", error);
+              if (DeviceInfo.isTablet()) {
+                Keyboard.dismiss();
+                Actions.pop();
+              } else {
+                this.props.setValue(true, data);
+              }
+            });
+        } else {
+          DeviceEventEmitter.emit('updateSelected', 0);
+          this.props.updateList && this.props.updateList();
+          if (DeviceInfo.isTablet()) {
+            Keyboard.dismiss();
+            Actions.pop();
+          } else {
+            this.props.setValue(true, data);
+          }
+        }
+      });
+
     } else {
       let message =
         typeof data == 'object'
@@ -1072,7 +1078,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     }
   };
 
-  componentWillReceiveProps(nextProps: { [x: string]: any }) {
+  UNSAFE_componentWillReceiveProps(nextProps: { [x: string]: any }) {
     //Delete MindPop Operation resolver
     if (nextProps.deleteStatus && nextProps.deleteStatus.completed) {
       loaderHandler.hideLoader();
@@ -1134,7 +1140,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         state['deletedAttachments'] = [];
       }
       this.isEdit = nextProps.isEdit;
-      this.setState({});
+      // this.setState({});
     }
     if (Object.keys(state).length > 0) {
       this.setState(state as State);
@@ -1185,7 +1191,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
             onResponderStart={() => this.enterEditMode()}>
             <Text
               multiline={true}
-              style={[Styles.captureMindPopText,{
+              style={[Styles.captureMindPopText, {
                 fontStyle: this.state.content.length > 0 ? 'normal' : 'italic',
               }]}>
               {this.state.content || 'Capture your MindPop...'}
@@ -1201,7 +1207,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
             placeholderTextColor="rgba(0, 0, 0, 0.8)"
             value={this.state.content}
             multiline={true}
-            style={[Styles.textInputStyle,{
+            style={[Styles.textInputStyle, {
               fontStyle: this.state.content.length > 0 ? 'normal' : 'italic',
             }]}
           />
@@ -1217,7 +1223,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     }
     return (
       <FlatList
-        style={[Styles.flatListContainer,{
+        style={[Styles.flatListContainer, {
           marginBottom:
             this.state.bottomToolbar > 0 ? this.state.bottomToolbar -
               (Platform.OS == 'android' ? 230 : 160) : 60,
@@ -1313,7 +1319,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       }
     }
 
-    this.setState({ deletedAttachments }, () => { });
+    this.setState({ deletedAttachments });
   };
 
   _renderRow = (
@@ -1477,7 +1483,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 onPress={() => this._selDelete(item, found)}
                 style={Styles.deleteContainer}>
                 <View
-                  style={[Styles.deleteSubCon,{
+                  style={[Styles.deleteSubCon, {
                     backgroundColor: found ? '#ff2315' : Colors.black,
                   }]}>
                   <Text

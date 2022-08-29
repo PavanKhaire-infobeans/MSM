@@ -90,7 +90,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 	createNew: boolean = false;
 	uploadCompleted: EventManager;
 	convertToMemoryObject: any = {};
-	createMemoryListener: any;
+	createMemoryListener: EventManager;
 	constructor(props: { [x: string]: any; listMindPops: (payload: any) => void; fromDeeplinking?: boolean; nid?: any; deepLinkBackClick?: boolean }) {
 		super(props);
 		this.eventSubs = DeviceEventEmitter.addListener("updateSelected", this._updateIndex);
@@ -112,19 +112,19 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 
 	mindPopUploadCompleted = (success?: any, mindPopID?: any) => {
 		try {
-			this.setState({},
-				() => {
-					this.props.listMindPops({
-						searchTerm: {
-							start: 0,
-							length: 40,
-							SearchString: ""
-						},
-						configurationTimestamp: TimeStampMilliSeconds(),
-						lastSyncTimeStamp: "0"
-					});
-				}
-			)
+			// this.setState({},
+			// 	() => {
+			this.props.listMindPops({
+				searchTerm: {
+					start: 0,
+					length: 40,
+					SearchString: ""
+				},
+				configurationTimestamp: TimeStampMilliSeconds(),
+				lastSyncTimeStamp: "0"
+			});
+			// }
+			// )
 		} catch (e) {
 
 		}
@@ -214,7 +214,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		reloadList(updatedSectionListData);
 	}
 
-	componentWillReceiveProps(nextProps: { [x: string]: any }) {
+	UNSAFE_componentWillReceiveProps(nextProps: { [x: string]: any }) {
 		if (nextProps.list.completed) {
 			LoaderHandler.hideLoader();
 			if (nextProps.list.success) {
@@ -224,16 +224,18 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 						totalItems,
 						webserviceBeingCalled: false,
 						selectedIndex: this.searchKeyword.trim().length != 0 ? 0 : this.state.selectedIndex
-					});
-					this._populateListFromDB(fetchedItems, updatedSectionListData => {
-						this.props.callEnded();
-						this.setState({ listSectionItems: updatedSectionListData }, () => {
-							this.props.updateListCount(this._listItems().length);
-							if (this.state.totalItems == 0) {
-								this.props.cleanEdit();
-							}
+					},()=>{
+						this._populateListFromDB(fetchedItems, updatedSectionListData => {
+							this.props.callEnded();
+							this.setState({ listSectionItems: updatedSectionListData }, () => {
+								this.props.updateListCount(this._listItems().length);
+								if (this.state.totalItems == 0) {
+									this.props.cleanEdit();
+								}
+							});
 						});
 					});
+					
 				} else {
 					this.props.callEnded();
 					this.setState({ listSectionItems: [], totalItems: 0, webserviceBeingCalled: false }, () => {
@@ -249,8 +251,9 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 					this.state.listSectionItems && this.state.listSectionItems.length > 0
 						? this.state.listSectionItems[this.state.listSectionItems.length - 1].data || []
 						: [];
-				this.setState({ totalItems: data.length, webserviceBeingCalled: false });
-				this.props.updateListCount(0);
+				this.setState({ totalItems: data.length, webserviceBeingCalled: false },()=>{
+					this.props.updateListCount(0);
+				});
 				// No_Internet_Warning();
 			}
 
@@ -330,6 +333,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		}
 
 	}
+
 	componentDidMount() {
 		setTimeout(() => {
 			DefaultPreference.get('hide_mindpop_intro').then((value: any) => {
@@ -359,6 +363,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 			cancelAction: this._cancelAction,
 			clearAllAction: this._clearAllSelection
 		});
+
 		if (this.props.actionWrite || this.props.actionRecord || this.props.actionImageUpload) {
 			this.createNewMindPop(true);
 		}
@@ -371,6 +376,8 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		this.props.updateListCount(0);
 		this.props.updateSelectedItemCount(0);
 		this.eventSubs.remove();
+		DeviceEventEmitter.removeAllListeners("updateSelected");
+		this.createMemoryListener.removeListener()
 		// this.createMemoryListener.removeListener();
 	}
 
@@ -436,8 +443,9 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 		let index = this.searchKeyword.trim() == "" ? this._listItems().length : this.state.lastFetchedIndex;
 		var totalItems = this.state.totalItems;
 		if (totalItems == 0) {
-			this.setState({ totalItems: 0, webserviceBeingCalled: true });
-			LoaderHandler.showLoader();
+			this.setState({ totalItems: 0, webserviceBeingCalled: true },()=>{
+				LoaderHandler.showLoader();
+			});
 		}
 		this.props.resetEdit();
 		MindPopStore._getMindPopFromLocalDB(this.searchKeyword).then((list: any[]) => {
@@ -594,8 +602,9 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 					</View>
 				</SafeAreaView>
 				{this.state.mindPopIntroVisibility && <MindPopIntro cancelMindPopIntro={() => {
-					this.setState({ mindPopIntroVisibility: false });
-					DefaultPreference.set('hide_mindpop_intro', "true").then(function () { })
+					this.setState({ mindPopIntroVisibility: false },()=>{
+						DefaultPreference.set('hide_mindpop_intro', "true").then(function () { })
+					});
 				}
 				}></MindPopIntro>}
 			</View>
@@ -721,8 +730,9 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 									if (this.props.isSelectingItem) {
 										this._selectRow(data.item);
 									} else {
-										this.setState({ selectedIndex: data.index });
-										this.props.editMode(data.item);
+										this.setState({ selectedIndex: data.index },()=>{
+											this.props.editMode(data.item);
+										});
 									}
 								} else {
 									this.props.isSelectingItem ? this._selectRow(data.item) : this._editAction(item, data, true);
@@ -815,7 +825,7 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 				}}>
 				<View
 					style={{
-						backgroundColor: DeviceInfo.isTablet() ? Colors.ThemeColor :Colors.white,
+						backgroundColor: DeviceInfo.isTablet() ? Colors.ThemeColor : Colors.white,
 						borderRadius: DeviceInfo.isTablet() ? 24 : 5,
 						justifyContent: DeviceInfo.isTablet() ? "center" : "flex-start",
 						alignItems: DeviceInfo.isTablet() ? "center" : "flex-start",
@@ -851,8 +861,9 @@ class MindPopList extends React.Component<{ listMindPops: (payload: any) => void
 	};
 
 	performSearch = (searchKeyword: string): void => {
-		this.setState({ searchMode: true });
-		this.updateList(searchKeyword);
+		this.setState({ searchMode: true },()=>{
+			this.updateList(searchKeyword);
+		});
 		//set search keyword save last normal searched index
 		/*this.setState({ searchKeyword: searchKeyword, listSectionItems: [], lastFetchedIndex: this._listItems().length }, () => {
 			//fetch data from database
@@ -963,10 +974,10 @@ const styles = EStyleSheet.create({
 		flex: 1,
 		width: "100%"
 	},
-	emptyViewStyle:{ 
-		height: 30, 
-		width: "100%", 
-		backgroundColor: "red" 
+	emptyViewStyle: {
+		height: 30,
+		width: "100%",
+		backgroundColor: "red"
 	},
 	containerSearch: {
 		backgroundColor: Colors.white,

@@ -56,6 +56,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   allCommentsListeners: EventManager;
   commentListener: EventManager;
   memoryActionsListener: EventManager;
+  memoryDetailsUpdateListener: EventManager;
   memoryDataModel: MemoryDataModel;
   keyLiked = 'likedBy';
   keyTagged = 'tagged';
@@ -72,7 +73,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   _externalQueue: View | Carousel;
   _webView: View | WebView;
   audioPlayer: React.RefObject<AudioPlayer> = React.createRef<AudioPlayer>();
-  backListner: any;
+  backListner: EventManager;
   holdTempLikeOnComment = { tempId: '', likeStatus: '' };
   state: State = {
     collaboratorsVisibility: true,
@@ -96,7 +97,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
   systemFonts = [...defaultSystemFonts];
 
-  memoryDetailsUpdateListener: EventManager;
   shakeAnimation: any = new Animated.Value(0);
   constructor(props: Props) {
     super(props);
@@ -158,7 +158,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       'hardwareBackPress',
       this._onBack,
     );
-    EventManager.addListener('event_new_testing', this.commentCallback);
+    // EventManager.addListener('event_new_testing', this.commentCallback);
     DeviceEventEmitter.addListener('event_new_testing', this.commentCallback);
     this.memoryActionsListener = EventManager.addListener(
       kMemoryActionPerformedOnMemoryDetails,
@@ -175,6 +175,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       this.setState({ memoryDetailAvailable: true, isExternalQueue: false });
     }
   }
+
 
   _onBack = () => {
     loaderHandler.hideLoader();
@@ -211,7 +212,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       ToastMessage(response, Colors.ErrorColor);
       this.setState({ viewAllComments: false });
     }
-    this.setState({});
+    // this.setState({});
     this.forwardDataToNative();
   };
 
@@ -266,7 +267,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
             (element: any) => element.cid != cid,
           );
         this.memoryDataModel.likesComments.noOfComments--;
-        this.setState({});
+        // this.setState({});
         loaderHandler.hideLoader();
         this.forwardDataToNative();
       } else {
@@ -326,7 +327,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           this.memoryDataModel.likesComments.commentsList.push(commentItem);
           //console.log(this.memoryDataModel.likesComments.commentsList);
 
-          this.setState({});
+          // this.setState({});
           this.setState({
             bottomToolbar: 0,
             commentValue: '',
@@ -428,15 +429,17 @@ export default class MemoryDetails extends React.Component<Props, State> {
     if (this.state.viewAllComments) {
       this.setState({ viewAllComments: false });
     } else {
-      this.setState({ viewAllComments: true });
-      if (this.memoryDataModel.likesComments.noOfComments > 0) {
-        loaderHandler.showLoader('Loading...');
-        GetAllComments(
-          this.memoryDataModel.nid,
-          this.storyType,
-          this.memoryDataModel.likesComments.noOfComments,
-        );
-      }
+      this.setState({ viewAllComments: true },()=>{
+        if (this.memoryDataModel.likesComments.noOfComments > 0) {
+          loaderHandler.showLoader('Loading...');
+          GetAllComments(
+            this.memoryDataModel.nid,
+            this.storyType,
+            this.memoryDataModel.likesComments.noOfComments,
+          );
+        }
+      });
+      
     }
   };
 
@@ -448,7 +451,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     loaderHandler.hideLoader();
     if (fetched) {
       this.showList(this.keyLiked, getAllLikes);
-      this.setState({});
+      // this.setState({});
     } else {
       ToastMessage(getAllLikes, Colors.ErrorColor);
     }
@@ -463,14 +466,17 @@ export default class MemoryDetails extends React.Component<Props, State> {
       this.setState({
         memoryDetailAvailable: true,
         isExternalQueue: isExternalCue,
+      },()=>{
+        if (this.props.comment) {
+          this.focusCommentView();
+        } 
+        else if (this.props.showComments) {
+          setTimeout(() => {
+            this.scrollToBottom();
+          }, 1000);
+        }
       });
-      if (this.props.comment) {
-        this.focusCommentView();
-      } else if (this.props.showComments) {
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 1000);
-      }
+      
     } else {
       ToastMessage(memoryDetails, Colors.ErrorColor);
       this.setState({ memoryDetailAvailable: true });
@@ -479,6 +485,18 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   componentWillUnmount() {
+    this.memoryDetailsListener.removeListener();
+    this.getAllLikesListener.removeListener();
+    this.likeListener.removeListener();
+    this.unlikeListener.removeListener();
+    this.deleteCommentListener.removeListener();
+    this.editCommentListener.removeListener();
+    this.allCommentsListeners.removeListener();
+    this.commentListener.removeListener();
+    this.memoryActionsListener.removeListener();
+    this.memoryDetailsUpdateListener.removeListener();
+    this.backListner.removeListener();
+    DeviceEventEmitter.removeAllListeners('event_new_testing');
     this.forwardDataToNative;
     try {
       this.audioPlayer.current.hidePlayer();
@@ -606,7 +624,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           this.memoryDataModel.likesComments.commentsList[
             index
           ].like_comment_data.like_count = likeCount;
-        this.setState({});
+        // this.setState({});
       } else {
         let commentsList = [...this.state.allCommentsList];
         commentsList[index].like_comment_data.like_flag = likeFlag;
@@ -773,7 +791,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         ].likesComments.isLikedByUser =
           this.memoryDataModel.likesComments.isLikedByUser;
       }
-      this.setState({});
+      // this.setState({});
     } else {
       No_Internet_Warning();
     }
@@ -783,10 +801,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
     this.setState({
       commentId: item.cid,
       commentValue: decode_utf8(item.comment_body_value),
-    });
-    this._commentBoxRef &&
+    },()=>{
+      this._commentBoxRef &&
       this._commentBoxRef.focus &&
       this._commentBoxRef.focus();
+    });
+    
   };
 
   deleteComment = (item: any) => {
@@ -841,24 +861,26 @@ export default class MemoryDetails extends React.Component<Props, State> {
             commentValue: '',
             commentId: '',
             commentViewVisiblity: false,
+          }, () => {
+            if (this.state.isExternalQueue) {
+              this.memoryDataModel.externalQueue.collection[
+                this.state.activeSlide
+              ].likesComments.commentsList =
+                this.memoryDataModel.likesComments.commentsList;
+              this.memoryDataModel.externalQueue.collection[
+                this.state.activeSlide
+              ].likesComments.noOfComments =
+                this.memoryDataModel.likesComments.noOfComments;
+            }
+            this.holdTempLikeOnComment = { tempId: cid, likeStatus: '0' };
+            PostComment(
+              this.memoryDataModel.nid,
+              this.storyType,
+              commentText,
+              cid,
+            );
           });
-          if (this.state.isExternalQueue) {
-            this.memoryDataModel.externalQueue.collection[
-              this.state.activeSlide
-            ].likesComments.commentsList =
-              this.memoryDataModel.likesComments.commentsList;
-            this.memoryDataModel.externalQueue.collection[
-              this.state.activeSlide
-            ].likesComments.noOfComments =
-              this.memoryDataModel.likesComments.noOfComments;
-          }
-          this.holdTempLikeOnComment = { tempId: cid, likeStatus: '0' };
-          PostComment(
-            this.memoryDataModel.nid,
-            this.storyType,
-            commentText,
-            cid,
-          );
+
         } else {
           commentText = encode_utf8(commentText);
           loaderHandler.showLoader('Editing...');
@@ -1366,11 +1388,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   modifyCommentsAndLikesData = (index: any) => {
-    this.setState({ activeSlide: index, viewAllComments: false });
-    let currentSelectedItem =
-      this.memoryDataModel.externalQueue.collection[index];
-    this.memoryDataModel.nid = currentSelectedItem.nid;
-    this.memoryDataModel.likesComments = currentSelectedItem.likesComments;
+    this.setState({ activeSlide: index, viewAllComments: false }, () => {
+      let currentSelectedItem =
+        this.memoryDataModel.externalQueue.collection[index];
+      this.memoryDataModel.nid = currentSelectedItem.nid;
+      this.memoryDataModel.likesComments = currentSelectedItem.likesComments;
+    });
+
   };
 
   openMemoryActions = () => {
@@ -1485,10 +1509,11 @@ export default class MemoryDetails extends React.Component<Props, State> {
       actionType: MemoryActionKeys.cancelActionKey,
     });
     this._actionSheet && this._actionSheet.showSheet();
-    this.setState({ showMemoryActions: true });
-    setTimeout(() => {
+    this.setState({ showMemoryActions: true }, () => {
       Keyboard.dismiss();
-    }, 1000);
+    });
+    // setTimeout(() => {
+    // }, 1000);
   };
 
   onActionItemClicked = async (index: number, data: any): void => {

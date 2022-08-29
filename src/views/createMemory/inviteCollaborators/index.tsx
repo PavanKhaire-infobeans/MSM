@@ -91,7 +91,9 @@ class InviteCollaborators extends React.Component<Props, State> {
     }
   }
 
-  componentWillUnmount = () => {};
+  componentWillUnmount = () => {
+    this.actionsCallBack.removeListener()
+  };
 
   cancelAction = () => {
     Keyboard.dismiss();
@@ -118,7 +120,7 @@ class InviteCollaborators extends React.Component<Props, State> {
     });
   };
 
-  componentWillReceiveProps = () => {
+  UNSAFE_componentWillReceiveProps = () => {
     loaderHandler.hideLoader();
   };
 

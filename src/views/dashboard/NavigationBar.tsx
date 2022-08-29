@@ -172,6 +172,12 @@ class NavigationBar extends React.Component<Props> {
     DeviceEventEmitter.addListener(kProfilePicUpdated, this.updateProfilePic);
   };
 
+  componentWillUnmount(){
+    DeviceEventEmitter.removeAllListeners(kProfilePicUpdated);
+    this.notificationReceivedForeground.removeListener()
+    
+  }
+
   updateProfilePic = () => {
     this.setState({});
   };

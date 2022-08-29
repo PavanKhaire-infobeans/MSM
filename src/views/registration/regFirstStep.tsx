@@ -84,6 +84,14 @@ export default class RegFirstStep extends Component<Props> {
 		this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
 	}
 
+	componentWillUnmount() {
+		this.checkProfile.removeListener();
+		this.submitReg.removeListener();
+		Keyboard.removeAllListeners("keyboardDidHide")
+		Keyboard.removeAllListeners("keyboardDidShow")
+		this.navBar._hide();
+	}
+
 	_keyboardDidShow = (e) => {
 		try {
 			const { height, screenX, screenY, width } = e.endCoordinates
@@ -100,6 +108,7 @@ export default class RegFirstStep extends Component<Props> {
 
 		}
 	}
+
 	_keyboardDidHide = () => {
 		this.setState({
 			keyboardHeight: 0
@@ -861,9 +870,4 @@ export default class RegFirstStep extends Component<Props> {
 		});
 	};
 
-	componentWillUnmount() {
-		this.checkProfile.removeListener();
-		this.submitReg.removeListener();
-		this.navBar._hide();
-	}
 }

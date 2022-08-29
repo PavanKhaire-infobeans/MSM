@@ -45,6 +45,11 @@ const Styles = EStyleSheet.create({
         shadowRadius: 2,
         shadowOffset: { width: 0, height: 2 },
     },
+    userNameTextContainerStyle:{ 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        marginLeft: 8, 
+    },
     imagebackGroundStyle:{ 
         height: '100%', 
         width: '100%', 

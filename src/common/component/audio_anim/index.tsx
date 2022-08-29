@@ -110,13 +110,13 @@ const Animator = () => {
       for (let key in value) {
         direction[key] = value[key].direction;
       }
-      // setState(prev => ({
-      //   ...prev,
-      //   direction: direction,
-      // }));
-      // setTimeout(() => {
-        // play();
-      // }, duration)
+      setState(prev => ({
+        ...prev,
+        direction: direction,
+      }));
+      setTimeout(() => {
+        play();
+      }, duration)
     });
   }
 

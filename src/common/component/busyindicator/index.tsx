@@ -11,26 +11,28 @@ const BusyIndicator = (props) => {
   const [state, setState] = useState({
     isVisible: props.startVisible,
   });
-
-  useEffect(() => {
-
-    return () => {
-      emitter.remove();
-    }
-  }, [])
-
-  const changeLoadingEffect = (state) => {
-    setState(prev => ({
-      ...prev,
-      isVisible: state?.isVisible,
-      text: state.title ? state.title : props.text,
-    }));
-  }
-
+  
   let emitter = DeviceEventEmitter.addListener(
     'changeLoadingEffect',
     changeLoadingEffect,
   );
+
+  useEffect(() => {
+
+    return () => {
+      // emitter.remove();
+    }
+  }, [])
+
+  const changeLoadingEffect = (state?) => {
+    if (state) {
+      setState(prev => ({
+        ...prev,
+        isVisible: state?.isVisible,
+        text: state.title ? state.title : props.text,
+      }));
+    }
+  }
 
   const customStyles = StyleSheet.create({
     overlay: {

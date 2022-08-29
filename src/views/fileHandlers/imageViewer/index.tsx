@@ -105,10 +105,13 @@ export default class ImageViewer extends React.Component<Props> {
       </View>
     );
   };
-  onChange = (index?: number) => {
+  onChange = (index: number) => {
     // Alert.alert(index+"");
-    this.setState({ activeSlide: index });
-    currentIndex = index;
+    if (index != undefined && index != null) {
+      this.setState({ activeSlide: index },()=>{
+        currentIndex = index;
+      });        
+    }
   };
   changeViewVisibility = () => {
     let viewVisibility = !this.state.viewDetails;

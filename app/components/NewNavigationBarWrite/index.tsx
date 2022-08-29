@@ -63,6 +63,10 @@ const NavigationBar = (props: Props) => {
       kForegroundNotificationListener,
       notificationReceived,
     );
+    return ()=>{
+      DeviceEventEmitter.removeAllListeners(kProfilePicUpdated)
+      notificationReceivedForeground.removeListener()
+    }
   }, [])
 
   notificationReceived = (details: any) => {

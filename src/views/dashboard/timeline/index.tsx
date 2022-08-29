@@ -123,11 +123,14 @@ const Timeline = (props: Props) => {
         memoryTimelineUpdateListener = EventManager.addListener("memoryUpdateTimelineListener", () => {
             // let obj = {type: ListType.Timeline, isRefresh : true, filters : props.filters, loadPrevious : true, lastMemoryDate : props.timelineList[0].updated, filters : props.filters}     
             // props.fetchMemoryList(obj);
-            props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, filters: props.filters });
+            props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, isRefresh: false, filters: props.filters });
             loaderHandler.hideLoader();
         });
-        props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, filters: props.filters });
+        props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, isRefresh: false, filters: props.filters });
 
+        return ()=>{
+            memoryTimelineUpdateListener.removeListener()
+        }
     }, [])
 
     const onRefresh = () => {
@@ -422,7 +425,7 @@ const Timeline = (props: Props) => {
                                                         // jumpToClicked(previousItemYear ? JSON.stringify(previousItemYear) : allYears.length ? allYears[allYears.length - 1].year : '', "");
 
                                                         if (flatListRef.current) {
-                                                            flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
+                                                            flatListRef.current.scrollToOffset({ animated: true, offset: 56 });
                                                         }
                                                         // setPreviousItemYear(null)
                                                         // setNextItemYear(null)
@@ -468,7 +471,7 @@ const Timeline = (props: Props) => {
                                                                 setNextItemYear(next);
                                                                 let month = ""
                                                                 if (flatListRef.current) {
-                                                                    flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
+                                                                    flatListRef.current.scrollToOffset({ animated: true, offset: 50 });
                                                                 }
                                                                 props.fetchMemoryList({ type: ListType.Timeline, isLoading: true, jumpTo: true, selectedYear: currentYear, selectedMonth: month });
                                                             }}
@@ -493,7 +496,7 @@ const Timeline = (props: Props) => {
                                                         setScrolling(false);
                                                         jumpToClicked(nextItemYear ? JSON.stringify(nextItemYear) : '', "");
                                                         if (flatListRef.current) {
-                                                            flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
+                                                            flatListRef.current.scrollToOffset({ animated: true, offset: 50 });
                                                         }
                                                     }}
                                                         style={[styles.newnormalText]}>
@@ -525,7 +528,7 @@ const Timeline = (props: Props) => {
 
                                                         // jumpToClicked(nextItemYear ? JSON.stringify(nextItemYear) : '', "");
                                                         if (flatListRef.current) {
-                                                            flatListRef.current.scrollToOffset({ animated: true, offset: 8 });
+                                                            flatListRef.current.scrollToOffset({ animated: true, offset: 50 });
                                                         }
                                                         setTimelineBarNextPrevClick(true);
                                                     }}
@@ -591,12 +594,16 @@ const Timeline = (props: Props) => {
                             }
                             Keyboard.dismiss()
                         }}
+
                         ItemSeparatorComponent={() => <View style={styles.renderSeparator} />}
                         renderItem={(item: any) =>
                             <MemoryListItem
                                 item={item}
                                 previousItem={item.index == 0 ? null : props.timelineList[item.index - 1]}
                                 like={like}
+                                onLayout={(eve) => {
+                                    // alert(eve.nativeEvent.layout.height)
+                                }}
                                 listType={ListType.Timeline}
                                 animate={state.animateValue}
                                 audioView={audioView}
@@ -606,13 +613,13 @@ const Timeline = (props: Props) => {
                                 }))}
                                 openMemoryActions={(itm) => openMemoryActions(itm)}
                             />}
-                        maxToRenderPerBatch={50}
+                        // maxToRenderPerBatch={50}
                         indicatorStyle='white'
                         removeClippedSubviews={true}
                         refreshControl={
                             <RefreshControl
-                                colors={[Platform.OS === "android" ? Colors.NewThemeColor : Colors.black]}
-                                tintColor={Platform.OS === "android" ? Colors.NewThemeColor : Colors.black}
+                                colors={[Platform.OS === "android" ? Colors.NewThemeColor : Colors.newTextColor]}
+                                tintColor={Platform.OS === "android" ? Colors.NewThemeColor : Colors.newTextColor}
                                 refreshing={props.refresh}
                                 onRefresh={onRefresh.bind(this)}
                             />

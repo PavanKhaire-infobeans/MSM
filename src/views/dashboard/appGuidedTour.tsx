@@ -13,15 +13,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Props} from '../login/loginController';
+import { Props } from '../login/loginController';
 //@ts-ignore
 import LottieView from 'lottie-react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import Sound from 'react-native-sound';
-import {SubmitButton} from '../../common/component/button';
+import { SubmitButton } from '../../common/component/button';
 import TextNew from '../../common/component/Text';
-import {Colors, fontFamily} from '../../common/constants';
+import { Colors, fontFamily } from '../../common/constants';
 import {
   add_content,
   arrow_left,
@@ -108,7 +108,7 @@ export default class AppGuidedTour extends React.Component<Props> {
       desc: (
         <>
           <TextNew>Add a memory by tapping {'\n'}the </TextNew>
-          <Image style={{height: 25, width: 30}} source={add_content}></Image>
+          <Image style={{ height: 25, width: 30 }} source={add_content}></Image>
           <TextNew> button.</TextNew>
         </>
       ),
@@ -164,7 +164,7 @@ export default class AppGuidedTour extends React.Component<Props> {
 
   fadeIn = (index: any) => {
     this.setState(
-      {currentIndex: index, fadeIn: new Animated.Value(0), scrolling: false},
+      { currentIndex: index, fadeIn: new Animated.Value(0), scrolling: false },
       () => {
         Animated.timing(this.state.fadeIn, {
           toValue: 1,
@@ -176,7 +176,7 @@ export default class AppGuidedTour extends React.Component<Props> {
   };
 
   fadeInView() {
-    this.setState({fadeInView: new Animated.Value(0)}, () => {
+    this.setState({ fadeInView: new Animated.Value(0) }, () => {
       Animated.timing(this.state.fadeInView, {
         toValue: 1,
         duration: 1000,
@@ -204,7 +204,7 @@ export default class AppGuidedTour extends React.Component<Props> {
   resumeTour() {
     setTimeout(() => {
       if (this._carousal) {
-        const {currentIndex} = this.state;
+        const { currentIndex } = this.state;
         let newIndex = currentIndex;
         if (newIndex >= this.appIntro.length) {
           newIndex = this.appIntro.length - 1;
@@ -212,10 +212,11 @@ export default class AppGuidedTour extends React.Component<Props> {
         if (newIndex <= 0) {
           newIndex = 0;
         }
-        this.setState({currentIndex: newIndex});
-        this._carousal?.scrollToIndex({
-          animated: true,
-          index: newIndex,
+        this.setState({ currentIndex: newIndex, tourEnded: false }, () => {
+          this._carousal?.scrollToIndex({
+            animated: true,
+            index: newIndex,
+          });
         });
       }
     }, 50);
@@ -225,7 +226,7 @@ export default class AppGuidedTour extends React.Component<Props> {
     this.fadeOutView();
     setTimeout(() => {
       this.props.cancelAppTour();
-      Actions.push('promptsView', {animated: true});
+      Actions.push('promptsView', { animated: true });
     }, 1000);
   }
 
@@ -253,13 +254,15 @@ export default class AppGuidedTour extends React.Component<Props> {
   navigateToIndex(index: any) {
     ReactNativeHapticFeedback.trigger('notificationSuccess', options);
     if (this.state.currentIndex == this.appIntro.length - 1) {
-      this.setState({showPromptAnim: false});
+      this.setState({ showPromptAnim: false });
     }
-    this.setState({currentIndex: index});
-	this._carousal?.scrollToIndex({
-		animated: true,
-		index: index,
-	  });
+    this.setState({ currentIndex: index }, () => {
+      this._carousal?.scrollToIndex({
+        animated: true,
+        index: index,
+      });
+    });
+
   }
 
   renderAppIntro = (item: any) => {
@@ -279,7 +282,7 @@ export default class AppGuidedTour extends React.Component<Props> {
             style={Styles.lottieContainer}
             onStartShouldSetResponder={e => {
               if (this.state.currentIndex == this.appIntro.length - 1)
-                this.setState({showPromptAnim: true});
+                this.setState({ showPromptAnim: true });
               return true;
             }}>
             {/* { !this.state.showPromptAnim && <Image style={{width: "90%", flex:1,bottom:0, height: "90%",backgroundColor:"yellow"}} source={require("../../common/lottieFiles/1_alternate.gif")} /> } */}
@@ -319,9 +322,9 @@ export default class AppGuidedTour extends React.Component<Props> {
               <View>
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState({tourSaveForLater: true,tourEnded: false})
+                    this.setState({ tourSaveForLater: true, tourEnded: false })
                   }}
-                  style={{alignItems: 'flex-end', paddingRight: 2}}>
+                  style={{ alignItems: 'flex-end', paddingRight: 2 }}>
                   <Image source={close_big_grey}></Image>
                 </TouchableOpacity>
               </View>
@@ -339,14 +342,15 @@ export default class AppGuidedTour extends React.Component<Props> {
                   style={Styles.submitButnStyle}
                   text="Resume tour"
                   onPress={() => {
-                    this.setState({beginTour: true});
-                    this.resumeTour();
-                    this.setState({tourEnded: false});
+                    this.setState({ beginTour: true }, () => {
+                      this.resumeTour();
+                      // this.setState({tourEnded: false});
+                    });
                   }}
                 />
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState({tourEnded: false,tourSaveForLater: true,initialView: false,beginTour: false});
+                    this.setState({ tourEnded: false, tourSaveForLater: true, initialView: false, beginTour: false });
                   }}
                   style={Styles.buttonContainer}>
                   <TextNew style={Styles.orTextStyle}>Save for later</TextNew>
@@ -405,7 +409,7 @@ export default class AppGuidedTour extends React.Component<Props> {
                   <View style={Styles.closeContainerSTyle}>
                     <TouchableOpacity
                       onPress={() => {
-                        this.setState({tourEnded: true});
+                        this.setState({ tourEnded: true });
                       }}>
                       <Image source={close_big_grey}></Image>
                     </TouchableOpacity>
@@ -434,16 +438,18 @@ export default class AppGuidedTour extends React.Component<Props> {
                       'notificationSuccess',
                       options,
                     );
-                    const {currentIndex} = this.state;
+                    const { currentIndex } = this.state;
                     let newIndex = currentIndex - 1;
                     if (newIndex <= 0) {
                       newIndex = 0;
                     }
-                    this.setState({currentIndex: newIndex});
-                    this._carousal?.scrollToIndex({
-                      animated: true,
-                      index: newIndex,
+                    this.setState({ currentIndex: newIndex },()=>{
+                      this._carousal?.scrollToIndex({
+                        animated: true,
+                        index: newIndex,
+                      });
                     });
+                    
                   }}>
                   <View style={Styles.backBtnContainer}>
                     <Image source={arrow_left}></Image>
@@ -460,24 +466,26 @@ export default class AppGuidedTour extends React.Component<Props> {
                     );
                     if (this.state.currentIndex == this.appIntro.length - 1) {
                       this.fadeInView();
-                      this.setState({showPromptAnim: false,beginTour: false,showMemoryCreationView: true});
+                      this.setState({ showPromptAnim: false, beginTour: false, showMemoryCreationView: true });
                     } else {
-                      const {currentIndex} = this.state;
+                      const { currentIndex } = this.state;
                       let newIndex = currentIndex + 1;
                       if (newIndex >= this.appIntro.length) {
                         newIndex = this.appIntro.length - 1;
                       }
-                      this.setState({currentIndex: newIndex});
-                      this._carousal?.scrollToIndex({
-                        animated: true,
-                        index: newIndex,
+                      this.setState({ currentIndex: newIndex },()=>{
+                        this._carousal?.scrollToIndex({
+                          animated: true,
+                          index: newIndex,
+                        });
                       });
+                      
                     }
                   }}>
                   <View
                     style={[
                       Styles.backBtnContainer,
-                      {backgroundColor: Colors.BtnBgColor},
+                      { backgroundColor: Colors.BtnBgColor },
                     ]}>
                     <TextNew
                       style={[Styles.backTextStyle, Styles.nextTextStyle]}>
@@ -493,17 +501,17 @@ export default class AppGuidedTour extends React.Component<Props> {
               <View
                 style={[
                   Styles.renderDismissPopUpSubContainerStyle,
-                  {borderRadius: 10},
+                  { borderRadius: 10 },
                 ]}>
                 {
                   this.state.tourSaveForLater ? (
                     <View style={Styles.saveLaterContainer}>
                       <Image source={msm_logo} style={Styles.imageLogoStyle} />
                       <TextNew
-                        style={[Styles.appIntroTitleStyle, {marginTop: 16}]}>
+                        style={[Styles.appIntroTitleStyle, { marginTop: 16 }]}>
                         Access this tour at anytime
                       </TextNew>
-                      <TextNew style={[Styles.appIntroDescStyle, {margin: 12}]}>
+                      <TextNew style={[Styles.appIntroDescStyle, { margin: 12 }]}>
                         Find this tour again when you tap the{' '}
                         <Image
                           style={Styles.iconStyle}
@@ -522,14 +530,14 @@ export default class AppGuidedTour extends React.Component<Props> {
                       <Animated.View
                         style={[
                           Styles.beginTourContainer,
-                          {opacity: this.state.fadeInView},
+                          { opacity: this.state.fadeInView },
                         ]}>
                         <View style={Styles.fullWidth}>
                           <View style={Styles.closeImage}>
                             <TouchableOpacity
                               onPress={() => {
-                                this.setState({tourEnded: false}),
-                                  this.setState({tourSaveForLater: true});
+                                this.setState({ tourEnded: false, tourSaveForLater: true })
+                                  // this.setState({ tourSaveForLater: true });
                               }}
                               style={Styles.closeContainerStyle}>
                               <Image source={close_big_grey}></Image>
@@ -564,7 +572,7 @@ export default class AppGuidedTour extends React.Component<Props> {
                               onPress={() => {
                                 this.fadeOutView();
                                 setTimeout(() => {
-                                  Actions.push('addContent', {animated: true});
+                                  Actions.push('addContent', { animated: true });
                                   this.props.cancelAppTour();
                                 }, 1000);
                               }}
@@ -593,15 +601,16 @@ export default class AppGuidedTour extends React.Component<Props> {
                                   options,
                                 );
                                 this.fadeOutView();
-                                const {currentIndex} = this.state;
+                                const { currentIndex } = this.state;
                                 this._carousal?.scrollToIndex({
                                   animated: true,
                                   index: currentIndex,
                                 });
                                 this.setState({
-									beginTour: true,
-									showPromptAnim: false,
-									showMemoryCreationView: false});
+                                  beginTour: true,
+                                  showPromptAnim: false,
+                                  showMemoryCreationView: false
+                                });
                               }}>
                               <View style={Styles.backBtnContainer}>
                                 <Image source={arrow_left}></Image>
@@ -620,8 +629,10 @@ export default class AppGuidedTour extends React.Component<Props> {
                         <View>
                           <TouchableOpacity
                             onPress={() => {
-                              this.setState({beginTour: false,
-								showMemoryCreationView: false,tourEnded: true,tourSaveForLater: false,initialView: false});
+                              this.setState({
+                                beginTour: false,
+                                showMemoryCreationView: false, tourEnded: true, tourSaveForLater: false, initialView: false
+                              });
                             }}
                             style={Styles.closeBtnStyle}>
                             <Image source={close_big_grey}></Image>
@@ -651,7 +662,7 @@ export default class AppGuidedTour extends React.Component<Props> {
                             style={Styles.submitButnStyle}
                             text="Let’s get started!"
                             onPress={() => {
-                              this.setState({initialView: false,beginTour: true});
+                              this.setState({ initialView: false, beginTour: true });
                             }}
                           />
                         </View>

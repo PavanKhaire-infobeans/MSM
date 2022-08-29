@@ -18,7 +18,7 @@ export default class SearchBar extends React.Component<Props> {
     isFocused: false,
   };
 
-  componentWillReceiveProps(props: Props) {
+  UNSAFE_componentWillReceiveProps(props: Props) {
     if (this.props.value != props.value && props.value != this.state.value) {
       this.setState({ value: props.value || '' });
     }
@@ -104,18 +104,20 @@ export default class SearchBar extends React.Component<Props> {
               onChangeText={text => {
                 this.setState({
                   value: text,
+                },()=>{
+                  if (this.props.onChangeText) {
+                    this.props.onChangeText(text);
+                  }
+  
+                  if (this.props.onClearField && text.length == 0) {
+                    if (!this.props.retainFocus) {
+                      this.inputField.current.blur();
+                    }
+                    this.props.onClearField();
+                  }
                 });
 
-                if (this.props.onChangeText) {
-                  this.props.onChangeText(text);
-                }
-
-                if (this.props.onClearField && text.length == 0) {
-                  if (!this.props.retainFocus) {
-                    this.inputField.current.blur();
-                  }
-                  this.props.onClearField();
-                }
+                
               }}
               keyboardType="ascii-capable"
               value={this.state.value}
@@ -145,31 +147,34 @@ export default class SearchBar extends React.Component<Props> {
   focus() {
     this.setState({
       editing: true,
+    },()=>{
+      if (this.props.onFocus) {
+        this.props.onFocus();
+      }
     });
-
-    if (this.props.onFocus) {
-      this.props.onFocus();
-    }
   }
 
   blur() {
     this.setState({
       editing: false,
+    },()=>{
+      if (this.inputField) {
+        this.inputField.current.blur();
+      }
+      if (this.props.onBlur) {
+        this.props.onBlur();
+      }
     });
-    if (this.inputField) {
-      this.inputField.current.blur();
-    }
-    if (this.props.onBlur) {
-      this.props.onBlur();
-    }
+   
   }
 
   clearField() {
     this.inputField.current.clear();
-    this.setState({ value: '' });
-    if (this.props.onClearField) {
-      this.props.onClearField();
-    }
+    this.setState({ value: '' },()=>{
+      if (this.props.onClearField) {
+        this.props.onClearField();
+      }
+    });
   }
 
   showClear() {

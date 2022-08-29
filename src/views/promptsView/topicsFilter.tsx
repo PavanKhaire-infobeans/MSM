@@ -73,7 +73,7 @@ export default class TopicsFilter extends React.Component<State, Props> {
     if (filterAdded) {
       loaderHandler.showLoader();
       GetPrompts(this.state.filteredTopics, false, 0);
-      this.setState({});
+      // this.setState({});
       EventManager.callBack('scrollFlatlist');
       Actions.pop();
     } else {

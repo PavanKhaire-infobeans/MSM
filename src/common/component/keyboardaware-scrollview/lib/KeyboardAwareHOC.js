@@ -184,7 +184,7 @@ function listenToKeyboardEvents(ScrollableComponent: React$Component) {
       });
     }
 
-    componentWillReceiveProps(nextProps: KeyboardAwareHOCProps) {
+    UNSAFE_componentWillReceiveProps(nextProps: KeyboardAwareHOCProps) {
       if (nextProps.viewIsInsideTabBar !== this.props.viewIsInsideTabBar) {
         const keyboardSpace: number = nextProps.viewIsInsideTabBar
           ? _KAM_DEFAULT_TAB_BAR_HEIGHT

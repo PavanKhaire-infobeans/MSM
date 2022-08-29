@@ -206,44 +206,47 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         loadingDataFromServer = true;
         this.setState({
           draftType: type,
+        },()=>{
+          if (showLoader) {
+            loaderHandler.showLoader();
+            memoryDraftsArray = [];
+            // this.setState({});
+          }
+          var length = memoryDraftsArray.length;
+          if (isRefreshing) {
+            length = 0;
+          }
+          switch (type) {
+            case DraftType.allDrafts: {
+              GetMemoryDrafts('all', 'all', length);
+              break;
+            }
+            case DraftType.myCollaborationDrafts: {
+              GetMemoryDrafts('mine', 'my_collaborative', length);
+              break;
+            }
+            case DraftType.myPersonalDrafts: {
+              GetMemoryDrafts('mine', 'my_personal', length);
+              break;
+            }
+            case DraftType.friendsDrafts: {
+              GetMemoryDrafts('friends', 'all', length);
+              break;
+            }
+            case DraftType.recentryDeleteDrafts: {
+              GetMemoryDrafts('deleted', 'all', length);
+              break;
+            }
+          }
         });
-        if (showLoader) {
-          loaderHandler.showLoader();
-          memoryDraftsArray = [];
-          this.setState({});
-        }
-        var length = memoryDraftsArray.length;
-        if (isRefreshing) {
-          length = 0;
-        }
-        switch (type) {
-          case DraftType.allDrafts: {
-            GetMemoryDrafts('all', 'all', length);
-            break;
-          }
-          case DraftType.myCollaborationDrafts: {
-            GetMemoryDrafts('mine', 'my_collaborative', length);
-            break;
-          }
-          case DraftType.myPersonalDrafts: {
-            GetMemoryDrafts('mine', 'my_personal', length);
-            break;
-          }
-          case DraftType.friendsDrafts: {
-            GetMemoryDrafts('friends', 'all', length);
-            break;
-          }
-          case DraftType.recentryDeleteDrafts: {
-            GetMemoryDrafts('deleted', 'all', length);
-            break;
-          }
-        }
+        
       } else {
         this.setState({
           isRefreshing: false,
           loading: false,
+        },()=>{
+          No_Internet_Warning();
         });
-        No_Internet_Warning();
       }
     }
   }
@@ -260,9 +263,11 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   onRefresh = () => {
     this.setState({
       isRefreshing: true,
+    },()=>{
+      page = 0;
+      this.draftOptionSelected(this.state.draftType, false, true);
     });
-    page = 0;
-    this.draftOptionSelected(this.state.draftType, false, true);
+    
   };
   deleteDraftCallback = (success: any, response: any, nid: any) => {
     loaderHandler.hideLoader();
@@ -272,7 +277,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         (element: any) => element.nid != nid,
       );
       this.memoryDraftsDataModel.decreaseMemoryDraftCount();
-      this.setState({});
+      // this.setState({});
     } else {
       ToastMessage('Unable to delete draft. Please try again later');
     }
@@ -732,9 +737,11 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         // increase page by 1
         this.setState({
           loading: true,
+        },()=>{
+          page++;
+          this.draftOptionSelected(this.state.draftType, false, false, true);
         });
-        page++;
-        this.draftOptionSelected(this.state.draftType, false, false, true);
+        
       }
     }
   };

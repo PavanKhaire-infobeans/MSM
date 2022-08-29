@@ -29,6 +29,7 @@ type Props = {
   openMemoryActions: (item: any) => void;
   jumpToVisibility?: (item: any) => void;
   MemoryActions?: any;
+  onLayout?: any;
 };
 
 type State = { activeIndex: any };
@@ -211,6 +212,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
           !this.props.item.item.isPrompt ?
             (
               <View
+                onLayout={this.props.onLayout}
                 style={styles.promptContainer}>
 
                 {this.externalCueItems.includes(this.props.item.item.type) ? (
@@ -271,45 +273,45 @@ export default class MemoryListItem extends React.Component<Props, State> {
                         </View>
                         <View
                           style={styles.carouselContainer}>
-                            <Carousel
-                              data={this.props.item.item.collection}
-                              renderItem={(collection: any) => (
-                                <TouchableHighlight
-                                  underlayColor={'none'}
-                                  onPress={() => {
-                                    _onShowMemoryDetails(this.props.item.item, "Recent");
-                                  }}>
-                                  <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-                                    <PlaceholderImageView
-                                      style={styles.PlaceholderImageView}
-                                      uri={Utility.getFileURLFromPublicURL(
-                                        collection.item.images.thumbnail_url,
-                                      )}
-                                      resizeMode={'contain'}
-                                    />
-                                    <TextNew
-                                      style={styles.collectionTitle}>
-                                      {collection.item.title}
-                                    </TextNew>
-                                  </View>
-                                </TouchableHighlight>
-                              )}
-                              sliderWidth={Dimensions.get('window').width - 48}
-                              itemWidth={Dimensions.get('window').width - 48}
-                              onSnapToItem={(index: any) =>
-                                this.setState({ activeIndex: index })
-                              }
-                            />
-                            <Pagination
-                              dotsLength={this.props.item.item.collection.length}
-                              activeDotIndex={this.state.activeIndex}
-                              dotStyle={styles.dotStyle}
-                              inactiveDotStyle={{
-                                backgroundColor: 'grey',
-                              }}
-                              inactiveDotOpacity={0.4}
-                              inactiveDotScale={0.6}
-                            />
+                          <Carousel
+                            data={this.props.item.item.collection}
+                            renderItem={(collection: any) => (
+                              <TouchableHighlight
+                                underlayColor={'none'}
+                                onPress={() => {
+                                  _onShowMemoryDetails(this.props.item.item, "Recent");
+                                }}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+                                  <PlaceholderImageView
+                                    style={styles.PlaceholderImageView}
+                                    uri={Utility.getFileURLFromPublicURL(
+                                      collection.item.images.thumbnail_url
+                                    )}
+                                    resizeMode={'contain'}
+                                  />
+                                  <TextNew
+                                    style={styles.collectionTitle}>
+                                    {collection.item.title}
+                                  </TextNew>
+                                </View>
+                              </TouchableHighlight>
+                            )}
+                            sliderWidth={Dimensions.get('window').width - 48}
+                            itemWidth={Dimensions.get('window').width - 48}
+                            onSnapToItem={(index: any) =>
+                              this.setState({ activeIndex: index })
+                            }
+                          />
+                          <Pagination
+                            dotsLength={this.props.item.item.collection.length}
+                            activeDotIndex={this.state.activeIndex}
+                            dotStyle={styles.dotStyle}
+                            inactiveDotStyle={{
+                              backgroundColor: 'grey',
+                            }}
+                            inactiveDotOpacity={0.4}
+                            inactiveDotScale={0.6}
+                          />
                         </View>
                       </View>
                     )
@@ -407,6 +409,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
             (
               this.props.item.item.active_prompts.length > 0 && (
                 <View
+                  onLayout={this.props.onLayout}
                   style={[styles.activepromptsContainer]}>
                   <View
                     style={styles.activepromptsSubContainer}>

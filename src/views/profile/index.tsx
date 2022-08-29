@@ -93,7 +93,7 @@ export default class Profile extends React.Component<object> {
   //     this.setState({});
   //     this.getUserProfileData();
   // }
-  // componentWillReceiveProps(){
+  // UNSAFE_componentWillReceiveProps(){
   //     this.getUserProfileData()
   // }
 
@@ -139,8 +139,9 @@ export default class Profile extends React.Component<object> {
   };
 
   _onRefresh = () => {
-    this.setState({ refreshing: true });
-    this.getUserProfileData();
+    this.setState({ refreshing: true },()=>{
+      this.getUserProfileData();
+    });
   };
 
   prepareFormSections() {
@@ -489,9 +490,11 @@ export default class Profile extends React.Component<object> {
                         ...this.state.basicInfo,
                         coverPicUri: tempfile.filePath,
                       },
+                    },()=>{
+                      this.profileData.basicInfo.isCoverPicAvailable = true;
+                      this.uploadImage(tempfile);
                     });
-                    this.profileData.basicInfo.isCoverPicAvailable = true;
-                    this.uploadImage(tempfile);
+                    
                   }
                 })
                 .catch(e => { });
@@ -523,10 +526,10 @@ export default class Profile extends React.Component<object> {
                       ...this.state.basicInfo,
                       coverPicUri: tempfile.filePath,
                     },
+                  },()=>{
+                    this.profileData.basicInfo.isCoverPicAvailable = true;
+                    this.uploadImage(tempfile);
                   });
-                  this.profileData.basicInfo.isCoverPicAvailable = true;
-                  this.uploadImage(tempfile);
-
                   // this.saveTempFiles(tempfiles);
                   // this.props.setValue(false);
                 })
@@ -548,13 +551,15 @@ export default class Profile extends React.Component<object> {
       .then((response: any) => {
         loaderHandler.hideLoader();
         this.getUserProfileData();
-        this.setState({ hasCoverPicLoaded: true });
-        this.profileData.basicInfo.isCoverPicAvailable = true;
+        this.setState({ hasCoverPicLoaded: true },()=>{
+          this.profileData.basicInfo.isCoverPicAvailable = true;
+        });
       })
       .catch((error: any) => {
         loaderHandler.hideLoader();
-        this.setState({ hasCoverPicLoaded: true });
-        this.profileData.basicInfo.isCoverPicAvailable = false;
+        this.setState({ hasCoverPicLoaded: true },()=>{
+          this.profileData.basicInfo.isCoverPicAvailable = false;
+        });
       });
   };
 
@@ -581,7 +586,7 @@ export default class Profile extends React.Component<object> {
                 this.profileData.basicInfo.coverPicUri = '';
                 this.profileData.basicInfo.isCoverPicAvailable = false;
                 this.getUserProfileData();
-                this.setState({});
+                // this.setState({});
               })
               .catch((error: any) => {
                 ToastMessage(error.message, Colors.ErrorColor);

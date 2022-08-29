@@ -66,17 +66,17 @@ class PublishMemoryDraft extends React.Component<Props, State> {
         text: 'Yes',
         style: 'default',
         onPress: () => {
-          this.setState({ showMenu: false });
-          Keyboard.dismiss();
-          Actions.pop();
+          this.setState({ showMenu: false }, () => {
+            Keyboard.dismiss();
+            Actions.pop();
+          });
         },
       },
     ]);
   };
 
   publishMemory = () => {
-    this.setState({ showMenu: false });
-    this.props.publishMemoryDraft(kPublish);
+    this.setState({ showMenu: false }, () => this.props.publishMemoryDraft(kPublish));
   };
 
   commonListComponent = (
@@ -223,51 +223,59 @@ class PublishMemoryDraft extends React.Component<Props, State> {
   };
 
   tags = () => {
-    this.setState({ showMenu: false });
-    if (Utility.isInternetConnected) {
-      Actions.push('commonListCreateMemory', {
-        tag: kTags,
-        title: 'Memory Tags',
-        showRecent: true,
-        referenceList: this.props.tagsList,
-        placeholder: 'Enter tags here...',
-      });
-    } else {
-      No_Internet_Warning();
-    }
+    this.setState({ showMenu: false }, () => {
+      if (Utility.isInternetConnected) {
+        Actions.push('commonListCreateMemory', {
+          tag: kTags,
+          title: 'Memory Tags',
+          showRecent: true,
+          referenceList: this.props.tagsList,
+          placeholder: 'Enter tags here...',
+        });
+      } else {
+        No_Internet_Warning();
+      }
+    });
+
   };
 
   whoELseWhereThere = () => {
-    this.setState({ showMenu: false });
-    if (Utility.isInternetConnected) {
-      Actions.push('commonListCreateMemory', {
-        tag: kWhoElseWhereThere,
-        title: 'Who else where there',
-        showRecent: false,
-        referenceList: this.props.whoElseWhereThereList,
-        placeholder: 'Enter name of friends...',
-      });
-    } else {
-      No_Internet_Warning();
-    }
+    this.setState({ showMenu: false },()=>{
+      if (Utility.isInternetConnected) {
+        Actions.push('commonListCreateMemory', {
+          tag: kWhoElseWhereThere,
+          title: 'Who else where there',
+          showRecent: false,
+          referenceList: this.props.whoElseWhereThereList,
+          placeholder: 'Enter name of friends...',
+        });
+      } else {
+        No_Internet_Warning();
+      }
+    });
+    
   };
 
   collection = () => {
-    this.setState({ showMenu: false });
-    if (Utility.isInternetConnected) {
-      Actions.push('collectionList');
-    } else {
-      No_Internet_Warning();
-    }
+    this.setState({ showMenu: false },()=>{
+      if (Utility.isInternetConnected) {
+        Actions.push('collectionList');
+      } else {
+        No_Internet_Warning();
+      }
+    });
+    
   };
 
   whoCanSee = () => {
-    this.setState({ showMenu: false });
-    if (Utility.isInternetConnected) {
-      Actions.push('whoCanSee');
-    } else {
-      No_Internet_Warning();
-    }
+    this.setState({ showMenu: false },()=>{
+      if (Utility.isInternetConnected) {
+        Actions.push('whoCanSee');
+      } else {
+        No_Internet_Warning();
+      }
+    });
+    
   };
 
   showHideMenu = () => {
@@ -284,7 +292,9 @@ class PublishMemoryDraft extends React.Component<Props, State> {
       }
     });
   };
+
   componentWillUnmount = () => {
+    this.showConfettiCanon.removeListener();
     if (this._confettiView) {
       this._confettiView.stopConfetti();
     }
@@ -415,10 +425,11 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                           underlayColor={Colors.transparent}
                           style={Styles.memoryDraftIntroButnStyle}
                           onPress={() => {
-                            this.setState({ showGuideOverlay: false });
-                            DefaultPreference.set('hide_tour', 'true').then(
-                              function () { },
-                            );
+                            this.setState({ showGuideOverlay: false },()=>{
+                              DefaultPreference.set('hide_tour', 'true').then(
+                                function () { },
+                              );  
+                            });
                           }}>
                           <View
                             style={Styles.doneBtnContainer}>

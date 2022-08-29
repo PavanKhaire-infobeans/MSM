@@ -73,6 +73,11 @@ export default class MyAccount extends React.Component {
 
   fullname = Account.selectedData().firstName + ' ' + Account.selectedData().lastName;
 
+  componentWillUnmount =()=>{
+    this.checkProfile.removeListener()
+    this.profilePicUpdate.removeListener()
+  }
+
   segregateItemClick(identifier: any) {
     switch (identifier) {
       case MyMessages:
@@ -192,7 +197,7 @@ export default class MyAccount extends React.Component {
   updateProfilePic = () => {
     this.fullname =
       Account.selectedData().firstName + ' ' + Account.selectedData().lastName;
-    this.setState({});
+    // this.setState({});
   };
 
   render() {

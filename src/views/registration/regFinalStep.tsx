@@ -44,7 +44,7 @@ export class RegFinalStep extends Component {
     },
   };
 
-  componentDidMount =()=>{
+  componentDidMount = () => {
     Keyboard.dismiss()
   }
 
@@ -59,15 +59,15 @@ export class RegFinalStep extends Component {
             ref={ref => (this.navBar = ref)}
           />
           <StatusBar
-            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <ScrollView
             // keyboardShouldPersistTaps="always"
             // keyboardDismissMode="s"
             style={Styles.ScrollViewStyle}
-            onScroll={()=>{Keyboard.dismiss()}}
-            contentContainerStyle={{alignItems: 'center'}}
+            onScroll={() => { Keyboard.dismiss() }}
+            contentContainerStyle={{ alignItems: 'center' }}
             bounces={false}>
             <View style={Styles.ScrollViewStyleContainer}>
               {/* <InstanceView
@@ -100,10 +100,11 @@ export class RegFinalStep extends Component {
                       fromYear: text,
                       error: {
                         ...this.state.error,
-                        fromYear: {error: false, message: ''},
+                        fromYear: { error: false, message: '' },
                       },
+                    }, () => {
+                      this.navBar._hide();
                     });
-                    this.navBar._hide();
                   }}
                 />
                 <TextField
@@ -118,10 +119,11 @@ export class RegFinalStep extends Component {
                       toYear: text,
                       error: {
                         ...this.state.error,
-                        toYear: {error: false, message: ''},
+                        toYear: { error: false, message: '' },
                       },
+                    }, () => {
+                      this.navBar._hide();
                     });
-                    this.navBar._hide();
                   }}
                 />
               </View>
@@ -136,10 +138,11 @@ export class RegFinalStep extends Component {
                     major: text,
                     error: {
                       ...this.state.error,
-                      major: {error: false, message: ''},
+                      major: { error: false, message: '' },
                     },
+                  }, () => {
+                    this.navBar._hide();
                   });
-                  this.navBar._hide();
                 }}
               />
               <TextField
@@ -153,10 +156,11 @@ export class RegFinalStep extends Component {
                     minor: text,
                     error: {
                       ...this.state.error,
-                      minor: {error: false, message: ''},
+                      minor: { error: false, message: '' },
                     },
+                  }, () => {
+                    this.navBar._hide();
                   });
-                  this.navBar._hide();
                 }}
               />
               <TextField
@@ -170,16 +174,17 @@ export class RegFinalStep extends Component {
                     minor: text,
                     error: {
                       ...this.state.error,
-                      minor: {error: false, message: ''},
+                      minor: { error: false, message: '' },
                     },
+                  }, () => {
+                    this.navBar._hide();
                   });
-                  this.navBar._hide();
                 }}
               />
               <SubmitButton
                 style={Styles.joinButton}
                 text="Send Request to Join"
-                onPress={() => {}}
+                onPress={() => { }}
               />
             </View>
           </ScrollView>
@@ -189,7 +194,7 @@ export class RegFinalStep extends Component {
   }
 }
 
-const mapStateToProps = (state: {[x: string]: any}) => ({});
+const mapStateToProps = (state: { [x: string]: any }) => ({});
 
 const mapDispatchToProps = (dispatch: Function) => ({});
 

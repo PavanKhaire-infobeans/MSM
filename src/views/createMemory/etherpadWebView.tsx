@@ -12,6 +12,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import Utility from '../../common/utility';
 import Styles from './styles';
+import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 
 type State = { [x: string]: any };
 type Props = { [x: string]: any };
@@ -60,7 +61,6 @@ export default class EtherPadEditing extends React.Component<Props, State> {
     });
   };
 
-  componentDidMount() { }
 
   componentWillUnmount() { 
     Keyboard.removeAllListeners(this.keyboardDidHideListener);
@@ -187,6 +187,8 @@ export default class EtherPadEditing extends React.Component<Props, State> {
           <WebView
             source={{ uri: this.props.padDetails.padUrl }}
             style={Styles.webViewStyle}
+            // onLoadStart={()=>loaderHandler.showLoader()}
+            // onLoadEnd={()=>loaderHandler.hideLoader()}
             javaScriptEnabled={true}
             domStorageEnabled={true}
             renderLoading={this.renderLoader}

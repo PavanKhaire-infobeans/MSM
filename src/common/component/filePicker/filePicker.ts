@@ -282,37 +282,88 @@ export const PickPDF = async (callback: any) => {
 
 export const PickImage = async (callback: any) => {
   requestPermission('photo').then(async (success) => {
-    //   console.log('PickImage: ', success);
+    console.log('PickImage: ', success);
     if (success) {
 
       // try {
-      //   const res = await DocumentPicker.pick({
-      //     type: [DocumentPicker.types.images],
+      //   // ImageCropPicker.openPicker(options)
+      //   //   .then(response => {
+      //   //     //console.log(response, typeof response);
+      //   //     var tempfiles: TempFile[] = (response as Array<PickerImage>).map(
+      //   //       obj => {
+      //   //         let path =
+      //   //           obj.path.indexOf('file://') != -1
+      //   //             ? obj.path
+      //   //             : 'file://' + obj.path;
+      //   //         let fid = GenerateRandomID();
+      //   //         let TempFile = {
+      //   //           fid: fid,
+      //   //           filePath: path,
+      //   //           thumb_uri: path,
+      //   //           isLocal: true,
+      //   //           type: `${FileType[FileType.image]}s`,
+      //   //           status: TempFileStatus.needsToUpload,
+      //   //           userId: Account.selectedData().userID,
+      //   //           file_title: '',
+      //   //           file_description: '',
+      //   //           userName:
+      //   //             Account.selectedData().firstName +
+      //   //             ' ' +
+      //   //             Account.selectedData().lastName,
+      //   //           date: Utility.dateObjectToDefaultFormat(new Date()),
+      //   //         };
+      //   //         return TempFile;
+      //   //       },
+      //   //     );
+      //   //     if (tempfiles.length > 5) {
+      //   //       tempfiles.splice(5, tempfiles.length - 1);
+      //   //       ToastMessage('Maximum 5 photos can be selected', Colors.ErrorColor);
+      //   //     }
+      //   //     callback(tempfiles);
+      //   //     return tempfiles;
+      //   //   })
+      //   //   .catch(e => { });
+
+      //    const response = await launchImageLibrary(options, (response:any) => {
+
+      //     try {
+      //       var tempfiles: any[] = response.assets.map(
+      //         obj => {
+      //           let path =
+      //             obj.uri.indexOf('file://') != -1
+      //               ? obj.uri
+      //               : 'file://' + obj.uri;
+      //           let fid = GenerateRandomID();
+      //           let TempFile = {
+      //             fid: fid,
+      //             filePath: path,
+      //             thumb_uri: path,
+      //             isLocal: true,
+      //             type: `${FileType[FileType.image]}s`,
+      //             status: TempFileStatus.needsToUpload,
+      //             userId: Account.selectedData().userID,
+      //             file_title: '',
+      //             file_description: '',
+      //             userName:
+      //               Account.selectedData().firstName +
+      //               ' ' +
+      //               Account.selectedData().lastName,
+      //             date: Utility.dateObjectToDefaultFormat(new Date()),
+      //           };
+      //           return TempFile;
+      //         },
+      //       );
+      //       if (tempfiles.length > 5) {
+      //         tempfiles.splice(5, tempfiles.length - 1);
+      //         ToastMessage('Maximum 5 photos can be selected', Colors.ErrorColor);
+      //       }
+      //       callback(tempfiles);
+      //       return tempfiles;
+      //     } catch (error) {
+      //       console.log(error)
+      //     }
+
       //   });
-      //   console.log('res : ' + JSON.stringify(res));
-      //   if (res) {
-      //     let path =
-      //       res.uri.indexOf('file://') != -1 ? res.uri : 'file://' + res.uri;
-      //     let fid = GenerateRandomID();
-      //     var tempfile: TempFile = {
-      //       fid: fid,
-      //       filePath: path,
-      //       thumb_uri: path,
-      //       isLocal: true,
-      //       type: `${FileType[FileType.image]}s`,
-      //       status: TempFileStatus.needsToUpload,
-      //       filename: res.name,
-      //       userId: Account.selectedData().userID,
-      //       file_title: '',
-      //       file_description: '',
-      //       userName:
-      //         Account.selectedData().firstName +
-      //         ' ' +
-      //         Account.selectedData().lastName,
-      //       date: Utility.dateObjectToDefaultFormat(new Date()),
-      //     };
-      //     callback([tempfile]);
-      //   }
       // } catch (err) {
       //   //Handling any exception (If any)
       //   if (DocumentPicker.isCancel(err)) {

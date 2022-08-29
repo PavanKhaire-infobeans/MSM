@@ -112,7 +112,7 @@ const ScrollableTabView = createReactClass({
     };
   },
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (props.children !== this.props.children) {
       this.updateSceneKeys({
         page: this.state.currentPage,

@@ -90,6 +90,15 @@ class CommonListCreateMemory extends React.Component<Props, State> {
     this.props.saveSearchList([]);
   }
 
+  componentWillUnmount() {
+
+    this.backListner.removeListener();
+    Keyboard.removeAllListeners("keyboardDidShow")
+    Keyboard.removeAllListeners("keyboardDidHide")
+    Keyboard.removeAllListeners("keyboardWillShow")
+    Keyboard.removeAllListeners("keyboardWillHide")
+  }
+
   componentDidMount() {
     let refList: any = this.props.referenceList.slice(0);
     this.setState({
@@ -118,27 +127,29 @@ class CommonListCreateMemory extends React.Component<Props, State> {
   addToList = (item: any) => {
     let refList = this.state.referenceList;
     let found = false;
-    this.setState({ errorView: false });
-    if (this.state.isMemoryTags)
-      found = refList.some(
-        (element: any) => element.tid === item.tid || element.name == item.name,
-      );
-    else found = refList.some((element: any) => element.uid === item.uid);
+    this.setState({ errorView: false }, () => {
+      if (this.state.isMemoryTags)
+        found = refList.some(
+          (element: any) => element.tid === item.tid || element.name == item.name,
+        );
+      else found = refList.some((element: any) => element.uid === item.uid);
 
-    if (!found) {
-      refList.push(item);
-      this.setState({ referenceList: refList });
-    }
+      if (!found) {
+        refList.push(item);
+        this.setState({ referenceList: refList });
+      }
 
-    let searchList = this.props.searchList;
-    if (this.state.isMemoryTags)
-      searchList = searchList.filter((element: any) => element.tid != item.tid);
-    else
-      searchList = searchList.filter((element: any) => element.uid != item.uid);
-    this.props.saveSearchList(searchList);
-    this.searchBar.current &&
-      this.searchBar.current.clearField &&
-      this.searchBar.current.clearField();
+      let searchList = this.props.searchList;
+      if (this.state.isMemoryTags)
+        searchList = searchList.filter((element: any) => element.tid != item.tid);
+      else
+        searchList = searchList.filter((element: any) => element.uid != item.uid);
+      this.props.saveSearchList(searchList);
+      this.searchBar.current &&
+        this.searchBar.current.clearField &&
+        this.searchBar.current.clearField();
+    });
+
   };
 
   removeFromList = (item: any) => {
@@ -211,6 +222,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
       </View>
     );
   };
+
   renderTagsItem = (item: any) => {
     return (
       <TouchableHighlight

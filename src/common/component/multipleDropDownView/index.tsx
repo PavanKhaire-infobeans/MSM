@@ -47,11 +47,6 @@ const MultipleDropDownSelector = (props: Props) => {
       useNativeDriver: true,
     }).start();
   }, [props.showError])
-  // componentWillReceiveProps(nextProps: Props) {
-  //   if (this.props.showError !== nextProps.showError) {
-
-  //   }
-  // }
 
   return (
     <View

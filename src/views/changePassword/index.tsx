@@ -52,14 +52,13 @@ export default class ChangePassword extends React.Component {
     );
   }
 
-  componentDidMount() {}
-
   updateState(state: object) {
     this.setState(state);
   }
 
   componentWillUnmount() {
     this.navBar._hide();
+    this.changePasswordListener.removeListener()
   }
   changePasswordResponse(success: boolean, response: any) {
     loaderHandler.hideLoader();

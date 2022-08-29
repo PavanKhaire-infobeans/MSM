@@ -69,7 +69,7 @@ export default class TextField extends React.Component<Props, State> {
     };
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (this.props.showError !== nextProps.showError) {
       Animated.parallel([
         Animated.timing(this.state.height, {
@@ -96,22 +96,24 @@ export default class TextField extends React.Component<Props, State> {
     this.setState({
       showClearImage: false,
       inputFocused: false
+    },()=>{
+      this.isBlurred = true;
+      if (this.props.value.length == 0) {
+        Animated.parallel([
+          Animated.timing(this.state.sizeFnt, {
+            toValue: kPlaceHolderFontSize,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+          Animated.timing(this.state.top, {
+            toValue: this.props.inputFieldForPayment ? kTopAnimated : kTop,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      }
     });
-    this.isBlurred = true;
-    if (this.props.value.length == 0) {
-      Animated.parallel([
-        Animated.timing(this.state.sizeFnt, {
-          toValue: kPlaceHolderFontSize,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(this.state.top, {
-          toValue: this.props.inputFieldForPayment ? kTopAnimated : kTop,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
+    
   };
 
   onFocus = () => {

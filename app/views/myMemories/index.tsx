@@ -21,7 +21,7 @@ import styles from './styles';
 type Props = {[x: string]: any};
 
 export default class MyMemoriesContainer extends React.Component<Props> {
-  backListner: any;
+  backListner: EventManager;
   scrollableTabView: any;
   state = {
     index: 0,
@@ -38,9 +38,11 @@ export default class MyMemoriesContainer extends React.Component<Props> {
     );
   }
 
-  componentDidMount() {}
+  componentWillUnmount() {
+    this.backListner.removeListener()
+  }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     if (this.props.isFromMenu) {
       setTimeout(() => this.scrollableTabView.goToPage(1), 300);
     }

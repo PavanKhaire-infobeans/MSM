@@ -81,7 +81,7 @@ class FindCommunity extends Component<FindProps, State> {
     } catch (err) {}
   };
 
-  componentWillReceiveProps(nextProps: FindProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: FindProps) {
     if (nextProps.request.completed) {
       this.getAll();
       this.props.end();

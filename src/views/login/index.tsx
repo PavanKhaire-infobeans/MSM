@@ -103,7 +103,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
    *
    * Will get updates from Saga
    */
-  componentWillReceiveProps(nextProps: Props) {
+   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     // Check for login response
     if (Actions.currentScene == 'login' || Actions.currentScene == 'prologue') {
       this.controller.checkLoggedIn(nextProps.loginStatus);
@@ -142,6 +142,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   showAlertFromNative(test: any) {
     Alert.alert(JSON.stringify(test));
   }
+
   loginToSelected = (selectedCommunity: any) => {
     const { username, password } = this.state;
     DefaultPreference.get('firebaseToken').then(
@@ -190,8 +191,9 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
               this.setState({
                 username: `${value.username}`,
                 password: `${value.password}`,
+              },()=>{
+                Keyboard.dismiss();
               });
-              Keyboard.dismiss();
             }
           });
         }
@@ -229,6 +231,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 
     }
   }
+
   _keyboardDidHide = () => {
     this.setState({
       keyboardHeight: 0
@@ -252,10 +255,14 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   };
 
   componentWillUnmount() {
-    this.setState({ _isRemeberMe: false });
-    this.showErrorMessage(false);
-    Keyboard.removeAllListeners(this.keyboardDidShowListener)
-    Keyboard.removeAllListeners(this.keyboardDidHideListener)
+    this.setState({ _isRemeberMe: false },()=>{
+      this.showErrorMessage(false);
+      Keyboard.removeAllListeners(this.keyboardDidShowListener)
+      Keyboard.removeAllListeners(this.keyboardDidHideListener)
+      this.appleLoginCallBack.removeListener();
+      DeviceEventEmitter.removeAllListeners("AppleLoginResult");
+  
+    });
   }
 
   selectedCommunity: Account = new Account();

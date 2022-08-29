@@ -51,6 +51,10 @@ class MemoryCollectionList extends React.Component<Props, State> {
     this.checkForScroll = true;
   }
 
+  componentWillUnmount(){
+    this.publishedMemoryCollectionsListener.removeListener();
+  }
+
   fetchPublishedMemoryCollections = (
     fetched?: boolean,
     publishedMemoryCollectionsData?: any,
@@ -63,6 +67,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
       // ToastMessage(getAllLikes, Colors.ErrorColor);
     }
   };
+
   cancelAction = () => {
     Keyboard.dismiss();
     Actions.pop();
@@ -70,7 +75,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
 
   saveValue = () => {
     let collections_nids: any = [];
-    this.state.collections.forEach(element => {
+    this.state.collections.forEach((element:any) => {
       collections_nids.push(element.nid ? element.nid : element.tid);
     });
     if (Utility.isInternetConnected) {

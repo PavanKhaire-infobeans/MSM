@@ -216,7 +216,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       ToastMessage(response, Colors.ErrorColor);
       this.setState({ viewAllComments: false });
     }
-    this.setState({});
+    // this.setState({});
     this.forwardDataToNative();
   };
 
@@ -270,7 +270,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
             (element: any) => element.cid != cid,
           );
         this.memoryDataModel.likesComments.noOfComments--;
-        this.setState({});
+        // this.setState({});
         loaderHandler.hideLoader();
         this.forwardDataToNative();
       } else {
@@ -329,7 +329,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           this.memoryDataModel.likesComments.commentsList.push(commentItem);
           //console.log(this.memoryDataModel.likesComments.commentsList);
 
-          this.setState({});
+          // this.setState({});
           this.setState({
             bottomToolbar: 0,
             commentValue: '',
@@ -431,15 +431,17 @@ export default class MemoryDetails extends React.Component<Props, State> {
     if (this.state.viewAllComments) {
       this.setState({ viewAllComments: false });
     } else {
-      this.setState({ viewAllComments: true });
-      if (this.memoryDataModel.likesComments.noOfComments > 0) {
-        loaderHandler.showLoader('Loading...');
-        GetAllComments(
-          this.memoryDataModel.nid,
-          this.storyType,
-          this.memoryDataModel.likesComments.noOfComments,
-        );
-      }
+      this.setState({ viewAllComments: true }, () => {
+        if (this.memoryDataModel.likesComments.noOfComments > 0) {
+          loaderHandler.showLoader('Loading...');
+          GetAllComments(
+            this.memoryDataModel.nid,
+            this.storyType,
+            this.memoryDataModel.likesComments.noOfComments,
+          );
+        }
+      });
+
     }
   };
   getLastTwoComments = () => {
@@ -451,7 +453,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     loaderHandler.hideLoader();
     if (fetched) {
       this.showList(this.keyLiked, getAllLikes);
-      this.setState({});
+      // this.setState({});
     } else {
       ToastMessage(getAllLikes, Colors.ErrorColor);
     }
@@ -466,14 +468,16 @@ export default class MemoryDetails extends React.Component<Props, State> {
       this.setState({
         memoryDetailAvailable: true,
         isExternalQueue: isExternalCue,
+      }, () => {
+        if (this.props.comment) {
+          this.focusCommentView();
+        } else if (this.props.showComments) {
+          setTimeout(() => {
+            this.scrollToBottom();
+          }, 1000);
+        }
       });
-      if (this.props.comment) {
-        this.focusCommentView();
-      } else if (this.props.showComments) {
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 1000);
-      }
+
     } else {
       ToastMessage(memoryDetails, Colors.ErrorColor);
       this.setState({ memoryDetailAvailable: true });
@@ -612,7 +616,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           this.memoryDataModel.likesComments.commentsList[
             index
           ].like_comment_data.like_count = likeCount;
-        this.setState({});
+        // this.setState({});
       } else {
         let commentsList = [...this.state.allCommentsList];
         commentsList[index].like_comment_data.like_flag = likeFlag;
@@ -827,7 +831,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         ].likesComments.isLikedByUser =
           this.memoryDataModel.likesComments.isLikedByUser;
       }
-      this.setState({});
+      // this.setState({});
     } else {
       No_Internet_Warning();
     }
@@ -836,10 +840,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
     this.setState({
       commentId: item.cid,
       commentValue: decode_utf8(item.comment_body_value),
+    }, () => {
+      this._commentBoxRef &&
+        this._commentBoxRef.focus &&
+        this._commentBoxRef.focus();
     });
-    this._commentBoxRef &&
-      this._commentBoxRef.focus &&
-      this._commentBoxRef.focus();
+
   };
 
   deleteComment = (item: any) => {
@@ -894,24 +900,26 @@ export default class MemoryDetails extends React.Component<Props, State> {
             commentValue: '',
             commentId: '',
             commentViewVisiblity: false,
+          }, () => {
+            if (this.state.isExternalQueue) {
+              this.memoryDataModel.externalQueue.collection[
+                this.state.activeSlide
+              ].likesComments.commentsList =
+                this.memoryDataModel.likesComments.commentsList;
+              this.memoryDataModel.externalQueue.collection[
+                this.state.activeSlide
+              ].likesComments.noOfComments =
+                this.memoryDataModel.likesComments.noOfComments;
+            }
+            this.holdTempLikeOnComment = { tempId: cid, likeStatus: '0' };
+            PostComment(
+              this.memoryDataModel.nid,
+              this.storyType,
+              commentText,
+              cid,
+            );
           });
-          if (this.state.isExternalQueue) {
-            this.memoryDataModel.externalQueue.collection[
-              this.state.activeSlide
-            ].likesComments.commentsList =
-              this.memoryDataModel.likesComments.commentsList;
-            this.memoryDataModel.externalQueue.collection[
-              this.state.activeSlide
-            ].likesComments.noOfComments =
-              this.memoryDataModel.likesComments.noOfComments;
-          }
-          this.holdTempLikeOnComment = { tempId: cid, likeStatus: '0' };
-          PostComment(
-            this.memoryDataModel.nid,
-            this.storyType,
-            commentText,
-            cid,
-          );
+
         } else {
           commentText = encode_utf8(commentText);
           loaderHandler.showLoader('Editing...');
@@ -1443,9 +1451,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
               <RenderHtml
                 tagsStyles={{ p: { ...fontSize(18), marginBottom: 10, fontFamily: 'Inter', fontWeight: '400', lineHeight: 24 } }}
                 contentWidth={Dimensions.get('window').width}
-                source={{html:currentSelectedItem.description}}
+                source={{ html: currentSelectedItem.description }}
                 enableExperimentalMarginCollapsing={true}
-                ></RenderHtml>
+              ></RenderHtml>
             )
             // <Text style={{...fontSize(18), lineHeight: 26, paddingBottom: 15, color: "#000"}}>{currentSelectedItem.description}</Text>
           }
@@ -1521,11 +1529,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   modifyCommentsAndLikesData = (index: any) => {
-    this.setState({ activeSlide: index, viewAllComments: false });
-    let currentSelectedItem =
-      this.memoryDataModel.externalQueue.collection[index];
-    this.memoryDataModel.nid = currentSelectedItem.nid;
-    this.memoryDataModel.likesComments = currentSelectedItem.likesComments;
+    this.setState({ activeSlide: index, viewAllComments: false }, () => {
+      let currentSelectedItem =
+        this.memoryDataModel.externalQueue.collection[index];
+      this.memoryDataModel.nid = currentSelectedItem.nid;
+      this.memoryDataModel.likesComments = currentSelectedItem.likesComments;
+    });
+
   };
   openMemoryActions = () => {
     MemoryActions = [];
@@ -1640,9 +1650,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
     });
     this._actionSheet && this._actionSheet.showSheet();
     this.setState({ showMemoryActions: true });
-    setTimeout(() => {
+    // setTimeout(() => {
       Keyboard.dismiss();
-    }, 1000);
+    // }, 1000);
   };
   onActionItemClicked = (index: number, data: any): void => {
     switch (data.actionType) {
@@ -1929,9 +1939,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
             <RenderHtml
               tagsStyles={{ p: { ...fontSize(18), marginBottom: 10, fontFamily: 'Inter', fontWeight: '400', lineHeight: 24 } }}
               contentWidth={Dimensions.get('window').width}
-              source={{html:this.memoryDataModel.memory.description}}
+              source={{ html: this.memoryDataModel.memory.description }}
               enableExperimentalMarginCollapsing={true}
-              ></RenderHtml>
+            ></RenderHtml>
           </View>
         )}
       </View>
@@ -1974,7 +1984,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           )}
           {/* {this.state.memoryDetailAvailable && <UserDetails userDetails={this.memoryDataModel.userDetails} shareDetails={this.memoryDataModel.shareOption} isExternalQueue={this.state.isExternalQueue || this.storyType.indexOf('song') != -1 ? true : false} storyType={this.storyType}/>} */}
           <StatusBar
-            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           {/* <StatusBar barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'} /> */}

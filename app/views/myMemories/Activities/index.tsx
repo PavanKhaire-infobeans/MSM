@@ -49,6 +49,11 @@ export default class Activities extends React.Component<Props, State> {
     this.getActivities(false, false);
   }
 
+  componentWillUnmount = () => {
+    this.activitiesListener.removeListener();
+    this.activitiesForeground.removeListener();
+  }
+
   activityReceivedForeground = (details: any) => {
     let activityList: any = this.state.activityList;
     activityList.forEach((element: any, index: any) => {
@@ -97,20 +102,22 @@ export default class Activities extends React.Component<Props, State> {
   };
 
   getActivities = (isReferesh: any, isLoadMore: any) => {
-    this.setState({ isRefreshing: isReferesh, isLoadMore: isLoadMore });
-    let initialOffset = this.state.activityList.length;
-    if (Utility.isInternetConnected) {
-      if (!isReferesh && !isLoadMore) loaderHandler.showLoader();
-      else if (isReferesh) {
-        initialOffset = 0;
+    this.setState({ isRefreshing: isReferesh, isLoadMore: isLoadMore }, () => {
+      let initialOffset = this.state.activityList.length;
+      if (Utility.isInternetConnected) {
+        if (!isReferesh && !isLoadMore) loaderHandler.showLoader();
+        else if (isReferesh) {
+          initialOffset = 0;
+        }
+        GetActivities(
+          { type: 'activities', limit: 20, offset: initialOffset },
+          kActivities,
+        );
+      } else {
+        No_Internet_Warning();
       }
-      GetActivities(
-        { type: 'activities', limit: 20, offset: initialOffset },
-        kActivities,
-      );
-    } else {
-      No_Internet_Warning();
-    }
+    });
+
   };
 
   renderActivityView = (item: any): any => {
@@ -176,7 +183,7 @@ export default class Activities extends React.Component<Props, State> {
                 <Text style={styles.buttonTextStyle}>
                   Open Memory
                 </Text>
-                
+
               </View>
             </TouchableWithoutFeedback>
           )}

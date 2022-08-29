@@ -107,8 +107,6 @@ export default class PromptsView extends React.Component<State, Props> {
               categoriesArray: fetchPromptsList.prompt_categories,
               offsetVal: fetchPromptsList.prompt_offset,
               prompt_count: fetchPromptsList.prompt_count
-            }, () => {
-              // console.log("loadmore: ",JSON.stringify(this.state.items))
             });
 
           }
@@ -119,16 +117,13 @@ export default class PromptsView extends React.Component<State, Props> {
               categoriesArray: fetchPromptsList.prompt_categories,
               offsetVal: fetchPromptsList.prompt_offset,
               prompt_count: fetchPromptsList.prompt_count
-            }, () => {
-              // console.log("data: ",JSON.stringify(this.state.items))
             });
           }
-          this.setState({ loading: false });
-          loaderHandler.hideLoader();
+          this.setState({ loading: false }, () => loaderHandler.hideLoader());
+
         }
         else {
-          this.setState({ loading: false });
-          loaderHandler.hideLoader();
+          this.setState({ loading: false }, () => loaderHandler.hideLoader());
         }
       },
     );
@@ -139,8 +134,8 @@ export default class PromptsView extends React.Component<State, Props> {
         if (fetched) {
           var array = [...this.state.items]; // make a separate copy of the array
           const filteredItems = array.filter(item => item.id !== promptId);
-          this.setState({ items: filteredItems });
-          loaderHandler.hideLoader();
+          this.setState({ items: filteredItems },()=>loaderHandler.hideLoader());
+          
         } else {
           loaderHandler.hideLoader();
         }
@@ -154,10 +149,15 @@ export default class PromptsView extends React.Component<State, Props> {
       this.convertToMemory(this.props.nid, this.props.title)
     }
     else {
-      this.setState({ loading: true });
-      console.log('on mounting', this.state.categoriesArray);
-      GetPrompts(this.state.categoriesArray, false, this.state.offsetVal);
+      this.setState({ loading: true },()=>GetPrompts(this.state.categoriesArray, false, this.state.offsetVal));
     }
+  }
+
+  componentWillUnmount = () => {
+    this.promptHideListener.removeListener()
+    this.scrollFlatlistListener.removeListener()
+    this.memoryFromPrompt.removeListener()
+    this.promptsListListener.removeListener()
   }
 
   loadMorePrompts() {
@@ -273,10 +273,10 @@ export default class PromptsView extends React.Component<State, Props> {
                       </TouchableOpacity>
                     </View> */}
                       <View style={Styles.imageContainer}>
-                        <ImageBackground 
-                          borderTopLeftRadius={24} borderTopRightRadius={24} 
-                          source={item.item.prompt_image ? {uri:item.item.prompt_image} : sampleimage} 
-                          resizeMode='cover' 
+                        <ImageBackground
+                          borderTopLeftRadius={24} borderTopRightRadius={24}
+                          source={item.item.prompt_image ? { uri: item.item.prompt_image } : sampleimage}
+                          resizeMode='cover'
                           style={Styles.promptImage}>
                           <LinearGradient
                             // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
@@ -378,7 +378,6 @@ export default class PromptsView extends React.Component<State, Props> {
   }
 
   promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    this.memoryFromPrompt.removeListener();
     setTimeout(() => {
       loaderHandler.hideLoader();
     }, 500);

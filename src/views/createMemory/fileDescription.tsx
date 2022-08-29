@@ -10,8 +10,8 @@ import EventManager from '../../common/eventManager';
 import { pdf_icon } from '../../images';
 import Styles from './styles';
 
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 export default class FileDescription extends React.Component<Props, State> {
   keyboardDidShowListener: any;
@@ -34,30 +34,32 @@ export default class FileDescription extends React.Component<Props, State> {
     this.setState({
       file_title: this.file_title,
       description: this.description,
+    }, () => {
+      this.backListner = EventManager.addListener(
+        'hardwareBackPress',
+        this.cancelAction,
+      );
+      if (Platform.OS == 'android') {
+        this.keyboardDidShowListener = Keyboard.addListener(
+          'keyboardDidShow',
+          this._keyboardDidShow,
+        );
+        this.keyboardDidHideListener = Keyboard.addListener(
+          'keyboardDidHide',
+          this._keyboardDidHide,
+        );
+      } else {
+        this.keyboardDidShowListener = Keyboard.addListener(
+          'keyboardWillShow',
+          this._keyboardDidShow,
+        );
+        this.keyboardDidHideListener = Keyboard.addListener(
+          'keyboardWillHide',
+          this._keyboardDidHide,
+        );
+      }
     });
-    this.backListner = EventManager.addListener(
-      'hardwareBackPress',
-      this.cancelAction,
-    );
-    if (Platform.OS == 'android') {
-      this.keyboardDidShowListener = Keyboard.addListener(
-        'keyboardDidShow',
-        this._keyboardDidShow,
-      );
-      this.keyboardDidHideListener = Keyboard.addListener(
-        'keyboardDidHide',
-        this._keyboardDidHide,
-      );
-    } else {
-      this.keyboardDidShowListener = Keyboard.addListener(
-        'keyboardWillShow',
-        this._keyboardDidShow,
-      );
-      this.keyboardDidHideListener = Keyboard.addListener(
-        'keyboardWillHide',
-        this._keyboardDidHide,
-      );
-    }
+
   }
 
   _keyboardDidShow = (e: any) => {
@@ -72,6 +74,13 @@ export default class FileDescription extends React.Component<Props, State> {
     });
   };
 
+  componentWillUnmount() {
+    this.backListner.removeListener()
+    Keyboard.removeAllListeners("keyboardDidShow")
+    Keyboard.removeAllListeners("keyboardDidHide")
+    Keyboard.removeAllListeners("keyboardWillShow")
+    Keyboard.removeAllListeners("keyboardWillHide")
+  }
   cancelAction = () => {
     if (
       this.state.file_title == this.file_title &&
@@ -80,7 +89,7 @@ export default class FileDescription extends React.Component<Props, State> {
       Keyboard.dismiss();
       Actions.pop();
     } else {
-      
+
       Alert.alert('Save changes?', `Do you want to save your changes?`, [
         {
           text: 'No',
@@ -129,7 +138,7 @@ export default class FileDescription extends React.Component<Props, State> {
               <Image
                 source={pdf_icon}
                 resizeMode={'contain'}
-                style={{backgroundColor: Colors.transparent}}
+                style={{ backgroundColor: Colors.transparent }}
               />
               <Image
                 source={pdf_icon}
@@ -143,7 +152,7 @@ export default class FileDescription extends React.Component<Props, State> {
           <View
             style={Styles.audioContainer}>
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => { }}
               style={Styles.playButtonContainer}>
               <View
                 style={Styles.playStyle}
@@ -202,7 +211,7 @@ export default class FileDescription extends React.Component<Props, State> {
               backgroundColor={Colors.ThemeColor}
             /> */}
             {this.renderFileView()}
-            <View style={[Styles.imagebuttonStyle,Styles.fullFlex]}>
+            <View style={[Styles.imagebuttonStyle, Styles.fullFlex]}>
               <TextInput
                 style={Styles.titleTextInputStyle}
                 placeholder="Enter title here..."
@@ -211,21 +220,21 @@ export default class FileDescription extends React.Component<Props, State> {
                 numberOfLines={5}
                 value={this.state.file_title}
                 onChangeText={(text: any) =>
-                  this.setState({file_title: text})
+                  this.setState({ file_title: text })
                 }></TextInput>
 
               <TextInput
                 style={Styles.descTextInputStyle}
                 placeholder="Enter description..."
                 placeholderTextColor={Colors.darkGray}
-                onChangeText={(text: any) => this.setState({description: text})}
+                onChangeText={(text: any) => this.setState({ description: text })}
                 value={this.state.description}
-                onScroll={() => {}}
+                onScroll={() => { }}
                 multiline={true}></TextInput>
             </View>
             {Platform.OS == 'ios' && (
               <View
-                style={[ Styles.fullWidth,{height: this.state.supportView}]}></View>
+                style={[Styles.fullWidth, { height: this.state.supportView }]}></View>
             )}
           </View>
         </SafeAreaView>

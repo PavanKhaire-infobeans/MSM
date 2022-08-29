@@ -554,7 +554,7 @@ class DashBoard extends React.Component<DashProps> {
   //     this.foregroundNotification = EventManager.addListener(kForegroundNotice, this.foregroundNotificationCallback);
   //     this.backgroundNotification = EventManager.addListener(kBackgroundNotice, this.checkNotificationAvailiability);
   // }
-  // componentWillReceiveProps(nextProps: DashProps) {
+  // UNSAFE_componentWillReceiveProps(nextProps: DashProps) {
   //     if (nextProps.action) {
   //         this.props.performAction(nextProps.action)
   //     }

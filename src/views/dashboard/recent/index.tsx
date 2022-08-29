@@ -61,6 +61,10 @@ const Recent = (props: Props) => {
         });
         props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
+        return ()=>{
+            memoryUpdateListener.removeListener();
+            memoryFromPrompt.removeListener();
+        }
     }, [])
 
     const onRefresh = () => {

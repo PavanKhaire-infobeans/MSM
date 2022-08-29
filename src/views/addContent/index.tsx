@@ -90,15 +90,16 @@ class AddContentDetails extends React.Component {
   }
 
   componentDidMount = () => {
-    setTimeout(() => {
+    // setTimeout(() => {
       DefaultPreference.get('hide_memory_intro').then((value: any) => {
         if (value == 'true') {
           this.setState({ memoryIntroVisibility: false });
-        } else {
+        } 
+        else {
           this.setState({ memoryIntroVisibility: true });
         }
       });
-    }, 200);
+    // }, 200);
   };
   nextDialogView = () => {
     return (
@@ -223,7 +224,8 @@ class AddContentDetails extends React.Component {
         'keyboardDidHide',
         this._keyboardDidHide,
       );
-    } else {
+    } 
+    else {
       this.keyboardDidShowListener = Keyboard.addListener(
         'keyboardWillShow',
         this._keyboardDidShow,
@@ -299,6 +301,12 @@ class AddContentDetails extends React.Component {
 
   componentWillUnmount = () => {
     this.mindPopCallback.removeListener();
+    Keyboard.removeAllListeners("keyboardDidShow");
+    Keyboard.removeAllListeners("keyboardDidHide");
+    Keyboard.removeAllListeners("keyboardWillShow");
+    Keyboard.removeAllListeners("keyboardWillHide");
+    this.backListner.removeListener();
+    this.createMemoryListener.removeListener();
     // this.keyboardDidShowListener.removeListener();
     // this.keyboardDidHideListener.removeListener();
   };
@@ -376,47 +384,50 @@ class AddContentDetails extends React.Component {
   createMemory = async () => {
     this.setState({
       showNextDialog: false,
+    },()=>{
+      if (Utility.isInternetConnected) {
+        if (this.state.content.trim() === "") {
+          this.draftDetails = DefaultDetailsMemory("My memory");
+        }
+        else {
+          this.draftDetails = DefaultDetailsWithoutTitleMemory(this.state.content);//.trim()
+        }
+        loaderHandler.showLoader('Loading...');
+        CreateUpdateMemory(this.draftDetails, [], 'addContentCreateMemory');
+  
+      } else {
+        No_Internet_Warning();
+      }
     });
-    if (Utility.isInternetConnected) {
-      if (this.state.content.trim() === "") {
-        this.draftDetails = DefaultDetailsMemory("My memory");
-      }
-      else {
-        this.draftDetails = DefaultDetailsWithoutTitleMemory(this.state.content);//.trim()
-      }
-      loaderHandler.showLoader('Loading...');
-      CreateUpdateMemory(this.draftDetails, [], 'addContentCreateMemory');
-
-    } else {
-      No_Internet_Warning();
-    }
   };
 
   saveMindPop = () => {
     this.setState({
       showNextDialog: false,
+    },()=>{
+      if (Utility.isInternetConnected) {
+        let moment = TimeStampMilliSeconds();
+        var req: {
+          requestDetails: { mindPopContentArray: Array<any>; mindPopID?: string };
+          configurationTimestamp: string;
+        } = {
+          requestDetails: {
+            mindPopContentArray: [
+              {
+                contentType: 1,
+                contentValue: encode_utf8(this.state.content),
+              },
+            ],
+          },
+          configurationTimestamp: moment,
+        };
+        loaderHandler.showLoader('Saving...');
+        addEditMindPop(req, this.state.files, true);
+      } else {
+        No_Internet_Warning();
+      }
     });
-    if (Utility.isInternetConnected) {
-      let moment = TimeStampMilliSeconds();
-      var req: {
-        requestDetails: { mindPopContentArray: Array<any>; mindPopID?: string };
-        configurationTimestamp: string;
-      } = {
-        requestDetails: {
-          mindPopContentArray: [
-            {
-              contentType: 1,
-              contentValue: encode_utf8(this.state.content),
-            },
-          ],
-        },
-        configurationTimestamp: moment,
-      };
-      loaderHandler.showLoader('Saving...');
-      addEditMindPop(req, this.state.files, true);
-    } else {
-      No_Internet_Warning();
-    }
+    
   };
 
   cameraAttachmentPress = () => {
@@ -980,10 +991,11 @@ class AddContentDetails extends React.Component {
         {this.state.memoryIntroVisibility && (
           <CreateMemoryIntro
             cancelMemoryIntro={() => {
-              this.setState({ memoryIntroVisibility: false });
-              DefaultPreference.set('hide_memory_intro', 'true').then(
-                function () { },
-              );
+              this.setState({ memoryIntroVisibility: false },()=>{
+                DefaultPreference.set('hide_memory_intro', 'true').then(
+                  function () { },
+                );  
+              });
             }}></CreateMemoryIntro>
         )}
       </SafeAreaView>

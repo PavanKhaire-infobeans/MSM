@@ -14,8 +14,8 @@ import {
 
 type Props = {[x: string]: any};
 export default class BlockedUsers extends React.Component<Props> {
-  blockedMemoryListiner: any;
-  userUnblocked: any;
+  blockedMemoryListiner: EventManager;
+  userUnblocked: EventManager;
 
   state = {
     itemList: [],
@@ -36,6 +36,11 @@ export default class BlockedUsers extends React.Component<Props> {
     );
   }
 
+  componentWillUnmount =()=>{
+    this.blockedMemoryListiner.removeListener()
+    this.userUnblocked.removeListener()
+  }
+
   userUnblockedCallBack = (
     success: any,
     responseMessage: any,
@@ -47,9 +52,11 @@ export default class BlockedUsers extends React.Component<Props> {
       let list = this.state.itemList.filter((it: any) => it.uid != uid);
       this.setState({
         itemList: list,
+      },()=>{
+        Actions.dashBoard();
+        loaderHandler.showLoader();
       });
-      Actions.dashBoard();
-      loaderHandler.showLoader();
+      
     } else {
       loaderHandler.hideLoader();
       ToastMessage(responseMessage);

@@ -51,13 +51,14 @@ export default class CollectionDetails extends React.Component<Props, State> {
       kSequenceUpdated,
       this.collectionUpdate,
     );
-    this.setState({ collectionName: this.props.collectionName });
-    GetCollectionDetails(this.props.tid);
+    this.setState({ collectionName: this.props.collectionName },()=>{
+      GetCollectionDetails(this.props.tid);
+    });
   }
 
   componentWillUnmount = () => {
-    //this.collectionFetch.removeListener();
-    //this.collectionUpdated.removeListener();
+    this.collectionFetch.removeListener();
+    this.collectionUpdated.removeListener();
   };
 
   collectionFetched = (success: any, responseList: any) => {

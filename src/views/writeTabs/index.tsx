@@ -40,11 +40,11 @@ class WriteTabs extends React.Component<Props>{
     notificationListener: EventManager;
     foregroundNotification: EventManager;
     backgroundNotification: EventManager;
-    scrollableTabView: any;
     eventManager: EventManager;
     memoryActionsListener: EventManager;
-    notificationModel: NotificationDataModel;
     eventListener: EventManager;
+    notificationModel: NotificationDataModel;
+    scrollableTabView: any;
     state = {
         filterScreenVisibility: false,
         jumpToVisibility: false,
@@ -196,14 +196,13 @@ class WriteTabs extends React.Component<Props>{
 
     componentWillUnmount = () => {
         this.props.showAlertCall(false);
+        this.notificationListener.removeListener();
+        this.foregroundNotification.removeListener();
+        this.backgroundNotification.removeListener();
+        this.eventManager.removeListener();
+        this.memoryActionsListener.removeListener();
+        this.eventListener.removeListener();
         // this.eventManager.removeListener();
-    }
-
-    componentWillReceiveProps(props: Props) {
-        if (this.props.showPublishedPopup) {
-            debugger
-
-        }
     }
 
     memoryActionCallBack = (fetched: boolean, responseMessage: any, nid?: any, type?: any, uid?: any) => {
@@ -224,7 +223,7 @@ class WriteTabs extends React.Component<Props>{
             // }
             // this.publishedMemoryDataModel.updatePublishedMemories(publishedMemoriesArray)
             this.props.sendMemoryActions({ nid, type, uid })
-            this.setState({});
+            // this.setState({});
         } else {
             ToastMessage(responseMessage, Colors.ErrorColor);
         }
@@ -316,8 +315,7 @@ class WriteTabs extends React.Component<Props>{
                     </View>
                 </SafeAreaView>
                 {this.state.appTourVisibility && <AppGuidedTour cancelAppTour={() => {
-                    this.setState({ appTourVisibility: false });
-                    DefaultPreference.set('hide_guide_tour', "true").then(function () { })
+                    this.setState({ appTourVisibility: false },()=>DefaultPreference.set('hide_guide_tour', "true").then(function () { }));
                 }
                 } />}
             </View>);

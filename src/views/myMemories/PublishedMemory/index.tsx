@@ -104,7 +104,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       // loaderHandler.showLoader();
       // GetMemoryDrafts("all","all", memoryDraftsArray.length)
       publishedMemoriesArray = [];
-      this.setState({});
+      // this.setState({});
       GetPublishedMemories('');
       loadingDataFromServer = true;
     } else {
@@ -115,9 +115,11 @@ export default class PublishedMemory extends React.Component<Props, State> {
       () => {
         this.setState({
           isMemoryUpdate: true,
+        },()=>{
+          GetPublishedMemories('');
+          loaderHandler.hideLoader();
         });
-        GetPublishedMemories('');
-        loaderHandler.hideLoader();
+        
       },
     );
   }
@@ -136,13 +138,14 @@ export default class PublishedMemory extends React.Component<Props, State> {
         element.isLikedByUser = likeFlag;
       }
     });
-    this.setState({});
+    // this.setState({});
   };
   onRefresh = () => {
     this.setState({
       isRefreshing: true,
+    },()=>{
+      GetPublishedMemories('');
     });
-    GetPublishedMemories('');
   };
   handleLoadMore = () => {
     // let draftCount = this.memoryDraftsDataModel.getMemoryDraftsCount();
@@ -155,11 +158,12 @@ export default class PublishedMemory extends React.Component<Props, State> {
         // increase page by 1
         this.setState({
           loading: true,
+        },()=>{
+          loadingDataFromServer = true;
+          let memoryDetails = publishedMemoriesArray[publishedMemoriesArray.length - 1];
+          GetPublishedMemories(memoryDetails.updated);
         });
-        loadingDataFromServer = true;
-        let memoryDetails =
-          publishedMemoriesArray[publishedMemoriesArray.length - 1];
-        GetPublishedMemories(memoryDetails.updated);
+        
       }
     }
   };
@@ -200,9 +204,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     this.setState({
       isRefreshing: false,
       loading: false,
-    });
-
-    loaderHandler.hideLoader();
+    },()=>loaderHandler.hideLoader());
   };
 
   like = (item: any) => {
@@ -216,7 +218,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
         item.item.isLikedByUser = 1;
         item.item.noOfLikes = item.item.noOfLikes + 1;
       }
-      this.setState({});
+      // this.setState({});
     } else {
       No_Internet_Warning();
     }
@@ -235,7 +237,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     loaderHandler.hideLoader();
     if (fetched) {
       this.showList(getAllLikes);
-      this.setState({});
+      // this.setState({});
     } else {
       ToastMessage(getAllLikes, Colors.ErrorColor);
     }
@@ -291,7 +293,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       this.publishedMemoryDataModel.updatePublishedMemories(
         publishedMemoriesArray,
       );
-      this.setState({});
+      // this.setState({});
     } else {
       ToastMessage(responseMessage, Colors.ErrorColor);
     }

@@ -110,7 +110,7 @@ export default class CommonAudioRecorder extends React.Component<
       }
     } else {
       if (state == 'active') {
-        this.setState({});
+        // this.setState({});
       }
     }
   };
@@ -229,8 +229,9 @@ export default class CommonAudioRecorder extends React.Component<
           SoundRecorder.start(path, options)
             .then(() => {
               this.processing = true;
-              this.setState({ path, audioState: 'recording' });
-              this.time();
+              this.setState({ path, audioState: 'recording' }, () => {
+                this.time();
+              });
             })
             .catch((err: Error) => {
               console.log('Error', err);
@@ -273,8 +274,9 @@ export default class CommonAudioRecorder extends React.Component<
     } else if (this.state.audioState == 'record-pause') {
       SoundRecorder.resume().then(() => {
         this.processing = true;
-        this.setState({ audioState: 'recording' });
-        this.time();
+        this.setState({ audioState: 'recording' }), () => {
+          this.time();
+        };
       });
     } else {
       if (this.state.audioState == 'recorded') {
@@ -431,21 +433,23 @@ export default class CommonAudioRecorder extends React.Component<
       return;
     }
 
-    this.setState({ modalVisible: false });
-    let timeVal = this.state.totalTime / 1000;
-    let minInt = parseInt(`${parseInt(`${timeVal}`) / 60}`),
-      secInt = parseInt(`${timeVal}`) % 60;
-    this.props.editRefresh([
-      {
-        filePath: this.state.path,
-        isLocal: true,
-        filename: `${this.state.changedName}.${this.recording.split('.')[1]}`,
-        type: `${FileType[FileType.audio]}s`,
-        time: `time1-${minInt < 10 ? 0 : ''}${minInt}:${secInt < 10 ? 0 : ''
-          }${secInt}`,
-      },
-    ]);
-    Actions.pop();
+    this.setState({ modalVisible: false }, () => {
+      let timeVal = this.state.totalTime / 1000;
+      let minInt = parseInt(`${parseInt(`${timeVal}`) / 60}`),
+        secInt = parseInt(`${timeVal}`) % 60;
+      this.props.editRefresh([
+        {
+          filePath: this.state.path,
+          isLocal: true,
+          filename: `${this.state.changedName}.${this.recording.split('.')[1]}`,
+          type: `${FileType[FileType.audio]}s`,
+          time: `time1-${minInt < 10 ? 0 : ''}${minInt}:${secInt < 10 ? 0 : ''
+            }${secInt}`,
+        },
+      ]);
+      Actions.pop();
+    });
+
   };
 
   render() {
@@ -583,8 +587,8 @@ export default class CommonAudioRecorder extends React.Component<
         </View>
         {this.props.selectedItem ? (
           <View
-            style={[Styles.selectedRecordItemContainer,{
-              justifyContent: getValue(this.props.selectedItem, ['isLocal']) ? 'flex-end': 'space-between',
+            style={[Styles.selectedRecordItemContainer, {
+              justifyContent: getValue(this.props.selectedItem, ['isLocal']) ? 'flex-end' : 'space-between',
             }]}>
             {!getValue(this.props.selectedItem, ['isLocal']) ? (
               <TouchableOpacity

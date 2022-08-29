@@ -41,7 +41,7 @@ type Props = {
 };
 
 class CommonFriendsSearchView extends React.Component<Props, State> {
-  backListner: any;
+  backListner: EventManager;
   searchBar: React.RefObject<SearchBar> = React.createRef<SearchBar>();
   keyboardDidShowListener: any;
   keyboardDidHideListener: any;
@@ -96,6 +96,12 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
 
   componentWillMount() {
     this.props.saveSearchList([]);
+
+    this.backListner.removeListener();
+    Keyboard.removeAllListeners("keyboardDidShow")
+    Keyboard.removeAllListeners("keyboardDidHide")
+    Keyboard.removeAllListeners("keyboardWillShow")
+    Keyboard.removeAllListeners("keyboardWillHide")
   }
 
   componentDidMount() {
@@ -121,25 +127,26 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
       refList = this.state.referenceListFriends;
     }
     let found = false;
-    this.setState({ errorView: false });
-    if (this.state.userTabSelected)
-      found = refList.some((element: any) => element.uid === item.uid);
-    else found = refList.some((element: any) => element.id === item.id);
+    this.setState({ errorView: false }, () => {
+      if (this.state.userTabSelected)
+        found = refList.some((element: any) => element.uid === item.uid);
+      else found = refList.some((element: any) => element.id === item.id);
 
-    if (!found) {
-      refList.push(item);
-      this.setState({ referenceList: refList });
-    }
+      if (!found) {
+        refList.push(item);
+        this.setState({ referenceList: refList });
+      }
 
-    let searchList = this.props.searchList;
-    if (this.state.userTabSelected)
-      searchList = searchList.filter((element: any) => element.uid != item.uid);
-    else
-      searchList = searchList.filter((element: any) => element.id != item.id);
-    this.props.saveSearchList(searchList);
-    this.searchBar.current &&
-      this.searchBar.current.clearField &&
-      this.searchBar.current.clearField();
+      let searchList = this.props.searchList;
+      if (this.state.userTabSelected)
+        searchList = searchList.filter((element: any) => element.uid != item.uid);
+      else
+        searchList = searchList.filter((element: any) => element.id != item.id);
+      this.props.saveSearchList(searchList);
+      this.searchBar.current &&
+        this.searchBar.current.clearField &&
+        this.searchBar.current.clearField();
+    });
   };
 
   removeFromList = (item: any) => {
@@ -209,8 +216,8 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
             )}
             <View>
               <Text
-                style={[style.normalText,{
-                 marginBottom:0
+                style={[style.normalText, {
+                  marginBottom: 0
                 }]}>
                 {this.state.userTabSelected
                   ? item.field_first_name_value +
@@ -293,10 +300,12 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
 
   tabChange = (setUserTab: boolean) => {
     this.props.saveSearchList([]);
-    this.setState({ userTabSelected: setUserTab });
-    this.searchBar.current &&
-      this.searchBar.current.clearField &&
-      this.searchBar.current.clearField();
+    this.setState({ userTabSelected: setUserTab }, () => {
+      this.searchBar.current &&
+        this.searchBar.current.clearField &&
+        this.searchBar.current.clearField();
+    });
+
   };
   render() {
     return (
@@ -354,7 +363,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                   style={[
                     style.tabsText,
                     {
-                      fontWeight: !this.state.userTabSelected ?'500' : 'normal',
+                      fontWeight: !this.state.userTabSelected ? '500' : 'normal',
                     },
                   ]}>
                   Friend Circle
@@ -363,7 +372,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
             </View>
             <SearchBar
               ref={this.searchBar}
-              style={[style.commonFriendSerachStyle,{
+              style={[style.commonFriendSerachStyle, {
                 borderBottomColor: this.state.errorView ? Colors.ErrorColor : Colors.TextColor,
               }]}
               placeholder={this.props.placeholder}
@@ -417,7 +426,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 renderItem={(item: any) => this.renderRow(item, true)}
               />
             )}
-            <View style={[style.fullWidth,{ height: this.state.bottomView }]}></View>
+            <View style={[style.fullWidth, { height: this.state.bottomView }]}></View>
           </View>
         </SafeAreaView>
       </View>

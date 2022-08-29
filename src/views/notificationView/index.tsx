@@ -63,6 +63,11 @@ class NotificationView extends React.Component<Props> {
 
   sendcallback = () => {};
 
+  componentWillUnmount = ()=>{
+    this.notificationListener.removeListener()
+    this.notificationReceivedForeground.removeListener()
+  }
+
   updateListing = () => {
     this.setState({});
   };
@@ -77,8 +82,7 @@ class NotificationView extends React.Component<Props> {
   }
 
   UNSAFE_componentWillReceiveProps(props: Props) {
-    // componentWillReceiveProps(props: Props){
-    this.setState({});
+    // this.setState({});
     loaderHandler.hideLoader();
   }
 

@@ -39,7 +39,7 @@ export default class ImageViewer extends React.Component<Props, State> {
     this.init(this.props);
   }
 
-  public componentWillReceiveProps(nextProps: Props) {
+  public UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.index !== this.state.currentShowIndex) {
       this.setState(
         {

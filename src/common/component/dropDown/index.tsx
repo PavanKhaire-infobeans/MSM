@@ -41,7 +41,7 @@ export default class DropDownSelector extends React.Component<Props, State> {
     };
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     let selectedValue = this.props.selectedValue || '';
     let nextSelectedValue = nextProps.selectedValue || '';
     if (this.props.showError !== nextProps.showError) {

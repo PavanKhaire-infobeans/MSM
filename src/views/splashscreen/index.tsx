@@ -36,11 +36,10 @@ class Splash extends Component<Props> {
         deeplinkMemoryType : '',
         apiCalldoneOnce: false
       }
-      memoryFromPrompt = null;
-      getPromptListener = null;
+      memoryFromPrompt :EventManager;
+      getPromptListener: EventManager;
 
   promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    this.memoryFromPrompt.removeListener();
     // setTimeout(() => {
     //   loaderHandler.hideLoader();
     // }, 500);
@@ -58,6 +57,33 @@ class Splash extends Component<Props> {
   };
 
   async componentWillMount() {
+    
+    this.memoryFromPrompt = EventManager.addListener(
+      promptIdListener,
+      this.promptToMemoryCallBack,
+    );
+
+    this.getPromptListener = EventManager.addListener(
+      kGetPromptByID,
+      (success: boolean,fetchPrompt?: any) => {
+        if (success && (fetchPrompt.type == 'prompts') && (fetchPrompt.status == '1')) {
+          if (Utility.isInternetConnected) {
+              loaderHandler.showLoader('Creating Memory...');
+              let draftDetails: any = DefaultDetailsMemory(fetchPrompt.title);
+              draftDetails.prompt_id = parseInt(this.state.decodedDataFromURL);
+              
+              CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');  
+            }
+          else {
+            No_Internet_Warning();
+          }                  
+        }
+        else{
+          Actions.dashBoard();
+        }
+      },
+    );
+
     const initialUrl = await Linking.getInitialURL().then(async(url) => {
       if (url) {
         if (Utility.isInternetConnected) { 
@@ -141,7 +167,7 @@ class Splash extends Component<Props> {
     }, 2500);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (
       nextProps.user.instanceID != 0 &&
       nextProps.user.userAuthToken != null
@@ -185,30 +211,7 @@ class Splash extends Component<Props> {
                   apiCalldoneOnce : true
                 },()=>{
                   GetPromptBYPromptId(this.state.decodedDataFromURL)
-                  this.getPromptListener = EventManager.addListener(
-                    kGetPromptByID,
-                    (success: boolean,fetchPrompt?: any) => {
-                      if (success && (fetchPrompt.type == 'prompts') && (fetchPrompt.status == '1')) {
-                        
-                        if (Utility.isInternetConnected) {
-                            loaderHandler.showLoader('Creating Memory...');
-                            let draftDetails: any = DefaultDetailsMemory(fetchPrompt.title);
-                            draftDetails.prompt_id = parseInt(this.state.decodedDataFromURL);
-                            this.memoryFromPrompt = EventManager.addListener(
-                              promptIdListener,
-                              this.promptToMemoryCallBack,
-                            );
-                            CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');  
-                          }
-                        else {
-                          No_Internet_Warning();
-                        }                  
-                      }
-                      else{
-                        Actions.dashBoard();
-                      }
-                    },
-                  );
+                 
                 })
                 
               }
@@ -224,10 +227,7 @@ class Splash extends Component<Props> {
                           loaderHandler.showLoader('Creating Memory...');
                           let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
                           draftDetails.prompt_id = parseInt(id);
-                          this.memoryFromPrompt = EventManager.addListener(
-                            promptIdListener,
-                            this.promptToMemoryCallBack,
-                          );
+                          
                           CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');  
                         }
                         else if (splitArray[3] && (splitArray[3] === 'mindpopup')) {
@@ -286,6 +286,10 @@ class Splash extends Component<Props> {
     }
   }
 
+  componentWillUnmount =()=>{
+    this.memoryFromPrompt.removeListener();
+    this.getPromptListener.removeListener();
+  }
   render() {
     let versionNumber = DeviceInfo.getVersion();
     return (

@@ -57,6 +57,10 @@ class NotificationListing extends React.Component<Props> {
     this.setState({ index: this.props.index });
   }
 
+  componentWillUnmount = ()=>{
+    this.notificationReceivedForeground.removeListener()
+  }
+
   UNSAFE_componentWillReceiveProps(props: Props) {
     //componentDidUpdate(props: Props){
     this.setState({ isRefreshing: false });
@@ -79,7 +83,7 @@ class NotificationListing extends React.Component<Props> {
           dataIndex: index,
         });
         this.props.setNotificationFlag({ ids: item.ids });
-        this.setState({});
+        // this.setState({});
         EventManager.callBack(NotificationListener);
       }
     } else {
@@ -93,7 +97,7 @@ class NotificationListing extends React.Component<Props> {
       this.props.setNotificationFlag({
         group_ids: this.props.notificationList[this.state.index].group_id,
       });
-      this.setState({});
+      // this.setState({});
       EventManager.callBack(NotificationListener);
     } else {
       No_Internet_Warning();
@@ -196,12 +200,14 @@ class NotificationListing extends React.Component<Props> {
   };
 
   refreshNotifications = () => {
-    this.setState({ isRefreshing: true });
-    if (Utility.isInternetConnected) {
-      this.props.getNotificationTypes();
-    } else {
-      No_Internet_Warning();
-    }
+    this.setState({ isRefreshing: true },()=>{
+      if (Utility.isInternetConnected) {
+        this.props.getNotificationTypes();
+      } else {
+        No_Internet_Warning();
+      }
+    });
+    
   };
 
   renderFooter = () => {
@@ -219,16 +225,18 @@ class NotificationListing extends React.Component<Props> {
       this.props.notificationList[this.state.index].data.length &&
       !this.state.isLoadMore
     ) {
-      this.setState({ isLoadMore: true });
-      this.props.loadMore({
-        group_id: this.props.notificationList[this.state.index].group_id,
-        limit: 20,
-        offset: this.props.notificationList[this.state.index].data.length,
-        index: this.state.index,
+      this.setState({ isLoadMore: true },()=>{
+        this.props.loadMore({
+          group_id: this.props.notificationList[this.state.index].group_id,
+          limit: 20,
+          offset: this.props.notificationList[this.state.index].data.length,
+          index: this.state.index,
+        });
+        setTimeout(() => {
+          this.setState({ isLoadMore: false });
+        }, 3000);
       });
-      setTimeout(() => {
-        this.setState({ isLoadMore: false });
-      }, 3000);
+      
     }
   };
 

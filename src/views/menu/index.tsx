@@ -26,9 +26,9 @@ class Menu extends React.Component<MenuProps> {
   state: { list: any } = {
     list: [],
   };
-  listener?: EmitterSubscription = null;
-  onlogout?: EventManager = null;
-  logoutPressed?: EventManager = null;
+  listener?: EmitterSubscription;
+  onlogout?: EventManager;
+  logoutPressed?: EventManager;
   userEmail = '';
   componentDidMount() {
     this.listener = DeviceEventEmitter.addListener('logout', this.updateUser);
@@ -47,8 +47,9 @@ class Menu extends React.Component<MenuProps> {
   }
 
   componentWillUnmount() {
-    this.listener.remove();
     this.onlogout.removeListener();
+    DeviceEventEmitter.removeAllListeners('logout');
+    this.logoutPressed?.removeListener();
   }
 
   render() {
@@ -93,10 +94,12 @@ class Menu extends React.Component<MenuProps> {
   }
 
   updateUser = ({ accounts, user }: { accounts: UserData[]; user: UserData }) => {
-    this.setState({ list: accounts });
-    this.props.setUser(user);
-    Actions.replace('prologue');
-    Actions.dashBoard();
+    this.setState({ list: accounts }, () => {
+      this.props.setUser(user);
+      Actions.replace('prologue');
+      Actions.dashBoard();
+    });
+
   };
 
   _logout = () => {
@@ -153,13 +156,15 @@ class Menu extends React.Component<MenuProps> {
     this.showAlert(lastInstanceName);
 
     let user: UserData = accounts[accounts.length - 1];
-    this.setState({ list: accounts });
-    this.props.setUser(user);
-    if (accounts.length > 0) {
-      EventManager.callBack(kUserAccountUpdated);
-      Actions.reset('dashBoard');
-    }
-    Actions.drawerClose();
+    this.setState({ list: accounts }, () => {
+      this.props.setUser(user);
+      if (accounts.length > 0) {
+        EventManager.callBack(kUserAccountUpdated);
+        Actions.reset('dashBoard');
+      }
+      Actions.drawerClose();
+    });
+
   };
 
   showAlert(instanceName: string) {
@@ -176,11 +181,11 @@ class Menu extends React.Component<MenuProps> {
       this.userEmail = data.item.email;
       return (
         <View
-          style={[styles.drawHeaderContainer,{
+          style={[styles.drawHeaderContainer, {
             paddingTop: data.index == 0 ? 0 : 15,
           }]}>
           <View
-            style={[styles.drawHeaderEmptyContainer,{
+            style={[styles.drawHeaderEmptyContainer, {
               height: data.index != 0 ? 1 : 0,
             }]}></View>
           <View style={styles.drawerContainer}>

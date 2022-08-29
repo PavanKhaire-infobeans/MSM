@@ -98,7 +98,7 @@ export const CreateUpdateMemory = async (
     }
   } catch (err) {
     loaderHandler.hideLoader();
-    // console.warn(" errr daaaaa :", JSON.stringify(err));
+    console.warn(" errr daaaaa :", (err));
     EventManager.callBack(listener, false, 'Unable to create memory!!');
   }
 };
@@ -392,6 +392,18 @@ async function uploadAttachments(memoryId: number, files: TempFile[], listener: 
     });
   })
   return result;
+
+  // const promises = this.state.data.map(item => {
+  //   return uploadFile(memoryId, item)
+  // });
+
+  // await Promise.all(promises).then(results => {
+  //   // const videos = results.map(result => result.items[0]);
+  //   console.log("videos >>>>>>",JSON.stringify(results));
+
+  // })
+  // console.log("videos data>>>>>>",JSON.stringify(promises));
+  // return promises
 }
 
 async function uploadFile(memoryId: number, file: TempFile) {

@@ -56,7 +56,7 @@ class ForgotPassword extends React.Component<Props> {
     this.setState(state);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.forgotPasswordStatus.completed) {
       loaderHandler.hideLoader();
       this.props.clean();

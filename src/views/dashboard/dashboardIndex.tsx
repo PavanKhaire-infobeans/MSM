@@ -75,6 +75,7 @@ class DashboardIndex extends React.Component<Props>{
         this.backgroundNotification = EventManager.addListener(kBackgroundNotice, this.checkNotificationAvailiability);
         this.eventListener = EventManager.addListener(kNotificationIndicator, this.changeNotification)
         this.memoryActionsListener = EventManager.addListener(kMemoryActionPerformedOnDashboard, this.memoryActionCallBack)
+        this.memoryFromPrompt = EventManager.addListener(promptIdListener, this.promptToMemoryCallBack);
         this.props.fetchFiltersData({ type: ListType.Recent });
         this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
         if (this.props.setTimer == "false") {
@@ -171,7 +172,6 @@ class DashboardIndex extends React.Component<Props>{
             loaderHandler.showLoader("Creating Memory...");
             let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
             draftDetails.prompt_id = parseInt(id);
-            this.memoryFromPrompt = EventManager.addListener(promptIdListener, this.promptToMemoryCallBack);
             CreateUpdateMemory(draftDetails, [], promptIdListener, "save");
         } else {
             No_Internet_Warning();
@@ -194,6 +194,12 @@ class DashboardIndex extends React.Component<Props>{
     componentWillUnmount = () => {
         this.props.showAlertCall(false);
         this.eventManager.removeListener();
+        this.memoryFromPrompt.removeListener();
+        this.notificationListener.removeListener();
+        this.foregroundNotification.removeListener();
+        this.backgroundNotification.removeListener();
+        this.eventListener.removeListener();
+        this.memoryActionsListener.removeListener();
     }
 
     memoryActionCallBack = (fetched: boolean, responseMessage: any, nid?: any, type?: any, uid?: any) => {
@@ -214,7 +220,7 @@ class DashboardIndex extends React.Component<Props>{
             // }
             // this.publishedMemoryDataModel.updatePublishedMemories(publishedMemoriesArray)
             this.props.sendMemoryActions({ nid, type, uid })
-            this.setState({});
+            // this.setState({});
         } else {
             ToastMessage(responseMessage, Colors.ErrorColor);
         }
@@ -286,8 +292,7 @@ class DashboardIndex extends React.Component<Props>{
                 </SafeAreaView>
                 {this.state.appTourVisibility &&
                     <AppGuidedTour cancelAppTour={() => {
-                        this.setState({ appTourVisibility: false });
-                        DefaultPreference.set('hide_guide_tour', "true").then(function () { })
+                        this.setState({ appTourVisibility: false },()=>DefaultPreference.set('hide_guide_tour', "true").then(function () { }));
                     }} />
                 }
             </View>);

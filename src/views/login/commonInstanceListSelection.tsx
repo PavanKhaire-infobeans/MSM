@@ -146,8 +146,9 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
       });
       selectedCommunitiesId = selectedCommunitiesId.join(', ');
       if (Utility.isInternetConnected) {
-        this.setState({ showLoader: true });
-        this.props.onClick(selectedCommunitiesId);
+        this.setState({ showLoader: true },()=>{
+          this.props.onClick(selectedCommunitiesId);
+        });
       } else {
         No_Internet_Warning();
       }
@@ -276,9 +277,10 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
         selectedCommunitiesId.push(this.props.listAccounts[element].id);
       });
       if (Utility.isInternetConnected) {
-        this.setState({ showLoader: true });
-        this.props.onClick(selectedCommunitiesId);
-        Actions.pop();
+        this.setState({ showLoader: true },()=>{
+          this.props.onClick(selectedCommunitiesId);
+          Actions.pop();
+        });
       } else {
         No_Internet_Warning();
       }

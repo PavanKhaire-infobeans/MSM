@@ -55,13 +55,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
   _actionSheet: any | MemoryActionsSheet = null;
   dropDown: any | MemoryActionsSheet = null;
   publishedMemoryListener: EventManager;
-  publishedMemoryDataModel: PublishedMemoryDataModel;
   likeListener: EventManager;
   unlikeListener: EventManager;
   publishedMemoryUpdatedLister: EventManager;
-  audioPlayer: React.RefObject<AudioPlayer> = React.createRef<AudioPlayer>();
   getAllLikesListener: EventManager;
   memoryActionsListener: EventManager;
+  publishedMemoryDataModel: PublishedMemoryDataModel;
+  audioPlayer: React.RefObject<AudioPlayer> = React.createRef<AudioPlayer>();
   state: State = {
     loadMemories: false,
     showNoInternetView: false,
@@ -112,7 +112,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       // loaderHandler.showLoader();
       // GetMemoryDrafts("all","all", memoryDraftsArray.length)
       publishedMemoriesArray = [];
-      this.setState({});
+      // this.setState({});
       GetPublishedMemories('');
       loadingDataFromServer = true;
     } else {
@@ -123,11 +123,21 @@ export default class PublishedMemory extends React.Component<Props, State> {
       () => {
         this.setState({
           isMemoryUpdate: true,
+        },()=>{
+          GetPublishedMemories('');
+          loaderHandler.hideLoader();
         });
-        GetPublishedMemories('');
-        loaderHandler.hideLoader();
       },
     );
+  }
+
+  componentWillUnmount = () => {
+    this.publishedMemoryListener.removeListener();
+    this.likeListener.removeListener();
+    this.unlikeListener.removeListener();
+    this.publishedMemoryUpdatedLister.removeListener();
+    this.getAllLikesListener.removeListener();
+    this.memoryActionsListener.removeListener();
   }
 
   publishedMemoryUpdated = (
@@ -144,14 +154,14 @@ export default class PublishedMemory extends React.Component<Props, State> {
         element.isLikedByUser = likeFlag;
       }
     });
-    this.setState({});
+    // this.setState({});
   };
 
   onRefresh = () => {
     this.setState({
       isRefreshing: true,
-    });
-    GetPublishedMemories('');
+    },()=>GetPublishedMemories(''));
+    
   };
 
   handleLoadMore = () => {
@@ -165,11 +175,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
         // increase page by 1
         this.setState({
           loading: true,
+        },()=>{
+          loadingDataFromServer = true;
+          let memoryDetails =
+            publishedMemoriesArray[publishedMemoriesArray.length - 1];
+          GetPublishedMemories(memoryDetails.updated);
         });
-        loadingDataFromServer = true;
-        let memoryDetails =
-          publishedMemoriesArray[publishedMemoriesArray.length - 1];
-        GetPublishedMemories(memoryDetails.updated);
+        
       }
     }
   };
@@ -210,9 +222,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     this.setState({
       isRefreshing: false,
       loading: false,
-    });
-
-    loaderHandler.hideLoader();
+    },()=>loaderHandler.hideLoader());
   };
 
   like = (item: any) => {
@@ -226,7 +236,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
         item.item.isLikedByUser = 1;
         item.item.noOfLikes = item.item.noOfLikes + 1;
       }
-      this.setState({});
+      // this.setState({});
     } else {
       No_Internet_Warning();
     }
@@ -245,7 +255,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     loaderHandler.hideLoader();
     if (fetched) {
       this.showList(getAllLikes);
-      this.setState({});
+      // this.setState({});
     } else {
       ToastMessage(getAllLikes, Colors.ErrorColor);
     }
@@ -307,7 +317,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       this.publishedMemoryDataModel.updatePublishedMemories(
         publishedMemoriesArray,
       );
-      this.setState({});
+      // this.setState({});
     } else {
       ToastMessage(responseMessage, Colors.ErrorColor);
     }
@@ -1255,13 +1265,18 @@ export const MemoryBasicDetails = (
               }
             }}>
             <View style={[styles.flexRow, { width: Utility.getDeviceWidth() - 112 }]}>
-              <Image
+              <ImageBackground
                 style={styles.userImageStyle}
-                source={
-                  userDetails.userProfilePic && userDetails.userProfilePic != '' ? { uri: userDetails.userProfilePic } : profile_placeholder
-                }
-              ></Image>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 8, }}>
+                imageStyle={styles.userImageStyle}
+                source={profile_placeholder}>
+                <Image
+                  style={styles.userImageStyle}
+                  source={
+                    userDetails.userProfilePic && userDetails.userProfilePic != '' ? { uri: userDetails.userProfilePic } : profile_placeholder
+                  }
+                ></Image>
+              </ImageBackground>
+              <View style={styles.userNameTextContainerStyle}>
                 <View>
                   <Text
                     style={styles.userNameTextStyle}>
@@ -1366,7 +1381,6 @@ export const MediaView = (item: any, audioView: any) => {
                         )}
                         resizeMode={'contain'}
                       />
-
                       {memoryDetail.images.length > 1 && (
                         <TouchableWithoutFeedback
                           onPress={() => {

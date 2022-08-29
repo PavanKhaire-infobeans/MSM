@@ -6,6 +6,7 @@ import {
 } from '../views/registration/getInstancesSaga';
 import loaderHandler from './component/busyindicator/LoaderHandler';
 const Permissions = require('react-native-permissions').default;
+import Upload from 'react-native-background-upload';
 
 //const punycode = require('punycode');
 export const keyObject = 'object';
@@ -266,23 +267,23 @@ export function uploadTask(
   success: (data: { [x: string]: any }) => void,
   failure: (error: any) => void,
 ): (options: object) => void {
-  const UploadManager = require('react-native-background-upload').default;
+  // const UploadManager = require('react-native-background-upload').default;
   const loaderHandler =
     require('../common/component/busyindicator/LoaderHandler').default;
-  return function (options: object): void {
+  return function (options: any): void {
     try {
       asyncGen(function* () {
 
         // console.log("File Upload payload:",JSON.stringify(options));
-        // loaderHandler.showLoader('Uploading..');
+        loaderHandler.showLoader('Uploading..');
         try {
-          let uploadId = yield UploadManager.startUpload(options);
+          let uploadId = yield Upload.startUpload(options);
           if (typeof uploadId == 'string') {
-            UploadManager.addListener('error', uploadId, (data: any) => {
+            Upload.addListener('error', uploadId, (data: any) => {
               // hideLoaderWithTimeOut();
               failure(data);
             });
-            UploadManager.addListener(
+            Upload.addListener(
               'cancelled',
               uploadId,
               (...data: any[]) => {
@@ -290,7 +291,7 @@ export function uploadTask(
                 failure({ message: 'Upload cancelled', uploadId, data });
               },
             );
-            UploadManager.addListener('completed', uploadId, (data: any) => {
+            Upload.addListener('completed', uploadId, (data: any) => {
               // hideLoaderWithTimeOut();
               success(data);
             });
@@ -298,6 +299,29 @@ export function uploadTask(
             // hideLoaderWithTimeOut();
             failure(uploadId);
           }
+
+          // Upload.startUpload(options).then((uploadId) => {
+          //   console.log('Upload started')
+          //   Upload.addListener('progress', uploadId, (data) => {
+          //     console.log(`Progress: ${data.progress}%`)
+          //   })
+          //   Upload.addListener('error', uploadId, (data) => {
+          //     console.log(`Error: ${data.error}%`)
+          //     failure(data);
+          //   })
+          //   Upload.addListener('cancelled', uploadId, (data) => {
+          //     console.log(`Cancelled!`)
+          //     failure({ message: 'Upload cancelled', uploadId, data });
+          //   })
+          //   Upload.addListener('completed', uploadId, (data) => {
+          //     // data includes responseCode: number and responseBody: Object
+          //     success(data);
+          //     console.log('Completed!')
+          //   })
+          // }).catch((err) => {
+          //   console.log('Upload error!', err)
+          //   failure(err);
+          // })
         } catch (err) {
           // hideLoaderWithTimeOut();
           failure(err);

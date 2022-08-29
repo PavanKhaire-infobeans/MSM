@@ -40,6 +40,7 @@ class MessageDialogue extends Component<{}, State> {
   showListener?: any = null;
   hideListener?: any = null;
   showListenerWithoutClose?: any = null;
+  
   UNSAFE_componentWillMount() {
     //  componentWillMount() {
     this.showListener = DeviceEventEmitter.addListener(
@@ -54,6 +55,12 @@ class MessageDialogue extends Component<{}, State> {
       'showListenerWithoutClose',
       this._showWithOutClose,
     );
+  }
+
+  componentWillUnmount(){
+    DeviceEventEmitter.removeAllListeners("showMessage")
+    DeviceEventEmitter.removeAllListeners("hideMessage")
+    DeviceEventEmitter.removeAllListeners("showListenerWithoutClose")
   }
 
   _showWithOutClose = ({ message, color }: { message: string; color: string }) => {

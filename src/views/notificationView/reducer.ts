@@ -80,6 +80,7 @@ export const NotificationsRedux = (
           notificationList = activityList.slice(0);
         }
       });
+      
       let details = action.payload.details[0];
       notificationList.forEach((element: any, index: any) => {
         if (
@@ -108,6 +109,6 @@ export const NotificationsRedux = (
       newState.unreadNot = true;
       break;
   }
-  console.log('Utility notification count : ', Utility.unreadNotification);
+  console.log('Utility notification count : ', action.type);
   return newState;
 };

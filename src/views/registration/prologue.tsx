@@ -59,7 +59,9 @@ class Prologue extends Component<Props> {
 	};
 
 	componentWillUnmount = () => {
-		this.setState({ isBottomPickerVisible: false })
+		this.setState({ isBottomPickerVisible: false }, () => {
+			this.registrationData.removeListener()
+		})
 	}
 	componentDidMount() {
 		// var { width, height } = Dimensions.get('window');
@@ -72,23 +74,27 @@ class Prologue extends Component<Props> {
 		// 	console.log(result)
 		// 	// { safeAreaInsets: { top: 44, left: 0, bottom: 34, right: 0 } }
 		// })		
-		this.setState({ isBottomPickerVisible: false })
-		this.registrationData = EventManager.addListener(kCueBackFormData, this.cueBackRegistrationForm);
-		new GetFormData().callService(kCueBackRegistration, false, true)
-		this.props.getAllInstances();
+		this.setState({ isBottomPickerVisible: false }, () => {
+			this.registrationData = EventManager.addListener(kCueBackFormData, this.cueBackRegistrationForm);
+			new GetFormData().callService(kCueBackRegistration, false, true)
+			this.props.getAllInstances();
+		})
+
 	}
 
 	cueBackRegistrationForm = (success: any, formList: any) => {
 		if (success) {
-			this.setState({ registrationFormData: formList })
-			if (this.state.wasLoading) {
-				loaderHandler.hideLoader()
-				this.setState({ isRegistrationOpen: true, wasLoading: false })
-			}
+			this.setState({ registrationFormData: formList }, () => {
+				if (this.state.wasLoading) {
+					loaderHandler.hideLoader()
+					this.setState({ isRegistrationOpen: true, wasLoading: false })
+				}
+			})
+
 		}
 	}
 
-	componentWillReceiveProps(nextProps: Props) {
+	UNSAFE_componentWillReceiveProps(nextProps: Props) {
 		if (nextProps.request.completed && this.props.navigation && this.props.navigation?.state && this.props.navigation?.state?.routeName && this.props.navigation?.state?.routeName == "prologue") {
 			this.props.end();
 		}
@@ -109,8 +115,7 @@ class Prologue extends Component<Props> {
 			this.setState({ isLoginDrawerOpen: false, isLoginUp: false });
 		}
 		if (identifier == this.searchIdentifier) {
-			this.setState({ isSearchDrawerOpen: false });
-			loginDrawerRef.refDrawer.collapse()
+			this.setState({ isSearchDrawerOpen: false }, () => loginDrawerRef.refDrawer.collapse());
 		}
 		Keyboard.dismiss();
 		this._hide();
@@ -180,8 +185,7 @@ class Prologue extends Component<Props> {
 				this.setState({ isRegistrationOpen: true })
 			}
 			else {
-				this.setState({ wasLoading: true })
-				loaderHandler.showLoader('Loading...')
+				this.setState({ wasLoading: true }, () => loaderHandler.showLoader('Loading...'))
 			}
 		} else {
 			No_Internet_Warning();
@@ -190,9 +194,8 @@ class Prologue extends Component<Props> {
 
 	onBackPressed = () => {
 		if (this.state.isRegistrationOpen && !this.state.isLoginDrawerOpen && !this.state.isSearchDrawerOpen) {
-			this.setState({ isRegistrationOpen: false })
+			this.setState({ isRegistrationOpen: false }, () => loginDrawerRef.refDrawer.collapse())
 			// this.searchDrawerRef.refDrawer.collapse();
-			loginDrawerRef.refDrawer.collapse();
 		} else if (this.props.showHeader) {
 			Actions.pop();
 		}
@@ -203,9 +206,10 @@ class Prologue extends Component<Props> {
 	}
 
 	onRegFinalCallBack = (msg: any) => {
-		this.setState({ isRegistrationOpen: false })
-		loginDrawerRef.refDrawer.expand();
-		ToastMessage(msg, Colors.ThemeColor, false, true)
+		this.setState({ isRegistrationOpen: false }, () => {
+			loginDrawerRef.refDrawer.expand();
+			ToastMessage(msg, Colors.ThemeColor, false, true)
+		})
 	}
 
 	prologueHeader = () => {

@@ -78,20 +78,24 @@ export default class UserProfileEdit extends React.Component<Props> {
   };
 
   _closeAction = () => {
-    this.setState({modalVisible: false});
-    Keyboard.dismiss();
-    Actions.pop();
+    this.setState({modalVisible: false},()=>{
+      Keyboard.dismiss();
+      Actions.pop();
+    });
+    
   };
 
   constructor(prop: Props) {
     super(prop);
     this.isProfilePicAvailable = false;
-    this.setState({basicInfo: prop.basicInfo});
-    this.profileUpdated = EventManager.addListener(kSetUserProfileData, () => {
-      Keyboard.dismiss();
-      Actions.popTo('profile');
+    this.setState({basicInfo: prop.basicInfo},()=>{
+      this.profileUpdated = EventManager.addListener(kSetUserProfileData, () => {
+        Keyboard.dismiss();
+        Actions.popTo('profile');
+      });
+      this.isProfilePicAvailable = getValue(this.props, ['profilePicUri']) != '';
     });
-    this.isProfilePicAvailable = getValue(this.props, ['profilePicUri']) != '';
+    
   }
 
   componentWillUnmount() {
@@ -269,11 +273,7 @@ export default class UserProfileEdit extends React.Component<Props> {
                 isDatePickerVisible: false,
                 [this.state.selectionData.fieldName]:
                   Utility.dateObjectToDefaultFormat(date),
-              },
-              () => {
-                //console.log(this.state);
-              },
-            );
+              });
           }}
         />
       </View>
@@ -621,9 +621,11 @@ export default class UserProfileEdit extends React.Component<Props> {
                         ...this.state.basicInfo,
                         profilePicUri: tempfile.filePath,
                       },
+                    },()=>{
+                      this.uploadImage(tempfile);
+                      this.isProfilePicAvailable = true;
                     });
-                    this.uploadImage(tempfile);
-                    this.isProfilePicAvailable = true;
+                    
                   }
 
                   //this.saveTempFiles(tempfilesArr);
@@ -659,8 +661,9 @@ export default class UserProfileEdit extends React.Component<Props> {
                       ...this.state.basicInfo,
                       profilePicUri: tempfile.filePath,
                     },
+                  },()=>{
+                    this.uploadImage(tempfile);
                   });
-                  this.uploadImage(tempfile);
 
                   // this.saveTempFiles(tempfiles);
                   // this.props.setValue(false);
@@ -681,13 +684,13 @@ export default class UserProfileEdit extends React.Component<Props> {
         UserProfile();
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = true;
-        this.setState({hasLoaded: true});
-        loaderHandler.hideLoader();
+        this.setState({hasLoaded: true},()=>loaderHandler.hideLoader());
+        
       })
       .catch((error: any) => {
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = false;
-        this.setState({hasLoaded: true});
+        this.setState({hasLoaded: true},()=>loaderHandler.hideLoader());
       });
   };
 

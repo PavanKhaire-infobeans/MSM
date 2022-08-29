@@ -52,13 +52,13 @@ type State = {
   };
   hasLoaded: boolean;
   [key: string]: any | string;
-  error: {[x: string]: {error: boolean; message: string}};
+  error: { [x: string]: { error: boolean; message: string } };
   isDatePickerVisible: boolean;
 };
 export default class MutilpleValueEdit extends React.Component<Props> {
   bottomPicker: React.RefObject<BottomPicker> = React.createRef<BottomPicker>();
   profileUpdated: EventManager;
-  textFieldArray: {[key: string]: TextInput} = {};
+  textFieldArray: { [key: string]: TextInput } = {};
   lastFieldName: string = '';
   _actionSheet: any | ActionSheet = null;
   isProfilePicAvailable: boolean;
@@ -99,23 +99,27 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     });
     if (props.basicInfo) {
       this.isProfilePicAvailable = false;
-      this.setState({basicInfo: props.basicInfo});
-      this.profileUpdated = EventManager.addListener(
-        kSetUserProfileData,
-        () => {
-          Keyboard.dismiss();
-          Actions.popTo('profile');
-        },
-      );
-      this.isProfilePicAvailable =
-        getValue(this.props, ['profilePicUri']) != '';
+      this.setState({ basicInfo: props.basicInfo }, () => {
+        this.profileUpdated = EventManager.addListener(
+          kSetUserProfileData,
+          () => {
+            Keyboard.dismiss();
+            Actions.popTo('profile');
+          },
+        );
+        this.isProfilePicAvailable =
+          getValue(this.props, ['profilePicUri']) != '';
+      });
+
     }
   }
 
   _closeAction = () => {
-    this.setState({modalVisible: false});
-    Keyboard.dismiss();
-    Actions.pop();
+    this.setState({ modalVisible: false },()=>{
+      Keyboard.dismiss();
+      Actions.pop();
+    });
+    
   };
 
   componentWillUnmount() {
@@ -129,7 +133,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
       if (getValue(field, ['granularity', 'todate']) != 'required') {
         this.setState({
           isDatePickerVisible: true,
-          selectionData: {fieldName: field.field_name},
+          selectionData: { fieldName: field.field_name },
         });
         return;
       }
@@ -147,11 +151,11 @@ export default class MutilpleValueEdit extends React.Component<Props> {
         }
       }
       for (var i = most; i > least; i--) {
-        actions.push({key: i, text: `${i}`});
+        actions.push({ key: i, text: `${i}` });
       }
     } else {
       for (let key in field.values) {
-        actions.push({key, text: field.values[key]});
+        actions.push({ key, text: field.values[key] });
       }
     }
 
@@ -210,7 +214,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     }
 
     for (var i = most; i > least; i--) {
-      actions.push({key: i, text: `${i}`});
+      actions.push({ key: i, text: `${i}` });
     }
 
     this.setState(
@@ -222,7 +226,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
           fieldName: field_name,
           selectionType: 0,
           label: selectedViewName,
-          selectedValues: {[selectedValue]: selectedValue},
+          selectedValues: { [selectedValue]: selectedValue },
           maxLimit: 1,
           isFromMultipleDropDown: true,
           fieldNameOfMultipleDropDown:
@@ -272,7 +276,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
             ? this.state[field.field_name].value2
             : field.default_value.value2
           : field.default_value.value2;
-        return {value: default_value_from, value2: default_value_to};
+        return { value: default_value_from, value2: default_value_to };
       } else {
         let val = getValue(field, ['default_value', 'value']);
         if (val) {
@@ -301,7 +305,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
             showError = this.state.error[field.field_name].error;
             errorMessage = this.state.error[field.field_name].message;
           }
-          var extra: {[x: string]: any} = {
+          var extra: { [x: string]: any } = {
             showError,
             errorMessage,
             isRequired: field.required,
@@ -343,8 +347,8 @@ export default class MutilpleValueEdit extends React.Component<Props> {
               field.field_name && field.field_name.indexOf('phone') >= 0
                 ? 'phone-pad'
                 : field.field_name.indexOf('email') >= 0
-                ? 'email-address'
-                : 'ascii-capable';
+                  ? 'email-address'
+                  : 'ascii-capable';
             let maxLimit = field.field_name.indexOf('name') >= 0 ? 15 : 100;
             return (
               <TextField
@@ -362,7 +366,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                     [field.field_name]: text,
                     error: {
                       ...this.state.error,
-                      [field.field_name]: {error: false, message: ''},
+                      [field.field_name]: { error: false, message: '' },
                     },
                   });
                 }}
@@ -374,8 +378,8 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                   this.state[field.field_name]
                     ? this.state[field.field_name]
                     : this.state[field.field_name] == ''
-                    ? ''
-                    : default_value
+                      ? ''
+                      : default_value
                 }
                 keyboardType={keyboardBoardType}
                 onSubmitEditing={() => {
@@ -438,9 +442,9 @@ export default class MutilpleValueEdit extends React.Component<Props> {
               field_date =
                 field_date.length > 0
                   ? Utility.dateAccordingToFormat(
-                      field_date,
-                      field.granularity.date_format,
-                    )
+                    field_date,
+                    field.granularity.date_format,
+                  )
                   : '';
               return (
                 <DropDown
@@ -488,11 +492,11 @@ export default class MutilpleValueEdit extends React.Component<Props> {
           <Image
             defaultSource={profile_placeholder}
             source={
-              isProfilePicAvailable ? {uri: profilePicURL} : profile_placeholder
+              isProfilePicAvailable ? { uri: profilePicURL } : profile_placeholder
             }
             style={Styles.profileImage}
-            onLoad={() => this.setState({hasLoaded: true})}
-            onLoadStart={() => this.setState({hasLoaded: false})}
+            onLoad={() => this.setState({ hasLoaded: true })}
+            onLoadStart={() => this.setState({ hasLoaded: false })}
           />
           {!this.state.hasLoaded ? (
             <ActivityIndicatorView size="small" />
@@ -640,7 +644,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     }
     if (Object.keys(error).length > 0) {
       ToastMessage('Please check the highlighted fields', Colors.ErrorColor);
-      this.setState({error});
+      this.setState({ error });
       return false;
     } else if (hasChangedAnyValue == false) {
       ToastMessage('No changes found', Colors.ThemeColor);
@@ -658,13 +662,16 @@ export default class MutilpleValueEdit extends React.Component<Props> {
         UserProfile();
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = true;
-        this.setState({hasLoaded: true});
-        loaderHandler.hideLoader();
+        this.setState({ hasLoaded: true },()=>{
+          loaderHandler.hideLoader();
+        });
       })
       .catch((error: any) => {
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = false;
-        this.setState({hasLoaded: true});
+        this.setState({ hasLoaded: true },()=>{
+          loaderHandler.hideLoader();
+        });
       });
   };
 
@@ -694,7 +701,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
       <View style={Styles.container}>
         <SafeAreaView
           style={Styles.multipleValueContainer}>
-          <StatusBar barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
+          <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
           <NavigationHeaderSafeArea
             isWhite={true}
             rightText="Save"
@@ -709,7 +716,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
             keyboardShouldPersistTaps="always"
             keyboardDismissMode="on-drag"
             style={Styles.KeyboardAwareScrollViewStyle}
-            contentContainerStyle={{alignItems: 'center'}}
+            contentContainerStyle={{ alignItems: 'center' }}
             bounces={false}>
             {this.props.basicInfo && this.generateProfilePicView()}
             <View
@@ -718,7 +725,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
               <DateTimePicker
                 isVisible={this.state.isDatePickerVisible}
                 onCancel={() => {
-                  this.setState({isDatePickerVisible: false});
+                  this.setState({ isDatePickerVisible: false });
                   //console.log("cancelled")
                 }}
                 onDateSelection={(date: any) => {
@@ -727,11 +734,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                       isDatePickerVisible: false,
                       [this.state.selectionData.fieldName]:
                         Utility.dateObjectToDefaultFormat(date),
-                    },
-                    () => {
-                      //console.log(this.state);
-                    },
-                  );
+                    });
                 }}
               />
             </View>
@@ -758,19 +761,15 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                   },
                   error: {
                     ...this.state.error,
-                    [fieldName]: {error: false, message: ''},
+                    [fieldName]: { error: false, message: '' },
                   },
-                },
-                () => {
-                  //console.log("Data setting completed", this.state)
-                },
-              );
+                });
             } else {
               this.setState({
-                [fieldName]: {[selectedItem.key]: selectedItem.text},
+                [fieldName]: { [selectedItem.key]: selectedItem.text },
                 error: {
                   ...this.state.error,
-                  [fieldName]: {error: false, message: ''},
+                  [fieldName]: { error: false, message: '' },
                 },
               });
             }
@@ -795,7 +794,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
               [fieldName]: selectedValueObjects,
               error: {
                 ...this.state.error,
-                [fieldName]: {error: false, message: ''},
+                [fieldName]: { error: false, message: '' },
               },
             });
             //console.log(this.state)
@@ -871,7 +870,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                   //this.saveTempFiles(tempfilesArr);
                   //this.props.setValue(false);
                 })
-                .catch(e => {});
+                .catch(e => { });
             }
           });
           break;
@@ -905,7 +904,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                   // this.saveTempFiles(tempfiles);
                   // this.props.setValue(false);
                 })
-                .catch(e => {});
+                .catch(e => { });
             }
           });
           break;
@@ -915,9 +914,9 @@ export default class MutilpleValueEdit extends React.Component<Props> {
 }
 
 const ImageActions: Array<ImageSelectionSheetItem> = [
-  {index: 0, text: 'Capture from Camera', image: action_camera},
-  {index: 1, text: 'Upload from Gallery', image: action_picture},
-  {index: 2, text: 'Cancel', image: action_close},
+  { index: 0, text: 'Capture from Camera', image: action_camera },
+  { index: 1, text: 'Upload from Gallery', image: action_picture },
+  { index: 2, text: 'Cancel', image: action_close },
 ];
 
 export type TempFile = {

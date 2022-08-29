@@ -1,21 +1,16 @@
 import React, { createRef } from 'react';
 import {
-  Alert,
-  FlatList,
-  Image,
-  Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, TextInput, TouchableHighlight, TouchableOpacity,
-  View
+  Alert, Image, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar,
+  TextInput, TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Actions } from 'react-native-router-flux';
 import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Text from '../../common/component/Text';
 import {
-  Colors, decode_utf8,
-  DraftActions,
-  fontFamily, GenerateRandomID
+  Colors, decode_utf8, DraftActions, GenerateRandomID
 } from '../../common/constants';
 import {
   MindPopAttachment
@@ -250,7 +245,7 @@ class CreateMemory extends React.Component<Props> {
 
   filesToUpdate: Array<any> = [];
   listener: EventManager;
-  backListner: any;
+  backListner: EventManager;
   bottomPicker: React.RefObject<BottomPicker> = React.createRef<BottomPicker>();
   memoryCallback: EventManager;
   deleteDraftListener: EventManager;
@@ -365,13 +360,14 @@ class CreateMemory extends React.Component<Props> {
         youWhereThere: draftDetails.youWhereThere,
         taggedCount: draftDetails.taggedCount,
         collaboratorOwner: draftDetails.collaboratorOwner,
+      }, () => {
+        this.setEtherPadContent('get', '', draftDetails.etherpad_details.padId);
       });
       // if(!(draftDetails.isCreatedByUser.uid == Account.selectedData().userID)){
       // 	CollaboratorActionAPI({nid : this.props.draftNid,
       // 		id : Account.selectedData().userID,
       // 		action_type: CollaboratorsAction.joinCollaboration})
       // }
-      this.setEtherPadContent('get', '', draftDetails.etherpad_details.padId);
     } else {
       ToastMessage(draftDetails, Colors.ErrorColor);
     }
@@ -417,9 +413,10 @@ class CreateMemory extends React.Component<Props> {
         },
         isCreatedByUser: true,
         date: { ...this.state.day, value: this.props.memoryDate.day },
+      }, () => {
+        this.props.setNid(this.props.id);
+        this.setEtherPadContent('get', '', this.props.padDetails.padId);
       });
-      this.props.setNid(this.props.id);
-      this.setEtherPadContent('get', '', this.props.padDetails.padId);
     }
     // this.setEtherPadContent('set', decode_utf8(this.props.textTitle), this.props.padDetails.padId);
     this.props.recentTags(recentTag);
@@ -859,7 +856,9 @@ class CreateMemory extends React.Component<Props> {
           'createMemoryMainListener',
           key,
         );
-        if (resp.Status) {
+
+        console.warn("sadadadsd ::", resp)
+        if (resp?.Status) {
           this.memorySaveCallback(resp.Status, resp.Status, resp.padid, key)
 
         }
@@ -918,8 +917,11 @@ class CreateMemory extends React.Component<Props> {
     this.deleteDraftListener.removeListener();
     this.updateFilesListener.removeListener();
     this.draftDetailsListener.removeListener();
-    Keyboard.removeAllListeners("keyboardDidHide");
-    Keyboard.removeAllListeners("keyboardWillShow");
+    this.backListner.removeListener();
+    Keyboard.removeAllListeners("keyboardDidShow")
+    Keyboard.removeAllListeners("keyboardDidHide")
+    Keyboard.removeAllListeners("keyboardWillShow")
+    Keyboard.removeAllListeners("keyboardWillHide")
   };
 
   hideMenu = () => {
@@ -938,7 +940,7 @@ class CreateMemory extends React.Component<Props> {
           list: ImageActions,
         },
       },
-      this._actionSheet && this._actionSheet.current && this._actionSheet.current.showSheet()
+      () => this._actionSheet && this._actionSheet.current && this._actionSheet.current.showSheet()
     );
   };
 
@@ -1130,9 +1132,9 @@ class CreateMemory extends React.Component<Props> {
     Actions.push('fileDescription', { file: file, done: this.updateFileContent });
   };
 
-  renderRow = (data: any) => {
-    let index = data.index;
-    data = data.item;
+  renderRow = (data: any, index: number) => {
+    // let index = data.index;
+    // data = data.item;
     data.by = data.file_owner ? getUserName(data) : 'You';
     let date = data.file_date
       ? data.file_date
@@ -1140,7 +1142,7 @@ class CreateMemory extends React.Component<Props> {
     let fileTitle = data.file_title ? data.file_title : '';
     let fileDescription = data.file_description ? data.file_description : '';
     return (
-      <View style={styles.fullWidth}>
+      <View key={`key-${index}`} style={styles.fullWidth}>
         {/* {index == 0 && this.viewBeforList()} */}
         <View
           style={styles.rowConatiner}>
@@ -1476,8 +1478,9 @@ class CreateMemory extends React.Component<Props> {
           if (currentMonth < selectedMonth) {
             this.setState({
               month: { ...this.state.selectionData, value: MonthObj.month[0] },
+            }, () => {
+              this.setState({ day: { ...this.state.selectionData, value: 'Day' } });
             });
-            this.setState({ day: { ...this.state.selectionData, value: 'Day' } });
           } else if (
             currentMonth == selectedMonth &&
             this.state.day.value != 'Day'
@@ -1501,31 +1504,33 @@ class CreateMemory extends React.Component<Props> {
             showDay: false,
           });
         } else if (this.state.day.value != 'Day') {
-          this.setState({ showDay: true });
-          let currentDay = parseInt(this.state.day.value);
-          if (currentDay >= 28) {
-            let maxDay = 28;
-            switch (selectedItem.text) {
-              case 'Feb':
-                maxDay = 28;
-                if (this.state.year.value != 'Year*') {
-                  if (parseInt(this.state.year.value) % 4 == 0) {
-                    maxDay = 29;
+          this.setState({ showDay: true }, () => {
+            let currentDay = parseInt(this.state.day.value);
+            if (currentDay >= 28) {
+              let maxDay = 28;
+              switch (selectedItem.text) {
+                case 'Feb':
+                  maxDay = 28;
+                  if (this.state.year.value != 'Year*') {
+                    if (parseInt(this.state.year.value) % 4 == 0) {
+                      maxDay = 29;
+                    }
                   }
-                }
-                break;
-              case 'Apr' || 'Jun' || 'Sep' || 'Nov':
-                maxDay = 30;
-                break;
-              default:
+                  break;
+                case 'Apr' || 'Jun' || 'Sep' || 'Nov':
+                  maxDay = 30;
+                  break;
+                default:
+              }
+              if (maxDay < currentDay) {
+                this.setState({
+                  day: { ...this.state.selectionData, value: 'Day' },
+                  showDay: true,
+                });
+              }
             }
-            if (maxDay < currentDay) {
-              this.setState({
-                day: { ...this.state.selectionData, value: 'Day' },
-                showDay: true,
-              });
-            }
-          }
+          });
+
         } else {
           this.setState({
             day: { ...this.state.selectionData, value: 'Day' },
@@ -2124,12 +2129,12 @@ class CreateMemory extends React.Component<Props> {
             />
 
             {
-              this.state.itemList.length ?
+              // this.state.itemList.length ?
 
                 <ScrollView
                   contentContainerStyle={Styles.viewBeforListContentContainerStyle}
                   style={styles.fullWidth}
-                // onStartShouldSetResponder={() => true}
+                  scrollEnabled={this.state.itemList.length ? true : false}
                 >
                   {/* {this.state.itemList.length == 0 ? ( */}
                   {this.viewBeforList()}
@@ -2137,29 +2142,32 @@ class CreateMemory extends React.Component<Props> {
 
 
                   {
-                    this.state.bottomToolbar ?
-                      null
-                      :
-                      <FlatList
-                        ref={ref => (this._mainItemList = ref)}
-                        extraData={this.state}
-                        nestedScrollEnabled={true}
-                        keyExtractor={(_, index: number) => `${index}`}
-                        style={[styles.fullWidth, { marginBottom: 100 }]}
-                        onScroll={() => Keyboard.dismiss()}
-                        // keyboardShouldPersistTaps={'handled'}
-                        showsHorizontalScrollIndicator={false}
-                        // showsVerticalScrollIndicator={false}
-                        data={this.state.itemList}
-                        renderItem={(item: any) => this.renderRow(item)}
-                      />
+                    // this.state.bottomToolbar ?
+                    //   null
+                    //   :
+                    // <FlatList
+                    //   ref={ref => (this._mainItemList = ref)}
+                    //   extraData={this.state}
+                    //   nestedScrollEnabled={true}
+                    //   keyExtractor={(_, index: number) => `${index}`}
+                    //   style={[styles.fullWidth, { marginBottom: 100 }]}
+                    //   onScroll={() => Keyboard.dismiss()}
+                    //   // keyboardShouldPersistTaps={'handled'}
+                    //   showsHorizontalScrollIndicator={false}
+                    //   // showsVerticalScrollIndicator={false}
+                    //   data={this.state.itemList}
+                    //   renderItem={(item: any) => this.renderRow(item)}
+                    // />
+                    this.state.itemList?.length ?
+                      this.state.itemList.map((item, index) => this.renderRow(item, index))
+                      : null
                   }
                   {/* )} */}
                 </ScrollView>
-                :
-                <View style={styles.fullWidth} >
-                  {this.viewBeforList()}
-                </View>
+                // :
+                // <View style={styles.fullWidth} >
+                //   {this.viewBeforList()}
+                // </View>
             }
             {/* {this.state.menuVisibility && (
               <View

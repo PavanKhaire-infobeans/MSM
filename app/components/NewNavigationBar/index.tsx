@@ -50,6 +50,12 @@ const NavigationBar = (props: Props) => {
       kForegroundNotificationListener,
       notificationReceived,
     );
+
+    return ()=>{
+      DeviceEventEmitter.removeAllListeners(kProfilePicUpdated)
+      notificationReceivedForeground.removeListener()
+    }
+
   }, [])
 
   notificationReceived = (details: any) => {
@@ -118,12 +124,10 @@ const NavigationBar = (props: Props) => {
     );
   }
 
-
-
-
   let showClose: boolean = props.showClose
     ? props.showClose
     : false;
+
   return (
     <View
       style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
