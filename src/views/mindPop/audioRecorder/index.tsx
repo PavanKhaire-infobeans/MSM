@@ -71,7 +71,7 @@ export default class AudioRecorderView extends React.Component<
   // 	}
   // }
   // back = () => {
-  // 	this.isRecordingFromAddContent ? this.navigateBackOrReset() : Actions.pop();
+  // 	this.isRecordingFromAddContent ? this.navigateBackOrReset() : this.props.navigation.goBack();
   // };
   // navigateBackOrReset = () =>{
   // 	{this.state.audioState !== "none" && this.state.audioState !== "recording" && this.state.audioState !== "record-pause" ? (
@@ -88,7 +88,7 @@ export default class AudioRecorderView extends React.Component<
   // 				show: false
   // 		}
   // 		})
-  // 	) : Actions.popTo("addContent")}
+  // 	) : this.props.navigation.popTo("addContent")}
   // }
   // /**
   //  * Set time while User is recording
@@ -342,7 +342,7 @@ export default class AudioRecorderView extends React.Component<
   // 			time: `time1-${minInt < 10 ? 0 : ""}${minInt}:${secInt < 10 ? 0 : ""}${secInt}`
   // 		}
   // 	]);
-  // 	Actions.pop();
+  // 	this.props.navigation.goBack();
   // };
   // render() {
   // 	return (
@@ -469,7 +469,7 @@ export default class AudioRecorderView extends React.Component<
   // 						<TouchableOpacity
   // 							onPress={() => {
   // 								this.props.deleteItem();
-  // 								Actions.pop();
+  // 								this.props.navigation.goBack();
   // 							}}
   // 							style={{ marginLeft: 10, alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
   // 							<Image source={rubbish} resizeMode="contain" />
@@ -477,7 +477,7 @@ export default class AudioRecorderView extends React.Component<
   // 					) : null}
   // 					<TouchableOpacity
   // 						onPress={() => {
-  // 							Actions.pop();
+  // 							this.props.navigation.goBack();
   // 							this.props.reset();
   // 						}}
   // 						style={{ marginLeft: 10, alignItems: "center", justifyContent: "center", width: 80, height: 44 }}>

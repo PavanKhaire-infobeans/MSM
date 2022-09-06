@@ -1,44 +1,87 @@
 import React from 'react';
 import {
-  ActivityIndicator, Alert, Animated, FlatList, Image, Keyboard,
-  Platform, RefreshControl, SafeAreaView, StyleSheet, TouchableHighlight,  TouchableOpacity, View
+  ActivityIndicator,
+  Alert,
+  Animated,
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Text from '../../../common/component/Text';
 import {
-  Colors, encode_utf8, fontFamily, fontSize, MemoryActionKeys
+  Colors,
+  encode_utf8,
+  fontFamily,
+  fontSize,
+  MemoryActionKeys,
 } from '../../../common/constants';
-import { GetAllLikes, Like, Unlike } from '../../memoryDetails/detailsWebService';
+import {GetAllLikes, Like, Unlike} from '../../memoryDetails/detailsWebService';
 import {
-  GetPublishedMemories, kAllLikes, kLiked, kMemoryActionPerformedPublished, kPublishedMemoriesFetched, kUnliked, MemoryAction
+  GetPublishedMemories,
+  kAllLikes,
+  kLiked,
+  kMemoryActionPerformedPublished,
+  kPublishedMemoriesFetched,
+  kUnliked,
+  MemoryAction,
 } from '../myMemoriesWebService';
 
-import { Actions } from 'react-native-router-flux';
-import { block, flag, flagandroid, personxmark, redstar, report } from '../../../../app/images';
+import {
+  block,
+  flag,
+  flagandroid,
+  personxmark,
+  redstar,
+  report,
+} from '../../../../app/images';
 import AudioPlayer, {
-  kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious
+  kClosed,
+  kEnded,
+  kNext,
+  kPaused,
+  kPlaying,
+  kPrevious,
 } from '../../../common/component/audio_player/audio_player';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import MemoryActionsSheet, {
-  MemoryActionsSheetItem
+  MemoryActionsSheetItem,
 } from '../../../common/component/memoryActionsSheet';
 import MemoryListItem from '../../../common/component/memoryListItem';
 import PlaceholderImageView from '../../../common/component/placeHolderImageView';
 import {
-  No_Internet_Warning, ToastMessage
+  No_Internet_Warning,
+  ToastMessage,
 } from '../../../common/component/Toast';
 import EventManager from '../../../common/eventManager';
 import Utility from '../../../common/utility';
 import {
-  add_icon_small, block_memory, cancelActions, delete_memory, edit_memory, greenDotsButton, icon_comment, icon_like,
-  icon_like_selected, icon_send, move_to_draft, remove_me_from_this_post
+  add_icon_small,
+  block_memory,
+  cancelActions,
+  delete_memory,
+  edit_memory,
+  greenDotsButton,
+  icon_comment,
+  icon_like,
+  icon_like_selected,
+  icon_send,
+  move_to_draft,
+  remove_me_from_this_post,
 } from '../../../images';
-import { ListType } from '../../dashboard/dashboardReducer';
+import {ListType} from '../../dashboard/dashboardReducer';
 import {
   Border,
-  LikeCommentShare
+  LikeCommentShare,
 } from '../../memoryDetails/componentsMemoryDetails';
-import { PublishedMemoryDataModel } from './publishedMemoryDataModel';
+import {PublishedMemoryDataModel} from './publishedMemoryDataModel';
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
 ];
@@ -113,13 +156,15 @@ export default class PublishedMemory extends React.Component<Props, State> {
     this.memoryPublishedUpdateListener = EventManager.addListener(
       'memoryUpdatePublishedListener',
       () => {
-        this.setState({
-          isMemoryUpdate: true,
-        },()=>{
-          GetPublishedMemories('');
-          loaderHandler.hideLoader();
-        });
-        
+        this.setState(
+          {
+            isMemoryUpdate: true,
+          },
+          () => {
+            GetPublishedMemories('');
+            loaderHandler.hideLoader();
+          },
+        );
       },
     );
   }
@@ -141,11 +186,14 @@ export default class PublishedMemory extends React.Component<Props, State> {
     // this.setState({});
   };
   onRefresh = () => {
-    this.setState({
-      isRefreshing: true,
-    },()=>{
-      GetPublishedMemories('');
-    });
+    this.setState(
+      {
+        isRefreshing: true,
+      },
+      () => {
+        GetPublishedMemories('');
+      },
+    );
   };
   handleLoadMore = () => {
     // let draftCount = this.memoryDraftsDataModel.getMemoryDraftsCount();
@@ -156,14 +204,17 @@ export default class PublishedMemory extends React.Component<Props, State> {
     ) {
       if (!this.state.loading) {
         // increase page by 1
-        this.setState({
-          loading: true,
-        },()=>{
-          loadingDataFromServer = true;
-          let memoryDetails = publishedMemoriesArray[publishedMemoriesArray.length - 1];
-          GetPublishedMemories(memoryDetails.updated);
-        });
-        
+        this.setState(
+          {
+            loading: true,
+          },
+          () => {
+            loadingDataFromServer = true;
+            let memoryDetails =
+              publishedMemoriesArray[publishedMemoriesArray.length - 1];
+            GetPublishedMemories(memoryDetails.updated);
+          },
+        );
       }
     }
   };
@@ -201,10 +252,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
         ToastMessage(publishedMemories, Colors.ErrorColor);
       }
     }
-    this.setState({
-      isRefreshing: false,
-      loading: false,
-    },()=>loaderHandler.hideLoader());
+    this.setState(
+      {
+        isRefreshing: false,
+        loading: false,
+      },
+      () => loaderHandler.hideLoader(),
+    );
   };
 
   like = (item: any) => {
@@ -303,14 +357,14 @@ export default class PublishedMemory extends React.Component<Props, State> {
     let itemList: any = [];
     let heading: any = '';
     if (Utility.isInternetConnected) {
-      //Actions.jump("memoryDetails", {"nid": event.nid, "type": event.type, "comment": event.comment ? true : false})
+      //this.props.navigation.jump("memoryDetails", {"nid": event.nid, "type": event.type, "comment": event.comment ? true : false})
       itemList = getAllLikes;
       if (itemList.length > 1) {
         heading = 'Liked by ' + itemList.length + ' people';
       } else {
         heading = 'Liked by ' + itemList.length + ' person';
       }
-      Actions.push('customListMemoryDetails', {
+      this.props.navigation.push('customListMemoryDetails', {
         heading: heading,
         itemList: itemList,
       });
@@ -698,7 +752,10 @@ export default class PublishedMemory extends React.Component<Props, State> {
 
 const _addToCollection = (nid: any) => {
   if (Utility.isInternetConnected) {
-    Actions.push('memoryCollectionList', {isFromMemoryAction: true, nid: nid});
+    this.props.navigation.push('memoryCollectionList', {
+      isFromMemoryAction: true,
+      nid: nid,
+    });
   } else {
     No_Internet_Warning();
   }
@@ -706,7 +763,7 @@ const _addToCollection = (nid: any) => {
 const _onEditMemory = (nid: any) => {
   if (Utility.isInternetConnected) {
     loaderHandler.showLoader();
-    Actions.push('createMemory', {
+    this.props.navigation.push('createMemory', {
       editMode: true,
       draftNid: nid,
       editPublsihedMemory: true,
@@ -784,7 +841,7 @@ export const MemoryActionsList = (item: any) => {
         memoryActions.push({
           index: i,
           text: item.actions_on_memory[value],
-          image: Platform.OS == 'ios' ? personxmark :block,
+          image: Platform.OS == 'ios' ? personxmark : block,
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.blockUserKey,
@@ -898,7 +955,7 @@ export const CommentBox = (item: any) => {
         paddingBottom: 5,
       }}
       onPress={() =>
-        Actions.jump('memoryDetails', {
+        this.props.navigation.jump('memoryDetails', {
           nid: item.item.nid,
           type: item.item.type,
           comment: true,
@@ -1010,7 +1067,7 @@ export const RenderLikeAndCommentSection = (
             alignItems: 'center',
           }}
           onPress={() => {
-            Actions.jump('memoryDetails', {
+            this.props.navigation.jump('memoryDetails', {
               nid: item.item.nid,
               type: item.item.type,
               comment: true,
@@ -1032,8 +1089,12 @@ export const RenderLikeAndCommentSection = (
 
 export const _onShowMemoryDetails = (item: any) => {
   if (Utility.isInternetConnected) {
-    Actions.jump('newmemoryDetails', { nid: item.nid, type: item.type, height: 80 });
-    // Actions.jump('memoryDetails', {nid: item.nid, type: item.type});
+    this.props.navigation.jump('newmemoryDetails', {
+      nid: item.nid,
+      type: item.type,
+      height: 80,
+    });
+    // this.props.navigation.jump('memoryDetails', {nid: item.nid, type: item.type});
   } else {
     No_Internet_Warning();
   }
@@ -1041,7 +1102,7 @@ export const _onShowMemoryDetails = (item: any) => {
 
 export const _onOpenPdfs = (pdfUrl: any) => {
   if (Utility.isInternetConnected) {
-    Actions.jump('pdfViewer', {file: {url: encode_utf8(pdfUrl)}});
+    this.props.navigation.jump('pdfViewer', {file: {url: encode_utf8(pdfUrl)}});
   } else {
     No_Internet_Warning();
   }
@@ -1077,7 +1138,7 @@ export const _onOpenImages = (items: any, index: any) => {
     let position = 0;
     images = items;
     position = index;
-    Actions.jump('imageViewer', {files: images, index: position});
+    this.props.navigation.jump('imageViewer', {files: images, index: position});
   } else {
     No_Internet_Warning();
   }
@@ -1112,7 +1173,10 @@ export const MemoryBasicDetails = (
                 style={{
                   color: Colors.NewYellowColor,
                   fontWeight: '500',
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                  fontFamily:
+                    Platform.OS === 'ios'
+                      ? fontFamily.Inter
+                      : fontFamily.InterMedium,
                   lineHeight: 20,
                 }}>
                 {userDetails.name}

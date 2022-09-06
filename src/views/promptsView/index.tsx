@@ -1,28 +1,46 @@
 import React from 'react';
 import {
-  ActivityIndicator, Alert, FlatList, Image, ImageBackground, Keyboard, Platform, SafeAreaView, StatusBar,
-  Text, TouchableOpacity, View
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Image,
+  ImageBackground,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Actions } from 'react-native-router-flux';
-import { plus, sampleimage } from '../../../app/images';
+
+import {plus, sampleimage} from '../../../app/images';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import TextNew from '../../common/component/Text';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
-import { Colors, decode_utf8, fontFamily, fontSize } from '../../common/constants';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import {
+  Colors,
+  decode_utf8,
+  fontFamily,
+  fontSize,
+} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import {
   CreateUpdateMemory,
-  promptIdListener
+  promptIdListener,
 } from '../createMemory/createMemoryWebService';
-import { DefaultDetailsMemory } from '../createMemory/dataHelper';
+import {DefaultDetailsMemory} from '../createMemory/dataHelper';
 import {
-  GetPrompts, HidePrompt, kHidePrompt, kPromptsList
+  GetPrompts,
+  HidePrompt,
+  kHidePrompt,
+  kPromptsList,
 } from '../myMemories/myMemoriesWebService';
 import Styles from './styles';
-type Props = { [x: string]: any };
-type State = { [x: string]: any };
+type Props = {[x: string]: any};
+type State = {[x: string]: any};
 var promptList: any[] = [];
 var promptCategoriesArray: any[] = [];
 
@@ -34,7 +52,7 @@ export default class PromptsView extends React.Component<State, Props> {
     loadMore: 0,
     items: [],
     loading: false,
-    prompt_count: 0
+    prompt_count: 0,
   };
   memoryFromPrompt: EventManager;
   promptsListListener: EventManager;
@@ -47,31 +65,40 @@ export default class PromptsView extends React.Component<State, Props> {
     this.scrollFlatlistListener = EventManager.addListener(
       'scrollFlatlist',
       () => {
-        this.flatListRef.scrollToOffset({ offset: 0, animated: false });
+        this.flatListRef.scrollToOffset({offset: 0, animated: false});
       },
     );
     this.promptsListListener = EventManager.addListener(
       kPromptsList,
       (fetched?: boolean, ifLoadMore?: boolean, fetchPromptsList?: any) => {
         if (fetched) {
-
           // console.log("data: ",JSON.stringify(fetchPromptsList))
 
           debugger;
-          let values: { id: string; desc: any, prompt_category?: any, prompt_image?: any }[] = [];
+          let values: {
+            id: string;
+            desc: any;
+            prompt_category?: any;
+            prompt_image?: any;
+          }[] = [];
           // this.setState({
           //   loadMore: fetchPromptsList.load_more,
           //   categoriesArray: fetchPromptsList.prompt_categories
           // });
-          if (fetchPromptsList.prompt_categories && Object.keys(fetchPromptsList.prompt_categories).length) {
-
-            promptCategoriesArray = Object.values(fetchPromptsList.prompt_categories);
-
+          if (
+            fetchPromptsList.prompt_categories &&
+            Object.keys(fetchPromptsList.prompt_categories).length
+          ) {
+            promptCategoriesArray = Object.values(
+              fetchPromptsList.prompt_categories,
+            );
           }
 
           promptList = fetchPromptsList.memory_prompt_data;
           // this.setState({ offsetVal: fetchPromptsList.prompt_offset, prompt_count: fetchPromptsList.prompt_count });
-          let promptWithCategory: any[] = fetchPromptsList.memory_prompt_data_detail, promptWithCategoryValues: any = [];
+          let promptWithCategory: any[] =
+              fetchPromptsList.memory_prompt_data_detail,
+            promptWithCategoryValues: any = [];
 
           if (promptWithCategory && promptWithCategory.length) {
             // promptWithCategoryValues = Object.values(fetchPromptsList.memory_prompt_data_detail);
@@ -80,15 +107,28 @@ export default class PromptsView extends React.Component<State, Props> {
               let categoriesArray: any = [];
 
               for (var key in element) {
-                if (element[key]['prompt_category'] && element[key]['prompt_category'].length) {
+                if (
+                  element[key]['prompt_category'] &&
+                  element[key]['prompt_category'].length
+                ) {
                   element[key]['prompt_category'].forEach(promptCategory => {
-                    let selectedCategory = (promptCategoriesArray.filter((item) => item.value == promptCategory));
+                    let selectedCategory = promptCategoriesArray.filter(
+                      item => item.value == promptCategory,
+                    );
                     if (selectedCategory.length) {
-                      categoriesArray = [...categoriesArray, ...selectedCategory];
+                      categoriesArray = [
+                        ...categoriesArray,
+                        ...selectedCategory,
+                      ];
                     }
                   });
                 }
-                values.push({ id: key, desc: element[key]['title'], prompt_category: categoriesArray, prompt_image: element[key]['prompt_image'] });
+                values.push({
+                  id: key,
+                  desc: element[key]['title'],
+                  prompt_category: categoriesArray,
+                  prompt_image: element[key]['prompt_image'],
+                });
               }
             });
           }
@@ -106,24 +146,20 @@ export default class PromptsView extends React.Component<State, Props> {
               loadMore: fetchPromptsList.load_more,
               categoriesArray: fetchPromptsList.prompt_categories,
               offsetVal: fetchPromptsList.prompt_offset,
-              prompt_count: fetchPromptsList.prompt_count
+              prompt_count: fetchPromptsList.prompt_count,
             });
-
-          }
-          else {
+          } else {
             this.setState({
               items: values,
               loadMore: fetchPromptsList.load_more,
               categoriesArray: fetchPromptsList.prompt_categories,
               offsetVal: fetchPromptsList.prompt_offset,
-              prompt_count: fetchPromptsList.prompt_count
+              prompt_count: fetchPromptsList.prompt_count,
             });
           }
-          this.setState({ loading: false }, () => loaderHandler.hideLoader());
-
-        }
-        else {
-          this.setState({ loading: false }, () => loaderHandler.hideLoader());
+          this.setState({loading: false}, () => loaderHandler.hideLoader());
+        } else {
+          this.setState({loading: false}, () => loaderHandler.hideLoader());
         }
       },
     );
@@ -134,8 +170,9 @@ export default class PromptsView extends React.Component<State, Props> {
         if (fetched) {
           var array = [...this.state.items]; // make a separate copy of the array
           const filteredItems = array.filter(item => item.id !== promptId);
-          this.setState({ items: filteredItems },()=>loaderHandler.hideLoader());
-          
+          this.setState({items: filteredItems}, () =>
+            loaderHandler.hideLoader(),
+          );
         } else {
           loaderHandler.hideLoader();
         }
@@ -145,20 +182,20 @@ export default class PromptsView extends React.Component<State, Props> {
 
   componentDidMount() {
     if (this.props.fromDeepLinking) {
-
-      this.convertToMemory(this.props.nid, this.props.title)
-    }
-    else {
-      this.setState({ loading: true },()=>GetPrompts(this.state.categoriesArray, false, this.state.offsetVal));
+      this.convertToMemory(this.props.nid, this.props.title);
+    } else {
+      this.setState({loading: true}, () =>
+        GetPrompts(this.state.categoriesArray, false, this.state.offsetVal),
+      );
     }
   }
 
   componentWillUnmount = () => {
-    this.promptHideListener.removeListener()
-    this.scrollFlatlistListener.removeListener()
-    this.memoryFromPrompt.removeListener()
-    this.promptsListListener.removeListener()
-  }
+    this.promptHideListener.removeListener();
+    this.scrollFlatlistListener.removeListener();
+    this.memoryFromPrompt.removeListener();
+    this.promptsListListener.removeListener();
+  };
 
   loadMorePrompts() {
     if (this.state.loadMore == 1) {
@@ -183,14 +220,16 @@ export default class PromptsView extends React.Component<State, Props> {
   render() {
     return (
       <View style={Styles.container}>
-        <SafeAreaView
-          style={Styles.noViewStyle}
-        />
+        <SafeAreaView style={Styles.noViewStyle} />
         <SafeAreaView style={Styles.safeAreaContextStyle}>
           <View style={Styles.subContainer}>
             {/* <NavigationBar title={TabItems.Prompts} /> */}
             <StatusBar
-              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             {/* {!this.state.loading && (
@@ -202,7 +241,7 @@ export default class PromptsView extends React.Component<State, Props> {
                 }}>
                 <TouchableOpacity
                   onPress={() =>
-                    Actions.push('topicsFilter', {
+                    this.props.navigation.push('topicsFilter', {
                       categories: this.state.categoriesArray,
                     })
                   }
@@ -257,9 +296,8 @@ export default class PromptsView extends React.Component<State, Props> {
               renderItem={(item: any) => {
                 return (
                   <>
-                    <View style={{ height: item?.index == 0 ? 16 : 0 }} />
-                    <View
-                      style={Styles.promptContainer}>
+                    <View style={{height: item?.index == 0 ? 16 : 0}} />
+                    <View style={Styles.promptContainer}>
                       {/* <View>
                       <TouchableOpacity
                         underlayColor={'transparent'}
@@ -274,40 +312,48 @@ export default class PromptsView extends React.Component<State, Props> {
                     </View> */}
                       <View style={Styles.imageContainer}>
                         <ImageBackground
-                          borderTopLeftRadius={24} borderTopRightRadius={24}
-                          source={item.item.prompt_image ? { uri: item.item.prompt_image } : sampleimage}
-                          resizeMode='cover'
+                          borderTopLeftRadius={24}
+                          borderTopRightRadius={24}
+                          source={
+                            item.item.prompt_image
+                              ? {uri: item.item.prompt_image}
+                              : sampleimage
+                          }
+                          resizeMode="cover"
                           style={Styles.promptImage}>
                           <LinearGradient
                             // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
                             // locations={[0, 0.6]}
-                            colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
-                            style={Styles.LinearGradientStyle}>
-                          </LinearGradient>
+                            colors={[
+                              'rgba(255, 255, 255, 0)',
+                              'rgba(255, 255, 255, 1)',
+                            ]}
+                            style={Styles.LinearGradientStyle}></LinearGradient>
                         </ImageBackground>
                       </View>
-                      <View
-                        style={Styles.propmptCategoryContainer}>
-                        {item.item.prompt_category && item.item.prompt_category.length ?
-                          item.item.prompt_category.length === 1 ?
-                            <Text
-                              style={Styles.promptLable}>
+                      <View style={Styles.propmptCategoryContainer}>
+                        {item.item.prompt_category &&
+                        item.item.prompt_category.length ? (
+                          item.item.prompt_category.length === 1 ? (
+                            <Text style={Styles.promptLable}>
                               {item.item.prompt_category[0].label}
                             </Text>
-                            :
-                            item.item.prompt_category.map((category, categoryIndex) => (
-                              <Text
-                                style={Styles.promptCtegory}>
-                                {category.label} {categoryIndex + 1 != item.item.prompt_category.length ? ',' : null}
-                              </Text>
-                            ))
-                          :
-                          null
-                        }
+                          ) : (
+                            item.item.prompt_category.map(
+                              (category, categoryIndex) => (
+                                <Text style={Styles.promptCtegory}>
+                                  {category.label}{' '}
+                                  {categoryIndex + 1 !=
+                                  item.item.prompt_category.length
+                                    ? ','
+                                    : null}
+                                </Text>
+                              ),
+                            )
+                          )
+                        ) : null}
 
-                        <TextNew
-                          numberOfLines={3}
-                          style={Styles.desc}>
+                        <TextNew numberOfLines={3} style={Styles.desc}>
                           {item.item.desc}
                         </TextNew>
                         <View>
@@ -315,18 +361,15 @@ export default class PromptsView extends React.Component<State, Props> {
                             onPress={() =>
                               this.convertToMemory(item.item.id, item.item.desc)
                             }>
-                            <View
-                              style={Styles.addmemoryContainer}>
+                            <View style={Styles.addmemoryContainer}>
                               <Image source={plus}></Image>
-                              <TextNew
-                                style={Styles.AnsPrompt}>
+                              <TextNew style={Styles.AnsPrompt}>
                                 Answer Prompt
                               </TextNew>
                             </View>
                           </TouchableOpacity>
                         </View>
                       </View>
-
                     </View>
                   </>
                 );
@@ -336,8 +379,7 @@ export default class PromptsView extends React.Component<State, Props> {
               onEndReached={this.loadMorePrompts.bind(this)}
             />
             {this.state.items.length == 0 && (
-              <View
-                style={Styles.noPromptContainer}>
+              <View style={Styles.noPromptContainer}>
                 {this.state.loading ? (
                   <ActivityIndicator
                     color={Colors.newTextColor}
@@ -345,8 +387,7 @@ export default class PromptsView extends React.Component<State, Props> {
                     style={Styles.activityStyle}
                   />
                 ) : (
-                  <Text
-                    style={Styles.noPrompt}>
+                  <Text style={Styles.noPrompt}>
                     There are no prompts to display at this moment
                   </Text>
                 )}
@@ -359,7 +400,7 @@ export default class PromptsView extends React.Component<State, Props> {
   }
   convertToMemory(id: any, title: any) {
     if (Utility.isInternetConnected) {
-      this.setState({ selectedPrompt: parseInt(id) }, () => {
+      this.setState({selectedPrompt: parseInt(id)}, () => {
         selectedIndex = id;
         loaderHandler.showLoader('Creating Memory...');
         let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
@@ -371,7 +412,6 @@ export default class PromptsView extends React.Component<State, Props> {
         CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
         Keyboard.dismiss();
       });
-
     } else {
       No_Internet_Warning();
     }
@@ -382,9 +422,8 @@ export default class PromptsView extends React.Component<State, Props> {
       loaderHandler.hideLoader();
     }, 500);
     if (success) {
-
       this.removeSelectedPrompt();
-      Actions.push('createMemory', {
+      this.props.navigation.push('createMemory', {
         editMode: true,
         draftNid: draftDetails,
         isFromPrompt: true,
@@ -398,7 +437,7 @@ export default class PromptsView extends React.Component<State, Props> {
   removeSelectedPrompt() {
     var array = [...this.state.items]; // make a separate copy of the array
     const filteredItems = array.filter(item => item.id !== selectedIndex);
-    this.setState({ items: filteredItems });
+    this.setState({items: filteredItems});
   }
 
   hidePrompt(promptId: any) {
@@ -418,7 +457,7 @@ export default class PromptsView extends React.Component<State, Props> {
       {
         text: 'Cancel',
         style: 'cancel',
-        onPress: () => { },
+        onPress: () => {},
       },
     ]);
   }

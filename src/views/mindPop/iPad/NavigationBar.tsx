@@ -1,14 +1,14 @@
 import React from 'react';
-import { Image, Platform, StatusBar, TouchableOpacity, View } from 'react-native';
+import {Image, Platform, StatusBar, TouchableOpacity, View} from 'react-native';
 import Text from '../../../common/component/Text';
 //@ts-ignore
 import styles from './styles';
-import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
+
+import {connect} from 'react-redux';
 import NavigationHeader from '../../../common/component/navigationHeader';
-import { Colors, fontFamily, fontSize } from '../../../common/constants';
-import { backBtn, navBarCrossIconWhite } from '../../../images';
-import { EditMode } from '../edit/reducer';
+import {Colors, fontFamily, fontSize} from '../../../common/constants';
+import {backBtn, navBarCrossIconWhite} from '../../../images';
+import {EditMode} from '../edit/reducer';
 import Styles from './styles';
 
 const testID = {
@@ -21,8 +21,6 @@ const testID = {
   },
   title: {text: 'title'},
 };
-
-
 
 class MindPopIPadNavigationBar extends React.Component<{[x: string]: any}> {
   _renderRight() {
@@ -43,10 +41,7 @@ class MindPopIPadNavigationBar extends React.Component<{[x: string]: any}> {
           onPress={() => action()}
           style={styles.rightButtonsTouchable}
           testID={testID.rightButtons.mindpop}>
-          <Text
-            style={styles.titleTextStyle}>
-            {title}
-          </Text>
+          <Text style={styles.titleTextStyle}>{title}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -66,9 +61,12 @@ class MindPopIPadNavigationBar extends React.Component<{[x: string]: any}> {
           backgroundColor={Colors.NewThemeColor}
         />
         <View
-          style={[styles.leftIMAGCONTAINER,{
-            width: this.props.listCount > 0 ? 320 : '100%',
-          }]}>
+          style={[
+            styles.leftIMAGCONTAINER,
+            {
+              width: this.props.listCount > 0 ? 320 : '100%',
+            },
+          ]}>
           <TouchableOpacity
             style={styles.leftButtonTouchableContainer}
             testID={testID.leftButtons.menu}
@@ -86,41 +84,32 @@ class MindPopIPadNavigationBar extends React.Component<{[x: string]: any}> {
         </View>
         {this.props.listCount > 0 ? (
           <React.Fragment>
-            <View
-              key="sepeartor"
-              style={styles.separator}
-            />
-            <View
-              key="rightSection"
-              style={styles.rightSections}>
+            <View key="sepeartor" style={styles.separator} />
+            <View key="rightSection" style={styles.rightSections}>
               <TouchableOpacity
                 onPress={() => {
                   this.props.reset();
-                  Actions.mindPopEdit({updateList: this.props.updateList});
+                  this.props.navigation.mindPopEdit({
+                    updateList: this.props.updateList,
+                  });
                 }}
                 style={[styles.rightButtonsTouchable, {marginLeft: 3}]}
                 testID={'headerCreateMindPop'}>
-                <Text
-                  style={Styles.titleTextStyle}>
-                  +Create a MindPop
-                </Text>
+                <Text style={Styles.titleTextStyle}>+Create a MindPop</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   this.props.saveMode();
-                  Actions.mindPopEdit({updateList: this.props.updateList});
+                  this.props.navigation.mindPopEdit({
+                    updateList: this.props.updateList,
+                  });
                 }}
                 style={[styles.rightButtonsTouchable, {marginRight: 3}]}
                 testID={'headerCreateMindPop'}>
-                <Text
-                  style={styles.titleTextStyle}>
-                  Edit
-                </Text>
+                <Text style={styles.titleTextStyle}>Edit</Text>
               </TouchableOpacity>
               {this.props.isSelectingItem ? (
-                <View
-                  style={styles.selectingItem}
-                />
+                <View style={styles.selectingItem} />
               ) : null}
             </View>
           </React.Fragment>

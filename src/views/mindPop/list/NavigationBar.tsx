@@ -1,41 +1,36 @@
 import React from 'react';
-import { Image, StatusBar, TouchableOpacity, View } from 'react-native';
+import {Image, StatusBar, TouchableOpacity, View} from 'react-native';
 import Text from '../../../common/component/Text';
 //@ts-ignore
-import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
-import { Colors, fontSize } from '../../../common/constants';
-import { backBtn, mindpopBarIcon, navBarCrossIconWhite } from '../../../images';
-import styles from './styles'; 
+
+import {connect} from 'react-redux';
+import {Colors, fontSize} from '../../../common/constants';
+import {backBtn, mindpopBarIcon, navBarCrossIconWhite} from '../../../images';
+import styles from './styles';
 
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
-  leftButtons: { menu: 'navbar_leftbtn_menu' },
+  leftButtons: {menu: 'navbar_leftbtn_menu'},
   rightButtons: {
     mindpop: 'mindpop_btn',
     message: 'message_btn',
     notification: 'notification_btn',
   },
-  title: { text: 'title' },
+  title: {text: 'title'},
 };
 //Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
 
-class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
+class MindPopNavigationBar extends React.Component<{[x: string]: any}> {
   _renderLeft() {
-    
     let leftImg = this.props.isSelectionOn ? backBtn : navBarCrossIconWhite;
     return (
       <TouchableOpacity
         style={[styles.leftButtonTouchableContainer]}
         testID={testID.leftButtons.menu}
-        onPress={() => Actions.pop()}>
-        {/* onPress={() => Actions.dashBoard()}> */}
+        onPress={() => this.props.navigation.pop()}>
+        {/* onPress={() => this.props.navigation.dashBoard()}> */}
         {/* action() */}
-        <Image
-          style={styles.imageStyle}
-          resizeMode="center"
-          source={leftImg}
-        />
+        <Image style={styles.imageStyle} resizeMode="center" source={leftImg} />
       </TouchableOpacity>
     );
   }
@@ -50,8 +45,7 @@ class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
   _renderIcon() {
     let mindPopImg = mindpopBarIcon;
     return (
-      <View
-        style={styles.iconContainer}>
+      <View style={styles.iconContainer}>
         <Image
           style={styles.imageStyle}
           resizeMode="center"
@@ -79,10 +73,7 @@ class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
           onPress={() => action()}
           style={styles.rightButtonsTouchable}
           testID={testID.rightButtons.mindpop}>
-          <Text
-            style={styles.titleStyle}>
-            {title}
-          </Text>
+          <Text style={styles.titleStyle}>{title}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -90,8 +81,7 @@ class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
 
   render() {
     return (
-      <View
-        style={styles.navigationBarContainer}>
+      <View style={styles.navigationBarContainer}>
         <StatusBar
           barStyle="dark-content"
           backgroundColor={Colors.NewThemeColor}
@@ -106,7 +96,7 @@ class MindPopNavigationBar extends React.Component<{ [x: string]: any }> {
   }
 }
 
-const mapStateToProps = (state: { [x: string]: any }) => ({
+const mapStateToProps = (state: {[x: string]: any}) => ({
   isSelectionOn: state.mindPopListSelectionStatus as boolean,
   listCount: state.listCount as number,
   selectedItemCount: state.selectedItemCount,

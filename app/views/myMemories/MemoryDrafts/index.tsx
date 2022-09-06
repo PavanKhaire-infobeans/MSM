@@ -1,30 +1,53 @@
 import React from 'react';
 import {
-  ActivityIndicator, Alert, FlatList, Image, ImageBackground, Keyboard, RefreshControl, SafeAreaView, StatusBar,
-  TouchableHighlight, TouchableWithoutFeedback, View
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Image,
+  ImageBackground,
+  Keyboard,
+  RefreshControl,
+  SafeAreaView,
+  StatusBar,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { DeleteDraftService, kDeleteDraft } from '../../../../src/views/createMemory/createMemoryWebService';
-import { Border } from '../../memoryDetails/componentsMemoryDetails';
-import { GetMemoryDrafts, kMemoryDraftsFetched } from '../myMemoriesWebService';
+import {
+  DeleteDraftService,
+  kDeleteDraft,
+} from '../../../../src/views/createMemory/createMemoryWebService';
+import {Border} from '../../memoryDetails/componentsMemoryDetails';
+import {GetMemoryDrafts, kMemoryDraftsFetched} from '../myMemoriesWebService';
 import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
 import Text from './../../../../src/common/component/Text';
 import {
-  No_Internet_Warning, ToastMessage
+  No_Internet_Warning,
+  ToastMessage,
 } from './../../../../src/common/component/Toast';
 import {
-  Colors, DraftActions, DraftType, getValue
+  Colors,
+  DraftActions,
+  DraftType,
+  getValue,
 } from './../../../../src/common/constants';
 import EventManager from './../../../../src/common/eventManager';
-import { Account } from './../../../../src/common/loginStore';
+import {Account} from './../../../../src/common/loginStore';
 import Utility from './../../../../src/common/utility';
-import { collaborative, delete_comment, downImage, itemSelectedCheckMark, profile_placeholder, upImage } from './../../../../src/images';
-import { MemoryDraftsDataModel } from './memoryDraftsDataModel';
+import {
+  collaborative,
+  delete_comment,
+  downImage,
+  itemSelectedCheckMark,
+  profile_placeholder,
+  upImage,
+} from './../../../../src/images';
+import {MemoryDraftsDataModel} from './memoryDraftsDataModel';
 import Styles from './styles';
 import styles from './styles';
 
-type State = { [x: string]: any };
-type Props = { [x: string]: any };
+type State = {[x: string]: any};
+type Props = {[x: string]: any};
 var memoryDraftsArray: any[] = [];
 var page: 0;
 var loadingDataFromServer = true;
@@ -50,7 +73,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   /**Menu options for actions*/
   menuOptions: Array<menuOption> = [
-    { key: 1, title: DraftType.allDrafts, onPress: this.draftOptionSelected },
+    {key: 1, title: DraftType.allDrafts, onPress: this.draftOptionSelected},
     {
       key: 2,
       title: DraftType.myPersonalDrafts,
@@ -61,7 +84,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       title: DraftType.myCollaborationDrafts,
       onPress: this.draftOptionSelected,
     },
-    { key: 4, title: DraftType.friendsDrafts, onPress: this.draftOptionSelected },
+    {key: 4, title: DraftType.friendsDrafts, onPress: this.draftOptionSelected},
     {
       key: 5,
       title: DraftType.recentryDeleteDrafts,
@@ -95,8 +118,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       loaderHandler.showLoader();
       if (this.props.decodedDataFromURL) {
         this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
-      }
-      else {
+      } else {
         GetMemoryDrafts('all', 'all', memoryDraftsArray.length);
       }
     } else {
@@ -109,7 +131,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     this.draftDetailsListener.removeListener();
     this.deleteDraftListener.removeListener();
     this.refereshDraftList.removeListener();
-  }
+  };
 
   memoryDraftDetails = (fetched: boolean, memoryDraftDetails: any) => {
     loadingDataFromServer = false;
@@ -130,7 +152,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         );
       }
       memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
-      this.setState({ memoryDetailAvailable: true });
+      this.setState({memoryDetailAvailable: true});
     } else {
       if (page != 0) {
         page--;
@@ -151,7 +173,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         {
           text: 'No',
           style: 'cancel',
-          onPress: () => { },
+          onPress: () => {},
         },
         {
           text: 'Yes',
@@ -175,7 +197,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           {
             text: 'No',
             style: 'cancel',
-            onPress: () => { },
+            onPress: () => {},
           },
           {
             text: 'Yes',
@@ -209,48 +231,52 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     if (this.state.draftType != type || isRefreshing || loadMore) {
       if (Utility.isInternetConnected) {
         loadingDataFromServer = true;
-        this.setState({
-          draftType: type,
-        }, () => {
-          if (showLoader) {
-            loaderHandler.showLoader();
-            memoryDraftsArray = [];
-            // this.setState({});
-          }
-          var length = memoryDraftsArray.length;
-          if (isRefreshing) {
-            length = 0;
-          }
-          switch (type) {
-            case DraftType.allDrafts: {
-              GetMemoryDrafts('all', 'all', length);
-              break;
+        this.setState(
+          {
+            draftType: type,
+          },
+          () => {
+            if (showLoader) {
+              loaderHandler.showLoader();
+              memoryDraftsArray = [];
+              // this.setState({});
             }
-            case DraftType.myCollaborationDrafts: {
-              GetMemoryDrafts('mine', 'my_collaborative', length);
-              break;
+            var length = memoryDraftsArray.length;
+            if (isRefreshing) {
+              length = 0;
             }
-            case DraftType.myPersonalDrafts: {
-              GetMemoryDrafts('mine', 'my_personal', length);
-              break;
+            switch (type) {
+              case DraftType.allDrafts: {
+                GetMemoryDrafts('all', 'all', length);
+                break;
+              }
+              case DraftType.myCollaborationDrafts: {
+                GetMemoryDrafts('mine', 'my_collaborative', length);
+                break;
+              }
+              case DraftType.myPersonalDrafts: {
+                GetMemoryDrafts('mine', 'my_personal', length);
+                break;
+              }
+              case DraftType.friendsDrafts: {
+                GetMemoryDrafts('friends', 'all', length);
+                break;
+              }
+              case DraftType.recentryDeleteDrafts: {
+                GetMemoryDrafts('deleted', 'all', length);
+                break;
+              }
             }
-            case DraftType.friendsDrafts: {
-              GetMemoryDrafts('friends', 'all', length);
-              break;
-            }
-            case DraftType.recentryDeleteDrafts: {
-              GetMemoryDrafts('deleted', 'all', length);
-              break;
-            }
-          }
-        });
-
+          },
+        );
       } else {
-        this.setState({
-          isRefreshing: false,
-          loading: false,
-        }, () => No_Internet_Warning());
-
+        this.setState(
+          {
+            isRefreshing: false,
+            loading: false,
+          },
+          () => No_Internet_Warning(),
+        );
       }
     }
   }
@@ -268,19 +294,21 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   };
 
   onRefresh = () => {
-    this.setState({
-      isRefreshing: true,
-    },()=>{
-      page = 0;
-      this.draftOptionSelected(this.state.draftType, false, true);
-    });
-    
+    this.setState(
+      {
+        isRefreshing: true,
+      },
+      () => {
+        page = 0;
+        this.draftOptionSelected(this.state.draftType, false, true);
+      },
+    );
   };
 
   deleteDraftCallback = (success: any, response: any, nid: any) => {
     loaderHandler.hideLoader();
     if (success) {
-      // Actions.pop();
+      // this.props.navigation.goBack();
       memoryDraftsArray = memoryDraftsArray.filter(
         (element: any) => element.nid != nid,
       );
@@ -293,10 +321,11 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   render() {
     return (
-      <SafeAreaView
-        style={styles.mainContainer}>
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBar
-          barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
           backgroundColor={Colors.NewThemeColor}
         />
         <View style={styles.draftOptionsView}>
@@ -305,8 +334,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               this.showMenu();
             }}>
             <View style={styles.draftOptionsViewSubContainer}>
-              <Text
-                style={styles.draftTypeTextStyle}>
+              <Text style={styles.draftTypeTextStyle}>
                 {this.state.draftType}{' '}
               </Text>
               {this.state.draftOptionsVisible ? (
@@ -315,7 +343,6 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                 <Image source={downImage} />
               )}
             </View>
-
           </TouchableWithoutFeedback>
         </View>
 
@@ -349,11 +376,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           onEndReached={this.handleLoadMore.bind(this)}
         />
         {memoryDraftsArray.length == 0 && loadingDataFromServer == false ? (
-          <View
-            style={styles.memoryDraftsArrayStyle}
-            pointerEvents="none">
-            <Text
-              style={styles.noDraftTextStyle}>
+          <View style={styles.memoryDraftsArrayStyle} pointerEvents="none">
+            <Text style={styles.noDraftTextStyle}>
               There are no drafts available to display at this moment.
             </Text>
           </View>
@@ -374,9 +398,15 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                     }}>
                     <View style={styles.draftOptionSelectedTouchableStyle}>
                       <Text
-                        style={[styles.draftTitleTextStyle, {
-                          color: this.state.draftType == data.title ? Colors.newTextColor : Colors.newTextColor,
-                        }]}>
+                        style={[
+                          styles.draftTitleTextStyle,
+                          {
+                            color:
+                              this.state.draftType == data.title
+                                ? Colors.newTextColor
+                                : Colors.newTextColor,
+                          },
+                        ]}>
                         {data.title}
                       </Text>
                       {this.state.draftType == data.title ? (
@@ -396,7 +426,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   getDraftDetails = (item: any) => {
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader();
-      Actions.push('createMemory', { editMode: true, draftNid: item.item.nid });
+      this.props.navigation.push('createMemory', {
+        editMode: true,
+        draftNid: item.item.nid,
+      });
     } else {
       No_Internet_Warning();
     }
@@ -418,25 +451,18 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               ? this.state.draftType == DraftType.friendsDrafts
                 ? this.getDraftDetails(item)
                 : this.getDraftDetails(item)
-              : () => { }
+              : () => {}
           // this.deleteDraft(item.item.nid, false)
         }>
         <View style={styles.renderDraftViewContainer}>
           <View style={styles.renderDraftViewSubContainer}>
             <UserDetails item={item} />
             <CommonImageView file={file} files={files} />
-            <Text
-              style={styles.titleTextStyle}>
-              {title}
-            </Text>
+            <Text style={styles.titleTextStyle}>{title}</Text>
             {journal_name && journal_name != '' ? (
-              <Text
-                style={styles.inCollectionTextStyle}>
+              <Text style={styles.inCollectionTextStyle}>
                 {'In Collection '}
-                <Text
-                  style={styles.journal_nameStyle}>
-                  {journal_name}
-                </Text>
+                <Text style={styles.journal_nameStyle}>{journal_name}</Text>
               </Text>
             ) : null}
             {collaborativeArray ? (
@@ -446,8 +472,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                     source={collaborative}
                     style={styles.collaborativeImagestyle}
                     resizeMode="contain">
-                    <Text
-                      style={styles.CollaborativeTextStyle}>
+                    <Text style={styles.CollaborativeTextStyle}>
                       Collaborative
                     </Text>
                   </ImageBackground>
@@ -458,50 +483,52 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             <Border />
             {collaborativeArray != undefined && collaborativeArray != null ? (
               collaborativeArray.length > 0 ? (
-                <View
-                  style={styles.collaborativeArrayContainer}>
+                <View style={styles.collaborativeArrayContainer}>
                   <Text style={styles.lastActivityTextStyle}>
                     Last activity {item.item.activity}
                   </Text>
                   <Text
-                    style={[styles.lastActivityTextStyle, {
-                      marginTop: 18,
-                    }]}>
+                    style={[
+                      styles.lastActivityTextStyle,
+                      {
+                        marginTop: 18,
+                      },
+                    ]}>
                     {item.item.attachment_count} attachments{' '}
                     {item.item.new_attachment_count != undefined &&
-                      item.item.new_attachment_count != null &&
-                      item.item.new_attachment_count != '' ? (
-                      <Text
-                        style={styles.attachmentCountTextStyle}>
+                    item.item.new_attachment_count != null &&
+                    item.item.new_attachment_count != '' ? (
+                      <Text style={styles.attachmentCountTextStyle}>
                         ({item.item.new_attachment_count} new)
                       </Text>
                     ) : null}
                   </Text>
-                  <Text style={[styles.lastActivityTextStyle, {
-                    marginTop: 18,
-                  }]}>
+                  <Text
+                    style={[
+                      styles.lastActivityTextStyle,
+                      {
+                        marginTop: 18,
+                      },
+                    ]}>
                     {item.item.my_chat_count}{' '}
                     {item.item.my_chat_count == 1 ? 'message' : 'messages'}{' '}
                     {item.item.unread_chat_count != undefined &&
-                      item.item.unread_chat_count != null &&
-                      item.item.unread_chat_count != '' ? (
-                      <Text
-                        style={styles.attachmentCountTextStyle}>
+                    item.item.unread_chat_count != null &&
+                    item.item.unread_chat_count != '' ? (
+                      <Text style={styles.attachmentCountTextStyle}>
                         ({item.item.unread_chat_count} new)
                       </Text>
                     ) : null}
                   </Text>
-                  <Text
-                    style={styles.new_collaborator_countTextStyle}>
+                  <Text style={styles.new_collaborator_countTextStyle}>
                     {item.item.collaborators.length}{' '}
                     {item.item.collaborators.length == 1
                       ? 'collaborator'
                       : 'collaborators'}{' '}
                     {item.item.new_collaborator_count != undefined &&
-                      item.item.new_collaborator_count != null &&
-                      item.item.new_collaborator_count != '' ? (
-                      <Text
-                        style={styles.lastActivityTextStyle}>
+                    item.item.new_collaborator_count != null &&
+                    item.item.new_collaborator_count != '' ? (
+                      <Text style={styles.lastActivityTextStyle}>
                         ({item.item.new_collaborator_count} new)
                       </Text>
                     ) : null}
@@ -511,17 +538,14 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               ) : null
             ) : null}
 
-            <View
-              style={styles.collaborateMainContainer}>
+            <View style={styles.collaborateMainContainer}>
               {this.state.draftType != DraftType.recentryDeleteDrafts ? (
                 this.state.draftType == DraftType.friendsDrafts ? (
                   <TouchableWithoutFeedback
                     onPress={() => this.getDraftDetails(item)}>
                     <View style={styles.alignSelfCenter}>
-                      <View
-                        style={styles.CollaborateContainer}>
-                        <Text
-                          style={styles.CollaborateTextStyle}>
+                      <View style={styles.CollaborateContainer}>
+                        <Text style={styles.CollaborateTextStyle}>
                           {'Collaborate'}
                         </Text>
                       </View>
@@ -531,10 +555,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                   <TouchableWithoutFeedback
                     onPress={() => this.getDraftDetails(item)}>
                     <View style={styles.alignSelfCenter}>
-                      <View
-                        style={styles.CollaborateContainer}>
-                        <Text
-                          style={styles.CollaborateTextStyle}>
+                      <View style={styles.CollaborateContainer}>
+                        <Text style={styles.CollaborateTextStyle}>
                           {'Edit Draft'}
                         </Text>
                       </View>
@@ -545,10 +567,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                 <TouchableWithoutFeedback
                   onPress={() => this.deleteDraft(item.item.nid, false)}>
                   <View style={styles.alignSelfCenter}>
-                    <View
-                      style={styles.CollaborateContainer}>
-                      <Text
-                        style={styles.CollaborateTextStyle}>
+                    <View style={styles.CollaborateContainer}>
+                      <Text style={styles.CollaborateTextStyle}>
                         {'Undelete'}
                       </Text>
                     </View>
@@ -556,9 +576,12 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                 </TouchableWithoutFeedback>
               )}
               {Account.selectedData().userID == item.item.uid &&
-                this.state.draftType != DraftType.recentryDeleteDrafts ? (
+              this.state.draftType != DraftType.recentryDeleteDrafts ? (
                 <TouchableWithoutFeedback
-                  style={[styles.alignSelfCenter, styles.deleteImageContainerStyle]}
+                  style={[
+                    styles.alignSelfCenter,
+                    styles.deleteImageContainerStyle,
+                  ]}
                   onPress={() => this.deleteDraft(item.item.nid, true)}>
                   <Image
                     style={styles.deleteImageStyle}
@@ -584,11 +607,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   };
 
   renderSeparator = () => {
-    return (
-      <View
-        style={styles.separator}
-      />
-    );
+    return <View style={styles.separator} />;
   };
 
   handleLoadMore = () => {
@@ -596,13 +615,15 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     if (memoryDraftsArray.length < draftCount) {
       if (!this.state.loading) {
         // increase page by 1
-        this.setState({
-          loading: true,
-        },()=>{
-          page++;
-          this.draftOptionSelected(this.state.draftType, false, false, true);
-        });
-        
+        this.setState(
+          {
+            loading: true,
+          },
+          () => {
+            page++;
+            this.draftOptionSelected(this.state.draftType, false, false, true);
+          },
+        );
       }
     }
   };
@@ -619,13 +640,10 @@ const UserDetails = (item: any) => {
     'userProfilePic',
   ]);
   return (
-    <View
-      style={styles.userDetailsContainer}>
+    <View style={styles.userDetailsContainer}>
       <View style={styles.userDetailsSubContainer}>
-
         {
-          <View
-            style={styles.imagebackgroundContainer}>
+          <View style={styles.imagebackgroundContainer}>
             <ImageBackground
               style={Styles.avatar}
               imageStyle={styles.ImageBackgroundStyle}
@@ -634,7 +652,7 @@ const UserDetails = (item: any) => {
                 style={styles.userImageStyle}
                 source={
                   Account.selectedData().profileImage != ''
-                    ? { uri: Account.selectedData().profileImage }
+                    ? {uri: Account.selectedData().profileImage}
                     : profile_placeholder
                 }
               />
@@ -643,13 +661,11 @@ const UserDetails = (item: any) => {
         }
 
         <View>
-          <Text
-            style={styles.nameTextStyle}>
+          <Text style={styles.nameTextStyle}>
             {'Created by '}
             <Text style={styles.createdbyNameTextStyle}>{name}</Text>
           </Text>
-          <Text
-            style={styles.nameTextStyle}>
+          <Text style={styles.nameTextStyle}>
             {''}
             <Text>{createdOn}</Text>
           </Text>
@@ -659,21 +675,13 @@ const UserDetails = (item: any) => {
   );
 };
 
-const CommonImageView = (props: { file: any; files: any }) => {
+const CommonImageView = (props: {file: any; files: any}) => {
   let currentIndex = props.files.indexOf(props.file);
   return (
-    <View
-      style={[
-        styles.commonImageContainer,
-        styles.boxShadow,
-      ]}>
-      {/* <TouchableOpacity onPress={()=>Actions.push("imageViewer", {files : props.files, index : currentIndex})}> */}
-      <View
-        style={styles.commonImageContainerSub}>
-        <Image
-          source={{ uri: props.file.url }}
-          style={styles.fileImageStyle}
-        />
+    <View style={[styles.commonImageContainer, styles.boxShadow]}>
+      {/* <TouchableOpacity onPress={()=>this.props.navigation.push("imageViewer", {files : props.files, index : currentIndex})}> */}
+      <View style={styles.commonImageContainerSub}>
+        <Image source={{uri: props.file.url}} style={styles.fileImageStyle} />
       </View>
       {/* </TouchableOpacity> */}
       {/* <TitleAndDescription file={props.file} type={kImage}/> */}

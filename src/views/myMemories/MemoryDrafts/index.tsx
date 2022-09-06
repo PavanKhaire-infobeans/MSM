@@ -1,29 +1,54 @@
 import React from 'react';
 import {
   ActivityIndicator,
-  Alert, FlatList, Image, ImageBackground, Keyboard, Platform, RefreshControl, SafeAreaView, StatusBar, StyleSheet, TouchableHighlight, TouchableOpacity, View
+  Alert,
+  FlatList,
+  Image,
+  ImageBackground,
+  Keyboard,
+  Platform,
+  RefreshControl,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 // import { styles } from '../../../common/component/multipleDropDownView/styles';
 import Text from '../../../common/component/Text';
 import {
-  No_Internet_Warning, ToastMessage
+  No_Internet_Warning,
+  ToastMessage,
 } from '../../../common/component/Toast';
 import {
-  Colors, DraftActions, DraftType, fontFamily, fontSize,
-  getValue
+  Colors,
+  DraftActions,
+  DraftType,
+  fontFamily,
+  fontSize,
+  getValue,
 } from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
-import { Account } from '../../../common/loginStore';
+import {Account} from '../../../common/loginStore';
 import Utility from '../../../common/utility';
-import { collaborative, delete_comment, downImage, itemSelectedCheckMark, profile_placeholder, upImage } from '../../../images';
 import {
-  DeleteDraftService, kDeleteDraft
+  collaborative,
+  delete_comment,
+  downImage,
+  itemSelectedCheckMark,
+  profile_placeholder,
+  upImage,
+} from '../../../images';
+import {
+  DeleteDraftService,
+  kDeleteDraft,
 } from '../../createMemory/createMemoryWebService';
-import { Border } from '../../memoryDetails/componentsMemoryDetails';
-import { GetMemoryDrafts, kMemoryDraftsFetched } from '../myMemoriesWebService';
-import { MemoryDraftsDataModel } from './memoryDraftsDataModel';
+import {Border} from '../../memoryDetails/componentsMemoryDetails';
+import {GetMemoryDrafts, kMemoryDraftsFetched} from '../myMemoriesWebService';
+import {MemoryDraftsDataModel} from './memoryDraftsDataModel';
 
 // import {CommonImageView} from '../../memoryDetails/index'
 
@@ -99,8 +124,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       loaderHandler.showLoader();
       if (this.props.decodedDataFromURL) {
         this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
-      }
-      else{
+      } else {
         GetMemoryDrafts('all', 'all', memoryDraftsArray.length);
       }
     } else {
@@ -204,49 +228,54 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     if (this.state.draftType != type || isRefreshing || loadMore) {
       if (Utility.isInternetConnected) {
         loadingDataFromServer = true;
-        this.setState({
-          draftType: type,
-        },()=>{
-          if (showLoader) {
-            loaderHandler.showLoader();
-            memoryDraftsArray = [];
-            // this.setState({});
-          }
-          var length = memoryDraftsArray.length;
-          if (isRefreshing) {
-            length = 0;
-          }
-          switch (type) {
-            case DraftType.allDrafts: {
-              GetMemoryDrafts('all', 'all', length);
-              break;
+        this.setState(
+          {
+            draftType: type,
+          },
+          () => {
+            if (showLoader) {
+              loaderHandler.showLoader();
+              memoryDraftsArray = [];
+              // this.setState({});
             }
-            case DraftType.myCollaborationDrafts: {
-              GetMemoryDrafts('mine', 'my_collaborative', length);
-              break;
+            var length = memoryDraftsArray.length;
+            if (isRefreshing) {
+              length = 0;
             }
-            case DraftType.myPersonalDrafts: {
-              GetMemoryDrafts('mine', 'my_personal', length);
-              break;
+            switch (type) {
+              case DraftType.allDrafts: {
+                GetMemoryDrafts('all', 'all', length);
+                break;
+              }
+              case DraftType.myCollaborationDrafts: {
+                GetMemoryDrafts('mine', 'my_collaborative', length);
+                break;
+              }
+              case DraftType.myPersonalDrafts: {
+                GetMemoryDrafts('mine', 'my_personal', length);
+                break;
+              }
+              case DraftType.friendsDrafts: {
+                GetMemoryDrafts('friends', 'all', length);
+                break;
+              }
+              case DraftType.recentryDeleteDrafts: {
+                GetMemoryDrafts('deleted', 'all', length);
+                break;
+              }
             }
-            case DraftType.friendsDrafts: {
-              GetMemoryDrafts('friends', 'all', length);
-              break;
-            }
-            case DraftType.recentryDeleteDrafts: {
-              GetMemoryDrafts('deleted', 'all', length);
-              break;
-            }
-          }
-        });
-        
+          },
+        );
       } else {
-        this.setState({
-          isRefreshing: false,
-          loading: false,
-        },()=>{
-          No_Internet_Warning();
-        });
+        this.setState(
+          {
+            isRefreshing: false,
+            loading: false,
+          },
+          () => {
+            No_Internet_Warning();
+          },
+        );
       }
     }
   }
@@ -261,18 +290,20 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     });
   };
   onRefresh = () => {
-    this.setState({
-      isRefreshing: true,
-    },()=>{
-      page = 0;
-      this.draftOptionSelected(this.state.draftType, false, true);
-    });
-    
+    this.setState(
+      {
+        isRefreshing: true,
+      },
+      () => {
+        page = 0;
+        this.draftOptionSelected(this.state.draftType, false, true);
+      },
+    );
   };
   deleteDraftCallback = (success: any, response: any, nid: any) => {
     loaderHandler.hideLoader();
     if (success) {
-      // Actions.pop();
+      // this.props.navigation.goBack();
       memoryDraftsArray = memoryDraftsArray.filter(
         (element: any) => element.nid != nid,
       );
@@ -293,7 +324,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           backgroundColor: 'black',
         }}>
         <StatusBar
-          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
           backgroundColor={Colors.NewThemeColor}
         />
         <View style={style.draftOptionsView}>
@@ -313,7 +346,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             }}>
             <Text
               style={{
-                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                fontFamily:
+                  Platform.OS === 'ios'
+                    ? fontFamily.Inter
+                    : fontFamily.InterMedium,
                 fontSize: 16,
                 fontWeight: '500',
                 color: Colors.TextColor,
@@ -429,7 +465,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   getDraftDetails = (item: any) => {
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader();
-      Actions.push('createMemory', {editMode: true, draftNid: item.item.nid});
+      this.props.navigation.push('createMemory', {
+        editMode: true,
+        draftNid: item.item.nid,
+      });
     } else {
       No_Internet_Warning();
     }
@@ -463,7 +502,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                 ...fontSize(30),
                 color: Colors.NewTitleColor,
                 fontWeight: '500',
-                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                fontFamily:
+                  Platform.OS === 'ios'
+                    ? fontFamily.Inter
+                    : fontFamily.InterMedium,
                 marginLeft: 16,
                 marginRight: 16,
                 textAlign: 'left',
@@ -542,7 +584,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                     item.item.new_attachment_count != '' ? (
                       <Text
                         style={{
-                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                          fontFamily:
+                            Platform.OS === 'ios'
+                              ? fontFamily.Inter
+                              : fontFamily.InterMedium,
                           fontWeight: '500',
                           color: Colors.TextColor,
                         }}>
@@ -558,7 +603,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                     item.item.unread_chat_count != '' ? (
                       <Text
                         style={{
-                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                          fontFamily:
+                            Platform.OS === 'ios'
+                              ? fontFamily.Inter
+                              : fontFamily.InterMedium,
                           fontWeight: '500',
                           color: Colors.TextColor,
                         }}>
@@ -571,7 +619,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                       ...fontSize(17),
                       marginTop: 18,
                       marginBottom: 18,
-                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                      fontFamily:
+                        Platform.OS === 'ios'
+                          ? fontFamily.Inter
+                          : fontFamily.InterMedium,
                       fontWeight: '500',
                       color: Colors.NewYellowColor,
                     }}>
@@ -584,7 +635,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                     item.item.new_collaborator_count != '' ? (
                       <Text
                         style={{
-                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                          fontFamily:
+                            Platform.OS === 'ios'
+                              ? fontFamily.Inter
+                              : fontFamily.InterMedium,
                           fontWeight: '500',
                           color: Colors.TextColor,
                         }}>
@@ -735,13 +789,15 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     if (memoryDraftsArray.length < draftCount) {
       if (!this.state.loading) {
         // increase page by 1
-        this.setState({
-          loading: true,
-        },()=>{
-          page++;
-          this.draftOptionSelected(this.state.draftType, false, false, true);
-        });
-        
+        this.setState(
+          {
+            loading: true,
+          },
+          () => {
+            page++;
+            this.draftOptionSelected(this.state.draftType, false, false, true);
+          },
+        );
       }
     }
   };
@@ -767,7 +823,7 @@ const UserDetails = (item: any) => {
         flexDirection: 'row',
       }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {/* <TouchableOpacity style={{paddingLeft: 15, paddingRight: 10}} onPress={()=>Actions.pop()}>
+        {/* <TouchableOpacity style={{paddingLeft: 15, paddingRight: 10}} onPress={()=>this.props.navigation.pop()}>
                         <Image source={black_arrow}/>
                     </TouchableOpacity> */}
         {
@@ -834,7 +890,7 @@ const CommonImageView = (props: {file: any; files: any}) => {
         {backgroundColor: Colors.ligh, marginBottom: 15, marginTop: 15},
         style.boxShadow,
       ]}>
-      {/* <TouchableOpacity onPress={()=>Actions.push("imageViewer", {files : props.files, index : currentIndex})}> */}
+      {/* <TouchableOpacity onPress={()=>this.props.navigation.push("imageViewer", {files : props.files, index : currentIndex})}> */}
       <View
         style={{
           backgroundColor: Colors.NewLightThemeColor,

@@ -6,17 +6,17 @@ import {
   StatusBar,
   Text,
   TouchableHighlight,
-  View
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextNew from '../../common/component/Text';
-import { Colors } from '../../common/constants';
+import {Colors} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import { action_close, check, plus } from '../../images';
-import { GetPrompts } from '../myMemories/myMemoriesWebService';
+import {action_close, check, plus} from '../../images';
+import {GetPrompts} from '../myMemories/myMemoriesWebService';
 import Styles from './styles';
 
 type Props = {[x: string]: any};
@@ -75,28 +75,29 @@ export default class TopicsFilter extends React.Component<State, Props> {
       GetPrompts(this.state.filteredTopics, false, 0);
       // this.setState({});
       EventManager.callBack('scrollFlatlist');
-      Actions.pop();
+      this.props.navigation.goBack();
     } else {
       EventManager.callBack('scrollFlatlist');
-      Actions.pop();
+      this.props.navigation.goBack();
     }
   }
 
   render() {
     return (
-      <View
-        style={Styles.filterContainer}>
+      <View style={Styles.filterContainer}>
         <SafeAreaView style={Styles.filterSubContainer}>
           <NavigationHeaderSafeArea
             heading={'Topics'}
             showCommunity={false}
-            cancelAction={() => Actions.pop()}
+            cancelAction={() => this.props.navigation.pop()}
             showRightText={false}
             isWhite={true}
             backIcon={action_close}
           />
           <StatusBar
-            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+            barStyle={
+              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+            }
             backgroundColor={Colors.NewThemeColor}
           />
           <ScrollView style={Styles.filterSubScroll}>
@@ -113,7 +114,10 @@ export default class TopicsFilter extends React.Component<State, Props> {
                         style={[
                           Styles.filterItem,
                           {
-                            backgroundColor: obj.checked == 1 ? Colors.selectedFilter : Colors.filterBG,
+                            backgroundColor:
+                              obj.checked == 1
+                                ? Colors.selectedFilter
+                                : Colors.filterBG,
                           },
                         ]}>
                         <View style={{flexDirection: 'row'}}>
@@ -124,7 +128,10 @@ export default class TopicsFilter extends React.Component<State, Props> {
                             style={[
                               Styles.filterText,
                               {
-                                color: obj.checked == 1 ? Colors.TextColor : Colors.TextColor,
+                                color:
+                                  obj.checked == 1
+                                    ? Colors.TextColor
+                                    : Colors.TextColor,
                               },
                             ]}>
                             {obj.label}
@@ -140,12 +147,8 @@ export default class TopicsFilter extends React.Component<State, Props> {
             <TouchableHighlight
               underlayColor={'none'}
               onPress={() => this.applyFilters()}>
-              <View
-                style={Styles.ApplyContainer}>
-                <TextNew
-                  style={Styles.applyText}>
-                  Apply Topics
-                </TextNew>
+              <View style={Styles.ApplyContainer}>
+                <TextNew style={Styles.applyText}>Apply Topics</TextNew>
               </View>
             </TouchableHighlight>
             {/* <View style={{height: 50, position : 'absolute', bottom : -50, width : '100%', backgroundColor : '#fff'}}/> */}

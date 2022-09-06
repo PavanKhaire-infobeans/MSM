@@ -1,60 +1,58 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
-  DeviceEventEmitter, Image, Keyboard,
-  TouchableWithoutFeedback, View
+  DeviceEventEmitter,
+  Image,
+  Keyboard,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import Text from '../../../src/common/component/Text';
-import {
-  close_white
-} from '../../../src/images';
+import {close_white} from '../../../src/images';
 
-import { jumptocalendar, user } from '../../images';
+import {jumptocalendar, user} from '../../images';
 //@ts-ignore
-import { connect } from 'react-redux';
-import {
-  kNotificationIndicator
-} from '../../../src/common/component/TabBarIcons';
-import { Colors } from '../../../src/common/constants';
+import {connect} from 'react-redux';
+import {kNotificationIndicator} from '../../../src/common/component/TabBarIcons';
+import {Colors} from '../../../src/common/constants';
 import EventManager from '../../../src/common/eventManager';
-import { Account } from '../../../src/common/loginStore';
+import {Account} from '../../../src/common/loginStore';
 import Utility from '../../../src/common/utility';
-import { NotificationDataModel } from '../../../src/views/notificationView/notificationDataModel';
-import { kForegroundNotificationListener } from '../../../src/views/notificationView/notificationServices';
-import { AddNewNotification } from '../../../src/views/notificationView/reducer';
-import { kProfilePicUpdated } from '../../../src/views/profile/profileDataModel';
+import {NotificationDataModel} from '../../../src/views/notificationView/notificationDataModel';
+import {kForegroundNotificationListener} from '../../../src/views/notificationView/notificationServices';
+import {AddNewNotification} from '../../../src/views/notificationView/reducer';
+import {kProfilePicUpdated} from '../../../src/views/profile/profileDataModel';
 import styles from './styles';
 
-import { JUMP_TO_VIEW_SHOW } from '../../../src/views/dashboard/dashboardReducer';
+import {JUMP_TO_VIEW_SHOW} from '../../../src/views/dashboard/dashboardReducer';
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
-  leftButtons: { menu: 'navbar_leftbtn_menu' },
+  leftButtons: {menu: 'navbar_leftbtn_menu'},
   rightButtons: {
     mindpop: 'mindpop_btn',
     message: 'message_btn',
     notification: 'notification_btn',
     notificationIcon: 'icon_notification',
   },
-  title: { text: 'title' },
+  title: {text: 'title'},
 };
 
-type Props = { [x: string]: any };
-type State = { [x: string]: any };
+type Props = {[x: string]: any};
+type State = {[x: string]: any};
 const NavigationBar = (props: Props) => {
-  let key = Account.selectedData().instanceID + '_' + Account.selectedData().userID;
+  let key =
+    Account.selectedData().instanceID + '_' + Account.selectedData().userID;
   let profilePicUpdate: EventManager;
   let test = true;
   let notificationReceivedForeground: EventManager;
   let notificationReceived;
-  const [state, setState] = useState({ showBadge: false });
+  const [state, setState] = useState({showBadge: false});
 
   useEffect(() => {
-
     if (Utility.unreadNotification[key] > 0) {
-      setState(prevState => ({ ...prevState, showBadge: true }));
+      setState(prevState => ({...prevState, showBadge: true}));
     } else {
-      setState(prevState => ({ ...prevState, showBadge: false }));
+      setState(prevState => ({...prevState, showBadge: false}));
     }
     // this.profilePicUpdate = EventManager.addListener(kProfilePicUpdated, this.updateProfilePic);
     DeviceEventEmitter.addListener(kProfilePicUpdated, updateProfilePic);
@@ -63,30 +61,28 @@ const NavigationBar = (props: Props) => {
       kForegroundNotificationListener,
       notificationReceived,
     );
-    return ()=>{
-      DeviceEventEmitter.removeAllListeners(kProfilePicUpdated)
-      notificationReceivedForeground.removeListener()
-    }
-  }, [])
+    return () => {
+      DeviceEventEmitter.removeAllListeners(kProfilePicUpdated);
+      notificationReceivedForeground.removeListener();
+    };
+  }, []);
 
   notificationReceived = (details: any) => {
     let group_id = new NotificationDataModel().getGroupId(
       details.notificationType,
     );
-    props.addNotificationItem({ group_id: group_id, details: [details] });
+    props.addNotificationItem({group_id: group_id, details: [details]});
     if (Utility.unreadNotification[key] > 0) {
-      setState(prevState => ({ ...prevState, showBadge: true }));
-    }
-    else {
-      setState(prevState => ({ ...prevState, showBadge: false }));
+      setState(prevState => ({...prevState, showBadge: true}));
+    } else {
+      setState(prevState => ({...prevState, showBadge: false}));
     }
     setTimeout(() => {
       EventManager.callBack(kNotificationIndicator);
     }, 2000);
   };
 
-  const updateProfilePic = () => {
-  };
+  const updateProfilePic = () => {};
 
   const _renderMiddle = () => {
     // let isPublicInstance: any = Account.selectedData().is_public_site;
@@ -98,56 +94,47 @@ const NavigationBar = (props: Props) => {
         </TouchableOpacity> */}
       </View>
     );
-  }
+  };
 
   const _mindPopAction = () => {
-    Actions.push('mindPop');
+    this.props.navigation.push('mindPop');
   };
 
   const _closeAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    props.navigation.goBack();
   };
 
   const _renderRight = () => {
-
     return (
       <View style={styles.rightContainer}>
-        {
-          props.showRight ?
-            <TouchableWithoutFeedback
-              onPress={() => {
-                props.showJumpto(true);
-                // _mindPopAction();
-              }}
-
-              testID={testID.rightButtons.mindpop}>
-              <View style={styles.rightButtonsTouchable}>
-                <Image
-                  source={jumptocalendar}
-                  resizeMode="contain"
-                />
-                <View style={styles.height4} />
-                <Text style={styles.cancleText}>{props.showRightText }</Text>
-              </View>
-            </TouchableWithoutFeedback>
-            :
-            null
-        }
-
+        {props.showRight ? (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              props.showJumpto(true);
+              // _mindPopAction();
+            }}
+            testID={testID.rightButtons.mindpop}>
+            <View style={styles.rightButtonsTouchable}>
+              <Image source={jumptocalendar} resizeMode="contain" />
+              <View style={styles.height4} />
+              <Text style={styles.cancleText}>{props.showRightText}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        ) : null}
       </View>
     );
-  }
+  };
 
   const _userProfileSection = () => {
-    if (Actions.currentScene != 'myAccount') {
-      Actions.push('myAccount');
+    if (this.props.navigation.currentScene != 'myAccount') {
+      this.props.navigation.push('myAccount');
     }
   };
 
   const _notificationAction = () => {
-    if (Actions.currentScene != 'notificationView') {
-      Actions.push('notificationView');
+    if (this.props.navigation.currentScene != 'notificationView') {
+      this.props.navigation.push('notificationView');
     }
   };
 
@@ -156,58 +143,55 @@ const NavigationBar = (props: Props) => {
       {
         text: 'OK',
         style: 'cancel',
-        onPress: () => { },
+        onPress: () => {},
       },
     ]);
   };
 
-  let showClose: boolean = props.showClose
-    ? props.showClose
-    : false;
+  let showClose: boolean = props.showClose ? props.showClose : false;
   let isPublicInstance: any = Account.selectedData().is_public_site;
   return (
     <View
-      style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
+      style={[
+        styles.container,
+        {backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor},
+      ]}>
       <TouchableWithoutFeedback
         testID={testID.leftButtons.menu}
         onPress={() => {
-          Actions.push('myAccount');
-          // showClose ? _closeAction() : Actions.drawerOpen();
+          this.props.navigation.push('myAccount');
+          // showClose ? _closeAction() : this.props.navigation.drawerOpen();
         }}>
         <View style={styles.leftButtonTouchableContainer}>
-        {showClose ? (
+          {showClose ? (
             <View style={styles.closeButton}>
-              <View style={styles.imageContainer}  >
+              <View style={styles.imageContainer}>
                 <Image source={close_white} />
               </View>
               <View style={styles.imageSeparator} />
-              <View style={[styles.textContainer,{ justifyContent: 'center' }]}>
+              <View style={[styles.textContainer, {justifyContent: 'center'}]}>
                 <Text style={styles.JumptoText}>Cancle</Text>
               </View>
             </View>
-          )
-            :
-            (
-              <View style={styles.closeButton}>
-                <View style={styles.imageContainer} >
-                  <Image source={user} />
-                </View>
-                <View style={styles.imageSeparator} />
-                <View style={styles.profileImgSeparator}>
-                  <Text style={styles.JumptoText}>Profile</Text>
-                </View>
+          ) : (
+            <View style={styles.closeButton}>
+              <View style={styles.imageContainer}>
+                <Image source={user} />
               </View>
-            )}
+              <View style={styles.imageSeparator} />
+              <View style={styles.profileImgSeparator}>
+                <Text style={styles.JumptoText}>Profile</Text>
+              </View>
+            </View>
+          )}
         </View>
-
       </TouchableWithoutFeedback>
       {_renderMiddle()}
       {_renderRight()}
     </View>
   );
-
-}
-const mapState = (state: { [x: string]: any }) => ({
+};
+const mapState = (state: {[x: string]: any}) => ({
   notificationList: state.NotificationsRedux.notificationData,
   unreadNot: state.NotificationsRedux.unreadNot,
   currentTabName: state.dashboardReducer.currentTabName,
@@ -215,8 +199,10 @@ const mapState = (state: { [x: string]: any }) => ({
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    addNotificationItem: (payload: any) => dispatch({ type: AddNewNotification, payload: payload }),
-    showJumpto: (payload: any) => dispatch({ type: JUMP_TO_VIEW_SHOW, payload: payload }),
+    addNotificationItem: (payload: any) =>
+      dispatch({type: AddNewNotification, payload: payload}),
+    showJumpto: (payload: any) =>
+      dispatch({type: JUMP_TO_VIEW_SHOW, payload: payload}),
   };
 };
 

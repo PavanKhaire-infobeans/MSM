@@ -48,6 +48,7 @@
 		8DA56307469C432684F95F7B /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4FA592E6C1E84ABDB7AF7230 /* Rubik-BoldItalic.ttf */; };
 		8E8E2DCEBE684B16908FE636 /* FiraSansExtraCondensed-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 906123C3482C4131BF1A83EC /* FiraSansExtraCondensed-ThinItalic.ttf */; };
 		90BFDE9795754CD88B5A6E23 /* FiraSansExtraCondensed-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D08A413A44444E991ED1953 /* FiraSansExtraCondensed-RegularItalic.ttf */; };
+		91B1B4CF28B63021001AB943 /* SFPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64C7E66728AB718A0082D3CB /* SFPro-Regular.ttf */; };
 		979DEC83E531414DBF76057F /* Proxima Nova Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EC402C2DFBC64DDEA36E84CF /* Proxima Nova Bold.otf */; };
 		9A8A9BFCCFEA451FBE6F45BE /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E499F81714240F98681D47C /* Rubik-BlackItalic.ttf */; };
 		A997581753D4EE015D815109 /* libPods-MyStoriesMatter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 74434C61D12B0BCA35F33EC0 /* libPods-MyStoriesMatter.a */; };
@@ -448,7 +449,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				64C7E66828AB718B0082D3CB /* SFPro-Regular.ttf in Resources */,
+				91B1B4CF28B63021001AB943 /* SFPro-Regular.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				64FABF68280ECD540055408E /* Inter-ExtraBold.ttf in Resources */,
 				64FABF79280ED5E60055408E /* Lora-MediumItalic.ttf in Resources */,
@@ -861,7 +862,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -926,7 +927,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

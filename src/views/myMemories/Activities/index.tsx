@@ -1,24 +1,31 @@
 import React from 'react';
 import {
-  ActivityIndicator, FlatList, Keyboard, Platform, RefreshControl, SafeAreaView, StatusBar, TouchableOpacity, View
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  Platform,
+  RefreshControl,
+  SafeAreaView,
+  StatusBar,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import PlaceholderImageView from '../../../common/component/placeHolderImageView';
 import Text from '../../../common/component/Text';
 import {
-  No_Internet_Warning, ToastMessage
+  No_Internet_Warning,
+  ToastMessage,
 } from '../../../common/component/Toast';
-import {
-  Colors, fontFamily, fontSize
-} from '../../../common/constants';
+import {Colors, fontFamily, fontSize} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
 import Utility from '../../../common/utility';
-import { NotificationDataModel } from '../../notificationView/notificationDataModel';
+import {NotificationDataModel} from '../../notificationView/notificationDataModel';
 import {
   GetActivities,
   kActivities,
-  kActivityListener
+  kActivityListener,
 } from '../../notificationView/notificationServices';
 
 type State = {[x: string]: any};
@@ -100,7 +107,7 @@ export default class Activities extends React.Component<Props, State> {
   };
 
   getActivities = (isReferesh: any, isLoadMore: any) => {
-    this.setState({isRefreshing: isReferesh, isLoadMore: isLoadMore},()=>{
+    this.setState({isRefreshing: isReferesh, isLoadMore: isLoadMore}, () => {
       let initialOffset = this.state.activityList.length;
       if (Utility.isInternetConnected) {
         if (!isReferesh && !isLoadMore) loaderHandler.showLoader();
@@ -115,7 +122,6 @@ export default class Activities extends React.Component<Props, State> {
         No_Internet_Warning();
       }
     });
-    
   };
 
   renderActivityView = (item: any): any => {
@@ -175,7 +181,10 @@ export default class Activities extends React.Component<Props, State> {
                   style={{
                     ...fontSize(18),
                     fontWeight: '500',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                    fontFamily:
+                      Platform.OS === 'ios'
+                        ? fontFamily.Inter
+                        : fontFamily.InterMedium,
                     color: Colors.white,
                   }}>
                   {'+'}
@@ -217,7 +226,10 @@ export default class Activities extends React.Component<Props, State> {
                   color: Colors.TextColor,
                   paddingBottom: 15,
                   fontWeight: '500',
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                  fontFamily:
+                    Platform.OS === 'ios'
+                      ? fontFamily.Inter
+                      : fontFamily.InterMedium,
                   fontStyle: 'italic',
                 }}>
                 Notes to collaborators:{' '}
@@ -271,9 +283,15 @@ export default class Activities extends React.Component<Props, State> {
         (item.notificationType.indexOf('collaboration') != -1 ||
           item.notificationType.indexOf('new_edits') != -1)
       ) {
-        Actions.push('createMemory', {editMode: true, draftNid: item.nid});
+        this.props.navigation.push('createMemory', {
+          editMode: true,
+          draftNid: item.nid,
+        });
       } else {
-        Actions.push('memoryDetails', {nid: item.nid, type: 'my_stories'});
+        this.props.navigation.push('memoryDetails', {
+          nid: item.nid,
+          type: 'my_stories',
+        });
       }
     } else {
       No_Internet_Warning();
@@ -292,7 +310,9 @@ export default class Activities extends React.Component<Props, State> {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
         <StatusBar
-          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
           backgroundColor={Colors.ThemeColor}
         />
         <FlatList

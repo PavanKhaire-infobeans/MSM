@@ -1,29 +1,33 @@
 import React from 'react';
 import {
-  FlatList, Image, Keyboard, Platform, SafeAreaView,
-  StatusBar, TouchableHighlight, View
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import Text from '../../../common/component/Text';
 // @ts-ignore
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {
-  Colors, fontFamily, fontSize,
-  ShareOptions
+  Colors,
+  fontFamily,
+  fontSize,
+  ShareOptions,
 } from '../../../common/constants';
-import {
-  add_icon, radio, radio_active
-} from '../../../images';
-import {
-  SaveShareOption
-} from '../reducer';
+import {add_icon, radio, radio_active} from '../../../images';
+import {SaveShareOption} from '../reducer';
 // @ts-ignore
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
-import { getUserCount } from '../dataHelper';
+import {getUserCount} from '../dataHelper';
 import Styles from './styles';
 export const kWhoCanSeeThisMemory = 'whoCanSeeThisMemoryScreen';
-type State = { [x: string]: any };
+type State = {[x: string]: any};
 type Props = {
   tid?: any;
   isRename: any;
@@ -44,10 +48,10 @@ class WhoCanSee extends React.Component<Props, State> {
 
   componentDidMount() {
     let index = Object.keys(ShareOptions).indexOf(this.props.shareOption);
-    this.setState({ selectedItemIndex: index });
+    this.setState({selectedItemIndex: index});
   }
 
-  componentWillUnmount = () => { };
+  componentWillUnmount = () => {};
 
   saveValue = () => {
     if (this.validateShareOptions()) {
@@ -55,9 +59,9 @@ class WhoCanSee extends React.Component<Props, State> {
         Object.keys(ShareOptions)[this.state.selectedItemIndex],
       );
       Keyboard.dismiss();
-      Actions.pop();
+      this.props.navigation.goBack();
     } else {
-      this.setState({ showError: true });
+      this.setState({showError: true});
     }
   };
 
@@ -74,12 +78,12 @@ class WhoCanSee extends React.Component<Props, State> {
 
   cancelAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   whoCanSeeView = (item: any) => {
-    this.setState({ selectedItemIndex: item.index }, () => {
-      Actions.push('commonFriendsSearchView', {
+    this.setState({selectedItemIndex: item.index}, () => {
+      this.props.navigation.push('commonFriendsSearchView', {
         title: 'Who can see this memory?',
         refListFriends: this.props.whoCanSeeMemoryUids,
         refListFriendCircles: this.props.whoCanSeeMemoryGroupIds,
@@ -111,8 +115,9 @@ class WhoCanSee extends React.Component<Props, State> {
     return (
       <TouchableHighlight
         underlayColor={'#ffffff33'}
-        onPress={() => this.setState({ selectedItemIndex: item.index, showError: false }) }>
-          
+        onPress={() =>
+          this.setState({selectedItemIndex: item.index, showError: false})
+        }>
         <View style={Styles.ShareOptionsItemStyle}>
           <Image
             source={
@@ -128,13 +133,16 @@ class WhoCanSee extends React.Component<Props, State> {
                 <TouchableHighlight
                   onPress={() => this.whoCanSeeView(item)}
                   underlayColor={'#ffffff33'}
-                  style={[Styles.shareOptionContainerStyle, {
-                    borderBottomColor: this.state.showError ? Colors.ErrorColor : 'rgba(0,0,0,0.3)',
-                  }]}>
-                  <View
-                    style={Styles.shareOptionSubContainerStyle}>
-                    <Text
-                      style={Styles.optionsTextStyle}>
+                  style={[
+                    Styles.shareOptionContainerStyle,
+                    {
+                      borderBottomColor: this.state.showError
+                        ? Colors.ErrorColor
+                        : 'rgba(0,0,0,0.3)',
+                    },
+                  ]}>
+                  <View style={Styles.shareOptionSubContainerStyle}>
+                    <Text style={Styles.optionsTextStyle}>
                       {this.getCustomText()}
                     </Text>
                     <Image
@@ -144,8 +152,7 @@ class WhoCanSee extends React.Component<Props, State> {
                   </View>
                 </TouchableHighlight>
                 {this.state.showError && (
-                  <Text
-                    style={Styles.showErrorStyle}>
+                  <Text style={Styles.showErrorStyle}>
                     *Add atleast one Friend/Friend Circle to share.{' '}
                   </Text>
                 )}
@@ -159,12 +166,12 @@ class WhoCanSee extends React.Component<Props, State> {
   render() {
     return (
       <View style={Styles.container}>
-        <SafeAreaView
-          style={Styles.invisibleContainer}
-        />
+        <SafeAreaView style={Styles.invisibleContainer} />
         <SafeAreaView style={Styles.safeAreaContainer}>
           <StatusBar
-            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+            barStyle={
+              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+            }
             backgroundColor={Colors.ThemeColor}
           />
           <View style={Styles.container}>
@@ -177,8 +184,7 @@ class WhoCanSee extends React.Component<Props, State> {
               saveValues={this.saveValue}
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
-            <Text
-              style={Styles.whoElsetextStyle}>
+            <Text style={Styles.whoElsetextStyle}>
               Select who can see memories after publishing it.
             </Text>
             <FlatList
@@ -196,7 +202,7 @@ class WhoCanSee extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: { [x: string]: any }) => {
+const mapState = (state: {[x: string]: any}) => {
   return {
     shareOption: state.MemoryInitials.shareOption,
     whoCanSeeMemoryUids: state.MemoryInitials.whoCanSeeMemoryUids,
@@ -207,7 +213,7 @@ const mapState = (state: { [x: string]: any }) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     saveShareOption: (payload: any) =>
-      dispatch({ type: SaveShareOption, payload: payload }),
+      dispatch({type: SaveShareOption, payload: payload}),
   };
 };
 

@@ -1,12 +1,17 @@
 import React from 'react';
 import {
-  ActivityIndicator, Image, Keyboard, SafeAreaView, TouchableOpacity, View
+  ActivityIndicator,
+  Image,
+  Keyboard,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import Text from '../../../common/component/Text';
-import { Colors, fontSize, getValue } from '../../../common/constants';
+import {Colors, fontSize, getValue} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
-import { rubbish } from '../../../images';
+import {rubbish} from '../../../images';
 import Styles from './styles';
 
 type Props = {
@@ -29,7 +34,7 @@ export default class ImagePreview extends React.Component<Props, State> {
 
   back = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
     this.props.reset();
   };
 
@@ -51,8 +56,7 @@ export default class ImagePreview extends React.Component<Props, State> {
   );
 
   private _view: JSX.Element = (
-    <View
-      style={Styles.ActivityContainer}>
+    <View style={Styles.ActivityContainer}>
       <ActivityIndicator animating={true} size="large" />
     </View>
   );
@@ -70,8 +74,7 @@ export default class ImagePreview extends React.Component<Props, State> {
       ? this.props.selectedItem.uri
       : this.props.selectedItem.filePath;
     return (
-      <SafeAreaView
-        style={Styles.safeAreaContainer}>
+      <SafeAreaView style={Styles.safeAreaContainer}>
         <View style={Styles.subContainer}>
           {this.state.error ? (
             this._errorView
@@ -90,15 +93,20 @@ export default class ImagePreview extends React.Component<Props, State> {
           {!this.state.hasLoaded ? this._view : null}
         </View>
         <View
-          style={[Styles.buttonContainer,{
-            justifyContent: this.props.selectedItem.isLocal ? 'flex-end' : 'space-between',
-          }]}>
+          style={[
+            Styles.buttonContainer,
+            {
+              justifyContent: this.props.selectedItem.isLocal
+                ? 'flex-end'
+                : 'space-between',
+            },
+          ]}>
           {this.props.selectedItem.isLocal ? null : (
             <TouchableOpacity
               onPress={() => {
                 this.props.deleteItem();
                 Keyboard.dismiss();
-                Actions.pop();
+                this.props.navigation.goBack();
               }}
               style={Styles.buttonStyle}>
               {this.props.isEditMode ? (
@@ -110,13 +118,11 @@ export default class ImagePreview extends React.Component<Props, State> {
           <TouchableOpacity
             onPress={() => {
               Keyboard.dismiss();
-              Actions.pop();
+              this.props.navigation.goBack();
               this.props.reset();
             }}
             style={Styles.closeButton}>
-            <Text style={Styles.closeStyle}>
-              Close
-            </Text>
+            <Text style={Styles.closeStyle}>Close</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

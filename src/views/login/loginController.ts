@@ -1,5 +1,4 @@
 import { Keyboard } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
@@ -122,7 +121,7 @@ export class LoginController implements LoginControllerProtocol {
         CueBackInsatance,
       );
       setTimeout(() => {
-        Actions.dashBoard();
+        this.props.navigation.dashBoard();
         this.view.props.clearDashboard();
         loaderHandler.hideLoader();
       }, 100);
@@ -407,7 +406,7 @@ export class LoginController implements LoginControllerProtocol {
                 }
               });
             }
-            Actions.dashBoard();
+            this.props.navigation.dashBoard();
           }, 100);
           this.view.props.clearDashboard();
           this.view.props.clean();

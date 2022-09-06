@@ -1,28 +1,41 @@
 import React from 'react';
 import {
-  FlatList, Image, Keyboard, Platform, SafeAreaView,
-  StatusBar, Text, TouchableHighlight, View
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 // @ts-ignore
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import {No_Internet_Warning} from '../../../common/component/Toast';
 import {
-  No_Internet_Warning
-} from '../../../common/component/Toast';
-import { Colors, decode_utf8, fontFamily, fontSize } from '../../../common/constants';
+  Colors,
+  decode_utf8,
+  fontFamily,
+  fontSize,
+} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
 import Utility from '../../../common/utility';
 import {
-  add_icon, checkbox, checkbox_active, settings_icon
+  add_icon,
+  checkbox,
+  checkbox_active,
+  settings_icon,
 } from '../../../images';
 import {
   GetPublishedMemoryCollections,
   kPublishedMemoryCollections,
-  MemoryAction
+  MemoryAction,
 } from '../../myMemories/myMemoriesWebService';
-import { CollectinAPI } from '../saga';
+import {CollectinAPI} from '../saga';
 import styles from './styles';
 
 type State = {[x: string]: any};
@@ -51,7 +64,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
     this.checkForScroll = true;
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.publishedMemoryCollectionsListener.removeListener();
   }
 
@@ -70,12 +83,12 @@ class MemoryCollectionList extends React.Component<Props, State> {
 
   cancelAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   saveValue = () => {
     let collections_nids: any = [];
-    this.state.collections.forEach((element:any) => {
+    this.state.collections.forEach((element: any) => {
       collections_nids.push(element.nid ? element.nid : element.tid);
     });
     if (Utility.isInternetConnected) {
@@ -88,7 +101,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
         collections_nids,
       );
       Keyboard.dismiss();
-      Actions.pop();
+      this.props.navigation.goBack();
     } else {
       No_Internet_Warning();
     }
@@ -130,17 +143,14 @@ class MemoryCollectionList extends React.Component<Props, State> {
           underlayColor={Colors.white}
           onPress={() => this.setCollection(item.item)}
           style={styles.collectionListButtonStyle}>
-          <View
-            style={styles.collectionListButtonContainerStyle}>
-            <View
-              style={styles.collectionTitleContainer}>
+          <View style={styles.collectionListButtonContainerStyle}>
+            <View style={styles.collectionTitleContainer}>
               <Image
                 style={styles.moveImage}
                 resizeMode="contain"
                 source={isSelected ? checkbox_active : checkbox}></Image>
               <View style={styles.titleContainer}>
-                <Text
-                  style={styles.titleText}>
+                <Text style={styles.titleText}>
                   {decode_utf8(item.item.name)}
                 </Text>
                 <Text style={styles.titleText}>
@@ -154,7 +164,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
               style={styles.nameContainer}
               underlayColor={'#ffffff44'}
               onPress={() =>
-                Actions.push('collectionDetails', {
+                this.props.navigation.push('collectionDetails', {
                   tid: item.item.tid,
                   collectionName: decode_utf8(item.item.name),
                 })
@@ -174,9 +184,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView
-          style={styles.invisibleContainer}
-        />
+        <SafeAreaView style={styles.invisibleContainer} />
         <SafeAreaView style={styles.safeAreaContainer}>
           <View style={styles.container}>
             <NavigationHeaderSafeArea
@@ -187,23 +195,25 @@ class MemoryCollectionList extends React.Component<Props, State> {
               saveValues={this.saveValue}
             />
             <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             <TouchableHighlight
               underlayColor={'#ffffff55'}
               style={styles.addNewCollectionContainer}
               onPress={() =>
-                Actions.push('createRenameCollection', {
+                this.props.navigation.push('createRenameCollection', {
                   isRename: false,
                   callback: this.newCollectionCreated,
                 })
               }>
-              <View
-                style={styles.addNewCollectionSubContainer}>
+              <View style={styles.addNewCollectionSubContainer}>
                 <Image source={add_icon}></Image>
-                <Text
-                  style={styles.NewCollectionTextColor}>
+                <Text style={styles.NewCollectionTextColor}>
                   Create New Collection
                 </Text>
               </View>

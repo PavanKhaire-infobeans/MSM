@@ -1,25 +1,34 @@
 import React from 'react';
 import {
-  ActivityIndicator, FlatList, Keyboard, RefreshControl, SafeAreaView, StatusBar, TouchableWithoutFeedback, View
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  RefreshControl,
+  SafeAreaView,
+  StatusBar,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { NotificationDataModel } from '../../../../src/views/notificationView/notificationDataModel';
-import { GetActivities, kActivities, kActivityListener } from '../../../../src/views/notificationView/notificationServices';
+import {NotificationDataModel} from '../../../../src/views/notificationView/notificationDataModel';
+import {
+  GetActivities,
+  kActivities,
+  kActivityListener,
+} from '../../../../src/views/notificationView/notificationServices';
 import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
 import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
 import Text from './../../../../src/common/component/Text';
 import {
-  No_Internet_Warning, ToastMessage
+  No_Internet_Warning,
+  ToastMessage,
 } from './../../../../src/common/component/Toast';
-import {
-  Colors
-} from './../../../../src/common/constants';
+import {Colors} from './../../../../src/common/constants';
 import EventManager from './../../../../src/common/eventManager';
 import Utility from './../../../../src/common/utility';
 import styles from './styles';
 
-type State = { [x: string]: any };
-type Props = { [x: string]: any };
+type State = {[x: string]: any};
+type Props = {[x: string]: any};
 
 export default class Activities extends React.Component<Props, State> {
   activitiesListener: EventManager;
@@ -52,7 +61,7 @@ export default class Activities extends React.Component<Props, State> {
   componentWillUnmount = () => {
     this.activitiesListener.removeListener();
     this.activitiesForeground.removeListener();
-  }
+  };
 
   activityReceivedForeground = (details: any) => {
     let activityList: any = this.state.activityList;
@@ -69,16 +78,16 @@ export default class Activities extends React.Component<Props, State> {
       }
     });
     activityList = details.concat(activityList).slice(0);
-    this.setState({ activityList: activityList });
+    this.setState({activityList: activityList});
   };
 
   populateActivities = (success: any, activities: any) => {
     if (success) {
       let activityList = activities.data
         ? new NotificationDataModel().getNotificationDetails(
-          activities.data,
-          true,
-        )
+            activities.data,
+            true,
+          )
         : [];
       activityList = this.state.isLoadMore
         ? this.state.activityList.concat(activityList).slice(0)
@@ -102,7 +111,7 @@ export default class Activities extends React.Component<Props, State> {
   };
 
   getActivities = (isReferesh: any, isLoadMore: any) => {
-    this.setState({ isRefreshing: isReferesh, isLoadMore: isLoadMore }, () => {
+    this.setState({isRefreshing: isReferesh, isLoadMore: isLoadMore}, () => {
       let initialOffset = this.state.activityList.length;
       if (Utility.isInternetConnected) {
         if (!isReferesh && !isLoadMore) loaderHandler.showLoader();
@@ -110,25 +119,21 @@ export default class Activities extends React.Component<Props, State> {
           initialOffset = 0;
         }
         GetActivities(
-          { type: 'activities', limit: 20, offset: initialOffset },
+          {type: 'activities', limit: 20, offset: initialOffset},
           kActivities,
         );
       } else {
         No_Internet_Warning();
       }
     });
-
   };
 
   renderActivityView = (item: any): any => {
     let index = item.index;
     item = item.item;
     return (
-      <View
-        style={styles.activityViewStyle}>
-
-        <View
-          style={styles.authorContainer}>
+      <View style={styles.activityViewStyle}>
+        <View style={styles.authorContainer}>
           <PlaceholderImageView
             uri={item.userProfile ? item.userProfile : ''}
             borderRadius={21}
@@ -136,10 +141,8 @@ export default class Activities extends React.Component<Props, State> {
             profilePic={true}
           />
           {item.userCount > 1 && (
-            <View
-              style={styles.activityUserCountStyle}>
-              <Text
-                style={styles.activityUserCountTextStyle}>
+            <View style={styles.activityUserCountStyle}>
+              <Text style={styles.activityUserCountTextStyle}>
                 {'+'}
                 {item.userCount - 1}
               </Text>
@@ -148,47 +151,35 @@ export default class Activities extends React.Component<Props, State> {
         </View>
 
         <View style={styles.fullFlex}>
-          <Text
-            style={styles.displayNameTextStyle}>
+          <Text style={styles.displayNameTextStyle}>
             {item.displayName}{' '}
-            <Text style={{ color: Colors.TextColor }}>
+            <Text style={{color: Colors.TextColor}}>
               {item.descriptionText}
             </Text>{' '}
             '{item.title}'
           </Text>
-          <Text
-            style={styles.dateTextStyle}>
-            {item.date}
-          </Text>
+          <Text style={styles.dateTextStyle}>{item.date}</Text>
           {item.isJoinInvite &&
-            item.noteToCollaborator &&
-            item.noteToCollaborator.length > 0 ? (
-            <Text
-              style={styles.notesToCollabrationTextStyle}>
+          item.noteToCollaborator &&
+          item.noteToCollaborator.length > 0 ? (
+            <Text style={styles.notesToCollabrationTextStyle}>
               Notes to collaborators:{' '}
-              <Text style={{ fontWeight: 'normal' }}>
+              <Text style={{fontWeight: 'normal'}}>
                 {item.noteToCollaborator}
               </Text>
             </Text>
           ) : null}
           {item.isDisabled ? (
-            <Text style={styles.errorTextStyle}>
-              {item.errorMsg}
-            </Text>
+            <Text style={styles.errorTextStyle}>{item.errorMsg}</Text>
           ) : (
             <TouchableWithoutFeedback
-              onPress={() => this.redirectActivities(item, index)}
-            >
+              onPress={() => this.redirectActivities(item, index)}>
               <View style={styles.openMemoryButtonStyle}>
-                <Text style={styles.buttonTextStyle}>
-                  Open Memory
-                </Text>
-
+                <Text style={styles.buttonTextStyle}>Open Memory</Text>
               </View>
             </TouchableWithoutFeedback>
           )}
         </View>
-
       </View>
     );
   };
@@ -209,9 +200,15 @@ export default class Activities extends React.Component<Props, State> {
         (item.notificationType.indexOf('collaboration') != -1 ||
           item.notificationType.indexOf('new_edits') != -1)
       ) {
-        Actions.push('createMemory', { editMode: true, draftNid: item.nid });
+        this.props.navigation.push('createMemory', {
+          editMode: true,
+          draftNid: item.nid,
+        });
       } else {
-        Actions.push('memoryDetails', { nid: item.nid, type: 'my_stories' });
+        this.props.navigation.push('memoryDetails', {
+          nid: item.nid,
+          type: 'my_stories',
+        });
       }
     } else {
       No_Internet_Warning();
@@ -230,7 +227,9 @@ export default class Activities extends React.Component<Props, State> {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBar
-          barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
           backgroundColor={Colors.ThemeColor}
         />
         <FlatList
@@ -264,11 +263,8 @@ export default class Activities extends React.Component<Props, State> {
           onEndReached={this.handleLoadMore.bind(this)}
         />
         {this.state.count == 0 && !this.state.loadingDataFromServer ? (
-          <View
-            style={styles.noActivityCOntainerStyle}
-            pointerEvents="none">
-            <Text
-              style={styles.noActivityTextStyle}>
+          <View style={styles.noActivityCOntainerStyle} pointerEvents="none">
+            <Text style={styles.noActivityTextStyle}>
               There are no activities to display at this moment.
             </Text>
           </View>

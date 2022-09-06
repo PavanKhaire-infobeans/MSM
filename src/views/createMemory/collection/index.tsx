@@ -1,23 +1,37 @@
 import React from 'react';
 import {
-  FlatList, Image, Keyboard, Platform, SafeAreaView, StatusBar, Text, TouchableHighlight, View
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
+
+import {connect} from 'react-redux';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { Colors, decode_utf8, fontFamily, fontSize } from '../../../common/constants';
+import {
+  Colors,
+  decode_utf8,
+  fontFamily,
+  fontSize,
+} from '../../../common/constants';
 import Utility from '../../../common/utility';
 import {
-  add_icon, checkbox, checkbox_active, settings_icon
+  add_icon,
+  checkbox,
+  checkbox_active,
+  settings_icon,
 } from '../../../images';
-import { SaveCollection } from '../reducer';
-import {
-  CollectinAPI
-} from '../saga';
+import {SaveCollection} from '../reducer';
+import {CollectinAPI} from '../saga';
 import Styles from './styles';
 
-type State = { [x: string]: any };
-type Props = { [x: string]: any };
+type State = {[x: string]: any};
+type Props = {[x: string]: any};
 
 class CollectionList extends React.Component<Props, State> {
   _listRef: any;
@@ -58,7 +72,7 @@ class CollectionList extends React.Component<Props, State> {
 
   cancelAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   saveValue = () => {
@@ -71,14 +85,14 @@ class CollectionList extends React.Component<Props, State> {
     //         loaderHandler.showLoader();
     //         MemoryAction("my_stories", this.props.nid, "add_to_collection",'', collections_nids);
     //         Keyboard.dismiss();
-    //         Actions.pop();
+    //         this.props.navigation.goBack();
     //     } else{
     //          No_Internet_Warning();
     //      }
     // } else{
     this.props.setCollection(this.state.collections);
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
     // }
   };
 
@@ -105,7 +119,7 @@ class CollectionList extends React.Component<Props, State> {
       if (!found) {
         collections.push(item);
       }
-      this.setState({ collections: collections });
+      this.setState({collections: collections});
     } catch (error) {
       console.log(error);
     }
@@ -126,17 +140,14 @@ class CollectionList extends React.Component<Props, State> {
           underlayColor={Colors.white}
           onPress={() => this.setCollection(item.item)}
           style={Styles.collectionListButtonStyle}>
-          <View
-            style={Styles.collectionListButtonContainerStyle}>
-            <View
-              style={Styles.collectionTitleContainer}>
+          <View style={Styles.collectionListButtonContainerStyle}>
+            <View style={Styles.collectionTitleContainer}>
               <Image
                 style={Styles.moveImage}
                 resizeMode="contain"
                 source={isSelected ? checkbox_active : checkbox}></Image>
               <View style={Styles.titleContainer}>
-                <Text
-                  style={Styles.titleText}>
+                <Text style={Styles.titleText}>
                   {decode_utf8(item.item.name)}
                 </Text>
                 <Text style={Styles.titleText}>
@@ -150,7 +161,7 @@ class CollectionList extends React.Component<Props, State> {
               style={Styles.nameContainer}
               underlayColor={'#ffffff44'}
               onPress={() =>
-                Actions.push('collectionDetails', {
+                this.props.navigation.push('collectionDetails', {
                   tid: item.item.tid,
                   collectionName: decode_utf8(item.item.name),
                 })
@@ -164,15 +175,13 @@ class CollectionList extends React.Component<Props, State> {
   };
 
   newCollectionCreated = (collection: any) => {
-    this.setState({ collection: collection });
+    this.setState({collection: collection});
   };
 
   render() {
     return (
       <View style={Styles.container}>
-        <SafeAreaView
-          style={Styles.invisibleContainer}
-        />
+        <SafeAreaView style={Styles.invisibleContainer} />
         <SafeAreaView style={Styles.safeAreaContainer}>
           <View style={Styles.container}>
             <NavigationHeaderSafeArea
@@ -183,23 +192,25 @@ class CollectionList extends React.Component<Props, State> {
               saveValues={this.saveValue}
             />
             <StatusBar
-              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             <TouchableHighlight
               underlayColor={'#ffffff55'}
               style={Styles.addNewCollectionContainer}
               onPress={() =>
-                Actions.push('createRenameCollection', {
+                this.props.navigation.push('createRenameCollection', {
                   isRename: false,
                   callback: this.newCollectionCreated,
                 })
               }>
-              <View
-                style={Styles.addNewCollectionSubContainer}>
+              <View style={Styles.addNewCollectionSubContainer}>
                 <Image source={add_icon}></Image>
-                <Text
-                  style={Styles.NewCollectionTextColor}>
+                <Text style={Styles.NewCollectionTextColor}>
                   Create New Collection
                 </Text>
               </View>
@@ -224,7 +235,7 @@ class CollectionList extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: { [x: string]: any }) => {
+const mapState = (state: {[x: string]: any}) => {
   return {
     collections: state.MemoryInitials.collections,
     collectionList: state.MemoryInitials.collectionList,
@@ -234,10 +245,10 @@ const mapState = (state: { [x: string]: any }) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    collectionAPI: () => dispatch({ type: CollectinAPI }),
+    collectionAPI: () => dispatch({type: CollectinAPI}),
     //   MemoryCollectionsAPI : (payload: any) => dispatch({type: MemoryCollectionsAPI, payload : payload}),
     setCollection: (payload: any) =>
-      dispatch({ type: SaveCollection, payload: payload }),
+      dispatch({type: SaveCollection, payload: payload}),
   };
 };
 

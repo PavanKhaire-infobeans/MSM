@@ -1,19 +1,24 @@
 import React from 'react';
 import {
-  Alert, DeviceEventEmitter, EmitterSubscription, FlatList, Image, SafeAreaView, TouchableOpacity, View
+  Alert,
+  DeviceEventEmitter,
+  EmitterSubscription,
+  FlatList,
+  Image,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import Text from '../../common/component/Text';
-import {
-  Colors, fontSize, Size
-} from '../../common/constants';
-import { Account, LoginStore, UserData } from '../../common/loginStore';
+import {Colors, fontSize, Size} from '../../common/constants';
+import {Account, LoginStore, UserData} from '../../common/loginStore';
 import styles from './styles';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import EventManager from '../../common/eventManager';
-import { logoutMethod, logoutMultiple } from '../../common/webservice/webservice';
-import { user_drawable } from '../../images';
-import { UserAccount } from './reducer';
+import {logoutMethod, logoutMultiple} from '../../common/webservice/webservice';
+import {user_drawable} from '../../images';
+import {UserAccount} from './reducer';
 
 type MenuProps = {
   user: UserData;
@@ -23,7 +28,7 @@ const kOnLogout = 'UserLogoutListener';
 export const kLogoutPressed = 'logoutPressed';
 export const kUserAccountUpdated = 'userAccountUpdated';
 class Menu extends React.Component<MenuProps> {
-  state: { list: any } = {
+  state: {list: any} = {
     list: [],
   };
   listener?: EmitterSubscription;
@@ -55,11 +60,8 @@ class Menu extends React.Component<MenuProps> {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <View
-          style={styles.communitiesContainer}>
-          <Text style={styles.communityText}>
-            Your communities
-          </Text>
+        <View style={styles.communitiesContainer}>
+          <Text style={styles.communityText}>Your communities</Text>
           {/* {false ? (
             <TouchableOpacity
               style={{
@@ -76,13 +78,12 @@ class Menu extends React.Component<MenuProps> {
           ) : null} */}
         </View>
         <FlatList
-          data={[...this.state.list, { type: 'AddCommunity' }]}
+          data={[...this.state.list, {type: 'AddCommunity'}]}
           keyExtractor={(_: any, index: number) => `${index}`}
           keyExtractor={(_, index: number) => `${index}`}
           renderItem={this.renderRow}
         />
-        <View
-          style={styles.logoutContainer}>
+        <View style={styles.logoutContainer}>
           <TouchableOpacity
             onPress={() => this._logout()}
             style={styles.logoutbutton}>
@@ -93,13 +94,12 @@ class Menu extends React.Component<MenuProps> {
     );
   }
 
-  updateUser = ({ accounts, user }: { accounts: UserData[]; user: UserData }) => {
-    this.setState({ list: accounts }, () => {
+  updateUser = ({accounts, user}: {accounts: UserData[]; user: UserData}) => {
+    this.setState({list: accounts}, () => {
       this.props.setUser(user);
-      Actions.replace('prologue');
-      Actions.dashBoard();
+      this.props.navigation.replace('prologue');
+      this.props.navigation.dashBoard();
     });
-
   };
 
   _logout = () => {
@@ -108,7 +108,7 @@ class Menu extends React.Component<MenuProps> {
         let list = resp.rows.raw();
         list = list.filter((it: UserData) => it.userAuthToken != '');
         if (list.length > 1) {
-          Actions.push('commonInstanceListsSelection', {
+          this.props.navigation.push('commonInstanceListsSelection', {
             listAccounts: list,
             title: 'Logout',
             type: 'logout',
@@ -119,7 +119,7 @@ class Menu extends React.Component<MenuProps> {
             {
               text: 'No',
               style: 'cancel',
-              onPress: () => { },
+              onPress: () => {},
             },
             {
               text: 'Yes',
@@ -134,11 +134,11 @@ class Menu extends React.Component<MenuProps> {
                     if (accounts.length > 0) {
                       EventManager.callBack(kOnLogout, accounts);
                     } else {
-                      Actions.reset('prologue');
+                      this.props.navigation.reset('prologue');
                     }
                   })
                   .catch(() => {
-                    Actions.reset('prologue');
+                    this.props.navigation.reset('prologue');
                   });
               },
             },
@@ -156,15 +156,14 @@ class Menu extends React.Component<MenuProps> {
     this.showAlert(lastInstanceName);
 
     let user: UserData = accounts[accounts.length - 1];
-    this.setState({ list: accounts }, () => {
+    this.setState({list: accounts}, () => {
       this.props.setUser(user);
       if (accounts.length > 0) {
         EventManager.callBack(kUserAccountUpdated);
-        Actions.reset('dashBoard');
+        this.props.navigation.reset('dashBoard');
       }
-      Actions.drawerClose();
+      this.props.navigation.drawerClose();
     });
-
   };
 
   showAlert(instanceName: string) {
@@ -181,19 +180,22 @@ class Menu extends React.Component<MenuProps> {
       this.userEmail = data.item.email;
       return (
         <View
-          style={[styles.drawHeaderContainer, {
-            paddingTop: data.index == 0 ? 0 : 15,
-          }]}>
+          style={[
+            styles.drawHeaderContainer,
+            {
+              paddingTop: data.index == 0 ? 0 : 15,
+            },
+          ]}>
           <View
-            style={[styles.drawHeaderEmptyContainer, {
-              height: data.index != 0 ? 1 : 0,
-            }]}></View>
+            style={[
+              styles.drawHeaderEmptyContainer,
+              {
+                height: data.index != 0 ? 1 : 0,
+              },
+            ]}></View>
           <View style={styles.drawerContainer}>
             <Image source={user_drawable}></Image>
-            <Text
-              style={styles.emailText}>
-              {data.item.email}
-            </Text>
+            <Text style={styles.emailText}>{data.item.email}</Text>
           </View>
         </View>
       );
@@ -201,13 +203,13 @@ class Menu extends React.Component<MenuProps> {
     return null;
   };
 
-  renderRow = (data: { item: UserData & { type: string }; index: number }) => {
+  renderRow = (data: {item: UserData & {type: string}; index: number}) => {
     if (data.item.type == 'AddCommunity') {
       return null;
       // return (
       // 	<TouchableOpacity
       // 		onPress={() => {
-      // 			Actions.push("prologue", { showHeader: true });
+      // 			this.props.navigation.push("prologue", { showHeader: true });
       // 		}}>
       // 		<View style={{ width: "100%", flexDirection: "row", padding: 16, height: 82, alignItems: "center" }}>
       // 			<View style={styles.actionAdd}>
@@ -236,7 +238,9 @@ class Menu extends React.Component<MenuProps> {
             onPress={() => {
               this.props.setUser(data.item);
               EventManager.callBack(kUserAccountUpdated);
-              Actions.push('dashBoard', { animationEnabled: false });
+              this.props.navigation.push('dashBoard', {
+                animationEnabled: false,
+              });
             }}>
             <Banner communityInfo={data.item} style={[styles.row]} />
           </TouchableOpacity>
@@ -254,15 +258,15 @@ const logoutWorkFlow = (selectedAccounts: any) => {
       if (accounts.length > 0) {
         EventManager.callBack(kOnLogout, accounts);
       } else {
-        Actions.reset('prologue');
+        this.props.navigation.reset('prologue');
       }
     })
     .catch(() => {
-      Actions.reset('prologue');
+      this.props.navigation.reset('prologue');
     });
 };
 
-const mapState = (state: { [x: string]: any }) => ({
+const mapState = (state: {[x: string]: any}) => ({
   user: state.account,
 });
 
@@ -270,14 +274,13 @@ const mapDispatch = (dispatch: Function) => ({
   /**
    * Save selected user to reducer and AsyncStorage
    */
-  setUser: (payload: UserData) => dispatch({ type: UserAccount.Store, payload }),
+  setUser: (payload: UserData) => dispatch({type: UserAccount.Store, payload}),
 });
 export default connect(mapState, mapDispatch)(Menu);
 
+type Props = {communityInfo: UserData; style?: any};
 
-type Props = { communityInfo: UserData; style?: any };
-
-const Banner = ({ communityInfo, style }: Props) => {
+const Banner = ({communityInfo, style}: Props) => {
   let name = communityInfo.name;
   let url =
     communityInfo.instanceURL == '192.168.2.6'
@@ -298,7 +301,7 @@ const Banner = ({ communityInfo, style }: Props) => {
 			/> */}
       <View style={styles.image}>
         <Image
-          source={{ uri: imageURL }}
+          source={{uri: imageURL}}
           style={styles.imageIcon}
           resizeMode="cover"
         />

@@ -1,19 +1,26 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
-  Appearance, BackHandler, Linking, Platform, Text
+  Appearance,
+  BackHandler,
+  Linking,
+  Platform,
+  Text,
+  LogBox,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {
-  ActionConst, Actions, Drawer, Router, Scene, Stack, Tabs
-} from 'react-native-router-flux';
-import { Provider } from 'react-redux';
+
+import {Provider} from 'react-redux';
 import Busyindicator from './common/component/busyindicator';
-import TabIcon, { NewTabItems } from './common/component/TabBarIcons';
-import { Colors } from './common/constants';
+import TabIcon, {NewTabItems} from './common/component/TabBarIcons';
+import {Colors} from './common/constants';
 import EventManager from './common/eventManager';
 import store from './common/reducer/reducers';
-import Utility, { getFontScale, networkConnectivitySaga, themechanges } from './common/utility';
+import Utility, {
+  getFontScale,
+  networkConnectivitySaga,
+  themechanges,
+} from './common/utility';
 
 import CreateMemory from './views/createMemory';
 import CollectionList from './views/createMemory/collection';
@@ -49,7 +56,7 @@ import {
   iPadList,
   MindPopEdit,
   MindPopList,
-  PreviewImage
+  PreviewImage,
 } from './views/mindPop';
 import BlockedUsers from './views/moreOptions/blockedUsers';
 import CommonWebView from './views/moreOptions/commonWebView';
@@ -81,18 +88,104 @@ import AppIntro from './views/appIntro';
 import DashboardIndex from './views/dashboard/dashboardIndex';
 import FilterScreen from './views/dashboard/filtersScreen';
 import {
-  kBackgroundNotice, kForegroundNotice
+  kBackgroundNotice,
+  kForegroundNotice,
 } from './views/notificationView/notificationServices';
 import TopicsFilter from './views/promptsView/topicsFilter';
 import WriteTabs from './views/writeTabs';
+
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
 EStyleSheet.build();
 
 if (Text.defaultProps == null) Text.defaultProps = {};
 
 Text.defaultProps.allowFontScaling = false;
 
+const RootStack = createStackNavigator();
+const DrawerStack = createDrawerNavigator();
+
+const DrawerNavigator = () => {
+  return (
+    <DrawerStack.Navigator>
+      <DrawerStack.Screen name="Home" component={DashboardIndex} />
+    </DrawerStack.Navigator>
+  );
+};
+
+const AppNavigationRouter = () => {
+  return (
+    <NavigationContainer>
+      <RootStack.Navigator initialRouteName="splash">
+        <RootStack.Screen
+          name="splash"
+          component={Splash}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="prologue"
+          component={Prologue}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="appIntro"
+          component={AppIntro}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="findCommunity"
+          component={FindCommunity}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="registrationPre"
+          component={RegFirstStep}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="registrationFinal"
+          component={RegFinalStep}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="userRegStatus"
+          component={UserRegistrationStatus}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="login"
+          component={LoginView}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="commonInstanceListsSelection"
+          component={CommonInstanceListsSelection}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="forgotPassword"
+          component={ForgotPassword}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="filtersScreen"
+          component={FilterScreen}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="dashboard"
+          component={DrawerNavigator}
+          options={{headerShown: false}}
+        />
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+};
+
 const AppRouter = () => (
-  <Router sceneStyle={{ backgroundColor: Colors.white }}>
+  <Router sceneStyle={{backgroundColor: Colors.white}}>
     <Scene key="root">
       {/* <Scene key="animatedAppIntro" type={ActionConst.RESET} hideNavBar component={AnimatedAppIntro} /> */}
       <Scene
@@ -174,8 +267,8 @@ const AppRouter = () => (
             showIcon={true}
             tabBarPosition="bottom"
             activeTintColor={Colors.ThemeColor}
-            tabBarOnPress={({ navigation, defaultHandler }) => {
-              navigateToParticular(navigation, defaultHandler)
+            tabBarOnPress={({navigation, defaultHandler}) => {
+              navigateToParticular(navigation, defaultHandler);
             }}
             tabBarStyle={{
               height: 40,
@@ -187,7 +280,7 @@ const AppRouter = () => (
               borderRadius: 12,
               borderColor: Colors.white,
               marginBottom: 4,
-              alignSelf: 'center'
+              alignSelf: 'center',
             }}>
             <Stack title={NewTabItems.Read} tabBarIcon={TabIcon}>
               <Scene hideNavBar key="dashboard" component={DashboardIndex} />
@@ -375,22 +468,24 @@ function navigateToParticular(_navigation, defaultHandler) {
     defaultHandler();
     // }
   } catch (error) {
-    console.log("defaultHandler  > ", error)
+    console.log('defaultHandler  > ', error);
   }
 }
 
-const App = (_props) => {
+LogBox.ignoreAllLogs(true);
+
+const App = _props => {
   let backEvent: EventManager;
 
   // alert(useWindowDimensions().fontScale)
 
   /*
-    * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
-    * */
+   * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+   * */
   const notificationOpenedListener = messaging().onNotificationOpenedApp(
     notificationOpen => {
       // const { data  } = notificationOpen.notification;
-      const { data } = notificationOpen;
+      const {data} = notificationOpen;
       Utility.notificationObject.hasNotification = true;
       Utility.notificationObject.data = data;
       // Utility.notificationObject.isBackgroundNotification = true;
@@ -420,11 +515,9 @@ const App = (_props) => {
       if (notificationOpen != null) {
         notificationOpen();
       }
-      backEvent &&
-        backEvent.removeListener() &&
-        onTokenRefreshListener();
-    }
-  }, [])
+      backEvent && backEvent.removeListener() && onTokenRefreshListener();
+    };
+  }, []);
 
   // async componentDidMount() {
   //   setTimeout(() => SplashScreen.hide(), 500);
@@ -448,7 +541,7 @@ const App = (_props) => {
     } else {
       requestPermission();
     }
-  }
+  };
 
   //3
   const getToken = async () => {
@@ -465,7 +558,7 @@ const App = (_props) => {
             .then(fcmToken => {
               if (fcmToken) {
                 DefaultPreference.set('firebaseToken', fcmToken).then(
-                  function () { },
+                  function () {},
                 );
                 return true;
               }
@@ -479,7 +572,7 @@ const App = (_props) => {
     }
     // }
     // })
-  }
+  };
 
   //2
   const requestPermission = async () => {
@@ -492,7 +585,7 @@ const App = (_props) => {
       return false;
       //console.log('permission rejected');
     }
-  }
+  };
 
   const createNotificationListeners = async () => {
     // showAlert("Listener", "added")
@@ -500,7 +593,7 @@ const App = (_props) => {
      * Triggered when a particular notification has been received in foreground
      * */
     notificationListener = messaging().onMessage(notification => {
-      const { data } = notification;
+      const {data} = notification;
       EventManager.callBack(kForegroundNotice, data);
     });
 
@@ -509,50 +602,33 @@ const App = (_props) => {
      * */
     notificationOpen = await messaging().getInitialNotification();
     if (notificationOpen) {
-      const { data } = notificationOpen;
+      const {data} = notificationOpen;
       Utility.notificationObject.hasNotification = true;
       Utility.notificationObject.data = data;
     }
     /*
      * Triggered for data only payload in foreground
      * */
-    messageListener = messaging().onMessage(_message => {
-      //   //process data message
-      //   //console.log(JSON.stringify(message));
-      //   showAlert("Alert", "message arrived");
-    });
-  }
-
+    messageListener = messaging().onMessage(_message => {});
+  };
 
   //Back event handler
   const _backPressAnd = () => {
     loaderHandler.hideLoader();
-    if (Actions.currentScene == 'mindPopEdit') {
+    if (this.props.navigation.currentScene == 'mindPopEdit') {
       EventManager.callBack('hardwareBackPress', true);
       return true;
     }
     return false;
   };
 
-  const handleUrl = ({ url }) => {
-    Linking.canOpenURL(url).then((supported) => {
+  const handleUrl = ({url}) => {
+    Linking.canOpenURL(url).then(supported => {
       if (supported) {
         DeepLinking.evaluateUrl(url);
       }
     });
-  }
-
-  // componentWillUnmount() {
-  //   Linking.removeEventListener('url', handleUrl);
-  //   notificationListener();
-  //   notificationOpenedListener();
-  //   if (notificationOpen != null) {
-  //     notificationOpen();
-  //   }
-  //   backEvent &&
-  //     backEvent.removeListener() &&
-  //     onTokenRefreshListener();
-  //   }
+  };
 
   const loadSegmentAnalytics = async () => {
     await analytics.setup('UIejGdlPobXDuxYQC2YU19IBomGe5oQO', {
@@ -561,17 +637,15 @@ const App = (_props) => {
       // Record certain application events automatically!
       trackAppLifecycleEvents: true,
     });
-  }
+  };
 
-  console.disableYellowBox = true;
   return (
     <Provider store={store}>
       {/* <View style={{flex: 1}}> */}
-      <AppRouter />
+      <AppNavigationRouter />
       <Busyindicator overlayColor={Colors.ThemeColor} />
       {/* </View> */}
     </Provider>
   );
-
-}
+};
 export default App;

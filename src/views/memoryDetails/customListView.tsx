@@ -1,26 +1,32 @@
 import React from 'react';
 import {
-  FlatList, Image, ImageBackground, Keyboard, Platform, SafeAreaView, StatusBar, TouchableHighlight, View
+  FlatList,
+  Image,
+  ImageBackground,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Text from '../../common/component/Text';
-import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
-import { Account } from '../../common/loginStore';
+import {Colors, fontFamily, fontSize, Size} from '../../common/constants';
+import {Account} from '../../common/loginStore';
 import Utility from '../../common/utility';
-import {
-  action_close, profile_placeholder
-} from '../../images';
+import {action_close, profile_placeholder} from '../../images';
 
-type Props = { [x: string]: any };
+type Props = {[x: string]: any};
 export default class CustomListView extends React.Component<Props> {
   componentDidMount() {
-    this.setState({ itemList: this.props.itemList });
+    this.setState({itemList: this.props.itemList});
   }
 
   cancelAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   renderCommentView = (item: any) => {
@@ -28,8 +34,8 @@ export default class CustomListView extends React.Component<Props> {
       item.item.uid == Account.selectedData().userID
         ? 'You'
         : item.item.field_first_name_value +
-        ' ' +
-        item.item.field_last_name_value;
+          ' ' +
+          item.item.field_last_name_value;
     return (
       <TouchableHighlight
         underlayColor={'#cccccc3e'}
@@ -49,24 +55,27 @@ export default class CustomListView extends React.Component<Props> {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <ImageBackground
               source={profile_placeholder}
-              style={{ height: 50, width: 50 }}
-              imageStyle={{ borderRadius: 25 }}>
+              style={{height: 50, width: 50}}
+              imageStyle={{borderRadius: 25}}>
               <Image
                 source={
                   item.item.uri && item.item.uri != ''
-                    ? { uri: Utility.getFileURLFromPublicURL(item.item.uri) }
+                    ? {uri: Utility.getFileURLFromPublicURL(item.item.uri)}
                     : profile_placeholder
                 }
-                style={{ height: 50, width: 50, borderRadius: 25 }}></Image>
+                style={{height: 50, width: 50, borderRadius: 25}}></Image>
             </ImageBackground>
             <Text
               style={{
                 marginLeft: 10,
                 fontWeight: '500',
-                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                fontFamily:
+                  Platform.OS === 'ios'
+                    ? fontFamily.Inter
+                    : fontFamily.InterMedium,
                 lineHeight: 20,
                 fontSize: 16,
                 color: Colors.TextColor,
@@ -89,7 +98,10 @@ export default class CustomListView extends React.Component<Props> {
               <Text
                 style={{
                   color: Colors.white,
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                  fontFamily:
+                    Platform.OS === 'ios'
+                      ? fontFamily.Inter
+                      : fontFamily.InterMedium,
                   fontWeight: '500',
                 }}>
                 Unblock
@@ -103,19 +115,21 @@ export default class CustomListView extends React.Component<Props> {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <View style={{ flex: 1 }}>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+        <View style={{flex: 1}}>
           <NavigationHeaderSafeArea
             heading={this.props.heading}
             showCommunity={false}
-            cancelAction={() => Actions.pop()}
+            cancelAction={() => this.props.navigation.pop()}
             showRightText={false}
             isWhite={true}
             backIcon={action_close}
           />
 
           <StatusBar
-            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+            barStyle={
+              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+            }
             backgroundColor={Colors.NewThemeColor}
           />
           <FlatList

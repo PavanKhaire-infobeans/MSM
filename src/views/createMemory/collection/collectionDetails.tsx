@@ -1,32 +1,39 @@
 import React from 'react';
 import {
-  Image, Keyboard,
-  Platform, SafeAreaView,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
   StatusBar,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 // @ts-ignore
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
-import { Actions } from 'react-native-router-flux';
+
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import styles from './styles';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { ToastMessage } from '../../../common/component/Toast';
-import { Colors, decode_utf8, fontFamily, fontSize } from '../../../common/constants';
+import {ToastMessage} from '../../../common/component/Toast';
+import {
+  Colors,
+  decode_utf8,
+  fontFamily,
+  fontSize,
+} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
 import Utility from '../../../common/utility';
-import { move_arrow, visibility_theme } from '../../../images';
+import {move_arrow, visibility_theme} from '../../../images';
 import {
   GetCollectionDetails,
   kCollectionMemories,
   kSequenceUpdated,
-  UpdateMemoryCollection
+  UpdateMemoryCollection,
 } from '../createMemoryWebService';
 
-type State = { [x: string]: any };
-type Props = { tid: any; collectionName: any };
+type State = {[x: string]: any};
+type Props = {tid: any; collectionName: any};
 
 export default class CollectionDetails extends React.Component<Props, State> {
   collectionFetch: EventManager;
@@ -51,7 +58,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
       kSequenceUpdated,
       this.collectionUpdate,
     );
-    this.setState({ collectionName: this.props.collectionName },()=>{
+    this.setState({collectionName: this.props.collectionName}, () => {
       GetCollectionDetails(this.props.tid);
     });
   }
@@ -82,16 +89,16 @@ export default class CollectionDetails extends React.Component<Props, State> {
       ToastMessage('Unable to update memory');
     }
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   cancelAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   renameCollection = (name: any) => {
-    this.setState({ collectionName: name });
+    this.setState({collectionName: name});
   };
 
   saveValue = () => {
@@ -113,7 +120,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
       );
     } else {
       Keyboard.dismiss();
-      Actions.pop();
+      this.props.navigation.goBack();
     }
   };
 
@@ -126,22 +133,22 @@ export default class CollectionDetails extends React.Component<Props, State> {
   ) => {
     return (
       <TouchableOpacity
-        style={[styles.renderRowContainer,{
-          backgroundColor: isActive ? Colors.SerachbarColor : Colors.white,
-        }]}
+        style={[
+          styles.renderRowContainer,
+          {
+            backgroundColor: isActive ? Colors.SerachbarColor : Colors.white,
+          },
+        ]}
         onLongPress={move}
         onPressOut={moveEnd}>
-        <View
-          style={styles.renderSubRowContainer}>
-          <View
-            style={styles.imageContainer}>
+        <View style={styles.renderSubRowContainer}>
+          <View style={styles.imageContainer}>
             <Image
               style={styles.moveImage}
               resizeMode="contain"
               source={move_arrow}></Image>
             <View style={styles.titleContainer}>
-              <Text
-                style={styles.titleText}>
+              <Text style={styles.titleText}>
                 {decode_utf8(item.item.title)}
               </Text>
               {/* <Text style={{...fontSize(16)}}>{"("}{item.item.memory_count}{" memories)"}</Text> */}
@@ -158,39 +165,40 @@ export default class CollectionDetails extends React.Component<Props, State> {
     item.data.forEach((element: any, index: any) => {
       finalSequence.push(element.id);
     });
-    this.setState({ collectionList: item.data, finalSequence: finalSequence });
+    this.setState({collectionList: item.data, finalSequence: finalSequence});
     //console.log(item);
   }
 
-  renderItem = ({ item, index, move, moveEnd, isActive }: any) => {
+  renderItem = ({item, index, move, moveEnd, isActive}: any) => {
     return (
       <TouchableOpacity
-        onPress={() => { }}
+        onPress={() => {}}
         style={styles.collectionContainer}
         onLongPress={move}
         onPressOut={moveEnd}>
         <View
-          style={[styles.collectionSubContainer,{
-            backgroundColor: isActive ? 'rgba(2, 109, 96, 0.4)' : Colors.white,
-          }]}>
-          <View
-            style={styles.collectionTitleContainer}>
+          style={[
+            styles.collectionSubContainer,
+            {
+              backgroundColor: isActive
+                ? 'rgba(2, 109, 96, 0.4)'
+                : Colors.white,
+            },
+          ]}>
+          <View style={styles.collectionTitleContainer}>
             <Image
               style={styles.moveImage}
               resizeMode="contain"
               source={move_arrow}></Image>
             <View style={styles.titleContainer}>
-              <Text
-                style={styles.titleText}>
-                {decode_utf8(item.title)}
-              </Text>
+              <Text style={styles.titleText}>{decode_utf8(item.title)}</Text>
             </View>
           </View>
           {item.status != 0 && (
             <TouchableOpacity
               style={styles.visiblityImageContainer}
               onPress={() =>
-                Actions.push('memoryDetails', {
+                this.props.navigation.push('memoryDetails', {
                   nid: item.id,
                   type: 'my_stories',
                 })
@@ -206,9 +214,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView
-          style={styles.invisibleContainer}
-        />
+        <SafeAreaView style={styles.invisibleContainer} />
         <SafeAreaView style={styles.safeAreaContainer}>
           <View style={styles.container}>
             <NavigationHeaderSafeArea
@@ -220,26 +226,27 @@ export default class CollectionDetails extends React.Component<Props, State> {
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
-              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.ThemeColor}
             />
-            <View
-              style={styles.collectionNameContainer}>
+            <View style={styles.collectionNameContainer}>
               <Text style={styles.collectionText}>
                 {this.state.collectionName}
               </Text>
               <TouchableOpacity
                 onPress={() =>
-                  Actions.push('createRenameCollection', {
+                  this.props.navigation.push('createRenameCollection', {
                     tid: this.props.tid,
                     isRename: true,
                     collectionName: this.props.collectionName,
                     callback: this.renameCollection,
                   })
                 }>
-                <Text style={styles.titleText}>
-                  Rename
-                </Text>
+                <Text style={styles.titleText}>Rename</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.container}>

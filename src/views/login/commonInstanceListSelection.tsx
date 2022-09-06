@@ -1,17 +1,25 @@
 import React from 'react';
 import {
-  ActivityIndicator, Alert, FlatList, Image, Keyboard, Platform, SafeAreaView,
-  StatusBar, TouchableHighlight, View
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Text from '../../common/component/Text';
-import { No_Internet_Warning } from '../../common/component/Toast';
-import { Colors, fontFamily, fontSize } from '../../common/constants';
-import { backBlkBtn, user_drawable } from '../../images';
+import {No_Internet_Warning} from '../../common/component/Toast';
+import {Colors, fontFamily, fontSize} from '../../common/constants';
+import {backBlkBtn, user_drawable} from '../../images';
 import InstanceView from '../registration/instanceView';
-import { styles } from './designs';
-import { Props } from './loginController';
+import {styles} from './designs';
+import {Props} from './loginController';
 // @ts-ignore
 import Utility from '../../common/utility';
 
@@ -36,9 +44,9 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
   drawHeader = (email: any) => {
     this.userEmail = email;
     return (
-      <View style={{ width: '100%', paddingTop: 10 }}>
+      <View style={{width: '100%', paddingTop: 10}}>
         {/* <View style={{height: (data.index != 0 ? 1 : 0), width: "100%", paddingRight: 15, paddingLeft: 15, marginBottom : 10 , backgroundColor : "#DDDDDD"}}></View> */}
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image source={user_drawable}></Image>
           <Text
             style={{
@@ -67,7 +75,13 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
               }}>
               {`You're already logged into`}{' '}
               <Text
-                style={{ fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium, fontWeight: '500' }}>
+                style={{
+                  fontFamily:
+                    Platform.OS === 'ios'
+                      ? fontFamily.Inter
+                      : fontFamily.InterMedium,
+                  fontWeight: '500',
+                }}>
                 {this.state.instanceString}
                 {this.state.disabledIndexs.length > 1
                   ? ` communities`
@@ -83,7 +97,13 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
               }}>
               {`Please logout from `}
               <Text
-                style={{ fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium, fontWeight: '500' }}>
+                style={{
+                  fontFamily:
+                    Platform.OS === 'ios'
+                      ? fontFamily.Inter
+                      : fontFamily.InterMedium,
+                  fontWeight: '500',
+                }}>
                 {this.state.instanceString}
               </Text>
               {` if you want to login`}
@@ -92,7 +112,13 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
                 : ` this community`}
               {` with `}
               <Text
-                style={{ fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium, fontWeight: '500' }}>
+                style={{
+                  fontFamily:
+                    Platform.OS === 'ios'
+                      ? fontFamily.Inter
+                      : fontFamily.InterMedium,
+                  fontWeight: '500',
+                }}>
                 {this.props.username}
               </Text>
             </Text>
@@ -104,7 +130,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
   constructor(props: Props) {
     super(props);
     this.navBar = this.props.navBar;
-    this.setState({ showLoader: false });
+    this.setState({showLoader: false});
   }
 
   selectAllItems = () => {
@@ -114,11 +140,11 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
     this.props.listAccounts.forEach((element: any, index: any) => {
       if (!element.isDisabled) {
         indexs.push(index);
-        this.setState({ allDisabled: false });
+        this.setState({allDisabled: false});
       } else {
         disabledIndexs.push(index);
         instanceNames.push(element.site_name);
-        this.setState({ anyDisabled: true });
+        this.setState({anyDisabled: true});
       }
     });
     this.setState(
@@ -146,7 +172,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
       });
       selectedCommunitiesId = selectedCommunitiesId.join(', ');
       if (Utility.isInternetConnected) {
-        this.setState({ showLoader: true },()=>{
+        this.setState({showLoader: true}, () => {
           this.props.onClick(selectedCommunitiesId);
         });
       } else {
@@ -173,7 +199,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
           {
             text: 'No',
             style: 'cancel',
-            onPress: () => { },
+            onPress: () => {},
           },
           {
             text: 'Yes',
@@ -207,12 +233,12 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
     } else {
       this.navBar._hide();
     }
-    this.updateState({ errorViewHeight: height });
+    this.updateState({errorViewHeight: height});
   };
 
   componentWillUnmount() {
     this.showErrorMessage(false);
-    this.setState({ showLoader: false });
+    this.setState({showLoader: false});
   }
 
   cellTapped = (index: any) => {
@@ -225,7 +251,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
     } else {
       selectedIndex.push(index);
     }
-    this.setState({ selectedIndex: selectedIndex });
+    this.setState({selectedIndex: selectedIndex});
   };
 
   renderRow = (data: any) => {
@@ -238,8 +264,8 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
       this.props.type == ListType.Login
         ? this.props.username
         : this.props.type == ListType.ForgotPassword
-          ? this.props.email
-          : data.email;
+        ? this.props.email
+        : data.email;
     if (index == 0) {
       this.userEmail = '';
     }
@@ -247,7 +273,7 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
       <View>
         {usersEmail != this.userEmail && this.drawHeader(usersEmail)}
         <TouchableHighlight
-          style={{ opacity: data.isDisabled ? 0.5 : 1 }}
+          style={{opacity: data.isDisabled ? 0.5 : 1}}
           disabled={data.isDisabled}
           underlayColor={Colors.white}
           onPress={() => this.cellTapped(index)}>
@@ -277,9 +303,9 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
         selectedCommunitiesId.push(this.props.listAccounts[element].id);
       });
       if (Utility.isInternetConnected) {
-        this.setState({ showLoader: true },()=>{
+        this.setState({showLoader: true}, () => {
           this.props.onClick(selectedCommunitiesId);
-          Actions.pop();
+          this.props.navigation.goBack();
         });
       } else {
         No_Internet_Warning();
@@ -304,48 +330,48 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
               cancelAction={() =>
                 this.props.type == ListType.Login
                   ? this.props.onRequestClose()
-                  : Actions.pop()
+                  : this.props.navigation.pop()
               }
               showRightText={false}
               isWhite={true}
               backIcon={backBlkBtn}
             />
             <StatusBar
-              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewDarkThemeColor}
             />
             {(this.props.type == ListType.Login ||
               this.props.type == ListType.ForgotPassword) && (
-                <Text style={styles.emailTextstyle}>
-                  {`We have found ${this.props.listAccounts.length} communities that belong to `}
-                  {this.props.type == ListType.ForgotPassword
-                    ? 'your email address.'
-                    : `the same credentials.`}
-                </Text>
-              )}
+              <Text style={styles.emailTextstyle}>
+                {`We have found ${this.props.listAccounts.length} communities that belong to `}
+                {this.props.type == ListType.ForgotPassword
+                  ? 'your email address.'
+                  : `the same credentials.`}
+              </Text>
+            )}
             {!this.state.allDisabled && (
               <Text
-                style={styles.resetPasswordStyle}>{`Please select which communities from the list you want to ${this.props.type == ListType.ForgotPassword
+                style={
+                  styles.resetPasswordStyle
+                }>{`Please select which communities from the list you want to ${
+                this.props.type == ListType.ForgotPassword
                   ? 'reset your password'
                   : this.props.type == ListType.Logout
-                    ? 'logout from'
-                    : this.props.type
-                  }.`}</Text>
+                  ? 'logout from'
+                  : this.props.type
+              }.`}</Text>
             )}
-            <View
-              style={styles.yourComminityContainer}>
-              <Text
-                style={styles.comminityText}>
-                {'Your Communities'}
-              </Text>
+            <View style={styles.yourComminityContainer}>
+              <Text style={styles.comminityText}>{'Your Communities'}</Text>
               <TouchableHighlight
                 onPress={() => this.selectAllItems()}
                 underlayColor={'#ffffff00'}
                 style={styles.selectAllContainer}>
-                <Text
-                  style={styles.selectAllText}>
-                  {'Select all'}
-                </Text>
+                <Text style={styles.selectAllText}>{'Select all'}</Text>
               </TouchableHighlight>
             </View>
             <FlatList
@@ -370,17 +396,22 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
                 this.props.type == ListType.Login
                   ? this.callLoginService()
                   : this.props.type == ListType.ForgotPassword
-                    ? this.callForgotPassword()
-                    : this.callLogoutService()
+                  ? this.callForgotPassword()
+                  : this.callLogoutService()
               }>
               <View
-                style={[styles.titleProps,{
-                  backgroundColor:
-                    this.props.type == ListType.Login ? this.state.allDisabled
-                        ? '#cccccc': Colors.ThemeColor: '#9a3427',
-                }]}>
-                <Text
-                  style={styles.titleTextStyle}>
+                style={[
+                  styles.titleProps,
+                  {
+                    backgroundColor:
+                      this.props.type == ListType.Login
+                        ? this.state.allDisabled
+                          ? '#cccccc'
+                          : Colors.ThemeColor
+                        : '#9a3427',
+                  },
+                ]}>
+                <Text style={styles.titleTextStyle}>
                   {this.props.type == ListType.ForgotPassword
                     ? 'Reset Password'
                     : this.props.title}
@@ -390,19 +421,15 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
           </View>
         </SafeAreaView>
         {this.state.showLoader && (
-          <View
-            style={styles.loaderContainer}>
-            <View
-              style={styles.activityContainer}>
+          <View style={styles.loaderContainer}>
+            <View style={styles.activityContainer}>
               <ActivityIndicator
                 color={Colors.newTextColor}
                 size={'small'}
                 style={styles.activityStyle}
               />
 
-              <Text style={styles.loadingTextStyle}>
-                {'Loading...'}
-              </Text>
+              <Text style={styles.loadingTextStyle}>{'Loading...'}</Text>
             </View>
           </View>
         )}

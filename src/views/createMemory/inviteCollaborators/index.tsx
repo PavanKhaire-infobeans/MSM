@@ -1,40 +1,43 @@
 import React from 'react';
 import {
-  FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableHighlight, TouchableOpacity, View
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import GroupPicHolder from '../../../common/component/group_pic_holder/group_pic_holder';
 import PlaceholderImageView from '../../../common/component/placeHolderImageView';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import {
-  No_Internet_Warning, ToastMessage
+  No_Internet_Warning,
+  ToastMessage,
 } from '../../../common/component/Toast';
-import {
-  Colors, fontFamily, fontSize
-} from '../../../common/constants';
+import {Colors, fontFamily, fontSize} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
-import { Account } from '../../../common/loginStore';
+import {Account} from '../../../common/loginStore';
 import Utility from '../../../common/utility';
-import {
-  checkbox, checkbox_active, team_icon
-} from '../../../images';
-import { kReloadDraft } from '../../myMemories/MemoryDrafts';
+import {checkbox, checkbox_active, team_icon} from '../../../images';
+import {kReloadDraft} from '../../myMemories/MemoryDrafts';
 import {
   CollaboratorActionAPI,
-  kCollaboratorsActions
+  kCollaboratorsActions,
 } from '../createMemoryWebService';
-import { kCollaborators } from '../publish';
-import {
-  SaveCollaborators
-} from '../reducer';
-import {
-  CollaboratorsAPI
-} from '../saga';
-import { kSaveNotes } from './noteToCollaborators';
+import {kCollaborators} from '../publish';
+import {SaveCollaborators} from '../reducer';
+import {CollaboratorsAPI} from '../saga';
+import {kSaveNotes} from './noteToCollaborators';
 import Styles from './styles';
 
 type State = {[x: string]: any};
@@ -83,7 +86,7 @@ class InviteCollaborators extends React.Component<Props, State> {
     if (success) {
       if (isLeaveConversation) {
         EventManager.callBack(kReloadDraft);
-        Actions.jump('memoriesDrafts');
+        this.props.navigation.jump('memoriesDrafts');
       } else this.props.getCollaborators(this.props.nid);
     } else {
       loaderHandler.hideLoader();
@@ -92,12 +95,12 @@ class InviteCollaborators extends React.Component<Props, State> {
   }
 
   componentWillUnmount = () => {
-    this.actionsCallBack.removeListener()
+    this.actionsCallBack.removeListener();
   };
 
   cancelAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   inviteFriendsToCollaborate = () => {
@@ -112,7 +115,7 @@ class InviteCollaborators extends React.Component<Props, State> {
         function () {},
       );
     }
-    Actions.push('commonFriendsSearchView', {
+    this.props.navigation.push('commonFriendsSearchView', {
       title: 'Invite Collaborators',
       refListFriends: [],
       refListFriendCircles: [],
@@ -182,13 +185,10 @@ class InviteCollaborators extends React.Component<Props, State> {
       return <View></View>;
     }
     return (
-      <View
-        style={Styles.collabratorListItemStyle}>
+      <View style={Styles.collabratorListItemStyle}>
         {item.type == 0 ? (
-          <View
-            style={Styles.collabratorListItemtype0Style}>
-            <View
-              style={Styles.collabratorListItemtype0ImageContainerStyle}>
+          <View style={Styles.collabratorListItemtype0Style}>
+            <View style={Styles.collabratorListItemtype0ImageContainerStyle}>
               <PlaceholderImageView
                 uri={Utility.getFileURLFromPublicURL(item.uri)}
                 style={Styles.collabratorListItemtype0ImageContainerStyle}
@@ -196,26 +196,20 @@ class InviteCollaborators extends React.Component<Props, State> {
               />
             </View>
             <View style={Styles.collaratorNameContainer}>
-              <Text
-                style={Styles.collaratorNameStyle}>
+              <Text style={Styles.collaratorNameStyle}>
                 {item.field_first_name_value} {item.field_last_name_value}
               </Text>
-              <Text
-                style={Styles.collaratorNameTextStyle}>
+              <Text style={Styles.collaratorNameTextStyle}>
                 {isOwner ? 'Owner' : this.getTextForActions(item)}
               </Text>
               {!this.state.showLeave && this.getMemoryActions(item)}
             </View>
           </View>
         ) : item.id && item.name && item.name.length > 0 ? (
-          <View
-            style={Styles.collabratorListItemtype0Style}>
+          <View style={Styles.collabratorListItemtype0Style}>
             <GroupPicHolder items={item.users ? item.users : []} />
             <View style={Styles.collaratorNameContainer}>
-              <Text
-                style={Styles.collaratorNameStyle}>
-                {item.name}
-              </Text>
+              <Text style={Styles.collaratorNameStyle}>{item.name}</Text>
               {!this.state.showLeave && this.getMemoryActions(item)}
             </View>
           </View>
@@ -253,8 +247,7 @@ class InviteCollaborators extends React.Component<Props, State> {
       item.reminded == 0;
 
     return (
-      <View
-        style={Styles.getMemoryActionsContainer}>
+      <View style={Styles.getMemoryActionsContainer}>
         {
           <TouchableHighlight
             underlayColor={'#ffffff11'}
@@ -264,10 +257,15 @@ class InviteCollaborators extends React.Component<Props, State> {
                 : this.memoryAction(CollaboratorsAction.reinvite, item)
             }>
             <Text
-              style={[Styles.getMemoryActionsName,{
-                textDecorationColor: showRemove ? Colors.ErrorColor : Colors.NewTitleColor,
-                color: showRemove ? Colors.ErrorColor : Colors.NewTitleColor,
-              }]}>
+              style={[
+                Styles.getMemoryActionsName,
+                {
+                  textDecorationColor: showRemove
+                    ? Colors.ErrorColor
+                    : Colors.NewTitleColor,
+                  color: showRemove ? Colors.ErrorColor : Colors.NewTitleColor,
+                },
+              ]}>
               {showRemove ? 'Remove' : 'Reinvite'}
             </Text>
           </TouchableHighlight>
@@ -278,10 +276,7 @@ class InviteCollaborators extends React.Component<Props, State> {
             onPress={() =>
               this.memoryAction(CollaboratorsAction.sendReminder, item)
             }>
-            <Text
-              style={Styles.sendReminderText}>
-              Send Reminder
-            </Text>
+            <Text style={Styles.sendReminderText}>Send Reminder</Text>
           </TouchableHighlight>
         )}
       </View>
@@ -303,12 +298,11 @@ class InviteCollaborators extends React.Component<Props, State> {
   render() {
     return (
       <View style={Styles.container}>
-        <SafeAreaView
-          style={Styles.invisibleContainer}
-        />
-        <SafeAreaView
-          style={Styles.safeAreaContainer}>
-          <View style={Styles.container} onStartShouldSetResponder={() => false}>
+        <SafeAreaView style={Styles.invisibleContainer} />
+        <SafeAreaView style={Styles.safeAreaContainer}>
+          <View
+            style={Styles.container}
+            onStartShouldSetResponder={() => false}>
             <NavigationHeaderSafeArea
               heading={'Collaboration'}
               showCommunity={true}
@@ -320,21 +314,29 @@ class InviteCollaborators extends React.Component<Props, State> {
               }
             />
             <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             {this.props.collaborators.length > 0 ? (
               <View style={Styles.container}>
                 <View
-                  style={[Styles.collabratorContainer,{
-                      justifyContent: this.state.showLeave ? 'center': 'space-between',
-                  }]}>
+                  style={[
+                    Styles.collabratorContainer,
+                    {
+                      justifyContent: this.state.showLeave
+                        ? 'center'
+                        : 'space-between',
+                    },
+                  ]}>
                   {!this.state.showLeave && (
                     <TouchableHighlight
                       underlayColor={'#ffffff11'}
                       onPress={() => this.inviteFriendsToCollaborate()}>
-                      <Text
-                        style={Styles.NewCollectionTextColor}>
+                      <Text style={Styles.NewCollectionTextColor}>
                         Invite More
                       </Text>
                     </TouchableHighlight>
@@ -342,15 +344,14 @@ class InviteCollaborators extends React.Component<Props, State> {
                   <TouchableHighlight
                     underlayColor={'#ffffff11'}
                     onPress={() =>
-                      Actions.push('notesToCollaborators', {
+                      this.props.navigation.push('notesToCollaborators', {
                         friendsList: [],
                         friendsCircleList: [],
                         type: kSaveNotes,
                         isOwner: !this.state.showLeave,
                       })
                     }>
-                    <Text
-                      style={Styles.NewCollectionTextColor}>
+                    <Text style={Styles.NewCollectionTextColor}>
                       {this.state.showLeave ? 'View ' : ''}
                       {'Note to collaborators'}
                     </Text>
@@ -372,8 +373,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                     style={Styles.menuContainer}
                     onStartShouldSetResponder={() => true}
                     onResponderStart={() => this.setState({showMenu: false})}>
-                    <View
-                      style={Styles.menuSubContainer}>
+                    <View style={Styles.menuSubContainer}>
                       <TouchableOpacity
                         style={Styles.leaveConverSationButtonStyle}
                         onPress={() => this.leaveConversation()}>
@@ -388,9 +388,11 @@ class InviteCollaborators extends React.Component<Props, State> {
             ) : (
               <ScrollView>
                 <View style={Styles.collabrationContainer}>
-                  <Image source={team_icon} style={Styles.visiblityImageContainer} />
-                  <Text
-                    style={Styles.collabrateWithTextStyle}>
+                  <Image
+                    source={team_icon}
+                    style={Styles.visiblityImageContainer}
+                  />
+                  <Text style={Styles.collabrateWithTextStyle}>
                     {
                       "Collaborate with your friends and family to fill in any gaps, add more details, and include everyone's perspectives to record the full story. \n\nChat with each other, edit together in real-time, and collectively contribute photos to piece together your shared memory!"
                     }
@@ -412,8 +414,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                       source={this.state.checked ? checkbox_active : checkbox}
                       resizeMode="contain"
                     />
-                    <Text
-                      style={Styles.dontShowTextStyle}>
+                    <Text style={Styles.dontShowTextStyle}>
                       Don't show me this again
                     </Text>
                   </TouchableOpacity>

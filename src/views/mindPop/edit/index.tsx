@@ -5,28 +5,34 @@ import {
   Dimensions,
   Image,
   ImageBackground,
-  Keyboard, Platform, SafeAreaView,
-  TextInput, TouchableHighlight, TouchableOpacity,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
   TouchableOpacityProperties,
-  View
+  View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import ImageCropPicker from 'react-native-image-crop-picker';
-import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
+
+import {connect} from 'react-redux';
 import ActionSheet, {
-  ActionSheetItem
+  ActionSheetItem,
 } from '../../../common/component/actionSheet';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 //@ts-ignore
-import { EditHeader } from '..';
+import {EditHeader} from '..';
 import {
   CaptureImage,
-  PickAudio, PickImage, PickPDF
+  PickAudio,
+  PickImage,
+  PickPDF,
 } from '../../../common/component/filePicker/filePicker';
-import { KeyboardAwareFlatList as FlatList } from '../../../common/component/keyboardaware-scrollview';
+import {KeyboardAwareFlatList as FlatList} from '../../../common/component/keyboardaware-scrollview';
 import Text from '../../../common/component/Text';
-import { ToastMessage } from '../../../common/component/Toast';
+import {ToastMessage} from '../../../common/component/Toast';
 import {
   Colors,
   decode_utf8,
@@ -38,33 +44,40 @@ import {
   GetFileType,
   getValue,
   NO_INTERNET,
-  TimeStampMilliSeconds
+  TimeStampMilliSeconds,
 } from '../../../common/constants';
 import MindPopStore, {
-  MindPopAttachment
+  MindPopAttachment,
 } from '../../../common/database/mindPopStore/mindPopStore';
 import EventManager from '../../../common/eventManager';
 import Utility from '../../../common/utility';
 import {
-  action_audio, action_camera,
-  action_close, action_pdf, audio_play,
-  camera, icon_upload_file, keyboard_hide, pdf_icon, record,
+  action_audio,
+  action_camera,
+  action_close,
+  action_pdf,
+  audio_play,
+  camera,
+  icon_upload_file,
+  keyboard_hide,
+  pdf_icon,
+  record,
   rubbish,
-  sound_wave
+  sound_wave,
 } from '../../../images';
-import { CreateUpdateMemory } from '../../createMemory/createMemoryWebService';
-import { DefaultDetailsMemory } from '../../createMemory/dataHelper';
-import { DeleteMindPopOperation } from '../list/deleteMindPopReducer';
-import { GetMindPopStatus } from '../list/reducer';
-import { addEditMindPop, kAddEditIdentifier } from './addMindPopflow';
-import { AddMindPopStatus, EditMode } from './reducer';
+import {CreateUpdateMemory} from '../../createMemory/createMemoryWebService';
+import {DefaultDetailsMemory} from '../../createMemory/dataHelper';
+import {DeleteMindPopOperation} from '../list/deleteMindPopReducer';
+import {GetMindPopStatus} from '../list/reducer';
+import {addEditMindPop, kAddEditIdentifier} from './addMindPopflow';
+import {AddMindPopStatus, EditMode} from './reducer';
 //@ts-ignore
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import Styles from './styles';
 const ScreenWidth = Dimensions.get('window').width;
 
-type MainItem = { [y: string]: string | Array<{ [x: string]: any }> };
+type MainItem = {[y: string]: string | Array<{[x: string]: any}>};
 
 enum TempFileStatus {
   needsToUpload = 'needsToUpload',
@@ -105,16 +118,16 @@ type State = {
 };
 
 const ImageActions: Array<ActionSheetItem> = [
-  { index: 0, text: 'Image', image: action_camera },
-  { index: 1, text: 'Audio', image: action_audio },
-  { index: 2, text: 'PDF', image: action_pdf },
-  { index: 3, text: 'Cancel', image: action_close },
+  {index: 0, text: 'Image', image: action_camera},
+  {index: 1, text: 'Audio', image: action_audio},
+  {index: 2, text: 'PDF', image: action_pdf},
+  {index: 3, text: 'Cancel', image: action_close},
 ];
 
 /**
  * Edit MindPop component
  */
-class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
+class MindPopEdit extends React.Component<{[x: string]: any}, State> {
   //Action sheet reference
   _actionSheet: any | ActionSheet = null;
   fileMain: string;
@@ -128,7 +141,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   _audioBtnRef: TouchableOpacity | any;
 
   //Files array list
-  files: Array<MindPopAttachment & { type: string; uri: string }>;
+  files: Array<MindPopAttachment & {type: string; uri: string}>;
 
   //Component default state
   state: State = {
@@ -158,7 +171,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   createMemoryListener: EventManager;
   isDeleteForMemory: boolean = false;
 
-  constructor(props: { [x: string]: any }) {
+  constructor(props: {[x: string]: any}) {
     super(props);
 
     this.files = [];
@@ -257,12 +270,12 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       return;
     }
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   _prevUpdate = () => {
     //Check if user has some unsaved changes
-    const { filesToDelete, filesToUpload } = this._getUpdatedFiles();
+    const {filesToDelete, filesToUpload} = this._getUpdatedFiles();
 
     if (
       this.state.content != this.state.oldcontent ||
@@ -275,10 +288,10 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           style: 'cancel',
           onPress: () => {
             let content = this.state.oldcontent;
-            this.setState({ content }, () => {
+            this.setState({content}, () => {
               //Go Back
               Keyboard.dismiss();
-              Actions.pop();
+              this.props.navigation.goBack();
               this.props.updateList && this.props.updateList();
             });
           },
@@ -297,14 +310,14 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         this._actionSheet;
       }
       Keyboard.dismiss();
-      Actions.pop();
+      this.props.navigation.goBack();
       this.props.updateList && this.props.updateList();
     }
   };
 
   _cancel = () => {
     //Check if user has some unsaved changes
-    const { filesToDelete, filesToUpload } = this._getUpdatedFiles();
+    const {filesToDelete, filesToUpload} = this._getUpdatedFiles();
 
     if (
       this.state.content != this.state.oldcontent ||
@@ -317,7 +330,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           style: 'cancel',
           onPress: () => {
             let content = this.state.oldcontent;
-            this.setState({ content }, () => {
+            this.setState({content}, () => {
               this.removeTempFiles();
               this.updateFiles();
               //finish editing
@@ -345,7 +358,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     let moment = TimeStampMilliSeconds();
 
     var req: {
-      requestDetails: { mindPopContentArray: Array<any>; mindPopID?: string };
+      requestDetails: {mindPopContentArray: Array<any>; mindPopID?: string};
       configurationTimestamp: string;
     } = {
       requestDetails: {
@@ -363,7 +376,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     if (this.state.id) {
       req = {
         ...req,
-        requestDetails: { ...req.requestDetails, mindPopID: this.state.id },
+        requestDetails: {...req.requestDetails, mindPopID: this.state.id},
       };
 
       if (filesToDelete.length > 0) {
@@ -380,7 +393,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         }
         req = {
           ...req,
-          requestDetails: { ...req.requestDetails, mindPopContentArray },
+          requestDetails: {...req.requestDetails, mindPopContentArray},
         };
       }
       message = 'Updating...';
@@ -391,7 +404,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     addEditMindPop(req, filesToUpload);
   };
 
-  _getUpdatedFiles = (): { filesToDelete: any[]; filesToUpload: TempFile[] } => {
+  _getUpdatedFiles = (): {filesToDelete: any[]; filesToUpload: TempFile[]} => {
     let filesToDelete: any[] = [];
     let fids: string[] = this.filesToUpload.map((it: TempFile) => it.fid);
     let filesToUpload: TempFile[] = [...this.filesToUpload];
@@ -408,12 +421,12 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       }
     }
 
-    return { filesToDelete, filesToUpload };
+    return {filesToDelete, filesToUpload};
   };
 
   _save = () => {
     Keyboard.dismiss();
-    const { filesToDelete, filesToUpload: uploads } = this._getUpdatedFiles();
+    const {filesToDelete, filesToUpload: uploads} = this._getUpdatedFiles();
 
     // if (this.state.content.trim().length > 0 || uploads.length > 0 || filesToDelete.length > 0) {
     if (
@@ -435,14 +448,15 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         if (filesToDelete.length > 0) {
           Alert.alert(
             'Delete',
-            `Are you sure you want to delete ${filesToDelete.length
+            `Are you sure you want to delete ${
+              filesToDelete.length
             } attachement${filesToDelete.length > 1 ? 's' : ''}`,
             [
               {
                 text: 'No',
                 style: 'cancel',
                 onPress: () => {
-                  this.setState({ deletedAttachments: [] });
+                  this.setState({deletedAttachments: []});
                 },
               },
               {
@@ -450,7 +464,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 style: 'default',
                 onPress: () => {
                   this._saveCall(filesToDelete, uploads);
-                  this.setState({ deletedAttachments: filesToDelete });
+                  this.setState({deletedAttachments: filesToDelete});
                 },
               },
             ],
@@ -463,7 +477,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   };
 
   private updateFiles = () => {
-    var listItems: Array<MainItem> = [{ itemType: 'editor' }];
+    var listItems: Array<MainItem> = [{itemType: 'editor'}];
     // let itemCount = (item.data as Array<any>).length
     let paddingSpace = 30; // horizontal padding of container view (15*2)
     var editScreenWidth = ScreenWidth - paddingSpace;
@@ -486,13 +500,13 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         let uri = (file.uri as string).replace('public://', this.fileMain);
         let fItem: {
           [x: string]: any;
-        } = { ...file, uri };
+        } = {...file, uri};
         if (fItem.type == 'images') {
           let thumb_uri = (fItem.thumb_uri as string).replace(
             'public://',
             this.fileMain,
           );
-          fItem = { ...fItem, thumb_uri };
+          fItem = {...fItem, thumb_uri};
         }
         data.push(fItem);
 
@@ -516,7 +530,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         listItems.length > 1 &&
         i == 0 &&
         listItems[listItems.length - 1].data.length <
-        (DeviceInfo.isTablet() ? 4 : 2)
+          (DeviceInfo.isTablet() ? 4 : 2)
       ) {
         lData = [...listItems[listItems.length - 1].data];
         listItems.pop();
@@ -536,14 +550,14 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     }
 
     if (data.length > 0) {
-      listItems.push({ itemType: 'list', data: [...data] });
+      listItems.push({itemType: 'list', data: [...data]});
     }
     this.props.actionRecord && this.audioAttachmentPress();
     this.props.actionImageUpload && this.cameraAttachmentPress();
     if (this.props.actionRecord || this.props.actionImageUpload) {
       //Do nothing
     } else {
-      this.setState({ listItems }, () => {
+      this.setState({listItems}, () => {
         this.state.id &&
           this.state.id.length == 0 &&
           this.filesToUpload.length == 0 &&
@@ -557,10 +571,10 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   componentWillUnmount = () => {
     this.listener.removeListener();
     this.backListner.removeListener();
-    Keyboard.removeAllListeners("keyboardDidShow")
-    Keyboard.removeAllListeners("keyboardDidHide")
-    Keyboard.removeAllListeners("keyboardWillShow")
-    Keyboard.removeAllListeners("keyboardWillHide")
+    Keyboard.removeAllListeners('keyboardDidShow');
+    Keyboard.removeAllListeners('keyboardDidHide');
+    Keyboard.removeAllListeners('keyboardWillShow');
+    Keyboard.removeAllListeners('keyboardWillHide');
   };
 
   saveTempFiles = (filesObjArray: Array<TempFile>) => {
@@ -599,9 +613,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   render() {
     return (
       <View style={Styles.mainContainer}>
-        <SafeAreaView
-          style={Styles.invisibleView}
-        />
+        <SafeAreaView style={Styles.invisibleView} />
         <SafeAreaView style={Styles.containerStyle}>
           <View style={Styles.mainContainer}>
             <EditHeader
@@ -613,13 +625,13 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
               style={{
                 width:
                   DeviceInfo.isTablet() &&
-                    this.props.navigation.state.routeName !== 'mindPopList'
+                  this.props.navigation.state.routeName !== 'mindPopList'
                     ? '80%'
                     : '100%',
                 ...(DeviceInfo.isTablet() &&
-                  this.props.navigation.state.routeName === 'mindPopList'
+                this.props.navigation.state.routeName === 'mindPopList'
                   ? {}
-                  : { maxWidth: 786 }),
+                  : {maxWidth: 786}),
                 flex: 1,
               }}>
               {this.renderHeader()}
@@ -700,12 +712,12 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
 
   audioAttachmentPress = () => {
     Keyboard.dismiss();
-    Actions.commonAudioRecorder({
+    this.props.navigation.commonAudioRecorder({
       mindPopID: this.state.id || 0,
       editRefresh: (file: any[]) => {
         Keyboard.dismiss();
         let fid = GenerateRandomID();
-        let tempFile: TempFile[] = file.map(obj => ({ ...obj, fid }));
+        let tempFile: TempFile[] = file.map(obj => ({...obj, fid}));
         this.saveTempFiles(tempFile);
         this.props.setValue(false);
       },
@@ -728,7 +740,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         'save',
       );
       Keyboard.dismiss();
-      Actions.pop();
+      this.props.navigation.goBack();
     } else {
       ToastMessage(NO_INTERNET);
     }
@@ -740,16 +752,22 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         keyboardShouldPersistTaps="always"
         style={Styles.scrollViewStyle}>
         <View
-          style={[Styles.toolBarContainer, {
-            justifyContent:
-              this.props.navigation.state.routeName == 'mindPopEdit' ? 'space-between' : 'flex-end',
-            ...(DeviceInfo.isTablet() && this.props.navigation.state.routeName == 'mindPopList'
-              ? {
-                borderLeftColor: Colors.backrgba,
-                borderLeftWidth: 1,
-              }
-              : {}),
-          }]}>
+          style={[
+            Styles.toolBarContainer,
+            {
+              justifyContent:
+                this.props.navigation.state.routeName == 'mindPopEdit'
+                  ? 'space-between'
+                  : 'flex-end',
+              ...(DeviceInfo.isTablet() &&
+              this.props.navigation.state.routeName == 'mindPopList'
+                ? {
+                    borderLeftColor: Colors.backrgba,
+                    borderLeftWidth: 1,
+                  }
+                : {}),
+            },
+          ]}>
           {this.state.bottomToolbar > 0 && (
             <TouchableHighlight
               underlayColor={Colors.white}
@@ -799,14 +817,10 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           ) : null}
           {this.state.id ? (
             <React.Fragment>
-              <View
-                style={Styles.converMemoryContainer}>
+              <View style={Styles.converMemoryContainer}>
                 <TouchableOpacity
                   onPress={() => this.convertToMemory(this.state.id)}>
-                  <Text
-                    style={Styles.converMemory}>
-                    Convert to Memory
-                  </Text>
+                  <Text style={Styles.converMemory}>Convert to Memory</Text>
                 </TouchableOpacity>
                 {this.isEdit ? (
                   <TouchableOpacity
@@ -814,7 +828,8 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                       Keyboard.dismiss();
                       Alert.alert(
                         'Are you sure you want to delete this MindPop?',
-                        `You will lose all content${this.files.length > 0 ? ' and files attached.' : ''
+                        `You will lose all content${
+                          this.files.length > 0 ? ' and files attached.' : ''
                         }.`,
                         [
                           {
@@ -823,7 +838,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                             onPress: () => {
                               //loaderHandler.showLoader("Deleting...");
                               this.props.deleteMindPops({
-                                mindPopList: [{ mindPopID: this.state.id }],
+                                mindPopList: [{mindPopID: this.state.id}],
                                 configurationTimestamp: TimeStampMilliSeconds(),
                               });
                             },
@@ -831,7 +846,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                           {
                             text: 'No',
                             style: 'cancel',
-                            onPress: () => { },
+                            onPress: () => {},
                           },
                         ],
                       );
@@ -840,8 +855,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                     <Image source={rubbish} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : (
-                  <View
-                    style={Styles.emptyContainerStyle}></View>
+                  <View style={Styles.emptyContainerStyle}></View>
                 )}
                 {/* {this.state.bottomToolbar > 0 && <TouchableOpacity
 							onPress={() => Keyboard.dismiss()}
@@ -854,20 +868,24 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         </View>
       </KeyboardAwareScrollView>
     ) : (
-      <KeyboardAccessory
-        style={Styles.KeyboardAccessoryStyle}>
+      <KeyboardAccessory style={Styles.KeyboardAccessoryStyle}>
         <View
-          style={[Styles.toolBarContainer, {
-            justifyContent:
-              this.props.navigation.state.routeName == 'mindPopEdit' ? 'space-between' : 'flex-end',
-            ...(DeviceInfo.isTablet() &&
+          style={[
+            Styles.toolBarContainer,
+            {
+              justifyContent:
+                this.props.navigation.state.routeName == 'mindPopEdit'
+                  ? 'space-between'
+                  : 'flex-end',
+              ...(DeviceInfo.isTablet() &&
               this.props.navigation.state.routeName == 'mindPopList'
-              ? {
-                borderLeftColor: Colors.backrgba,
-                borderLeftWidth: 1,
-              }
-              : {}),
-          }]}>
+                ? {
+                    borderLeftColor: Colors.backrgba,
+                    borderLeftWidth: 1,
+                  }
+                : {}),
+            },
+          ]}>
           {this.state.bottomToolbar > 0 && (
             <TouchableHighlight
               underlayColor={Colors.white}
@@ -917,14 +935,10 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           ) : null}
           {this.state.id ? (
             <React.Fragment>
-              <View
-                style={Styles.converMemoryContainer}>
+              <View style={Styles.converMemoryContainer}>
                 <TouchableOpacity
                   onPress={() => this.convertToMemory(this.state.id)}>
-                  <Text
-                    style={Styles.converMemory}>
-                    Convert to Memory
-                  </Text>
+                  <Text style={Styles.converMemory}>Convert to Memory</Text>
                 </TouchableOpacity>
                 {this.isEdit ? (
                   <TouchableOpacity
@@ -932,7 +946,8 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                       Keyboard.dismiss();
                       Alert.alert(
                         'Are you sure you want to delete this MindPop?',
-                        `You will lose all content${this.files.length > 0 ? ' and files attached.' : ''
+                        `You will lose all content${
+                          this.files.length > 0 ? ' and files attached.' : ''
                         }.`,
                         [
                           {
@@ -941,7 +956,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                             onPress: () => {
                               //loaderHandler.showLoader("Deleting...");
                               this.props.deleteMindPops({
-                                mindPopList: [{ mindPopID: this.state.id }],
+                                mindPopList: [{mindPopID: this.state.id}],
                                 configurationTimestamp: TimeStampMilliSeconds(),
                               });
                             },
@@ -949,7 +964,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                           {
                             text: 'No',
                             style: 'cancel',
-                            onPress: () => { },
+                            onPress: () => {},
                           },
                         ],
                       );
@@ -958,8 +973,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                     <Image source={rubbish} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : (
-                  <View
-                    style={Styles.emptyContainerStyle}></View>
+                  <View style={Styles.emptyContainerStyle}></View>
                 )}
                 {/* {this.state.bottomToolbar > 0 && <TouchableOpacity
 							onPress={() => Keyboard.dismiss()}
@@ -987,7 +1001,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         break;
     }
     this.setState({
-      actionSheet: { ...this.state.actionSheet, type: 'none', list: [] },
+      actionSheet: {...this.state.actionSheet, type: 'none', list: []},
     });
   };
 
@@ -1004,7 +1018,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       if (!this.state.id) {
         //Go Back
         Keyboard.dismiss();
-        Actions.pop();
+        this.props.navigation.goBack();
         DeviceEventEmitter.emit('updateSelected', 0);
         this.props.updateList && this.props.updateList();
         return;
@@ -1012,65 +1026,67 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       //remove all temporary files first
       this.removeTempFiles();
       let content = decode_utf8(decode_utf8(data.message || '') || '');
-      this.setState({
-        id: data.id,
-        content,
-        oldcontent: content,
-      }, () => {
-        if (data) {
-          this.setupFiles(data);
-          this.updateFiles();
-        }
-        if (this.state.deletedAttachments.length > 0) {
-          let ids = [...this.state.deletedAttachments].map((itm: { fid: string }) =>
-            parseInt(`${itm.fid}`),
-          );
-          MindPopStore.deleteMindPopAttachment(ids)
-            .then((resp: any) => {
-              //console.log("message", resp);
-              // this._prevUpdate();
-              DeviceEventEmitter.emit('updateSelected', 0);
-              this.props.updateList && this.props.updateList();
-              if (DeviceInfo.isTablet()) {
-                Keyboard.dismiss();
-                Actions.pop();
-              } else {
-                this._removeDeletedFiles(ids);
-                this.updateFiles();
-                this.props.setValue(true, data);
-              }
-            })
-            .catch((error: any) => {
-              // this._prevUpdate();
-              DeviceEventEmitter.emit('updateSelected', 0);
-              this.props.updateList && this.props.updateList();
-              //console.log("Error", error);
-              if (DeviceInfo.isTablet()) {
-                Keyboard.dismiss();
-                Actions.pop();
-              } else {
-                this.props.setValue(true, data);
-              }
-            });
-        } else {
-          DeviceEventEmitter.emit('updateSelected', 0);
-          this.props.updateList && this.props.updateList();
-          if (DeviceInfo.isTablet()) {
-            Keyboard.dismiss();
-            Actions.pop();
-          } else {
-            this.props.setValue(true, data);
+      this.setState(
+        {
+          id: data.id,
+          content,
+          oldcontent: content,
+        },
+        () => {
+          if (data) {
+            this.setupFiles(data);
+            this.updateFiles();
           }
-        }
-      });
-
+          if (this.state.deletedAttachments.length > 0) {
+            let ids = [...this.state.deletedAttachments].map(
+              (itm: {fid: string}) => parseInt(`${itm.fid}`),
+            );
+            MindPopStore.deleteMindPopAttachment(ids)
+              .then((resp: any) => {
+                //console.log("message", resp);
+                // this._prevUpdate();
+                DeviceEventEmitter.emit('updateSelected', 0);
+                this.props.updateList && this.props.updateList();
+                if (DeviceInfo.isTablet()) {
+                  Keyboard.dismiss();
+                  this.props.navigation.goBack();
+                } else {
+                  this._removeDeletedFiles(ids);
+                  this.updateFiles();
+                  this.props.setValue(true, data);
+                }
+              })
+              .catch((error: any) => {
+                // this._prevUpdate();
+                DeviceEventEmitter.emit('updateSelected', 0);
+                this.props.updateList && this.props.updateList();
+                //console.log("Error", error);
+                if (DeviceInfo.isTablet()) {
+                  Keyboard.dismiss();
+                  this.props.navigation.goBack();
+                } else {
+                  this.props.setValue(true, data);
+                }
+              });
+          } else {
+            DeviceEventEmitter.emit('updateSelected', 0);
+            this.props.updateList && this.props.updateList();
+            if (DeviceInfo.isTablet()) {
+              Keyboard.dismiss();
+              this.props.navigation.goBack();
+            } else {
+              this.props.setValue(true, data);
+            }
+          }
+        },
+      );
     } else {
       let message =
         typeof data == 'object'
           ? data.message || ERROR_MESSAGE
           : typeof data == 'string'
-            ? data
-            : ERROR_MESSAGE;
+          ? data
+          : ERROR_MESSAGE;
       ToastMessage(
         message,
         message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor,
@@ -1078,7 +1094,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     }
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps: { [x: string]: any }) {
+  UNSAFE_componentWillReceiveProps(nextProps: {[x: string]: any}) {
     //Delete MindPop Operation resolver
     if (nextProps.deleteStatus && nextProps.deleteStatus.completed) {
       loaderHandler.hideLoader();
@@ -1094,7 +1110,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           !this.isDeleteForMemory
         ) {
           Keyboard.dismiss();
-          Actions.pop();
+          this.props.navigation.goBack();
           return;
         } else if (this.props.navigation.state.routeName == 'mindPopEdit') {
           this.isDeleteForMemory = false;
@@ -1115,12 +1131,12 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     if (
       this.props.navigation.state.routeName == 'mindPopList' ||
       Object.keys(this.props.listItem || {}).length <
-      Object.keys(nextProps.listItem || {}).length
+        Object.keys(nextProps.listItem || {}).length
     ) {
       this.setupFiles(nextProps.listItem);
       this.updateFiles();
     }
-    var state: { [x: string]: any } = {};
+    var state: {[x: string]: any} = {};
     if (
       ((this.state.id == '' && getValue(nextProps, ['listItem', 'id'])) ||
         DeviceInfo.isTablet()) &&
@@ -1147,13 +1163,13 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     }
   }
 
-  setupFiles = (itemData: { [x: string]: any }) => {
+  setupFiles = (itemData: {[x: string]: any}) => {
     this.files = [];
     for (let key in itemData) {
       let item = itemData[key];
       if (Array.isArray(item)) {
         let list = item.map(it => {
-          return { ...it, type: key };
+          return {...it, type: key};
         });
         this.files = [...this.files, ...list];
       }
@@ -1165,7 +1181,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     if (this.props.actionRecord || this.props.actionImageUpload) {
       //Do nothing
     } else {
-      this.setState({ deletedAttachments: [] }, () => {
+      this.setState({deletedAttachments: []}, () => {
         this.state.id &&
           this.state.id.length == 0 &&
           this._inputRef &&
@@ -1191,9 +1207,13 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
             onResponderStart={() => this.enterEditMode()}>
             <Text
               multiline={true}
-              style={[Styles.captureMindPopText, {
-                fontStyle: this.state.content.length > 0 ? 'normal' : 'italic',
-              }]}>
+              style={[
+                Styles.captureMindPopText,
+                {
+                  fontStyle:
+                    this.state.content.length > 0 ? 'normal' : 'italic',
+                },
+              ]}>
               {this.state.content || 'Capture your MindPop...'}
             </Text>
           </View>
@@ -1202,14 +1222,17 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
             placeholder="Capture your MindPop..."
             ref={ref => (this._inputRef = ref)}
             onChangeText={text => {
-              this.setState({ content: text });
+              this.setState({content: text});
             }}
             placeholderTextColor="rgba(0, 0, 0, 0.8)"
             value={this.state.content}
             multiline={true}
-            style={[Styles.textInputStyle, {
-              fontStyle: this.state.content.length > 0 ? 'normal' : 'italic',
-            }]}
+            style={[
+              Styles.textInputStyle,
+              {
+                fontStyle: this.state.content.length > 0 ? 'normal' : 'italic',
+              },
+            ]}
           />
         )}
       </View>
@@ -1223,11 +1246,16 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     }
     return (
       <FlatList
-        style={[Styles.flatListContainer, {
-          marginBottom:
-            this.state.bottomToolbar > 0 ? this.state.bottomToolbar -
-              (Platform.OS == 'android' ? 230 : 160) : 60,
-        }]}
+        style={[
+          Styles.flatListContainer,
+          {
+            marginBottom:
+              this.state.bottomToolbar > 0
+                ? this.state.bottomToolbar -
+                  (Platform.OS == 'android' ? 230 : 160)
+                : 60,
+          },
+        ]}
         keyExtractor={(_: any, index: number) => `${index}`}
         keyboardShouldPersistTaps="always"
         horizontal={true}
@@ -1242,7 +1270,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           />
         )}
         renderItem={(element: any) =>
-          this._renderRow({ item: element.item }, 180)
+          this._renderRow({item: element.item}, 180)
         }
       />
     );
@@ -1313,13 +1341,13 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       } else {
         ToastMessage('Temp Attachment deleted');
         let ids = this.state.deletedAttachments.map(
-          (itm: { fid: string }) => itm.fid,
+          (itm: {fid: string}) => itm.fid,
         );
         deletedAttachments.splice(ids.indexOf(item.fid), 1);
       }
     }
 
-    this.setState({ deletedAttachments });
+    this.setState({deletedAttachments});
   };
 
   _renderRow = (
@@ -1328,12 +1356,12 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     }: {
       [x: string]: any;
       item: TempFile &
-      MindPopAttachment & {
-        type: string;
-        fid: string;
-        filename: string;
-        thumb_uri: string;
-      };
+        MindPopAttachment & {
+          type: string;
+          fid: string;
+          filename: string;
+          thumb_uri: string;
+        };
     },
     width: number,
   ) => {
@@ -1346,9 +1374,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         alignItems: 'center',
       },
       onPress: () => {
-        this.setState({ selectedItem: item }, () => {
+        this.setState({selectedItem: item}, () => {
           if (item.type == 'audios') {
-            Actions.commonAudioRecorder({
+            this.props.navigation.commonAudioRecorder({
               mindPopID: this.state.id,
               selectedItem: this.state.selectedItem,
               deleteItem: () => {
@@ -1356,7 +1384,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                   {
                     deletedAttachments: [
                       ...this.state.deletedAttachments,
-                      { ...this.state.selectedItem },
+                      {...this.state.selectedItem},
                     ],
                     selectedItem: null,
                   },
@@ -1366,18 +1394,18 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 );
               },
               reset: () => {
-                this.setState({ selectedItem: null });
+                this.setState({selectedItem: null});
               },
             });
           } else if (item.type == 'images') {
-            Actions.previewImage({
+            this.props.navigation.previewImage({
               selectedItem: this.state.selectedItem,
               deleteItem: () => {
                 this.setState(
                   {
                     deletedAttachments: [
                       ...this.state.deletedAttachments,
-                      { ...this.state.selectedItem },
+                      {...this.state.selectedItem},
                     ],
                     selectedItem: null,
                   },
@@ -1387,14 +1415,14 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 );
               },
               reset: () => {
-                this.setState({ selectedItem: null });
+                this.setState({selectedItem: null});
               },
               isEditMode:
                 this.props.navigation.state.routeName == 'mindPopEdit',
             });
           } else if (item.type == 'files') {
             item.url = item.uri;
-            Actions.push('pdfViewer', { file: item });
+            this.props.navigation.push('pdfViewer', {file: item});
           }
         });
       },
@@ -1404,7 +1432,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     var thumb_uri = item.thumb_uri;
     if (item.fid) {
       let ids = this.state.deletedAttachments.map(
-        (itm: { fid: string }) => itm.fid,
+        (itm: {fid: string}) => itm.fid,
       );
       found = ids.indexOf(item.fid || `${item.id}`) != -1;
     }
@@ -1420,7 +1448,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         {found ? (
           <View></View>
         ) : (
-          <TouchableOpacity {...props} key={item.fid} style={{ padding: 13 }}>
+          <TouchableOpacity {...props} key={item.fid} style={{padding: 13}}>
             <View
               style={{
                 borderWidth: 1,
@@ -1434,60 +1462,52 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                   style={Styles.imageBackgrounStyle}
                   source={sound_wave}
                   resizeMode="contain">
-                  <View
-                    style={Styles.imageBackgrounContainerStyle}>
-                    <View
-                      style={Styles.imageBackgrounsubContainerStyle}>
+                  <View style={Styles.imageBackgrounContainerStyle}>
+                    <View style={Styles.imageBackgrounsubContainerStyle}>
                       <Image
                         style={Styles.audioPlayStyle}
                         source={audio_play}
                       />
                     </View>
                   </View>
-                  <Text
-                    numberOfLines={1}
-                    style={Styles.fileName}>{`${item.title ? item.title : item.filename ? item.filename : ''
-                      }`}</Text>
+                  <Text numberOfLines={1} style={Styles.fileName}>{`${
+                    item.title ? item.title : item.filename ? item.filename : ''
+                  }`}</Text>
                 </ImageBackground>
               ) : item.type == 'images' ? (
                 <Image
-                  source={{ uri: item.thumb_uri }}
-                  style={{ width: width, height: thumbnailHeight }}
+                  source={{uri: item.thumb_uri}}
+                  style={{width: width, height: thumbnailHeight}}
                   resizeMode="contain"
                 />
               ) : item.type == 'files' ? (
-                <View
-                  style={Styles.imageBackgrounStyle}>
+                <View style={Styles.imageBackgrounStyle}>
                   <ImageBackground
                     style={Styles.pdfImagebackground}
                     source={pdf_icon}
                     resizeMode="contain"
                   />
-                  <Text
-                    numberOfLines={1}
-                    style={Styles.fileName}>
+                  <Text numberOfLines={1} style={Styles.fileName}>
                     {`${item.filename}`}
                   </Text>
                 </View>
               ) : null}
-              {found ? (
-                <View
-                  style={Styles.found}
-                />
-              ) : null}
+              {found ? <View style={Styles.found} /> : null}
             </View>
 
             {!this.isEdit &&
-              this.props.navigation.state.routeName == 'mindPopEdit' ? (
+            this.props.navigation.state.routeName == 'mindPopEdit' ? (
               <TouchableOpacity
                 onPress={() => this._selDelete(item, found)}
                 style={Styles.deleteContainer}>
                 <View
-                  style={[Styles.deleteSubCon, {
-                    backgroundColor: found ? '#ff2315' : Colors.black,
-                  }]}>
-                  <Text
-                    style={Styles.crossText}>{`${found ? '-' : '✕'}`}</Text>
+                  style={[
+                    Styles.deleteSubCon,
+                    {
+                      backgroundColor: found ? '#ff2315' : Colors.black,
+                    },
+                  ]}>
+                  <Text style={Styles.crossText}>{`${found ? '-' : '✕'}`}</Text>
                 </View>
               </TouchableOpacity>
             ) : null}
@@ -1498,23 +1518,23 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   };
 }
 
-const mapState = (state: { [x: string]: any }) => ({
+const mapState = (state: {[x: string]: any}) => ({
   list: state.getMindPop,
   addMindPop: state.addMindPop,
   deleteStatus: state.deleteMindPop,
-  ...(DeviceInfo.isTablet() ? {} : { isEdit: state.mindPopEditMode.mode }),
+  ...(DeviceInfo.isTablet() ? {} : {isEdit: state.mindPopEditMode.mode}),
   listItem: state.mindPopEditMode.selectedMindPop,
 });
 
 const mapDispatch = (dispatch: Function) => {
   return {
     deleteMindPops: (payload: any) =>
-      dispatch({ type: DeleteMindPopOperation.RequestStarted, payload }),
+      dispatch({type: DeleteMindPopOperation.RequestStarted, payload}),
     deleteMindPopsCallEnd: () =>
-      dispatch({ type: DeleteMindPopOperation.RequestEnded }),
-    complete: () => dispatch({ type: AddMindPopStatus.RequestEnded }),
-    cleanEdit: () => dispatch({ type: EditMode.UNSELECT }),
-    edit: () => dispatch({ type: EditMode.RESET }),
+      dispatch({type: DeleteMindPopOperation.RequestEnded}),
+    complete: () => dispatch({type: AddMindPopStatus.RequestEnded}),
+    cleanEdit: () => dispatch({type: EditMode.UNSELECT}),
+    edit: () => dispatch({type: EditMode.RESET}),
     // callEnded: () => dispatch({ type: GetMindPopStatus.RequestEnded }),
     setValue: (mode: boolean, value: any) =>
       dispatch({
@@ -1522,7 +1542,7 @@ const mapDispatch = (dispatch: Function) => {
         payload: value,
       }),
     listMindPops: (payload: any) =>
-      dispatch({ type: GetMindPopStatus.RequestStarted, payload }),
+      dispatch({type: GetMindPopStatus.RequestStarted, payload}),
   };
 };
 

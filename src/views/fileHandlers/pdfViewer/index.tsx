@@ -1,12 +1,10 @@
 import React from 'react';
-import {
-  Dimensions, Keyboard, SafeAreaView, StatusBar
-} from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { ToastMessage } from '../../../common/component/Toast';
+import {Dimensions, Keyboard, SafeAreaView, StatusBar} from 'react-native';
+
+import {ToastMessage} from '../../../common/component/Toast';
 //@ts-ignore
 import Pdf from 'react-native-pdf';
-import { Colors, decode_utf8 } from '../../../common/constants';
+import {Colors, decode_utf8} from '../../../common/constants';
 import Utility from '../../../common/utility';
 import Styles from './styles';
 type Props = {[x: string]: any};
@@ -21,7 +19,7 @@ export default class PDFViewer extends React.Component<Props> {
 
   cancelAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   render() {
@@ -39,7 +37,11 @@ export default class PDFViewer extends React.Component<Props> {
 
     return (
       <SafeAreaView style={Styles.container}>
-        <StatusBar barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
+        <StatusBar
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
+        />
         {/* <WebView 
                         automaticallyAdjustContentInsets={false}
                         source={{uri: 'http://docs.google.com/gview?embedded=true&url='+filePath}}

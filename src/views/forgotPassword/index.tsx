@@ -1,35 +1,42 @@
 import React from 'react';
 import {
-  Keyboard, KeyboardAvoidingView,
-  SafeAreaView, StatusBar, TextInput, TouchableOpacity, View
+  Keyboard,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  StatusBar,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { connect } from 'react-redux';
-import { SubmitButton } from '../../common/component/button';
+import {connect} from 'react-redux';
+import {SubmitButton} from '../../common/component/button';
 import Text from '../../common/component/Text';
-import { styles } from './styles';
+import {styles} from './styles';
 import {
-  ForgotPasswordServiceStatus, ForgotPasswordState
+  ForgotPasswordServiceStatus,
+  ForgotPasswordState,
 } from './forgotPasswordReducer';
 
-import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import TextField from '../../common/component/textField';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import {
   Colors,
-  fontSize, getValue, Size,
-  testEmail
+  fontSize,
+  getValue,
+  Size,
+  testEmail,
 } from '../../common/constants';
-import { Account } from '../../common/loginStore';
-import { Props } from '../login/loginController';
+import {Account} from '../../common/loginStore';
+import {Props} from '../login/loginController';
 //@ts-ignore
-import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
+import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../common/utility';
-import { loginInstanceRequest } from '../../common/webservice/loginServices';
-import { backBlkBtn } from '../../images';
-import { ListType } from '../login/commonInstanceListSelection';
-import { kAdmin } from '../registration/getInstancesSaga';
+import {loginInstanceRequest} from '../../common/webservice/loginServices';
+import {backBlkBtn} from '../../images';
+import {ListType} from '../login/commonInstanceListSelection';
+import {kAdmin} from '../registration/getInstancesSaga';
 //Login Component
 class ForgotPassword extends React.Component<Props> {
   //Password Field Reference
@@ -99,31 +106,30 @@ class ForgotPassword extends React.Component<Props> {
           <NavigationHeaderSafeArea
             heading={'Forgot Password'}
             showCommunity={false}
-            cancelAction={() => Actions.pop()}
+            cancelAction={() => this.props.navigation.pop()}
             showRightText={false}
             isWhite={true}
             backIcon={backBlkBtn}
           />
           <StatusBar
-            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+            barStyle={
+              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+            }
             backgroundColor={Colors.NewDarkThemeColor}
           />
           <KeyboardAwareScrollView
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             style={styles.scrollViewStyles}>
-            <View
-              style={ styles.loginContainer}>
+            <View style={styles.loginContainer}>
               {/** Commuity banner UI */}
-              <View
-                style={styles.communityBanner}>
+              <View style={styles.communityBanner}>
                 <View style={styles.subcommunityBanner}>
                   {/* <View style={styles.communityBanner}>
 										<CommunityBanner communityInfo={this.selectedCommunity} />
 									</View> */}
 
-                  <Text
-                    style={styles.enterEmailText}>
+                  <Text style={styles.enterEmailText}>
                     {this.state.isRequestSubmitted
                       ? 'You will soon receive an email with the instructions to reset the password.'
                       : `Please enter your email address to reset your password`}
@@ -168,19 +174,16 @@ class ForgotPassword extends React.Component<Props> {
               <View style={styles.resendContainer}>
                 {this.state.isRequestSubmitted && (
                   <View style={styles.resendSubContainer}>
-                    <Text
-                      style={styles.dintReceivedText}>
+                    <Text style={styles.dintReceivedText}>
                       Didn't receive the Email?
                     </Text>
-                    <Text
-                      style={styles.spamTextStyle}>
+                    <Text style={styles.spamTextStyle}>
                       Please check your spam folder, or
                     </Text>
                     <TouchableOpacity
                       style={styles.resendButtonStyle}
                       onPress={this.resetButtonAction.bind(this)}>
-                      <Text
-                        style={styles.resendTextStyle}>
+                      <Text style={styles.resendTextStyle}>
                         Request to resend email.
                       </Text>
                     </TouchableOpacity>
@@ -245,10 +248,10 @@ class ForgotPassword extends React.Component<Props> {
         .then((response: Response) => response.json())
         .catch((err: any) => console.log(err));
 
-        console.log("response of instance is: ",JSON.stringify(response))
+      console.log('response of instance is: ', JSON.stringify(response));
       if (response.ResponseCode == 200) {
         if (response.Response.length > 1) {
-          Actions.push('commonInstanceListsSelection', {
+          this.props.navigation.push('commonInstanceListsSelection', {
             listAccounts: response.Response,
             title: 'Forgot Password',
             type: ListType.ForgotPassword,
@@ -275,7 +278,7 @@ class ForgotPassword extends React.Component<Props> {
 
   onDoneButtonAction() {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   }
 }
 

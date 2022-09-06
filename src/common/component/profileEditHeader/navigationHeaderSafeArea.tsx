@@ -1,17 +1,21 @@
 import React from 'react';
 import {
-  Image, Keyboard, StatusBar, TouchableWithoutFeedback, View
+  Image,
+  Keyboard,
+  StatusBar,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 //@ts-ignore
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import { Actions } from 'react-native-router-flux';
-import { penEdit } from '../../../../app/images';
-import { black_arrow, close_white } from '../../../images';
-import { Colors } from '../../constants';
-import { Account } from '../../loginStore';
+
+import {penEdit} from '../../../../app/images';
+import {black_arrow, close_white} from '../../../images';
+import {Colors} from '../../constants';
+import {Account} from '../../loginStore';
 import Utility from '../../utility';
 import MessageDialogue from '../messageDialogue';
-import { default as Text, default as TextNew } from '../Text';
+import {default as Text, default as TextNew} from '../Text';
 import styles from './styles';
 
 const options = {
@@ -19,7 +23,7 @@ const options = {
   ignoreAndroidSystemSettings: false,
 };
 
-class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
+class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
   messageRef: any | MessageDialogue = null;
   static defaultProps = {
     showRightText: true,
@@ -28,28 +32,31 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
     return (
       <View>
         {!this.props.hideClose ? (
-          <TouchableWithoutFeedback
-            onPress={() => this.props.cancelAction()}>
+          <TouchableWithoutFeedback onPress={() => this.props.cancelAction()}>
             <View style={styles.leftButtonTouchableContainer}>
               <Image
-                style={this.props.showRightText ? styles.cancelImage : styles.cancelImageConditional}
+                style={
+                  this.props.showRightText
+                    ? styles.cancelImage
+                    : styles.cancelImageConditional
+                }
                 resizeMode="center"
                 source={
-                  this.props.backIcon ? this.props.backIcon : this.props.isWhite ? black_arrow : close_white
+                  this.props.backIcon
+                    ? this.props.backIcon
+                    : this.props.isWhite
+                    ? black_arrow
+                    : close_white
                 }
               />
-              {
-                this.props.backIcon
-                  ?
-                  <View style={styles.cancleTextContainer}>
-                    <Text style={styles.cancleText}>
-                      {this.props.cancleText ? this.props.cancleText : "Cancel"}
-                    </Text>
-                  </View>
-                  : null
-              }
+              {this.props.backIcon ? (
+                <View style={styles.cancleTextContainer}>
+                  <Text style={styles.cancleText}>
+                    {this.props.cancleText ? this.props.cancleText : 'Cancel'}
+                  </Text>
+                </View>
+              ) : null}
             </View>
-
           </TouchableWithoutFeedback>
         ) : (
           <View style={styles.emptyView}></View>
@@ -67,7 +74,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
         <Text
           style={[
             styles.titleText,
-            { color: this.props.isWhite ? Colors.black : Colors.TextColor },
+            {color: this.props.isWhite ? Colors.black : Colors.TextColor},
           ]}
           numberOfLines={1}
           ellipsizeMode="tail">
@@ -78,44 +85,48 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
   }
 
   _renderRight() {
-    return (
-      this.props.rightIcon ?
-        <View style={styles.rightContainer}>
+    return this.props.rightIcon ? (
+      <View style={styles.rightContainer}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.props.saveValues();
+          }}>
+          <View style={styles.rightButtonsTouchableStyle}>
+            <Image source={penEdit} resizeMode="contain" />
+            <View style={styles.height4} />
+            <Text style={styles.cancleText}>{this.props.rightText}</Text>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    ) : (
+      <View style={styles.rightButtonsContainer}>
+        {this.props.showRightText && (
           <TouchableWithoutFeedback
             onPress={() => {
+              if (this.props.showRightText == 'Publish') {
+                ReactNativeHapticFeedback.trigger('impactMedium', options);
+              }
               this.props.saveValues();
-            }}>
-            <View style={styles.rightButtonsTouchableStyle}>
-              <Image
-                source={penEdit}
-                resizeMode="contain"
-              />
-              <View style={styles.height4} />
-              <Text style={styles.cancleText}>{this.props.rightText}</Text>
-            </View>
+            }}
+            style={
+              this.props.rightText === 'Save'
+                ? styles.rightButtonSaveTouchable
+                : styles.rightButtonsTouchable
+            }>
+            <Text
+              style={[
+                styles.rightTextStyle,
+                {
+                  color: this.props.isWhite
+                    ? Colors.newDescTextColor
+                    : Colors.newDescTextColor,
+                },
+              ]}>
+              {this.props.rightText}
+            </Text>
           </TouchableWithoutFeedback>
-
-        </View>
-        :
-        <View style={styles.rightButtonsContainer}>
-          {this.props.showRightText && (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                if (this.props.showRightText == 'Publish') {
-                  ReactNativeHapticFeedback.trigger('impactMedium', options);
-                }
-                this.props.saveValues();
-              }}
-              style={this.props.rightText === "Save" ? styles.rightButtonSaveTouchable : styles.rightButtonsTouchable}>
-              <Text
-                style={[styles.rightTextStyle, {
-                  color: this.props.isWhite ? Colors.newDescTextColor : Colors.newDescTextColor,
-                }]}>
-                {this.props.rightText}
-              </Text>
-            </TouchableWithoutFeedback>
-          )}
-          {/* {this.props.rightIcon && (
+        )}
+        {/* {this.props.rightIcon && (
           <TouchableWithoutFeedback onPress={() => this.props.showHideMenu()}>
             <View
               style={styles.moreOptionContainer}>
@@ -123,18 +134,17 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
             </View>
           </TouchableWithoutFeedback>
         )} */}
-        </View>
-
+      </View>
     );
   }
 
   _showWithOutClose = (message: any, color: any) => {
     this.messageRef &&
-      this.messageRef._showWithOutClose({ message: message, color: color });
+      this.messageRef._showWithOutClose({message: message, color: color});
   };
 
   _show = (message: any, color: any) => {
-    this.messageRef && this.messageRef._show({ message: message, color: color });
+    this.messageRef && this.messageRef._show({message: message, color: color});
   };
 
   _hide = () => {
@@ -147,14 +157,13 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
         ? 'calpoly.cueback.com'
         : accData.instanceURL;
     return (
-      <View >
+      <View>
         {this.props.isRegisteration ? (
-          <View
-            style={styles.registrationContainerStyle}>
+          <View style={styles.registrationContainerStyle}>
             <TouchableWithoutFeedback
               onPress={() => {
                 Keyboard.dismiss();
-                Actions.pop();
+                this.props.navigation.goBack();
               }}>
               <View style={styles.backArrowContainerSTyle}>
                 <Image source={black_arrow} />
@@ -162,7 +171,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
             </TouchableWithoutFeedback>
             <View style={styles.imageContainer}>
               <Image
-                source={{ uri: accData.instanceImage }}
+                source={{uri: accData.instanceImage}}
                 style={styles.image}
               />
             </View>
@@ -174,9 +183,15 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
           </View>
         ) : (
           <View
-            style={[styles.mainContainer, { borderBottomWidth: this.props.isWhite ? 2 : 0, borderTopLeftRadius: 12, borderTopRightRadius: 12 }]}>
-            <View
-              style={styles.subContainer}>
+            style={[
+              styles.mainContainer,
+              {
+                borderBottomWidth: this.props.isWhite ? 2 : 0,
+                borderTopLeftRadius: 12,
+                borderTopRightRadius: 12,
+              },
+            ]}>
+            <View style={styles.subContainer}>
               {this._renderLeft()}
               {this._renderMiddle()}
             </View>
@@ -185,7 +200,13 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
           </View>
         )}
         <MessageDialogue ref={ref => (this.messageRef = ref)} />
-        {this.props.isWhite && <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />}
+        {this.props.isWhite && (
+          <StatusBar
+            barStyle={
+              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+            }
+          />
+        )}
       </View>
     );
   }

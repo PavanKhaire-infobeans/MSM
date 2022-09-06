@@ -1,17 +1,24 @@
 import React from 'react';
 import {
-  Alert, Image, Keyboard, Platform, SafeAreaView, Text,
-  TextInput, TouchableOpacity, View
+  Alert,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { Colors } from '../../common/constants';
+import {Colors} from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import { pdf_icon } from '../../images';
+import {pdf_icon} from '../../images';
 import Styles from './styles';
 
-type State = { [x: string]: any };
-type Props = { [x: string]: any };
+type State = {[x: string]: any};
+type Props = {[x: string]: any};
 
 export default class FileDescription extends React.Component<Props, State> {
   keyboardDidShowListener: any;
@@ -31,35 +38,37 @@ export default class FileDescription extends React.Component<Props, State> {
   componentDidMount() {
     this.file_title = this.props.file.file_title;
     this.description = this.props.file.file_description;
-    this.setState({
-      file_title: this.file_title,
-      description: this.description,
-    }, () => {
-      this.backListner = EventManager.addListener(
-        'hardwareBackPress',
-        this.cancelAction,
-      );
-      if (Platform.OS == 'android') {
-        this.keyboardDidShowListener = Keyboard.addListener(
-          'keyboardDidShow',
-          this._keyboardDidShow,
+    this.setState(
+      {
+        file_title: this.file_title,
+        description: this.description,
+      },
+      () => {
+        this.backListner = EventManager.addListener(
+          'hardwareBackPress',
+          this.cancelAction,
         );
-        this.keyboardDidHideListener = Keyboard.addListener(
-          'keyboardDidHide',
-          this._keyboardDidHide,
-        );
-      } else {
-        this.keyboardDidShowListener = Keyboard.addListener(
-          'keyboardWillShow',
-          this._keyboardDidShow,
-        );
-        this.keyboardDidHideListener = Keyboard.addListener(
-          'keyboardWillHide',
-          this._keyboardDidHide,
-        );
-      }
-    });
-
+        if (Platform.OS == 'android') {
+          this.keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            this._keyboardDidShow,
+          );
+          this.keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            this._keyboardDidHide,
+          );
+        } else {
+          this.keyboardDidShowListener = Keyboard.addListener(
+            'keyboardWillShow',
+            this._keyboardDidShow,
+          );
+          this.keyboardDidHideListener = Keyboard.addListener(
+            'keyboardWillHide',
+            this._keyboardDidHide,
+          );
+        }
+      },
+    );
   }
 
   _keyboardDidShow = (e: any) => {
@@ -75,11 +84,11 @@ export default class FileDescription extends React.Component<Props, State> {
   };
 
   componentWillUnmount() {
-    this.backListner.removeListener()
-    Keyboard.removeAllListeners("keyboardDidShow")
-    Keyboard.removeAllListeners("keyboardDidHide")
-    Keyboard.removeAllListeners("keyboardWillShow")
-    Keyboard.removeAllListeners("keyboardWillHide")
+    this.backListner.removeListener();
+    Keyboard.removeAllListeners('keyboardDidShow');
+    Keyboard.removeAllListeners('keyboardDidHide');
+    Keyboard.removeAllListeners('keyboardWillShow');
+    Keyboard.removeAllListeners('keyboardWillHide');
   }
   cancelAction = () => {
     if (
@@ -87,16 +96,15 @@ export default class FileDescription extends React.Component<Props, State> {
       this.state.description == this.description
     ) {
       Keyboard.dismiss();
-      Actions.pop();
+      this.props.navigation.goBack();
     } else {
-
       Alert.alert('Save changes?', `Do you want to save your changes?`, [
         {
           text: 'No',
           style: 'cancel',
           onPress: () => {
             Keyboard.dismiss();
-            Actions.pop();
+            this.props.navigation.goBack();
           },
         },
         {
@@ -115,10 +123,8 @@ export default class FileDescription extends React.Component<Props, State> {
     switch (file.type) {
       case 'images':
         return (
-          <View
-            style={Styles.fileHolderContainer}>
-            <View
-              style={Styles.fileHolderSubContainer}>
+          <View style={Styles.fileHolderContainer}>
+            <View style={Styles.fileHolderSubContainer}>
               <Image
                 source={{
                   uri: file.filePath ? file.filePath : file.thumbnail_url,
@@ -131,32 +137,25 @@ export default class FileDescription extends React.Component<Props, State> {
         break;
       case 'files':
         return (
-          <View
-            style={Styles.fileHolderContainer}>
-            <View
-              style={Styles.fileHolderSubContainer}>
+          <View style={Styles.fileHolderContainer}>
+            <View style={Styles.fileHolderSubContainer}>
               <Image
                 source={pdf_icon}
                 resizeMode={'contain'}
-                style={{ backgroundColor: Colors.transparent }}
+                style={{backgroundColor: Colors.transparent}}
               />
-              <Image
-                source={pdf_icon}
-                style={Styles.pdfIconImageStyle}></Image>
+              <Image source={pdf_icon} style={Styles.pdfIconImageStyle}></Image>
             </View>
           </View>
         );
         break;
       case 'audios':
         return (
-          <View
-            style={Styles.audioContainer}>
+          <View style={Styles.audioContainer}>
             <TouchableOpacity
-              onPress={() => { }}
+              onPress={() => {}}
               style={Styles.playButtonContainer}>
-              <View
-                style={Styles.playStyle}
-              />
+              <View style={Styles.playStyle} />
             </TouchableOpacity>
             <View style={Styles.durationContainer}>
               <Text
@@ -165,9 +164,7 @@ export default class FileDescription extends React.Component<Props, State> {
                 ellipsizeMode="tail">
                 {file.title ? file.title : file.filename ? file.filename : ''}
               </Text>
-              <Text style={Styles.durationTextStyle}>
-                {file.duration}
-              </Text>
+              <Text style={Styles.durationTextStyle}>{file.duration}</Text>
             </View>
           </View>
         );
@@ -187,15 +184,13 @@ export default class FileDescription extends React.Component<Props, State> {
       );
     }
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   render() {
     return (
       <View style={Styles.fullFlex}>
-        <SafeAreaView
-          style={Styles.emptySafeAreaStyle}
-        />
+        <SafeAreaView style={Styles.emptySafeAreaStyle} />
         <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
           <View style={Styles.fullFlex}>
             <NavigationHeaderSafeArea
@@ -220,21 +215,24 @@ export default class FileDescription extends React.Component<Props, State> {
                 numberOfLines={5}
                 value={this.state.file_title}
                 onChangeText={(text: any) =>
-                  this.setState({ file_title: text })
+                  this.setState({file_title: text})
                 }></TextInput>
 
               <TextInput
                 style={Styles.descTextInputStyle}
                 placeholder="Enter description..."
                 placeholderTextColor={Colors.darkGray}
-                onChangeText={(text: any) => this.setState({ description: text })}
+                onChangeText={(text: any) => this.setState({description: text})}
                 value={this.state.description}
-                onScroll={() => { }}
+                onScroll={() => {}}
                 multiline={true}></TextInput>
             </View>
             {Platform.OS == 'ios' && (
               <View
-                style={[Styles.fullWidth, { height: this.state.supportView }]}></View>
+                style={[
+                  Styles.fullWidth,
+                  {height: this.state.supportView},
+                ]}></View>
             )}
           </View>
         </SafeAreaView>

@@ -1,11 +1,15 @@
 import React from 'react';
 import {
-  ActivityIndicator, Keyboard, SafeAreaView, StatusBar, View
+  ActivityIndicator,
+  Keyboard,
+  SafeAreaView,
+  StatusBar,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import WebView from 'react-native-webview';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { Colors } from '../../common/constants';
+import {Colors} from '../../common/constants';
 import Utility from '../../common/utility';
 import Styles from './styles';
 type Props = {[x: string]: any};
@@ -31,13 +35,15 @@ export default class CommonWebView extends React.Component<Props> {
   render() {
     return (
       <View style={Styles.container}>
-        <SafeAreaView
-          style={Styles.noViewStyle}
-        />
+        <SafeAreaView style={Styles.noViewStyle} />
         <SafeAreaView style={Styles.safeAreaContextStyle}>
           <View style={Styles.container}>
             <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             {/* <NavigationBar title={TabItems.AllMemories}/>             */}
@@ -63,9 +69,9 @@ export default class CommonWebView extends React.Component<Props> {
                 cancelAction={() => {
                   Keyboard.dismiss();
                   if (this.props.deepLinkBackClick) {
-                    Actions.dashBoard();
+                    this.props.navigation.dashBoard();
                   } else {
-                    Actions.pop();                    
+                    this.props.navigation.goBack();
                   }
                 }}
               />

@@ -1,19 +1,13 @@
 import React from 'react';
-import {
-  Alert,
-  DeviceEventEmitter
-} from 'react-native';
+import {Alert, DeviceEventEmitter} from 'react-native';
 
-import { Actions } from 'react-native-router-flux';
 import BatchedBridge from 'react-native/Libraries/BatchedBridge/BatchedBridge';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 // import {eventEmitter} from '../splashscreen';
 
 // @ts-ignore
-import {
-  MemoryActionsSheetItem
-} from '../../common/component/memoryActionsSheet';
-import { logout } from '../../common/webservice/webservice';
+import {MemoryActionsSheetItem} from '../../common/component/memoryActionsSheet';
+import {logout} from '../../common/webservice/webservice';
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
@@ -26,20 +20,24 @@ export class ExposedToJava {
     nid = nid.trim();
     type = type.trim();
     comment = comment && comment.length > 0 ? true : false;
-    Actions.push('memoryDetails', {nid: nid, type: type, comment: comment});
+    this.props.navigation.push('memoryDetails', {
+      nid: nid,
+      type: type,
+      comment: comment,
+    });
   }
 
   openPDFView(url: any) {
-    Actions.push('pdfViewer', {file: {url: url}});
+    this.props.navigation.push('pdfViewer', {file: {url: url}});
   }
 
   openAudioController(audioJson: any) {
-    // Actions.push("pdfViewer", {file: {url : url}});
+    // this.props.navigation.push("pdfViewer", {file: {url : url}});
     Alert.alert(audioJson);
   }
 
   openImageController(imageJson: any) {
-    // Actions.push("pdfViewer", {file: {url : url}});
+    // this.props.navigation.push("pdfViewer", {file: {url : url}});
     Alert.alert(imageJson);
   }
 }
@@ -168,7 +166,7 @@ class DashBoard extends React.Component<DashProps> {
   //     this.checkNotificationAvailiability();
   // }
   // changeNotification=()=>{
-  //     Actions.refresh('root')
+  //     this.props.navigation.refresh('root')
   // }
   // foregroundNotificationCallback=(details : any)=>{
   //     if(Utility.isInternetConnected){
@@ -211,9 +209,9 @@ class DashBoard extends React.Component<DashProps> {
   //         if(Utility.notificationObject.isBackgroundNotification){
   //             SetSeenActivity({"ids" : details.ids}, 0)
   //             if(details.status==0 && (details.notificationType.indexOf("collaboration")!= -1 || details.notificationType.indexOf("new_edits") != -1)){
-  //                 Actions.push("createMemory", {editMode : true, draftNid : details.nid})
+  //                 this.props.navigation.push("createMemory", {editMode : true, draftNid : details.nid})
   //             } else {
-  //                 Actions.push("memoryDetails", {"nid": details.nid, "type": details.type})
+  //                 this.props.navigation.push("memoryDetails", {"nid": details.nid, "type": details.type})
   //             }
   //         } else {
   //             EventManager.callBack(kForegroundNotificationListener, details);
@@ -231,7 +229,7 @@ class DashBoard extends React.Component<DashProps> {
   //             let position = 0;
   //             images = event.nativeEvent.images;
   //             position = event.nativeEvent.index;
-  //             Actions.jump("imageViewer", {files : images, index : position})
+  //             this.props.navigation.jump("imageViewer", {files : images, index : position})
   //         } else{
   //             No_Internet_Warning();
   //         }
@@ -239,7 +237,7 @@ class DashBoard extends React.Component<DashProps> {
   // _onOpenPdfs(event: any){
   //     if(Utility.isInternetConnected){
   //         if(this.callerTimeout){
-  //               Actions.jump("pdfViewer", {file: {url : encode_utf8(event.nativeEvent.pdfUrl)}});
+  //               this.props.navigation.jump("pdfViewer", {file: {url : encode_utf8(event.nativeEvent.pdfUrl)}});
   //         }
   //           this.callerTimeout = false;
   //           setTimeout(() => {
@@ -252,7 +250,7 @@ class DashBoard extends React.Component<DashProps> {
   // _onShowMemoryDetails(event: any){
   //     if(this.callerTimeout){
   //         if(Utility.isInternetConnected){
-  //             Actions.jump("memoryDetails", {"nid": event.nativeEvent.nid, "type": event.nativeEvent.type, "comment": event.nativeEvent.comment ? true : false, "showComments": event.nativeEvent.showComments ? true: false})
+  //             this.props.navigation.jump("memoryDetails", {"nid": event.nativeEvent.nid, "type": event.nativeEvent.type, "comment": event.nativeEvent.comment ? true : false, "showComments": event.nativeEvent.showComments ? true: false})
   //         } else{
   //             No_Internet_Warning();
   //         }
@@ -309,9 +307,9 @@ class DashBoard extends React.Component<DashProps> {
   //     if(Utility.isInternetConnected){
   //         loaderHandler.showLoader();
   //         // if (nid){
-  //             Actions.push("createMemory", {editMode : true, draftNid : nid ? nid : event.nid, editPublsihedMemory: true})
+  //             this.props.navigation.push("createMemory", {editMode : true, draftNid : nid ? nid : event.nid, editPublsihedMemory: true})
   //         // }else{
-  //         //     Actions.push("createMemory", {editMode : true, draftNid : event.nid})
+  //         //     this.props.navigation.push("createMemory", {editMode : true, draftNid : event.nid})
   //         // }
   //     } else{
   //         No_Internet_Warning();
@@ -434,7 +432,7 @@ class DashBoard extends React.Component<DashProps> {
   //     Alert.alert(""+test.images.index);
   // }
   // navigateToAddContent =()=>{
-  //     Actions.push("addContent");
+  //     this.props.navigation.push("addContent");
   // }
   // onErrorOccurance = (event : any) => {
   //     this.showErrorMessage(event)
@@ -449,7 +447,7 @@ class DashBoard extends React.Component<DashProps> {
   // showMemoryDetails = (event : any) => {
   //       if(this.callerTimeout){
   //         if(Utility.isInternetConnected){
-  //             Actions.jump("memoryDetails", {"nid": event.nid, "type": event.type, "comment": event.comment ? true : false})
+  //             this.props.navigation.jump("memoryDetails", {"nid": event.nid, "type": event.type, "comment": event.comment ? true : false})
   //         } else{
   //             No_Internet_Warning();
   //         }
@@ -462,7 +460,7 @@ class DashBoard extends React.Component<DashProps> {
   // openPdfDetails = (event : any) =>{
   //     if(Utility.isInternetConnected){
   //     if(this.callerTimeout){
-  //           Actions.push("pdfViewer", {file: {url : event.pdfUrl}});
+  //           this.props.navigation.push("pdfViewer", {file: {url : event.pdfUrl}});
   //     }
   //       this.callerTimeout = false;
   //       setTimeout(() => {
@@ -520,7 +518,7 @@ class DashBoard extends React.Component<DashProps> {
   //         }
   //         images = event.images;
   //         position = event.index;
-  //         Actions.jump("imageViewer", {files : images, index : position})
+  //         this.props.navigation.jump("imageViewer", {files : images, index : position})
   //     } else{
   //         No_Internet_Warning();
   //     }
@@ -574,7 +572,7 @@ class DashBoard extends React.Component<DashProps> {
   //         else {
   //             NativeModules.AllMemoriesComponentManager.memoryFromPromptCreated({ prompt_id : this.prompt_id });
   //         }
-  //         Actions.push("createMemory", {editMode : true, draftNid : draftDetails, isFromPrompt: true})
+  //         this.props.navigation.push("createMemory", {editMode : true, draftNid : draftDetails, isFromPrompt: true})
   //     }
   //     else{
   //     loaderHandler.hideLoader()

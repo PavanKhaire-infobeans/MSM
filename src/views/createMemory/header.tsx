@@ -1,18 +1,13 @@
 import React from 'react';
-import {
-  Image, Keyboard, StatusBar, TouchableOpacity,
-  View
-} from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import {Image, Keyboard, StatusBar, TouchableOpacity, View} from 'react-native';
+
 import Text from '../../common/component/Text';
-import {
-  close_white
-} from '../../images';
+import {close_white} from '../../images';
 //@ts-ignore
 import NavigationHeader from '../../common/component/navigationHeader';
-import { Colors } from '../../common/constants';
+import {Colors} from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import { Account } from '../../common/loginStore';
+import {Account} from '../../common/loginStore';
 import styles from './styles';
 
 export const kShowHideMenu = 'show_or_hide_menu';
@@ -32,28 +27,21 @@ export default class CreateMemoryHeader extends React.Component<{
 
   _closeAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   _renderRight() {
     return (
       <View style={styles.rightButtonsContainer}>
         <TouchableOpacity onPress={() => this.saveMemoryDraft()}>
-          <Text
-            style={styles.doneTextStyle}>
-            Done
-          </Text>
+          <Text style={styles.doneTextStyle}>Done</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => this.showHideMenu()}>
-          <View
-            style={styles.menuContainer}>
-            <View
-              style={styles.rowStyle}></View>
-            <View
-              style={styles.rowStyle}></View>
-            <View
-              style={styles.rowStyle}></View>
+          <View style={styles.menuContainer}>
+            <View style={styles.rowStyle}></View>
+            <View style={styles.rowStyle}></View>
+            <View style={styles.rowStyle}></View>
           </View>
         </TouchableOpacity>
       </View>

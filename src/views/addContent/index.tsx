@@ -1,53 +1,86 @@
-import React, { createRef } from 'react';
+import React, {createRef} from 'react';
 import {
-  Alert, FlatList, Image, ImageBackground, Keyboard, Platform, SafeAreaView, StatusBar, TextInput, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View
+  Alert,
+  FlatList,
+  Image,
+  ImageBackground,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import {
-  action_audio, action_camera,
-  action_close, action_pdf, audio_play, camera, icon_add_content_audio,
+  action_audio,
+  action_camera,
+  action_close,
+  action_pdf,
+  audio_play,
+  camera,
+  icon_add_content_audio,
   icon_add_content_camera,
-  icon_add_content_upload, icon_upload_file, keyboard_hide, pdf_icon, record, sound_wave
+  icon_add_content_upload,
+  icon_upload_file,
+  keyboard_hide,
+  pdf_icon,
+  record,
+  sound_wave,
 } from '../../images';
 // @ts-ignore
 import DeviceInfo from 'react-native-device-info';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Actions } from 'react-native-router-flux';
-import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
+import ActionSheet, {ActionSheetItem} from '../../common/component/actionSheet';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
-  CaptureImage, PickAudio, PickImage, PickPDF
+  CaptureImage,
+  PickAudio,
+  PickImage,
+  PickPDF,
 } from '../../common/component/filePicker/filePicker';
 import Text from '../../common/component/Text';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import {
-  Colors, encode_utf8, fontFamily, GenerateRandomID, TimeStampMilliSeconds
+  Colors,
+  encode_utf8,
+  fontFamily,
+  GenerateRandomID,
+  TimeStampMilliSeconds,
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import { createNew } from '../createMemory';
-import { CreateUpdateMemory } from '../createMemory/createMemoryWebService';
-import { DefaultDetailsMemory, DefaultDetailsWithoutTitleMemory } from '../createMemory/dataHelper';
-import { TempFile } from '../mindPop/edit';
+import {createNew} from '../createMemory';
+import {CreateUpdateMemory} from '../createMemory/createMemoryWebService';
 import {
-  addEditMindPop, kMindPopUploadedIdentifier
+  DefaultDetailsMemory,
+  DefaultDetailsWithoutTitleMemory,
+} from '../createMemory/dataHelper';
+import {TempFile} from '../mindPop/edit';
+import {
+  addEditMindPop,
+  kMindPopUploadedIdentifier,
 } from '../mindPop/edit/addMindPopflow';
 import DefaultPreference from 'react-native-default-preference';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import CustomAlert from '../../common/component/customeAlert';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import CreateMemoryIntro from '../createMemory/createMemoryIntro';
-import { showCustomAlert, showCustomAlertData } from '../createMemory/reducer';
+import {showCustomAlert, showCustomAlertData} from '../createMemory/reducer';
 import style from './styles';
 
-type State = { [key: string]: any };
+type State = {[key: string]: any};
 
 const ImageActions: Array<ActionSheetItem> = [
-  { index: 0, text: 'Image', image: action_camera },
-  { index: 1, text: 'Audio', image: action_audio },
-  { index: 2, text: 'PDF', image: action_pdf },
-  { index: 3, text: 'Cancel', image: action_close },
+  {index: 0, text: 'Image', image: action_camera},
+  {index: 1, text: 'Audio', image: action_audio},
+  {index: 2, text: 'PDF', image: action_pdf},
+  {index: 3, text: 'Cancel', image: action_close},
 ];
 
 const options = {
@@ -63,7 +96,7 @@ class AddContentDetails extends React.Component {
   backListner: any;
   createMemoryListener: EventManager;
   draftDetails: any = {};
-  inputRef = createRef()
+  inputRef = createRef();
   state: State = {
     memoryIntroVisibility: false,
     textContent: '',
@@ -76,12 +109,12 @@ class AddContentDetails extends React.Component {
       type: 'none',
       list: ImageActions,
     },
-    listItems: [{ itemType: 'editor' }],
+    listItems: [{itemType: 'editor'}],
     content: '',
     showNextDialog: false,
     mindPopClick: false,
-    titleError: "",
-    placeholder: "|Tap to start writing..."
+    titleError: '',
+    placeholder: '|Tap to start writing...',
   };
 
   constructor(props: any) {
@@ -91,14 +124,13 @@ class AddContentDetails extends React.Component {
 
   componentDidMount = () => {
     // setTimeout(() => {
-      DefaultPreference.get('hide_memory_intro').then((value: any) => {
-        if (value == 'true') {
-          this.setState({ memoryIntroVisibility: false });
-        } 
-        else {
-          this.setState({ memoryIntroVisibility: true });
-        }
-      });
+    DefaultPreference.get('hide_memory_intro').then((value: any) => {
+      if (value == 'true') {
+        this.setState({memoryIntroVisibility: false});
+      } else {
+        this.setState({memoryIntroVisibility: true});
+      }
+    });
     // }, 200);
   };
   nextDialogView = () => {
@@ -107,46 +139,54 @@ class AddContentDetails extends React.Component {
         modalVisible={true}
         // setModalVisible={setModalVisible}
         title={'Save your memory'}
-        message={'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'}
-        buttons={[{
-          text: 'Save as Memory Draft',
-          func: () => {
-            ReactNativeHapticFeedback.trigger('impactMedium', options);
-            this.createMemory();
-          },
-        },
-        {
-          text: 'Save as a MindPop',
-          func: () => {
-            this.setState({
-              mindPopClick: true,
-              showNextDialog: false
-            }, () => {
-              if (this.state.content != '') {
-                ReactNativeHapticFeedback.trigger('impactMedium', options);
-                this.saveMindPop();
-              }
-              else {
-                ToastMessage('Title is mandatory');
-                this.setState({
-                  titleError: 'Title is mandatory'
-                })
-              }
-            })
-          },
-        },
-        {
-          text: 'Cancel',
-          func: () => {
-            this.setState({
-              showNextDialog: false
-            }, () => {
-              this.props.beforeBack ? this.props.beforeBack() : null;
-              Actions.pop()
-            })
-          },
-          styles: { fontWeight: '400' }
+        message={
+          'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'
         }
+        buttons={[
+          {
+            text: 'Save as Memory Draft',
+            func: () => {
+              ReactNativeHapticFeedback.trigger('impactMedium', options);
+              this.createMemory();
+            },
+          },
+          {
+            text: 'Save as a MindPop',
+            func: () => {
+              this.setState(
+                {
+                  mindPopClick: true,
+                  showNextDialog: false,
+                },
+                () => {
+                  if (this.state.content != '') {
+                    ReactNativeHapticFeedback.trigger('impactMedium', options);
+                    this.saveMindPop();
+                  } else {
+                    ToastMessage('Title is mandatory');
+                    this.setState({
+                      titleError: 'Title is mandatory',
+                    });
+                  }
+                },
+              );
+            },
+          },
+          {
+            text: 'Cancel',
+            func: () => {
+              this.setState(
+                {
+                  showNextDialog: false,
+                },
+                () => {
+                  this.props.beforeBack ? this.props.beforeBack() : null;
+                  this.props.navigation.pop();
+                },
+              );
+            },
+            styles: {fontWeight: '400'},
+          },
         ]}
       />
       // <View
@@ -196,8 +236,7 @@ class AddContentDetails extends React.Component {
 
   selectorButton = (name: any, icon: any, onItemPressed: () => void) => {
     return (
-      <View
-        style={style.selectorButtonContainer}>
+      <View style={style.selectorButtonContainer}>
         <TouchableOpacity
           style={style.selectorButtonStyle}
           onPress={() => {
@@ -205,10 +244,7 @@ class AddContentDetails extends React.Component {
             onItemPressed();
           }}>
           <Image source={icon} />
-          <Text
-            style={style.textStyle}>
-            {name}
-          </Text>
+          <Text style={style.textStyle}>{name}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -224,8 +260,7 @@ class AddContentDetails extends React.Component {
         'keyboardDidHide',
         this._keyboardDidHide,
       );
-    } 
-    else {
+    } else {
       this.keyboardDidShowListener = Keyboard.addListener(
         'keyboardWillShow',
         this._keyboardDidShow,
@@ -252,13 +287,13 @@ class AddContentDetails extends React.Component {
   createMemoryCallBack = (success: boolean, nid: any, padDetails: any) => {
     loaderHandler.hideLoader();
     if (success) {
-      Actions.replace('createMemory', {
+      this.props.navigation.replace('createMemory', {
         attachments: this.state.files,
         id: nid,
         textTitle: this.draftDetails.title,
         editMode: false,
         padDetails: padDetails,
-        location: { description: '', reference: '' },
+        location: {description: '', reference: ''},
         memoryDate: this.draftDetails.memory_date,
         type: createNew,
       });
@@ -277,10 +312,10 @@ class AddContentDetails extends React.Component {
             style: 'cancel',
             onPress: () => {
               let content = this.state.oldcontent;
-              this.setState({ content }, () => {
+              this.setState({content}, () => {
                 //Go Back
                 Keyboard.dismiss();
-                Actions.pop();
+                this.props.navigation.goBack();
               });
             },
           },
@@ -295,16 +330,16 @@ class AddContentDetails extends React.Component {
       }, 10);
     } else {
       Keyboard.dismiss();
-      Actions.pop();
+      this.props.navigation.goBack();
     }
   };
 
   componentWillUnmount = () => {
     this.mindPopCallback.removeListener();
-    Keyboard.removeAllListeners("keyboardDidShow");
-    Keyboard.removeAllListeners("keyboardDidHide");
-    Keyboard.removeAllListeners("keyboardWillShow");
-    Keyboard.removeAllListeners("keyboardWillHide");
+    Keyboard.removeAllListeners('keyboardDidShow');
+    Keyboard.removeAllListeners('keyboardDidHide');
+    Keyboard.removeAllListeners('keyboardWillShow');
+    Keyboard.removeAllListeners('keyboardWillHide');
     this.backListner.removeListener();
     this.createMemoryListener.removeListener();
     // this.keyboardDidShowListener.removeListener();
@@ -318,11 +353,11 @@ class AddContentDetails extends React.Component {
       //   alertTitle: 'New MindPop saved!',
       //   desc: `See your new MindPop added with the rest of your in-progress work now.`,
       // });
-      this.props.showAlertCall(true)
+      this.props.showAlertCall(true);
       this.props.showAlertCallData({
         title: 'New MindPop saved!',
-        desc: `See your new MindPop added with the rest of your in-progress work now.`
-      })
+        desc: `See your new MindPop added with the rest of your in-progress work now.`,
+      });
       // Alert.alert('New MindPop saved!', `See your new MindPop added with the rest of your in-progress work now.`, [
       //   {
       //     text: 'Great!',
@@ -331,8 +366,8 @@ class AddContentDetails extends React.Component {
       //     },
       //   }
       // ]);
-      // Actions.replace('mindPop')
-      Actions.mindPop();
+      // this.props.navigation.replace('mindPop')
+      this.props.navigation.mindPop();
 
       // , {
       //   showPublishedPopup: true,
@@ -382,52 +417,60 @@ class AddContentDetails extends React.Component {
   };
 
   createMemory = async () => {
-    this.setState({
-      showNextDialog: false,
-    },()=>{
-      if (Utility.isInternetConnected) {
-        if (this.state.content.trim() === "") {
-          this.draftDetails = DefaultDetailsMemory("My memory");
+    this.setState(
+      {
+        showNextDialog: false,
+      },
+      () => {
+        if (Utility.isInternetConnected) {
+          if (this.state.content.trim() === '') {
+            this.draftDetails = DefaultDetailsMemory('My memory');
+          } else {
+            this.draftDetails = DefaultDetailsWithoutTitleMemory(
+              this.state.content,
+            ); //.trim()
+          }
+          loaderHandler.showLoader('Loading...');
+          CreateUpdateMemory(this.draftDetails, [], 'addContentCreateMemory');
+        } else {
+          No_Internet_Warning();
         }
-        else {
-          this.draftDetails = DefaultDetailsWithoutTitleMemory(this.state.content);//.trim()
-        }
-        loaderHandler.showLoader('Loading...');
-        CreateUpdateMemory(this.draftDetails, [], 'addContentCreateMemory');
-  
-      } else {
-        No_Internet_Warning();
-      }
-    });
+      },
+    );
   };
 
   saveMindPop = () => {
-    this.setState({
-      showNextDialog: false,
-    },()=>{
-      if (Utility.isInternetConnected) {
-        let moment = TimeStampMilliSeconds();
-        var req: {
-          requestDetails: { mindPopContentArray: Array<any>; mindPopID?: string };
-          configurationTimestamp: string;
-        } = {
-          requestDetails: {
-            mindPopContentArray: [
-              {
-                contentType: 1,
-                contentValue: encode_utf8(this.state.content),
-              },
-            ],
-          },
-          configurationTimestamp: moment,
-        };
-        loaderHandler.showLoader('Saving...');
-        addEditMindPop(req, this.state.files, true);
-      } else {
-        No_Internet_Warning();
-      }
-    });
-    
+    this.setState(
+      {
+        showNextDialog: false,
+      },
+      () => {
+        if (Utility.isInternetConnected) {
+          let moment = TimeStampMilliSeconds();
+          var req: {
+            requestDetails: {
+              mindPopContentArray: Array<any>;
+              mindPopID?: string;
+            };
+            configurationTimestamp: string;
+          } = {
+            requestDetails: {
+              mindPopContentArray: [
+                {
+                  contentType: 1,
+                  contentValue: encode_utf8(this.state.content),
+                },
+              ],
+            },
+            configurationTimestamp: moment,
+          };
+          loaderHandler.showLoader('Saving...');
+          addEditMindPop(req, this.state.files, true);
+        } else {
+          No_Internet_Warning();
+        }
+      },
+    );
   };
 
   cameraAttachmentPress = () => {
@@ -446,18 +489,18 @@ class AddContentDetails extends React.Component {
 
   audioAttachmentPress = (selectedItem?: any) => {
     Keyboard.dismiss();
-    Actions.commonAudioRecorder({
+    this.props.navigation.commonAudioRecorder({
       mindPopID: 0,
       selectedItem: selectedItem ? selectedItem : null,
       hideDelete: true,
       editRefresh: (file: any[]) => {
         Keyboard.dismiss();
         let fid = GenerateRandomID();
-        let tempFile: TempFile[] = file.map(obj => ({ ...obj, fid }));
+        let tempFile: TempFile[] = file.map(obj => ({...obj, fid}));
         this.fileCallback(tempFile);
       },
-      reset: () => { },
-      deleteItem: () => { },
+      reset: () => {},
+      deleteItem: () => {},
     });
   };
 
@@ -472,11 +515,11 @@ class AddContentDetails extends React.Component {
         }
         break;
       case 'files':
-        Actions.push('pdfViewer', { file: file });
+        this.props.navigation.push('pdfViewer', {file: file});
         break;
       case 'images':
-        Actions.push('imageViewer', {
-          files: [{ url: file.thumb_uri }],
+        this.props.navigation.push('imageViewer', {
+          files: [{url: file.thumb_uri}],
           hideDescription: true,
         });
         break;
@@ -503,24 +546,23 @@ class AddContentDetails extends React.Component {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
-        style={[style.toolbarContainer, {
-          backgroundColor: this.state.bottomBar.keyboardVisible ? Colors.SerachbarColor : Colors.white,
-        }]}>
-
+        style={[
+          style.toolbarContainer,
+          {
+            backgroundColor: this.state.bottomBar.keyboardVisible
+              ? Colors.SerachbarColor
+              : Colors.white,
+          },
+        ]}>
         {!this.state.bottomBar.keyboardVisible ? (
-          <View
-            style={style.keyboardVisible}>
-            <TouchableHighlight
-              onPress={() => this.cameraAttachmentPress()}>
+          <View style={style.keyboardVisible}>
+            <TouchableHighlight onPress={() => this.cameraAttachmentPress()}>
               <View style={style.bottomRowView}>
                 <Image
                   style={style.cameraImageStyle}
                   source={icon_add_content_camera}
                 />
-                <Text
-                  style={style.bottomTextStyle}>
-                  {'Photo/Scan'}
-                </Text>
+                <Text style={style.bottomTextStyle}>{'Photo/Scan'}</Text>
               </View>
             </TouchableHighlight>
 
@@ -530,10 +572,7 @@ class AddContentDetails extends React.Component {
                   style={style.audioImageStyle}
                   source={icon_add_content_audio}
                 />
-                <Text
-                  style={style.bottomTextStyle}>
-                  {'Talk'}
-                </Text>
+                <Text style={style.bottomTextStyle}>{'Talk'}</Text>
               </View>
             </TouchableHighlight>
 
@@ -546,20 +585,101 @@ class AddContentDetails extends React.Component {
                   style={style.cameraImageStyle}
                   source={icon_add_content_upload}
                 />
-                <Text
-                  style={style.bottomTextStyle}>
-                  {'Upload'}
-                </Text>
+                <Text style={style.bottomTextStyle}>{'Upload'}</Text>
               </View>
             </TouchableHighlight>
           </View>
-        )
-          :
-          (
-            <View
-              style={style.toolbarSubContainer}>
-              <View
-                style={style.bottomBarContainer}>
+        ) : (
+          <View style={style.toolbarSubContainer}>
+            <View style={style.bottomBarContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.cameraAttachmentPress();
+                }}
+                style={style.buttonContainerStyle}>
+                <Image source={camera} resizeMode="stretch" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  this.audioAttachmentPress();
+                }}
+                style={style.buttonContainerStyle}>
+                <Image source={record} resizeMode="stretch" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  Keyboard.dismiss();
+                  this._actionSheet && this._actionSheet.showSheet();
+                }}
+                style={style.buttonContainerStyle}>
+                <Image source={icon_upload_file} resizeMode="stretch" />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                Keyboard.dismiss();
+              }}
+              style={style.buttonContainerStyle}>
+              <Image
+                source={keyboard_hide}
+                style={style.keyboardHideImageStyle}
+                resizeMode="stretch"
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+      </KeyboardAwareScrollView>
+    ) : (
+      <KeyboardAccessory style={style.subContainerStyle}>
+        <View
+          style={[
+            style.keyboardAccesoryContainer,
+            {
+              backgroundColor: this.state.bottomBar.keyboardVisible
+                ? Colors.SerachbarColor
+                : Colors.white,
+            },
+          ]}>
+          {!this.state.bottomBar.keyboardVisible ? (
+            <View style={style.keyboardVisible}>
+              <TouchableHighlight onPress={() => this.cameraAttachmentPress()}>
+                <View style={style.bottomRowView}>
+                  <Image
+                    style={style.cameraImageStyle}
+                    source={icon_add_content_camera}
+                  />
+                  <Text style={style.bottomTextStyle}>{'Photo/Scan'}</Text>
+                </View>
+              </TouchableHighlight>
+
+              <TouchableHighlight onPress={() => this.audioAttachmentPress()}>
+                <View style={style.bottomRowView}>
+                  <Image
+                    style={style.audioImageStyle}
+                    source={icon_add_content_audio}
+                  />
+                  <Text style={style.bottomTextStyle}>{'Talk'}</Text>
+                </View>
+              </TouchableHighlight>
+
+              <TouchableHighlight
+                onPress={() =>
+                  this._actionSheet && this._actionSheet.showSheet()
+                }>
+                <View style={style.bottomRowView}>
+                  <Image
+                    style={style.cameraImageStyle}
+                    source={icon_add_content_upload}
+                  />
+                  <Text style={style.bottomTextStyle}>{'Upload'}</Text>
+                </View>
+              </TouchableHighlight>
+            </View>
+          ) : (
+            <View style={style.toolbarSubContainer}>
+              <View style={style.buttonSubContainer}>
                 <TouchableOpacity
                   onPress={() => {
                     this.cameraAttachmentPress();
@@ -598,111 +718,9 @@ class AddContentDetails extends React.Component {
               </TouchableOpacity>
             </View>
           )}
-
-      </KeyboardAwareScrollView>
-    )
-      :
-      (
-        <KeyboardAccessory
-          style={style.subContainerStyle}>
-
-          <View
-            style={[style.keyboardAccesoryContainer, {
-              backgroundColor: this.state.bottomBar.keyboardVisible ? Colors.SerachbarColor : Colors.white,
-            }]}>
-            {!this.state.bottomBar.keyboardVisible ? (
-              <View
-                style={style.keyboardVisible}>
-                <TouchableHighlight
-                  onPress={() => this.cameraAttachmentPress()}>
-                  <View style={style.bottomRowView}>
-                    <Image
-                      style={style.cameraImageStyle}
-                      source={icon_add_content_camera}
-                    />
-                    <Text
-                      style={style.bottomTextStyle}>
-                      {'Photo/Scan'}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-
-                <TouchableHighlight onPress={() => this.audioAttachmentPress()}>
-                  <View style={style.bottomRowView}>
-                    <Image
-                      style={style.audioImageStyle}
-                      source={icon_add_content_audio}
-                    />
-                    <Text
-                      style={style.bottomTextStyle}>
-                      {'Talk'}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-
-                <TouchableHighlight
-                  onPress={() =>
-                    this._actionSheet && this._actionSheet.showSheet()
-                  }>
-                  <View style={style.bottomRowView}>
-                    <Image
-                      style={style.cameraImageStyle}
-                      source={icon_add_content_upload}
-                    />
-                    <Text
-                      style={style.bottomTextStyle}>
-                      {'Upload'}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-              </View>
-            ) : (
-              <View
-                style={style.toolbarSubContainer}>
-                <View
-                  style={style.buttonSubContainer}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.cameraAttachmentPress();
-                    }}
-                    style={style.buttonContainerStyle}>
-                    <Image source={camera} resizeMode="stretch" />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.audioAttachmentPress();
-                    }}
-                    style={style.buttonContainerStyle}>
-                    <Image source={record} resizeMode="stretch" />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      Keyboard.dismiss();
-                      this._actionSheet && this._actionSheet.showSheet();
-                    }}
-                    style={style.buttonContainerStyle}>
-                    <Image source={icon_upload_file} resizeMode="stretch" />
-                  </TouchableOpacity>
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    Keyboard.dismiss();
-                  }}
-                  style={style.buttonContainerStyle}>
-                  <Image
-                    source={keyboard_hide}
-                    style={style.keyboardHideImageStyle}
-                    resizeMode="stretch"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-
-        </KeyboardAccessory>
-      );
+        </View>
+      </KeyboardAccessory>
+    );
     // <KeyboardAccessory style={{backgroundColor: "#fff",
     //                            position:"absolute",
     //                            width: "100%",
@@ -794,7 +812,6 @@ class AddContentDetails extends React.Component {
   };
 
   _renderRow = (element: any, width: any) => {
-
     return (
       <TouchableHighlight
         onPress={() => this.rowItemPressed(element)}
@@ -802,46 +819,35 @@ class AddContentDetails extends React.Component {
         key={element.fid}
         style={style.padding15}>
         <View>
-          <View
-            style={[style.RecordContainer, { width }]}>
+          <View style={[style.RecordContainer, {width}]}>
             {element.type == 'audios' ? (
               <ImageBackground
                 style={style.RecordContainerImgBackgrounStyle}
                 source={sound_wave}
                 resizeMode="contain">
-                <View
-                  style={style.playButtonMainContainer}>
-                  <View
-                    style={style.playButtonContainer}>
-                    <Image
-                      style={style.audioImage}
-                      source={audio_play}
-                    />
+                <View style={style.playButtonMainContainer}>
+                  <View style={style.playButtonContainer}>
+                    <Image style={style.audioImage} source={audio_play} />
                   </View>
                 </View>
-                <Text
-                  numberOfLines={1}
-                  style={style.filenameTextStyle}>
+                <Text numberOfLines={1} style={style.filenameTextStyle}>
                   {`${element.filename}`}
                 </Text>
               </ImageBackground>
             ) : element.type == 'images' ? (
               <Image
-                source={{ uri: element.thumb_uri }}
-                style={{ width: width, height: 120 }}
+                source={{uri: element.thumb_uri}}
+                style={{width: width, height: 120}}
                 resizeMode="contain"
               />
             ) : element.type == 'files' ? (
-              <View
-                style={style.RecordContainerImgBackgrounStyle}>
+              <View style={style.RecordContainerImgBackgrounStyle}>
                 <ImageBackground
                   style={style.pdfImageStyle}
                   source={pdf_icon}
                   resizeMode="contain"
                 />
-                <Text
-                  numberOfLines={1}
-                  style={style.filenameTextStyle}>
+                <Text numberOfLines={1} style={style.filenameTextStyle}>
                   {`${element.filename}`}
                 </Text>
               </View>
@@ -851,12 +857,8 @@ class AddContentDetails extends React.Component {
           <TouchableOpacity
             onPress={() => this.removeFile(element.fid)}
             style={style.deletefileContainer}>
-            <View
-              style={style.deletefileSubContainer}>
-              <Text
-                style={style.crossTextStyle}>
-                {'✕'}
-              </Text>
+            <View style={style.deletefileSubContainer}>
+              <Text style={style.crossTextStyle}>{'✕'}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -866,18 +868,19 @@ class AddContentDetails extends React.Component {
 
   render() {
     return (
-      <SafeAreaView
-        style={style.mainConTainer}>
+      <SafeAreaView style={style.mainConTainer}>
         <StatusBar
-          barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
           backgroundColor={Colors.NewThemeColor}
         />
 
-        <TouchableWithoutFeedback onPress={() => {
-             this.inputRef.focus()
-            }}
-              underlayColor={Colors.white} >
-
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.inputRef.focus();
+          }}
+          underlayColor={Colors.white}>
           {/* <NavigationHeaderSafeArea
             heading={'New Memory/MindPop'}
             showCommunity={true}
@@ -901,39 +904,43 @@ class AddContentDetails extends React.Component {
               saveValues={this.saveMemoryOrMindpop}
               backIcon={action_close}
             />
-            <TouchableWithoutFeedback onPress={() => {
-              // this.setState({
-              //   showNextDialog: true
-              // })
-            }}
+            <TouchableWithoutFeedback
+              onPress={() => {
+                // this.setState({
+                //   showNextDialog: true
+                // })
+              }}
               underlayColor={Colors.white}
               style={style.fullWidth}>
               <View style={style.fullFlex}>
-                <View
-                  style={style.inputContainer}>
+                <View style={style.inputContainer}>
                   {/* {
                     this.state.mindPopClick ? */}
                   <>
                     <TextInput
                       placeholder={this.state.placeholder}
                       autoFocus={false}
-                      ref={ref => this.inputRef = ref}
+                      ref={ref => (this.inputRef = ref)}
                       onChangeText={text => {
-                        this.setState({ content: text, titleError: "", placeholder: 'Start writing...' });
+                        this.setState({
+                          content: text,
+                          titleError: '',
+                          placeholder: 'Start writing...',
+                        });
                       }}
                       onFocus={() => {
-                        this.setState({ placeholder: 'Start writing...' });
+                        this.setState({placeholder: 'Start writing...'});
                       }}
                       placeholderTextColor={Colors.bordercolor}
                       value={this.state.content}
                       multiline={true}
                       style={style.textInputStyle}
                     />
-                    {
-                      this.state.titleError != "" && <Text style={style.titleError}>
+                    {this.state.titleError != '' && (
+                      <Text style={style.titleError}>
                         {this.state.titleError}
                       </Text>
-                    }
+                    )}
                   </>
                   {/* :
                       <Text style={style.textInputStyle}>{"|Tap to start writing..."}</Text>
@@ -942,22 +949,27 @@ class AddContentDetails extends React.Component {
                 </View>
                 {this.state.files.length > 0 ? (
                   <View>
-                    <View
-                      key="seperator"
-                      style={style.attachmentContainer}
-                    />
+                    <View key="seperator" style={style.attachmentContainer} />
 
                     <FlatList
                       horizontal={true}
                       keyboardShouldPersistTaps={'handled'}
                       keyExtractor={(_, index: number) => `${index}`}
-                      style={[style.flatlistStyle, {
-                        marginBottom: this.state.bottomBar.bottom > 0 ? this.state.bottomBar.bottom -
-                          (Platform.OS == 'android' ? 230 : 160) : 120,
-                      }]}
+                      style={[
+                        style.flatlistStyle,
+                        {
+                          marginBottom:
+                            this.state.bottomBar.bottom > 0
+                              ? this.state.bottomBar.bottom -
+                                (Platform.OS == 'android' ? 230 : 160)
+                              : 120,
+                        },
+                      ]}
                       keyExtractor={(item: any, index: number) => `${index}`}
                       data={this.state.files}
-                      renderItem={(item: any) => this._renderRow(item.item, 180)}
+                      renderItem={(item: any) =>
+                        this._renderRow(item.item, 180)
+                      }
                     />
                   </View>
                 ) : (
@@ -968,8 +980,8 @@ class AddContentDetails extends React.Component {
                         Platform.OS == 'android'
                           ? 0
                           : this.state.bottomBar.bottom == 0
-                            ? 130
-                            : this.state.bottomBar.bottom,
+                          ? 130
+                          : this.state.bottomBar.bottom,
                     }}></View>
                 )}
               </View>
@@ -983,18 +995,17 @@ class AddContentDetails extends React.Component {
               actions={this.state.actionSheet.list}
               onActionClick={this.onActionItemClicked.bind(this)}
             />
-            <View
-              style={style.emptyView}></View>
+            <View style={style.emptyView}></View>
           </View>
         </TouchableWithoutFeedback>
 
         {this.state.memoryIntroVisibility && (
           <CreateMemoryIntro
             cancelMemoryIntro={() => {
-              this.setState({ memoryIntroVisibility: false },()=>{
+              this.setState({memoryIntroVisibility: false}, () => {
                 DefaultPreference.set('hide_memory_intro', 'true').then(
-                  function () { },
-                );  
+                  function () {},
+                );
               });
             }}></CreateMemoryIntro>
         )}
@@ -1003,18 +1014,16 @@ class AddContentDetails extends React.Component {
   }
 }
 
-const mapState = (state: { [x: string]: any }) => ({
+const mapState = (state: {[x: string]: any}) => ({
   showAlert: state.MemoryInitials.showAlert,
 });
 
-
 const mapDispatch = (dispatch: Function) => {
   return {
-    showAlertCall: (payload: any) => dispatch({ type: showCustomAlert, payload: payload }),
-    showAlertCallData: (payload: any) => dispatch({ type: showCustomAlertData, payload: payload }),
+    showAlertCall: (payload: any) =>
+      dispatch({type: showCustomAlert, payload: payload}),
+    showAlertCallData: (payload: any) =>
+      dispatch({type: showCustomAlertData, payload: payload}),
   };
 };
-export default connect(
-  mapState,
-  mapDispatch
-)(AddContentDetails);
+export default connect(mapState, mapDispatch)(AddContentDetails);

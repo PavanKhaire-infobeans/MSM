@@ -1,6 +1,5 @@
 import { Platform, Alert, DeviceEventEmitter } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { Actions } from 'react-native-router-flux';
 import { Storage } from '../constants';
 import Utility, { getshowLogoutPopUp, setshowLogoutPopUp } from '../utility';
 import loaderHandler from '../component/busyindicator/LoaderHandler';
@@ -29,7 +28,7 @@ export const logoutMultiple = (selectedAccounts: any) => {
       }
     })
     .catch(err => {
-      Actions.reset('prologue');
+      this.props.navigation.reset('prologue');
     });
   return LoginStore.listAllAccounts();
 };
@@ -59,14 +58,14 @@ function logoutFlow() {
         let user: UserData = accounts[accounts.length - 1];
         DeviceEventEmitter.emit('logout', { accounts, user });
       } else {
-        if (Actions.currentScene !== 'login') {
-          Actions.replace('prologue');
+        if (this.props.navigation.currentScene !== 'login') {
+          this.props.navigation.replace('prologue');
         }
       }
     })
     .catch(err => {
-      if (Actions.currentScene !== 'login') {
-        Actions.replace('prologue');
+      if (this.props.navigation.currentScene !== 'login') {
+        this.props.navigation.replace('prologue');
       }
     });
 }

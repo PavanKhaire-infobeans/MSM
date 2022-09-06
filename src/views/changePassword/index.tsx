@@ -1,22 +1,20 @@
 import React from 'react';
-import {
-  Keyboard, SafeAreaView, StatusBar, TextInput, View
-} from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import {Keyboard, SafeAreaView, StatusBar, TextInput, View} from 'react-native';
+
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import { SubmitButton } from '../../common/component/button';
-import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
+import {SubmitButton} from '../../common/component/button';
+import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextField from '../../common/component/textField';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
-import { Colors } from '../../common/constants';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import {Colors} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import {
   ChangePasswordService,
-  kChangePassword
+  kChangePassword,
 } from '../changePassword/changePasswordWebService';
-import { styles } from './styles';
+import {styles} from './styles';
 
 export default class ChangePassword extends React.Component {
   _newPasswordField?: TextInput = null;
@@ -58,14 +56,14 @@ export default class ChangePassword extends React.Component {
 
   componentWillUnmount() {
     this.navBar._hide();
-    this.changePasswordListener.removeListener()
+    this.changePasswordListener.removeListener();
   }
   changePasswordResponse(success: boolean, response: any) {
     loaderHandler.hideLoader();
     if (success) {
       ToastMessage(response, Colors.ThemeColor);
       Keyboard.dismiss();
-      Actions.pop();
+      this.props.navigation.goBack();
     } else {
       ToastMessage(response, Colors.ErrorColor);
     }
@@ -228,7 +226,7 @@ export default class ChangePassword extends React.Component {
   }
   cancelAction = () => {
     Keyboard.dismiss();
-    Actions.pop();
+    this.props.navigation.goBack();
   };
 
   render() {
@@ -244,7 +242,9 @@ export default class ChangePassword extends React.Component {
           isWhite={true}
         />
         <StatusBar
-          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
           backgroundColor={Colors.NewThemeColor}
         />
         <KeyboardAwareScrollView

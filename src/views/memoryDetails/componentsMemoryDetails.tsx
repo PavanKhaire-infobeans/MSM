@@ -1,27 +1,43 @@
 import React from 'react';
 import {
-  Animated, Dimensions, FlatList, Image, ImageBackground, Keyboard, Platform,
-  StatusBar, StyleSheet, Text,
-  TouchableHighlight, TouchableOpacity, View
+  Animated,
+  Dimensions,
+  FlatList,
+  Image,
+  ImageBackground,
+  Keyboard,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import {
-  Colors, fontFamily, fontSize,
-  NO_INTERNET
+  Colors,
+  fontFamily,
+  fontSize,
+  NO_INTERNET,
 } from '../../common/constants';
 import Utility from '../../common/utility';
 //@ts-ignore
 import * as Animatable from 'react-native-animatable';
 import Carousel from 'react-native-snap-carousel';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import { Account } from '../../common/loginStore';
+import {Account} from '../../common/loginStore';
 import {
-  black_arrow, blue_head_icon, pdf_icon, profile_placeholder, white_arrow,
-  white_head_icon
+  black_arrow,
+  blue_head_icon,
+  pdf_icon,
+  profile_placeholder,
+  white_arrow,
+  white_head_icon,
 } from '../../images';
-import { getUserName } from '../createMemory/dataHelper';
+import {getUserName} from '../createMemory/dataHelper';
 import PublishedMemory from '../myMemories/PublishedMemory';
 export const kImage = 'image';
 export const kAudio = 'audio';
@@ -106,7 +122,10 @@ export const MemoryCollections = (props: {
                       ...fontSize(18),
                       lineHeight: 20,
                       color: 'white',
-                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                      fontFamily:
+                        Platform.OS === 'ios'
+                          ? fontFamily.Inter
+                          : fontFamily.InterMedium,
                       fontWeight: '500',
                       marginBottom: 2,
                     }}>
@@ -156,7 +175,7 @@ export const MemoryCollections = (props: {
           <TouchableHighlight
             underlayColor="#cccccc3e"
             onPress={() =>
-              Actions.push('memoryDetails', {
+              this.props.navigation.push('memoryDetails', {
                 nid: item.item.nid,
                 type: item.item.type,
               })
@@ -378,13 +397,13 @@ export const CollaboratorView = (props: {collaborators: any}) => {
 };
 
 export const UserDetails = (props: {
-  userDetails: any,
-  isExternalQueue: any,
-  shareDetails: any,
-  storyType: any,
-  onPressCallback?: any,
-  previewDraft?: any,
-  deepLinkBackClick?: boolean
+  userDetails: any;
+  isExternalQueue: any;
+  shareDetails: any;
+  storyType: any;
+  onPressCallback?: any;
+  previewDraft?: any;
+  deepLinkBackClick?: boolean;
 }) => {
   let showCueBackLogo =
     props.userDetails.name.toLowerCase().trim() == 'cueback' ||
@@ -408,9 +427,9 @@ export const UserDetails = (props: {
             onPress={() => {
               Keyboard.dismiss();
               if (props.deepLinkBackClick) {
-                Actions.dashBoard();
+                this.props.navigation.dashBoard();
               } else {
-                Actions.pop();
+                this.props.navigation.goBack();
               }
             }}>
             <Image source={props.isExternalQueue ? white_arrow : black_arrow} />
@@ -578,7 +597,9 @@ export const UserDetails = (props: {
         <Border paddingTop={5} padding={15} />
       </View>
       <StatusBar
-        barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+        barStyle={
+          Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+        }
         backgroundColor={props.isExternalQueue ? Colors.ThemeColor : '#fff'}
       />
     </View>
@@ -622,7 +643,7 @@ export const CommonPDFView = (props: {file: any; files: any}) => {
       <TouchableOpacity
         onPress={() => {
           if (Utility.isInternetConnected) {
-            Actions.push('pdfViewer', {file: props.file});
+            this.props.navigation.push('pdfViewer', {file: props.file});
           } else {
             ToastMessage(NO_INTERNET, Colors.WarningColor);
           }
@@ -686,7 +707,7 @@ export const CommonImageView = (props: {file: any; files: any}) => {
       <TouchableOpacity
         onPress={() => {
           if (Utility.isInternetConnected) {
-            Actions.push('imageViewer', {
+            this.props.navigation.push('imageViewer', {
               files: props.files,
               index: currentIndex,
             });
@@ -874,13 +895,17 @@ export const LikeCommentShare = (props: {
         <Animatable.View
           style={{
             flexDirection: 'row',
-            alignItems: 'center',justifyContent:'center',
-            height:40,width:40,borderRadius:20,backgroundColor:Colors.timeLinebackground,
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            backgroundColor: Colors.timeLinebackground,
             transform: [{translateX: PublishedMemory.shakeAnimation}],
           }}>
           <Image
             source={props.icon}
-            style={{padding: 1,}}
+            style={{padding: 1}}
             resizeMode="contain"
           />
           {/* <Text
@@ -894,7 +919,16 @@ export const LikeCommentShare = (props: {
           </Text> */}
         </Animatable.View>
       ) : (
-        <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'center',height:40,width:40,borderRadius:20,backgroundColor:Colors.timeLinebackground,}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            backgroundColor: Colors.timeLinebackground,
+          }}>
           <Image
             source={props.icon}
             style={{padding: 1}}

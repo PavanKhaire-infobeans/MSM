@@ -1,4 +1,3 @@
-import { Actions } from 'react-native-router-flux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import { Colors, CueBackInsatance, ERROR_MESSAGE } from '../../common/constants';
@@ -83,14 +82,14 @@ export default class GetFormData {
         values: null,
       });
       if (this.type == 'push') {
-        Actions.registrationPre({
+        this.props.navigation.registrationPre({
           formList,
           openLoginDrawer: this.openLoginDrawer,
         });
       } else if (this.type == kCueBackRegistration) {
         EventManager.callBack(kCueBackFormData, true, formList);
       } else {
-        Actions.replace('registrationPre', {formList});
+        this.props.navigation.replace('registrationPre', {formList});
       }
     } else {
       ToastMessage(
