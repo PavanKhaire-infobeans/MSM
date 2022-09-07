@@ -416,7 +416,11 @@ export default class Profile extends React.Component<object> {
         <SafeAreaView style={Styles.noViewStyle} />
         <SafeAreaView style={Styles.safeAreaContextStyle}>
           <View style={Styles.safeAreaSubContextStyle}>
-            <NavigationBar title={'My Profile'} showClose={true} />
+            <NavigationBar
+              title={'My Profile'}
+              showClose={true}
+              navigation={this.props.navigation}
+            />
             <StatusBar
               barStyle={
                 Utility.currentTheme == 'light'

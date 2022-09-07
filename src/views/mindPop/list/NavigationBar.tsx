@@ -27,7 +27,7 @@ class MindPopNavigationBar extends React.Component<{[x: string]: any}> {
       <TouchableOpacity
         style={[styles.leftButtonTouchableContainer]}
         testID={testID.leftButtons.menu}
-        onPress={() => this.props.navigation.pop()}>
+        onPress={() => this.props.navigation.goBack()}>
         {/* onPress={() => this.props.navigation.dashBoard()}> */}
         {/* action() */}
         <Image style={styles.imageStyle} resizeMode="center" source={leftImg} />

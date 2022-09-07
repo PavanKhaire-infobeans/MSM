@@ -92,7 +92,7 @@ class Splash extends Component<Props> {
             No_Internet_Warning();
           }
         } else {
-          this.props.navigation.dashBoard();
+          this.props.navigation.replace('dashboard');
         }
       },
     );
@@ -124,7 +124,7 @@ class Splash extends Component<Props> {
                         : '',
                     });
                   } else {
-                    // this.props.navigation.dashBoard();
+                    // this.props.navigation.dashboard();
                   }
                 } else if (urlreDirectTo && urlreDirectTo == 'memory') {
                   let urlData = splitUrl[4] ? base64.decode(splitUrl[4]) : '';
@@ -161,7 +161,7 @@ class Splash extends Component<Props> {
                     decodedDataFromURL: '',
                   });
                 } else {
-                  this.props.navigation.dashBoard();
+                  this.props.navigation.replace('dashboard');
                 }
               },
             );
@@ -172,15 +172,15 @@ class Splash extends Component<Props> {
       })
       .catch(err => console.log('An error occurred' + err));
 
-    LoginStore.listAllAccounts().then((resp: any) => {
-      let list = resp.rows.raw() as Array<UserData>;
-      let obj = {};
-      list.forEach((element: any) => {
-        obj = {...obj, [`${element.instanceID}_${element.userID}`]: 0};
-      });
-      Utility.unreadNotification = {...obj};
-      console.log('Notification object has : ', Utility.unreadNotification);
-    });
+    // LoginStore.listAllAccounts().then((resp: any) => {
+    //   let list = resp.rows.raw() as Array<UserData>;
+    //   let obj = {};
+    //   list.forEach((element: any) => {
+    //     obj = {...obj, [`${element.instanceID}_${element.userID}`]: 0};
+    //   });
+    //   Utility.unreadNotification = {...obj};
+    //   console.log('Notification object has : ', Utility.unreadNotification);
+    // });
     setTimeout(() => {
       this.props.getUser();
     }, 2500);
@@ -289,24 +289,24 @@ class Splash extends Component<Props> {
                             deepLinkBackClick: true,
                           });
                         } else {
-                          this.props.navigation.dashBoard();
+                          this.props.navigation.replace('dashboard');
                         }
                       } else {
-                        this.props.navigation.dashBoard();
+                        this.props.navigation.replace('dashboard');
                       }
                     } else {
                       No_Internet_Warning();
                     }
                   },
                 );
-              } else this.props.navigation.dashBoard();
+              } else this.props.navigation.replace('dashboard');
             } else {
               No_Internet_Warning();
               this.props.navigation.replace('prologue');
             }
           }
         } else {
-          this.props.navigation.dashBoard();
+          this.props.navigation.replace('dashboard');
         }
       } catch (error) {
         console.log(error);

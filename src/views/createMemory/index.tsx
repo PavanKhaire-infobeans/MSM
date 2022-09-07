@@ -347,7 +347,7 @@ class CreateMemory extends React.Component<Props> {
     loaderHandler.hideLoader();
     if (success) {
       loaderHandler.showLoader();
-      this.props.navigation.dashBoard();
+      this.props.navigation.navigate('dashBoard');
     } else {
       ToastMessage('Unable to delete draft. Please try again later');
     }
@@ -1018,7 +1018,7 @@ class CreateMemory extends React.Component<Props> {
     ) {
       ToastMessage('This audio file is corrupted', Colors.ErrorColor);
     } else {
-      this.props.navigation.commonAudioRecorder({
+      this.props.navigation.navigate('commonAudioRecorder', {
         mindPopID: 0,
         selectedItem: selectedItem ? selectedItem : null,
         hideDelete: true,
@@ -2114,7 +2114,7 @@ class CreateMemory extends React.Component<Props> {
                       isLoading: true,
                     });
                     loaderHandler.showLoader();
-                    this.props.navigation.pop();
+                    this.props.navigation.goBack();
                   });
                   // ReactNativeHapticFeedback.trigger('impactMedium', options);
                 },

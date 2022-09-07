@@ -257,7 +257,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     } else {
       Keyboard.dismiss();
       if (this.props.deepLinkBackClick) {
-        this.props.navigation.dashBoard();
+        this.props.navigation.navigate('dashBoard');
       } else {
         this.props.navigation.goBack();
       }
@@ -1910,7 +1910,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
               heading={''}
               cancleText={'Back'}
               showCommunity={false}
-              cancelAction={() => this.props.navigation.pop()}
+              cancelAction={() => this.props.navigation.goBack()}
               showRightText={false}
               isWhite={true}
               rightText={

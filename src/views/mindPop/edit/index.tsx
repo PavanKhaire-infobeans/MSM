@@ -173,7 +173,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
 
   constructor(props: {[x: string]: any}) {
     super(props);
-
+    console.log('Props : ', JSON.stringify(props));
     this.files = [];
     // this.filePathsToUpload = [];
     if (getValue(props, ['listItem', 'id']) && props.listItem.id !== '') {
@@ -187,14 +187,14 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
     }
     this.moment = '0';
     if (typeof this.props.isEdit != 'undefined') {
-      this.isEdit = this.props.isEdit;
+      this.isEdit = this.props?.isEdit;
     }
 
     this.listener = EventManager.addListener(
       kAddEditIdentifier,
       this.reloadData,
     );
-    if (this.props.navigation.state.routeName == 'mindPopEdit') {
+    if (this.props.route.name == 'mindPopEdit') {
       this.backListner = EventManager.addListener(
         'hardwareBackPress',
         this._onBackIfEdit,
@@ -274,6 +274,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
   };
 
   _prevUpdate = () => {
+    alert('here');
     //Check if user has some unsaved changes
     const {filesToDelete, filesToUpload} = this._getUpdatedFiles();
 
@@ -481,10 +482,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
     // let itemCount = (item.data as Array<any>).length
     let paddingSpace = 30; // horizontal padding of container view (15*2)
     var editScreenWidth = ScreenWidth - paddingSpace;
-    if (
-      DeviceInfo.isTablet() &&
-      this.props.navigation.state.routeName === 'mindPopList'
-    ) {
+    if (DeviceInfo.isTablet() && this.props.route.name === 'mindPopList') {
       editScreenWidth = editScreenWidth - 320;
     }
     var data: Array<{
@@ -625,11 +623,11 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
               style={{
                 width:
                   DeviceInfo.isTablet() &&
-                  this.props.navigation.state.routeName !== 'mindPopList'
+                  this.props.route.name !== 'mindPopList'
                     ? '80%'
                     : '100%',
                 ...(DeviceInfo.isTablet() &&
-                this.props.navigation.state.routeName === 'mindPopList'
+                this.props.route.name === 'mindPopList'
                   ? {}
                   : {maxWidth: 786}),
                 flex: 1,
@@ -712,7 +710,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
 
   audioAttachmentPress = () => {
     Keyboard.dismiss();
-    this.props.navigation.commonAudioRecorder({
+    this.props.navigation.navigate('commonAudioRecorder', {
       mindPopID: this.state.id || 0,
       editRefresh: (file: any[]) => {
         Keyboard.dismiss();
@@ -756,11 +754,11 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
             Styles.toolBarContainer,
             {
               justifyContent:
-                this.props.navigation.state.routeName == 'mindPopEdit'
+                this.props.route.name == 'mindPopEdit'
                   ? 'space-between'
                   : 'flex-end',
               ...(DeviceInfo.isTablet() &&
-              this.props.navigation.state.routeName == 'mindPopList'
+              this.props.route.name == 'mindPopList'
                 ? {
                     borderLeftColor: Colors.backrgba,
                     borderLeftWidth: 1,
@@ -776,7 +774,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
               <Image source={keyboard_hide} />
             </TouchableHighlight>
           )}
-          {this.props.navigation.state.routeName == 'mindPopEdit' ? (
+          {this.props.route.name == 'mindPopEdit' ? (
             <View style={Styles.buttonContainer}>
               {/* <TouchableOpacity
 							onPress={() => {this.cameraAttachmentPress()}}
@@ -874,11 +872,11 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
             Styles.toolBarContainer,
             {
               justifyContent:
-                this.props.navigation.state.routeName == 'mindPopEdit'
+                this.props.route.name == 'mindPopEdit'
                   ? 'space-between'
                   : 'flex-end',
               ...(DeviceInfo.isTablet() &&
-              this.props.navigation.state.routeName == 'mindPopList'
+              this.props.route.name == 'mindPopList'
                 ? {
                     borderLeftColor: Colors.backrgba,
                     borderLeftWidth: 1,
@@ -894,7 +892,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
               <Image source={keyboard_hide} />
             </TouchableHighlight>
           )}
-          {this.props.navigation.state.routeName == 'mindPopEdit' ? (
+          {this.props.route.name == 'mindPopEdit' ? (
             <View style={Styles.buttonContainer}>
               {/* <TouchableOpacity
 							onPress={() => {this.cameraAttachmentPress()}}
@@ -1100,19 +1098,16 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
       loaderHandler.hideLoader();
       if (
         nextProps.deleteStatus.success &&
-        this.props.navigation.state.routeName == 'mindPopEdit'
+        this.props.route.name == 'mindPopEdit'
       ) {
         let arrIds = [parseInt(this.state.id)];
         MindPopStore._deleteMindPops(arrIds);
         this.props.deleteMindPopsCallEnd();
-        if (
-          this.props.navigation.state.routeName == 'mindPopEdit' &&
-          !this.isDeleteForMemory
-        ) {
+        if (this.props.route.name == 'mindPopEdit' && !this.isDeleteForMemory) {
           Keyboard.dismiss();
           this.props.navigation.goBack();
           return;
-        } else if (this.props.navigation.state.routeName == 'mindPopEdit') {
+        } else if (this.props.route.name == 'mindPopEdit') {
           this.isDeleteForMemory = false;
         }
       } else {
@@ -1129,7 +1124,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
     }
     //To update files on Tablet in View mode
     if (
-      this.props.navigation.state.routeName == 'mindPopList' ||
+      this.props.route.name == 'mindPopList' ||
       Object.keys(this.props.listItem || {}).length <
         Object.keys(nextProps.listItem || {}).length
     ) {
@@ -1140,7 +1135,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
     if (
       ((this.state.id == '' && getValue(nextProps, ['listItem', 'id'])) ||
         DeviceInfo.isTablet()) &&
-      this.props.navigation.state.routeName == 'mindPopList' &&
+      this.props.route.name == 'mindPopList' &&
       nextProps.listItem
     ) {
       let content = decode_utf8(nextProps.listItem.message || '');
@@ -1265,7 +1260,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
         ItemSeparatorComponent={() => (
           <View
             style={{
-              width: 0, //!DeviceInfo.isTablet() ? 0 : this.props.navigation.state.routeName == "mindPopList" ? 5 : 35
+              width: 0, //!DeviceInfo.isTablet() ? 0 : this.props.route.name == "mindPopList" ? 5 : 35
             }}
           />
         )}
@@ -1297,7 +1292,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
   // 				ItemSeparatorComponent={() => (
   // 					<View
   // 						style={{
-  // 							width: 0 //!DeviceInfo.isTablet() ? 0 : this.props.navigation.state.routeName == "mindPopList" ? 5 : 35
+  // 							width: 0 //!DeviceInfo.isTablet() ? 0 : this.props.route.name == "mindPopList" ? 5 : 35
   // 						}}
   // 					/>
   // 				)}
@@ -1417,8 +1412,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
               reset: () => {
                 this.setState({selectedItem: null});
               },
-              isEditMode:
-                this.props.navigation.state.routeName == 'mindPopEdit',
+              isEditMode: this.props.route.name == 'mindPopEdit',
             });
           } else if (item.type == 'files') {
             item.url = item.uri;
@@ -1495,8 +1489,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
               {found ? <View style={Styles.found} /> : null}
             </View>
 
-            {!this.isEdit &&
-            this.props.navigation.state.routeName == 'mindPopEdit' ? (
+            {!this.isEdit && this.props.route.name == 'mindPopEdit' ? (
               <TouchableOpacity
                 onPress={() => this._selDelete(item, found)}
                 style={Styles.deleteContainer}>

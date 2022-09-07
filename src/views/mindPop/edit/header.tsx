@@ -1,10 +1,10 @@
 import React from 'react';
-import { Image, Platform, TouchableOpacity, View } from 'react-native';
+import {Image, Platform, TouchableOpacity, View} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Text from '../../../common/component/Text';
-import { Colors, fontFamily, fontSize } from '../../../common/constants';
-import { EditMode } from './reducer';
+import {Colors, fontFamily, fontSize} from '../../../common/constants';
+import {EditMode} from './reducer';
 import Styles from './styles';
 
 class EditHeader extends React.Component<{
@@ -19,16 +19,15 @@ class EditHeader extends React.Component<{
 }> {
   render() {
     return (
-      <View
-        style={Styles.container}>
+      <View style={Styles.container}>
         {this.props.isEdit ||
         !this.props.selectedItem ||
         DeviceInfo.isTablet() ? (
-          <View
-            style={Styles.tabletSubContainer}>
+          <View style={Styles.tabletSubContainer}>
             <TouchableOpacity
               style={Styles.backButton}
               onPress={() => {
+                alert(JSON.stringify(this.props));
                 this.props.updatePrev && this.props.updatePrev();
               }}>
               <Image
@@ -36,10 +35,7 @@ class EditHeader extends React.Component<{
                 source={require('../../../images/back/back.png')}
               />
             </TouchableOpacity>
-            <Text
-              style={Styles.mindPopText}>
-              MindPops
-            </Text>
+            <Text style={Styles.mindPopText}>MindPops</Text>
           </View>
         ) : (
           <TouchableOpacity
@@ -48,14 +44,10 @@ class EditHeader extends React.Component<{
               // this.props.reset();
               this.props.cancel();
             }}>
-            <Text style={Styles.cancelText}>
-              Cancel
-            </Text>
+            <Text style={Styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity
-          style={Styles.editButton}
-          onPress={this.onRightPress}>
+        <TouchableOpacity style={Styles.editButton} onPress={this.onRightPress}>
           <Text style={Styles.cancelText}>
             {this.props.isEdit ? 'Edit' : 'Save'}
           </Text>

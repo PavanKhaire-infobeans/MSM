@@ -181,7 +181,7 @@ class AddContentDetails extends React.Component {
                 },
                 () => {
                   this.props.beforeBack ? this.props.beforeBack() : null;
-                  this.props.navigation.pop();
+                  this.props.navigation.goBack();
                 },
               );
             },
@@ -367,7 +367,7 @@ class AddContentDetails extends React.Component {
       //   }
       // ]);
       // this.props.navigation.replace('mindPop')
-      this.props.navigation.mindPop();
+      this.props.navigation.replace('mindPop');
 
       // , {
       //   showPublishedPopup: true,
@@ -489,7 +489,7 @@ class AddContentDetails extends React.Component {
 
   audioAttachmentPress = (selectedItem?: any) => {
     Keyboard.dismiss();
-    this.props.navigation.commonAudioRecorder({
+    this.props.navigation.navigate('commonAudioRecorder', {
       mindPopID: 0,
       selectedItem: selectedItem ? selectedItem : null,
       hideDelete: true,

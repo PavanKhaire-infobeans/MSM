@@ -103,8 +103,9 @@ export default class MyAccount extends React.Component {
         this.props.navigation.push('mindPop');
         break;
       case Drafts:
-        // this.props.navigation.jump('memoriesDrafts', {isFromMenu: true});
-        this.props.navigation.replace('writeTabs');
+        this.props.navigation.replace('dashboard', {
+          Screen: 'writeTabs',
+        });
         break;
       case Memories:
         break;
@@ -227,7 +228,11 @@ export default class MyAccount extends React.Component {
         <SafeAreaView style={Styles.noViewStyle} />
         <SafeAreaView style={Styles.safeAreaContextStyle}>
           <View style={Styles.container}>
-            <NavigationBar title={'My Account'} showClose={true} />
+            <NavigationBar
+              title={'My Account'}
+              showClose={true}
+              navigation={this.props.navigation}
+            />
             <StatusBar
               barStyle={
                 Utility.currentTheme == 'light'

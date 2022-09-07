@@ -495,7 +495,7 @@ class MindPopList extends React.Component<{
   _cancelAction = () => {
     Keyboard.dismiss();
     if (this.props.deepLinkBackClick) {
-      this.props.navigation.dashBoard();
+      this.props.navigation.naviagte('dashBoard');
     } else {
       this.props.navigation.goBack();
     }
@@ -596,7 +596,9 @@ class MindPopList extends React.Component<{
     } else {
       this.props.resetEdit(data.item);
     }
-    this.props.navigation.mindPopEdit({updateList: this.updateList});
+    this.props.navigation.navigate('mindPopEdit', {
+      updateList: this.updateList,
+    });
     if (DeviceInfo.isTablet()) {
       this.setState({selectedIndex: data.index});
     }
@@ -710,24 +712,30 @@ class MindPopList extends React.Component<{
               <MindPopIPadNavigationBar
                 selectAction={this.props.selectAction}
                 selectAllAction={this.props.selectAllAction}
-                backAction={() => this.props.navigation.writeTabs()}
+                backAction={() =>
+                  this.props.navigation.navigate('dashboard', {
+                    Screen: 'writeTabs',
+                  })
+                }
                 // backAction={this.props.backAction}
                 updateList={this.props.updateList}
                 // cancelAction={this.props.cancelAction}
-                cancelAction={() => this.props.navigation.pop()}
+                cancelAction={() => this.props.navigation.goBack()}
                 // cancelAction={() => this.props.navigation.dashboard()}
                 clearAllAction={this.props.clearAllAction}
+                navigation={this.props.navigation}
               />
             ) : (
               <MindPopNavigationBar
                 selectAction={this.props.selectAction}
                 selectAllAction={this.props.selectAllAction}
-                backAction={() => this.props.navigation.dashboard()}
-                cancelAction={() => this.props.navigation.dashboard()}
+                backAction={() => this.props.navigation.navigate('dashboard')}
+                cancelAction={() => this.props.navigation.navigate('dashboard')}
                 // backAction={this.props.backAction}
                 updateList={this.props.updateList}
                 // cancelAction={this.props.cancelAction}
                 clearAllAction={this.props.clearAllAction}
+                navigation={this.props.navigation}
               />
             )}
             {/* <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}> */}
@@ -841,20 +849,7 @@ class MindPopList extends React.Component<{
     return placeHolder;
   }
 
-  fetchAndPushMindPop = async (data: any) => {
-    // loaderHandler.showLoader("Loading...")
-    // let value : any = await MindPopStore._getMindPopAttachments(data.id);
-    // let medias: MindPopAttachment[] = value.rows.raw();
-    // let attachments : any = []
-    // medias.forEach((element: any) => {
-    // 	attachments.push(Convert(element))
-    // });
-    // this.convertToMemoryObject.id = data.id;
-    // this.convertToMemoryObject.details = DefaultDetailsMemory(data.message.trim());
-    // this.convertToMemoryObject.attachments = attachments;
-    // CreateUpdateMemory(this.convertToMemoryObject.details, [], "mindpopListCreateMemory")
-    // this.props.navigation.push("createMemory", {attachments : this.state., type : createNew}
-  };
+  fetchAndPushMindPop = async (data: any) => {};
   _renderFrontCell = (data: any, item: any): JSX.Element => {
     var frontCellWidth = this.props.isSelectingItem ? '85%' : '100%';
     var selectionCellWidth = this.props.isSelectingItem ? '15%' : '0%';
@@ -994,14 +989,16 @@ class MindPopList extends React.Component<{
     this.props.cleanEdit();
     if (fromNavBar) {
       loaderHandler.showLoader('Loading...');
-      this.props.navigation.mindPopEdit({
+      this.props.navigation.navigate('mindPopEdit', {
         updateList: this.updateList,
         actionImageUpload: this.props.actionImageUpload,
         actionRecord: this.props.actionRecord,
         actionWrite: this.props.actionWrite,
       });
     } else {
-      this.props.navigation.mindPopEdit({updateList: this.updateList});
+      this.props.navigation.navigate('mindPopEdit', {
+        updateList: this.updateList,
+      });
     }
   };
   _getEditorCell = (): JSX.Element => {
@@ -1128,6 +1125,7 @@ class MindPopList extends React.Component<{
             <EmptyView
               resetEdit={this.props.resetEdit}
               updateList={this.updateList}
+              navigation={this.props.navigation}
             />
           )
         ) : (

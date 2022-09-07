@@ -83,7 +83,7 @@ export default class CustomListView extends React.Component<Props> {
           <NavigationHeaderSafeArea
             heading={this.props.heading}
             showCommunity={false}
-            cancelAction={() => this.props.navigation.pop()}
+            cancelAction={() => this.props.navigation.goBack()}
             showRightText={false}
             isWhite={true}
             backIcon={action_close}

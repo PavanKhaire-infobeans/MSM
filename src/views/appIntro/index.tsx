@@ -65,7 +65,7 @@ export default class AppIntro extends React.Component {
 
   onDoneTap = () => {
     DefaultPreference.set('hide_app_intro', 'true').then(function () {});
-    this.props.navigation.prologue();
+    this.props.navigation.replace('prologue');
   };
 
   renderAppIntro = ({item, index}) => {

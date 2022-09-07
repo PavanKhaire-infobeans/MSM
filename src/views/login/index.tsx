@@ -71,8 +71,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   //User state
   state = {
     _isRemeberMe: false,
-    username: '',
-    password: '',
+    username: 'rishabh.shah@infobeans.com',
+    password: 'Admin@123',
     userNameError: {
       error: false,
       text: '',
@@ -119,12 +119,10 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
    */
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     // Check for login response
-    if (
-      this.props.navigation.currentScene == 'login' ||
-      this.props.navigation.currentScene == 'prologue'
-    ) {
-      this.controller.checkLoggedIn(nextProps.loginStatus);
-    }
+    console.log(nextProps.loginStatus);
+    // if (nextProps?.loginStatus) {
+    //   this.controller.checkLoggedIn(nextProps.loginStatus);
+    // }
   }
 
   constructor(props: Props) {
@@ -321,42 +319,6 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
         onTouchStart={() => {
           Keyboard.dismiss();
         }}>
-        {/* <ImageBackground source={Rectangle} resizeMode='cover' style={{ flex: 1, height: '100%', width: '100%', alignItems: 'center' }}> */}
-
-        {/* <Modal
-            animationType={'slide'}
-            transparent={false}
-            visible={this.state.isVisible}
-            onRequestClose={() =>
-              this.updateState({...this.state, isVisible: false})
-            }>
-            <CommonInstanceListsSelection
-              username={this.state.username}
-              onClick={(selectedCommunity: any) =>
-                this.loginToSelected(selectedCommunity)
-              }
-              type={ListType.Login}
-              title={'Login'}
-              listAccounts={this.state.instanceData}
-              onRequestClose={() =>
-                this.updateState({...this.state, isVisible: false})
-              }
-              isDisabledAccount={this.state.isDisabledAccount}
-            />
-          </Modal> */}
-        {/*<NavigationHeaderSafeArea height={0} ref={(ref)=> this.navBar = ref} showCommunity={false} cancelAction={()=> this.props.navigation.pop()} 
-                                      showRightText={true} isWhite={false}/>	*/}
-        {/* <TouchableWithoutFeedback
-					style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-					onPress={() => {
-						Keyboard.dismiss();
-					}}> */}
-
-        {/* <LinearGradient
-            // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
-            // locations={[0, 0.6]}
-            colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.6)']}
-            style={{ height: '100%', width: '100%' }}> */}
         <StatusBar
           barStyle={
             Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
@@ -436,7 +398,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             <Animated.View style={[Styles.buttonContainer, animStyle]}>
               <TouchableWithoutFeedback
                 // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
-                onPress={this.controller.onClick.bind(this.controller)}>
+                // onPress={this.controller.onClick.bind(this.controller)}>
+                onPress={() => this.props.navigation.navigate('dashboard')}>
                 <View
                   style={[
                     Styles.loginSSOButtonStyle,

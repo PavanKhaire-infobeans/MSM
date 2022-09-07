@@ -98,7 +98,7 @@ class Menu extends React.Component<MenuProps> {
     this.setState({list: accounts}, () => {
       this.props.setUser(user);
       this.props.navigation.replace('prologue');
-      this.props.navigation.dashBoard();
+      this.props.navigation.navigate('dashBoard');
     });
   };
 

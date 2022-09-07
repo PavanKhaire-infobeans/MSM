@@ -35,8 +35,11 @@ export default class EmptyView extends Component<{
             text="Create a MindPop"
             onPress={() => {
               this.props.resetEdit();
-              this.props.navigation.mindPopEdit({
+              this.props.navigation.navigate('mindPopEdit', {
                 updateList: this.props.updateList,
+                updatePrev: () => {
+                  this.props.navigation.goBack();
+                },
               });
             }}
           />

@@ -6,6 +6,8 @@ import {
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+
 import {kNotificationIndicator} from '../../../src/common/component/TabBarIcons';
 import Text from '../../../src/common/component/Text';
 import {Colors} from '../../../src/common/constants';
@@ -43,6 +45,8 @@ const NavigationBar = (props: Props) => {
   let notificationReceivedForeground: EventManager;
   let notificationReceived;
   const [state, setState] = useState({showBadge: false});
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (Utility.unreadNotification[key] > 0) {
@@ -131,7 +135,7 @@ const NavigationBar = (props: Props) => {
       <TouchableWithoutFeedback
         testID={testID.leftButtons.menu}
         onPress={() => {
-          this.props.navigation.push('myAccount');
+          navigation.push('myAccount');
           // showClose ? _closeAction() : this.props.navigation.drawerOpen();
         }}>
         <View style={styles.leftButtonTouchableContainer}>

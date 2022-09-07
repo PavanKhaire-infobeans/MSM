@@ -426,7 +426,7 @@ class Prologue extends Component<Props> {
                         <View style={Styles.separatorHeightStyle32} />
                         <TouchableWithoutFeedback
                           onPress={() => {
-                            this.props.navigation.navigate('dashboard');
+                            this.props.navigation.navigate('login');
                           }}>
                           <View
                             style={[

@@ -105,13 +105,44 @@ if (Text.defaultProps == null) Text.defaultProps = {};
 Text.defaultProps.allowFontScaling = false;
 
 const RootStack = createStackNavigator();
-const DrawerStack = createDrawerNavigator();
+const MindPopStack = createStackNavigator();
+const DrawerStack = createStackNavigator();
 
 const DrawerNavigator = () => {
   return (
-    <DrawerStack.Navigator>
+    <DrawerStack.Navigator
+      initialRouteName="Home"
+      screenOptions={{headerShown: false}}>
       <DrawerStack.Screen name="Home" component={DashboardIndex} />
+      <DrawerStack.Screen name="writeTabs" component={WriteTabs} />
     </DrawerStack.Navigator>
+  );
+};
+
+const MindPopNavigator = () => {
+  return (
+    <MindPopStack.Navigator initialRouteName="mindPopList">
+      <MindPopStack.Screen
+        name="mindPopList"
+        component={DeviceInfo.isTablet() ? iPadList : MindPopList}
+        options={{headerShown: false}}
+      />
+      <MindPopStack.Screen
+        name="tipsAndTricks"
+        component={TipsAndTricks}
+        options={{headerShown: false}}
+      />
+      <MindPopStack.Screen
+        name="previewImage"
+        component={PreviewImage}
+        options={{headerShown: false}}
+      />
+      <MindPopStack.Screen
+        name="mindPopEdit"
+        component={MindPopEdit}
+        options={{headerShown: false}}
+      />
+    </MindPopStack.Navigator>
   );
 };
 
@@ -179,298 +210,460 @@ const AppNavigationRouter = () => {
           component={DrawerNavigator}
           options={{headerShown: false}}
         />
+        <RootStack.Screen
+          name="mindPop"
+          component={MindPopNavigator}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="addContent"
+          component={AddContentView}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="userProfileEdit"
+          component={UserProfileEdit}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="multipleValuesEdit"
+          component={MultipleValuesEdit}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="profile"
+          component={Profile}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="myAccount"
+          title={'My Account'}
+          component={MyAccount}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="createMemory"
+          title={'Memory Draft'}
+          component={CreateMemory}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="memoryDetails"
+          component={MemoryDetails}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="customListMemoryDetails"
+          component={CustomListView}
+          options={{headerShown: false}}
+        />
+
+        <RootStack.Screen
+          name="newmemoryDetails"
+          component={NewMemoryDetails}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="newcustomListMemoryDetails"
+          component={NewCustomListView}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="newfileDetails"
+          component={NewFilesDetail}
+          options={{headerShown: false}}
+        />
+
+        <RootStack.Screen
+          name="blockedUsers"
+          component={BlockedUsers}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="fileDetails"
+          component={FilesDetail}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="imageViewer"
+          component={ImageViewer}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="pdfViewer"
+          component={PDFViewer}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="commonAudioRecorder"
+          component={CommonAudioRecorder}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="fileDescription"
+          component={FileDescription}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="publishMemoryDraft"
+          component={PublishMemoryDraft}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="commonListCreateMemory"
+          component={CommonListCreateMemory}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="collectionList"
+          component={CollectionList}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="memoryCollectionList"
+          component={MemoryCollectionList}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="collectionDetails"
+          component={CollectionDetails}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="createRenameCollection"
+          component={CreateRenameCollection}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="whoCanSee"
+          component={WhoCanSee}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="inviteCollaborators"
+          component={InviteCollaborators}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="notesToCollaborators"
+          component={NotesToCollaborators}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="commonFriendsSearchView"
+          component={CommonFriendsSearchView}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="etherPadEditing"
+          component={EtherPadEditing}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="notificationListing"
+          component={NotificationListing}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="changePassword"
+          component={ChangePassword}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="commonWebView"
+          component={CommonWebView}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="notificationView"
+          title={'Notifications'}
+          component={NotificationView}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="topicsFilter"
+          component={TopicsFilter}
+          options={{headerShown: false}}
+        />
       </RootStack.Navigator>
     </NavigationContainer>
   );
 };
+// const AppRouter = () => (
+//   <Router sceneStyle={{backgroundColor: Colors.white}}>
+//     <Scene key="root">
+//       {/* <Scene key="animatedAppIntro" type={ActionConst.RESET} hideNavBar component={AnimatedAppIntro} /> */}
+//       <Scene
+//         key="splash"
+//         type={ActionConst.RESET}
+//         hideNavBar
+//         component={Splash}
+//       />
+//       <Scene
+//         key="prologue"
+//         type={ActionConst.RESET}
+//         hideNavBar
+//         component={Prologue}
+//       />
+//       <Scene
+//         key="appIntro"
+//         type={ActionConst.RESET}
+//         hideNavBar
+//         component={AppIntro}
+//       />
+//       <Scene
+//         key="findCommunity"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={FindCommunity}
+//       />
+//       <Scene
+//         key="registrationPre"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={RegFirstStep}
+//       />
+//       <Scene
+//         key="registrationFinal"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={RegFinalStep}
+//       />
+//       <Scene
+//         key="userRegStatus"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={UserRegistrationStatus}
+//       />
+//       <Scene
+//         key="login"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={LoginView}
+//       />
+//       <Scene
+//         key="commonInstanceListsSelection"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={CommonInstanceListsSelection}
+//       />
+//       <Scene
+//         key="forgotPassword"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={ForgotPassword}
+//       />
+//       <Scene
+//         key="filtersScreen"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={FilterScreen}
+//       />
+//       <Drawer
+//         key="dashBoard"
+//         type={ActionConst.RESET}
+//         hideNavBar
+//         contentComponent={Menu}>
+//         <Scene key="wrapper" hideNavBar>
+//           <Tabs
+//             key="root"
+//             showLabel={false}
+//             lazy={true}
+//             showIcon={true}
+//             tabBarPosition="bottom"
+//             activeTintColor={Colors.ThemeColor}
+//             tabBarOnPress={({navigation, defaultHandler}) => {
+//               navigateToParticular(navigation, defaultHandler);
+//             }}
+//             tabBarStyle={{
+//               height: 40,
+//               backgroundColor: Colors.white,
+//               borderWidth: 1,
+//               borderTopWidth: 3,
+//               borderTopColor: Colors.white,
+//               width: '94%',
+//               borderRadius: 12,
+//               borderColor: Colors.white,
+//               marginBottom: 4,
+//               alignSelf: 'center',
+//             }}>
+//             <Stack title={NewTabItems.Read} tabBarIcon={TabIcon}>
+//               <Scene hideNavBar key="dashboard" component={DashboardIndex} />
+//             </Stack>
+//             <Stack title={NewTabItems.Write} tabBarIcon={TabIcon}>
+//               <Scene hideNavBar key="writeTabs" component={WriteTabs} />
+//             </Stack>
+//             {/* <Stack title={TabItems.MyMemories} tabBarIcon={TabIcon}>
+//               <Scene
+//                 hideNavBar
+//                 key="memoriesDrafts"
+//                 title={TabItems.MyMemories}
+//                 component={MyMemoriesContainer}
+//               />
+//             </Stack>
+//             <Stack title={TabItems.AddContent} tabBarIcon={TabIcon}>
+//               <Scene
+//                 hideNavBar
+//                 key="contentView"
+//                 title={TabItems.AddContent}
+//                 component={Dashboard}
+//               />
+//             </Stack>
+//             <Stack title={TabItems.Prompts} tabBarIcon={TabIcon}>
+//               <Scene
+//                 hideNavBar
+//                 key="promptsView"
+//                 title={TabItems.Prompts}
+//                 component={PromptsView}
+//               />
+//             </Stack> */}
+//             {/* <Stack title={TabItems.Notifications} tabBarIcon={TabIcon}>
+//                             <Scene hideNavBar key="notificationView" title={TabItems.Notifications} component={NotificationView} />
+//                         </Stack> */}
+//             {/* <Stack title={TabItems.MoreOptions} tabBarIcon={TabIcon}>
+//               <Scene key="moreOptions" hideNavBar component={MoreOptions} />
+//             </Stack> */}
+//           </Tabs>
+//         </Scene>
+//         {/* <Scene key="dashboardIndex" type={ActionConst.RESET} hideNavBar component={DashboadIndex}/> */}
+//       </Drawer>
+//       <Scene hideNavBar key="mindPop">
+//         <Scene
+//           hideNavBar
+//           gesturesEnabled={false}
+//           key="mindPopList"
+//           component={DeviceInfo.isTablet() ? iPadList : MindPopList}
+//           initial
+//         />
+//         <Scene key="tipsAndTricks" hideNavBar component={TipsAndTricks} />
+//         <Scene key="previewImage" hideNavBar component={PreviewImage} />
+//         <Scene key="mindPopEdit" hideNavBar component={MindPopEdit} />
+//       </Scene>
+//       <Scene
+//         key="addContent"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={AddContentView}
+//       />
+//       <Scene
+//         key="userProfileEdit"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={UserProfileEdit}
+//       />
+//       <Scene
+//         key="multipleValuesEdit"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={MultipleValuesEdit}
+//       />
+//       <Scene
+//         key="profile"
+//         type={ActionConst.PUSH}
+//         hideNavBar
+//         component={Profile}
+//       />
+//       <Scene
+//         key="myAccount"
+//         type={ActionConst.PUSH}
+//         title={'My Account'}
+//         hideNavBar
+//         component={MyAccount}
+//       />
+//       <Scene
+//         key="createMemory"
+//         type={ActionConst.PUSH}
+//         title={'Memory Draft'}
+//         hideNavBar
+//         component={CreateMemory}
+//       />
+//       <Scene key="memoryDetails" hideNavBar component={MemoryDetails} />
+//       <Scene
+//         key="customListMemoryDetails"
+//         hideNavBar
+//         component={CustomListView}
+//       />
 
-const AppRouter = () => (
-  <Router sceneStyle={{backgroundColor: Colors.white}}>
-    <Scene key="root">
-      {/* <Scene key="animatedAppIntro" type={ActionConst.RESET} hideNavBar component={AnimatedAppIntro} /> */}
-      <Scene
-        key="splash"
-        type={ActionConst.RESET}
-        hideNavBar
-        component={Splash}
-      />
-      <Scene
-        key="prologue"
-        type={ActionConst.RESET}
-        hideNavBar
-        component={Prologue}
-      />
-      <Scene
-        key="appIntro"
-        type={ActionConst.RESET}
-        hideNavBar
-        component={AppIntro}
-      />
-      <Scene
-        key="findCommunity"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={FindCommunity}
-      />
-      <Scene
-        key="registrationPre"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={RegFirstStep}
-      />
-      <Scene
-        key="registrationFinal"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={RegFinalStep}
-      />
-      <Scene
-        key="userRegStatus"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={UserRegistrationStatus}
-      />
-      <Scene
-        key="login"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={LoginView}
-      />
-      <Scene
-        key="commonInstanceListsSelection"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={CommonInstanceListsSelection}
-      />
-      <Scene
-        key="forgotPassword"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={ForgotPassword}
-      />
-      <Scene
-        key="filtersScreen"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={FilterScreen}
-      />
-      <Drawer
-        key="dashBoard"
-        type={ActionConst.RESET}
-        hideNavBar
-        contentComponent={Menu}>
-        <Scene key="wrapper" hideNavBar>
-          <Tabs
-            key="root"
-            showLabel={false}
-            lazy={true}
-            showIcon={true}
-            tabBarPosition="bottom"
-            activeTintColor={Colors.ThemeColor}
-            tabBarOnPress={({navigation, defaultHandler}) => {
-              navigateToParticular(navigation, defaultHandler);
-            }}
-            tabBarStyle={{
-              height: 40,
-              backgroundColor: Colors.white,
-              borderWidth: 1,
-              borderTopWidth: 3,
-              borderTopColor: Colors.white,
-              width: '94%',
-              borderRadius: 12,
-              borderColor: Colors.white,
-              marginBottom: 4,
-              alignSelf: 'center',
-            }}>
-            <Stack title={NewTabItems.Read} tabBarIcon={TabIcon}>
-              <Scene hideNavBar key="dashboard" component={DashboardIndex} />
-            </Stack>
-            <Stack title={NewTabItems.Write} tabBarIcon={TabIcon}>
-              <Scene hideNavBar key="writeTabs" component={WriteTabs} />
-            </Stack>
-            {/* <Stack title={TabItems.MyMemories} tabBarIcon={TabIcon}>
-              <Scene
-                hideNavBar
-                key="memoriesDrafts"
-                title={TabItems.MyMemories}
-                component={MyMemoriesContainer}
-              />
-            </Stack>
-            <Stack title={TabItems.AddContent} tabBarIcon={TabIcon}>
-              <Scene
-                hideNavBar
-                key="contentView"
-                title={TabItems.AddContent}
-                component={Dashboard}
-              />
-            </Stack>
-            <Stack title={TabItems.Prompts} tabBarIcon={TabIcon}>
-              <Scene
-                hideNavBar
-                key="promptsView"
-                title={TabItems.Prompts}
-                component={PromptsView}
-              />
-            </Stack> */}
-            {/* <Stack title={TabItems.Notifications} tabBarIcon={TabIcon}>
-                            <Scene hideNavBar key="notificationView" title={TabItems.Notifications} component={NotificationView} />
-                        </Stack> */}
-            {/* <Stack title={TabItems.MoreOptions} tabBarIcon={TabIcon}>
-              <Scene key="moreOptions" hideNavBar component={MoreOptions} />
-            </Stack> */}
-          </Tabs>
-        </Scene>
-        {/* <Scene key="dashboardIndex" type={ActionConst.RESET} hideNavBar component={DashboadIndex}/> */}
-      </Drawer>
-      <Scene hideNavBar key="mindPop">
-        <Scene
-          hideNavBar
-          gesturesEnabled={false}
-          key="mindPopList"
-          component={DeviceInfo.isTablet() ? iPadList : MindPopList}
-          initial
-        />
-        <Scene key="tipsAndTricks" hideNavBar component={TipsAndTricks} />
-        <Scene key="previewImage" hideNavBar component={PreviewImage} />
-        <Scene key="mindPopEdit" hideNavBar component={MindPopEdit} />
-      </Scene>
-      <Scene
-        key="addContent"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={AddContentView}
-      />
-      <Scene
-        key="userProfileEdit"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={UserProfileEdit}
-      />
-      <Scene
-        key="multipleValuesEdit"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={MultipleValuesEdit}
-      />
-      <Scene
-        key="profile"
-        type={ActionConst.PUSH}
-        hideNavBar
-        component={Profile}
-      />
-      <Scene
-        key="myAccount"
-        type={ActionConst.PUSH}
-        title={'My Account'}
-        hideNavBar
-        component={MyAccount}
-      />
-      <Scene
-        key="createMemory"
-        type={ActionConst.PUSH}
-        title={'Memory Draft'}
-        hideNavBar
-        component={CreateMemory}
-      />
-      <Scene key="memoryDetails" hideNavBar component={MemoryDetails} />
-      <Scene
-        key="customListMemoryDetails"
-        hideNavBar
-        component={CustomListView}
-      />
+//       <Scene key="newmemoryDetails" hideNavBar component={NewMemoryDetails} />
+//       <Scene
+//         key="newcustomListMemoryDetails"
+//         hideNavBar
+//         component={NewCustomListView}
+//       />
+//       <Scene key="newfileDetails" hideNavBar component={NewFilesDetail} />
 
-      <Scene key="newmemoryDetails" hideNavBar component={NewMemoryDetails} />
-      <Scene
-        key="newcustomListMemoryDetails"
-        hideNavBar
-        component={NewCustomListView}
-      />
-      <Scene key="newfileDetails" hideNavBar component={NewFilesDetail} />
-
-      <Scene key="blockedUsers" hideNavBar component={BlockedUsers} />
-      <Scene key="fileDetails" hideNavBar component={FilesDetail} />
-      <Scene key="imageViewer" hideNavBar component={ImageViewer} />
-      <Scene key="pdfViewer" component={PDFViewer} />
-      <Scene
-        key="commonAudioRecorder"
-        hideNavBar
-        component={CommonAudioRecorder}
-      />
-      <Scene key="fileDescription" hideNavBar component={FileDescription} />
-      <Scene
-        key="publishMemoryDraft"
-        hideNavBar
-        component={PublishMemoryDraft}
-      />
-      <Scene
-        key="commonListCreateMemory"
-        hideNavBar
-        component={CommonListCreateMemory}
-      />
-      <Scene key="collectionList" hideNavBar component={CollectionList} />
-      <Scene
-        key="memoryCollectionList"
-        hideNavBar
-        component={MemoryCollectionList}
-      />
-      <Scene key="collectionDetails" hideNavBar component={CollectionDetails} />
-      <Scene
-        key="createRenameCollection"
-        hideNavBar
-        component={CreateRenameCollection}
-      />
-      <Scene key="whoCanSee" hideNavBar component={WhoCanSee} />
-      <Scene
-        key="inviteCollaborators"
-        hideNavBar
-        component={InviteCollaborators}
-      />
-      <Scene
-        key="notesToCollaborators"
-        hideNavBar
-        component={NotesToCollaborators}
-      />
-      <Scene
-        key="commonFriendsSearchView"
-        hideNavBar
-        component={CommonFriendsSearchView}
-      />
-      <Scene key="etherPadEditing" hideNavBar component={EtherPadEditing} />
-      <Scene
-        key="notificationListing"
-        hideNavBar
-        component={NotificationListing}
-      />
-      <Scene
-        key="changePassword"
-        type={ActionConst.PUSH}
-        hideNavBar={true}
-        component={ChangePassword}
-      />
-      <Scene key="commonWebView" hideNavBar component={CommonWebView} />
-      <Scene
-        key="notificationView"
-        title={'Notifications'}
-        hideNavBar
-        component={NotificationView}
-      />
-      <Scene key="topicsFilter" hideNavBar component={TopicsFilter} />
-      {/* <Scene navBar={NavigationBar} key="addContentView" title={TabItems.AddContent} component={AddContentView} /> */}
-    </Scene>
-  </Router>
-);
-
-function navigateToParticular(_navigation, defaultHandler) {
-  try {
-    // if (navigation.state.routeName == 'key3') {
-    //   EventManager.callBack('addContentTabPressed');
-    // } else {
-    defaultHandler();
-    // }
-  } catch (error) {
-    console.log('defaultHandler  > ', error);
-  }
-}
+//       <Scene key="blockedUsers" hideNavBar component={BlockedUsers} />
+//       <Scene key="fileDetails" hideNavBar component={FilesDetail} />
+//       <Scene key="imageViewer" hideNavBar component={ImageViewer} />
+//       <Scene key="pdfViewer" component={PDFViewer} />
+//       <Scene
+//         key="commonAudioRecorder"
+//         hideNavBar
+//         component={CommonAudioRecorder}
+//       />
+//       <Scene key="fileDescription" hideNavBar component={FileDescription} />
+//       <Scene
+//         key="publishMemoryDraft"
+//         hideNavBar
+//         component={PublishMemoryDraft}
+//       />
+//       <Scene
+//         key="commonListCreateMemory"
+//         hideNavBar
+//         component={CommonListCreateMemory}
+//       />
+//       <Scene key="collectionList" hideNavBar component={CollectionList} />
+//       <Scene
+//         key="memoryCollectionList"
+//         hideNavBar
+//         component={MemoryCollectionList}
+//       />
+//       <Scene key="collectionDetails" hideNavBar component={CollectionDetails} />
+//       <Scene
+//         key="createRenameCollection"
+//         hideNavBar
+//         component={CreateRenameCollection}
+//       />
+//       <Scene key="whoCanSee" hideNavBar component={WhoCanSee} />
+//       <Scene
+//         key="inviteCollaborators"
+//         hideNavBar
+//         component={InviteCollaborators}
+//       />
+//       <Scene
+//         key="notesToCollaborators"
+//         hideNavBar
+//         component={NotesToCollaborators}
+//       />
+//       <Scene
+//         key="commonFriendsSearchView"
+//         hideNavBar
+//         component={CommonFriendsSearchView}
+//       />
+//       <Scene key="etherPadEditing" hideNavBar component={EtherPadEditing} />
+//       <Scene
+//         key="notificationListing"
+//         hideNavBar
+//         component={NotificationListing}
+//       />
+//       <Scene
+//         key="changePassword"
+//         type={ActionConst.PUSH}
+//         hideNavBar={true}
+//         component={ChangePassword}
+//       />
+//       <Scene key="commonWebView" hideNavBar component={CommonWebView} />
+//       <Scene
+//         key="notificationView"
+//         title={'Notifications'}
+//         hideNavBar
+//         component={NotificationView}
+//       />
+//       <Scene key="topicsFilter" hideNavBar component={TopicsFilter} />
+//       {/* <Scene navBar={NavigationBar} key="addContentView" title={TabItems.AddContent} component={AddContentView} /> */}
+//     </Scene>
+//   </Router>
+// );
 
 LogBox.ignoreAllLogs(true);
 

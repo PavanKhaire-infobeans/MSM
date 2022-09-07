@@ -427,7 +427,7 @@ export const UserDetails = (props: {
             onPress={() => {
               Keyboard.dismiss();
               if (props.deepLinkBackClick) {
-                this.props.navigation.dashBoard();
+                this.props.navigation.navigate('dashBoard');
               } else {
                 this.props.navigation.goBack();
               }

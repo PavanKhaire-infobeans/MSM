@@ -150,7 +150,7 @@ class DashboardIndex extends React.Component<Props> {
   };
 
   changeNotification = () => {
-    this.props.navigation.refresh('root');
+    this.props.navigation.reset('root');
   };
 
   foregroundNotificationCallback = (details: any) => {
