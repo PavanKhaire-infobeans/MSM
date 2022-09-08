@@ -1,24 +1,16 @@
 import React from 'react';
 import {
-  Alert,
-  Image,
-  Keyboard,
-  Platform,
-  SafeAreaView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+  Alert, Image, Keyboard, Platform, SafeAreaView, Text,
+  TextInput, TouchableOpacity, View
 } from 'react-native';
-
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import {Colors} from '../../common/constants';
+import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {pdf_icon} from '../../images';
+import { pdf_icon } from '../../images';
 import Styles from './styles';
 
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 export default class FileDescription extends React.Component<Props, State> {
   keyboardDidShowListener: any;
@@ -38,37 +30,35 @@ export default class FileDescription extends React.Component<Props, State> {
   componentDidMount() {
     this.file_title = this.props.file.file_title;
     this.description = this.props.file.file_description;
-    this.setState(
-      {
-        file_title: this.file_title,
-        description: this.description,
-      },
-      () => {
-        this.backListner = EventManager.addListener(
-          'hardwareBackPress',
-          this.cancelAction,
+    this.setState({
+      file_title: this.file_title,
+      description: this.description,
+    }, () => {
+      this.backListner = EventManager.addListener(
+        'hardwareBackPress',
+        this.cancelAction,
+      );
+      if (Platform.OS == 'android') {
+        this.keyboardDidShowListener = Keyboard.addListener(
+          'keyboardDidShow',
+          this._keyboardDidShow,
         );
-        if (Platform.OS == 'android') {
-          this.keyboardDidShowListener = Keyboard.addListener(
-            'keyboardDidShow',
-            this._keyboardDidShow,
-          );
-          this.keyboardDidHideListener = Keyboard.addListener(
-            'keyboardDidHide',
-            this._keyboardDidHide,
-          );
-        } else {
-          this.keyboardDidShowListener = Keyboard.addListener(
-            'keyboardWillShow',
-            this._keyboardDidShow,
-          );
-          this.keyboardDidHideListener = Keyboard.addListener(
-            'keyboardWillHide',
-            this._keyboardDidHide,
-          );
-        }
-      },
-    );
+        this.keyboardDidHideListener = Keyboard.addListener(
+          'keyboardDidHide',
+          this._keyboardDidHide,
+        );
+      } else {
+        this.keyboardDidShowListener = Keyboard.addListener(
+          'keyboardWillShow',
+          this._keyboardDidShow,
+        );
+        this.keyboardDidHideListener = Keyboard.addListener(
+          'keyboardWillHide',
+          this._keyboardDidHide,
+        );
+      }
+    });
+
   }
 
   _keyboardDidShow = (e: any) => {
@@ -84,11 +74,11 @@ export default class FileDescription extends React.Component<Props, State> {
   };
 
   componentWillUnmount() {
-    this.backListner.removeListener();
-    Keyboard.removeAllListeners('keyboardDidShow');
-    Keyboard.removeAllListeners('keyboardDidHide');
-    Keyboard.removeAllListeners('keyboardWillShow');
-    Keyboard.removeAllListeners('keyboardWillHide');
+    this.backListner.removeListener()
+    Keyboard.removeAllListeners("keyboardDidShow")
+    Keyboard.removeAllListeners("keyboardDidHide")
+    Keyboard.removeAllListeners("keyboardWillShow")
+    Keyboard.removeAllListeners("keyboardWillHide")
   }
   cancelAction = () => {
     if (
@@ -98,6 +88,7 @@ export default class FileDescription extends React.Component<Props, State> {
       Keyboard.dismiss();
       this.props.navigation.goBack();
     } else {
+
       Alert.alert('Save changes?', `Do you want to save your changes?`, [
         {
           text: 'No',

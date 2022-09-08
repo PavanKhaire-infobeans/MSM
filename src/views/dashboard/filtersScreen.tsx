@@ -1,48 +1,44 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Keyboard,
   SafeAreaView,
   StatusBar,
-  Text,
-  TouchableHighlight,
-  View,
+  Text, TouchableHighlight, View
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
-
-import {connect} from 'react-redux';
+import { ScrollView } from 'react-native-gesture-handler';
+import { connect } from 'react-redux';
 import BottomPicker, {
-  ActionSheetItem,
+  ActionSheetItem
 } from '../../common/component/bottomPicker';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MultipleDropDownSelector from '../../common/component/multipleDropDownView';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextNew from '../../common/component/Text';
-import {Colors} from '../../common/constants';
+import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
-import {action_close} from '../../images';
-import {globe, lock, usercheck, users} from './../../../app/images';
+import { useNavigation } from '@react-navigation/native';
+import { action_close } from '../../images';
+import { globe, lock, usercheck, users } from './../../../app/images';
 import {
   GET_MEMORY_LIST,
-  GET_TIMELINE_LIST,
-  JUMP_TO_FROM_DATE,
-  JUMP_TO_TO_DATE,
-  ListType,
-  SET_FILTERS_NAME,
-  SET_RECENT_FILTERS,
-  SET_TIMELINE_FILTERS,
+  GET_TIMELINE_LIST, JUMP_TO_FROM_DATE, JUMP_TO_TO_DATE, ListType,
+  SET_FILTERS_NAME, SET_RECENT_FILTERS,
+  SET_TIMELINE_FILTERS
 } from './dashboardReducer';
 import styles from './styles';
 
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 enum fieldType {
   to = 'To',
   from = 'From',
 }
 const FilterScreen = (props: Props) => {
+
+  const navigation = useNavigation();
   const [state, setState] = useState({
     fromDate: Account.selectedData().start_year,
     toDate: Account.selectedData().end_year,
@@ -53,14 +49,13 @@ const FilterScreen = (props: Props) => {
     selectionData: {},
   });
   let eventLoader: EventManager;
-  let bottomPicker: React.RefObject<BottomPicker> =
-    React.useRef<BottomPicker>();
+  let bottomPicker: React.RefObject<BottomPicker> = React.useRef<BottomPicker>();
 
   const onOptionSelection = (field: any) => {
     Keyboard.dismiss();
     var actions: ActionSheetItem[] = [];
     for (let i = new Date().getFullYear(); i >= 1917; i--) {
-      actions.push({key: i, text: i});
+      actions.push({ key: i, text: i });
     }
 
     setState(prevState => ({
@@ -70,19 +65,21 @@ const FilterScreen = (props: Props) => {
         actions,
         fieldName: field,
         label: field,
-        selectedValues: field == fieldType.to ? state.toDate : state.fromDate,
-      },
+        selectedValues:
+          field == fieldType.to ? state.toDate : state.fromDate,
+      }
     }));
     setTimeout(() => {
       bottomPicker.current &&
         bottomPicker.current.showPicker &&
         bottomPicker.current.showPicker();
     }, 500);
-  };
+
+  }
 
   const filterItemClicked = (obj: any, key: any, value1: any) => {
     let value = value1 == 1 ? 0 : 1;
-    let filters: any = {...state.filters};
+    let filters: any = { ...state.filters };
     if (obj.id == 'all') {
       filters.allSelected.value = value;
       for (let key in filters.mystories) {
@@ -148,16 +145,18 @@ const FilterScreen = (props: Props) => {
 
     setState(prevState => ({
       ...prevState,
-      filters,
+      filters
     }));
-    console.log('obj.id ?> ', obj.id);
+    console.log("obj.id ?> ",obj.id)
     if (obj.id == 'all') {
       if (value) {
-        applyFilters(filters);
+        applyFilters(filters)
       }
-    } else if (obj.id == undefined) {
-      applyFilters(filters);
     }
+    else if (obj.id == undefined) {
+        applyFilters(filters)
+    }
+
   };
 
   useEffect(() => {
@@ -173,12 +172,12 @@ const FilterScreen = (props: Props) => {
 
     eventLoader = EventManager.addListener('loadingDone', () => {
       loaderHandler.hideLoader();
-      this.props.navigation.goBack();
+      navigation.goBack();
     });
     return () => eventLoader.removeListener();
-  }, []);
+  }, [])
 
-  const applyFilters = filters => {
+  const applyFilters = (filters) => {
     // Account.selectedData().end_year = state.toDate;
     // Account.selectedData().start_year = state.fromDate;
     props.setFilterData(
@@ -189,19 +188,19 @@ const FilterScreen = (props: Props) => {
     );
     loaderHandler.showLoader();
     // setTimeout(() => {
-    props.fetchMemoryList(
-      props.currentScreen == ListType.Recent
-        ? GET_MEMORY_LIST
-        : GET_TIMELINE_LIST,
-      {
-        type:
-          props.currentScreen == ListType.Recent
-            ? ListType.Recent
-            : ListType.Timeline,
-        isLoading: true,
-        filters: filters,
-      },
-    );
+      props.fetchMemoryList(
+        props.currentScreen == ListType.Recent
+          ? GET_MEMORY_LIST
+          : GET_TIMELINE_LIST,
+        {
+          type:
+            props.currentScreen == ListType.Recent
+              ? ListType.Recent
+              : ListType.Timeline,
+          isLoading: true,
+          filters: filters,
+        },
+      );
     // }, 100);
   };
 
@@ -209,35 +208,34 @@ const FilterScreen = (props: Props) => {
     if (state.selectionData.fieldName == fieldType.to) {
       setState(prevState => ({
         ...prevState,
-        toDate: selectedItem.text,
+        toDate: selectedItem.text
       }));
-      props.setToDate(selectedItem.text);
+      props.setToDate(selectedItem.text)
     } else {
       setState(prevState => ({
         ...prevState,
-        fromDate: selectedItem.text,
+        fromDate: selectedItem.text
       }));
-      props.setFromDate(selectedItem.text);
+      props.setFromDate(selectedItem.text)
     }
   };
 
   return (
-    <View style={styles.filterContainerStyle}>
+    <View
+      style={styles.filterContainerStyle}>
       <SafeAreaView style={styles.SafeAreaViewContainerStyle}>
         <NavigationHeaderSafeArea
           // heading={'Filters'}
           height="80"
           heading={''}
           showCommunity={false}
-          cancelAction={() => this.props.navigation.pop()}
+          cancelAction={() => navigation.goBack()}
           showRightText={false}
           isWhite={true}
           backIcon={action_close}
         />
         <StatusBar
-          barStyle={
-            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-          }
+          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
           backgroundColor={Colors.NewThemeColor}
         />
         <ScrollView style={styles.scrollViewStyle}>
@@ -299,35 +297,28 @@ const FilterScreen = (props: Props) => {
                               state.filters.allSelected,
                               '',
                               state.filters.allSelected.value,
-                            );
+                            )
                             // applyFilters();
-                            props.setFiltersName(
-                              state.filters.allSelected.name,
-                            );
+                            props.setFiltersName(state.filters.allSelected.name)
                           }}
                           style={[
                             styles.filterItem,
                             {
-                              backgroundColor:
-                                state.filters.allSelected.value == 1
-                                  ? Colors.selectedFilterbg
-                                  : Colors.unSelectedFilterbg,
+                              backgroundColor: state.filters.allSelected.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                               borderColor: Colors.filterborder,
-                              borderWidth:
-                                state.filters.allSelected.value == 1 ? 1 : 0,
+                              borderWidth: state.filters.allSelected.value == 1 ? 1 : 0
                             },
                           ]}>
                           <View style={styles.justifyContentCenterAlignCenter}>
                             <Image
                               source={
                                 // state.filters.allSelected.value == 1
-                                //   ? check:
+                                //   ? check: 
                                 // plus
                                 globe
                               }
-                              resizeMode="contain"
-                              style={styles.globeImageStyle}
-                            />
+                              resizeMode='contain'
+                              style={styles.globeImageStyle}/>
                             <Text
                               style={[
                                 styles.filterText,
@@ -337,6 +328,7 @@ const FilterScreen = (props: Props) => {
                               ]}>
                               {state.filters.allSelected.name}
                             </Text>
+
                           </View>
                         </TouchableHighlight>
                         {Object.entries(state.filters.mystories).map(
@@ -350,44 +342,25 @@ const FilterScreen = (props: Props) => {
                                     state.filters.mystories,
                                     key,
                                     value.value,
-                                  );
+                                  )
                                   // applyFilters();
-                                  props.setFiltersName(value.name);
+                                  props.setFiltersName(value.name)
                                 }}
                                 style={[
                                   styles.filterItem,
                                   {
-                                    backgroundColor:
-                                      value.value == 1
-                                        ? Colors.selectedFilterbg
-                                        : Colors.unSelectedFilterbg,
+                                    backgroundColor: value.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                                     borderColor: Colors.filterborder,
-                                    borderWidth: value.value == 1 ? 1 : 0,
+                                    borderWidth: value.value == 1 ? 1 : 0
                                   },
                                 ]}>
-                                <View
-                                  style={
-                                    styles.justifyContentCenterAlignCenter
-                                  }>
+                                <View style={styles.justifyContentCenterAlignCenter}>
+
                                   <Image
-                                    source={
-                                      value.name == 'Me'
-                                        ? lock
-                                        : value.name == 'My Friends'
-                                        ? usercheck
-                                        : value.name == 'Non Friends'
-                                        ? users
-                                        : value.name == 'Close Friends'
-                                        ? users
-                                        : globe
-                                    }
+                                    source={value.name == 'Me' ? lock : value.name == 'My Friends' ? usercheck : value.name == 'Non Friends' ? users : value.name == 'Close Friends' ? users : globe}
                                     // source={value.value == 1 ? check : plus}
-                                    resizeMode="contain"
-                                    style={[
-                                      styles.justifyContentCenterAlignCenter,
-                                      {marginBottom: 5},
-                                    ]}
-                                  />
+                                    resizeMode='contain'
+                                    style={[styles.justifyContentCenterAlignCenter,{ marginBottom: 5,}]}/>
                                   <Text
                                     style={[
                                       styles.filterText,
@@ -397,6 +370,7 @@ const FilterScreen = (props: Props) => {
                                     ]}>
                                     {value.name}
                                   </Text>
+
                                 </View>
                               </TouchableHighlight>
                             );
@@ -410,43 +384,34 @@ const FilterScreen = (props: Props) => {
                                 state.filters.cueSelected,
                                 '',
                                 state.filters.cueSelected.value,
-                              );
+                              )
                               // applyFilters();
-                              props.setFiltersName(
-                                state.filters.cueSelected.name,
-                              );
+                              props.setFiltersName(state.filters.cueSelected.name)
                             }}
                             style={[
                               styles.filterItem,
                               {
                                 backgroundColor:
-                                  state.filters.cueSelected.value == 1
-                                    ? Colors.selectedFilterbg
-                                    : Colors.unSelectedFilterbg,
+                                  state.filters.cueSelected.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                                 borderColor: Colors.filterborder,
-                                borderWidth:
-                                  state.filters.cueSelected.value == 1 ? 1 : 0,
+                                borderWidth: state.filters.cueSelected.value == 1 ? 1 : 0
                               },
                             ]}>
-                            <View>
+                            <View >
                               <Image
                                 source={
                                   state.filters.cueSelected.value == 1
                                     ? globe
                                     : globe
                                 }
-                                resizeMode="contain"
-                                style={[
-                                  styles.justifyContentCenterAlignCenter,
-                                  {marginBottom: 5},
-                                ]}
-                              />
+                                resizeMode='contain'
+                                style={[styles.justifyContentCenterAlignCenter,{ marginBottom: 5,}]}/>
                               <Text
                                 style={[
                                   styles.filterText,
                                   {
                                     color: Colors.TextColor,
-                                    textAlign: 'center',
+                                    textAlign: 'center'
                                   },
                                 ]}>
                                 {state.filters.cueSelected.name}
@@ -501,42 +466,30 @@ const FilterScreen = (props: Props) => {
                                   state.filters.mystories.groups,
                                   index,
                                   obj.value,
-                                );
+                                )
                                 // applyFilters();
-                                props.setFiltersName(obj.name);
+                                props.setFiltersName(obj.name)
                               }}
                               style={[
                                 styles.filterItem,
                                 {
-                                  backgroundColor:
-                                    obj.value == 1
-                                      ? Colors.selectedFilterbg
-                                      : Colors.unSelectedFilterbg,
+                                  backgroundColor: obj.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                                   borderColor: Colors.filterborder,
-                                  borderWidth: obj.value == 1 ? 1 : 0,
+                                  borderWidth: obj.value == 1 ? 1 : 0
                                 },
                               ]}>
-                              <View style={{flexDirection: 'column'}}>
+                              <View style={{ flexDirection: 'column' }}>
                                 <Image
-                                  source={
-                                    obj.name == 'Close Friends' ||
-                                    obj.name == 'New Friends'
-                                      ? users
-                                      : globe
-                                  }
+                                  source={(obj.name == 'Close Friends') || (obj.name == 'New Friends') ? users : globe}
                                   // source={obj.value == 1 ? check : plus}
-                                  resizeMode="contain"
-                                  style={[
-                                    styles.justifyContentCenterAlignCenter,
-                                    {marginBottom: 5},
-                                  ]}
-                                />
+                                  resizeMode='contain'
+                                  style={[styles.justifyContentCenterAlignCenter,{ marginBottom: 5,}]}/>
                                 <Text
                                   style={[
                                     styles.filterText,
                                     {
                                       color: Colors.TextColor,
-                                      textAlign: 'center',
+                                      textAlign: 'center'
                                     },
                                   ]}>
                                   {obj.name}
@@ -590,24 +543,23 @@ const FilterScreen = (props: Props) => {
                                 underlayColor={'none'}
                                 onPress={() => {
                                   filterItemClicked(
-                                    state.filters.external_cues.categories,
+                                    state.filters.external_cues
+                                      .categories,
                                     index,
                                     obj.value,
-                                  );
+                                  )
                                   // props.setFiltersName(obj.name)
-                                }}
+                                }
+                                }
                                 style={[
                                   styles.filterItem,
                                   {
-                                    backgroundColor:
-                                      obj.value == 1
-                                        ? Colors.selectedFilterbg
-                                        : Colors.unSelectedFilterbg,
+                                    backgroundColor: obj.value == 1 ? Colors.selectedFilterbg : Colors.unSelectedFilterbg,
                                     borderColor: Colors.filterborder,
-                                    borderWidth: obj.value == 1 ? 1 : 0,
+                                    borderWidth: obj.value == 1 ? 1 : 0
                                   },
                                 ]}>
-                                <View>
+                                <View >
                                   {/* <Image
                                       source={obj.value == 1 ? check : plus}
                                       style={{
@@ -679,7 +631,8 @@ const FilterScreen = (props: Props) => {
       />
     </View>
   );
-};
+
+}
 
 const mapState = (state: any) => {
   return {
@@ -690,16 +643,12 @@ const mapState = (state: any) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    setFilterData: (type: any, payload: any) =>
-      dispatch({type: type, payload: payload}),
-    fetchMemoryList: (type: any, payload: any) =>
-      dispatch({type: type, payload: payload}),
-    setFiltersName: (payload: any) =>
-      dispatch({type: SET_FILTERS_NAME, payload: payload}),
-    setToDate: (payload: any) =>
-      dispatch({type: JUMP_TO_TO_DATE, payload: payload}),
-    setFromDate: (payload: any) =>
-      dispatch({type: JUMP_TO_FROM_DATE, payload: payload}),
+    setFilterData: (type: any, payload: any) => dispatch({ type: type, payload: payload }),
+    fetchMemoryList: (type: any, payload: any) => dispatch({ type: type, payload: payload }),
+    setFiltersName: (payload: any) => dispatch({ type: SET_FILTERS_NAME, payload: payload }),
+    setToDate: (payload: any) => dispatch({ type: JUMP_TO_TO_DATE, payload: payload }),
+    setFromDate: (payload: any) => dispatch({ type: JUMP_TO_FROM_DATE, payload: payload }),
+    
   };
 };
 

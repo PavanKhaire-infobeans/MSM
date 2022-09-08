@@ -19,6 +19,7 @@ export const SaveWhoCanSeeIds = 'saveWhoCanSeeIds';
 export const SaveCollaboratorNotes = 'saveCollaboratorsNotes';
 export const SaveDescription = 'saveDescription';
 export const EditContent = 'editContent';
+export const NavigateToDashboard = 'navigateToDashboard';
 
 type Payload = { type: string; payload: any };
 
@@ -43,6 +44,7 @@ const initialState: any = {
   notesToCollaborators: '',
   deleteFiles: [],
   showAlert: false,
+  goToDashboard: false,
   showAlertData: { },
 };
 
@@ -114,6 +116,9 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       break;
     case EditContent:
       newState = action.payload;
+      break;
+    case NavigateToDashboard:
+      newState.goToDashboard = action.payload;
       break;
     case showCustomAlert:
       newState.showAlert = action.payload;

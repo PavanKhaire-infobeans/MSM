@@ -1,33 +1,24 @@
 import React from 'react';
 import {
-  FlatList,
-  Image,
-  Keyboard,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  TouchableHighlight,
-  View,
+  FlatList, Image, Keyboard, Platform, SafeAreaView,
+  StatusBar, TouchableHighlight, View
 } from 'react-native';
-
 import Text from '../../../common/component/Text';
 // @ts-ignore
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
-  Colors,
-  fontFamily,
-  fontSize,
-  ShareOptions,
+  Colors, fontFamily, fontSize,
+  ShareOptions
 } from '../../../common/constants';
 import {add_icon, radio, radio_active} from '../../../images';
 import {SaveShareOption} from '../reducer';
 // @ts-ignore
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
-import {getUserCount} from '../dataHelper';
+import { getUserCount } from '../dataHelper';
 import Styles from './styles';
 export const kWhoCanSeeThisMemory = 'whoCanSeeThisMemoryScreen';
-type State = {[x: string]: any};
+type State = { [x: string]: any };
 type Props = {
   tid?: any;
   isRename: any;
@@ -48,10 +39,10 @@ class WhoCanSee extends React.Component<Props, State> {
 
   componentDidMount() {
     let index = Object.keys(ShareOptions).indexOf(this.props.shareOption);
-    this.setState({selectedItemIndex: index});
+    this.setState({ selectedItemIndex: index });
   }
 
-  componentWillUnmount = () => {};
+  componentWillUnmount = () => { };
 
   saveValue = () => {
     if (this.validateShareOptions()) {
@@ -61,7 +52,7 @@ class WhoCanSee extends React.Component<Props, State> {
       Keyboard.dismiss();
       this.props.navigation.goBack();
     } else {
-      this.setState({showError: true});
+      this.setState({ showError: true });
     }
   };
 
@@ -83,7 +74,7 @@ class WhoCanSee extends React.Component<Props, State> {
 
   whoCanSeeView = (item: any) => {
     this.setState({selectedItemIndex: item.index}, () => {
-      this.props.navigation.push('commonFriendsSearchView', {
+      this.props.navigation.navigate('commonFriendsSearchView', {
         title: 'Who can see this memory?',
         refListFriends: this.props.whoCanSeeMemoryUids,
         refListFriendCircles: this.props.whoCanSeeMemoryGroupIds,
@@ -202,7 +193,7 @@ class WhoCanSee extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     shareOption: state.MemoryInitials.shareOption,
     whoCanSeeMemoryUids: state.MemoryInitials.whoCanSeeMemoryUids,
@@ -213,7 +204,7 @@ const mapState = (state: {[x: string]: any}) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     saveShareOption: (payload: any) =>
-      dispatch({type: SaveShareOption, payload: payload}),
+      dispatch({ type: SaveShareOption, payload: payload }),
   };
 };
 

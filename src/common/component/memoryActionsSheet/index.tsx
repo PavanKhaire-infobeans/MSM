@@ -1,20 +1,13 @@
 import React from 'react';
 import {
-  Animated,
-  Dimensions,
-  FlatList,
-  Image,
-  Keyboard,
-  Modal,
-  TouchableWithoutFeedback,
-  View,
+  Animated,Dimensions,FlatList, Image, Keyboard, Modal, TouchableWithoutFeedback, View
 } from 'react-native';
 import {No_Internet_Warning} from '../../../common/component/Toast';
 import Utility from '../../../common/utility';
-import {Colors} from '../../constants';
+import { Colors } from '../../constants';
 import TextNew from '../Text';
 import styles from './styles';
-const {height} = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export type MemoryActionsSheetItem = {
   index: number;
@@ -35,7 +28,7 @@ type Props = {
   width: string | number;
   popToAddContent?: boolean;
 };
-type State = {bottom: any; hidden: boolean};
+type State = { bottom: any; hidden: boolean };
 
 export default class MemoryActionsSheet extends React.Component<Props, State> {
   static defaultProps: Props = {
@@ -50,7 +43,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
 
   showSheet = () => {
     if (Utility.isInternetConnected) {
-      this.setState({hidden: false}, () => {
+      this.setState({ hidden: false }, () => {
         Animated.timing(this.state.bottom, {
           toValue: 0,
           duration: 200,
@@ -69,7 +62,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
       useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
-        this.setState({hidden: true});
+        this.setState({ hidden: true });
       }, 20);
     });
   };

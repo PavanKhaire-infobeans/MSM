@@ -1,56 +1,41 @@
 import React from 'react';
 import {
-  Alert,
-  Image,
-  Keyboard,
-  SafeAreaView,
-  TextInput,
-  TouchableOpacity,
-  View,
+  Alert, Image, Keyboard, SafeAreaView, TextInput, TouchableOpacity, View
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import DropDown from '../../common/component/dropDown';
 import TextField from '../../common/component/textField';
-import {profile_placeholder} from '../../images';
+import { profile_placeholder } from '../../images';
 
 import ImageCropPicker, {
-  Image as PickerImage,
+  Image as PickerImage
 } from 'react-native-image-crop-picker';
-
 import ActionSheet, {
-  ActionSheetItem as ImageSelectionSheetItem,
+  ActionSheetItem as ImageSelectionSheetItem
 } from '../../common/component/actionSheet';
 import BottomPicker, {
-  ActionSheetItem,
+  ActionSheetItem
 } from '../../common/component/bottomPicker';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
-  Colors,
-  fontSize,
-  GenerateRandomID,
-  getValue,
-  requestPermission,
-  testEmail,
-  testPhone,
+  Colors, fontSize, GenerateRandomID, getValue, requestPermission, testEmail, testPhone
 } from '../../common/constants';
 import Utility from '../../common/utility';
-import {action_camera, action_close, action_picture} from '../../images';
+import { action_camera, action_close, action_picture } from '../../images';
 import {
-  RemoveProfilePic,
-  UpdateFormValues,
-  UploadProfilePic,
-  UserProfile,
+  RemoveProfilePic, UpdateFormValues,
+  UploadProfilePic, UserProfile
 } from './userProfileWebService';
 //@ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
 // import DatePickerView from "../../common/component/DatePicker";
 import ActivityIndicatorView from '../../common/component/ActivityIndicatorView';
 import DateTimePicker from '../../common/component/DateTimePicker';
 import NavigationBarForEdit from '../../common/component/navigationBarForEdit';
 import TextNew from '../../common/component/Text';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import {kSetUserProfileData} from './userProfileWebService';
+import { kSetUserProfileData } from './userProfileWebService';
 import Styles from './styles';
 type State = {
   actionSheet: {
@@ -92,10 +77,11 @@ export default class UserProfileEdit extends React.Component<Props> {
   };
 
   _closeAction = () => {
-    this.setState({modalVisible: false}, () => {
+    this.setState({modalVisible: false},()=>{
       Keyboard.dismiss();
       this.props.navigation.goBack();
     });
+    
   };
 
   constructor(prop: Props) {
@@ -112,6 +98,7 @@ export default class UserProfileEdit extends React.Component<Props> {
       this.isProfilePicAvailable =
         getValue(this.props, ['profilePicUri']) != '';
     });
+    
   }
 
   componentWillUnmount() {
@@ -284,11 +271,12 @@ export default class UserProfileEdit extends React.Component<Props> {
             //console.log("cancelled")
           }}
           onDateSelection={(date: any) => {
-            this.setState({
-              isDatePickerVisible: false,
-              [this.state.selectionData.fieldName]:
-                Utility.dateObjectToDefaultFormat(date),
-            });
+            this.setState(
+              {
+                isDatePickerVisible: false,
+                [this.state.selectionData.fieldName]:
+                  Utility.dateObjectToDefaultFormat(date),
+              });
           }}
         />
       </View>
@@ -472,10 +460,7 @@ export default class UserProfileEdit extends React.Component<Props> {
           heading={'Basic Info'}
           cancelAction={() => this._closeAction()}></NavigationBarForEdit>
         <SafeAreaView
-          style={[
-            Styles.basicInfoSubContainer,
-            {backgroundColor: Colors.white},
-          ]}>
+          style={[Styles.basicInfoSubContainer,{backgroundColor:Colors.white}]}>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="always"
             keyboardDismissMode="on-drag"
@@ -630,18 +615,16 @@ export default class UserProfileEdit extends React.Component<Props> {
                   //console.log(response, typeof response);
                   if (tempfilesArr.length > 0) {
                     let tempfile = tempfilesArr[0];
-                    this.setState(
-                      {
-                        basicInfo: {
-                          ...this.state.basicInfo,
-                          profilePicUri: tempfile.filePath,
-                        },
+                    this.setState({
+                      basicInfo: {
+                        ...this.state.basicInfo,
+                        profilePicUri: tempfile.filePath,
                       },
-                      () => {
-                        this.uploadImage(tempfile);
-                        this.isProfilePicAvailable = true;
-                      },
-                    );
+                    },()=>{
+                      this.uploadImage(tempfile);
+                      this.isProfilePicAvailable = true;
+                    });
+                    
                   }
 
                   //this.saveTempFiles(tempfilesArr);
@@ -672,17 +655,14 @@ export default class UserProfileEdit extends React.Component<Props> {
                     status: TempFileStatus.needsToUpload,
                   };
                   this.isProfilePicAvailable = true;
-                  this.setState(
-                    {
-                      basicInfo: {
-                        ...this.state.basicInfo,
-                        profilePicUri: tempfile.filePath,
-                      },
+                  this.setState({
+                    basicInfo: {
+                      ...this.state.basicInfo,
+                      profilePicUri: tempfile.filePath,
                     },
-                    () => {
-                      this.uploadImage(tempfile);
-                    },
-                  );
+                  },()=>{
+                    this.uploadImage(tempfile);
+                  });
 
                   // this.saveTempFiles(tempfiles);
                   // this.props.setValue(false);
@@ -703,12 +683,13 @@ export default class UserProfileEdit extends React.Component<Props> {
         UserProfile();
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = true;
-        this.setState({hasLoaded: true}, () => loaderHandler.hideLoader());
+        this.setState({hasLoaded: true},()=>loaderHandler.hideLoader());
+        
       })
       .catch((error: any) => {
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = false;
-        this.setState({hasLoaded: true}, () => loaderHandler.hideLoader());
+        this.setState({hasLoaded: true},()=>loaderHandler.hideLoader());
       });
   };
 

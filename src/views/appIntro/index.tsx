@@ -1,33 +1,19 @@
 import React from 'react';
 import {
-  Animated,
-  Dimensions,
-  FlatList,
-  Image,
-  ImageBackground,
-  SafeAreaView,
-  StatusBar,
-  TouchableHighlight,
-  View,
+  Animated, Dimensions, FlatList, Image, ImageBackground, SafeAreaView, StatusBar, TouchableHighlight, View
 } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
-
-import Carousel, {Pagination} from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 import Text from '../../common/component/Text';
-import {Colors} from '../../common/constants';
+import { Colors } from '../../common/constants';
 import Utility from '../../common/utility';
 import {
-  appIntro1,
-  appIntro2,
-  appIntro3,
-  appIntro4,
-  appIntroBg,
-  app_intro_msm,
+  appIntro1, appIntro2, appIntro3, appIntro4, appIntroBg, app_intro_msm
 } from '../../images';
 import style from './styles';
 export default class AppIntro extends React.Component {
   _externalQueue: Carousel;
-  _appIntroData: any = [{text: 'first'}, {text: 'second'}];
+  _appIntroData: any = [{ text: 'first' }, { text: 'second' }];
   images = [
     {
       image: appIntro1,
@@ -60,7 +46,7 @@ export default class AppIntro extends React.Component {
 
   state: any = {
     currentIndex: 0,
-    fadeInOut: new Animated.Value(1),
+    fadeInOut: new Animated.Value(1)
   };
 
   onDoneTap = () => {
@@ -72,31 +58,31 @@ export default class AppIntro extends React.Component {
     // let index = item.index;
     // item = item.item;
     return (
-      <View style={style.renderAppIntroContainer}>
+      <View
+        style={style.renderAppIntroContainer}>
         <ImageBackground source={item.background} style={style.flexContainer}>
-          <View style={style.imageBgContainer}>
-            <View style={style.imageBgSubContainer}>
-              <Image source={item.background1} style={style.imageStyle}></Image>
+          <View
+            style={style.imageBgContainer}>
+            <View
+              style={style.imageBgSubContainer}>
+              <Image
+                source={item.background1}
+                style={style.imageStyle}></Image>
             </View>
-            <View style={style.containtContainerStyle}>
-              <View style={style.animatedViewContainer}>
+            <View
+              style={style.containtContainerStyle}>
+              <View
+                style={style.animatedViewContainer}>
                 <View
-                  style={[
-                    style.AnimatedViewStyle,
-                    style.imangeconatinerStyle,
-                    {
-                      // opacity: this.state.fadeInOut
-                    },
-                  ]}>
+                  style={[style.AnimatedViewStyle, style.imangeconatinerStyle, {
+                    // opacity: this.state.fadeInOut
+                  }]}>
                   {/* {this.state.currentIndex == index && ( */}
-                  <Image
-                    source={item.image}
-                    style={[
-                      style.ScrollImagesStyle,
-                      {
+                    <Image
+                      source={item.image}
+                      style={[style.ScrollImagesStyle, {
                         resizeMode: index == 1 ? 'stretch' : 'contain',
-                      },
-                    ]}></Image>
+                      }]}></Image>
                   {/* )} */}
                 </View>
               </View>
@@ -135,50 +121,55 @@ export default class AppIntro extends React.Component {
   }
 
   fadeIn = () => {
-    this.setState({fadeIn: new Animated.Value(0)}, () => {
-      Animated.timing(this.state.fadeIn, {
-        toValue: 1,
-        duration: 1500,
-        useNativeDriver: false,
-      }).start();
-    });
+    this.setState(
+      { fadeIn: new Animated.Value(0) },
+      () => {
+        Animated.timing(this.state.fadeIn, {
+          toValue: 1,
+          duration: 1500,
+          useNativeDriver: false
+        }).start();
+      },
+    );
   };
 
   fadeOut() {
     Animated.timing(this.state.fadeIn, {
       toValue: 0,
       duration: 100,
-      useNativeDriver: false,
+      useNativeDriver: false
     }).start();
   }
 
   onScroll(e: any) {
-    let page = Math.ceil(
-      e.nativeEvent.contentOffset.x / Dimensions.get('window').width,
-    );
+    let page = Math.ceil(e.nativeEvent.contentOffset.x / Dimensions.get('window').width);
     if (page !== this.state.currentIndex) {
       if (page >= this.images.length) {
         page = this.images.length - 1;
       }
       this.setState({
-        currentIndex: page,
-      });
+        currentIndex: page
+      })
     }
   }
 
   render() {
     return (
       <View style={style.flexContainer}>
-        <SafeAreaView style={style.statusBarConstainer} />
-        <SafeAreaView style={style.mainContainer}>
+        <SafeAreaView
+          style={style.statusBarConstainer}
+        />
+        <SafeAreaView
+          style={style.mainContainer}>
           <StatusBar
-            barStyle={
-              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-            }
+            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
-          <View style={style.container}>
-            <View style={style.absoluteView} />
+          <View
+            style={style.container}>
+            <View
+              style={style.absoluteView}
+            />
             <Image
               source={app_intro_msm}
               style={style.appIntroImageStyle}></Image>
@@ -190,16 +181,21 @@ export default class AppIntro extends React.Component {
               pagingEnabled={true}
               showsHorizontalScrollIndicator={false}
               keyExtractor={(_item, index) => index + ''}
-              onScroll={e => this.onScroll(e)}
+              onScroll={(e) => this.onScroll(e)}
             />
-            <View style={style.paginationContainer}>{this.pagination}</View>
+            <View style={style.paginationContainer}>
+              {this.pagination}
+            </View>
             {this.state.currentIndex == this.images.length - 1 && (
               <View style={style.startButtonContainer}>
                 <TouchableHighlight
                   underlayColor={Colors.touchableunderlayColor}
                   onPress={() => this.onDoneTap()}
                   style={style.startButtonStyle}>
-                  <Text style={style.startTextStyle}>Start</Text>
+                  <Text
+                    style={style.startTextStyle}>
+                    Start
+                  </Text>
                 </TouchableHighlight>
               </View>
             )}

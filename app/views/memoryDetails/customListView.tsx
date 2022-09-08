@@ -1,27 +1,20 @@
 import React from 'react';
 import {
-  FlatList,
-  Image,
-  ImageBackground,
-  Keyboard,
-  SafeAreaView,
-  StatusBar,
-  TouchableHighlight,
-  View,
+  FlatList, Image, ImageBackground, Keyboard, SafeAreaView, StatusBar, TouchableHighlight, View
 } from 'react-native';
 import Text from './../../../src/common/component/Text';
 import {action_close, profile_placeholder} from './../../../src/images';
 // import NavigationBar from '../dashboard/NavigationBar';
 import NavigationHeaderSafeArea from './../../../src/common/component/profileEditHeader/navigationHeaderSafeArea';
-import {Colors} from './../../../src/common/constants';
-import {Account} from './../../../src/common/loginStore';
+import { Colors } from './../../../src/common/constants';
+import { Account } from './../../../src/common/loginStore';
 import Utility from './../../../src/common/utility';
 import styles from './styles';
 
-type Props = {[x: string]: any};
+type Props = { [x: string]: any };
 export default class CustomListView extends React.Component<Props> {
   componentDidMount() {
-    this.setState({itemList: this.props.itemList});
+    this.setState({ itemList: this.props.itemList });
   }
 
   cancelAction = () => {
@@ -34,12 +27,13 @@ export default class CustomListView extends React.Component<Props> {
       item.item.uid == Account.selectedData().userID
         ? 'You'
         : item.item.field_first_name_value +
-          ' ' +
-          item.item.field_last_name_value;
+        ' ' +
+        item.item.field_last_name_value;
     return (
       <TouchableHighlight
         underlayColor={'#cccccc3e'}
         style={styles.renderCommentViewContainer}>
+
         <View style={styles.renderCommentSubViewContainer}>
           <ImageBackground
             source={profile_placeholder}
@@ -48,7 +42,7 @@ export default class CustomListView extends React.Component<Props> {
             <Image
               source={
                 item.item.uri && item.item.uri != ''
-                  ? {uri: Utility.getFileURLFromPublicURL(item.item.uri)}
+                  ? { uri: Utility.getFileURLFromPublicURL(item.item.uri) }
                   : profile_placeholder
               }
               style={styles.imagebgStyleInnerImageStyle}></Image>
@@ -72,6 +66,7 @@ export default class CustomListView extends React.Component<Props> {
             <Text style={styles.unblockTextStyle}>Unblock</Text>
           </TouchableHighlight>
         )}
+
       </TouchableHighlight>
     );
   };
@@ -90,9 +85,7 @@ export default class CustomListView extends React.Component<Props> {
           />
 
           <StatusBar
-            barStyle={
-              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-            }
+            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <FlatList

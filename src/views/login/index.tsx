@@ -1,49 +1,34 @@
 import React from 'react';
 import {
-  Alert,
-  Animated,
-  DeviceEventEmitter,
-  Image,
-  Keyboard,
-  SafeAreaView,
+  Alert, Animated, DeviceEventEmitter, Image, Keyboard, SafeAreaView,
   StatusBar,
-  TextInput,
-  TouchableWithoutFeedback,
-  View,
+  TextInput, TouchableWithoutFeedback, View
 } from 'react-native';
-
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Text from '../../common/component/Text';
 import TextField from '../../common/component/textField';
-import {Colors, CommonTextStyles} from '../../common/constants';
-import {Account, LoginStore} from '../../common/loginStore';
-import {UserData} from '../../common/loginStore/database';
-import {UserAccount} from '../menu/reducer';
-import {styles} from './designs';
+import { Colors, CommonTextStyles } from '../../common/constants';
+import { Account, LoginStore } from '../../common/loginStore';
+import { UserData } from '../../common/loginStore/database';
+import { UserAccount } from '../menu/reducer';
+import { styles } from './designs';
 import {
-  LoginController,
-  LoginControllerProtocol,
-  LoginViewProtocol,
-  Props,
+  LoginController, LoginControllerProtocol, LoginViewProtocol,
+  Props
 } from './loginController';
 import {
-  LoginInstanceStatus,
-  LoginServiceStatus,
-  LoginState,
+  LoginInstanceStatus, LoginServiceStatus, LoginState
 } from './loginReducer';
 //@ts-ignore
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import {ToastMessage} from '../../common/component/Toast';
+import { ToastMessage } from '../../common/component/Toast';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore
-import {arrowRightCircle} from '../../../app/images';
+import { arrowRightCircle } from '../../../app/images';
 import MessageDialogue from '../../common/component/messageDialogue';
 import EventManager from '../../common/eventManager';
-import {
-  RESET_ON_LOGIN,
-  SET_KEYBOARD_HEIGHT,
-} from '../dashboard/dashboardReducer';
+import { RESET_ON_LOGIN, SET_KEYBOARD_HEIGHT } from '../dashboard/dashboardReducer';
 import Styles from './styles';
 import Utility from '../../common/utility';
 export const kRegSignUp = 'Registration SignUp';
@@ -71,8 +56,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   //User state
   state = {
     _isRemeberMe: false,
-    username: 'rishabh.shah@infobeans.com',
-    password: 'Admin@123',
+    username: '',
+    password: '',
     userNameError: {
       error: false,
       text: '',
@@ -86,7 +71,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     isVisible: false,
     instanceData: [],
     isDisabledAccount: false,
-    keyboardHeight: 0,
+    keyboardHeight: 0
   };
 
   moveOnYAxis = new Animated.Value(0);
@@ -117,12 +102,11 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
    *
    * Will get updates from Saga
    */
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
+   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     // Check for login response
-    console.log(nextProps.loginStatus);
-    // if (nextProps?.loginStatus) {
-    //   this.controller.checkLoggedIn(nextProps.loginStatus);
-    // }
+    if (nextProps?.navigation?.state?.routeName == 'login' || nextProps?.navigation?.state?.routeName == 'prologue') {
+      this.controller.checkLoggedIn(nextProps.loginStatus);
+    }
   }
 
   constructor(props: Props) {
@@ -159,7 +143,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   }
 
   loginToSelected = (selectedCommunity: any) => {
-    const {username, password} = this.state;
+    const { username, password } = this.state;
     DefaultPreference.get('firebaseToken').then(
       (value: any) => {
         this.props.loginServiceCall({
@@ -200,18 +184,15 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
         if (list.length == 0) {
           DefaultPreference.get('loginCredentials').then((value: any) => {
             value = value ? JSON.parse(value) : null;
-            if (value && value.username && value.password) {
+            if (value && (value.username && value.password)) {
               this._usernameField.focus();
               this._passwordField.focus();
-              this.setState(
-                {
-                  username: `${value.username}`,
-                  password: `${value.password}`,
-                },
-                () => {
-                  Keyboard.dismiss();
-                },
-              );
+              this.setState({
+                username: `${value.username}`,
+                password: `${value.password}`,
+              },()=>{
+                Keyboard.dismiss();
+              });
             }
           });
         }
@@ -219,14 +200,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       .catch((err: Error) => {
         //console.log(err);
       });
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow,
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      this._keyboardDidHide,
-    );
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
 
   updateState(state: object, showErrorMessage?: boolean, msgObject?: string) {
@@ -236,42 +211,38 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     }
   }
 
-  _keyboardDidShow = e => {
+  _keyboardDidShow = (e) => {
     try {
-      const {height, screenX, screenY, width} = e.endCoordinates;
+      const { height, screenX, screenY, width } = e.endCoordinates
       // console.log(height)
 
       if (height) {
         // alert( e.endCoordinates.height)
         // this.keyheightsKey = (height);
         // this.props.updateKeyboardHeight(height)
-        this.setState(
-          {
-            keyboardHeight: height,
-          },
-          () => this.startMoveOnYAxis(),
-        );
+        this.setState({
+          keyboardHeight: height
+        }, () => this.startMoveOnYAxis())
       }
+
     } catch (error) {
-      console.warn(error);
+      console.warn(error)
+
     }
-  };
+  }
 
   _keyboardDidHide = () => {
-    this.setState(
-      {
-        keyboardHeight: 0,
-      },
-      () => this.startMoveDownYAxis(),
-    );
-  };
+    this.setState({
+      keyboardHeight: 0
+    }, () => this.startMoveDownYAxis())
+  }
 
   showErrorMessage = (show: boolean, message?: string) => {
-    debugger;
+    debugger
     let height = 0;
     if (show) {
       // height = 70;
-      this.messageRef._show({message, color: Colors.ErrorColor});
+      this.messageRef._show({ message, color: Colors.ErrorColor });
       setTimeout(() => {
         this.messageRef && this.messageRef._hide();
       }, 4000);
@@ -279,16 +250,17 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     } else {
       this.messageRef._hide();
     }
-    this.updateState({errorViewHeight: height});
+    this.updateState({ errorViewHeight: height });
   };
 
   componentWillUnmount() {
-    this.setState({_isRemeberMe: false}, () => {
+    this.setState({ _isRemeberMe: false },()=>{
       this.showErrorMessage(false);
-      Keyboard.removeAllListeners(this.keyboardDidShowListener);
-      Keyboard.removeAllListeners(this.keyboardDidHideListener);
+      Keyboard.removeAllListeners(this.keyboardDidShowListener)
+      Keyboard.removeAllListeners(this.keyboardDidHideListener)
       this.appleLoginCallBack.removeListener();
-      DeviceEventEmitter.removeAllListeners('AppleLoginResult');
+      DeviceEventEmitter.removeAllListeners("AppleLoginResult");
+  
     });
   }
 
@@ -298,11 +270,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     // let keyboardHeight = this.state.keyboardHeight
     const yVal = this.moveOnYAxis.interpolate({
       inputRange: [0, 0.5, 1],
-      outputRange: [
-        0,
-        -(this.state.keyboardHeight * 0.55),
-        -(this.state.keyboardHeight * 0.85),
-      ],
+      outputRange: [0, -(this.state.keyboardHeight * 0.55), -(this.state.keyboardHeight * 0.85)],
     });
 
     const animStyle = {
@@ -329,12 +297,15 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
           <MessageDialogue ref={(ref: any) => (this.messageRef = ref)} />
         </SafeAreaView>
         <SafeAreaView style={Styles.flexContainer}>
+
+
           <View style={Styles.LoginHeader}>
             <Text style={Styles.hederText}>Login</Text>
           </View>
 
           <View style={Styles.separatorHeightStyle16} />
           <View style={Styles.separatorHeightStyle16} />
+
 
           <View style={Styles.inputsContainer}>
             <View>
@@ -362,11 +333,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                 }
               />
               {/* <View style={Styles.separatorHeightStyle16} /> */}
-              <Text
-                style={[
-                  CommonTextStyles.fontWeight500Size13Inter,
-                  Styles.labelStyle,
-                ]}>
+              <Text style={[CommonTextStyles.fontWeight500Size13Inter, Styles.labelStyle]}>
                 PASSWORD
               </Text>
 
@@ -395,39 +362,27 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                     marginLeft: 24,
                     height: 380 - this.state.keyboardHeight
                   }}> */}
-            <Animated.View style={[Styles.buttonContainer, animStyle]}>
+            <Animated.View style={[Styles.buttonContainer, animStyle]} >
+
               <TouchableWithoutFeedback
                 // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
-                // onPress={this.controller.onClick.bind(this.controller)}>
-                onPress={() => this.props.navigation.navigate('dashboard')}>
-                <View
-                  style={[
-                    Styles.loginSSOButtonStyle,
-                    {
-                      height: 44,
-                      backgroundColor:
-                        this.state.username != '' && this.state.password != ''
-                          ? Colors.bordercolor
-                          : Colors.bordercolor,
-                      opacity:
-                        this.state.username != '' && this.state.password != ''
-                          ? 1
-                          : 1,
-                      flexDirection: 'row',
-                      // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      CommonTextStyles.fontWeight500Size17Inter,
-                      Styles.loginTextStyle,
-                    ]}>
+                onPress={this.controller.onClick.bind(this.controller)}
+              >
+                <View style={[Styles.loginSSOButtonStyle, {
+                  height: 44,
+                  backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.bordercolor : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1,
+                  flexDirection: 'row'
+                  // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
+                }]}>
+                  <Text style={[CommonTextStyles.fontWeight500Size17Inter, Styles.loginTextStyle]}>
                     Login
                   </Text>
                   <Image source={arrowRightCircle} />
+
                 </View>
               </TouchableWithoutFeedback>
             </Animated.View>
+
           </View>
           {/** Sign In section */}
           {/* <TouchableHighlight
@@ -476,7 +431,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                     style={styles.forgotPassword}
                     onPress={() => {
                       this.showErrorMessage(false);
-                      this.props.navigation.push('forgotPassword');
+                      this.props.navigation.navigate('forgotPassword');
                     }}>
                     <Text
                       style={{
@@ -488,6 +443,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                     </Text>
                   </TouchableOpacity>
                 </View> */}
+
 
           {/* </View> */}
           {/* </View> */}
@@ -505,9 +461,9 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
  * Redux Map State
  * @param state
  */
-const mapState = (state: {loginStatus: LoginState; dashboardReducer}) => ({
+const mapState = (state: { loginStatus: LoginState, dashboardReducer }) => ({
   loginStatus: state.loginStatus,
-  keyboardHeight: state.dashboardReducer.keyBoardHeight,
+  keyboardHeight: state.dashboardReducer.keyBoardHeight
 });
 
 /**
@@ -516,14 +472,13 @@ const mapState = (state: {loginStatus: LoginState; dashboardReducer}) => ({
  */
 const mapDispatch = (dispatch: Function) => ({
   loginServiceCall: (params: object) =>
-    dispatch({type: LoginServiceStatus.RequestStarted, payload: params}),
+    dispatch({ type: LoginServiceStatus.RequestStarted, payload: params }),
   fetchLoginAccounts: (params: object) =>
-    dispatch({type: LoginInstanceStatus.RequestStarted, payload: params}),
-  setUser: (payload: UserData) => dispatch({type: UserAccount.Store, payload}),
-  clean: () => dispatch({type: LoginServiceStatus.Ended}),
-  clearDashboard: () => dispatch({type: RESET_ON_LOGIN}),
-  updateKeyboardHeight: (params: number) =>
-    dispatch({type: SET_KEYBOARD_HEIGHT, payload: params}),
+    dispatch({ type: LoginInstanceStatus.RequestStarted, payload: params }),
+  setUser: (payload: UserData) => dispatch({ type: UserAccount.Store, payload }),
+  clean: () => dispatch({ type: LoginServiceStatus.Ended }),
+  clearDashboard: () => dispatch({ type: RESET_ON_LOGIN }),
+  updateKeyboardHeight: (params: number) => dispatch({ type: SET_KEYBOARD_HEIGHT, payload: params }),
 });
 
 export default connect(mapState, mapDispatch)(Login);

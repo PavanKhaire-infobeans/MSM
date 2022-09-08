@@ -12,10 +12,6 @@ const BusyIndicator = (props) => {
     isVisible: props.startVisible,
   });
   
-  let emitter = DeviceEventEmitter.addListener(
-    'changeLoadingEffect',
-    changeLoadingEffect,
-  );
 
   useEffect(() => {
 
@@ -24,7 +20,7 @@ const BusyIndicator = (props) => {
     }
   }, [])
 
-  const changeLoadingEffect = (state?) => {
+  const changeLoadingEffect = (state) => {
     if (state) {
       setState(prev => ({
         ...prev,
@@ -33,6 +29,10 @@ const BusyIndicator = (props) => {
       }));
     }
   }
+  let emitter = DeviceEventEmitter.addListener(
+    'changeLoadingEffect',
+    changeLoadingEffect,
+  );
 
   const customStyles = StyleSheet.create({
     overlay: {

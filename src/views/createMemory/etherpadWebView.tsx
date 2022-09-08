@@ -1,26 +1,20 @@
 import React from 'react';
 import {
-  ActivityIndicator,
-  Image,
-  Keyboard,
-  Platform,
-  TouchableOpacity,
-  View,
+  ActivityIndicator, Image, Keyboard, Platform, TouchableOpacity, View
 } from 'react-native';
-
-import {WebView} from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 import Text from '../../common/component/Text';
-import {Colors} from '../../common/constants';
-import {close_white, icon_collaborators} from '../../images';
+import { Colors } from '../../common/constants';
+import { close_white, icon_collaborators } from '../../images';
 //@ts-ignore
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import Utility from '../../common/utility';
 import Styles from './styles';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 export default class EtherPadEditing extends React.Component<Props, State> {
   state: State = {
@@ -66,7 +60,8 @@ export default class EtherPadEditing extends React.Component<Props, State> {
     });
   };
 
-  componentWillUnmount() {
+
+  componentWillUnmount() { 
     Keyboard.removeAllListeners(this.keyboardDidHideListener);
     Keyboard.removeAllListeners(this.keyboardDidShowListener);
   }
@@ -109,7 +104,7 @@ export default class EtherPadEditing extends React.Component<Props, State> {
                 automatically.
               </Text>
               <TouchableOpacity
-                onPress={() => this.setState({showWarningNote: false})}
+                onPress={() => this.setState({ showWarningNote: false })}
                 style={Styles.closeButtonStyle}>
                 <Image source={close_white} resizeMode="contain" />
               </TouchableOpacity>
@@ -145,7 +140,7 @@ export default class EtherPadEditing extends React.Component<Props, State> {
                 automatically.
               </Text>
               <TouchableOpacity
-                onPress={() => this.setState({showWarningNote: false})}
+                onPress={() => this.setState({ showWarningNote: false })}
                 style={Styles.closeButtonStyle}>
                 <Image source={close_white} resizeMode="contain" />
               </TouchableOpacity>
@@ -179,15 +174,16 @@ export default class EtherPadEditing extends React.Component<Props, State> {
 
           {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>  */}
           <WebView
-            source={{uri: this.props.padDetails.padUrl}}
+            source={{ uri: this.props.padDetails.padUrl }}
             style={Styles.webViewStyle}
             // onLoadStart={()=>loaderHandler.showLoader()}
             // onLoadEnd={()=>loaderHandler.hideLoader()}
+            onShouldStartLoadWithRequest={()=>true}
             javaScriptEnabled={true}
             domStorageEnabled={true}
             renderLoading={this.renderLoader}
             startInLoadingState={true}
-            onMessage={() => {}}
+            onMessage={() => { }}
             injectedJavaScript={
               "document.cookie = 'sessionID=" +
               this.props.padDetails.sessionId +

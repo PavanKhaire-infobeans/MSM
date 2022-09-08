@@ -1,20 +1,21 @@
 import React from 'react';
-import {Keyboard, SafeAreaView, StatusBar, TextInput, View} from 'react-native';
-
+import {
+  Keyboard, SafeAreaView, StatusBar, TextInput, View
+} from 'react-native';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {SubmitButton} from '../../common/component/button';
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import { SubmitButton } from '../../common/component/button';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextField from '../../common/component/textField';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
-import {Colors} from '../../common/constants';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import {
   ChangePasswordService,
-  kChangePassword,
+  kChangePassword
 } from '../changePassword/changePasswordWebService';
-import {styles} from './styles';
+import { styles } from './styles';
 
 export default class ChangePassword extends React.Component {
   _newPasswordField?: TextInput = null;

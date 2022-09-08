@@ -1,19 +1,13 @@
 import React from 'react';
 import {
-  Image,
-  Keyboard,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  TouchableWithoutFeedback,
-  View,
+  Image, Keyboard, SafeAreaView, ScrollView, StatusBar, TouchableWithoutFeedback, View
 } from 'react-native';
 import Text from './../../../src/common/component/Text';
 // import NavigationBar from '../dashboard/NavigationBar';
 import Utility from '../../../src/common/utility';
 import NavigationBarForEdit from './../../../src/common/component/navigationBarForEdit';
-import {Colors} from './../../../src/common/constants';
-import {kImage, kPDF} from './componentsMemoryDetails';
+import { Colors } from './../../../src/common/constants';
+import { kImage, kPDF } from './componentsMemoryDetails';
 import styles from './styles';
 
 type Props = {[x: string]: any};
@@ -30,10 +24,10 @@ export default class FilesDetail extends React.Component<Props> {
   navigateToViews = () => {
     switch (this.props.type) {
       case kPDF:
-        this.props.navigation.push('pdfViewer', {file: this.props.file});
+        this.props.navigation.navigate('pdfViewer', {file: this.props.file});
         break;
       case kImage:
-        this.props.navigation.push('imageViewer', {files: [this.props.file]});
+        this.props.navigation.navigate('imageViewer', {files: [this.props.file]});
         break;
     }
   };
@@ -49,9 +43,7 @@ export default class FilesDetail extends React.Component<Props> {
         />
         <SafeAreaView style={styles.fileDetailsContainer}>
           <StatusBar
-            barStyle={
-              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-            }
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <ScrollView>

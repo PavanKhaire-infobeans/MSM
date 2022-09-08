@@ -1,42 +1,34 @@
 import React from 'react';
 import {
-  Keyboard,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  StatusBar,
-  TextInput,
-  TouchableOpacity,
-  View,
+  Keyboard, KeyboardAvoidingView,
+  SafeAreaView, StatusBar, TextInput, TouchableOpacity, View
 } from 'react-native';
-import {connect} from 'react-redux';
-import {SubmitButton} from '../../common/component/button';
+import { connect } from 'react-redux';
+import { SubmitButton } from '../../common/component/button';
 import Text from '../../common/component/Text';
-import {styles} from './styles';
+import { styles } from './styles';
 import {
-  ForgotPasswordServiceStatus,
-  ForgotPasswordState,
+  ForgotPasswordServiceStatus, ForgotPasswordState
 } from './forgotPasswordReducer';
 
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import TextField from '../../common/component/textField';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
   Colors,
-  fontSize,
-  getValue,
-  Size,
-  testEmail,
+  fontSize, getValue, Size,
+  testEmail
 } from '../../common/constants';
-import {Account} from '../../common/loginStore';
-import {Props} from '../login/loginController';
+import { Account } from '../../common/loginStore';
+import { Props } from '../login/loginController';
 //@ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../common/utility';
-import {loginInstanceRequest} from '../../common/webservice/loginServices';
-import {backBlkBtn} from '../../images';
-import {ListType} from '../login/commonInstanceListSelection';
-import {kAdmin} from '../registration/getInstancesSaga';
+import { loginInstanceRequest } from '../../common/webservice/loginServices';
+import { backBlkBtn } from '../../images';
+import { ListType } from '../login/commonInstanceListSelection';
+import { kAdmin } from '../registration/getInstancesSaga';
 //Login Component
 class ForgotPassword extends React.Component<Props> {
   //Password Field Reference
@@ -106,15 +98,13 @@ class ForgotPassword extends React.Component<Props> {
           <NavigationHeaderSafeArea
             heading={'Forgot Password'}
             showCommunity={false}
-            cancelAction={() => this.props.navigation.pop()}
+            cancelAction={() => this.props.navigation.goBack()}
             showRightText={false}
             isWhite={true}
             backIcon={backBlkBtn}
           />
           <StatusBar
-            barStyle={
-              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-            }
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewDarkThemeColor}
           />
           <KeyboardAwareScrollView
@@ -251,7 +241,7 @@ class ForgotPassword extends React.Component<Props> {
       console.log('response of instance is: ', JSON.stringify(response));
       if (response.ResponseCode == 200) {
         if (response.Response.length > 1) {
-          this.props.navigation.push('commonInstanceListsSelection', {
+          this.props.navigation.navigate('commonInstanceListsSelection', {
             listAccounts: response.Response,
             title: 'Forgot Password',
             type: ListType.ForgotPassword,

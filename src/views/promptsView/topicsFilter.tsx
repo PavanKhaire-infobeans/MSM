@@ -6,17 +6,16 @@ import {
   StatusBar,
   Text,
   TouchableHighlight,
-  View,
+  View
 } from 'react-native';
-
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextNew from '../../common/component/Text';
-import {Colors} from '../../common/constants';
+import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {action_close, check, plus} from '../../images';
-import {GetPrompts} from '../myMemories/myMemoriesWebService';
+import { action_close, check, plus } from '../../images';
+import { GetPrompts } from '../myMemories/myMemoriesWebService';
 import Styles from './styles';
 
 type Props = {[x: string]: any};
@@ -89,15 +88,13 @@ export default class TopicsFilter extends React.Component<State, Props> {
           <NavigationHeaderSafeArea
             heading={'Topics'}
             showCommunity={false}
-            cancelAction={() => this.props.navigation.pop()}
+            cancelAction={() => this.props.navigation.goBack()}
             showRightText={false}
             isWhite={true}
             backIcon={action_close}
           />
           <StatusBar
-            barStyle={
-              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-            }
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           <ScrollView style={Styles.filterSubScroll}>
@@ -114,10 +111,7 @@ export default class TopicsFilter extends React.Component<State, Props> {
                         style={[
                           Styles.filterItem,
                           {
-                            backgroundColor:
-                              obj.checked == 1
-                                ? Colors.selectedFilter
-                                : Colors.filterBG,
+                            backgroundColor: obj.checked == 1 ? Colors.selectedFilter : Colors.filterBG,
                           },
                         ]}>
                         <View style={{flexDirection: 'row'}}>
@@ -128,10 +122,7 @@ export default class TopicsFilter extends React.Component<State, Props> {
                             style={[
                               Styles.filterText,
                               {
-                                color:
-                                  obj.checked == 1
-                                    ? Colors.TextColor
-                                    : Colors.TextColor,
+                                color: obj.checked == 1 ? Colors.TextColor : Colors.TextColor,
                               },
                             ]}>
                             {obj.label}

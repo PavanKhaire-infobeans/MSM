@@ -1,17 +1,14 @@
 import React from 'react';
-
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
-import {MemoryActionKeys} from '../../common/constants';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import { MemoryActionKeys } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import CustomListView from '../memoryDetails/customListView';
 import {
   GetBlockedUsersAndMemory,
   kBlockedUsers,
-  kBlockedUsersFetched,
-  kUserUnblocked,
-  MemoryAction,
+  kBlockedUsersFetched, kUserUnblocked, MemoryAction
 } from '../myMemories/myMemoriesWebService';
 
 type Props = {[x: string]: any};
@@ -38,10 +35,10 @@ export default class BlockedUsers extends React.Component<Props> {
     );
   }
 
-  componentWillUnmount = () => {
-    this.blockedMemoryListiner.removeListener();
-    this.userUnblocked.removeListener();
-  };
+  componentWillUnmount =()=>{
+    this.blockedMemoryListiner.removeListener()
+    this.userUnblocked.removeListener()
+  }
 
   userUnblockedCallBack = (
     success: any,
@@ -57,7 +54,7 @@ export default class BlockedUsers extends React.Component<Props> {
           itemList: list,
         },
         () => {
-          this.props.navigation.dashBoard();
+          this.props.navigation.navigate('dashBoard');
           loaderHandler.showLoader();
         },
       );

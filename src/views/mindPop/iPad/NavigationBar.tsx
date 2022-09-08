@@ -1,14 +1,13 @@
 import React from 'react';
-import {Image, Platform, StatusBar, TouchableOpacity, View} from 'react-native';
+import { Image, Platform, StatusBar, TouchableOpacity, View } from 'react-native';
 import Text from '../../../common/component/Text';
 //@ts-ignore
 import styles from './styles';
-
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import NavigationHeader from '../../../common/component/navigationHeader';
-import {Colors, fontFamily, fontSize} from '../../../common/constants';
-import {backBtn, navBarCrossIconWhite} from '../../../images';
-import {EditMode} from '../edit/reducer';
+import { Colors, fontFamily, fontSize } from '../../../common/constants';
+import { backBtn, navBarCrossIconWhite } from '../../../images';
+import { EditMode } from '../edit/reducer';
 import Styles from './styles';
 
 const testID = {
@@ -21,6 +20,8 @@ const testID = {
   },
   title: {text: 'title'},
 };
+
+
 
 class MindPopIPadNavigationBar extends React.Component<{[x: string]: any}> {
   _renderRight() {
@@ -89,7 +90,7 @@ class MindPopIPadNavigationBar extends React.Component<{[x: string]: any}> {
               <TouchableOpacity
                 onPress={() => {
                   this.props.reset();
-                  this.props.navigation.mindPopEdit({
+                  this.props.navigation.navigate('mindPopEdit',{
                     updateList: this.props.updateList,
                   });
                 }}
@@ -100,7 +101,7 @@ class MindPopIPadNavigationBar extends React.Component<{[x: string]: any}> {
               <TouchableOpacity
                 onPress={() => {
                   this.props.saveMode();
-                  this.props.navigation.mindPopEdit({
+                  this.props.navigation.navigate('mindPopEdit',{
                     updateList: this.props.updateList,
                   });
                 }}

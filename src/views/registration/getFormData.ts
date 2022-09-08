@@ -82,7 +82,7 @@ export default class GetFormData {
         values: null,
       });
       if (this.type == 'push') {
-        this.props.navigation.registrationPre({
+        this.props.navigation.navigate('registrationPre',{
           formList,
           openLoginDrawer: this.openLoginDrawer,
         });

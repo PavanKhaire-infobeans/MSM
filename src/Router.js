@@ -1,26 +1,16 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
-  Appearance,
-  BackHandler,
-  Linking,
-  Platform,
-  Text,
-  LogBox,
-} from 'react-native';
+  Appearance, BackHandler, Linking, Platform, Text,  LogBox } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import {Provider} from 'react-redux';
 import Busyindicator from './common/component/busyindicator';
-import TabIcon, {NewTabItems} from './common/component/TabBarIcons';
-import {Colors} from './common/constants';
+import TabIcon, { NewTabItems } from './common/component/TabBarIcons';
+import { Colors } from './common/constants';
 import EventManager from './common/eventManager';
 import store from './common/reducer/reducers';
-import Utility, {
-  getFontScale,
-  networkConnectivitySaga,
-  themechanges,
-} from './common/utility';
+import Utility, { getFontScale, networkConnectivitySaga, themechanges } from './common/utility';
 
 import CreateMemory from './views/createMemory';
 import CollectionList from './views/createMemory/collection';
@@ -56,7 +46,7 @@ import {
   iPadList,
   MindPopEdit,
   MindPopList,
-  PreviewImage,
+  PreviewImage
 } from './views/mindPop';
 import BlockedUsers from './views/moreOptions/blockedUsers';
 import CommonWebView from './views/moreOptions/commonWebView';
@@ -88,8 +78,7 @@ import AppIntro from './views/appIntro';
 import DashboardIndex from './views/dashboard/dashboardIndex';
 import FilterScreen from './views/dashboard/filtersScreen';
 import {
-  kBackgroundNotice,
-  kForegroundNotice,
+  kBackgroundNotice, kForegroundNotice
 } from './views/notificationView/notificationServices';
 import TopicsFilter from './views/promptsView/topicsFilter';
 import WriteTabs from './views/writeTabs';
@@ -206,7 +195,7 @@ const AppNavigationRouter = () => {
           options={{headerShown: false}}
         />
         <RootStack.Screen
-          name="dashboard"
+          name="dashBoard"
           component={DrawerNavigator}
           options={{headerShown: false}}
         />
@@ -786,7 +775,7 @@ const App = _props => {
      * Triggered when a particular notification has been received in foreground
      * */
     notificationListener = messaging().onMessage(notification => {
-      const {data} = notification;
+      const { data } = notification;
       EventManager.callBack(kForegroundNotice, data);
     });
 
@@ -795,7 +784,7 @@ const App = _props => {
      * */
     notificationOpen = await messaging().getInitialNotification();
     if (notificationOpen) {
-      const {data} = notificationOpen;
+      const { data } = notificationOpen;
       Utility.notificationObject.hasNotification = true;
       Utility.notificationObject.data = data;
     }
@@ -805,14 +794,15 @@ const App = _props => {
     messageListener = messaging().onMessage(_message => {});
   };
 
+
   //Back event handler
   const _backPressAnd = () => {
     loaderHandler.hideLoader();
-    if (this.props.navigation.currentScene == 'mindPopEdit') {
-      EventManager.callBack('hardwareBackPress', true);
-      return true;
-    }
-    return false;
+    // if (this.props?.navigation?.state?.routeName == 'mindPopEdit') {
+    //   EventManager.callBack('hardwareBackPress', true);
+    //   return true;
+    // }
+    // return false;
   };
 
   const handleUrl = ({url}) => {
@@ -822,6 +812,18 @@ const App = _props => {
       }
     });
   };
+
+  // componentWillUnmount() {
+  //   Linking.removeEventListener('url', handleUrl);
+  //   notificationListener();
+  //   notificationOpenedListener();
+  //   if (notificationOpen != null) {
+  //     notificationOpen();
+  //   }
+  //   backEvent &&
+  //     backEvent.removeListener() &&
+  //     onTokenRefreshListener();
+  //   }
 
   const loadSegmentAnalytics = async () => {
     await analytics.setup('UIejGdlPobXDuxYQC2YU19IBomGe5oQO', {

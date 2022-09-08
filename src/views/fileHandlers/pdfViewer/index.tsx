@@ -4,7 +4,7 @@ import {Dimensions, Keyboard, SafeAreaView, StatusBar} from 'react-native';
 import {ToastMessage} from '../../../common/component/Toast';
 //@ts-ignore
 import Pdf from 'react-native-pdf';
-import {Colors, decode_utf8} from '../../../common/constants';
+import { Colors, decode_utf8 } from '../../../common/constants';
 import Utility from '../../../common/utility';
 import Styles from './styles';
 type Props = {[x: string]: any};

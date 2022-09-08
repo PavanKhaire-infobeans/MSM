@@ -1,21 +1,14 @@
 import React from 'react';
 import {
-  Animated,
-  Dimensions,
-  FlatList,
-  Keyboard,
-  Modal,
-  Platform,
-  TouchableWithoutFeedback,
-  View,
+  Animated, Dimensions, FlatList, Keyboard, Modal, Platform, TouchableWithoutFeedback, View
 } from 'react-native';
 // import {fontSize, Colors} from '../../constants';
 // import TextNew from '../Text';
 import TextNew from '../../../src/common/component/Text';
-import {No_Internet_Warning} from './../../../src/common/component/Toast';
+import { No_Internet_Warning } from './../../../src/common/component/Toast';
 import Utility from './../../../src/common/utility';
 import styles from './styles';
-const {height} = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export type MemoryActionsSheetItem = {
   index: number;
@@ -37,7 +30,7 @@ type Props = {
   width: string | number;
   popToAddContent?: boolean;
 };
-type State = {bottom: any; hidden: boolean};
+type State = { bottom: any; hidden: boolean };
 
 export default class MemoryActionsSheet extends React.Component<Props, State> {
   static defaultProps: Props = {
@@ -52,11 +45,11 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
   firstpart = false;
   showSheet = () => {
     if (Utility.isInternetConnected) {
-      this.setState({hidden: false}, () => {
+      this.setState({ hidden: false }, () => {
         Animated.timing(this.state.bottom, {
           toValue: 0,
           duration: 200,
-          useNativeDriver: true,
+          useNativeDriver: true
         }).start();
       });
     } else {
@@ -68,10 +61,10 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
     Animated.timing(this.state.bottom, {
       toValue: -height,
       duration: 50,
-      useNativeDriver: true,
+      useNativeDriver: true
     }).start(() => {
       setTimeout(() => {
-        this.setState({hidden: true}, () => (this.firstpart = false));
+        this.setState({ hidden: true }, () => this.firstpart = false);
       }, 20);
     });
   };
@@ -79,36 +72,30 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
   doSome() {
     this.firstpart = true;
     return (
-      <View
-        style={{
-          height: 8,
-          backgroundColor:
-            'linear-gradient(0deg, rgba(20, 20, 20, 0.15), rgba(20, 20, 20, 0.15)), rgba(255, 255, 255, 0.7)',
-        }}></View>
-    );
+      <View style={{ height: 8, backgroundColor: 'linear-gradient(0deg, rgba(20, 20, 20, 0.15), rgba(20, 20, 20, 0.15)), rgba(255, 255, 255, 0.7)' }}></View>
+    )
   }
   render() {
     if (this.state.hidden || this.props.actions.length == 0) {
       return <View style={styles.hiddenView} />;
     } else {
-      let actions = this.props.actions
-        .sort((a: any, b: any) => b.isDestructive - a.isDestructive)
-        .reverse();
+      let actions = this.props.actions.sort((a: any, b: any) => (b.isDestructive - a.isDestructive)).reverse();
 
       return (
-        <Modal transparent>
+        <Modal transparent >
           <View
             style={styles.container}
             onStartShouldSetResponder={() => true}
             onResponderStart={() => this.hideSheet()}>
-            <TouchableWithoutFeedback
-              style={styles.ActionView}
-              onPress={() => this.hideSheet()}>
+            <TouchableWithoutFeedback style={styles.ActionView}
+              onPress={() => this.hideSheet()}
+            >
               <View style={styles.ActionView} />
             </TouchableWithoutFeedback>
 
             <Animated.View
-              style={[styles.AnimatedContainer, {bottom: this.state.bottom}]}>
+
+              style={[styles.AnimatedContainer, { bottom: this.state.bottom, }]}>
               <View>
                 {/* <TextNew
                   style={{
@@ -142,75 +129,62 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                   }) => {
                     return (
                       <>
-                        {this.firstpart == false && data.isDestructive == 1
-                          ? this.doSome()
-                          : null}
+                        {this.firstpart == false && data.isDestructive == 1 ? this.doSome() : null}
 
                         <TouchableWithoutFeedback
                           onPress={() => {
                             this.props.memoryActions
                               ? this.props.onActionClick &&
-                                this.props.onActionClick(
-                                  data.index,
-                                  data,
-                                  data.memory_url,
-                                )
+                              this.props.onActionClick(data.index, data, data.memory_url)
                               : this.props.onActionClick &&
-                                this.props.onActionClick(
-                                  data.index,
-                                  data,
-                                  data.memory_url,
-                                );
+                              this.props.onActionClick(data.index, data, data.memory_url);
                             this.hideSheet();
                             Keyboard.dismiss();
 
                             {
                               this.props.popToAddContent &&
-                                this.props.navigation.popTo('addContent');
+                                this.props.navigation.replace('addContent');
                             }
                           }}>
                           <View
-                            style={[
-                              styles.flatlistContainer,
-                              {
-                                borderTopLeftRadius: data.index == 1 ? 10 : 0,
-                                borderTopRightRadius: data.index == 1 ? 10 : 0,
-                              },
-                            ]}>
-                            {Platform.OS == 'android' ? (
-                              <View
-                                style={[
-                                  styles.ioSContainer,
-                                  {
-                                    borderTopLeftRadius:
-                                      data.index == 0 ? 10 : 0,
-                                    borderTopRightRadius:
-                                      data.index == 0 ? 10 : 0,
-                                  },
-                                ]}>
-                                {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
-                                {/* <Image source={ data.isDestructive == 1 ? redstar : blackStar } resizeMode="contain" /> */}
-                              </View>
-                            ) : null}
+                            style={[styles.flatlistContainer, {
+                              borderTopLeftRadius: data.index == 1 ? 10 : 0,
+                              borderTopRightRadius: data.index == 1 ? 10 : 0,
+                            }]}>
 
-                            <TextNew style={styles.textStyle}>
+                            {
+                              Platform.OS == 'android' ?
+                                <View
+                                  style={[styles.ioSContainer, {
+                                    borderTopLeftRadius: data.index == 0 ? 10 : 0,
+                                    borderTopRightRadius: data.index == 0 ? 10 : 0,
+                                  }]}>
+                                  {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
+                                  {/* <Image source={ data.isDestructive == 1 ? redstar : blackStar } resizeMode="contain" /> */}
+                                </View>
+                                :
+                                null
+                            }
+
+
+                            <TextNew
+                              style={styles.textStyle}>
                               {data.text}
                             </TextNew>
 
-                            {Platform.OS == 'ios' ? (
-                              <View
-                                style={[
-                                  styles.iosTextStyle,
-                                  {
-                                    borderTopLeftRadius:
-                                      data.index == 0 ? 10 : 0,
-                                    borderTopRightRadius:
-                                      data.index == 0 ? 10 : 0,
-                                  },
-                                ]}>
-                                {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
-                              </View>
-                            ) : null}
+                            {
+                              Platform.OS == 'ios' ?
+                                <View
+                                  style={[styles.iosTextStyle, {
+                                    borderTopLeftRadius: data.index == 0 ? 10 : 0,
+                                    borderTopRightRadius: data.index == 0 ? 10 : 0,
+                                  }]}>
+                                  {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
+                                </View>
+                                :
+                                null
+                            }
+
                           </View>
                         </TouchableWithoutFeedback>
                       </>

@@ -1,15 +1,14 @@
-import React, {Component} from 'react';
-import {Keyboard, Platform, SafeAreaView, StatusBar, View} from 'react-native';
-
-import {SubmitButton} from '../../common/component/button';
+import React, { Component } from 'react';
+import { Keyboard, Platform, SafeAreaView, StatusBar, View } from 'react-native';
+import { SubmitButton } from '../../common/component/button';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Text from '../../common/component/Text';
-import {Colors, fontFamily, fontSize, getValue} from '../../common/constants';
-import {Account} from '../../common/loginStore';
+import { Colors, fontFamily, fontSize, getValue } from '../../common/constants';
+import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
-import {backBlkBtn} from '../../images';
+import { backBlkBtn } from '../../images';
 import InstanceView from './instanceView';
-import {loginDrawerRef} from './prologue';
+import { loginDrawerRef } from './prologue';
 import Styles from './styles';
 
 export default class UserRegistrationStatus extends Component<{
@@ -42,9 +41,7 @@ export default class UserRegistrationStatus extends Component<{
             backIcon={backBlkBtn}
           />
           <StatusBar
-            barStyle={
-              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-            }
+            barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
           {this.props.isAlreadyRegistered ? (

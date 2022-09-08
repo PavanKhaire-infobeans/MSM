@@ -88,7 +88,7 @@ export default class AudioRecorderView extends React.Component<
   // 				show: false
   // 		}
   // 		})
-  // 	) : this.props.navigation.popTo("addContent")}
+  // 	) : this.props.navigation.jumpTo("addContent")}
   // }
   // /**
   //  * Set time while User is recording

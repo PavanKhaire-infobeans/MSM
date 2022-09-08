@@ -165,7 +165,7 @@ export const SSOLogin = async (params: any) => {
   //     //                 }
   //     //             })
   //     //         }
-  //     //         this.props.navigation.dashBoard();
+  //     //         Actions.dashBoard();
   //     //     }, 100);
   //     //     this.view.props.clean();
   // } catch (err) {

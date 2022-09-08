@@ -2,20 +2,15 @@ import React from 'react';
 import {
   Animated,
   Dimensions,
-  FlatList,
-  Keyboard,
-  Modal,
-  Platform,
-  TouchableOpacity,
-  View,
+  FlatList, Keyboard, Modal, Platform, TouchableOpacity, View
 } from 'react-native';
 // import {fontSize, Colors} from '../../constants';
 import Utility from '../../utility';
 // import TextNew from '../Text';
 import TextNew from '../Text';
-import {No_Internet_Warning} from './../Toast';
+import { No_Internet_Warning } from './../Toast';
 import styles from './styles';
-const {height} = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export type MemoryActionsSheetItem = {
   index: number;
@@ -36,7 +31,7 @@ type Props = {
   width: string | number;
   popToAddContent?: boolean;
 };
-type State = {bottom: any; hidden: boolean};
+type State = { bottom: any; hidden: boolean };
 
 export default class MemoryActionsSheet extends React.Component<Props, State> {
   static defaultProps: Props = {
@@ -51,7 +46,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
   firstpart = false;
   showSheet = () => {
     if (Utility.isInternetConnected) {
-      this.setState({hidden: false}, () => {
+      this.setState({ hidden: false }, () => {
         Animated.timing(this.state.bottom, {
           toValue: 0,
           duration: 200,
@@ -70,7 +65,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
       useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
-        this.setState({hidden: true}, () => (this.firstpart = false));
+        this.setState({ hidden: true }, () => this.firstpart = false);
       }, 20);
     });
   };
@@ -78,34 +73,29 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
   doSome() {
     this.firstpart = true;
     return (
-      <View
-        style={{
-          height: 8,
-          backgroundColor:
-            'linear-gradient(0deg, rgba(20, 20, 20, 0.15), rgba(20, 20, 20, 0.15)), rgba(255, 255, 255, 0.7)',
-        }}></View>
-    );
+      <View style={{ height: 8, backgroundColor: 'linear-gradient(0deg, rgba(20, 20, 20, 0.15), rgba(20, 20, 20, 0.15)), rgba(255, 255, 255, 0.7)' }}></View>
+    )
   }
   render() {
     if (this.state.hidden || this.props.actions.length == 0) {
       return <View style={styles.hiddenView} />;
     } else {
-      let actions = this.props.actions
-        .sort((a: any, b: any) => b.isDestructive - a.isDestructive)
-        .reverse();
+      let actions = this.props.actions.sort((a: any, b: any) => (b.isDestructive - a.isDestructive)).reverse();
 
       return (
-        <Modal transparent>
+        <Modal transparent >
           <View
             style={styles.container}
             onStartShouldSetResponder={() => true}
             onResponderStart={() => this.hideSheet()}>
-            <TouchableOpacity
-              style={styles.ActionView}
-              onPress={() => this.hideSheet()}></TouchableOpacity>
+            <TouchableOpacity style={styles.ActionView}
+              onPress={() => this.hideSheet()}
+            >
+            </TouchableOpacity>
 
             <Animated.View
-              style={[styles.AnimatedContainer, {bottom: this.state.bottom}]}>
+
+              style={[styles.AnimatedContainer, { bottom: this.state.bottom, }]}>
               <View>
                 {/* <TextNew
                   style={{
@@ -147,9 +137,9 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                           onPress={() => {
                             this.props.memoryActions
                               ? this.props.onActionClick &&
-                                this.props.onActionClick(data.index, data)
+                              this.props.onActionClick(data.index, data)
                               : this.props.onActionClick &&
-                                this.props.onActionClick(data.index);
+                              this.props.onActionClick(data.index);
                             this.hideSheet();
                             Keyboard.dismiss();
 

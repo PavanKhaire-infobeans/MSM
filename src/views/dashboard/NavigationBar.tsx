@@ -1,23 +1,13 @@
 import React from 'react';
 import {
-  Alert,
-  DeviceEventEmitter,
-  Image,
-  ImageBackground,
-  Keyboard,
-  Platform,
+  Alert, DeviceEventEmitter, Image, ImageBackground, Keyboard, Platform,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-
 import Text from '../../common/component/Text';
 import {
-  close_white,
-  icon_notification,
-  instanceLogo,
-  mindpopBarIcon,
-  profile_placeholder,
-  white_head_icon,
+  close_white, icon_notification, instanceLogo, mindpopBarIcon, profile_placeholder,
+  white_head_icon
 } from '../../images';
 //@ts-ignore
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -25,22 +15,22 @@ import {connect} from 'react-redux';
 import {kNotificationIndicator} from '../../common/component/TabBarIcons';
 import {Colors, fontFamily, fontSize} from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
-import {NotificationDataModel} from '../notificationView/notificationDataModel';
-import {kForegroundNotificationListener} from '../notificationView/notificationServices';
-import {AddNewNotification} from '../notificationView/reducer';
-import {kProfilePicUpdated} from '../profile/profileDataModel';
+import { NotificationDataModel } from '../notificationView/notificationDataModel';
+import { kForegroundNotificationListener } from '../notificationView/notificationServices';
+import { AddNewNotification } from '../notificationView/reducer';
+import { kProfilePicUpdated } from '../profile/profileDataModel';
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
-  leftButtons: {menu: 'navbar_leftbtn_menu'},
+  leftButtons: { menu: 'navbar_leftbtn_menu' },
   rightButtons: {
     mindpop: 'mindpop_btn',
     message: 'message_btn',
     notification: 'notification_btn',
     notificationIcon: 'icon_notification',
   },
-  title: {text: 'title'},
+  title: { text: 'title' },
 };
 
 const styles = EStyleSheet.create({
@@ -50,8 +40,7 @@ const styles = EStyleSheet.create({
     lineHeight: 15,
     textAlign: 'left',
     fontWeight: '500',
-    fontFamily:
-      Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   titleText: {
     color: Colors.TextColor,
@@ -59,8 +48,7 @@ const styles = EStyleSheet.create({
     lineHeight: 20,
     textAlign: 'left',
     fontWeight: '500',
-    fontFamily:
-      Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
   },
   containerNavBarStyle: {
     flexDirection: 'row',
@@ -68,7 +56,7 @@ const styles = EStyleSheet.create({
     height: 54,
     justifyContent: 'space-between',
   },
-  titleContainer: {justifyContent: 'center', paddingTop: 10},
+  titleContainer: { justifyContent: 'center', paddingTop: 10 },
 
   leftButtonTouchableContainer: {
     justifyContent: 'center',
@@ -105,7 +93,7 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
   },
 
-  leftButtonLogo: {width: 30, height: 30},
+  leftButtonLogo: { width: 30, height: 30 },
 
   rightButtonsContainer: {
     flex: 1,
@@ -115,11 +103,11 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
 
-  rightButtonsTouchable: {padding: 5, paddingRight: 10},
+  rightButtonsTouchable: { padding: 5, paddingRight: 10 },
 
-  avatar: {height: 30, width: 30, borderRadius: 15, alignContent: 'center'},
+  avatar: { height: 30, width: 30, borderRadius: 15, alignContent: 'center' },
 
-  rightButtonsBackgroundImage: {width: 30, height: 30},
+  rightButtonsBackgroundImage: { width: 30, height: 30 },
 
   rightButtonsBadge: {
     position: 'absolute',
@@ -134,11 +122,11 @@ const styles = EStyleSheet.create({
     borderRadius: 8,
     alignContent: 'center',
   },
-  rightButtonsBadgeText: {...fontSize(10), color: '#ffffff'},
+  rightButtonsBadgeText: { ...fontSize(10), color: '#ffffff' },
 });
 
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 class NavigationBar extends React.Component<Props> {
   key = Account.selectedData().instanceID + '_' + Account.selectedData().userID;
   profilePicUpdate: EventManager;
@@ -160,11 +148,11 @@ class NavigationBar extends React.Component<Props> {
     let group_id = new NotificationDataModel().getGroupId(
       details.notificationType,
     );
-    this.props.addNotificationItem({group_id: group_id, details: [details]});
+    this.props.addNotificationItem({ group_id: group_id, details: [details] });
     if (Utility.unreadNotification[this.key] > 0) {
-      this.setState({showBadge: true});
+      this.setState({ showBadge: true });
     } else {
-      this.setState({showBadge: false});
+      this.setState({ showBadge: false });
     }
     setTimeout(() => {
       EventManager.callBack(kNotificationIndicator);
@@ -173,15 +161,15 @@ class NavigationBar extends React.Component<Props> {
   };
   componentWillMount = () => {
     if (Utility.unreadNotification[this.key] > 0) {
-      this.setState({showBadge: true});
+      this.setState({ showBadge: true });
     } else {
-      this.setState({showBadge: false});
+      this.setState({ showBadge: false });
     }
     // this.profilePicUpdate = EventManager.addListener(kProfilePicUpdated, this.updateProfilePic);
     DeviceEventEmitter.addListener(kProfilePicUpdated, this.updateProfilePic);
   };
 
-  componentWillUnmount() {
+  componentWillUnmount(){
     DeviceEventEmitter.removeAllListeners(kProfilePicUpdated);
     this.notificationReceivedForeground.removeListener();
   }
@@ -207,7 +195,7 @@ class NavigationBar extends React.Component<Props> {
     //this.props.navigation.popAndPush("mindPop")
     //Utility.notificationAvailable = !Utility.notificationAvailable;
     //EventManager.callBack(kNotificationIndicator);
-    this.props.navigation.push('mindPop');
+    this.props.navigation.navigate('mindPop');
   };
 
   _closeAction = () => {
@@ -265,7 +253,7 @@ class NavigationBar extends React.Component<Props> {
                 style={styles.avatar}
                 source={
                   Account.selectedData().profileImage != ''
-                    ? {uri: Account.selectedData().profileImage}
+                    ? { uri: Account.selectedData().profileImage }
                     : profile_placeholder
                 }
               />
@@ -279,14 +267,14 @@ class NavigationBar extends React.Component<Props> {
   }
 
   _userProfileSection = () => {
-    if (this.props.navigation.currentScene != 'myAccount') {
-      this.props.navigation.push('myAccount');
+    if (this.props?.navigation?.state?.routeName != 'myAccount') {
+      this.props.navigation.navigate('myAccount');
     }
   };
 
   _notificationAction = () => {
-    if (this.props.navigation.currentScene != 'notificationView') {
-      this.props.navigation.push('notificationView');
+    if (this.props?.navigation?.state?.routeName != 'notificationView') {
+      this.props.navigation.navigate('notificationView');
     }
   };
 
@@ -295,7 +283,7 @@ class NavigationBar extends React.Component<Props> {
       {
         text: 'OK',
         style: 'cancel',
-        onPress: () => {},
+        onPress: () => { },
       },
     ]);
   };
@@ -307,21 +295,12 @@ class NavigationBar extends React.Component<Props> {
     let isPublicInstance: any = Account.selectedData().is_public_site;
     return (
       <View
-        style={[
-          styles.containerNavBarStyle,
-          {
-            backgroundColor: this.props.isWhite
-              ? Colors.white
-              : Colors.NewThemeColor,
-          },
-        ]}>
+        style={[styles.containerNavBarStyle, {backgroundColor: this.props.isWhite ? Colors.white : Colors.NewThemeColor}]}>
         <TouchableOpacity
           style={styles.leftButtonTouchableContainer}
           testID={testID.leftButtons.menu}
           onPress={() => {
-            showClose
-              ? this._closeAction()
-              : this.props.navigation.drawerOpen();
+            showClose ? this._closeAction() : this.props.navigation.drawerOpen();
           }}>
           {showClose ? (
             <View style={styles.closeButton}>
@@ -353,7 +332,7 @@ class NavigationBar extends React.Component<Props> {
     );
   }
 }
-const mapState = (state: {[x: string]: any}) => ({
+const mapState = (state: { [x: string]: any }) => ({
   notificationList: state.NotificationsRedux.notificationData,
   unreadNot: state.NotificationsRedux.unreadNot,
 });
@@ -361,7 +340,7 @@ const mapState = (state: {[x: string]: any}) => ({
 const mapDispatch = (dispatch: Function) => {
   return {
     addNotificationItem: (payload: any) =>
-      dispatch({type: AddNewNotification, payload: payload}),
+      dispatch({ type: AddNewNotification, payload: payload }),
   };
 };
 

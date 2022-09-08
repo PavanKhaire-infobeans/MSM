@@ -69,7 +69,7 @@ function* getCollaboratorsList(params: any) {
     .catch((err: Error) => Promise.reject(err));
 }
 
-function* etherpadEditing(params: any) {
+function* etherpadEditingData(params: any) {
   return MemoryService(
     `https://${Account.selectedData().instanceURL}/api/etherpad/get_set_text`,
     params,
@@ -84,8 +84,9 @@ function* getMemoryTags(requestData: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
+    let requestTime: Date = new Date()
     let request = yield call(getMemoryTagsList, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
+      { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       {
         details: {
           search_string: requestData.payload.searchTerm,
@@ -97,10 +98,11 @@ function* getMemoryTags(requestData: any) {
       return await request;
     });
     let value = '';
+    console.warn("getMemoryTagsList response time :-: ", (new Date() - requestTime) / 1000)
     if (searchType == kSearchTags) {
       value = getValue(responseBody, ['MemoryTags']);
       if (value && value.length > 0) {
-        yield put({type: SaveSearchList, payload: value});
+        yield put({ type: SaveSearchList, payload: value });
       } else {
         yield put({
           type: SaveSearchList,
@@ -115,7 +117,7 @@ function* getMemoryTags(requestData: any) {
     } else {
       value = getValue(responseBody, ['RecentTags']);
       if (value.length > 0) {
-        yield put({type: RecentTags, payload: value});
+        yield put({ type: RecentTags, payload: value });
       }
     }
   } catch (err) {
@@ -130,7 +132,7 @@ function* getUsers(requestData: any) {
       return Storage.get('userData');
     });
     let request = yield call(getUserList, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
+      { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       {
         details: {
           string: requestData.payload.searchTerm,
@@ -148,7 +150,7 @@ function* getUsers(requestData: any) {
       value = getValue(responseBody, ['UserList', 'query_result_circle']);
     }
     if (value.length > 0) {
-      yield put({type: SaveSearchList, payload: value});
+      yield put({ type: SaveSearchList, payload: value });
     } else {
       yield put({
         type: SaveSearchList,
@@ -180,7 +182,7 @@ function* getCollections() {
       return Storage.get('userData');
     });
     let request = yield call(getCollectionList, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
+      { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       {
         details: {
           offset: 0,
@@ -192,7 +194,7 @@ function* getCollections() {
     });
     let value = getValue(responseBody, ['Collections']);
     if (value.length > 0) {
-      yield put({type: CollectionList, payload: value});
+      yield put({ type: CollectionList, payload: value });
     }
   } catch (err) {
     //console.log(err);
@@ -205,7 +207,7 @@ function* getLocationList(requestData: any) {
       return Storage.get('userData');
     });
     let request = yield call(getListLocations, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
+      { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       {
         details: {
           str: requestData.payload,
@@ -217,7 +219,7 @@ function* getLocationList(requestData: any) {
     });
     let value = getValue(responseBody, ['LocationData']);
     if (value.length > 0) {
-      yield put({type: LocationListUpdated, payload: value});
+      yield put({ type: LocationListUpdated, payload: value });
     }
   } catch (err) {
     //console.log(err);
@@ -230,7 +232,7 @@ function* getCollaborators(requestData: any) {
       return Storage.get('userData');
     });
     let request = yield call(getCollaboratorsList, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
+      { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       {
         configurationTimestamp: TimeStampMilliSeconds(),
         details: {
@@ -243,7 +245,7 @@ function* getCollaborators(requestData: any) {
     });
     let value = getValue(responseBody, ['data']);
     if (value.groups || value.users) {
-      yield put({type: SaveCollaborators, payload: value});
+      yield put({ type: SaveCollaborators, payload: value });
     }
   } catch (err) {
     //console.log(err);
@@ -255,8 +257,8 @@ function* etherPadEditing(requestData: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
-    let request = yield call(etherpadEditing, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
+    let request = yield call(etherpadEditingData, [
+      { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       {
         details: {
           pad_id: requestData.payload.padId,
@@ -265,13 +267,13 @@ function* etherPadEditing(requestData: any) {
         },
       },
     ]);
-    const responseBody = yield call(async function () {
+    const responseBody = yield call(async () => {
       return await request;
     });
     if (requestData.payload.type == 'get') {
       let value = getValue(responseBody, ['Data']);
       if (value.text) {
-        yield put({type: SaveDescription, payload: value.text.trim()});
+        yield put({ type: SaveDescription, payload: value.text.trim() });
       }
     }
   } catch (err) {

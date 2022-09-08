@@ -1,33 +1,26 @@
 import React from 'react';
 import {
-  Keyboard,
-  SafeAreaView,
+  Keyboard, SafeAreaView,
   StatusBar,
   Text,
-  TextInput,
-  View,
+  TextInput, View
 } from 'react-native';
-
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import {
-  Colors,
-  decode_utf8,
-  fontSize,
-  getValue,
+  Colors, decode_utf8, fontSize, getValue
 } from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
 import {
-  kCollectionUpdated,
-  UpdateMemoryCollection,
+  kCollectionUpdated, UpdateMemoryCollection
 } from '../createMemoryWebService';
-import {SaveCollection} from '../reducer';
-import {CollectinAPI} from '../saga';
+import { SaveCollection } from '../reducer';
+import { CollectinAPI } from '../saga';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
 import styles from './styles';
 
-type State = {[x: string]: any};
+type State = { [x: string]: any };
 type Props = {
   tid?: any;
   isRename: any;
@@ -45,7 +38,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
 
   componentDidMount() {
     if (this.props.isRename) {
-      this.setState({content: this.props.collectionName});
+      this.setState({ content: this.props.collectionName });
     }
     this.collectionUpdated = EventManager.addListener(
       kCollectionUpdated,
@@ -64,7 +57,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
         this.props.callback(this.state.content);
         this.props.collectionAPI();
       } else {
-        newCollection = {...newCollection, memory_count: 0};
+        newCollection = { ...newCollection, memory_count: 0 };
         this.props.setCollection(newCollection);
         this.props.collectionList.unshift(newCollection);
         this.props.callback(newCollection);
@@ -92,12 +85,12 @@ class CreateRenameCollection extends React.Component<Props, State> {
         );
       } else {
         UpdateMemoryCollection(
-          {name: decode_utf8(this.state.content.trim())},
+          { name: decode_utf8(this.state.content.trim()) },
           false,
         );
       }
     } else {
-      this.setState({showError: true});
+      this.setState({ showError: true });
     }
   };
 
@@ -109,7 +102,9 @@ class CreateRenameCollection extends React.Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView style={styles.invisibleContainer} />
+        <SafeAreaView
+          style={styles.invisibleContainer}
+        />
         <SafeAreaView style={styles.safeAreaContainer}>
           <View style={styles.container}>
             <NavigationHeaderSafeArea
@@ -125,31 +120,24 @@ class CreateRenameCollection extends React.Component<Props, State> {
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
-              }
+              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
-            <View style={styles.collectionTextinputContainer}>
+            <View
+              style={styles.collectionTextinputContainer}>
               <TextInput
                 placeholder="Enter collection name"
                 autoFocus={true}
                 onChangeText={text => {
-                  this.setState({content: text, showError: false});
+                  this.setState({ content: text, showError: false });
                 }}
                 value={this.state.content}
                 multiline={false}
                 maxLength={30}
-                style={[
-                  styles.CollectionInputStyle,
-                  {
-                    borderBottomColor: this.state.showError
-                      ? Colors.ErrorColor
-                      : 'rgba(0,0,0,0.4)',
-                  },
-                ]}
+                style={[styles.CollectionInputStyle,{
+                  borderBottomColor: this.state.showError
+                    ? Colors.ErrorColor : 'rgba(0,0,0,0.4)',
+                }]}
               />
               {this.state.showError && (
                 <Text style={styles.errorMessageStyle}>
@@ -163,7 +151,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
     );
   }
 }
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     collectionList: state.MemoryInitials.collectionList,
     collection: state.MemoryInitials.collection,
@@ -172,9 +160,9 @@ const mapState = (state: {[x: string]: any}) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    collectionAPI: () => dispatch({type: CollectinAPI}),
+    collectionAPI: () => dispatch({ type: CollectinAPI }),
     setCollection: (payload: any) =>
-      dispatch({type: SaveCollection, payload: payload}),
+      dispatch({ type: SaveCollection, payload: payload }),
   };
 };
 

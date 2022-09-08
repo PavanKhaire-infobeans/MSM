@@ -1,32 +1,26 @@
 import React from 'react';
 import {
-  Alert,
-  Animated,
-  Dimensions,
-  Image,
-  Keyboard,
-  Modal,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
+  Alert, Animated,
+  Dimensions, Image, Keyboard, Modal, SafeAreaView, ScrollView, StatusBar, Text, TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
-
 // @ts-ignore
 import Confetti from 'react-native-confetti';
 import DefaultPreference from 'react-native-default-preference';
-import {connect} from 'react-redux';
-import {kPublish} from '.';
+import { connect } from 'react-redux';
+import { kPublish } from '.';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextNew from '../../common/component/Text';
-import {No_Internet_Warning} from '../../common/component/Toast';
-import {Colors, getValue, ShareOptions} from '../../common/constants';
+import { No_Internet_Warning } from '../../common/component/Toast';
+import {
+  Colors,
+  getValue,
+  ShareOptions
+} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {add_icon_small, arrow7, edit_icon} from '../../images';
+import {
+  add_icon_small, arrow7, edit_icon
+} from '../../images';
 import Styles from './styles';
 
 export const kTags = 'kTags';
@@ -36,8 +30,8 @@ const shareWith = 'Who can see this memory?';
 const tags = 'Tags';
 const whoElse = 'Who else where there?';
 const addCollections = 'Add to Memory Collections';
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 class PublishMemoryDraft extends React.Component<Props, State> {
   widthVal: any;
@@ -65,13 +59,13 @@ class PublishMemoryDraft extends React.Component<Props, State> {
       {
         text: 'No',
         style: 'cancel',
-        onPress: () => {},
+        onPress: () => { },
       },
       {
         text: 'Yes',
         style: 'default',
         onPress: () => {
-          this.setState({showMenu: false}, () => {
+          this.setState({ showMenu: false }, () => {
             Keyboard.dismiss();
             this.props.navigation.goBack();
           });
@@ -81,9 +75,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
   };
 
   publishMemory = () => {
-    this.setState({showMenu: false}, () =>
-      this.props.publishMemoryDraft(kPublish),
-    );
+    this.setState({ showMenu: false }, () => this.props.publishMemoryDraft(kPublish));
   };
 
   commonListComponent = (
@@ -222,9 +214,9 @@ class PublishMemoryDraft extends React.Component<Props, State> {
   };
 
   tags = () => {
-    this.setState({showMenu: false}, () => {
+    this.setState({ showMenu: false }, () => {
       if (Utility.isInternetConnected) {
-        this.props.navigation.push('commonListCreateMemory', {
+        this.props.navigation.navigate('commonListCreateMemory', {
           tag: kTags,
           title: 'Memory Tags',
           showRecent: true,
@@ -235,12 +227,13 @@ class PublishMemoryDraft extends React.Component<Props, State> {
         No_Internet_Warning();
       }
     });
+
   };
 
   whoELseWhereThere = () => {
-    this.setState({showMenu: false}, () => {
+    this.setState({ showMenu: false },()=>{
       if (Utility.isInternetConnected) {
-        this.props.navigation.push('commonListCreateMemory', {
+        this.props.navigation.navigate('commonListCreateMemory', {
           tag: kWhoElseWhereThere,
           title: 'Who else where there',
           showRecent: false,
@@ -251,39 +244,42 @@ class PublishMemoryDraft extends React.Component<Props, State> {
         No_Internet_Warning();
       }
     });
+    
   };
 
   collection = () => {
-    this.setState({showMenu: false}, () => {
+    this.setState({ showMenu: false },()=>{
       if (Utility.isInternetConnected) {
-        this.props.navigation.push('collectionList');
+        this.props.navigation.navigate('collectionList');
       } else {
         No_Internet_Warning();
       }
     });
+    
   };
 
   whoCanSee = () => {
-    this.setState({showMenu: false}, () => {
+    this.setState({ showMenu: false },()=>{
       if (Utility.isInternetConnected) {
-        this.props.navigation.push('whoCanSee');
+        this.props.navigation.navigate('whoCanSee');
       } else {
         No_Internet_Warning();
       }
     });
+    
   };
 
   showHideMenu = () => {
     let showHide = !this.state.showMenu;
-    this.setState({showMenu: showHide});
+    this.setState({ showMenu: showHide });
   };
 
   componentDidMount = () => {
     DefaultPreference.get('hide_tour').then((value: any) => {
       if (value == 'true') {
-        this.setState({showGuideOverlay: false});
+        this.setState({ showGuideOverlay: false });
       } else {
-        this.setState({showGuideOverlay: true});
+        this.setState({ showGuideOverlay: true });
       }
     });
   };
@@ -294,7 +290,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
       this._confettiView.stopConfetti();
     }
     //  this.explosion.stop();
-    this.setState({showMenu: false});
+    this.setState({ showMenu: false });
   };
 
   render() {
@@ -316,7 +312,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
           <View
             style={Styles.fullFlex}
             onStartShouldSetResponder={() => true}
-            onResponderStart={() => this.setState({showMenu: false})}>
+            onResponderStart={() => this.setState({ showMenu: false })}>
             <NavigationHeaderSafeArea
               heading={'Memory Draft'}
               showCommunity={true}
@@ -329,11 +325,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
             />
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
-              }
+              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             <ScrollView style={Styles.imagebuttonStyle}>
@@ -369,9 +361,9 @@ class PublishMemoryDraft extends React.Component<Props, State> {
             </ScrollView>
             {this.state.showMenu && (
               <View
-                style={[Styles.renderLoaderStyle, {top: 0}]}
+                style={[Styles.renderLoaderStyle, { top: 0 }]}
                 onStartShouldSetResponder={() => true}
-                onResponderStart={() => this.setState({showMenu: false})}>
+                onResponderStart={() => this.setState({ showMenu: false })}>
                 <View style={Styles.sideMenu}>
                   <TouchableOpacity
                     style={Styles.titleContainer}
@@ -398,19 +390,14 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                   ]}>
                   <View style={[Styles.fullFlex, Styles.fullWidth]}>
                     <View
-                      style={[
-                        Styles.drawerContainer,
-                        {right: -1025 + this.widthVal * 0.16},
-                      ]}></View>
+                      style={[Styles.drawerContainer, { right: -1025 + this.widthVal * 0.16 }]}></View>
                     <View style={Styles.arrowImageContainerStyle}>
                       <Image source={arrow7}></Image>
                     </View>
                     <View
-                      style={[
-                        Styles.memoryPublishContainer,
-                        {width: this.widthVal - 90},
-                      ]}>
-                      <TextNew style={Styles.guideTitleTextStyle}>
+                      style={[Styles.memoryPublishContainer, { width: this.widthVal - 90 }]}>
+                      <TextNew
+                        style={Styles.guideTitleTextStyle}>
                         {'Memory Publish'}
                       </TextNew>
                       <TextNew style={Styles.guideDescTextStyle}>
@@ -423,10 +410,10 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                           underlayColor={Colors.transparent}
                           style={Styles.memoryDraftIntroButnStyle}
                           onPress={() => {
-                            this.setState({showGuideOverlay: false}, () => {
+                            this.setState({ showGuideOverlay: false },()=>{
                               DefaultPreference.set('hide_tour', 'true').then(
-                                function () {},
-                              );
+                                function () { },
+                              );  
                             });
                           }}>
                           <View style={Styles.doneBtnContainer}>
@@ -448,7 +435,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     shareOption: state.MemoryInitials.shareOption,
     tagsList: state.MemoryInitials.tags,
@@ -464,3 +451,4 @@ const mapDispatch = (dispatch: Function) => {
 };
 
 export default connect(mapState, mapDispatch)(PublishMemoryDraft);
+

@@ -1,5 +1,7 @@
+import React from 'react';
 import { Platform, Alert, DeviceEventEmitter } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import { useNavigation } from '@react-navigation/native';
 import { Storage } from '../constants';
 import Utility, { getshowLogoutPopUp, setshowLogoutPopUp } from '../utility';
 import loaderHandler from '../component/busyindicator/LoaderHandler';
@@ -28,7 +30,7 @@ export const logoutMultiple = (selectedAccounts: any) => {
       }
     })
     .catch(err => {
-      this.props.navigation.reset('prologue');
+      // Actions.reset('prologue');
     });
   return LoginStore.listAllAccounts();
 };
@@ -46,10 +48,14 @@ export async function logout() {
     await setshowLogoutPopUp(true);
     await logoutFlow();
   }
-  
+
 }
 
 function logoutFlow() {
+  const { navigate, dangerouslyGetState } = useNavigation()
+  const { index, routes } = dangerouslyGetState()
+  const currentScene = routes[index].name;
+
   logoutMethod()
     .then((resp: any) => {
       let list = resp.rows.raw();
@@ -58,14 +64,14 @@ function logoutFlow() {
         let user: UserData = accounts[accounts.length - 1];
         DeviceEventEmitter.emit('logout', { accounts, user });
       } else {
-        if (this.props.navigation.currentScene !== 'login') {
-          this.props.navigation.replace('prologue');
+        if (currentScene !== 'login') {
+          navigate('prologue');
         }
       }
     })
     .catch(err => {
-      if (this.props.navigation.currentScene !== 'login') {
-        this.props.navigation.replace('prologue');
+      if (currentScene !== 'login') {
+        navigate('prologue');
       }
     });
 }
@@ -76,7 +82,7 @@ const WebserviceCall = (function () {
     path: '/cueback',
     getRequest: (url: string, headers: object): Promise<Response> => {
       console.log("URL : " + url, "\nMethod : GET\n", "Headers", JSON.stringify(headers));
-
+      let requestTime =new Date()
       if (!Utility.isInternetConnected) {
         // return Promise.reject(new Error(NO_INTERNET));
       }
@@ -95,6 +101,7 @@ const WebserviceCall = (function () {
           return rsp
             .json()
             .then((value: any): any => {
+              console.warn(" response time :-: ", (new Date() - requestTime) / 1000)
               if (
                 value.ResponseCode == 405 ||
                 value.ResponseCode == 402 ||
@@ -129,6 +136,7 @@ const WebserviceCall = (function () {
       let reqMod = {
         ...request,
       };
+      let requestTime: Date = new Date()
       if (addRequest) {
         reqMod = {
           ...request,
@@ -169,6 +177,93 @@ const WebserviceCall = (function () {
                   new Date().toTimeString(),
                   JSON.stringify(request)
                 );
+                console.warn(" response time :-: ", (new Date() - requestTime) / 1000)
+                // console.log('Response is : ', value);
+                if (
+                  value.ResponseCode == 405 ||
+                  value.ResponseCode == 402 ||
+                  value.ResponseCode == 401
+                ) {
+                  loaderHandler.hideLoader();
+                  //TODO: Consult Web team and get unique ResponseCode of invalid session.
+                  console.log("Authentication token expired another :", JSON.stringify(value), url);
+                  if (
+                    value.ResponseMessage == 'Authentication token expired.' ||
+                    value.ResponseMessage == 'Invalid authentication token.'
+                  ) {
+                    ToastMessage('', '', true);
+                    logout();
+                  } //5461
+                  return Promise.reject(Error(value.ResponseMessage));
+                }
+                return resp;
+              } catch (error) {
+                console.error("reeee : ", error)
+              }
+
+            })
+            .catch((err: Error) => {
+              console.log('Error is : ', err);
+              return Promise.reject(err);
+            });
+        })
+        .catch((err: Error) => {
+          console.log('Error is : ', err);
+          return Promise.reject(err);
+        });
+    },
+    newPostRequest: async (
+      url: string,
+      headers: object,
+      request: object = {},
+      addRequest: boolean = true,
+    ) => 
+    {
+      let reqMod = {
+        ...request,
+      };
+      let requestTime: Date = new Date()
+      if (addRequest) {
+        reqMod = {
+          ...request,
+          deviceDetail: {
+            ModelName: DeviceInfo.getModel(),
+            OSVersion: DeviceInfo.getSystemVersion(),
+            PlatformName: Platform.select({ ios: 'iOS', android: 'Android' }),
+            AppVersion: DeviceInfo.getVersion(),
+            DeviceId: DeviceInfo.getUniqueId(),
+          },
+        };
+      }
+      //console.log("URL : " + url, "\nMethod : POST\n", "Request", JSON.stringify(reqMod));
+      //console.log("Headers", JSON.stringify(headers));
+      if (!Utility.isInternetConnected) {
+        //return Promise.reject(new Error(NO_INTERNET));
+      }
+      console.log('request : login ' + url, new Date().toTimeString());
+      return await fetch(url, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(reqMod),
+      })
+        .then((resp: any) => {
+          let rsp = resp.clone();
+          console.log("data resp",JSON.stringify(resp, null, 4));
+          console.log("headers another :", JSON.stringify(headers), url);
+          return rsp
+            .json()
+            .then((value: any): any => {
+              try {
+                console.log(
+                  'request : received  ' + url,
+                  new Date().toTimeString(),
+                  JSON.stringify(request)
+                );
+                console.warn(" response time :-: ", (new Date() - requestTime) / 1000)
                 // console.log('Response is : ', value);
                 if (
                   value.ResponseCode == 405 ||

@@ -121,7 +121,9 @@ export class LoginController implements LoginControllerProtocol {
         CueBackInsatance,
       );
       setTimeout(() => {
-        this.props.navigation.navigate('dashboard');
+        // Actions.dashBoard();
+        alert("")
+        this.view.props.navigation.navigate('dashBoard')
         this.view.props.clearDashboard();
         loaderHandler.hideLoader();
       }, 100);
@@ -220,7 +222,6 @@ export class LoginController implements LoginControllerProtocol {
       loaderHandler.showLoader();
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
-          console.log('username and password : ',username, password)
           this.view.props.fetchLoginAccounts({
             emailId: username,
             password: password,
@@ -373,7 +374,6 @@ export class LoginController implements LoginControllerProtocol {
    * Check if user is logged in after web service call or not
    */
   checkLoggedIn = (loginStatus: any) => {
-    console.log('check login : ',loginStatus.logincompleted)
     if (loginStatus.logincompleted) {
       loaderHandler.hideLoader();
       //If Login is success full
@@ -408,7 +408,9 @@ export class LoginController implements LoginControllerProtocol {
                 }
               });
             }
-            this.props.navigation.navigate('dashboard');
+        alert("s")
+        // Actions.dashBoard();
+            this.view.props.navigation.navigate('dashBoard')
           }, 100);
           this.view.props.clearDashboard();
           this.view.props.clean();

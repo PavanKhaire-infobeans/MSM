@@ -43,6 +43,7 @@ export const CreateUpdateMemory = async (
       .catch((err: Error) => {
         Promise.reject(err);
       });
+      // response = response.json();
 
     if (response.ResponseCode == 200) {
       //	Alert.alert("parseInt(getValue(response))"+ JSON.stringify(response));
@@ -61,11 +62,14 @@ export const CreateUpdateMemory = async (
 
       if (filesToUpload.length > 0) {
         let datareturn = await uploadAttachments(id, filesToUpload, listener, true, id, padDetails, key);
-        debugger
 
         if (listener == 'addContentCreateMemory') {
           loaderHandler.hideLoader();
           EventManager.callBack(listener, true, id, padDetails, key);
+        }
+        else if (listener == promptIdListener) {
+          loaderHandler.hideLoader();
+          return { status: true, id };
         }
         else {
           loaderHandler.hideLoader();
@@ -74,19 +78,28 @@ export const CreateUpdateMemory = async (
 
       }
       else {
-        if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener" || listener == promptIdListener) {
+        if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener") {
           loaderHandler.hideLoader();
           EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
+        }
+        else if (listener == promptIdListener) {
+          loaderHandler.hideLoader();
+          return { status: true, id };
         }
         else {
           loaderHandler.hideLoader();
           return response;
         }
       }
-    } else {
-      if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener" || listener == promptIdListener) {
+    }
+    else {
+      if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener") {
         loaderHandler.hideLoader();
         EventManager.callBack(listener, false, response['ResponseMessage']);
+      }
+      else if (listener == promptIdListener) {
+        loaderHandler.hideLoader();
+        return { status: false };
       }
       else {
         loaderHandler.hideLoader();
@@ -96,6 +109,7 @@ export const CreateUpdateMemory = async (
       // console.warn(" err daaaaa :", JSON.stringify(response));
       // EventManager.callBack(listener, false, response['ResponseMessage']);
     }
+
   } catch (err) {
     loaderHandler.hideLoader();
     console.warn(" errr daaaaa :", (err));
@@ -106,6 +120,7 @@ export const CreateUpdateMemory = async (
 export const GetDraftsDetails = async (nid: any) => {
   try {
     let data = await Storage.get('userData');
+    let requestTime: Date = new Date()
     let response = await MemoryService(
       `https://${Account.selectedData().instanceURL
       }/api/mystory/edit_memory_values`,
@@ -126,6 +141,7 @@ export const GetDraftsDetails = async (nid: any) => {
       .catch((err: Error) => {
         Promise.reject(err);
       });
+    console.warn(" response edit time :-: ", (new Date() - requestTime) / 1000)
     if (response != undefined && response != null) {
       if (response.ResponseCode == 200) {
         EventManager.callBack(kDraftDetailsFetched, true, response['Data']);
@@ -378,7 +394,7 @@ async function uploadAttachments(memoryId: number, files: TempFile[], listener: 
         }
 
         // if (files.length === resp.length) {
-          resolve(resp);
+        resolve(resp);
         // }
         debugger
         loaderHandler.showLoader('Loading...');

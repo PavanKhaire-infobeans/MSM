@@ -1,27 +1,21 @@
 import React from 'react';
 import {
-  Image,
-  Keyboard,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  TouchableOpacity,
-  View,
+  Image, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View
 } from 'react-native';
-
 import Text from '../../../common/component/Text';
-import {Colors, fontFamily, fontSize} from '../../../common/constants';
+import { Colors, fontFamily, fontSize } from '../../../common/constants';
 //@ts-ignore
-import {close_white_, default_placeholder} from '../../../images';
+import {
+  close_white_, default_placeholder
+} from '../../../images';
 //@ts-ignore
 // import ImageViewerWithZoom from 'react-native-image-zoom-viewer';
 import ImageViewerWithZoom from '../../../common/component/ImageZoomViewer/src/index';
 //@ts-ignore
 import Utility from '../../../common/utility';
 import Styles from './styles';
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 
 const images = [
   {
@@ -112,9 +106,9 @@ export default class ImageViewer extends React.Component<Props> {
   onChange = (index: number) => {
     // Alert.alert(index+"");
     if (index != undefined && index != null) {
-      this.setState({activeSlide: index}, () => {
+      this.setState({ activeSlide: index },()=>{
         currentIndex = index;
-      });
+      });        
     }
   };
   changeViewVisibility = () => {
@@ -147,12 +141,13 @@ export default class ImageViewer extends React.Component<Props> {
       if (fl.thumbnail_large_url) {
         fl.url = fl.thumbnail_large_url;
       }
-      let url = {url: fl.url ? fl.url : fl.filePath};
+      let url = { url: fl.url ? fl.url : fl.filePath };
       urls.push(url);
     }
     return (
       <View style={Styles.container}>
         <SafeAreaView style={Styles.subContainer}>
+
           {/* <Carousel                        
                         data={this.props.files}
                         renderItem={this.renderItem.bind(this)}
@@ -163,24 +158,20 @@ export default class ImageViewer extends React.Component<Props> {
                         style={{top: 0, position:"absolute", backgroundColor:"red", height: "100%", width:"100%"}}
                       />                             */}
           {/* <Modal visible={true} transparent={true}> */}
-          <StatusBar
-            barStyle={
-              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-            }
-          />
+          <StatusBar barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'} />
 
           <ImageViewerWithZoom
             style={Styles.ImageViewerWithZoomStyle}
             imageUrls={urls}
             index={currentIndex}
             loadingRender={this.renderLoadingImage.bind(this)}
-            onMove={data => {}}
+            onMove={data => { }}
             onChange={this.onChange.bind(this)}
             enablePreload={true}
             saveToLocalByLongPress={false}
-            onSwipeDown={() => this.props.navigation.pop()}
+            onSwipeDown={() => this.props.navigation.goBack()}
             enableSwipeDown={true}
-            // pageAnimateTime = {0.05}
+          // pageAnimateTime = {0.05}
           />
           {this.state.viewDetails && (
             <View style={Styles.viewDetailsContainer}>

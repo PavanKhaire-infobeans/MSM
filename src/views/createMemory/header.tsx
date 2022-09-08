@@ -5,9 +5,9 @@ import Text from '../../common/component/Text';
 import {close_white} from '../../images';
 //@ts-ignore
 import NavigationHeader from '../../common/component/navigationHeader';
-import {Colors} from '../../common/constants';
+import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 import styles from './styles';
 
 export const kShowHideMenu = 'show_or_hide_menu';

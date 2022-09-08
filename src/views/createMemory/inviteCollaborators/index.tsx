@@ -1,43 +1,39 @@
 import React from 'react';
 import {
-  FlatList,
-  Image,
-  Keyboard,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
+  FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
-
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import GroupPicHolder from '../../../common/component/group_pic_holder/group_pic_holder';
 import PlaceholderImageView from '../../../common/component/placeHolderImageView';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import {
-  No_Internet_Warning,
-  ToastMessage,
+  No_Internet_Warning, ToastMessage
 } from '../../../common/component/Toast';
-import {Colors, fontFamily, fontSize} from '../../../common/constants';
+import {
+  Colors, fontFamily, fontSize
+} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
-import {Account} from '../../../common/loginStore';
+import { Account } from '../../../common/loginStore';
 import Utility from '../../../common/utility';
-import {checkbox, checkbox_active, team_icon} from '../../../images';
-import {kReloadDraft} from '../../myMemories/MemoryDrafts';
+import {
+  checkbox, checkbox_active, team_icon
+} from '../../../images';
+import { kReloadDraft } from '../../myMemories/MemoryDrafts';
 import {
   CollaboratorActionAPI,
-  kCollaboratorsActions,
+  kCollaboratorsActions
 } from '../createMemoryWebService';
-import {kCollaborators} from '../publish';
-import {SaveCollaborators} from '../reducer';
-import {CollaboratorsAPI} from '../saga';
-import {kSaveNotes} from './noteToCollaborators';
+import { kCollaborators } from '../publish';
+import {
+  SaveCollaborators
+} from '../reducer';
+import {
+  CollaboratorsAPI
+} from '../saga';
+import { kSaveNotes } from './noteToCollaborators';
 import Styles from './styles';
 
 type State = {[x: string]: any};
@@ -115,7 +111,7 @@ class InviteCollaborators extends React.Component<Props, State> {
         function () {},
       );
     }
-    this.props.navigation.push('commonFriendsSearchView', {
+    this.props.navigation.navigate('commonFriendsSearchView', {
       title: 'Invite Collaborators',
       refListFriends: [],
       refListFriendCircles: [],
@@ -257,15 +253,10 @@ class InviteCollaborators extends React.Component<Props, State> {
                 : this.memoryAction(CollaboratorsAction.reinvite, item)
             }>
             <Text
-              style={[
-                Styles.getMemoryActionsName,
-                {
-                  textDecorationColor: showRemove
-                    ? Colors.ErrorColor
-                    : Colors.NewTitleColor,
-                  color: showRemove ? Colors.ErrorColor : Colors.NewTitleColor,
-                },
-              ]}>
+              style={[Styles.getMemoryActionsName,{
+                textDecorationColor: showRemove ? Colors.ErrorColor : Colors.NewTitleColor,
+                color: showRemove ? Colors.ErrorColor : Colors.NewTitleColor,
+              }]}>
               {showRemove ? 'Remove' : 'Reinvite'}
             </Text>
           </TouchableHighlight>
@@ -298,11 +289,12 @@ class InviteCollaborators extends React.Component<Props, State> {
   render() {
     return (
       <View style={Styles.container}>
-        <SafeAreaView style={Styles.invisibleContainer} />
-        <SafeAreaView style={Styles.safeAreaContainer}>
-          <View
-            style={Styles.container}
-            onStartShouldSetResponder={() => false}>
+        <SafeAreaView
+          style={Styles.invisibleContainer}
+        />
+        <SafeAreaView
+          style={Styles.safeAreaContainer}>
+          <View style={Styles.container} onStartShouldSetResponder={() => false}>
             <NavigationHeaderSafeArea
               heading={'Collaboration'}
               showCommunity={true}
@@ -314,24 +306,15 @@ class InviteCollaborators extends React.Component<Props, State> {
               }
             />
             <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
-              }
+              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
             {this.props.collaborators.length > 0 ? (
               <View style={Styles.container}>
                 <View
-                  style={[
-                    Styles.collabratorContainer,
-                    {
-                      justifyContent: this.state.showLeave
-                        ? 'center'
-                        : 'space-between',
-                    },
-                  ]}>
+                  style={[Styles.collabratorContainer,{
+                      justifyContent: this.state.showLeave ? 'center': 'space-between',
+                  }]}>
                   {!this.state.showLeave && (
                     <TouchableHighlight
                       underlayColor={'#ffffff11'}
@@ -344,7 +327,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                   <TouchableHighlight
                     underlayColor={'#ffffff11'}
                     onPress={() =>
-                      this.props.navigation.push('notesToCollaborators', {
+                      this.props.navigation.navigate('notesToCollaborators', {
                         friendsList: [],
                         friendsCircleList: [],
                         type: kSaveNotes,
@@ -388,11 +371,9 @@ class InviteCollaborators extends React.Component<Props, State> {
             ) : (
               <ScrollView>
                 <View style={Styles.collabrationContainer}>
-                  <Image
-                    source={team_icon}
-                    style={Styles.visiblityImageContainer}
-                  />
-                  <Text style={Styles.collabrateWithTextStyle}>
+                  <Image source={team_icon} style={Styles.visiblityImageContainer} />
+                  <Text
+                    style={Styles.collabrateWithTextStyle}>
                     {
                       "Collaborate with your friends and family to fill in any gaps, add more details, and include everyone's perspectives to record the full story. \n\nChat with each other, edit together in real-time, and collectively contribute photos to piece together your shared memory!"
                     }

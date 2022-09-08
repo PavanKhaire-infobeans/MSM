@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {View, Image, TouchableWithoutFeedback} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,Image,TouchableWithoutFeedback,
+} from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 
-import {chevron_down} from '../../../images';
+import { chevron_down } from '../../../images';
 import Text from '../../../common/component/Text';
 import styles from './styles';
 
@@ -28,11 +30,11 @@ const AccordionView = (props: Props) => {
   useEffect(() => {
     setState(prevState => ({
       ...prevState,
-      sectionData: props.sectionData,
-    }));
+      sectionData: props.sectionData
+    }))
   }, [props.sectionData]);
 
-  const _renderHeader = (section: {[s: string]: any}) => {
+  const _renderHeader = (section: { [s: string]: any }) => {
     let imgStyle =
       state.activeSections.length == 0
         ? styles.chevronImageNormal
@@ -45,13 +47,13 @@ const AccordionView = (props: Props) => {
     );
   };
 
-  const _renderContent = (section: {[s: string]: any}) => {
+  const _renderContent = (section: { [s: string]: any }) => {
     return (
       <View style={styles.cellContainer}>
         <Text numberofLines={0} style={styles.textSize16}>
           {section.content}
         </Text>
-        {/*<TouchableOpacity onPress={() => this.props.navigation.tipsAndTricks()}>
+        {/*<TouchableOpacity onPress={() => Actions.tipsAndTricks()}>
               <Text numberofLines={0} style={{ fontSize: 16, color: Colors.ThemeColor }}>{section.link}</Text>
             </TouchableOpacity>*/}
       </View>
@@ -61,8 +63,8 @@ const AccordionView = (props: Props) => {
   const _updateSections = (activeSections: [number]) => {
     setState(prevState => ({
       ...prevState,
-      activeSections: activeSections,
-    }));
+      activeSections: activeSections
+    }))
   };
 
   return (
@@ -75,6 +77,7 @@ const AccordionView = (props: Props) => {
       onChange={_updateSections}
     />
   );
-};
+
+}
 
 export default AccordionView;

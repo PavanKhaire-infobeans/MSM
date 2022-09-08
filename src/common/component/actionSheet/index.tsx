@@ -1,18 +1,12 @@
-import React, {forwardRef, useImperativeHandle, useState} from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import {
-  Animated,
-  Dimensions,
-  FlatList,
-  Keyboard,
-  Modal,
-  TouchableWithoutFeedback,
-  View,
+  Animated, Dimensions, FlatList, Keyboard, Modal, TouchableWithoutFeedback, View
 } from 'react-native';
-import {Colors, fontSize} from '../../constants';
+import { Colors, fontSize } from '../../constants';
 import TextNew from '../Text';
 import styles from './styles';
 
-const {height} = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export type ActionSheetItem = {
   index: number;
@@ -32,9 +26,10 @@ type Props = {
   width: string | number;
   popToAddContent?: boolean;
 };
-type State = {bottom: any; hidden: boolean};
+type State = { bottom: any; hidden: boolean };
 
 const ActionSheet = forwardRef((props: Props, ref: any) => {
+
   const [state, setState] = useState({
     bottom: new Animated.Value(-height),
     hidden: true,
@@ -42,10 +37,11 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
   const [showModal, setShowModal] = useState(true);
 
   const showSheet = () => {
-    setState(prevState => ({
+    setState(prevState =>
+    ({
       ...prevState,
-      hidden: false,
-    }));
+      hidden: false
+    }))
 
     Animated.timing(state.bottom, {
       toValue: 0,
@@ -61,65 +57,74 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
       useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
-        setState(prevState => ({
+        setState(prevState =>
+        ({
           ...prevState,
-          hidden: true,
-        }));
+          hidden: true
+        }))
       }, 20);
     });
   };
 
-  useImperativeHandle(ref, () => ({
-    showSheet: () => {
-      setState(prevState => ({
-        ...prevState,
-        hidden: false,
-      }));
 
-      Animated.timing(state.bottom, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
-    },
-    hideSheet: () => {
-      Animated.timing(state.bottom, {
-        toValue: -height,
-        duration: 200,
-        useNativeDriver: true,
-      }).start(() => {
-        setTimeout(() => {
-          setState(prevState => ({
-            ...prevState,
-            hidden: true,
-          }));
-        }, 20);
-      });
-    },
-  }));
+  useImperativeHandle(ref,
+    () => ({
+      showSheet: () => {
+        setState(prevState =>
+        ({
+          ...prevState,
+          hidden: false
+        }))
+
+        Animated.timing(state.bottom, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+      },
+      hideSheet: () => {
+        Animated.timing(state.bottom, {
+          toValue: -height,
+          duration: 200,
+          useNativeDriver: true,
+        }).start(() => {
+          setTimeout(() => {
+            setState(prevState =>
+            ({
+              ...prevState,
+              hidden: true
+            }))
+          }, 20);
+        });
+      }
+
+    }));
 
   if (state.hidden || props.actions.length == 0) {
     return <View style={styles.hiddenView} />;
-  } else {
+  }
+  else {
     return (
       <Modal
         animationType="none"
         transparent={true}
         // onRequestClose={() => { setShowModal(false)}}
         style={styles.modalStyle}
-        visible={true} //showModal
+        visible={true}//showModal
       >
-        <View style={styles.container}>
+        <View
+          style={styles.container}>
           <Animated.View
-            style={[styles.cellContainer, {width: props.width, bottom: 0}]}>
+            style={[styles.cellContainer, { width: props.width, bottom: 0 }]}>
+
             <View>
               {props.title && props.title.length > 0 ? (
                 <></>
-              ) : (
                 // <TextNew
                 //   style={styles.textTitle}>
                 //   {props.title}
                 // </TextNew>
+              ) : (
                 <View></View>
               )}
 
@@ -132,16 +137,12 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
                   Keyboard.dismiss();
                 }}
                 ListHeaderComponent={() => (
-                  <View style={[styles.listContainer, styles.listHeaderStyle]}>
+                  <View
+                    style={[styles.listContainer, styles.listHeaderStyle]}>
                     {/* <Image source={data.image} resizeMode="contain" /> */}
                     <TextNew
                       style={[styles.listText, styles.actionSheetHeaderText]}>
-                      {props.actions &&
-                      props.actions.length &&
-                      props.actions[0] &&
-                      props.actions[0].text.includes('Yes,')
-                        ? `Are you done writing this memory?`
-                        : `Save for later?`}
+                      {props.actions && props.actions.length && props.actions[0] && props.actions[0].text.includes('Yes,') ? `Are you done writing this memory?` : `Save for later?`}
                     </TextNew>
                   </View>
                 )}
@@ -153,76 +154,43 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
                 }) => {
                   return (
                     <View
-                      style={[
-                        styles.flatlistContainer,
-                        {
-                          backgroundColor:
-                            leadingItem.index == props.actions.length - 2
-                              ? Colors.transparent
-                              : Colors.blacknewrgb,
-                          height:
-                            leadingItem.index == props.actions.length - 2
-                              ? 8
-                              : 0,
-                        },
-                      ]}
+                      style={[styles.flatlistContainer, {
+                        backgroundColor: leadingItem.index == props.actions.length - 2 ? Colors.transparent : Colors.blacknewrgb,
+                        height: leadingItem.index == props.actions.length - 2 ? 8 : 0
+                      }]}
                     />
                   );
                 }}
-                renderItem={({item: data}: {item: ActionSheetItem}) => {
+                renderItem={({ item: data }: { item: ActionSheetItem }) => {
                   return (
                     <TouchableWithoutFeedback
                       onPress={() => {
-                        props.memoryActions
-                          ? props.onActionClick &&
-                            props.onActionClick(data.index, data)
-                          : props.onActionClick &&
-                            props.onActionClick(data.index);
+                        props.memoryActions ? props.onActionClick && props.onActionClick(data.index, data)
+                          : props.onActionClick && props.onActionClick(data.index);
                         hideSheet();
                         Keyboard.dismiss();
                         // {
                         //   props.popToAddContent &&
-                        //     this.props.navigation.popTo('addContent');
+                        //     Actions.popTo('addContent');
                         // }
                         // setShowModal(false)
                       }}>
                       <View
-                        style={[
-                          styles.listContainer,
-                          {
-                            borderRadius: data.text
-                              .toLowerCase()
-                              .includes('cancel')
-                              ? 13
-                              : 0,
-                            borderBottomColor: Colors.a5a5a7,
-                            borderBottomWidth: 1,
-                            borderBottomLeftRadius:
-                              data.index == props.actions.length - 2 ? 13 : 0,
-                            borderBottomRightRadius:
-                              data.index == props.actions.length - 2 ? 13 : 0,
-                            backgroundColor: data.text
-                              .toLowerCase()
-                              .includes('cancel')
-                              ? Colors.white
-                              : Colors.e0e0e0,
-                          },
-                        ]}>
+                        style={[styles.listContainer, {
+                          borderRadius: data.text.toLowerCase().includes('cancel') ? 13 : 0,
+                          borderBottomColor: Colors.a5a5a7,
+                          borderBottomWidth: 1,
+                          borderBottomLeftRadius: data.index == props.actions.length - 2 ? 13 : 0,
+                          borderBottomRightRadius: data.index == props.actions.length - 2 ? 13 : 0,
+                          backgroundColor: data.text.toLowerCase().includes('cancel') ? Colors.white : Colors.e0e0e0
+                        }]}>
                         {/* <Image source={data.image} resizeMode="contain" /> */}
                         <TextNew
-                          style={[
-                            styles.listText,
-                            {
-                              color: data.text.includes('No,')
-                                ? Colors.systemRed
-                                : Colors.systemBlue,
-                              fontWeight:
-                                data.index == props.actions.length - 1
-                                  ? '600'
-                                  : '400',
-                              textAlign: 'center',
-                            },
-                          ]}>
+                          style={[styles.listText, {
+                            color: data.text.includes('No,') ? Colors.systemRed : Colors.systemBlue,
+                            fontWeight: data.index == props.actions.length - 1 ? '600' : '400',
+                            textAlign: 'center'
+                          }]}>
                           {data.text}
                         </TextNew>
                       </View>
@@ -237,6 +205,7 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
       </Modal>
     );
   }
+
 });
 
 ActionSheet.defaultProps = {

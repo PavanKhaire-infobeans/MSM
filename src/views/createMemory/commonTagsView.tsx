@@ -1,42 +1,28 @@
 import React from 'react';
 import {
-  FlatList,
-  Image,
-  Keyboard,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  Text,
-  TouchableHighlight,
-  View,
+  FlatList, Image, Keyboard, Platform, SafeAreaView,
+  StatusBar, Text, TouchableHighlight, View
 } from 'react-native';
-
 // @ts-ignore
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import SearchBar from '../../common/component/SearchBar';
-import {Colors, fontSize} from '../../common/constants';
+import { Colors, fontSize } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {action_close} from '../../images';
-import {kTags} from './publish';
+import { action_close } from '../../images';
+import { kTags } from './publish';
 import {
-  SaveMemoryTagsList,
-  SaveSearchList,
-  SaveWhoElseWhereThere,
+  SaveMemoryTagsList, SaveSearchList, SaveWhoElseWhereThere
 } from './reducer';
 import {
-  kRecentTags,
-  kSearchTags,
-  kUsers,
-  MemoryTagsAPI,
-  UserSearchAPI,
+  kRecentTags, kSearchTags, kUsers, MemoryTagsAPI, UserSearchAPI
 } from './saga';
 import Styles from './styles';
 import style from './styles';
 
-type State = {[x: string]: any};
+type State = { [x: string]: any };
 type Props = {
   tag: string;
   title: string;
@@ -104,11 +90,12 @@ class CommonListCreateMemory extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
+
     this.backListner.removeListener();
-    Keyboard.removeAllListeners('keyboardDidShow');
-    Keyboard.removeAllListeners('keyboardDidHide');
-    Keyboard.removeAllListeners('keyboardWillShow');
-    Keyboard.removeAllListeners('keyboardWillHide');
+    Keyboard.removeAllListeners("keyboardDidShow")
+    Keyboard.removeAllListeners("keyboardDidHide")
+    Keyboard.removeAllListeners("keyboardWillShow")
+    Keyboard.removeAllListeners("keyboardWillHide")
   }
 
   componentDidMount() {
@@ -139,33 +126,29 @@ class CommonListCreateMemory extends React.Component<Props, State> {
   addToList = (item: any) => {
     let refList = this.state.referenceList;
     let found = false;
-    this.setState({errorView: false}, () => {
+    this.setState({ errorView: false }, () => {
       if (this.state.isMemoryTags)
         found = refList.some(
-          (element: any) =>
-            element.tid === item.tid || element.name == item.name,
+          (element: any) => element.tid === item.tid || element.name == item.name,
         );
       else found = refList.some((element: any) => element.uid === item.uid);
 
       if (!found) {
         refList.push(item);
-        this.setState({referenceList: refList});
+        this.setState({ referenceList: refList });
       }
 
       let searchList = this.props.searchList;
       if (this.state.isMemoryTags)
-        searchList = searchList.filter(
-          (element: any) => element.tid != item.tid,
-        );
+        searchList = searchList.filter((element: any) => element.tid != item.tid);
       else
-        searchList = searchList.filter(
-          (element: any) => element.uid != item.uid,
-        );
+        searchList = searchList.filter((element: any) => element.uid != item.uid);
       this.props.saveSearchList(searchList);
       this.searchBar.current &&
         this.searchBar.current.clearField &&
         this.searchBar.current.clearField();
     });
+
   };
 
   removeFromList = (item: any) => {
@@ -265,14 +248,14 @@ class CommonListCreateMemory extends React.Component<Props, State> {
 
   onChangeText = (text: any) => {
     if (text.trim().length > 0) {
-      this.setState({showSearchList: true});
+      this.setState({ showSearchList: true });
     } else {
-      this.setState({showSearchList: false});
+      this.setState({ showSearchList: false });
     }
     if (this.state.isMemoryTags) {
-      this.props.memoryTagsSearch({searchType: kSearchTags, searchTerm: text});
+      this.props.memoryTagsSearch({ searchType: kSearchTags, searchTerm: text });
     } else {
-      this.props.userSearch({searchType: kUsers, searchTerm: text});
+      this.props.userSearch({ searchType: kUsers, searchTerm: text });
     }
   };
 
@@ -360,8 +343,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
               />
             )}
 
-            <View
-              style={[style.fullWidth, {height: this.state.bottomView}]}></View>
+            <View style={[style.fullWidth, { height: this.state.bottomView }]}></View>
             <View style={style.smallSeparator}></View>
           </View>
         </SafeAreaView>
@@ -370,7 +352,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     recentTags: state.MemoryInitials.recentTags,
     searchList: state.MemoryInitials.searchList,
@@ -382,18 +364,18 @@ const mapDispatch = (dispatch: Function) => {
     recentTagsSearch: () =>
       dispatch({
         type: MemoryTagsAPI,
-        payload: {searchType: kRecentTags, searchTerm: ''},
+        payload: { searchType: kRecentTags, searchTerm: '' },
       }),
     memoryTagsSearch: (payload: any) =>
-      dispatch({type: MemoryTagsAPI, payload: payload}),
+      dispatch({ type: MemoryTagsAPI, payload: payload }),
     userSearch: (payload: any) =>
-      dispatch({type: UserSearchAPI, payload: payload}),
+      dispatch({ type: UserSearchAPI, payload: payload }),
     setMemoryTags: (payload: any) =>
-      dispatch({type: SaveMemoryTagsList, payload: payload}),
+      dispatch({ type: SaveMemoryTagsList, payload: payload }),
     setWhoElseWhereThere: (payload: any) =>
-      dispatch({type: SaveWhoElseWhereThere, payload: payload}),
+      dispatch({ type: SaveWhoElseWhereThere, payload: payload }),
     saveSearchList: (payload: any) =>
-      dispatch({type: SaveSearchList, payload: payload}),
+      dispatch({ type: SaveSearchList, payload: payload }),
   };
 };
 

@@ -1,11 +1,10 @@
-import React, {Component} from 'react';
-import {Image, Platform, View} from 'react-native';
+import React, { Component } from 'react';
+import { Image, Platform, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-
-import {SubmitButton} from '../../../common/component/button';
+import { SubmitButton } from '../../../common/component/button';
 import Text from '../../../common/component/Text';
-import {Colors, fontFamily, fontSize, Size} from '../../../common/constants';
-import {emptyMindPop as EmptyMindPop} from '../../../images';
+import { Colors, fontFamily, fontSize, Size } from '../../../common/constants';
+import { emptyMindPop as EmptyMindPop } from '../../../images';
 import Styles from './styles';
 
 export default class EmptyView extends Component<{
@@ -31,7 +30,7 @@ export default class EmptyView extends Component<{
             Quickly jot them down to write about later.
           </Text>
           <SubmitButton
-            style={{width: Size.byWidth(246)}}
+            style={{ width: Size.byWidth(246) }}
             text="Create a MindPop"
             onPress={() => {
               this.props.resetEdit();

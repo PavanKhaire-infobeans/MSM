@@ -1,19 +1,10 @@
 import React from 'react';
 import {
-  FlatList,
-  Image,
-  Keyboard,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
+  FlatList, Image, Keyboard, Platform, SafeAreaView,
+  StatusBar, Text, TouchableHighlight, TouchableOpacity, View
 } from 'react-native';
-
 // @ts-ignore
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import SearchBar from '../../common/component/SearchBar';
 import {Colors, fontSize} from '../../common/constants';
 import {action_close, icon_info} from '../../images';
@@ -30,7 +21,7 @@ import {SaveSearchList, SaveWhoCanSeeIds} from './reducer';
 import {kUserCircles, kUsers, UserSearchAPI} from './saga';
 import {kWhoCanSeeThisMemory} from './whoCanSee';
 
-type State = {[x: string]: any};
+type State = { [x: string]: any };
 type Props = {
   tag: string;
   title: string;
@@ -98,10 +89,10 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
     this.props.saveSearchList([]);
 
     this.backListner.removeListener();
-    Keyboard.removeAllListeners('keyboardDidShow');
-    Keyboard.removeAllListeners('keyboardDidHide');
-    Keyboard.removeAllListeners('keyboardWillShow');
-    Keyboard.removeAllListeners('keyboardWillHide');
+    Keyboard.removeAllListeners("keyboardDidShow")
+    Keyboard.removeAllListeners("keyboardDidHide")
+    Keyboard.removeAllListeners("keyboardWillShow")
+    Keyboard.removeAllListeners("keyboardWillHide")
   }
 
   componentDidMount() {
@@ -127,21 +118,19 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
       refList = this.state.referenceListFriends;
     }
     let found = false;
-    this.setState({errorView: false}, () => {
+    this.setState({ errorView: false }, () => {
       if (this.state.userTabSelected)
         found = refList.some((element: any) => element.uid === item.uid);
       else found = refList.some((element: any) => element.id === item.id);
 
       if (!found) {
         refList.push(item);
-        this.setState({referenceList: refList});
+        this.setState({ referenceList: refList });
       }
 
       let searchList = this.props.searchList;
       if (this.state.userTabSelected)
-        searchList = searchList.filter(
-          (element: any) => element.uid != item.uid,
-        );
+        searchList = searchList.filter((element: any) => element.uid != item.uid);
       else
         searchList = searchList.filter((element: any) => element.id != item.id);
       this.props.saveSearchList(searchList);
@@ -163,9 +152,9 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
 
     let refObj = {};
     if (this.state.userTabSelected) {
-      refObj = {referenceListFriends: refList};
+      refObj = { referenceListFriends: refList };
     } else {
-      refObj = {referenceListFriendCircles: refList};
+      refObj = { referenceListFriendCircles: refList };
     }
 
     this.setState(refObj);
@@ -173,20 +162,20 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
 
   onChangeText = (text: any) => {
     if (text.trim().length > 0) {
-      this.setState({showSearchList: true});
+      this.setState({ showSearchList: true });
     } else {
-      this.setState({showSearchList: false});
+      this.setState({ showSearchList: false });
     }
     if (this.state.userTabSelected) {
-      this.props.userSearch({searchType: kUsers, searchTerm: text});
+      this.props.userSearch({ searchType: kUsers, searchTerm: text });
     } else {
-      this.props.userSearch({searchType: kUserCircles, searchTerm: text});
+      this.props.userSearch({ searchType: kUserCircles, searchTerm: text });
     }
   };
 
   navigateToGroupInfo = (item: any) => {
     let heading = item.name + ' (' + item.users_count + ')';
-    this.props.navigation.push('customListMemoryDetails', {
+    this.props.navigation.navigate('customListMemoryDetails', {
       heading: heading,
       itemList: item.users,
     });
@@ -227,8 +216,8 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 ]}>
                 {this.state.userTabSelected
                   ? item.field_first_name_value +
-                    ' ' +
-                    item.field_last_name_value
+                  ' ' +
+                  item.field_last_name_value
                   : item.name}
               </Text>
               {!this.state.userTabSelected && item.uid != -1 && (
@@ -287,25 +276,26 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
         this.state.referenceListFriends.length > 0 ||
         this.state.referenceListFriendCircles.length > 0
       ) {
-        this.props.navigation.push('notesToCollaborators', {
+        this.props.navigation.navigate('notesToCollaborators', {
           friendsList: this.state.referenceListFriends,
           friendsCircleList: this.state.referenceListFriendCircles,
           type: kSaveInvite,
           isOwner: true,
         });
       } else {
-        this.setState({errorView: true});
+        this.setState({ errorView: true });
       }
     }
   };
 
   tabChange = (setUserTab: boolean) => {
     this.props.saveSearchList([]);
-    this.setState({userTabSelected: setUserTab}, () => {
+    this.setState({ userTabSelected: setUserTab }, () => {
       this.searchBar.current &&
         this.searchBar.current.clearField &&
         this.searchBar.current.clearField();
     });
+
   };
   render() {
     return (
@@ -336,9 +326,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 style={[
                   style.tabs,
                   {
-                    borderBottomColor: this.state.userTabSelected
-                      ? Colors.TextColor
-                      : Colors.NewThemeColor,
+                    borderBottomColor: this.state.userTabSelected ? Colors.TextColor : Colors.NewThemeColor,
                     borderBottomWidth: 3,
                   },
                 ]}
@@ -358,9 +346,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 style={[
                   style.tabs,
                   {
-                    borderBottomColor: !this.state.userTabSelected
-                      ? Colors.TextColor
-                      : Colors.NewThemeColor,
+                    borderBottomColor: !this.state.userTabSelected ? Colors.TextColor : Colors.NewThemeColor,
                     borderBottomWidth: 3,
                   },
                 ]}
@@ -369,9 +355,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                   style={[
                     style.tabsText,
                     {
-                      fontWeight: !this.state.userTabSelected
-                        ? '500'
-                        : 'normal',
+                      fontWeight: !this.state.userTabSelected ? '500' : 'normal',
                     },
                   ]}>
                   Friend Circle
@@ -439,8 +423,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 renderItem={(item: any) => this.renderRow(item, true)}
               />
             )}
-            <View
-              style={[style.fullWidth, {height: this.state.bottomView}]}></View>
+            <View style={[style.fullWidth, { height: this.state.bottomView }]}></View>
           </View>
         </SafeAreaView>
       </View>
@@ -448,7 +431,8 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: {[x: string]: any}) => {
+
+const mapState = (state: { [x: string]: any }) => {
   return {
     searchList: state.MemoryInitials.searchList,
   };
@@ -457,11 +441,11 @@ const mapState = (state: {[x: string]: any}) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     userSearch: (payload: any) =>
-      dispatch({type: UserSearchAPI, payload: payload}),
+      dispatch({ type: UserSearchAPI, payload: payload }),
     saveSearchList: (payload: any) =>
-      dispatch({type: SaveSearchList, payload: payload}),
+      dispatch({ type: SaveSearchList, payload: payload }),
     saveWhoCanSee: (payload: any) =>
-      dispatch({type: SaveWhoCanSeeIds, payload: payload}),
+      dispatch({ type: SaveWhoCanSeeIds, payload: payload }),
   };
 };
 
