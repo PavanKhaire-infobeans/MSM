@@ -1,25 +1,30 @@
 import React from 'react';
 import {
-  Dimensions, Image, Platform, TouchableHighlight, TouchableWithoutFeedback, View
+  Dimensions,
+  Image,
+  Platform,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { ListType } from '../../../views/dashboard/dashboardReducer';
-import { Border } from '../../../views/memoryDetails/componentsMemoryDetails';
+import {ListType} from '../../../views/dashboard/dashboardReducer';
+import {Border} from '../../../views/memoryDetails/componentsMemoryDetails';
 import {
   CommentBox,
   MediaView,
   MemoryBasicDetails,
   RenderLikeAndCommentSection,
-  _onShowMemoryDetails
+  _onShowMemoryDetails,
 } from '../../../views/myMemories/PublishedMemory';
-import { PublishedMemoryDataModel } from '../../../views/myMemories/PublishedMemory/publishedMemoryDataModel';
-import { Colors, fontFamily, fontSize } from '../../constants';
+import {PublishedMemoryDataModel} from '../../../views/myMemories/PublishedMemory/publishedMemoryDataModel';
+import {Colors, fontFamily, fontSize} from '../../constants';
 import Utility from '../../utility';
 import PlaceholderImageView from '../placeHolderImageView';
 import TextNew from '../Text';
 //@ts-ignore
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 import WebView from 'react-native-webview';
-import { calendar } from '../../../images';
+import {calendar} from '../../../images';
 import Prompts from '../prompts/prompts';
 
 type Props = {
@@ -32,9 +37,10 @@ type Props = {
   audioView: any;
   openMemoryActions: (item: any) => void;
   jumpToVisibility?: (item: any) => void;
+  navigation?: any;
 };
 
-type State = { activeIndex: any };
+type State = {activeIndex: any};
 
 export default class MemoryListItem extends React.Component<Props, State> {
   views = '';
@@ -46,7 +52,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
     'tv_shows_collection',
     'sports_collection',
   ];
-  state = { activeIndex: 0 };
+  state = {activeIndex: 0};
   showJumpTo =
     this.props.listType == ListType.Timeline &&
     (this.props.previousItem == null ||
@@ -72,7 +78,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                 onPress={() =>
                   this.props.jumpToVisibility(this.props.item.item.memory_date)
                 }
-                style={{ backgroundColor: Colors.NewThemeColor }}>
+                style={{backgroundColor: Colors.NewThemeColor}}>
                 <View
                   style={{
                     backgroundColor: 'rgba(255, 255, 253, 0.4)',
@@ -84,7 +90,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                     padding: 16,
                     paddingTop: 10,
                   }}>
-                  <View style={{ flexDirection: 'row' }}>
+                  <View style={{flexDirection: 'row'}}>
                     <Image source={calendar} />
                     <TextNew
                       style={{
@@ -110,8 +116,8 @@ export default class MemoryListItem extends React.Component<Props, State> {
             {this.externalCueItems.includes(this.props.item.item.type) ? (
               this.props.item.item.type == 'songs' ? (
                 <WebView
-                  source={{ uri: this.props.item.item.api_url }}
-                  style={{ width: '100%', minHeight: 400 }}
+                  source={{uri: this.props.item.item.api_url}}
+                  style={{width: '100%', minHeight: 400}}
                   javaScriptEnabled={true}
                   domStorageEnabled={true}
                   startInLoadingState={true}
@@ -120,9 +126,12 @@ export default class MemoryListItem extends React.Component<Props, State> {
                 <View>
                   <TouchableHighlight
                     underlayColor={'#ffffff00'}
-                    style={{ flex: 1, borderRadius: 5, marginTop: -2 }}
+                    style={{flex: 1, borderRadius: 5, marginTop: -2}}
                     onPress={() => {
-                      _onShowMemoryDetails(this.props.item.item);
+                      // _onShowMemoryDetails(
+                      //   this.props.item.item,
+                      //   this.props.navigation,
+                      // );
                     }}>
                     <View
                       style={{
@@ -141,7 +150,10 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           color: 'white',
                           flex: 1,
                           fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                          fontFamily:
+                            Platform.OS === 'ios'
+                              ? fontFamily.Inter
+                              : fontFamily.InterMedium,
                           textAlign: 'left',
                         }}>
                         {this.props.item.item.title}
@@ -150,12 +162,13 @@ export default class MemoryListItem extends React.Component<Props, State> {
                         onPress={() =>
                           this.props.openMemoryActions(this.props.item.item)
                         }>
-                        <View style={{
-                          padding: 8,
-                          height: 40,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}>
+                        <View
+                          style={{
+                            padding: 8,
+                            height: 40,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
                           <View
                             style={{
                               justifyContent: 'space-between',
@@ -191,7 +204,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                     </View>
                   </TouchableHighlight>
                   <View
-                    style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 0 }}>
+                    style={{flex: 1, backgroundColor: '#fff', paddingLeft: 0}}>
                     <View>
                       <Carousel
                         data={this.props.item.item.collection}
@@ -199,7 +212,10 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           <TouchableHighlight
                             underlayColor={'none'}
                             onPress={() => {
-                              _onShowMemoryDetails(this.props.item.item);
+                              // _onShowMemoryDetails(
+                              //   this.props.item.item,
+                              //   this.props.navigation,
+                              // );
                             }}>
                             <View>
                               <PlaceholderImageView
@@ -219,7 +235,10 @@ export default class MemoryListItem extends React.Component<Props, State> {
                                   ...fontSize(14),
                                   paddingTop: 10,
                                   fontWeight: '500',
-                                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                                  fontFamily:
+                                    Platform.OS === 'ios'
+                                      ? fontFamily.Inter
+                                      : fontFamily.InterMedium,
                                   textAlign: 'center',
                                 }}>
                                 {collection.item.title}
@@ -230,7 +249,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                         sliderWidth={Dimensions.get('window').width - 10}
                         itemWidth={Dimensions.get('window').width - 150}
                         onSnapToItem={(index: any) =>
-                          this.setState({ activeIndex: index })
+                          this.setState({activeIndex: index})
                         }
                       />
                       <Pagination
@@ -254,7 +273,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                 </View>
               )
             ) : (
-              <View style={{ backgroundColor: Colors.NewThemeColor }}>
+              <View style={{backgroundColor: Colors.NewThemeColor}}>
                 <View
                   style={{
                     backgroundColor: 'white',
@@ -268,15 +287,18 @@ export default class MemoryListItem extends React.Component<Props, State> {
                     this.props.listType,
                   )}
                   {this.props.listType == ListType.Published && (
-                    <View style={{ paddingRight: 16, paddingLeft: 16 }}>
+                    <View style={{paddingRight: 16, paddingLeft: 16}}>
                       <Border />
                     </View>
                   )}
                   <TouchableHighlight
                     underlayColor={'#ffffff00'}
-                    style={{ flex: 1, borderRadius: 5 }}
+                    style={{flex: 1, borderRadius: 5}}
                     onPress={() => {
-                      _onShowMemoryDetails(this.props.item.item);
+                      // _onShowMemoryDetails(
+                      //   this.props.item.item,
+                      //   this.props.navigation,
+                      // );
                     }}>
                     <View>
                       <TextNew
@@ -284,7 +306,10 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           ...fontSize(30),
                           color: Colors.NewTitleColor,
                           fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
-                          fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                          fontFamily:
+                            Platform.OS === 'ios'
+                              ? fontFamily.Inter
+                              : fontFamily.InterMedium,
                           marginLeft: 16,
                           marginRight: 16,
                           textAlign: 'left',
@@ -305,9 +330,11 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           marginLeft: 16,
                           marginRight: 16,
                         }}>
-                        {this.props.item.item.dateWithLocation ? this.props.item.item.dateWithLocation : this.props.item.item.memory_date}
+                        {this.props.item.item.dateWithLocation
+                          ? this.props.item.item.dateWithLocation
+                          : this.props.item.item.memory_date}
                         {this.props.listType != ListType.Published &&
-                          this.props.item.item.viewCount > 0 ? (
+                        this.props.item.item.viewCount > 0 ? (
                           <TextNew>
                             {' | '}
                             {this.props.item.item.viewCount}{' '}
@@ -321,12 +348,12 @@ export default class MemoryListItem extends React.Component<Props, State> {
                       </TextNew>
                       {/* )} */}
                       {
-                        <View style={{ paddingRight: 16, paddingLeft: 16 }}>
+                        <View style={{paddingRight: 16, paddingLeft: 16}}>
                           <Border />
                         </View>
                       }
                       {this.props.item.item.description &&
-                        this.props.item.item.description.length != 0 ? (
+                      this.props.item.item.description.length != 0 ? (
                         <TextNew
                           numberOfLines={3}
                           style={{
@@ -347,7 +374,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           flexDirection: 'row',
                           justifyContent: 'space-between',
                         }}>
-                        <View style={{ flexDirection: 'row' }}>
+                        <View style={{flexDirection: 'row'}}>
                           {this.props.item.item.mins_to_read ? (
                             <TextNew
                               style={{
@@ -366,20 +393,27 @@ export default class MemoryListItem extends React.Component<Props, State> {
                           18,
                           Dimensions.get('window').width - 70,
                         ) > 3 && (
-                            <TextNew
-                              style={{
-                                ...fontSize(18),
-                                fontWeight:
-                                  Platform.OS === 'ios' ? '500' : 'bold',
-                                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-                                color: Colors.NewYellowColor,
-                                marginBottom: 16,
-                              }}>
-                              {'Continue reading'}
-                            </TextNew>
-                          )}
+                          <TextNew
+                            style={{
+                              ...fontSize(18),
+                              fontWeight:
+                                Platform.OS === 'ios' ? '500' : 'bold',
+                              fontFamily:
+                                Platform.OS === 'ios'
+                                  ? fontFamily.Inter
+                                  : fontFamily.InterMedium,
+                              color: Colors.NewYellowColor,
+                              marginBottom: 16,
+                            }}>
+                            {'Continue reading'}
+                          </TextNew>
+                        )}
                       </View>
-                      {MediaView(this.props.item, this.props.audioView)}
+                      {MediaView(
+                        this.props.item,
+                        this.props.audioView,
+                        this.props.navigation,
+                      )}
                       {RenderLikeAndCommentSection(
                         this.props.item,
                         this.props.like,

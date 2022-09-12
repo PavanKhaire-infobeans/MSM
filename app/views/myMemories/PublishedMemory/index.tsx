@@ -1,50 +1,88 @@
 import React from 'react';
 import {
-  ActivityIndicator, Alert, Animated, FlatList, Image, ImageBackground, Keyboard,
-  Platform, RefreshControl, SafeAreaView, Share, TouchableHighlight, TouchableWithoutFeedback, View
+  ActivityIndicator,
+  Alert,
+  Animated,
+  FlatList,
+  Image,
+  ImageBackground,
+  Keyboard,
+  Platform,
+  RefreshControl,
+  SafeAreaView,
+  Share,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import ContextMenu from "react-native-context-menu-view";
+import ContextMenu from 'react-native-context-menu-view';
 import DeviceInfo from 'react-native-device-info';
-import { Account } from '../../../../src/common/loginStore';
-import { MemoryService } from '../../../../src/common/webservice/memoryServices';
-import { ListType } from '../../../../src/views/dashboard/dashboardReducer';
-import MemoryActionsSheet, { MemoryActionsSheetItem } from '../../../components/memoryActionsSheet';
+import {Account} from '../../../../src/common/loginStore';
+import {MemoryService} from '../../../../src/common/webservice/memoryServices';
+import {ListType} from '../../../../src/views/dashboard/dashboardReducer';
+import MemoryActionsSheet, {
+  MemoryActionsSheetItem,
+} from '../../../components/memoryActionsSheet';
+import {LikeCommentShare} from '../../memoryDetails/componentsMemoryDetails';
+import {GetAllLikes, Like, Unlike} from '../../memoryDetails/detailsWebService';
 import {
-  LikeCommentShare
-} from '../../memoryDetails/componentsMemoryDetails';
-import { GetAllLikes, Like, Unlike } from '../../memoryDetails/detailsWebService';
-import {
-  GetPublishedMemories, kAllLikes,
-  kLiked, kMemoryActionPerformedPublished, kMemoryMoveToDrafts, kPublishedMemoriesFetched, kUnliked, MemoryAction
+  GetPublishedMemories,
+  kAllLikes,
+  kLiked,
+  kMemoryActionPerformedPublished,
+  kMemoryMoveToDrafts,
+  kPublishedMemoriesFetched,
+  kUnliked,
+  MemoryAction,
 } from '../myMemoriesWebService';
 import AudioPlayer, {
-  kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious
+  kClosed,
+  kEnded,
+  kNext,
+  kPaused,
+  kPlaying,
+  kPrevious,
 } from './../../../../src/common/component/audio_player/audio_player';
 import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
 import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
 import Text from './../../../../src/common/component/Text';
 import {
-  No_Internet_Warning, ToastMessage
+  No_Internet_Warning,
+  ToastMessage,
 } from './../../../../src/common/component/Toast';
 import {
-  Colors, encode_utf8, fontSize, MemoryActionKeys, Storage
+  Colors,
+  encode_utf8,
+  fontSize,
+  MemoryActionKeys,
+  Storage,
 } from './../../../../src/common/constants';
 import EventManager from './../../../../src/common/eventManager';
 import Utility from './../../../../src/common/utility';
 import {
-  add_icon_small, block_and_report, block_memory, block_user, cancelActions, delete_memory,
-  edit_memory, icon_send, move_to_draft, profile_placeholder, remove_me_from_this_post, report_user
+  add_icon_small,
+  block_and_report,
+  block_memory,
+  block_user,
+  cancelActions,
+  delete_memory,
+  edit_memory,
+  icon_send,
+  move_to_draft,
+  profile_placeholder,
+  remove_me_from_this_post,
+  report_user,
 } from './../../../../src/images';
 import MemoryListItem from './../../../components/memoryListItem';
-import { heart, liked, moreoptions } from './../../../images';
-import { PublishedMemoryDataModel } from './publishedMemoryDataModel';
+import {heart, liked, moreoptions} from './../../../images';
+import {PublishedMemoryDataModel} from './publishedMemoryDataModel';
 import styles from './styles';
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
 ];
-type State = { [x: string]: any };
-type Props = { [x: string]: any };
+type State = {[x: string]: any};
+type Props = {[x: string]: any};
 var publishedMemoriesArray: any[] = [];
 var page: 0;
 var loadingDataFromServer = true;
@@ -82,6 +120,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
+    console.log('Props : ', props);
     this.publishedMemoryDataModel = new PublishedMemoryDataModel();
     this.publishedMemoryListener = EventManager.addListener(
       kPublishedMemoriesFetched,
@@ -103,7 +142,6 @@ export default class PublishedMemory extends React.Component<Props, State> {
       kMemoryMoveToDrafts,
       this.memoryActionCallBack,
     );
-
   }
 
   componentDidMount() {
@@ -120,12 +158,15 @@ export default class PublishedMemory extends React.Component<Props, State> {
     this.memoryPublishedUpdateListener = EventManager.addListener(
       'memoryUpdatePublishedListener',
       () => {
-        this.setState({
-          isMemoryUpdate: true,
-        },()=>{
-          GetPublishedMemories('');
-          loaderHandler.hideLoader();
-        });
+        this.setState(
+          {
+            isMemoryUpdate: true,
+          },
+          () => {
+            GetPublishedMemories('');
+            loaderHandler.hideLoader();
+          },
+        );
       },
     );
   }
@@ -137,7 +178,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     this.publishedMemoryUpdatedLister.removeListener();
     this.getAllLikesListener.removeListener();
     this.memoryActionsListener.removeListener();
-  }
+  };
 
   publishedMemoryUpdated = (
     nid: any,
@@ -157,10 +198,12 @@ export default class PublishedMemory extends React.Component<Props, State> {
   };
 
   onRefresh = () => {
-    this.setState({
-      isRefreshing: true,
-    },()=>GetPublishedMemories(''));
-    
+    this.setState(
+      {
+        isRefreshing: true,
+      },
+      () => GetPublishedMemories(''),
+    );
   };
 
   handleLoadMore = () => {
@@ -172,15 +215,17 @@ export default class PublishedMemory extends React.Component<Props, State> {
     ) {
       if (!this.state.loading) {
         // increase page by 1
-        this.setState({
-          loading: true,
-        },()=>{
-          loadingDataFromServer = true;
-          let memoryDetails =
-            publishedMemoriesArray[publishedMemoriesArray.length - 1];
-          GetPublishedMemories(memoryDetails.updated);
-        });
-        
+        this.setState(
+          {
+            loading: true,
+          },
+          () => {
+            loadingDataFromServer = true;
+            let memoryDetails =
+              publishedMemoriesArray[publishedMemoriesArray.length - 1];
+            GetPublishedMemories(memoryDetails.updated);
+          },
+        );
       }
     }
   };
@@ -218,10 +263,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
         ToastMessage(publishedMemories, Colors.ErrorColor);
       }
     }
-    this.setState({
-      isRefreshing: false,
-      loading: false,
-    },()=>loaderHandler.hideLoader());
+    this.setState(
+      {
+        isRefreshing: false,
+        loading: false,
+      },
+      () => loaderHandler.hideLoader(),
+    );
   };
 
   like = (item: any) => {
@@ -285,7 +333,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     type?: any,
     uid?: any,
   ) => {
-    console.log("response no listner next> ", nid)
+    console.log('response no listner next> ', nid);
     loaderHandler.hideLoader();
     if (fetched) {
       if (type == MemoryActionKeys.removeMeFromThisPostKey) {
@@ -295,8 +343,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
               .remove_me_from_this_post;
           }
         });
-      }
-      else if (
+      } else if (
         type == MemoryActionKeys.blockAndReportKey ||
         type == MemoryActionKeys.blockUserKey
       ) {
@@ -304,11 +351,9 @@ export default class PublishedMemory extends React.Component<Props, State> {
           (element: any) => element.user_details.uid != uid,
         );
       } else if (type == MemoryActionKeys.addToCollection) {
-      }
-      else if (type == MemoryActionKeys.editMemoryKey) {
+      } else if (type == MemoryActionKeys.editMemoryKey) {
         _onEditMemory(nid);
-      }
-      else {
+      } else {
         publishedMemoriesArray = publishedMemoriesArray.filter(
           (element: any) => element.nid != nid,
         );
@@ -394,7 +439,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                   <ActivityIndicator
                     color={Colors.ThemeColor}
                     size="large"
-                  // style={{ flex: 1, justifyContent: 'center' }}
+                    // style={{ flex: 1, justifyContent: 'center' }}
                   />
                 ) : (
                   <Text style={styles.noMemoriedTextStyle}>
@@ -439,7 +484,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     if (!this.state.loading) return null;
     return (
       <View style={styles.footerStyle}>
-        <ActivityIndicator color='#000000' />
+        <ActivityIndicator color="#000000" />
       </View>
     );
   };
@@ -459,7 +504,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       actionType: MemoryActionKeys.cancelActionKey,
     });
     this._actionSheet && this._actionSheet.showSheet();
-    this.setState({ showMemoryActions: true });
+    this.setState({showMemoryActions: true});
   };
 
   audioView = (item: any) => {
@@ -496,21 +541,21 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     />
                   )}
                 </View>
-                <View style={{ marginLeft: 10 }}>
+                <View style={{marginLeft: 10}}>
                   <Text
                     style={[
                       styles.normalText,
-                      { color: '#000', marginBottom: 5, paddingRight: 80 },
+                      {color: '#000', marginBottom: 5, paddingRight: 80},
                     ]}
                     numberOfLines={1}
                     ellipsizeMode="tail">
                     {item.audios[0].title
                       ? item.audios[0].title
                       : item.audios[0].filename
-                        ? item.audios[0].filename
-                        : ''}
+                      ? item.audios[0].filename
+                      : ''}
                   </Text>
-                  <Text style={[styles.normalText, { color: '#000' }]}>
+                  <Text style={[styles.normalText, {color: '#000'}]}>
                     {item.audios[0].duration}
                   </Text>
                 </View>
@@ -533,7 +578,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
               ]}>
               <TouchableHighlight
                 underlayColor={Colors.touchableunderlayColor}
-                style={{ flex: 1, justifyContent: 'center' }}
+                style={{flex: 1, justifyContent: 'center'}}
                 onPress={() => {
                   _onShowMemoryDetails(item);
                 }}>
@@ -580,7 +625,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
         audioFile.index = audioFile.index - 1;
         break;
     }
-    this.setState({ audioFile: audioFile });
+    this.setState({audioFile: audioFile});
   };
 
   togglePlayPause = (item: any) => {
@@ -628,7 +673,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
   _onCloseAudios(event: Event) {
     try {
       this.audioPlayer.current.hidePlayer();
-    } catch (error) { }
+    } catch (error) {}
   }
 }
 
@@ -676,7 +721,6 @@ const _onShareMemory = async (url: any) => {
         // alert(JSON.stringify(result))
       }
     }, 1000);
-
   } catch (error) {
     // alert(error.message);
   }
@@ -694,7 +738,7 @@ export const onActionItemClicked = async (index: number, data: any): void => {
       let details: any = {
         action_type: MemoryActionKeys.moveToDraftKey,
         type: data.memoryType,
-        id: data.nid
+        id: data.nid,
       };
       let userdata = await Storage.get('userData');
 
@@ -705,7 +749,7 @@ export const onActionItemClicked = async (index: number, data: any): void => {
             'X-CSRF-TOKEN': userdata.userAuthToken,
             'Content-Type': 'application/json',
           },
-          { configurationTimestamp: '0', details },
+          {configurationTimestamp: '0', details},
         ],
       )
         .then((response: Response) => response.json())
@@ -714,8 +758,7 @@ export const onActionItemClicked = async (index: number, data: any): void => {
         });
       if (response.ResponseCode == 200) {
         _onEditMemory(data.nid);
-      }
-      else {
+      } else {
         loaderHandler.hideLoader();
       }
       break;
@@ -732,7 +775,7 @@ export const onActionItemClicked = async (index: number, data: any): void => {
             {
               text: 'No',
               style: 'cancel',
-              onPress: () => { },
+              onPress: () => {},
             },
             {
               text: 'Yes',
@@ -895,7 +938,7 @@ export const CommentBox = (item: any) => {
         paddingBottom: 5,
       }}
       onPress={() =>
-        this.props.navigation.jumpTo('memoryDetails', {
+        this.props.navigation.navigate('memoryDetails', {
           nid: item.item.nid,
           type: item.item.type,
           comment: true,
@@ -928,8 +971,8 @@ export const CommentBox = (item: any) => {
           Write a comment..
         </Text>
 
-        <TouchableWithoutFeedback >
-          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <TouchableWithoutFeedback>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <Image source={icon_send} />
             <Text
               style={{
@@ -942,7 +985,6 @@ export const CommentBox = (item: any) => {
               {'Post'}
             </Text>
           </View>
-
         </TouchableWithoutFeedback>
       </View>
     </TouchableHighlight>
@@ -969,7 +1011,7 @@ export const RenderLikeAndCommentSection = (
     }
   }
   return (
-    <View style={{ marginRight: 24 }} key={item.index}>
+    <View style={{marginRight: 24}} key={item.index}>
       {/* {(memoryDetail.noOfComments > 0 || memoryDetail.showLikeCount) && (
         <Border />
       )} */}
@@ -977,7 +1019,6 @@ export const RenderLikeAndCommentSection = (
         style={{
           flexDirection: 'row',
           justifyContent: 'flex-end',
-
         }}>
         <TouchableHighlight
           underlayColor={Colors.touchableunderlayColor}
@@ -1027,25 +1068,27 @@ export const RenderLikeAndCommentSection = (
   );
 };
 
-export const _onShowMemoryDetails = (item: any, fromPage?: any) => {
+export const _onShowMemoryDetails = (
+  item: any,
+  fromPage?: any,
+  navigation?: any,
+) => {
   if (Utility.isInternetConnected) {
-    // if (fromPage == 'Recent') {
-    this.props.navigation.jumpTo('newmemoryDetails', {
+    navigation?.navigate('newmemoryDetails', {
       nid: item.nid,
       type: item.type,
       height: 80,
     });
-    // } else {
-    //   this.props.navigation.jumpTo('memoryDetails', { nid: item.nid, type: item.type });
-    // }
   } else {
     No_Internet_Warning();
   }
 };
 
-export const _onOpenPdfs = (pdfUrl: any) => {
+export const _onOpenPdfs = (pdfUrl: any, navigation?: any) => {
   if (Utility.isInternetConnected) {
-    this.props.navigation.jumpTo('pdfViewer', {file: {url: encode_utf8(pdfUrl)}});
+    navigation?.navigate('pdfViewer', {
+      file: {url: encode_utf8(pdfUrl)},
+    });
   } else {
     No_Internet_Warning();
   }
@@ -1075,13 +1118,16 @@ export const _onAnim = () => {
   ]).start();
 };
 
-export const _onOpenImages = (items: any, index: any) => {
+export const _onOpenImages = (items: any, index: any, navigation: any) => {
   if (Utility.isInternetConnected) {
     let images = [];
     let position = 0;
     images = items;
     position = index;
-    this.props.navigation.jumpTo('imageViewer', {files: images, index: position});
+    navigation?.navigate('imageViewer', {
+      files: images,
+      index: position,
+    });
   } else {
     No_Internet_Warning();
   }
@@ -1231,7 +1277,6 @@ export const MemoryBasicDetails = (
   openMemoryActions?: any,
   listType?: any,
 ) => {
-
   let memoryActions = MemoryActionsListArray(item);
   return (
     <>
@@ -1240,7 +1285,7 @@ export const MemoryBasicDetails = (
           <TouchableWithoutFeedback
             onPress={() => {
               if (Utility.isInternetConnected) {
-                this.props.navigation.jumpTo('newmemoryDetails', {
+                this.props.navigation.navigate('newmemoryDetails', {
                   nid: item.nid,
                   type: item.type,
                   height: 80,
@@ -1249,7 +1294,8 @@ export const MemoryBasicDetails = (
                 No_Internet_Warning();
               }
             }}>
-            <View style={[styles.flexRow, { width: Utility.getDeviceWidth() - 112 }]}>
+            <View
+              style={[styles.flexRow, {width: Utility.getDeviceWidth() - 112}]}>
               <ImageBackground
                 style={styles.userImageStyle}
                 imageStyle={styles.userImageStyle}
@@ -1257,9 +1303,11 @@ export const MemoryBasicDetails = (
                 <Image
                   style={styles.userImageStyle}
                   source={
-                    userDetails.userProfilePic && userDetails.userProfilePic != '' ? { uri: userDetails.userProfilePic } : profile_placeholder
-                  }
-                ></Image>
+                    userDetails.userProfilePic &&
+                    userDetails.userProfilePic != ''
+                      ? {uri: userDetails.userProfilePic}
+                      : profile_placeholder
+                  }></Image>
               </ImageBackground>
               <View style={styles.userNameTextContainerStyle}>
                 <View>
@@ -1282,13 +1330,14 @@ export const MemoryBasicDetails = (
             actions={memoryActions}
             dropdownMenuMode={true}
             previewBackgroundColor="transparent"
-            onPress={(e) => {
-              let data = memoryActions.filter((itm) => itm.title === e.nativeEvent.name)
+            onPress={e => {
+              let data = memoryActions.filter(
+                itm => itm.title === e.nativeEvent.name,
+              );
               if (data && data[0]) {
-                onActionItemClicked(e.nativeEvent.index, data[0])
+                onActionItemClicked(e.nativeEvent.index, data[0]);
               }
-            }}
-          >
+            }}>
             <Image source={moreoptions} />
           </ContextMenu>
           {/* :
@@ -1306,7 +1355,6 @@ export const MemoryBasicDetails = (
                  />
              } */}
 
-
           {/* <Image source={greenDotsButton} /> */}
         </View>
         {/* </TouchableWithoutFeedback> */}
@@ -1315,7 +1363,7 @@ export const MemoryBasicDetails = (
   );
 };
 
-export const MediaView = (item: any, audioView: any) => {
+export const MediaView = (item: any, audioView: any, navigation: any) => {
   let memoryDetail = item.item;
   return (
     <View>
@@ -1341,72 +1389,78 @@ export const MediaView = (item: any, audioView: any) => {
             
           </TouchableHighlight> */}
 
-          {
-            memoryDetail.images.length > 0 && (
-              <View style={{ flex: 1 }}>
-                <TouchableHighlight
-                  underlayColor={Colors.touchableunderlayColor}
-                  style={styles.fullFlex}
-                  onPress={() => {
-                    // memoryDetail.images.length > 2
-                    //   ? _onShowMemoryDetails(memoryDetail) : 
-                    _onOpenImages(memoryDetail.images, 0);
-                  }}>
-                  <View style={[styles.fullFlex]}>
-                    <ImageBackground style={styles.imagebackGroundStyle} blurRadius={5} resizeMode='stretch' source={{ uri: Utility.getFileURLFromPublicURL(memoryDetail.images[0].thumbnail_url) }} />
-                    <View style={[styles.fullFlex, { position: 'relative' }]}>
-                      <PlaceholderImageView
-                        style={styles.placeholderImageContainer}
-                        uri={Utility.getFileURLFromPublicURL(
-                          memoryDetail.images[0].thumbnail_url,
-                        )}
-                        resizeMode={'contain'}
-                      />
-                      {memoryDetail.images.length > 1 && (
-                        <TouchableWithoutFeedback
-                          onPress={() => {
-                            memoryDetail.images.length > 1
-                              ? _onShowMemoryDetails(memoryDetail) :
-                              _onOpenImages(memoryDetail.images, 0);
-                          }}
-                        >
-                          <View style={styles.moreImagesContainer}>
-                            <Text
-                              style={styles.moreImageTextStyle}>
-                              {'+'}
-                              {memoryDetail.images.length - 1}
-                              {" images"}
-                              {/* {'\n more'} */}
-                            </Text>
-                          </View>
-                        </TouchableWithoutFeedback>
+          {memoryDetail.images.length > 0 && (
+            <View style={{flex: 1}}>
+              <TouchableHighlight
+                underlayColor={Colors.touchableunderlayColor}
+                style={styles.fullFlex}
+                onPress={() => {
+                  // memoryDetail.images.length > 2
+                  //   ? _onShowMemoryDetails(memoryDetail) :
+                  _onOpenImages(memoryDetail.images, 0, navigation);
+                }}>
+                <View style={[styles.fullFlex]}>
+                  <ImageBackground
+                    style={styles.imagebackGroundStyle}
+                    blurRadius={5}
+                    resizeMode="stretch"
+                    source={{
+                      uri: Utility.getFileURLFromPublicURL(
+                        memoryDetail.images[0].thumbnail_url,
+                      ),
+                    }}
+                  />
+                  <View style={[styles.fullFlex, {position: 'relative'}]}>
+                    <PlaceholderImageView
+                      style={styles.placeholderImageContainer}
+                      uri={Utility.getFileURLFromPublicURL(
+                        memoryDetail.images[0].thumbnail_url,
                       )}
-                    </View>
-                    {/* </ImageBackground> */}
-
+                      resizeMode={'contain'}
+                    />
+                    {memoryDetail.images.length > 1 && (
+                      <TouchableWithoutFeedback
+                        onPress={() => {
+                          memoryDetail.images.length > 1
+                            ? _onShowMemoryDetails(
+                                memoryDetail,
+                                null,
+                                navigation,
+                              )
+                            : _onOpenImages(memoryDetail.images, 0, navigation);
+                        }}>
+                        <View style={styles.moreImagesContainer}>
+                          <Text style={styles.moreImageTextStyle}>
+                            {'+'}
+                            {memoryDetail.images.length - 1}
+                            {' images'}
+                            {/* {'\n more'} */}
+                          </Text>
+                        </View>
+                      </TouchableWithoutFeedback>
+                    )}
                   </View>
-                </TouchableHighlight>
-              </View>
-            )}
+                  {/* </ImageBackground> */}
+                </View>
+              </TouchableHighlight>
+            </View>
+          )}
         </View>
-      )
-        :
-        null
-      }
+      ) : null}
 
       {audioView(memoryDetail)}
 
       {memoryDetail.pdf && memoryDetail.pdf.length > 0 ? (
         <View style={styles.imageContainer}>
           {memoryDetail.pdf.length > 0 && (
-            <View style={{ flex: 1, backgroundColor: Colors.timeLinebackground }}>
+            <View style={{flex: 1, backgroundColor: Colors.timeLinebackground}}>
               <TouchableHighlight
                 underlayColor={Colors.touchableunderlayColor}
                 style={styles.fullFlex}
                 onPress={() => {
                   // memoryDetail.pdf.length > 2
-                  //   ? _onShowMemoryDetails(memoryDetail): 
-                  _onOpenPdfs(memoryDetail.pdf[0].url);
+                  //   ? _onShowMemoryDetails(memoryDetail):
+                  _onOpenPdfs(memoryDetail.pdf[0].url, navigation);
                 }}>
                 <View>
                   <PlaceholderImageView
@@ -1419,10 +1473,9 @@ export const MediaView = (item: any, audioView: any) => {
                     <TouchableWithoutFeedback
                       onPress={() => {
                         memoryDetail.pdf.length > 1
-                          ? _onShowMemoryDetails(memoryDetail) :
-                          _onOpenPdfs(memoryDetail.pdf[0].url);
-                      }}
-                    >
+                          ? _onShowMemoryDetails(memoryDetail, null, navigation)
+                          : _onOpenPdfs(memoryDetail.pdf[0].url, navigation);
+                      }}>
                       <View style={styles.moreImagesContainer}>
                         <Text style={styles.moreImageTextStyle}>
                           {'+'}
@@ -1432,7 +1485,6 @@ export const MediaView = (item: any, audioView: any) => {
                           {/* {'\n more'} */}
                         </Text>
                       </View>
-
                     </TouchableWithoutFeedback>
                   )}
                 </View>

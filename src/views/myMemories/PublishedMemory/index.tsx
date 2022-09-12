@@ -1,43 +1,88 @@
 import React from 'react';
 import {
-  ActivityIndicator, Alert, Animated, FlatList, Image, Keyboard,
-  Platform, RefreshControl, SafeAreaView, StyleSheet, TouchableHighlight,  TouchableOpacity, View
+  ActivityIndicator,
+  Alert,
+  Animated,
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import {useNavigation} from '@react-navigation/native';
 import Text from '../../../common/component/Text';
 import {
-  Colors, encode_utf8, fontFamily, fontSize, MemoryActionKeys
+  Colors,
+  encode_utf8,
+  fontFamily,
+  fontSize,
+  MemoryActionKeys,
 } from '../../../common/constants';
-import { GetAllLikes, Like, Unlike } from '../../memoryDetails/detailsWebService';
+import {GetAllLikes, Like, Unlike} from '../../memoryDetails/detailsWebService';
 import {
-  GetPublishedMemories, kAllLikes, kLiked, kMemoryActionPerformedPublished, kPublishedMemoriesFetched, kUnliked, MemoryAction
+  GetPublishedMemories,
+  kAllLikes,
+  kLiked,
+  kMemoryActionPerformedPublished,
+  kPublishedMemoriesFetched,
+  kUnliked,
+  MemoryAction,
 } from '../myMemoriesWebService';
 
-import { block, flag, flagandroid, personxmark, redstar, report } from '../../../../app/images';
+import {
+  block,
+  flag,
+  flagandroid,
+  personxmark,
+  redstar,
+  report,
+} from '../../../../app/images';
 import AudioPlayer, {
-  kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious
+  kClosed,
+  kEnded,
+  kNext,
+  kPaused,
+  kPlaying,
+  kPrevious,
 } from '../../../common/component/audio_player/audio_player';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import MemoryActionsSheet, {
-  MemoryActionsSheetItem
+  MemoryActionsSheetItem,
 } from '../../../common/component/memoryActionsSheet';
 import MemoryListItem from '../../../common/component/memoryListItem';
 import PlaceholderImageView from '../../../common/component/placeHolderImageView';
 import {
-  No_Internet_Warning, ToastMessage
+  No_Internet_Warning,
+  ToastMessage,
 } from '../../../common/component/Toast';
 import EventManager from '../../../common/eventManager';
 import Utility from '../../../common/utility';
 import {
-  add_icon_small, block_memory, cancelActions, delete_memory, edit_memory, greenDotsButton, icon_comment, icon_like,
-  icon_like_selected, icon_send, move_to_draft, remove_me_from_this_post
+  add_icon_small,
+  block_memory,
+  cancelActions,
+  delete_memory,
+  edit_memory,
+  greenDotsButton,
+  icon_comment,
+  icon_like,
+  icon_like_selected,
+  icon_send,
+  move_to_draft,
+  remove_me_from_this_post,
 } from '../../../images';
-import { ListType } from '../../dashboard/dashboardReducer';
+import {ListType} from '../../dashboard/dashboardReducer';
 import {
   Border,
-  LikeCommentShare
+  LikeCommentShare,
 } from '../../memoryDetails/componentsMemoryDetails';
-import { PublishedMemoryDataModel } from './publishedMemoryDataModel';
+import {PublishedMemoryDataModel} from './publishedMemoryDataModel';
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
 ];
@@ -112,13 +157,15 @@ export default class PublishedMemory extends React.Component<Props, State> {
     this.memoryPublishedUpdateListener = EventManager.addListener(
       'memoryUpdatePublishedListener',
       () => {
-        this.setState({
-          isMemoryUpdate: true,
-        },()=>{
-          GetPublishedMemories('');
-          loaderHandler.hideLoader();
-        });
-        
+        this.setState(
+          {
+            isMemoryUpdate: true,
+          },
+          () => {
+            GetPublishedMemories('');
+            loaderHandler.hideLoader();
+          },
+        );
       },
     );
   }
@@ -140,11 +187,14 @@ export default class PublishedMemory extends React.Component<Props, State> {
     // this.setState({});
   };
   onRefresh = () => {
-    this.setState({
-      isRefreshing: true,
-    },()=>{
-      GetPublishedMemories('');
-    });
+    this.setState(
+      {
+        isRefreshing: true,
+      },
+      () => {
+        GetPublishedMemories('');
+      },
+    );
   };
   handleLoadMore = () => {
     // let draftCount = this.memoryDraftsDataModel.getMemoryDraftsCount();
@@ -155,14 +205,17 @@ export default class PublishedMemory extends React.Component<Props, State> {
     ) {
       if (!this.state.loading) {
         // increase page by 1
-        this.setState({
-          loading: true,
-        },()=>{
-          loadingDataFromServer = true;
-          let memoryDetails = publishedMemoriesArray[publishedMemoriesArray.length - 1];
-          GetPublishedMemories(memoryDetails.updated);
-        });
-        
+        this.setState(
+          {
+            loading: true,
+          },
+          () => {
+            loadingDataFromServer = true;
+            let memoryDetails =
+              publishedMemoriesArray[publishedMemoriesArray.length - 1];
+            GetPublishedMemories(memoryDetails.updated);
+          },
+        );
       }
     }
   };
@@ -200,10 +253,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
         ToastMessage(publishedMemories, Colors.ErrorColor);
       }
     }
-    this.setState({
-      isRefreshing: false,
-      loading: false,
-    },()=>loaderHandler.hideLoader());
+    this.setState(
+      {
+        isRefreshing: false,
+        loading: false,
+      },
+      () => loaderHandler.hideLoader(),
+    );
   };
 
   like = (item: any) => {
@@ -349,6 +405,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                   listType={ListType.Published}
                   audioView={this.audioView}
                   openMemoryActions={this.openMemoryActions.bind(this)}
+                  navigation={this.props.navigation}
                 />
               )}
               maxToRenderPerBatch={50}
@@ -598,7 +655,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                 underlayColor={Colors.touchableunderlayColor}
                 style={{flex: 1, justifyContent: 'center'}}
                 onPress={() => {
-                  _onShowMemoryDetails(item);
+                  _onShowMemoryDetails(item, this.props.navigation);
                 }}>
                 <Text
                   style={{
@@ -786,7 +843,7 @@ export const MemoryActionsList = (item: any) => {
         memoryActions.push({
           index: i,
           text: item.actions_on_memory[value],
-          image: Platform.OS == 'ios' ? personxmark :block,
+          image: Platform.OS == 'ios' ? personxmark : block,
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.blockUserKey,
@@ -900,7 +957,7 @@ export const CommentBox = (item: any) => {
         paddingBottom: 5,
       }}
       onPress={() =>
-        this.props.navigation.jumpTo('memoryDetails', {
+        this.props.navigation.navigate('memoryDetails', {
           nid: item.item.nid,
           type: item.item.type,
           comment: true,
@@ -1012,7 +1069,7 @@ export const RenderLikeAndCommentSection = (
             alignItems: 'center',
           }}
           onPress={() => {
-            this.props.navigation.jumpTo('memoryDetails', {
+            this.props.navigation.navigate('memoryDetails', {
               nid: item.item.nid,
               type: item.item.type,
               comment: true,
@@ -1032,9 +1089,9 @@ export const RenderLikeAndCommentSection = (
   );
 };
 
-export const _onShowMemoryDetails = (item: any) => {
+export const _onShowMemoryDetails = (item: any, navigation?: any) => {
   if (Utility.isInternetConnected) {
-    this.props.navigation.jumpTo('newmemoryDetails', {
+    navigation?.navigate('newmemoryDetails', {
       nid: item.nid,
       type: item.type,
       height: 80,
@@ -1077,13 +1134,16 @@ export const _onAnim = () => {
   ]).start();
 };
 
-export const _onOpenImages = (items: any, index: any) => {
+export const _onOpenImages = (items: any, index: any, navigation: any) => {
   if (Utility.isInternetConnected) {
     let images = [];
     let position = 0;
     images = items;
     position = index;
-    this.props.navigation.jumpTo('imageViewer', {files: images, index: position});
+    navigation?.navigate('imageViewer', {
+      files: images,
+      index: position,
+    });
   } else {
     No_Internet_Warning();
   }
@@ -1118,7 +1178,10 @@ export const MemoryBasicDetails = (
                 style={{
                   color: Colors.NewYellowColor,
                   fontWeight: '500',
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                  fontFamily:
+                    Platform.OS === 'ios'
+                      ? fontFamily.Inter
+                      : fontFamily.InterMedium,
                   lineHeight: 20,
                 }}>
                 {userDetails.name}
@@ -1162,7 +1225,7 @@ export const MemoryBasicDetails = (
   );
 };
 
-export const MediaView = (item: any, audioView: any) => {
+export const MediaView = (item: any, audioView: any, navigation: any) => {
   let memoryDetail = item.item;
   return (
     <View>
@@ -1179,7 +1242,7 @@ export const MediaView = (item: any, audioView: any) => {
             underlayColor={'#ffffff00'}
             style={{flex: 1}}
             onPress={() => {
-              _onOpenImages(memoryDetail.images, 0);
+              _onOpenImages(memoryDetail.images, 0, navigation);
             }}>
             <PlaceholderImageView
               style={{
@@ -1215,8 +1278,8 @@ export const MediaView = (item: any, audioView: any) => {
                 style={{flex: 1}}
                 onPress={() => {
                   memoryDetail.images.length > 2
-                    ? _onShowMemoryDetails(memoryDetail)
-                    : _onOpenImages(memoryDetail.images, 1);
+                    ? _onShowMemoryDetails(memoryDetail, navigation)
+                    : _onOpenImages(memoryDetail.images, 1, navigation);
                 }}>
                 <View style={{flex: 1}}>
                   <PlaceholderImageView
@@ -1294,8 +1357,8 @@ export const MediaView = (item: any, audioView: any) => {
                 style={{flex: 1}}
                 onPress={() => {
                   memoryDetail.pdf.length > 2
-                    ? _onShowMemoryDetails(memoryDetail)
-                    : _onOpenPdfs(memoryDetail.pdf[1].url);
+                    ? _onShowMemoryDetails(memoryDetail, navigation)
+                    : _onOpenPdfs(memoryDetail.pdf[1].url, navigation);
                 }}>
                 <View>
                   <PlaceholderImageView

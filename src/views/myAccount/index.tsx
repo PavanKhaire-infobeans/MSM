@@ -2,27 +2,44 @@ import React from 'react';
 import {
   FlatList,
   Image,
-  ImageBackground, Platform, SafeAreaView, StatusBar, TouchableHighlight, View
+  ImageBackground,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  TouchableHighlight,
+  View,
 } from 'react-native';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import DefaultListItem from '../../common/component/defaultListItem';
 import TextNew from '../../common/component/Text';
-import { No_Internet_Warning } from '../../common/component/Toast';
-import { Colors, fontFamily, fontSize, getValue, Storage } from '../../common/constants';
+import {No_Internet_Warning} from '../../common/component/Toast';
+import {
+  Colors,
+  fontFamily,
+  fontSize,
+  getValue,
+  Storage,
+} from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import { Account } from '../../common/loginStore';
+import {Account} from '../../common/loginStore';
 import Utility from '../../common/utility';
 import {
   icon_drafts,
   icon_idea,
   icon_logout,
   icon_password,
-  profile_placeholder
+  profile_placeholder,
 } from '../../images';
-import { kLogoutPressed } from '../../views/menu';
+import {kLogoutPressed} from '../../views/menu';
 import NavigationBar from '../dashboard/NavigationBar';
-import { kProfilePicUpdated, ProfileDataModel } from '../profile/profileDataModel';
-import { kGetUserProfileData, UserProfile } from '../profile/userProfileWebService';
+import {
+  kProfilePicUpdated,
+  ProfileDataModel,
+} from '../profile/profileDataModel';
+import {
+  kGetUserProfileData,
+  UserProfile,
+} from '../profile/userProfileWebService';
 import Styles from './styles';
 type items = {
   title: string;
@@ -47,7 +64,7 @@ export default class MyAccount extends React.Component {
   profileData: ProfileDataModel;
   state = {
     Items: [],
-    userImage: null
+    userImage: null,
   };
 
   constructor(props: object) {
@@ -67,15 +84,15 @@ export default class MyAccount extends React.Component {
       kProfilePicUpdated,
       this.updateProfilePic,
     );
-
   }
 
-  fullname = Account.selectedData().firstName + ' ' + Account.selectedData().lastName;
+  fullname =
+    Account.selectedData().firstName + ' ' + Account.selectedData().lastName;
 
-  componentWillUnmount =()=>{
-    this.checkProfile.removeListener()
-    this.profilePicUpdate.removeListener()
-  }
+  componentWillUnmount = () => {
+    this.checkProfile.removeListener();
+    this.profilePicUpdate.removeListener();
+  };
 
   segregateItemClick(identifier: any) {
     switch (identifier) {
@@ -86,7 +103,7 @@ export default class MyAccount extends React.Component {
         break;
       case Drafts:
         // this.props.navigation.jumpTo('memoriesDrafts', {isFromMenu: true});
-        this.props.navigation.replace('writeTabs')
+        this.props.navigation.replace('writeTabs');
         break;
       case Memories:
         break;
@@ -163,14 +180,13 @@ export default class MyAccount extends React.Component {
         },
       ];
     }
-    this.setState({ Items: items });
-
+    this.setState({Items: items});
   };
 
   getUserProfileDataImage = async () => {
     let userImage = await Storage.get('user_profile_image');
     this.setState({userImage});
-  }
+  };
 
   // CallBack for Profile data web service
   getUserProfileDataCallBack = (success: boolean, profileDetails: any) => {
@@ -210,9 +226,17 @@ export default class MyAccount extends React.Component {
         <SafeAreaView style={Styles.noViewStyle} />
         <SafeAreaView style={Styles.safeAreaContextStyle}>
           <View style={Styles.container}>
-            <NavigationBar title={'My Account'} showClose={true} />
+            <NavigationBar
+              title={'My Account'}
+              showClose={true}
+              navigation={this.props.navigation}
+            />
             <StatusBar
-              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             <View style={Styles.profileImage}>
@@ -222,7 +246,7 @@ export default class MyAccount extends React.Component {
                 source={profile_placeholder}>
                 <Image
                   source={
-                    profilePic != '' ? { uri: profilePic } : profile_placeholder
+                    profilePic != '' ? {uri: profilePic} : profile_placeholder
                     // this.state.userImage ? { uri: this.state.userImage } : profilePic != '' ? { uri: profilePic } : profile_placeholder
                   }
                   style={Styles.imageStyle}
@@ -246,7 +270,7 @@ export default class MyAccount extends React.Component {
               data={this.state.Items}
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatListStyle}
-              renderItem={({ item: data }) => {
+              renderItem={({item: data}) => {
                 return (
                   <DefaultListItem
                     title={data.title}

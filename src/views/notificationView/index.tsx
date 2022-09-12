@@ -1,22 +1,18 @@
 import React from 'react';
-import { FlatList, SafeAreaView, StatusBar, View } from 'react-native';
-import { connect } from 'react-redux';
+import {FlatList, SafeAreaView, StatusBar, View} from 'react-native';
+import {connect} from 'react-redux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import DefaultListItem from '../../common/component/defaultListItem';
-import {
-  kNotificationIndicator
-} from '../../common/component/TabBarIcons';
-import { No_Internet_Warning } from '../../common/component/Toast';
-import { Colors } from '../../common/constants';
+import {kNotificationIndicator} from '../../common/component/TabBarIcons';
+import {No_Internet_Warning} from '../../common/component/Toast';
+import {Colors} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import NavigationBar from '../dashboard/NavigationBar';
-import { NotificationDataModel } from './notificationDataModel';
-import {
-  kForegroundNotificationListener
-} from './notificationServices';
-import { AddNewNotification, CurrentList } from './reducer';
-import { GetNotificationAPI } from './saga';
+import {NotificationDataModel} from './notificationDataModel';
+import {kForegroundNotificationListener} from './notificationServices';
+import {AddNewNotification, CurrentList} from './reducer';
+import {GetNotificationAPI} from './saga';
 import Styles from './styles';
 
 type items = {
@@ -62,10 +58,10 @@ class NotificationView extends React.Component<Props> {
 
   sendcallback = () => {};
 
-  componentWillUnmount = ()=>{
-    this.notificationListener.removeListener()
-    this.notificationReceivedForeground.removeListener()
-  }
+  componentWillUnmount = () => {
+    this.notificationListener.removeListener();
+    this.notificationReceivedForeground.removeListener();
+  };
 
   updateListing = () => {
     this.setState({});
@@ -98,10 +94,18 @@ class NotificationView extends React.Component<Props> {
         <SafeAreaView style={Styles.noViewStyle} />
         <SafeAreaView style={Styles.safeAreaContextStyle}>
           <View style={Styles.container}>
-            <NavigationBar title={'Notifications'} showClose={true} />
+            <NavigationBar
+              title={'Notifications'}
+              showClose={true}
+              navigation={this.props.navigation}
+            />
             {/* <NavigationBar title={TabItems.Notifications}/> */}
             <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             <FlatList

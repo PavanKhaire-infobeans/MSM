@@ -1,52 +1,124 @@
 import React from 'react';
 import {
-  Alert, Animated, DeviceEventEmitter, Dimensions, FlatList, Image, ImageBackground, Keyboard, Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, TextInput, TouchableHighlight,
-  TouchableOpacity, View
+  Alert,
+  Animated,
+  DeviceEventEmitter,
+  Dimensions,
+  FlatList,
+  Image,
+  ImageBackground,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import WebView from 'react-native-webview';
 import Text from '../../common/component/Text';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import {
-  Colors, decode_utf8, encode_utf8, fontFamily, fontSize, getDetails, getValue, keyArray, keyInt,
-  keyString, MemoryActionKeys, TimeStampMilliSeconds
+  Colors,
+  decode_utf8,
+  encode_utf8,
+  fontFamily,
+  fontSize,
+  getDetails,
+  getValue,
+  keyArray,
+  keyInt,
+  keyString,
+  MemoryActionKeys,
+  TimeStampMilliSeconds,
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import {
-  add_icon_small, block_and_report, block_memory, block_user, cancelActions, delete_memory,
-  edit_memory, icon_comment, icon_like, icon_like_selected, icon_send, move_to_draft, profile_placeholder, remove_me_from_this_post, report_user
+  add_icon_small,
+  block_and_report,
+  block_memory,
+  block_user,
+  cancelActions,
+  delete_memory,
+  edit_memory,
+  icon_comment,
+  icon_like,
+  icon_like_selected,
+  icon_send,
+  move_to_draft,
+  profile_placeholder,
+  remove_me_from_this_post,
+  report_user,
 } from '../../images';
 import {
-  DeleteComment, EditComment, GetAllComments, GetAllLikes, GetMemoryDetails, kAllComment, kAllLikes, kComment, kDeleteComment, kEditComment, kLiked, kLikeOnComment, kMemoryDetailsFetched, kUnliked, kUnlikeOnComment, Like, PostComment, Unlike
+  DeleteComment,
+  EditComment,
+  GetAllComments,
+  GetAllLikes,
+  GetMemoryDetails,
+  kAllComment,
+  kAllLikes,
+  kComment,
+  kDeleteComment,
+  kEditComment,
+  kLiked,
+  kLikeOnComment,
+  kMemoryDetailsFetched,
+  kUnliked,
+  kUnlikeOnComment,
+  Like,
+  PostComment,
+  Unlike,
 } from './detailsWebService';
-import { kNews, kSports, MemoryDataModel } from './memoryDataModel';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import {kNews, kSports, MemoryDataModel} from './memoryDataModel';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 import RenderHtml from 'react-native-render-html';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AudioPlayer, {
-  kClosed, kEnded, kNext, kPaused, kPlaying, kPrevious
+  kClosed,
+  kEnded,
+  kNext,
+  kPaused,
+  kPlaying,
+  kPrevious,
 } from '../../common/component/audio_player/audio_player';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MemoryActionsSheet, {
-  MemoryActionsSheetItem
+  MemoryActionsSheetItem,
 } from '../../common/component/memoryActionsSheet';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
-import { Account } from '../../common/loginStore';
+import {Account} from '../../common/loginStore';
 import Utility from '../../common/utility';
 import {
-  kMemoryActionPerformedOnMemoryDetails, MemoryAction
+  kMemoryActionPerformedOnMemoryDetails,
+  MemoryAction,
 } from '../myMemories/myMemoriesWebService';
-import { kPublishedMemoryUpdated } from '../myMemories/PublishedMemory/index';
+import {kPublishedMemoryUpdated} from '../myMemories/PublishedMemory/index';
 import {
-  Border, CollaboratorView, FilesView, kAudio, kImage, kPDF,
-  LikeCommentShare, LikeView, MemoryCollections, MemoryTags, TitleAndDescription, TitleAndValue, UserDetails
+  Border,
+  CollaboratorView,
+  FilesView,
+  kAudio,
+  kImage,
+  kPDF,
+  LikeCommentShare,
+  LikeView,
+  MemoryCollections,
+  MemoryTags,
+  TitleAndDescription,
+  TitleAndValue,
+  UserDetails,
 } from './componentsMemoryDetails';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
 ];
-type State = { [x: string]: any };
-type Props = { [x: string]: any };
+type State = {[x: string]: any};
+type Props = {[x: string]: any};
 
 export default class MemoryDetails extends React.Component<Props, State> {
   _actionSheet: any | MemoryActionsSheet = null;
@@ -76,7 +148,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   _webView: View | WebView;
   audioPlayer: React.RefObject<AudioPlayer> = React.createRef<AudioPlayer>();
   backListner: any;
-  holdTempLikeOnComment = { tempId: '', likeStatus: '' };
+  holdTempLikeOnComment = {tempId: '', likeStatus: ''};
   state: State = {
     collaboratorsVisibility: true,
     label: '',
@@ -176,7 +248,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   componentDidMount() {
     if (this.props.previewDraft) {
       this.memoryDataModel = this.props.memoryDetails;
-      this.setState({ memoryDetailAvailable: true, isExternalQueue: false });
+      this.setState({memoryDetailAvailable: true, isExternalQueue: false});
     }
   }
 
@@ -209,11 +281,11 @@ export default class MemoryDetails extends React.Component<Props, State> {
           keyArray,
         ).reverse();
       } else {
-        this.setState({ allCommentsList: response['comments'].reverse() });
+        this.setState({allCommentsList: response['comments'].reverse()});
       }
     } else {
       ToastMessage(response, Colors.ErrorColor);
-      this.setState({ viewAllComments: false });
+      this.setState({viewAllComments: false});
     }
     // this.setState({});
     this.forwardDataToNative();
@@ -371,7 +443,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
             },
           );
         }
-        this.holdTempLikeOnComment = { tempId: '', likeStatus: '' };
+        this.holdTempLikeOnComment = {tempId: '', likeStatus: ''};
         this.forwardDataToNative();
         this.scrollToBottom();
       }
@@ -428,9 +500,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
   getAllComments = () => {
     if (this.state.viewAllComments) {
-      this.setState({ viewAllComments: false });
+      this.setState({viewAllComments: false});
     } else {
-      this.setState({ viewAllComments: true }, () => {
+      this.setState({viewAllComments: true}, () => {
         if (this.memoryDataModel.likesComments.noOfComments > 0) {
           loaderHandler.showLoader('Loading...');
           GetAllComments(
@@ -440,13 +512,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
           );
         }
       });
-
     }
   };
   getLastTwoComments = () => {
     GetAllComments(this.memoryDataModel.nid, this.storyType, '2', true);
   };
-  hideAllComments = () => { };
+  hideAllComments = () => {};
 
   allLikesFetched = (fetched?: boolean, getAllLikes?: any) => {
     loaderHandler.hideLoader();
@@ -464,22 +535,24 @@ export default class MemoryDetails extends React.Component<Props, State> {
       let isExternalCue =
         this.storyType.indexOf('collection') != -1 ? true : false;
       this.memoryDataModel.updateMemoryDetails(memoryDetails);
-      this.setState({
-        memoryDetailAvailable: true,
-        isExternalQueue: isExternalCue,
-      }, () => {
-        if (this.props.comment) {
-          this.focusCommentView();
-        } else if (this.props.showComments) {
-          setTimeout(() => {
-            this.scrollToBottom();
-          }, 1000);
-        }
-      });
-
+      this.setState(
+        {
+          memoryDetailAvailable: true,
+          isExternalQueue: isExternalCue,
+        },
+        () => {
+          if (this.props.comment) {
+            this.focusCommentView();
+          } else if (this.props.showComments) {
+            setTimeout(() => {
+              this.scrollToBottom();
+            }, 1000);
+          }
+        },
+      );
     } else {
       ToastMessage(memoryDetails, Colors.ErrorColor);
-      this.setState({ memoryDetailAvailable: true });
+      this.setState({memoryDetailAvailable: true});
     }
     loaderHandler.hideLoader();
   };
@@ -529,7 +602,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     }
   };
 
-  showCollection = () => { };
+  showCollection = () => {};
 
   toggleCollaboratorView = () => {
     this.setState({
@@ -542,7 +615,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     return (
       <FlatList
         data={lastComments}
-        style={{ paddingBottom: 10 }}
+        style={{paddingBottom: 10}}
         keyExtractor={(_, index: number) => `${index}`}
         renderItem={(item: any) => this.renderCommentView(item)}
       />
@@ -621,7 +694,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         commentsList[index].like_comment_data.like_flag = likeFlag;
         if (isLikeAvailabe != null)
           commentsList[index].like_comment_data.like_count = likeCount;
-        this.setState({ allCommentsList: commentsList });
+        this.setState({allCommentsList: commentsList});
       }
     } else {
       No_Internet_Warning();
@@ -665,15 +738,15 @@ export default class MemoryDetails extends React.Component<Props, State> {
         }}>
         <ImageBackground
           style={[style.avatar]}
-          imageStyle={{ borderRadius: 20 }}
+          imageStyle={{borderRadius: 20}}
           source={profile_placeholder}>
           <Image
             source={
               item.item.uri && item.item.uri != ''
-                ? { uri: Utility.getFileURLFromPublicURL(item.item.uri) }
+                ? {uri: Utility.getFileURLFromPublicURL(item.item.uri)}
                 : profile_placeholder
             }
-            style={{ height: 40, width: 40, borderRadius: 20 }}></Image>
+            style={{height: 40, width: 40, borderRadius: 20}}></Image>
         </ImageBackground>
         <View
           style={{
@@ -722,7 +795,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={{ ...fontSize(16), color: Colors.TextColor }}>
+            <Text style={{...fontSize(16), color: Colors.TextColor}}>
               {decode_utf8(item.item.comment_body_value)}
             </Text>
           </View>
@@ -735,12 +808,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
               paddingBottom: 10,
             }}>
             <TouchableOpacity
-              style={{ padding: 5 }}
+              style={{padding: 5}}
               onPress={() => this.likeOnComment(item)}>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'row'}}>
                 <Image
                   source={likeFlag ? icon_like_selected : icon_like}
-                  style={{ marginRight: 5, marginLeft: 5 }}></Image>
+                  style={{marginRight: 5, marginLeft: 5}}></Image>
                 <TouchableHighlight
                   underlayColor={'#ffffffff'}
                   onPress={() =>
@@ -748,7 +821,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                       ? this.getAllLikes(item.item.cid, 'comment')
                       : this.likeOnComment(item)
                   }>
-                  <Text style={{ ...fontSize(16), color: Colors.NewTitleColor }}>
+                  <Text style={{...fontSize(16), color: Colors.NewTitleColor}}>
                     {likeText}
                   </Text>
                 </TouchableHighlight>
@@ -765,15 +838,15 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 {shouldShowEditButton && (
                   <TouchableOpacity onPress={() => this.editComment(item.item)}>
                     <Text
-                      style={{ ...fontSize(16), color: Colors.NewTitleColor }}>
+                      style={{...fontSize(16), color: Colors.NewTitleColor}}>
                       Edit
                     </Text>
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity
-                  style={{ marginLeft: 27 }}
+                  style={{marginLeft: 27}}
                   onPress={() => this.deleteComment(item.item)}>
-                  <Text style={{ ...fontSize(16), color: Colors.ErrorColor }}>
+                  <Text style={{...fontSize(16), color: Colors.ErrorColor}}>
                     Delete
                   </Text>
                 </TouchableOpacity>
@@ -836,15 +909,17 @@ export default class MemoryDetails extends React.Component<Props, State> {
     }
   };
   editComment = (item: any) => {
-    this.setState({
-      commentId: item.cid,
-      commentValue: decode_utf8(item.comment_body_value),
-    }, () => {
-      this._commentBoxRef &&
-        this._commentBoxRef.focus &&
-        this._commentBoxRef.focus();
-    });
-
+    this.setState(
+      {
+        commentId: item.cid,
+        commentValue: decode_utf8(item.comment_body_value),
+      },
+      () => {
+        this._commentBoxRef &&
+          this._commentBoxRef.focus &&
+          this._commentBoxRef.focus();
+      },
+    );
   };
 
   deleteComment = (item: any) => {
@@ -853,7 +928,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       {
         text: 'No',
         style: 'cancel',
-        onPress: () => { },
+        onPress: () => {},
       },
       {
         text: 'Yes',
@@ -879,7 +954,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
             field_last_name_value: Account.selectedData().lastName,
             uid: Account.selectedData().userID,
             uri: Account.selectedData().profileImage,
-            like_comment_data: { like_flag: 0, like_count: 0 },
+            like_comment_data: {like_flag: 0, like_count: 0},
             comment_body_value: commentText,
             changed: Math.floor(Date.now() / 1000),
             created: Math.floor(Date.now() / 1000),
@@ -893,32 +968,34 @@ export default class MemoryDetails extends React.Component<Props, State> {
           this.memoryDataModel.likesComments.noOfComments++;
           let allList = this.state.allCommentsList;
           allList.push(comment);
-          this.setState({
-            allCommentsList: allList,
-            bottomToolbar: 0,
-            commentValue: '',
-            commentId: '',
-            commentViewVisiblity: false,
-          }, () => {
-            if (this.state.isExternalQueue) {
-              this.memoryDataModel.externalQueue.collection[
-                this.state.activeSlide
-              ].likesComments.commentsList =
-                this.memoryDataModel.likesComments.commentsList;
-              this.memoryDataModel.externalQueue.collection[
-                this.state.activeSlide
-              ].likesComments.noOfComments =
-                this.memoryDataModel.likesComments.noOfComments;
-            }
-            this.holdTempLikeOnComment = { tempId: cid, likeStatus: '0' };
-            PostComment(
-              this.memoryDataModel.nid,
-              this.storyType,
-              commentText,
-              cid,
-            );
-          });
-
+          this.setState(
+            {
+              allCommentsList: allList,
+              bottomToolbar: 0,
+              commentValue: '',
+              commentId: '',
+              commentViewVisiblity: false,
+            },
+            () => {
+              if (this.state.isExternalQueue) {
+                this.memoryDataModel.externalQueue.collection[
+                  this.state.activeSlide
+                ].likesComments.commentsList =
+                  this.memoryDataModel.likesComments.commentsList;
+                this.memoryDataModel.externalQueue.collection[
+                  this.state.activeSlide
+                ].likesComments.noOfComments =
+                  this.memoryDataModel.likesComments.noOfComments;
+              }
+              this.holdTempLikeOnComment = {tempId: cid, likeStatus: '0'};
+              PostComment(
+                this.memoryDataModel.nid,
+                this.storyType,
+                commentText,
+                cid,
+              );
+            },
+          );
         } else {
           commentText = encode_utf8(commentText);
           loaderHandler.showLoader('Editing...');
@@ -936,7 +1013,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     Keyboard.dismiss();
   };
 
-  share = () => { };
+  share = () => {};
 
   focusCommentView = () => {
     this._commentBoxRef &&
@@ -951,7 +1028,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       } else {
         this.audioPlayer.current.showPlayer(index);
         this.setState({
-          audioFile: { ...this.state.audioFile, index: index, isPlaying: true },
+          audioFile: {...this.state.audioFile, index: index, isPlaying: true},
         });
       }
     } else {
@@ -978,96 +1055,96 @@ export default class MemoryDetails extends React.Component<Props, State> {
               ]}>
               {((file.url && file.url != '') ||
                 (file.filePath && file.filePath != '')) && (
-                  <TouchableOpacity onPress={() => this.togglePlayPause(index)}>
+                <TouchableOpacity onPress={() => this.togglePlayPause(index)}>
+                  <View
+                    style={{
+                      width: '100%',
+                      paddingTop: 10,
+                      justifyContent: 'flex-start',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
                     <View
                       style={{
-                        width: '100%',
-                        paddingTop: 10,
-                        justifyContent: 'flex-start',
-                        flexDirection: 'row',
+                        width: 55,
+                        height: 55,
+                        marginLeft: 15,
+                        backgroundColor: '#fff',
+                        borderRadius: 30,
+                        justifyContent: 'center',
                         alignItems: 'center',
+                        borderWidth: 4,
+                        borderColor: Colors.AudioViewBorderColor,
                       }}>
-                      <View
-                        style={{
-                          width: 55,
-                          height: 55,
-                          marginLeft: 15,
-                          backgroundColor: '#fff',
-                          borderRadius: 30,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          borderWidth: 4,
-                          borderColor: Colors.AudioViewBorderColor,
-                        }}>
-                        {this.state.audioFile.index == index &&
-                          this.state.audioFile.isPlaying ? (
+                      {this.state.audioFile.index == index &&
+                      this.state.audioFile.isPlaying ? (
+                        <View
+                          style={{
+                            height: 20,
+                            width: 16,
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                          }}>
                           <View
                             style={{
-                              height: 20,
-                              width: 16,
-                              justifyContent: 'space-between',
-                              flexDirection: 'row',
-                            }}>
-                            <View
-                              style={{
-                                backgroundColor: Colors.AudioViewBorderColor,
-                                flex: 1,
-                                width: 5,
-                              }}
-                            />
-                            <View
-                              style={{
-                                backgroundColor: 'transparent',
-                                flex: 1,
-                                width: 2,
-                              }}
-                            />
-                            <View
-                              style={{
-                                backgroundColor: Colors.AudioViewBorderColor,
-                                flex: 1,
-                                width: 5,
-                              }}
-                            />
-                          </View>
-                        ) : (
-                          <View
-                            style={{
-                              height: 24,
-                              width: 24,
-                              marginLeft: 10,
-                              borderLeftColor: Colors.AudioViewBorderColor,
-                              borderLeftWidth: 18,
-                              borderTopColor: 'transparent',
-                              borderTopWidth: 12,
-                              borderBottomColor: 'transparent',
-                              borderBottomWidth: 12,
+                              backgroundColor: Colors.AudioViewBorderColor,
+                              flex: 1,
+                              width: 5,
                             }}
                           />
-                        )}
-                      </View>
-                      <View style={{ marginLeft: 10 }}>
-                        <Text
-                          style={[
-                            style.normalText,
-                            { color: '#000', marginBottom: 5, paddingRight: 80 },
-                          ]}
-                          numberOfLines={1}
-                          ellipsizeMode="tail">
-                          {file.title
-                            ? file.title
-                            : file.filename
-                              ? file.filename
-                              : ''}
-                        </Text>
-                        <Text style={[style.normalText, { color: '#000' }]}>
-                          {file.duration}
-                        </Text>
-                      </View>
+                          <View
+                            style={{
+                              backgroundColor: 'transparent',
+                              flex: 1,
+                              width: 2,
+                            }}
+                          />
+                          <View
+                            style={{
+                              backgroundColor: Colors.AudioViewBorderColor,
+                              flex: 1,
+                              width: 5,
+                            }}
+                          />
+                        </View>
+                      ) : (
+                        <View
+                          style={{
+                            height: 24,
+                            width: 24,
+                            marginLeft: 10,
+                            borderLeftColor: Colors.AudioViewBorderColor,
+                            borderLeftWidth: 18,
+                            borderTopColor: 'transparent',
+                            borderTopWidth: 12,
+                            borderBottomColor: 'transparent',
+                            borderBottomWidth: 12,
+                          }}
+                        />
+                      )}
                     </View>
-                    <TitleAndDescription file={file} type={kAudio} />
-                  </TouchableOpacity>
-                )}
+                    <View style={{marginLeft: 10}}>
+                      <Text
+                        style={[
+                          style.normalText,
+                          {color: '#000', marginBottom: 5, paddingRight: 80},
+                        ]}
+                        numberOfLines={1}
+                        ellipsizeMode="tail">
+                        {file.title
+                          ? file.title
+                          : file.filename
+                          ? file.filename
+                          : ''}
+                      </Text>
+                      <Text style={[style.normalText, {color: '#000'}]}>
+                        {file.duration}
+                      </Text>
+                    </View>
+                  </View>
+                  <TitleAndDescription file={file} type={kAudio} />
+                </TouchableOpacity>
+              )}
             </View>
           );
         })}
@@ -1101,12 +1178,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
         audioFile.index = audioFile.index - 1;
         break;
     }
-    this.setState({ audioFile: audioFile });
+    this.setState({audioFile: audioFile});
   };
 
   CommonBottomSection = () => {
     return (
-      <View style={{ paddingRight: 15, paddingLeft: 15 }}>
+      <View style={{paddingRight: 15, paddingLeft: 15}}>
         {/* View for showing memory tags */}
         {/* {this.memoryDataModel.memoryTags.length > 0 &&  */}
         {/* <MemoryTags memoryTags={this.memoryDataModel.memoryTags}></MemoryTags>}    */}
@@ -1142,23 +1219,23 @@ export default class MemoryDetails extends React.Component<Props, State> {
               justifyContent: 'flex-start',
               alignItems: 'center',
               padding: 5,
-              transform: [{ translateX: this.shakeAnimation }],
+              transform: [{translateX: this.shakeAnimation}],
             }}>
             <TouchableOpacity onPress={() => this.like()}>
               <LikeView
                 onPress={() =>
                   this.memoryDataModel.likesComments.noOfLikes > 0 &&
-                    this.memoryDataModel.likesComments.showLikeCount
+                  this.memoryDataModel.likesComments.showLikeCount
                     ? this.getAllLikes()
                     : this.like()
                 }
                 name={
                   this.memoryDataModel.likesComments.showLikeCount &&
-                    this.memoryDataModel.likesComments.noOfLikes > 0
+                  this.memoryDataModel.likesComments.noOfLikes > 0
                     ? this.memoryDataModel.likesComments.noOfLikes +
-                    (this.memoryDataModel.likesComments.noOfLikes > 1
-                      ? ' Likes'
-                      : ' Like')
+                      (this.memoryDataModel.likesComments.noOfLikes > 1
+                        ? ' Likes'
+                        : ' Like')
                     : ' Like'
                 }
                 icon={
@@ -1186,9 +1263,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 name={
                   this.memoryDataModel.likesComments.noOfComments > 0
                     ? this.memoryDataModel.likesComments.noOfComments +
-                    (this.memoryDataModel.likesComments.noOfComments > 1
-                      ? ' Comments'
-                      : ' Comment')
+                      (this.memoryDataModel.likesComments.noOfComments > 1
+                        ? ' Comments'
+                        : ' Comment')
                     : 'Comment'
                 }
                 icon={icon_comment}
@@ -1205,13 +1282,16 @@ export default class MemoryDetails extends React.Component<Props, State> {
         {/* Hide/Show comments section */}
         {this.memoryDataModel.likesComments.noOfComments > 2 && (
           <TouchableOpacity
-            style={{ marginTop: 10, marginBottom: 10 }}
+            style={{marginTop: 10, marginBottom: 10}}
             onPress={() => this.getAllComments()}>
             {this.state.viewAllComments ? (
               <Text
                 style={{
                   fontWeight: '500',
-                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                  fontFamily:
+                    Platform.OS === 'ios'
+                      ? fontFamily.Inter
+                      : fontFamily.InterMedium,
                   lineHeight: 20,
                   fontSize: 16,
                   color: Colors.NewYellowColor,
@@ -1293,10 +1373,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
               color: Colors.TextColor,
             }}
             value={this.state.commentValue}
-            onChangeText={text => this.setState({ commentValue: text })}
+            onChangeText={text => this.setState({commentValue: text})}
             returnKeyLabel={'Enter'}
             onContentSizeChange={event => {
-              this.setState({ height: event.nativeEvent.contentSize.height });
+              this.setState({height: event.nativeEvent.contentSize.height});
             }}
             placeholder={'Write a comment..'}
             multiline={true}
@@ -1366,10 +1446,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
               color: Colors.TextColor,
             }}
             value={this.state.commentValue}
-            onChangeText={text => this.setState({ commentValue: text })}
+            onChangeText={text => this.setState({commentValue: text})}
             returnKeyLabel={'Enter'}
             onContentSizeChange={event => {
-              this.setState({ height: event.nativeEvent.contentSize.height });
+              this.setState({height: event.nativeEvent.contentSize.height});
             }}
             placeholder={'Write a comment..'}
             multiline={true}
@@ -1404,9 +1484,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
       this.memoryDataModel.externalQueue.collection[this.state.activeSlide];
     return (
       <View>
-        <View style={{ padding: 15 }}>
+        <View style={{padding: 15}}>
           <Text
-            style={{ ...fontSize(18), lineHeight: 26, color: Colors.TextColor }}>
+            style={{...fontSize(18), lineHeight: 26, color: Colors.TextColor}}>
             {this.memoryDataModel.externalQueue.collectionTitle}
           </Text>
           <Text
@@ -1414,20 +1494,23 @@ export default class MemoryDetails extends React.Component<Props, State> {
               ...fontSize(30),
               paddingTop: 5,
               fontWeight: '500',
-              fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+              fontFamily:
+                Platform.OS === 'ios'
+                  ? fontFamily.Inter
+                  : fontFamily.InterMedium,
               color: Colors.TextColor,
             }}>
             {currentSelectedItem.title}
           </Text>
           {this.memoryDataModel.externalQueue.collectionType == kNews && (
-            <Text style={{ ...fontSize(16), paddingTop: 5, color: '#595959' }}>
+            <Text style={{...fontSize(16), paddingTop: 5, color: '#595959'}}>
               {currentSelectedItem.date.length > 0
                 ? currentSelectedItem.date
                 : 'None'}
             </Text>
           )}
         </View>
-        <View style={{ width: '100%', height: 350 }}>
+        <View style={{width: '100%', height: 350}}>
           <View
             style={{
               height: 350,
@@ -1436,11 +1519,11 @@ export default class MemoryDetails extends React.Component<Props, State> {
             }}>
             <PlaceholderImageView
               uri={currentSelectedItem.image}
-              style={{ height: 350, width: Dimensions.get('window').width }}
+              style={{height: 350, width: Dimensions.get('window').width}}
             />
           </View>
         </View>
-        <View style={{ padding: 15 }}>
+        <View style={{padding: 15}}>
           {
             currentSelectedItem.description.length > 0 && (
               // <HTML
@@ -1448,11 +1531,18 @@ export default class MemoryDetails extends React.Component<Props, State> {
               //   html={currentSelectedItem.description}
               //   style={HTMLStyleSheet}></HTML>
               <RenderHtml
-                tagsStyles={{ p: { ...fontSize(18), marginBottom: 10, fontFamily: 'Inter', fontWeight: '400', lineHeight: 24 } }}
+                tagsStyles={{
+                  p: {
+                    ...fontSize(18),
+                    marginBottom: 10,
+                    fontFamily: 'Inter',
+                    fontWeight: '400',
+                    lineHeight: 24,
+                  },
+                }}
                 contentWidth={Dimensions.get('window').width}
-                source={{ html: currentSelectedItem.description }}
-                enableExperimentalMarginCollapsing={true}
-              ></RenderHtml>
+                source={{html: currentSelectedItem.description}}
+                enableExperimentalMarginCollapsing={true}></RenderHtml>
             )
             // <Text style={{...fontSize(18), lineHeight: 26, paddingBottom: 15, color: "#000"}}>{currentSelectedItem.description}</Text>
           }
@@ -1460,7 +1550,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
             <View>
               <Border />
               <View
-                style={{ flexDirection: 'row', marginBottom: 20, marginTop: 15 }}>
+                style={{flexDirection: 'row', marginBottom: 20, marginTop: 15}}>
                 <TitleAndValue
                   title={currentSelectedItem.details[0].title}
                   description={currentSelectedItem.details[0].value}
@@ -1473,25 +1563,25 @@ export default class MemoryDetails extends React.Component<Props, State> {
               {!(
                 this.memoryDataModel.externalQueue.collectionType == kSports
               ) && (
-                  <View>
-                    <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-                      <TitleAndValue
-                        title={currentSelectedItem.details[2].title}
-                        description={currentSelectedItem.details[2].value}
-                      />
-                      <TitleAndValue
-                        title={currentSelectedItem.details[3].title}
-                        description={currentSelectedItem.details[3].value}
-                      />
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                      <TitleAndValue
-                        title={currentSelectedItem.details[4].title}
-                        description={currentSelectedItem.details[4].value}
-                      />
-                    </View>
+                <View>
+                  <View style={{flexDirection: 'row', marginBottom: 20}}>
+                    <TitleAndValue
+                      title={currentSelectedItem.details[2].title}
+                      description={currentSelectedItem.details[2].value}
+                    />
+                    <TitleAndValue
+                      title={currentSelectedItem.details[3].title}
+                      description={currentSelectedItem.details[3].value}
+                    />
                   </View>
-                )}
+                  <View style={{flexDirection: 'row'}}>
+                    <TitleAndValue
+                      title={currentSelectedItem.details[4].title}
+                      description={currentSelectedItem.details[4].value}
+                    />
+                  </View>
+                </View>
+              )}
             </View>
           )}
         </View>
@@ -1503,8 +1593,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
     let currentSelectedItem =
       this.memoryDataModel.externalQueue.collection[this.state.activeSlide];
     return (
-      <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: '#fff'}}>
           <Carousel
             ref={(c: any) => {
               this._externalQueue = c;
@@ -1519,7 +1609,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           />
         </View>
         {currentSelectedItem.memoryTags.length > 0 && (
-          <View style={{ marginTop: 20, paddingRight: 20, paddingLeft: 20 }}>
+          <View style={{marginTop: 20, paddingRight: 20, paddingLeft: 20}}>
             <MemoryTags memoryTags={currentSelectedItem.memoryTags} />
           </View>
         )}
@@ -1528,13 +1618,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   modifyCommentsAndLikesData = (index: any) => {
-    this.setState({ activeSlide: index, viewAllComments: false }, () => {
+    this.setState({activeSlide: index, viewAllComments: false}, () => {
       let currentSelectedItem =
         this.memoryDataModel.externalQueue.collection[index];
       this.memoryDataModel.nid = currentSelectedItem.nid;
       this.memoryDataModel.likesComments = currentSelectedItem.likesComments;
     });
-
   };
   openMemoryActions = () => {
     MemoryActions = [];
@@ -1648,9 +1737,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
       actionType: MemoryActionKeys.cancelActionKey,
     });
     this._actionSheet && this._actionSheet.showSheet();
-    this.setState({ showMemoryActions: true });
+    this.setState({showMemoryActions: true});
     // setTimeout(() => {
-      Keyboard.dismiss();
+    Keyboard.dismiss();
     // }, 1000);
   };
   onActionItemClicked = (index: number, data: any): void => {
@@ -1671,7 +1760,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
               {
                 text: 'No',
                 style: 'cancel',
-                onPress: () => { },
+                onPress: () => {},
               },
               {
                 text: 'Yes',
@@ -1738,7 +1827,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     type?: any,
     uid?: any,
   ) => {
-    if (this.props?.navigation?.state?.routeName == 'memoryDetails') {
+    if (this.props?.route?.name == 'memoryDetails') {
       loaderHandler.hideLoader();
       if (fetched) {
         if (type == MemoryActionKeys.removeMeFromThisPostKey) {
@@ -1758,7 +1847,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       <Pagination
         dotsLength={this.memoryDataModel.externalQueue.collection.length}
         activeDotIndex={activeSlide}
-        containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
+        containerStyle={{backgroundColor: 'rgba(0, 0, 0, 0)'}}
         dotStyle={{
           width: 8,
           height: 8,
@@ -1781,12 +1870,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
   InternalQueue = () => {
     return (
-      <View style={{ width: '100%', paddingRight: 15, paddingLeft: 15 }}>
+      <View style={{width: '100%', paddingRight: 15, paddingLeft: 15}}>
         <Text
           style={{
             ...fontSize(30),
             color: Colors.NewTitleColor,
-            fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+            fontFamily:
+              Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
             fontWeight: '500',
             width: '100%',
             textAlign: 'left',
@@ -1794,13 +1884,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
           }}>
           {this.memoryDataModel.memory.memoryTitle}
         </Text>
-        <Text style={[{ fontStyle: 'italic' }, style.normalText]}>
+        <Text style={[{fontStyle: 'italic'}, style.normalText]}>
           {this.memoryDataModel.memory.memoryDate}
           {this.memoryDataModel.memory.memoryPlace.length > 0 && ', '}
           {this.memoryDataModel.memory.memoryPlace}
         </Text>
 
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           {this.memoryDataModel.memory.whoElseWasThere.length > 0 ? (
             <TouchableOpacity
               onPress={() => this.showList(this.keyTagged)}
@@ -1809,14 +1899,17 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 this.memoryDataModel.memory.whoElseWasThere.length == 0
               }>
               {this.memoryDataModel.memory.youWhereThere &&
-                this.memoryDataModel.memory.whoElseWasThere.length == 0 ? (
+              this.memoryDataModel.memory.whoElseWasThere.length == 0 ? (
                 <Text style={style.normalText}>{'You were also there '}</Text>
               ) : (
                 <Text
                   style={{
                     ...fontSize(16),
                     fontWeight: '500',
-                    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                    fontFamily:
+                      Platform.OS === 'ios'
+                        ? fontFamily.Inter
+                        : fontFamily.InterMedium,
                     color: Colors.NewTitleColor,
                   }}>
                   {this.memoryDataModel.memory.youWhereThere && (
@@ -1845,7 +1938,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
               <Text style={style.normalText}>{'| '}</Text>
             )}
           {this.memoryDataModel.memory.memoryReadTime.length > 0 && (
-            <Text style={[style.normalText, { marginBottom: 5 }]}>
+            <Text style={[style.normalText, {marginBottom: 5}]}>
               {this.memoryDataModel.memory.memoryReadTime}
             </Text>
           )}
@@ -1869,11 +1962,11 @@ export default class MemoryDetails extends React.Component<Props, State> {
 
         {this.memoryDataModel.collection_list.length > 0 && (
           <TouchableOpacity
-            style={{ marginTop: 5 }}
+            style={{marginTop: 5}}
             onPress={() => this.scrollToBottom()}>
             <Text style={style.normalText}>
               {'In Collection '}
-              <Text style={{ color: Colors.NewTitleColor }}>
+              <Text style={{color: Colors.NewTitleColor}}>
                 {this.memoryDataModel.collection_list[0].name}
                 {this.memoryDataModel.collection_list.length > 1 && (
                   <Text style={style.normalText}> and </Text>
@@ -1890,11 +1983,14 @@ export default class MemoryDetails extends React.Component<Props, State> {
         {this.memoryDataModel.memory.collaborators.length > 0 && (
           <TouchableOpacity
             onPress={() => this.toggleCollaboratorView()}
-            style={{ flexDirection: 'row', paddingBottom: 5, paddingTop: 5 }}>
+            style={{flexDirection: 'row', paddingBottom: 5, paddingTop: 5}}>
             <Text
               style={{
                 fontWeight: '500',
-                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                fontFamily:
+                  Platform.OS === 'ios'
+                    ? fontFamily.Inter
+                    : fontFamily.InterMedium,
                 fontSize: 16,
                 color: Colors.NewYellowColor,
               }}>
@@ -1907,7 +2003,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
               style={{
                 ...fontSize(18),
                 fontWeight: '500',
-                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                fontFamily:
+                  Platform.OS === 'ios'
+                    ? fontFamily.Inter
+                    : fontFamily.InterMedium,
                 color: Colors.ThemeColor,
                 transform: [
                   {
@@ -1936,11 +2035,18 @@ export default class MemoryDetails extends React.Component<Props, State> {
               html={this.memoryDataModel.memory.description}
               style={HTMLStyleSheet}></HTML> */}
             <RenderHtml
-              tagsStyles={{ p: { ...fontSize(18), marginBottom: 10, fontFamily: 'Inter', fontWeight: '400', lineHeight: 24 } }}
+              tagsStyles={{
+                p: {
+                  ...fontSize(18),
+                  marginBottom: 10,
+                  fontFamily: 'Inter',
+                  fontWeight: '400',
+                  lineHeight: 24,
+                },
+              }}
               contentWidth={Dimensions.get('window').width}
-              source={{ html: this.memoryDataModel.memory.description }}
-              enableExperimentalMarginCollapsing={true}
-            ></RenderHtml>
+              source={{html: this.memoryDataModel.memory.description}}
+              enableExperimentalMarginCollapsing={true}></RenderHtml>
           </View>
         )}
       </View>
@@ -1957,21 +2063,21 @@ export default class MemoryDetails extends React.Component<Props, State> {
       } else {
         htmlHeight = htmlHeight + 500;
       }
-      this.setState({ webViewHeight: htmlHeight });
+      this.setState({webViewHeight: htmlHeight});
     }
   }
 
   render() {
     return (
-      <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
-        <View style={{ flex: 1 }}>
+      <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
+        <View style={{flex: 1}}>
           {this.state.memoryDetailAvailable && (
             <UserDetails
               userDetails={this.memoryDataModel.userDetails}
               shareDetails={this.memoryDataModel.shareOption}
               isExternalQueue={
                 this.state.isExternalQueue ||
-                  this.storyType.indexOf('song') != -1
+                this.storyType.indexOf('song') != -1
                   ? true
                   : false
               }
@@ -1983,12 +2089,14 @@ export default class MemoryDetails extends React.Component<Props, State> {
           )}
           {/* {this.state.memoryDetailAvailable && <UserDetails userDetails={this.memoryDataModel.userDetails} shareDetails={this.memoryDataModel.shareOption} isExternalQueue={this.state.isExternalQueue || this.storyType.indexOf('song') != -1 ? true : false} storyType={this.storyType}/>} */}
           <StatusBar
-            barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+            barStyle={
+              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+            }
             backgroundColor={Colors.NewThemeColor}
           />
           {/* <StatusBar barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'} /> */}
           {this.state.memoryDetailAvailable && (
-            <View style={{ width: '100%' }}>
+            <View style={{width: '100%'}}>
               {this.state.isExternalQueue &&
                 this.memoryDataModel.externalQueue.collection.length > 1 && (
                   <View
@@ -2019,8 +2127,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
                     Platform.OS == 'android' && this.state.bottomToolbar == 0
                       ? 150
                       : Platform.OS == 'ios'
-                        ? 20
-                        : -300,
+                      ? 20
+                      : -300,
                 }}
                 keyboardShouldPersistTaps={'always'}
                 enableOnAndroid={false}
@@ -2043,7 +2151,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                             : 400,
                         marginBottom: 20,
                       }}
-                      source={{ uri: this.memoryDataModel.spotify_url }}
+                      source={{uri: this.memoryDataModel.spotify_url}}
                       javaScriptEnabled={true}
                       domStorageEnabled={true}
                       startInLoadingState={true}
@@ -2064,7 +2172,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                     />
                   </View>
                 )}
-                <View style={{ paddingLeft: 15, paddingRight: 15 }}>
+                <View style={{paddingLeft: 15, paddingRight: 15}}>
                   {this.memoryDataModel.memoryTags.length > 0 && (
                     <MemoryTags
                       memoryTags={this.memoryDataModel.memoryTags}></MemoryTags>
@@ -2081,7 +2189,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                         this.state.selectedCollectionIndex
                       }
                       changeIndex={(index: any) =>
-                        this.setState({ selectedCollectionIndex: index })
+                        this.setState({selectedCollectionIndex: index})
                       }></MemoryCollections>
                   )}
 
@@ -2146,7 +2254,7 @@ const style = StyleSheet.create({
     shadowColor: '#D9D9D9',
     shadowRadius: 2,
     elevation: 3,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
   },
   avatar: {
     height: 40,

@@ -374,6 +374,7 @@ export class LoginController implements LoginControllerProtocol {
    * Check if user is logged in after web service call or not
    */
   checkLoggedIn = (loginStatus: any) => {
+    console.log('loginStatus.logincompleted: ',loginStatus.logincompleted)
     if (loginStatus.logincompleted) {
       loaderHandler.hideLoader();
       //If Login is success full
@@ -427,7 +428,7 @@ export class LoginController implements LoginControllerProtocol {
           loginStatus,
           ['logindata'],
         );
-        var message = msg.message || msg.ResponseMessage || ERROR_MESSAGE;
+        var message = msg?.message || msg?.ResponseMessage || ERROR_MESSAGE;
         console.log(message);
         this.view.showErrorMessage(true, message);
       }
@@ -480,7 +481,7 @@ export class LoginController implements LoginControllerProtocol {
           loginStatus,
           ['instanceData'],
         );
-        var message = msg.message || msg.ResponseMessage || ERROR_MESSAGE;
+        var message = msg?.message || msg?.ResponseMessage || ERROR_MESSAGE;
         console.log(message);
         this.view.showErrorMessage(true, message);
       }
