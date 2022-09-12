@@ -1,41 +1,56 @@
 import React from 'react';
 import {
-  Image, Keyboard, SafeAreaView, StatusBar, TextInput, TouchableOpacity, View
+  Image,
+  Keyboard,
+  SafeAreaView,
+  StatusBar,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import DropDown from '../../common/component/dropDown';
 import TextField from '../../common/component/textField';
-import { profile_placeholder } from '../../images';
+import {profile_placeholder} from '../../images';
 
 import ImageCropPicker, {
-  Image as PickerImage
+  Image as PickerImage,
 } from 'react-native-image-crop-picker';
 import ActionSheet, {
-  ActionSheetItem as ImageSelectionSheetItem
+  ActionSheetItem as ImageSelectionSheetItem,
 } from '../../common/component/actionSheet';
 import BottomPicker, {
-  ActionSheetItem
+  ActionSheetItem,
 } from '../../common/component/bottomPicker';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
-  Colors, fontSize, GenerateRandomID, getValue, requestPermission, testEmail, testPhone
+  Colors,
+  fontSize,
+  GenerateRandomID,
+  getValue,
+  requestPermission,
+  testEmail,
+  testPhone,
 } from '../../common/constants';
 import Utility from '../../common/utility';
-import { action_camera, action_close, action_picture } from '../../images';
+import {action_camera, action_close, action_picture} from '../../images';
 import {
-  RemoveProfilePic, UpdateFormValues, UploadProfilePic, UserProfile
+  RemoveProfilePic,
+  UpdateFormValues,
+  UploadProfilePic,
+  UserProfile,
 } from './userProfileWebService';
 //@ts-ignore
-import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
+import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
 // import DatePickerView from "../../common/component/DatePicker";
 import ActivityIndicatorView from '../../common/component/ActivityIndicatorView';
 import DateTimePicker from '../../common/component/DateTimePicker';
 import MultipleDropDownSelector from '../../common/component/multipleDropDownView';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextNew from '../../common/component/Text';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import { kSetUserProfileData } from './userProfileWebService';
+import {kSetUserProfileData} from './userProfileWebService';
 import Styles from './styles';
 
 type Props = {
@@ -51,13 +66,13 @@ type State = {
   };
   hasLoaded: boolean;
   [key: string]: any | string;
-  error: { [x: string]: { error: boolean; message: string } };
+  error: {[x: string]: {error: boolean; message: string}};
   isDatePickerVisible: boolean;
 };
 export default class MutilpleValueEdit extends React.Component<Props> {
   bottomPicker: React.RefObject<BottomPicker> = React.createRef<BottomPicker>();
   profileUpdated: EventManager;
-  textFieldArray: { [key: string]: TextInput } = {};
+  textFieldArray: {[key: string]: TextInput} = {};
   lastFieldName: string = '';
   _actionSheet: any | ActionSheet = null;
   isProfilePicAvailable: boolean;
@@ -87,38 +102,37 @@ export default class MutilpleValueEdit extends React.Component<Props> {
 
   constructor(props: Props) {
     super(props);
-    this.props.editableFields.forEach((element: any) => {
+    console.log('Editable fields : ', this.props);
+    this.props.route.params.editableFields.forEach((element: any) => {
       this.setState({
         [element.field_name]: element.default_value,
       });
     });
     this.profileUpdated = EventManager.addListener(kSetUserProfileData, () => {
       Keyboard.dismiss();
-      this.props.navigation.popTo('profile');
+      this.props.navigation.navigate('profile');
     });
     if (props.basicInfo) {
       this.isProfilePicAvailable = false;
-      this.setState({ basicInfo: props.basicInfo }, () => {
+      this.setState({basicInfo: props.basicInfo}, () => {
         this.profileUpdated = EventManager.addListener(
           kSetUserProfileData,
           () => {
             Keyboard.dismiss();
-            this.props.navigation.popTo('profile');
+            this.props.navigation.navigate('profile');
           },
         );
         this.isProfilePicAvailable =
           getValue(this.props, ['profilePicUri']) != '';
       });
-
     }
   }
 
   _closeAction = () => {
-    this.setState({ modalVisible: false },()=>{
+    this.setState({modalVisible: false}, () => {
       Keyboard.dismiss();
       this.props.navigation.goBack();
     });
-    
   };
 
   componentWillUnmount() {
@@ -132,7 +146,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
       if (getValue(field, ['granularity', 'todate']) != 'required') {
         this.setState({
           isDatePickerVisible: true,
-          selectionData: { fieldName: field.field_name },
+          selectionData: {fieldName: field.field_name},
         });
         return;
       }
@@ -150,11 +164,11 @@ export default class MutilpleValueEdit extends React.Component<Props> {
         }
       }
       for (var i = most; i > least; i--) {
-        actions.push({ key: i, text: `${i}` });
+        actions.push({key: i, text: `${i}`});
       }
     } else {
       for (let key in field.values) {
-        actions.push({ key, text: field.values[key] });
+        actions.push({key, text: field.values[key]});
       }
     }
 
@@ -213,7 +227,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     }
 
     for (var i = most; i > least; i--) {
-      actions.push({ key: i, text: `${i}` });
+      actions.push({key: i, text: `${i}`});
     }
 
     this.setState(
@@ -225,7 +239,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
           fieldName: field_name,
           selectionType: 0,
           label: selectedViewName,
-          selectedValues: { [selectedValue]: selectedValue },
+          selectedValues: {[selectedValue]: selectedValue},
           maxLimit: 1,
           isFromMultipleDropDown: true,
           fieldNameOfMultipleDropDown:
@@ -275,7 +289,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
             ? this.state[field.field_name].value2
             : field.default_value.value2
           : field.default_value.value2;
-        return { value: default_value_from, value2: default_value_to };
+        return {value: default_value_from, value2: default_value_to};
       } else {
         let val = getValue(field, ['default_value', 'value']);
         if (val) {
@@ -287,178 +301,180 @@ export default class MutilpleValueEdit extends React.Component<Props> {
   }
 
   generateSectionFields() {
-    this.props.editableFields.forEach((element: any) => {
+    this.props.route.params.editableFields.forEach((element: any) => {
       if (element.type == 'text_textfield') {
         this.lastFieldName = element.field_name;
       }
     });
     return (
       <View>
-        {this.props.editableFields.map((field: any, index: number) => {
-          let default_value: any = '';
-          let type = field.type;
+        {this.props.route.params.editableFields.map(
+          (field: any, index: number) => {
+            let default_value: any = '';
+            let type = field.type;
 
-          var showError = false,
-            errorMessage = '';
-          if (this.state.error[field.field_name]) {
-            showError = this.state.error[field.field_name].error;
-            errorMessage = this.state.error[field.field_name].message;
-          }
-          var extra: { [x: string]: any } = {
-            showError,
-            errorMessage,
-            isRequired: field.required,
-          };
-
-          if (
-            type == 'options_select' ||
-            type == 'options' ||
-            type == 'options_buttons'
-          ) {
-            let valueArray: string[] = [];
-            let default_values = this.state[field.field_name]
-              ? this.state[field.field_name]
-              : field.default_value;
-            for (let key in default_values) {
-              //console.log("Values while selection ", default_values[key])
-              valueArray.push(default_values[key]);
+            var showError = false,
+              errorMessage = '';
+            if (this.state.error[field.field_name]) {
+              showError = this.state.error[field.field_name].error;
+              errorMessage = this.state.error[field.field_name].message;
             }
-            default_value = valueArray.join(', ');
+            var extra: {[x: string]: any} = {
+              showError,
+              errorMessage,
+              isRequired: field.required,
+            };
 
-            // default_value = this.getValueForField(field)
-            return (
-              <DropDown
-                key={`${index}`}
-                placeholderText={field.label}
-                value={default_value}
-                selectedValue={default_value}
-                {...extra}
-                onOptionSelected={() => this.onOptionSelection(field)}
-              />
-            );
-          } else if (type == 'text_textfield') {
-            let val = getValue(field, ['default_value']);
-            if (val) {
-              default_value = val;
-            }
-            // default_value = this.getValueForField(field)
-            let keyboardBoardType =
-              field.field_name && field.field_name.indexOf('phone') >= 0
-                ? 'phone-pad'
-                : field.field_name.indexOf('email') >= 0
-                  ? 'email-address'
-                  : 'ascii-capable';
-            let maxLimit = field.field_name.indexOf('name') >= 0 ? 15 : 100;
-            return (
-              <TextField
-                maxLength={maxLimit}
-                key={`${index}`}
-                reference={(input: TextInput) => {
-                  this.textFieldArray = {
-                    ...this.textFieldArray,
-                    [index]: input,
-                  };
-                }}
-                placeholder={field.label}
-                onChange={(text: string) => {
-                  this.setState({
-                    [field.field_name]: text,
-                    error: {
-                      ...this.state.error,
-                      [field.field_name]: { error: false, message: '' },
-                    },
-                  });
-                }}
-                {...extra}
-                returnKeyType={
-                  this.lastFieldName === field.field_name ? 'done' : 'next'
-                }
-                value={
-                  this.state[field.field_name]
-                    ? this.state[field.field_name]
-                    : this.state[field.field_name] == ''
-                      ? ''
-                      : default_value
-                }
-                keyboardType={keyboardBoardType}
-                onSubmitEditing={() => {
-                  let nextRef = `${index + 1}`;
-                  this.textFieldArray[nextRef] &&
-                    typeof this.textFieldArray[nextRef].focus == 'function' &&
-                    (this.textFieldArray[nextRef] as TextInput).focus();
-                }}
-              />
-            );
-          } else if (type == 'date_select') {
-            if (getValue(field, ['granularity', 'todate']) == 'required') {
-              let default_value_from = this.state[field.field_name]
-                ? this.state[field.field_name].value
-                  ? this.state[field.field_name].value
-                  : field.default_value.value
-                : field.default_value.value;
-              let default_value_to = this.state[field.field_name]
-                ? this.state[field.field_name].value2
-                  ? this.state[field.field_name].value2
-                  : field.default_value.value2
-                : field.default_value.value2;
-              //console.log("For date select");
-              default_value_from = Utility.dateAccordingToFormat(
-                default_value_from,
-                'Y',
-              )
-                ? Utility.dateAccordingToFormat(default_value_from, 'Y')
-                : '';
-              default_value_to = Utility.dateAccordingToFormat(
-                default_value_to,
-                'Y',
-              )
-                ? Utility.dateAccordingToFormat(default_value_to, 'Y')
-                : '';
-              return (
-                <MultipleDropDownSelector
-                  placeholderText={field.label}
-                  {...extra}
-                  view1Value={default_value_from}
-                  view2Value={default_value_to}
-                  view1Title="From"
-                  view2Title="To"
-                  onOptionSelected={(selectedFrom: string) => {
-                    this.onOptionSelectForMultipleDropDown(
-                      field.field_name,
-                      default_value_from,
-                      default_value_to,
-                      'From',
-                      'To',
-                      selectedFrom,
-                    );
-                  }}
-                />
-              );
-            } else {
-              let field_date: any = this.state[field.field_name]
+            if (
+              type == 'options_select' ||
+              type == 'options' ||
+              type == 'options_buttons'
+            ) {
+              let valueArray: string[] = [];
+              let default_values = this.state[field.field_name]
                 ? this.state[field.field_name]
-                : field.default_value.value;
-              field_date =
-                field_date.length > 0
-                  ? Utility.dateAccordingToFormat(
-                    field_date,
-                    field.granularity.date_format,
-                  )
-                  : '';
+                : field.default_value;
+              for (let key in default_values) {
+                //console.log("Values while selection ", default_values[key])
+                valueArray.push(default_values[key]);
+              }
+              default_value = valueArray.join(', ');
+
+              // default_value = this.getValueForField(field)
               return (
                 <DropDown
-                  key={field.field_name}
-                  selectedValue={field_date}
-                  value={field_date}
+                  key={`${index}`}
                   placeholderText={field.label}
-                  onOptionSelected={() => {
-                    this.onOptionSelection(field);
+                  value={default_value}
+                  selectedValue={default_value}
+                  {...extra}
+                  onOptionSelected={() => this.onOptionSelection(field)}
+                />
+              );
+            } else if (type == 'text_textfield') {
+              let val = getValue(field, ['default_value']);
+              if (val) {
+                default_value = val;
+              }
+              // default_value = this.getValueForField(field)
+              let keyboardBoardType =
+                field.field_name && field.field_name.indexOf('phone') >= 0
+                  ? 'phone-pad'
+                  : field.field_name.indexOf('email') >= 0
+                  ? 'email-address'
+                  : 'ascii-capable';
+              let maxLimit = field.field_name.indexOf('name') >= 0 ? 15 : 100;
+              return (
+                <TextField
+                  maxLength={maxLimit}
+                  key={`${index}`}
+                  reference={(input: TextInput) => {
+                    this.textFieldArray = {
+                      ...this.textFieldArray,
+                      [index]: input,
+                    };
+                  }}
+                  placeholder={field.label}
+                  onChange={(text: string) => {
+                    this.setState({
+                      [field.field_name]: text,
+                      error: {
+                        ...this.state.error,
+                        [field.field_name]: {error: false, message: ''},
+                      },
+                    });
+                  }}
+                  {...extra}
+                  returnKeyType={
+                    this.lastFieldName === field.field_name ? 'done' : 'next'
+                  }
+                  value={
+                    this.state[field.field_name]
+                      ? this.state[field.field_name]
+                      : this.state[field.field_name] == ''
+                      ? ''
+                      : default_value
+                  }
+                  keyboardType={keyboardBoardType}
+                  onSubmitEditing={() => {
+                    let nextRef = `${index + 1}`;
+                    this.textFieldArray[nextRef] &&
+                      typeof this.textFieldArray[nextRef].focus == 'function' &&
+                      (this.textFieldArray[nextRef] as TextInput).focus();
                   }}
                 />
               );
+            } else if (type == 'date_select') {
+              if (getValue(field, ['granularity', 'todate']) == 'required') {
+                let default_value_from = this.state[field.field_name]
+                  ? this.state[field.field_name].value
+                    ? this.state[field.field_name].value
+                    : field.default_value.value
+                  : field.default_value.value;
+                let default_value_to = this.state[field.field_name]
+                  ? this.state[field.field_name].value2
+                    ? this.state[field.field_name].value2
+                    : field.default_value.value2
+                  : field.default_value.value2;
+                //console.log("For date select");
+                default_value_from = Utility.dateAccordingToFormat(
+                  default_value_from,
+                  'Y',
+                )
+                  ? Utility.dateAccordingToFormat(default_value_from, 'Y')
+                  : '';
+                default_value_to = Utility.dateAccordingToFormat(
+                  default_value_to,
+                  'Y',
+                )
+                  ? Utility.dateAccordingToFormat(default_value_to, 'Y')
+                  : '';
+                return (
+                  <MultipleDropDownSelector
+                    placeholderText={field.label}
+                    {...extra}
+                    view1Value={default_value_from}
+                    view2Value={default_value_to}
+                    view1Title="From"
+                    view2Title="To"
+                    onOptionSelected={(selectedFrom: string) => {
+                      this.onOptionSelectForMultipleDropDown(
+                        field.field_name,
+                        default_value_from,
+                        default_value_to,
+                        'From',
+                        'To',
+                        selectedFrom,
+                      );
+                    }}
+                  />
+                );
+              } else {
+                let field_date: any = this.state[field.field_name]
+                  ? this.state[field.field_name]
+                  : field.default_value.value;
+                field_date =
+                  field_date.length > 0
+                    ? Utility.dateAccordingToFormat(
+                        field_date,
+                        field.granularity.date_format,
+                      )
+                    : '';
+                return (
+                  <DropDown
+                    key={field.field_name}
+                    selectedValue={field_date}
+                    value={field_date}
+                    placeholderText={field.label}
+                    onOptionSelected={() => {
+                      this.onOptionSelection(field);
+                    }}
+                  />
+                );
+              }
             }
-          }
-        })}
+          },
+        )}
       </View>
     );
   }
@@ -467,7 +483,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     Keyboard.dismiss();
     if (Utility.isInternetConnected) {
       if (this.validateFields()) {
-        UpdateFormValues(this.state, this.props.editableFields);
+        UpdateFormValues(this.state, this.props.route.params.editableFields);
       }
     } else {
       No_Internet_Warning();
@@ -490,11 +506,11 @@ export default class MutilpleValueEdit extends React.Component<Props> {
           <Image
             defaultSource={profile_placeholder}
             source={
-              isProfilePicAvailable ? { uri: profilePicURL } : profile_placeholder
+              isProfilePicAvailable ? {uri: profilePicURL} : profile_placeholder
             }
             style={Styles.profileImage}
-            onLoad={() => this.setState({ hasLoaded: true })}
-            onLoadStart={() => this.setState({ hasLoaded: false })}
+            onLoad={() => this.setState({hasLoaded: true})}
+            onLoadStart={() => this.setState({hasLoaded: false})}
           />
           {!this.state.hasLoaded ? (
             <ActivityIndicatorView size="small" />
@@ -535,7 +551,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     );
   };
   validateFields = (): boolean => {
-    let editablefields = this.props.editableFields;
+    let editablefields = this.props.route.params.editableFields;
     var error = {};
     let hasChangedAnyValue = false;
 
@@ -638,12 +654,12 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     }
     if (Object.keys(error).length > 0) {
       ToastMessage('Please check the highlighted fields', Colors.ErrorColor);
-      this.setState({ error });
+      this.setState({error});
       return false;
     } else if (hasChangedAnyValue == false) {
       ToastMessage('No changes found', Colors.ThemeColor);
       Keyboard.dismiss();
-      this.props.navigation.popTo('profile');
+      this.props.navigation.navigate('profile');
     }
     return hasChangedAnyValue;
   };
@@ -656,14 +672,14 @@ export default class MutilpleValueEdit extends React.Component<Props> {
         UserProfile();
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = true;
-        this.setState({ hasLoaded: true },()=>{
+        this.setState({hasLoaded: true}, () => {
           loaderHandler.hideLoader();
         });
       })
       .catch((error: any) => {
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = false;
-        this.setState({ hasLoaded: true },()=>{
+        this.setState({hasLoaded: true}, () => {
           loaderHandler.hideLoader();
         });
       });
@@ -713,7 +729,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
             keyboardShouldPersistTaps="always"
             keyboardDismissMode="on-drag"
             style={Styles.KeyboardAwareScrollViewStyle}
-            contentContainerStyle={{ alignItems: 'center' }}
+            contentContainerStyle={{alignItems: 'center'}}
             bounces={false}>
             {this.props.basicInfo && this.generateProfilePicView()}
             <View style={Styles.basicInfostyle}>
@@ -721,16 +737,15 @@ export default class MutilpleValueEdit extends React.Component<Props> {
               <DateTimePicker
                 isVisible={this.state.isDatePickerVisible}
                 onCancel={() => {
-                  this.setState({ isDatePickerVisible: false });
+                  this.setState({isDatePickerVisible: false});
                   //console.log("cancelled")
                 }}
                 onDateSelection={(date: any) => {
-                  this.setState(
-                    {
-                      isDatePickerVisible: false,
-                      [this.state.selectionData.fieldName]:
-                        Utility.dateObjectToDefaultFormat(date),
-                    });
+                  this.setState({
+                    isDatePickerVisible: false,
+                    [this.state.selectionData.fieldName]:
+                      Utility.dateObjectToDefaultFormat(date),
+                  });
                 }}
               />
             </View>
@@ -749,23 +764,22 @@ export default class MutilpleValueEdit extends React.Component<Props> {
             if (this.state.selectionData.isFromMultipleDropDown) {
               let date: Date = new Date();
               date.setFullYear(parseInt(selectedItem.text));
-              this.setState(
-                {
-                  [fieldName]: {
-                    ...this.state[fieldName],
-                    [selectedItem.key]: Utility.dateObjectToDefaultFormat(date),
-                  },
-                  error: {
-                    ...this.state.error,
-                    [fieldName]: { error: false, message: '' },
-                  },
-                });
-            } else {
               this.setState({
-                [fieldName]: { [selectedItem.key]: selectedItem.text },
+                [fieldName]: {
+                  ...this.state[fieldName],
+                  [selectedItem.key]: Utility.dateObjectToDefaultFormat(date),
+                },
                 error: {
                   ...this.state.error,
-                  [fieldName]: { error: false, message: '' },
+                  [fieldName]: {error: false, message: ''},
+                },
+              });
+            } else {
+              this.setState({
+                [fieldName]: {[selectedItem.key]: selectedItem.text},
+                error: {
+                  ...this.state.error,
+                  [fieldName]: {error: false, message: ''},
                 },
               });
             }
@@ -790,7 +804,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
               [fieldName]: selectedValueObjects,
               error: {
                 ...this.state.error,
-                [fieldName]: { error: false, message: '' },
+                [fieldName]: {error: false, message: ''},
               },
             });
             //console.log(this.state)
@@ -866,7 +880,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                   //this.saveTempFiles(tempfilesArr);
                   //this.props.setValue(false);
                 })
-                .catch(e => { });
+                .catch(e => {});
             }
           });
           break;
@@ -900,7 +914,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                   // this.saveTempFiles(tempfiles);
                   // this.props.setValue(false);
                 })
-                .catch(e => { });
+                .catch(e => {});
             }
           });
           break;
@@ -910,9 +924,9 @@ export default class MutilpleValueEdit extends React.Component<Props> {
 }
 
 const ImageActions: Array<ImageSelectionSheetItem> = [
-  { index: 0, text: 'Capture from Camera', image: action_camera },
-  { index: 1, text: 'Upload from Gallery', image: action_picture },
-  { index: 2, text: 'Cancel', image: action_close },
+  {index: 0, text: 'Capture from Camera', image: action_camera},
+  {index: 1, text: 'Upload from Gallery', image: action_picture},
+  {index: 2, text: 'Cancel', image: action_close},
 ];
 
 export type TempFile = {

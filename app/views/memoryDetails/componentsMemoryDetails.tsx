@@ -1,28 +1,47 @@
 import React from 'react';
 import {
-  Animated, Dimensions, FlatList, Image, ImageBackground, Share, StatusBar, StyleSheet, Text,
-  TouchableHighlight, TouchableWithoutFeedback, View
+  Animated,
+  Dimensions,
+  FlatList,
+  Image,
+  ImageBackground,
+  Share,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import PlaceholderImageView from './../../../src/common/component/placeHolderImageView';
 import {
-  Colors, fontSize, MemoryActionKeys, NO_INTERNET
+  Colors,
+  fontSize,
+  MemoryActionKeys,
+  NO_INTERNET,
 } from './../../../src/common/constants';
 import Utility from './../../../src/common/utility';
 //@ts-ignore
 import Carousel from 'react-native-snap-carousel';
 import {
-  blue_head_icon, pdf_icon, profile_placeholder, white_head_icon
+  blue_head_icon,
+  pdf_icon,
+  profile_placeholder,
+  white_head_icon,
 } from './../../../src/images';
 
-import { pen, share } from './../../images';
+import {pen, share} from './../../images';
 // import NavigationHeader from '../../common/component/navigationHeader';
-import { No_Internet_Warning, ToastMessage } from './../../../src/common/component/Toast';
+import {
+  No_Internet_Warning,
+  ToastMessage,
+} from './../../../src/common/component/Toast';
 // import {getUserName} from '../createMemory/dataHelper';
-import { Account } from './../../../src/common/loginStore';
+import {Account} from './../../../src/common/loginStore';
 // import PublishedMemory from '../myMemories/PublishedMemory';
 import * as Animatable from 'react-native-animatable';
-import { getUserName } from '../../../src/views/createMemory/dataHelper';
+import {getUserName} from '../../../src/views/createMemory/dataHelper';
 import PublishedMemory from '../../../src/views/myMemories/PublishedMemory';
 import EventManager from './../../../src/common/eventManager';
 import Styles from './styles';
@@ -76,16 +95,15 @@ export const MemoryCollections = (props: {
                 <Text style={Styles.byTextStyle}>
                   {'By '}
                   {Account.selectedData().userID ==
-                    props.collectionList[props.selectedCollectionIndex].user.uid
+                  props.collectionList[props.selectedCollectionIndex].user.uid
                     ? 'You'
                     : props.collectionList[props.selectedCollectionIndex].user
-                      .username}
+                        .username}
                 </Text>
               </View>
             </TouchableHighlight>
           )}
         />
-
       </View>
       <Carousel
         data={props.collectionList[props.selectedCollectionIndex].memories}
@@ -146,12 +164,12 @@ export const MemoryCollections = (props: {
                   ? item.item.whoElseWasThere.length > 1
                     ? ' others '
                     : item.item.youWhereThere
-                      ? ''
-                      : ' other '
+                    ? ''
+                    : ' other '
                   : ''}
                 <Text style={Styles.whoelseSubTextStyle}>
                   {item.item.whoElseWasThere.length > 0 ||
-                    item.item.youWhereThere
+                  item.item.youWhereThere
                     ? item.item.whoElseWasThere.length > 1
                       ? 'were also there'
                       : 'was also there'
@@ -168,22 +186,31 @@ export const MemoryCollections = (props: {
   );
 };
 
-export const Border = (props: { paddingTop?: any; padding?: any; paddingLeft?: any; width?: any, marginBottom?: any }) => {
+export const Border = (props: {
+  paddingTop?: any;
+  padding?: any;
+  paddingLeft?: any;
+  width?: any;
+  marginBottom?: any;
+}) => {
   return (
     <View
-      style={[Styles.borderStyle, {
-        width: props.width ? props.width : '100%',
-        marginTop: props.paddingTop ? props.paddingTop : 0,
-        marginRight: props.padding ? props.padding : 0,
-        marginLeft: props.padding ? props.padding : 0,
-        marginBottom: props.marginBottom ? props.marginBottom : 0,
-        paddingLeft: props.paddingLeft ? props.paddingLeft : 0,
-      }]}
+      style={[
+        Styles.borderStyle,
+        {
+          width: props.width ? props.width : '100%',
+          marginTop: props.paddingTop ? props.paddingTop : 0,
+          marginRight: props.padding ? props.padding : 0,
+          marginLeft: props.padding ? props.padding : 0,
+          marginBottom: props.marginBottom ? props.marginBottom : 0,
+          paddingLeft: props.paddingLeft ? props.paddingLeft : 0,
+        },
+      ]}
     />
   );
 };
 
-export const MemoryTags = (props: { memoryTags: any; onPressCallback?: any }) => {
+export const MemoryTags = (props: {memoryTags: any; onPressCallback?: any}) => {
   return (
     <FlatList
       horizontal
@@ -212,7 +239,7 @@ export const MemoryTags = (props: { memoryTags: any; onPressCallback?: any }) =>
   );
 };
 
-export const CollaboratorView = (props: { collaborators: any }) => {
+export const CollaboratorView = (props: {collaborators: any}) => {
   return (
     <FlatList
       horizontal
@@ -228,7 +255,7 @@ export const CollaboratorView = (props: { collaborators: any }) => {
             imageStyle={Styles.CollaboratorImageStyle}>
             <Image
               source={
-                item.item.uri != '' ? { uri: item.item.uri } : profile_placeholder
+                item.item.uri != '' ? {uri: item.item.uri} : profile_placeholder
               }
               style={Styles.CollaboratorProfileImageStyle}></Image>
           </ImageBackground>
@@ -240,21 +267,21 @@ export const CollaboratorView = (props: { collaborators: any }) => {
 };
 
 export const UserDetails = (props: {
-  userDetails: any,
-  isExternalQueue: any,
-  shareDetails: any,
-  storyType: any,
-  onPressCallback?: any,
-  previewDraft?: any,
-  deepLinkBackClick?: boolean
+  userDetails: any;
+  isExternalQueue: any;
+  shareDetails: any;
+  storyType: any;
+  onPressCallback?: any;
+  previewDraft?: any;
+  deepLinkBackClick?: boolean;
 }) => {
   let showCueBackLogo =
     props.userDetails.name.toLowerCase().trim() == 'cueback' ||
-      props.userDetails.name.toLowerCase().trim() == 'my stories matter'
+    props.userDetails.name.toLowerCase().trim() == 'my stories matter'
       ? true
       : props.storyType == 'internal_cues'
-        ? true
-        : false;
+      ? true
+      : false;
   return (
     <View style={Styles.userDetailsContainer}>
       <View style={Styles.userDetailsSubContainer}>
@@ -274,10 +301,10 @@ export const UserDetails = (props: {
             source={profile_placeholder}>
             <Image
               style={Styles.userImageStyle}
-              resizeMode='cover'
+              resizeMode="cover"
               source={
                 props.userDetails.isProfileAvailable
-                  ? { uri: props.userDetails.userProfilePic }
+                  ? {uri: props.userDetails.userProfilePic}
                   : props.userDetails.userProfilePic
               }
             />
@@ -310,8 +337,12 @@ export const UserDetails = (props: {
       </View>
       {/* <Border paddingTop={5} padding={15} /> */}
       <StatusBar
-        barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
-        backgroundColor={props.isExternalQueue ? Colors.ThemeColor : Colors.white}
+        barStyle={
+          Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+        }
+        backgroundColor={
+          props.isExternalQueue ? Colors.ThemeColor : Colors.white
+        }
       />
     </View>
   );
@@ -321,11 +352,10 @@ const _onShareMemory = async (url: any) => {
   try {
     setTimeout(async () => {
       const result: any = await Share.share({
-        message:
-          'Share the Memory',
+        message: 'Share the Memory',
         url: url,
-        title: 'Share'
-      })
+        title: 'Share',
+      });
 
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -335,43 +365,42 @@ const _onShareMemory = async (url: any) => {
         }
       } else if (result.action === Share.dismissedAction) {
         // dismissed
-      }
-      else {
+      } else {
         // alert(JSON.stringify(result))
       }
     }, 1000);
-
   } catch (error) {
     // alert(error.message);
   }
-}
+};
 
 export const ShowSharedaetilsDetails = (props: {
-  userDetails: any,
-  isExternalQueue?: any,
-  shareDetails?: any,
-  storyType?: any,
-  onPressCallback?: any,
-  previewDraft?: any,
-  deepLinkBackClick?: boolean,
-  renderLikeView?: any,
-  memoryDetails?: any,
-  onActionItemClicked?: any
+  userDetails: any;
+  isExternalQueue?: any;
+  shareDetails?: any;
+  storyType?: any;
+  onPressCallback?: any;
+  previewDraft?: any;
+  deepLinkBackClick?: boolean;
+  renderLikeView?: any;
+  memoryDetails?: any;
+  onActionItemClicked?: any;
 }) => {
   let showCueBackLogo =
     props.userDetails.name.toLowerCase().trim() == 'cueback' ||
-      props.userDetails.name.toLowerCase().trim() == 'my stories matter'
+    props.userDetails.name.toLowerCase().trim() == 'my stories matter'
       ? true
       : props.storyType == 'internal_cues'
-        ? true
-        : false;
+      ? true
+      : false;
   return (
     <View style={Styles.ShowSharedaetilsDetailsContainer}>
       {props.shareDetails.available && (
         <View style={Styles.ShowSharedaetilsDetailsContainerSub}>
           <TouchableWithoutFeedback
-            onPress={() => { _onShareMemory(props.memoryDetails.memory_url) }}
-          >
+            onPress={() => {
+              _onShareMemory(props.memoryDetails.memory_url);
+            }}>
             <View style={Styles.ShareContainer}>
               <Text style={Styles.shareTextStyle}>Share</Text>
               <Image source={share}></Image>
@@ -379,22 +408,26 @@ export const ShowSharedaetilsDetails = (props: {
           </TouchableWithoutFeedback>
 
           <View style={Styles.widthSeparator} />
-          {
-            props.userDetails.name == 'You' ?
-              <TouchableWithoutFeedback
-                onPress={() => props.onActionItemClicked({ nid: props.memoryDetails.nid, actionType: MemoryActionKeys.editMemoryKey })}
-              >
-                <View style={Styles.EditContainer}>
-                  <Text style={[Styles.shareTextStyle, { color: Colors.white }]}>Edit</Text>
-                  <Image source={pen}></Image>
-                </View>
-              </TouchableWithoutFeedback>
-              :
-              <View style={Styles.shareWidthStyle} />
-          }
+          {props.userDetails.name == 'You' ? (
+            <TouchableWithoutFeedback
+              onPress={() =>
+                props.onActionItemClicked({
+                  nid: props.memoryDetails.nid,
+                  actionType: MemoryActionKeys.editMemoryKey,
+                })
+              }>
+              <View style={Styles.EditContainer}>
+                <Text style={[Styles.shareTextStyle, {color: Colors.white}]}>
+                  Edit
+                </Text>
+                <Image source={pen}></Image>
+              </View>
+            </TouchableWithoutFeedback>
+          ) : (
+            <View style={Styles.shareWidthStyle} />
+          )}
         </View>
       )}
-
     </View>
   );
 };
@@ -428,18 +461,20 @@ export const CarousalFilesView = (props: {
   if (props.files.length > 0)
     return (
       <View style={Styles.imageCarouselContainerStyle}>
-        {props.type == kImage && props.files ?
+        {props.type == kImage && props.files ? (
           <Carousel
             data={props.files}
             renderItem={(item: any) => (
-              <CommonImageView showDesc={false} file={item.item} files={props.files} />
+              <CommonImageView
+                showDesc={false}
+                file={item.item}
+                files={props.files}
+              />
             )}
             sliderWidth={Dimensions.get('window').width}
             itemWidth={Dimensions.get('window').width}
           />
-          :
-          null
-        }
+        ) : null}
         {props.type == kPDF && props.files ? (
           <Carousel
             data={props.files}
@@ -455,15 +490,15 @@ export const CarousalFilesView = (props: {
   return null;
 };
 
-export const CommonPDFView = (props: { file: any; files: any }) => {
+export const CommonPDFView = (props: {file: any; files: any}) => {
   const navigation = useNavigation();
-  
+
   return (
     <View style={[Styles.commonPDFContainer, Styles.boxShadow]}>
       <TouchableWithoutFeedback
         onPress={() => {
           if (Utility.isInternetConnected) {
-            navigation.navigate("pdfViewer", { file: props.file });
+            navigation.navigate('pdfViewer', {file: props.file});
           } else {
             ToastMessage(NO_INTERNET, Colors.WarningColor);
           }
@@ -494,7 +529,11 @@ export const CommonPDFView = (props: { file: any; files: any }) => {
   );
 };
 
-export const CommonImageView = (props: { file: any; files: any; showDesc?: boolean }) => {
+export const CommonImageView = (props: {
+  file: any;
+  files: any;
+  showDesc?: boolean;
+}) => {
   let currentIndex = props.files.indexOf(props.file);
   return (
     <View style={[Styles.CommonImageViewContainer, Styles.boxShadow]}>
@@ -514,25 +553,25 @@ export const CommonImageView = (props: { file: any; files: any; showDesc?: boole
             <PlaceholderImageView
               style={Styles.placeholderStyle}
               uri={
-                props.file.thumbnail_url ? props.file.thumbnail_url : props.file.url
-                  ? props.file.url : props.file.filePath
+                props.file.thumbnail_url
+                  ? props.file.thumbnail_url
+                  : props.file.url
+                  ? props.file.url
+                  : props.file.filePath
               }
               resizeMode={'contain'}
             />
           </View>
-          {
-            props.showDesc == false ?
-              null
-              :
-              <TitleAndDescription file={props.file} type={kImage} />
-          }
+          {props.showDesc == false ? null : (
+            <TitleAndDescription file={props.file} type={kImage} />
+          )}
         </View>
       </TouchableWithoutFeedback>
     </View>
   );
 };
 
-export const TitleAndDescription = (props: { file: any; type: any }) => {
+export const TitleAndDescription = (props: {file: any; type: any}) => {
   let fileTitle = props.file.file_title
     ? props.file.file_title.replace(/["']/g, "\\'").toString()
     : '';
@@ -589,7 +628,7 @@ export const LikeView = (props: {
 }) => {
   return (
     <View style={Styles.LikeViewContainer}>
-      <Image source={props.icon} style={{ padding: 1 }} resizeMode="contain" />
+      <Image source={props.icon} style={{padding: 1}} resizeMode="contain" />
       <TouchableHighlight
         underlayColor={Colors.touchableunderlayColor}
         onPress={() => props.onPress()}>
@@ -682,14 +721,17 @@ export const LikeCommentShare = (props: {
   );
 };
 
-export const TitleAndValue = (props: { title: string; description: string }) => {
+export const TitleAndValue = (props: {title: string; description: string}) => {
   return (
     <View style={Styles.TitleAndValueContainer}>
       <Text
-        style={[Styles.titleandValueTextStyle, { color: Colors.newTextColor }]}>
+        style={[Styles.titleandValueTextStyle, {color: Colors.newTextColor}]}>
         {props.title}
       </Text>
-      <Text style={[Styles.titleandValueTextStyle, { color: Colors.bordercolor }]}>{props.description}</Text>
+      <Text
+        style={[Styles.titleandValueTextStyle, {color: Colors.bordercolor}]}>
+        {props.description}
+      </Text>
     </View>
   );
 };

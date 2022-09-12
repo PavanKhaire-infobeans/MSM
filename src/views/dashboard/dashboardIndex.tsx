@@ -421,7 +421,11 @@ class DashboardIndex extends React.Component<Props> {
         )
           .then((response: Response) => response.json())
           .catch((err: Error) => {
-            Promise.reject(err);
+            this.props.navigation.reset({
+              index: 0,
+              routes: [{name: 'prologue'}],
+            });
+            return Promise.reject(err);
           });
         DefaultPreference.set(
           'seasons',
@@ -496,7 +500,7 @@ class DashboardIndex extends React.Component<Props> {
           // });
         });
       } catch (err) {
-        console.log('Error fetching configurations');
+        console.log('Error fetching configurations', err);
       }
     } else {
       setTimeout(() => {

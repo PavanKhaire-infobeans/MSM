@@ -411,7 +411,8 @@ export class LoginController implements LoginControllerProtocol {
             }
         alert("s")
         // Actions.dashBoard();
-            this.view.props.navigation.navigate('dashBoard')
+            this.view.props.navigation.reste({index:0,
+              routes:[{name:'dashBoard'}]})
           }, 100);
           this.view.props.clearDashboard();
           this.view.props.clean();
@@ -466,6 +467,10 @@ export class LoginController implements LoginControllerProtocol {
                   instanceData: loginStatus.instanceData.Response,
                   isDisabledAccount: isDisabledAccount,
                 });
+          this.view.props.navigation.reset({
+            index: 0,
+            routes: [{name: 'dashBoard'}],
+          });
               } else {
                 this.loginUserAccounts(loginStatus.instanceData.Response[0].id);
               }
