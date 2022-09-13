@@ -96,7 +96,6 @@ import WriteTabs from './views/writeTabs';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 
 EStyleSheet.build();
 
@@ -106,18 +105,6 @@ Text.defaultProps.allowFontScaling = false;
 
 const RootStack = createStackNavigator();
 const MindPopStack = createStackNavigator();
-const DrawerStack = createStackNavigator();
-
-const DrawerNavigator = () => {
-  return (
-    <DrawerStack.Navigator
-      initialRouteName="Home"
-      screenOptions={{headerShown: false}}>
-      <DrawerStack.Screen name="Home" component={DashboardIndex} />
-      <DrawerStack.Screen name="writeTabs" component={WriteTabs} />
-    </DrawerStack.Navigator>
-  );
-};
 
 const MindPopNavigator = () => {
   return (
@@ -207,7 +194,7 @@ const AppNavigationRouter = () => {
         />
         <RootStack.Screen
           name="dashBoard"
-          component={DrawerNavigator}
+          component={DashboardIndex}
           options={{headerShown: false}}
         />
         <RootStack.Screen
@@ -383,6 +370,11 @@ const AppNavigationRouter = () => {
         <RootStack.Screen
           name="topicsFilter"
           component={TopicsFilter}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="writeTabs"
+          component={WriteTabs}
           options={{headerShown: false}}
         />
       </RootStack.Navigator>

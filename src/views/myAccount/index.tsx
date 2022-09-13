@@ -103,7 +103,9 @@ export default class MyAccount extends React.Component {
         break;
       case Drafts:
         // this.props.navigation.jumpTo('memoriesDrafts', {isFromMenu: true});
-        this.props.navigation.replace('writeTabs');
+        this.props.navigation.navigate('writeTabs', {
+          navigation: this.props.navigation,
+        });
         break;
       case Memories:
         break;

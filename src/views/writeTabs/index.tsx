@@ -268,7 +268,7 @@ class WriteTabs extends React.Component<Props> {
     this.notificationListener.removeListener();
     this.foregroundNotification.removeListener();
     this.backgroundNotification.removeListener();
-    this.eventManager.removeListener();
+    // this.eventManager.removeListener();
     this.memoryActionsListener.removeListener();
     this.eventListener.removeListener();
     // this.eventManager.removeListener();
@@ -398,11 +398,17 @@ class WriteTabs extends React.Component<Props> {
               tabBarActiveTextColor={Colors.TextColor}
               // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
               tabBarUnderlineStyle={Styles.tabBarUnderlineStyle}>
-              <MyMemories tabLabel={'Edit'} />
+              <MyMemories
+                tabLabel={'Edit'}
+                navigation={this.props.navigation}
+              />
               <MyMemories tabLabel={'New'} />
               {/* <AddContent tabLabel={'New'} /> */}
               {/* <View tabLabel={'New'} ></View> */}
-              <Prompts tabLabel={'Prompts'} />
+              <Prompts
+                tabLabel={'Prompts'}
+                navigation={this.props.navigation}
+              />
             </ScrollableTabViewForWrite>
             {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
           </View>

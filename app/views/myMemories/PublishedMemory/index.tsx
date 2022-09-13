@@ -120,7 +120,6 @@ export default class PublishedMemory extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    console.log('Props : ', props);
     this.publishedMemoryDataModel = new PublishedMemoryDataModel();
     this.publishedMemoryListener = EventManager.addListener(
       kPublishedMemoriesFetched,
@@ -677,9 +676,9 @@ export default class PublishedMemory extends React.Component<Props, State> {
   }
 }
 
-const _addToCollection = (nid: any) => {
+const _addToCollection = (nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
-    this.props.navigation.navigate('memoryCollectionList', {
+    navigation.navigate('memoryCollectionList', {
       isFromMemoryAction: true,
       nid: nid,
     });
@@ -687,10 +686,11 @@ const _addToCollection = (nid: any) => {
     No_Internet_Warning();
   }
 };
-const _onEditMemory = (nid: any) => {
+
+const _onEditMemory = (nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
     loaderHandler.showLoader();
-    this.props.navigation.navigate('createMemory', {
+    navigation.navigate('createMemory', {
       editMode: true,
       draftNid: nid,
       editPublsihedMemory: true,
@@ -726,11 +726,15 @@ const _onShareMemory = async (url: any) => {
   }
 };
 
-export const onActionItemClicked = async (index: number, data: any): void => {
+export const onActionItemClicked = async (
+  index: number,
+  data: any,
+  navigation: any,
+) => {
   // console.log(JSON.stringify(data));
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
-      _addToCollection(data.nid);
+      _addToCollection(data.nid, navigation);
       break;
     case MemoryActionKeys.editMemoryKey:
       loaderHandler.showLoader();
@@ -757,7 +761,7 @@ export const onActionItemClicked = async (index: number, data: any): void => {
           Promise.reject(err);
         });
       if (response.ResponseCode == 200) {
-        _onEditMemory(data.nid);
+        _onEditMemory(data.nid, navigation);
       } else {
         loaderHandler.hideLoader();
       }
@@ -1276,6 +1280,7 @@ export const MemoryBasicDetails = (
   item: any,
   openMemoryActions?: any,
   listType?: any,
+  navigation?: any,
 ) => {
   let memoryActions = MemoryActionsListArray(item);
   return (
@@ -1285,7 +1290,7 @@ export const MemoryBasicDetails = (
           <TouchableWithoutFeedback
             onPress={() => {
               if (Utility.isInternetConnected) {
-                this.props.navigation.navigate('newmemoryDetails', {
+                navigation.navigate('newmemoryDetails', {
                   nid: item.nid,
                   type: item.type,
                   height: 80,
@@ -1335,7 +1340,7 @@ export const MemoryBasicDetails = (
                 itm => itm.title === e.nativeEvent.name,
               );
               if (data && data[0]) {
-                onActionItemClicked(e.nativeEvent.index, data[0]);
+                onActionItemClicked(e.nativeEvent.index, data[0], navigation);
               }
             }}>
             <Image source={moreoptions} />

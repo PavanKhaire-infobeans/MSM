@@ -530,6 +530,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   memoryDetails = (fetched: boolean, memoryDetails: any) => {
+    loaderHandler.hideLoader();
     if (fetched) {
       // "internal_cues" ||
       let isExternalCue =
@@ -554,7 +555,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
       ToastMessage(memoryDetails, Colors.ErrorColor);
       this.setState({memoryDetailAvailable: true});
     }
-    loaderHandler.hideLoader();
   };
 
   componentWillUnmount() {

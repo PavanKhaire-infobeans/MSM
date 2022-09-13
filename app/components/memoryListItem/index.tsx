@@ -265,7 +265,11 @@ export default class MemoryListItem extends React.Component<Props, State> {
                             itm => itm.title === e.nativeEvent.name,
                           );
                           if (data && data[0]) {
-                            onActionItemClicked(e.nativeEvent.index, data[0]);
+                            onActionItemClicked(
+                              e.nativeEvent.index,
+                              data[0],
+                              this.props.navigation,
+                            );
                           }
                         }}>
                         <Image source={moreoptions} />
@@ -330,6 +334,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                     this.props.item.item,
                     this.setItem,
                     this.props.listType,
+                    this.props.navigation,
                     // this.props.openMemoryActions,
                     // _onShowMemoryDetails(this.props.item.item,"Recent")
                   )}

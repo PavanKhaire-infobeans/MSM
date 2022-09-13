@@ -1,12 +1,18 @@
 import React from 'react';
 import {
-  Platform, SafeAreaView, StatusBar, StyleSheet, View
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
 } from 'react-native';
 // @ts-ignore
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import CustomAlert from '../../common/component/customeAlert';
 import {
-  Colors, fontFamily, MyMemoriesTapBarOptions
+  Colors,
+  fontFamily,
+  MyMemoriesTapBarOptions,
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
@@ -57,11 +63,9 @@ export default class MyMemoriesContainer extends React.Component<Props> {
         message={message}
         buttons={[
           {
-            text:  Platform.OS==='android'?'GREAT!':'Great!',
-            func: () => {
-
-            },
-          }
+            text: Platform.OS === 'android' ? 'GREAT!' : 'Great!',
+            func: () => {},
+          },
         ]}
       />
     );
@@ -86,7 +90,11 @@ export default class MyMemoriesContainer extends React.Component<Props> {
           <View style={{flex: 1}}>
             {/* <NavigationBar title={TabItems.MyMemories} /> */}
             <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             {/* <ScrollableTabView
@@ -104,9 +112,13 @@ export default class MyMemoriesContainer extends React.Component<Props> {
                 height: 2,
               }}
               initialPage={1}> */}
-              {/* <PublishedMemory tabLabel={MyMemoriesTapBarOptions.published} /> */}
-              <MemoryDrafts tabLabel={MyMemoriesTapBarOptions.drafts} fromDeepLink={this.props.fromDeepLink}/>
-              {/* <Activities tabLabel={MyMemoriesTapBarOptions.activity} /> */}
+            {/* <PublishedMemory tabLabel={MyMemoriesTapBarOptions.published} /> */}
+            <MemoryDrafts
+              tabLabel={MyMemoriesTapBarOptions.drafts}
+              fromDeepLink={this.props.fromDeepLink}
+              navigation={this.props.navigation}
+            />
+            {/* <Activities tabLabel={MyMemoriesTapBarOptions.activity} /> */}
             {/* </ScrollableTabView> */}
           </View>
         </SafeAreaView>
