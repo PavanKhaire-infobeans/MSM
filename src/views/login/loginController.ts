@@ -125,13 +125,12 @@ export class LoginController implements LoginControllerProtocol {
         userInfo.user.email,
         CueBackInsatance,
       );
-      setTimeout(() => {
-        this.view.props.navigation.reset({
-          index: 0,
-          routes: [{name: 'dashBoard'}],
-        });
-        loaderHandler.hideLoader();
-      }, 100);
+      this.view.props.navigation.reset({
+        index: 0,
+        routes: [{name: 'dashBoard'}],
+      });
+      loaderHandler.hideLoader();
+      this.view.props.clearDashboard();
       this.view.props.clean();
     } else {
       loaderHandler.hideLoader();
@@ -402,8 +401,8 @@ export class LoginController implements LoginControllerProtocol {
             });
           }
           console.log('Login s -> dashboard');
-          // this.view.props.clearDashboard();
-          // this.view.props.clean();
+          this.view.props.clearDashboard();
+          this.view.props.clean();
           this.view.props.navigation.reset({
             index: 0,
             routes: [{name: 'dashBoard'}],
