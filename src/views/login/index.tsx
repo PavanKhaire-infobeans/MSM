@@ -111,21 +111,6 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   keyboardDidHideListener: any;
 
   navBar: NavigationHeaderSafeArea = null;
-  /**
-   * Lifecycle Method
-   *
-   * Will get updates from Saga
-   */
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    // Check for login response
-    console.log('nextProps?.route?.name: ', JSON.stringify(nextProps));
-    if (
-      nextProps?.route?.name == 'login' ||
-      nextProps?.route?.name == 'prologue'
-    ) {
-      this.controller.checkLoggedIn(nextProps.loginStatus);
-    }
-  }
 
   constructor(props: Props) {
     super(props);
@@ -229,6 +214,23 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       'keyboardDidHide',
       this._keyboardDidHide,
     );
+  }
+  /**
+   * Lifecycle Method
+   *
+   * Will get updates from Saga
+   */
+  componentWillReceiveProps(nextProps: Props) {
+    // Check for login response
+    console.log('this.props !== nextProps : ', this.props !== nextProps);
+    if (
+      this.props !== nextProps &&
+      (nextProps?.route?.name == 'login' ||
+        nextProps?.route?.name == 'prologue')
+    ) {
+      console.log('nextProps?.route?.name: ', JSON.stringify(nextProps));
+      this.controller.checkLoggedIn(nextProps.loginStatus);
+    }
   }
 
   updateState(state: object, showErrorMessage?: boolean, msgObject?: string) {

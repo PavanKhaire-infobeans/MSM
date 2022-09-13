@@ -102,7 +102,7 @@ class DashboardIndex extends React.Component<Props> {
     this.props.navigation.navigate('addContent');
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.eventManager = EventManager.addListener(
       'addContentTabPressed',
       this.navigateToAddContent,
@@ -146,7 +146,7 @@ class DashboardIndex extends React.Component<Props> {
         });
       }, 2000);
     }
-  };
+  }
 
   changeNotification = () => {
     this.props.navigation.reset('root');

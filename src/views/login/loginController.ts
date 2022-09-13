@@ -1,21 +1,26 @@
-import { Keyboard } from 'react-native';
+import {Keyboard} from 'react-native';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import {
-  Colors, CueBackInsatance, ERROR_MESSAGE, getValue, NO_INTERNET, testEmail
+  Colors,
+  CueBackInsatance,
+  ERROR_MESSAGE,
+  getValue,
+  NO_INTERNET,
+  testEmail,
 } from '../../common/constants';
 import ViewProtocol from '../../common/interfaces/viewProtocol';
-import { Account, LoginStore, UserData } from '../../common/loginStore';
+import {Account, LoginStore, UserData} from '../../common/loginStore';
 import Utility from '../../common/utility';
 // @ts-ignore
 import {
   GoogleSignin,
-  statusCodes
+  statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import {NativeEventEmitter, NativeModules} from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
 import EventManager from '../../common/eventManager';
-import { kSSOLogin, SSOLogin } from '../../common/webservice/loginServices';
+import {kSSOLogin, SSOLogin} from '../../common/webservice/loginServices';
 
 let userInfo: any = {};
 export const kAppleCredentials = 'appleUserCredentials';
@@ -63,7 +68,7 @@ export class LoginController implements LoginControllerProtocol {
 
   appleLoginCallBack(params: any) {
     this.appleSubscriber.remove();
-    let user = { id: params.id };
+    let user = {id: params.id};
     if (params.id != null && params.id.trim() != '') {
       loaderHandler.showLoader();
       if (params.email != null && params.email.trim() != '') {
@@ -76,7 +81,7 @@ export class LoginController implements LoginControllerProtocol {
           name: params.givenName + ' ' + params.familyName,
         };
       }
-      userInfo = { user };
+      userInfo = {user};
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
           params = {
@@ -121,10 +126,10 @@ export class LoginController implements LoginControllerProtocol {
         CueBackInsatance,
       );
       setTimeout(() => {
-        // Actions.dashBoard();
-        alert("")
-        this.view.props.navigation.navigate('dashBoard')
-        this.view.props.clearDashboard();
+        this.view.props.navigation.reset({
+          index: 0,
+          routes: [{name: 'dashBoard'}],
+        });
         loaderHandler.hideLoader();
       }, 100);
       this.view.props.clean();
@@ -184,7 +189,7 @@ export class LoginController implements LoginControllerProtocol {
 
   onClick() {
     if (Utility.isInternetConnected) {
-      const { username, password } = this.view.state;
+      const {username, password} = this.view.state;
       if (username.length == 0 || password.length == 0) {
         var state = {};
         if (username.length == 0) {
@@ -254,7 +259,7 @@ export class LoginController implements LoginControllerProtocol {
    * @param value
    */
   onTextChange(key: string, value: string) {
-    var state: { [x: string]: any } = { [key]: value };
+    var state: {[x: string]: any} = {[key]: value};
     if (
       key == 'username' &&
       this.view.state.userNameError.error == true &&
@@ -286,18 +291,6 @@ export class LoginController implements LoginControllerProtocol {
     this.view.showErrorMessage(false);
   }
 
-  // showErrorMessage=(show: boolean, message?: string)=>{
-  //     let height = 0;
-  //     if(show){
-  //         height = 70;
-  //         this.view.showErrorMessage(message, Colors.ErrorColor);
-  //     }
-  //     else{
-  //         this.view.showErrorMessage(false);
-  //     }
-  //     this.view.updateState({errorViewHeight : height})
-  // }
-
   generateFileForProfile = (profileImage: any) => {
     if (profileImage != '') {
       var instancePath = `https://${this.view.selectedCommunity.instanceURL}/sites/${this.view.selectedCommunity.instanceURL}/default/files/`;
@@ -309,14 +302,14 @@ export class LoginController implements LoginControllerProtocol {
 
   loginUserAccounts = (portal_ids?: any) => {
     loaderHandler.showLoader();
-    const { username, password } = this.view.state;
-    let loginObj: any = { emailId: username, password: password, fcm_token: '' };
+    const {username, password} = this.view.state;
+    let loginObj: any = {emailId: username, password: password, fcm_token: ''};
     if (portal_ids) {
-      loginObj = { ...loginObj, portal_ids: portal_ids };
+      loginObj = {...loginObj, portal_ids: portal_ids};
     }
     DefaultPreference.get('firebaseToken').then(
       (value: any) => {
-        this.view.props.loginServiceCall({ ...loginObj, fcm_token: value });
+        this.view.props.loginServiceCall({...loginObj, fcm_token: value});
       },
       (err: any) => {
         this.view.props.loginServiceCall(loginObj);
@@ -364,7 +357,7 @@ export class LoginController implements LoginControllerProtocol {
       isSSOLogin: isSSOLogin,
       // profileImage:  this.generateFileForProfile(profileImage)
     };
-    const values = { ...this.view.selectedCommunity };
+    const values = {...this.view.selectedCommunity};
     LoginStore.saveOnLogin(values);
     this.view.dataWasStored = userID;
     this.view.props.setUser(this.view.selectedCommunity);
@@ -374,7 +367,7 @@ export class LoginController implements LoginControllerProtocol {
    * Check if user is logged in after web service call or not
    */
   checkLoggedIn = (loginStatus: any) => {
-    console.log('loginStatus.logincompleted: ',loginStatus.logincompleted)
+    console.log('loginStatus.logincompleted: ', JSON.stringify(loginStatus));
     if (loginStatus.logincompleted) {
       loaderHandler.hideLoader();
       //If Login is success full
@@ -389,33 +382,32 @@ export class LoginController implements LoginControllerProtocol {
               element.SiteDetails,
             );
           });
-          setTimeout(() => {
-            let obj = {
-              username: this.view.state.username,
-              password: this.view.state.password,
-            };
-            if (this.view.state._isRemeberMe) {
-              DefaultPreference.set('loginCredentials', JSON.stringify(obj));
-            } else {
-              DefaultPreference.get('loginCredentials').then((value: any) => {
-                value = value ? JSON.parse(value) : null;
-                if (value && (value.username && value.password)) {
-                  if (
-                    obj.username == value.username &&
-                    obj.password == value.password
-                  ) {
-                    DefaultPreference.set('loginCredentials', null);
-                  }
+          let obj = {
+            username: this.view.state.username,
+            password: this.view.state.password,
+          };
+          if (this.view.state._isRemeberMe) {
+            DefaultPreference.set('loginCredentials', JSON.stringify(obj));
+          } else {
+            DefaultPreference.get('loginCredentials').then((value: any) => {
+              value = value ? JSON.parse(value) : null;
+              if (value && value.username && value.password) {
+                if (
+                  obj.username == value.username &&
+                  obj.password == value.password
+                ) {
+                  DefaultPreference.set('loginCredentials', null);
                 }
-              });
-            }
-        alert("s")
-        // Actions.dashBoard();
-            this.view.props.navigation.reste({index:0,
-              routes:[{name:'dashBoard'}]})
-          }, 100);
-          this.view.props.clearDashboard();
-          this.view.props.clean();
+              }
+            });
+          }
+          console.log('Login s -> dashboard');
+          // this.view.props.clearDashboard();
+          // this.view.props.clean();
+          this.view.props.navigation.reset({
+            index: 0,
+            routes: [{name: 'dashBoard'}],
+          });
         } else {
           let errorMessage = getValue(loginStatus, ['data', 'message'])
             ? getValue(loginStatus, ['data', 'message'])
@@ -425,7 +417,7 @@ export class LoginController implements LoginControllerProtocol {
         }
       } else {
         //If web service failed
-        var msg: { message: string; ResponseMessage: string } = getValue(
+        var msg: {message: string; ResponseMessage: string} = getValue(
           loginStatus,
           ['logindata'],
         );
@@ -467,10 +459,11 @@ export class LoginController implements LoginControllerProtocol {
                   instanceData: loginStatus.instanceData.Response,
                   isDisabledAccount: isDisabledAccount,
                 });
-          this.view.props.navigation.reset({
-            index: 0,
-            routes: [{name: 'dashBoard'}],
-          });
+                console.log('Open dashboard');
+                this.view.props.navigation.reset({
+                  index: 0,
+                  routes: [{name: 'dashBoard'}],
+                });
               } else {
                 this.loginUserAccounts(loginStatus.instanceData.Response[0].id);
               }
@@ -482,7 +475,7 @@ export class LoginController implements LoginControllerProtocol {
           this.view._show(NO_INTERNET, Colors.WarningColor);
         }
       } else {
-        var msg: { message: string; ResponseMessage: string } = getValue(
+        var msg: {message: string; ResponseMessage: string} = getValue(
           loginStatus,
           ['instanceData'],
         );
