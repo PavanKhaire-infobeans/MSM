@@ -141,24 +141,29 @@ export const GetDraftsDetails = async (nid: any) => {
       .catch((err: Error) => {
         Promise.reject(err);
       });
-    console.warn(" response edit time :-: ", (new Date() - requestTime) / 1000)
+    
     if (response != undefined && response != null) {
       if (response.ResponseCode == 200) {
-        EventManager.callBack(kDraftDetailsFetched, true, response['Data']);
+        // EventManager.callBack(kDraftDetailsFetched, true, response['Data']);
+        return { status: true, responseData: response['Data'] };
       } else {
-        EventManager.callBack(
-          kDraftDetailsFetched,
-          false,
-          response['ResponseMessage'],
-        );
+        // EventManager.callBack(
+        //   kDraftDetailsFetched,
+        //   false,
+        //   response['ResponseMessage'],
+        // );
+        return { status: false, responseData: response['ResponseMessage'] };
+
       }
     }
   } catch (err) {
-    EventManager.callBack(
-      kDraftDetailsFetched,
-      false,
-      'Unable to process your request. Please try again later',
-    );
+    // EventManager.callBack(
+    //   kDraftDetailsFetched,
+    //   false,
+    //   'Unable to process your request. Please try again later',
+    // );
+    return { status: false, responseData: 'Unable to process your request. Please try again later' };
+
   }
 };
 

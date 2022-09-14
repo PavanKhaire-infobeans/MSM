@@ -125,12 +125,14 @@ export class LoginController implements LoginControllerProtocol {
         userInfo.user.email,
         CueBackInsatance,
       );
-      this.view.props.navigation.reset({
-        index: 0,
-        routes: [{name: 'dashBoard'}],
-      });
-      loaderHandler.hideLoader();
-      this.view.props.clearDashboard();
+      setTimeout(() => {
+        this.view.props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'dashBoard' }]
+        })
+        this.view.props.clearDashboard();
+        loaderHandler.hideLoader();
+      }, 100);
       this.view.props.clean();
     } else {
       loaderHandler.hideLoader();
@@ -323,50 +325,52 @@ export class LoginController implements LoginControllerProtocol {
     username: any,
     siteDetails: any,
   ) => {
-    console.log('details');
-    const {
-      UserAuthToken: userAuthToken,
-      UserID: userID,
-      FirstName: firstName,
-      LastName: lastName,
-      ProfileImage: profileImage,
-      is_public_site: is_public_site,
-    } = element.Response;
+    try {
+      const {
+        UserAuthToken: userAuthToken,
+        UserID: userID,
+        FirstName: firstName,
+        LastName: lastName,
+        ProfileImage: profileImage,
+        is_public_site: is_public_site,
+      } = element.Response;
 
-    let site_url = siteDetails.site_url || siteDetails.InstanceURL;
-    let site_logo_url =
-      siteDetails.site_logo_url || siteDetails.InstanceImageURL;
-    let site_name = siteDetails.site_name || siteDetails.InstanceName;
-    let instanceData = siteDetails.id || element.Response.site_id;
+      let site_url = siteDetails.site_url || siteDetails.InstanceURL;
+      let site_logo_url =
+        siteDetails.site_logo_url || siteDetails.InstanceImageURL;
+      let site_name = siteDetails.site_name || siteDetails.InstanceName;
+      let instanceData = siteDetails.id || element.Response.site_id;
 
-    this.view.selectedCommunity.values = {
-      email: username,
-      userAuthToken,
-      userID,
-      firstName,
-      lastName,
-      name: site_name,
-      instanceID: parseInt(instanceData),
-      profileImage: profileImage,
-      is_public_site: is_public_site,
-      instanceURL: site_url.replace('https://', '').replace('http://', ''),
-      instanceImage:
-        site_logo_url ||
-        'https://qa.cueback.com/sites/qa.cueback.com/default/files/cal-poly-cp_0.png',
-      isSSOLogin: isSSOLogin,
-      // profileImage:  this.generateFileForProfile(profileImage)
-    };
-    const values = {...this.view.selectedCommunity};
-    LoginStore.saveOnLogin(values);
-    this.view.dataWasStored = userID;
-    this.view.props.setUser(this.view.selectedCommunity);
+      this.view.selectedCommunity.values = {
+        email: username,
+        userAuthToken,
+        userID,
+        firstName,
+        lastName,
+        name: site_name,
+        instanceID: parseInt(instanceData),
+        profileImage: profileImage,
+        is_public_site: is_public_site,
+        instanceURL: site_url.replace('https://', '').replace('http://', ''),
+        instanceImage:
+          site_logo_url ||
+          'https://qa.cueback.com/sites/qa.cueback.com/default/files/cal-poly-cp_0.png',
+        isSSOLogin: isSSOLogin,
+        // profileImage:  this.generateFileForProfile(profileImage)
+      };
+      const values = { ...this.view.selectedCommunity };
+      LoginStore.saveOnLogin(values);
+      this.view.dataWasStored = userID;
+      this.view.props.setUser(this.view.selectedCommunity);
+    } catch (error) {
+      console.log("login info err :", error)
+    }
   };
 
   /**
    * Check if user is logged in after web service call or not
    */
   checkLoggedIn = (loginStatus: any) => {
-    console.log('loginStatus.logincompleted: ', JSON.stringify(loginStatus));
     if (loginStatus.logincompleted) {
       loaderHandler.hideLoader();
       //If Login is success full
@@ -381,32 +385,34 @@ export class LoginController implements LoginControllerProtocol {
               element.SiteDetails,
             );
           });
-          let obj = {
-            username: this.view.state.username,
-            password: this.view.state.password,
-          };
-          if (this.view.state._isRemeberMe) {
-            DefaultPreference.set('loginCredentials', JSON.stringify(obj));
-          } else {
-            DefaultPreference.get('loginCredentials').then((value: any) => {
-              value = value ? JSON.parse(value) : null;
-              if (value && value.username && value.password) {
-                if (
-                  obj.username == value.username &&
-                  obj.password == value.password
-                ) {
-                  DefaultPreference.set('loginCredentials', null);
+          setTimeout(() => {
+            let obj = {
+              username: this.view.state.username,
+              password: this.view.state.password,
+            };
+            if (this.view.state._isRemeberMe) {
+              DefaultPreference.set('loginCredentials', JSON.stringify(obj));
+            } else {
+              DefaultPreference.get('loginCredentials').then((value: any) => {
+                value = value ? JSON.parse(value) : null;
+                if (value && (value.username && value.password)) {
+                  if (
+                    obj.username == value.username &&
+                    obj.password == value.password
+                  ) {
+                    DefaultPreference.set('loginCredentials', '');
+                  }
                 }
-              }
-            });
-          }
-          console.log('Login s -> dashboard');
+              });
+            }
+            // Actions.dashBoard();
+            this.view.props.navigation.reset({
+              index: 0,
+              routes: [{ name: 'dashBoard' }]
+            })
+          }, 100);
           this.view.props.clearDashboard();
           this.view.props.clean();
-          this.view.props.navigation.reset({
-            index: 0,
-            routes: [{name: 'dashBoard'}],
-          });
         } else {
           let errorMessage = getValue(loginStatus, ['data', 'message'])
             ? getValue(loginStatus, ['data', 'message'])
@@ -416,7 +422,7 @@ export class LoginController implements LoginControllerProtocol {
         }
       } else {
         //If web service failed
-        var msg: {message: string; ResponseMessage: string} = getValue(
+        var msg: { message: string; ResponseMessage: string } = getValue(
           loginStatus,
           ['logindata'],
         );
@@ -458,12 +464,9 @@ export class LoginController implements LoginControllerProtocol {
                   instanceData: loginStatus.instanceData.Response,
                   isDisabledAccount: isDisabledAccount,
                 });
-                console.log('Open dashboard');
-                this.view.props.navigation.reset({
-                  index: 0,
-                  routes: [{name: 'dashBoard'}],
-                });
-              } else {
+
+              }
+              else {
                 this.loginUserAccounts(loginStatus.instanceData.Response[0].id);
               }
             })

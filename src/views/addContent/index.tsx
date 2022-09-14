@@ -179,7 +179,7 @@ class AddContentDetails extends React.Component {
                   showNextDialog: false,
                 },
                 () => {
-                  this.props.beforeBack ? this.props.beforeBack() : null;
+                  this.props.route.params.beforeBack ? this.props.route.params.beforeBack() : null;
                   this.props.navigation.goBack();
                 },
               );

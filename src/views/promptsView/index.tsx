@@ -155,7 +155,7 @@ export default class PromptsView extends React.Component<State, Props> {
   componentWillUnmount = () => {
     this.promptHideListener.removeListener()
     this.scrollFlatlistListener.removeListener()
-    this.memoryFromPrompt.removeListener()
+    // this.memoryFromPrompt.removeListener()
     this.promptsListListener.removeListener()
   }
 

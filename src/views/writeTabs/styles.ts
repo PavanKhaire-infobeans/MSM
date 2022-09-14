@@ -4,6 +4,24 @@ import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
 
 const Styles = EStyleSheet.create({
 
+  bottomBarContainer:{ 
+    height: 48, 
+    backgroundColor: Colors.white, 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
+  bottomBarSubContainer:{
+    height: 40,
+    backgroundColor: Colors.white,
+    borderWidth: 1,
+    borderTopWidth: 3,
+    borderTopColor: Colors.white,
+    width: '94%',
+    borderRadius: 12,
+    borderColor: Colors.white,
+    marginBottom: 4,
+    alignSelf: 'center', flexDirection: 'row'
+  },
   alertContainer: {
     backgroundColor: Colors.white
   },

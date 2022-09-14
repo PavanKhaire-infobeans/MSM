@@ -196,11 +196,10 @@ class Splash extends Component<Props> {
       Account.selectedData().values = nextProps.user;
       // this.props.navigation.reset("dashboardIndex")
       try {
-        console.log('Splash : UNSAFE_componentWillReceiveProps');
-        this.props.fetchFiltersDataTimeline({type: ListType.Timeline});
+        // this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
 
         if (this.state.fromDeeplinking) {
-          console.log('Here');
+
           if (!this.state.apiCalldoneOnce) {
             if (Utility.isInternetConnected) {
               if (this.state.navigateToScreen == 'mystory') {

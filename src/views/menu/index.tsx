@@ -112,7 +112,8 @@ class Menu extends React.Component<MenuProps> {
             type: 'logout',
             onClick: logoutWorkFlow,
           });
-        } else {
+        } 
+        else {
           Alert.alert('', `Are you sure you want to log out ?`, [
             {
               text: 'No',
@@ -132,11 +133,17 @@ class Menu extends React.Component<MenuProps> {
                     if (accounts.length > 0) {
                       EventManager.callBack(kOnLogout, accounts);
                     } else {
-                      this.props.navigation.reset('prologue');
+                      this.props.navigation.reset({
+                          index: 0,
+                          routes: [{ name: 'prologue' }]
+                        });
                     }
                   })
                   .catch(() => {
-                    this.props.navigation.reset('prologue');
+                    this.props.navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'prologue' }]
+                    });
                   });
               },
             },

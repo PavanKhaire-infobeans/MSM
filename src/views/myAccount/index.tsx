@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Alert,
   FlatList,
   Image,
   ImageBackground,
@@ -21,8 +22,9 @@ import {
   Storage,
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import {Account, LoginStore, UserData} from '../../common/loginStore';
 import Utility from '../../common/utility';
+import { logoutMethod } from '../../common/webservice/webservice';
 import {
   icon_drafts,
   icon_idea,
@@ -115,11 +117,52 @@ export default class MyAccount extends React.Component {
         this.props.navigation.navigate('changePassword');
         break;
       case Logout:
-        EventManager.callBack(kLogoutPressed);
+        this._logout()
         break;
       default:
     }
   }
+
+
+  _logout = () => {
+
+    LoginStore.listAllAccounts()
+      .then((resp: any) => {
+        let list = resp.rows.raw();
+        list = list.filter((it: UserData) => it.userAuthToken != '');
+       
+          Alert.alert('', `Are you sure you want to log out ?`, [
+            {
+              text: 'No',
+              style: 'cancel',
+              onPress: () => { },
+            },
+            {
+              text: 'Yes',
+              style: 'default',
+              onPress: () => {
+                logoutMethod()
+                  .then((resp: any) => {
+                      this.props.navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'prologue' }]
+                      });
+                    // }
+                  })
+                  .catch(() => {
+                    this.props.navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'prologue' }]
+                    });
+                  });
+              },
+            },
+          ]);
+      })
+      .catch(() => {
+        //console.log(err);
+      });
+  };
 
   componentDidMount = () => {
     let items = [{}];

@@ -292,30 +292,32 @@ class CreateMemory extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     this.createMemoryHelper = new CreateMemoryHelper();
-    this.showHideMenuListener = EventManager.addListener(
-      kShowHideMenu,
-      this.showMenu,
-    );
-    this.saveDraftListener = EventManager.addListener(
-      kSaveDraft,
-      this.saveDraft,
-    );
-    this.memoryCallback = EventManager.addListener(
-      'createMemoryMainListener',
-      this.memorySaveCallback,
-    );
-    this.deleteDraftListener = EventManager.addListener(
-      kDeleteDraftCreateMemo,
-      this.deleteDraftCallback,
-    );
-    this.updateFilesListener = EventManager.addListener(
-      kFilesUpdated,
-      this.fileUpdateCallback,
-    );
-    this.draftDetailsListener = EventManager.addListener(
-      kDraftDetailsFetched,
-      this.draftDetailsCallBack,
-    );
+
+    // this.showHideMenuListener = EventManager.addListener(
+    //   kShowHideMenu,
+    //   this.showMenu,
+    // );
+    // this.saveDraftListener = EventManager.addListener(
+    //   kSaveDraft,
+    //   this.saveDraft,
+    // );
+    // this.memoryCallback = EventManager.addListener(
+    //   'createMemoryMainListener',
+    //   this.memorySaveCallback,
+    // );
+    // this.deleteDraftListener = EventManager.addListener(
+    //   kDeleteDraftCreateMemo,
+    //   this.deleteDraftCallback,
+    // );
+    // this.updateFilesListener = EventManager.addListener(
+    //   kFilesUpdated,
+    //   this.fileUpdateCallback,
+    // );
+    // this.draftDetailsListener = EventManager.addListener(
+    //   kDraftDetailsFetched,
+    //   this.draftDetailsCallBack,
+    // );
+
     if (Platform.OS == 'android') {
       this.keyboardDidShowListener = Keyboard.addListener(
         'keyboardDidShow',
@@ -425,7 +427,7 @@ class CreateMemory extends React.Component<Props> {
     }, 500);
   };
 
-  componentDidMount = () => {
+  componentDidMount = async() => {
     DefaultPreference.get('hide_memory_draft').then((value: any) => {
       if (value == 'true') {
         this.state.memoryDraftVisibility = false;
@@ -435,11 +437,15 @@ class CreateMemory extends React.Component<Props> {
     });
 
     this.props.resetAll();
-    let recentTag = {searchType: kRecentTags, searchTerm: ''};
+    let recentTag = { searchType: kRecentTags, searchTerm: '' };
     if (this.props.route.params.editMode) {
       loaderHandler.showLoader('Loading...');
-      GetDraftsDetails(this.props.route.params.draftNid);
-    } else {
+      let response: any = await GetDraftsDetails(this.props.route.params.draftNid);
+
+      this.draftDetailsCallBack(response.status, response.responseData);
+
+    } 
+    else {
       let title = decode_utf8(this.props.route.params.textTitle);
       title = title.replace(/\n/g, ' ');
       if (title.length > 150) {
@@ -485,9 +491,14 @@ class CreateMemory extends React.Component<Props> {
   };
 
   UNSAFE_componentWillReceiveProps(newProps) {
-    if (newProps.goToDashboard) {
-      loaderHandler.hideLoader();
-      this.props.navigation.navigate('dashBoard');
+    if ((this.props != newProps) && newProps.goToDashboard) {
+      //loaderHandler.hideLoader();
+      // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+      // this.props.navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: 'dashBoard' }]
+      // })
+      // this.props.navigation.replace('dashBoard');
     }
   }
 
@@ -504,7 +515,7 @@ class CreateMemory extends React.Component<Props> {
   memorySaveCallback = (success: any, id?: any, padId?: any, key?: any) => {
     // loaderHandler.hideLoader();
 
-    console.log('dataaaaa : ', JSON.stringify(success), id, key);
+    // console.log('dataaaaa : ', JSON.stringify(success), id, key);
     if (success) {
       // EventManager.callBack('showConfetti');
       if (key == kPublish) {
@@ -513,10 +524,13 @@ class CreateMemory extends React.Component<Props> {
           title: 'Memory published! 🎉',
           desc: `Nice work writing Shakespeare! Your new memory has been published!`,
         });
-        this.props.navigateToDashboard(true);
+        // this.props.navigateToDashboard(true);
         // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
-        loaderHandler.showLoader();
-
+        // loaderHandler.showLoader();
+        this.props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'dashBoard' }]
+        })
         // Alert.alert(
         //   'Memory published! 🎉',
         //   `Nice work writing Shakespeare! Your new memory has been published!`,
@@ -552,15 +566,15 @@ class CreateMemory extends React.Component<Props> {
         //   },
         // ]);
         Keyboard.dismiss();
-        this.props.fetchMemoryList({type: ListType.Recent, isLoading: true});
-        this.props.fetchMemoryList({type: ListType.Timeline, isLoading: true});
+        // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+        // this.props.fetchMemoryList({ type: ListType.Timeline, isLoading: true });
         // EventManager.callBack('memoryUpdateRecentListener');
         // EventManager.callBack('memoryUpdateTimelineListener');
-        EventManager.callBack('memoryUpdatePublishedListener');
-        EventManager.callBack('memoryDetailsListener');
+        // EventManager.callBack('memoryUpdatePublishedListener');
+        // EventManager.callBack('memoryDetailsListener');
         this.props.navigation.goBack();
         // this.props.navigation.writeTabs();
-        loaderHandler.showLoader();
+        // loaderHandler.showLoader();
       } else {
         this.props.showAlertCall(true);
         this.props.showAlertCallData({
@@ -988,12 +1002,12 @@ class CreateMemory extends React.Component<Props> {
   componentWillUnmount = () => {
     Keyboard.dismiss();
     // this.props.resetLocation();
-    this.showHideMenuListener.removeListener();
-    this.saveDraftListener.removeListener();
-    this.memoryCallback.removeListener();
-    this.deleteDraftListener.removeListener();
-    this.updateFilesListener.removeListener();
-    this.draftDetailsListener.removeListener();
+    // this.showHideMenuListener.removeListener();
+    // this.saveDraftListener.removeListener();
+    // this.memoryCallback.removeListener();
+    // this.deleteDraftListener.removeListener();
+    // this.updateFilesListener.removeListener();
+    // this.draftDetailsListener.removeListener();
     this.backListner.removeListener();
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();

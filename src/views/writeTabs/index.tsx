@@ -7,9 +7,10 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {
+import { connect } from 'react-redux';
+import TabIcon, {
   kNotificationIndicator,
+  NewTabItems,
   TabItems,
 } from '../../common/component/TabBarIcons';
 import {
@@ -371,7 +372,6 @@ class WriteTabs extends React.Component<Props> {
               locked={Platform.OS == 'ios' ? false : true}
               initialPage={0}
               currentScreen={(screenName: any) => {
-                // alert(screenName)
                 if (screenName == 1) {
                   if (
                     this.props?.route?.name != 'createMemory' &&
@@ -410,6 +410,14 @@ class WriteTabs extends React.Component<Props> {
                 navigation={this.props.navigation}
               />
             </ScrollableTabViewForWrite>
+
+            <View style={Styles.bottomBarContainer}>
+              <View style={Styles.bottomBarSubContainer}>
+                <TabIcon focused={true} navigation={this.props.navigation} title={NewTabItems.Read} />
+                <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Write} />
+              </View>
+            </View>
+
             {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
           </View>
         </SafeAreaView>

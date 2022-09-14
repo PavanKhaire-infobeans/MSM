@@ -4,7 +4,8 @@ import { Colors, fontFamily, fontSize } from '../constants';
 const Styles = EStyleSheet.create({
   
   container: {
-    width: '100%', 
+    // width: '100%', 
+    flex: 1,
     height: 40,
     alignSelf: 'center',
     backgroundColor: Colors.bottomTabColor,

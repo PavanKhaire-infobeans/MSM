@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, Text, View } from 'react-native';
+import { Dimensions, Image, Text, TouchableHighlight, View } from 'react-native';
 //@ts-ignore
 import { book, write } from '../../../app/images';
 import {
@@ -123,12 +123,23 @@ export default class TabIcon extends React.Component<{ [x: string]: any }> {
     }
 
     return (
-      <View style={[style.container, {
-        borderTopLeftRadius: this.props.title == 'Read' ? 14 : 0,
-        borderBottomLeftRadius: this.props.title == 'Read' ? 14 : 0,
-        borderTopRightRadius: this.props.title == 'Write' ? 14 : 0,
-        borderBottomRightRadius: this.props.title == 'Write' ? 14 : 0,
-      }]}>
+      <TouchableHighlight
+        underlayColor={Colors.bottomTabColor}
+        style={[style.container, {
+          borderTopLeftRadius: this.props.title == 'Read' ? 14 : 0,
+          borderBottomLeftRadius: this.props.title == 'Read' ? 14 : 0,
+          borderTopRightRadius: this.props.title == 'Write' ? 14 : 0,
+          borderBottomRightRadius: this.props.title == 'Write' ? 14 : 0,
+        }]}
+        onPress={() => {
+          if (this.props.title == 'Read') {
+            this.props.navigation.navigate('dashBoard')
+          }
+          else if (this.props.title == 'Write') {
+            this.props.navigation.navigate('writeTabs')
+          }
+        }}
+      >
 
         <View
           style={[style.subContainer, {
@@ -158,14 +169,8 @@ export default class TabIcon extends React.Component<{ [x: string]: any }> {
             </>
           )}
         </View>
-        {/* <View
-          style={{
-            height: 100,
-            position: 'absolute',
-            bottom: -100,
-            width: '100%',
-          }}></View> */}
-      </View>
+
+      </TouchableHighlight>
     );
   }
 }

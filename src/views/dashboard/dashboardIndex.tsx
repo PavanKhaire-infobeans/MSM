@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import NewNavigationBar from '../../../app/components/NewNavigationBar';
-import {
+import TabIcon, {
   kNotificationIndicator,
+  NewTabItems,
   TabItems,
 } from '../../common/component/TabBarIcons';
 import {
@@ -66,6 +67,7 @@ import AppGuidedTour from './appGuidedTour';
 import Recent from './recent';
 import Styles from './styles';
 import Timeline from './timeline';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const options = {
   enableVibrateFallback: true,
@@ -95,44 +97,43 @@ class DashboardIndex extends React.Component<Props> {
     super(props);
     this.FetchConfigurations();
     this.notificationModel = new NotificationDataModel();
+    // this.eventManager = EventManager.addListener(
+    //   'addContentTabPressed',
+    //   this.navigateToAddContent,
+    // );
+    // this.notificationListener = EventManager.addListener(
+    //   kGetInvidualNotification,
+    //   this.notificationCallback,
+    // );
+    // this.foregroundNotification = EventManager.addListener(
+    //   kForegroundNotice,
+    //   this.foregroundNotificationCallback,
+    // );
+    // this.backgroundNotification = EventManager.addListener(
+    //   kBackgroundNotice,
+    //   this.checkNotificationAvailiability,
+    // );
+    // this.eventListener = EventManager.addListener(
+    //   kNotificationIndicator,
+    //   this.changeNotification,
+    // );
+    // this.memoryActionsListener = EventManager.addListener(
+    //   kMemoryActionPerformedOnDashboard,
+    //   this.memoryActionCallBack,
+    // );
+    // this.memoryFromPrompt = EventManager.addListener(
+    //   promptIdListener,
+    //   this.promptToMemoryCallBack,
+    // );
   }
 
   navigateToAddContent = () => {
     ReactNativeHapticFeedback.trigger('notificationSuccess', options);
-    this.props.navigation.navigate('addContent');
+    // this.props.navigation.navigate('addContent');
   };
 
-  componentDidMount() {
-    this.eventManager = EventManager.addListener(
-      'addContentTabPressed',
-      this.navigateToAddContent,
-    );
-    this.notificationListener = EventManager.addListener(
-      kGetInvidualNotification,
-      this.notificationCallback,
-    );
-    this.foregroundNotification = EventManager.addListener(
-      kForegroundNotice,
-      this.foregroundNotificationCallback,
-    );
-    this.backgroundNotification = EventManager.addListener(
-      kBackgroundNotice,
-      this.checkNotificationAvailiability,
-    );
-    this.eventListener = EventManager.addListener(
-      kNotificationIndicator,
-      this.changeNotification,
-    );
-    this.memoryActionsListener = EventManager.addListener(
-      kMemoryActionPerformedOnDashboard,
-      this.memoryActionCallBack,
-    );
-    this.memoryFromPrompt = EventManager.addListener(
-      promptIdListener,
-      this.promptToMemoryCallBack,
-    );
-    this.props.fetchFiltersData({type: ListType.Recent});
-    this.props.fetchFiltersDataTimeline({type: ListType.Timeline});
+  componentDidMount = () => {
+
     if (this.props.setTimer == 'false') {
       this.state.appTourVisibility = true;
     } else {
@@ -146,7 +147,7 @@ class DashboardIndex extends React.Component<Props> {
         });
       }, 2000);
     }
-  }
+  };
 
   changeNotification = () => {
     this.props.navigation.reset('root');
@@ -265,13 +266,13 @@ class DashboardIndex extends React.Component<Props> {
 
   componentWillUnmount = () => {
     this.props.showAlertCall(false);
-    this.eventManager.removeListener();
-    this.memoryFromPrompt.removeListener();
-    this.notificationListener.removeListener();
-    this.foregroundNotification.removeListener();
-    this.backgroundNotification.removeListener();
-    this.eventListener.removeListener();
-    this.memoryActionsListener.removeListener();
+    // this.eventManager.removeListener();
+    // this.memoryFromPrompt.removeListener();
+    // this.notificationListener.removeListener();
+    // this.foregroundNotification.removeListener();
+    // this.backgroundNotification.removeListener();
+    // this.eventListener.removeListener();
+    // this.memoryActionsListener.removeListener();
   };
 
   memoryActionCallBack = (
@@ -394,6 +395,13 @@ class DashboardIndex extends React.Component<Props> {
               />
             </ScrollableTabView>
             {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
+          </View>
+          
+          <View style={Styles.bottomBarContainer}>
+            <View style={Styles.bottomBarSubContainer}>
+              <TabIcon focused={true} navigation={this.props.navigation} title={NewTabItems.Read} />
+              <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Write} />
+            </View>
           </View>
         </SafeAreaView>
         {this.state.appTourVisibility && (
