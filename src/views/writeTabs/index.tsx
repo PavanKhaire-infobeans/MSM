@@ -370,7 +370,7 @@ class WriteTabs extends React.Component<Props> {
               style={Styles.fullWidth}
               scrollEnabled={Platform.OS == 'ios' ? true : false}
               locked={Platform.OS == 'ios' ? false : true}
-              initialPage={0}
+              initialPage={2}
               currentScreen={(screenName: any) => {
                 if (screenName == 1) {
                   if (

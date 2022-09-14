@@ -325,7 +325,6 @@ const Recent = (props: Props) => {
   };
 
   const promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    memoryFromPrompt.removeListener();
     setTimeout(() => {
       loaderHandler.hideLoader();
     }, 500);
