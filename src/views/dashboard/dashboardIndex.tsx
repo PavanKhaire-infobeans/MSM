@@ -375,10 +375,7 @@ class DashboardIndex extends React.Component<Props> {
               tabBarPosition="bottom"
               tabBarTextStyle={{
                 ...fontSize(16),
-                fontFamily:
-                  Platform.OS === 'ios'
-                    ? fontFamily.Inter
-                    : fontFamily.InterMedium,
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
               }}
               tabBarActiveTextColor={Colors.TextColor}
               // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"

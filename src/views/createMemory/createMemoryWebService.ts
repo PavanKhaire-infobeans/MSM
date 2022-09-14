@@ -5,7 +5,7 @@ import {
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
-import { MemoryService } from '../../common/webservice/memoryServices';
+import { MemoryService, newMemoryService } from '../../common/webservice/memoryServices';
 import { TempFile } from '../mindPop/edit';
 import { CollaboratorsAction } from './inviteCollaborators';
 
@@ -25,11 +25,12 @@ export const CreateUpdateMemory = async (
   filesToUpload: any,
   listener: any,
   key?: any,
+  CB?: any
 ) => {
   try {
     console.log('params..', params);
     let data = await Storage.get('userData');
-    let response = await MemoryService(
+    let response: any = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/mystory/create_update`,
       [
         {
@@ -38,77 +39,79 @@ export const CreateUpdateMemory = async (
         },
         { details: params },
       ],
+      async (response: any) => {
+        if (response.ResponseCode == 200) {
+          //	Alert.alert("parseInt(getValue(response))"+ JSON.stringify(response));
+          let id = parseInt(getValue(response, ['Status'])) || 0;
+          let prompt_id = parseInt(getValue(response, ['promptId'])) || 0;
+          let padDetails = {
+            padId: getValue(response, ['padid']),
+            padUrl: getValue(response, ['etherpad_url']),
+            sessionId: getValue(response, ['sessionId']),
+          };
+          if (id == 0) {
+            EventManager.callBack(listener, false, 'Could not save MindPop');
+            return;
+          }
+          debugger
+
+          if (filesToUpload.length > 0) {
+            let datareturn = await uploadAttachments(id, filesToUpload, listener, true, id, padDetails, key);
+
+            if (listener == 'addContentCreateMemory') {
+              loaderHandler.hideLoader();
+              EventManager.callBack(listener, true, id, padDetails, key);
+            }
+            else if (listener == promptIdListener) {
+              loaderHandler.hideLoader();
+              return { status: true, id };
+            }
+            else {
+              loaderHandler.hideLoader();
+              return response;
+            }
+
+          }
+          else {
+            if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener") {
+              loaderHandler.hideLoader();
+              EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
+            }
+            else if (listener == promptIdListener) {
+              // loaderHandler.hideLoader();
+              CB({ status: true, id });
+            }
+            else {
+              loaderHandler.hideLoader();
+              return CB(response);
+            }
+          }
+        }
+        else {
+          if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener") {
+            loaderHandler.hideLoader();
+            EventManager.callBack(listener, false, response['ResponseMessage']);
+          }
+          else if (listener == promptIdListener) {
+            loaderHandler.hideLoader();
+            CB({ status: false, id: 0 });
+          }
+          else {
+            loaderHandler.hideLoader();
+            return CB(response);
+          }
+          // loaderHandler.hideLoader();
+          // console.warn(" err daaaaa :", JSON.stringify(response));
+          // EventManager.callBack(listener, false, response['ResponseMessage']);
+        }
+
+      }
     )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-      // response = response.json();
-
-    if (response.ResponseCode == 200) {
-      //	Alert.alert("parseInt(getValue(response))"+ JSON.stringify(response));
-      let id = parseInt(getValue(response, ['Status'])) || 0;
-      let prompt_id = parseInt(getValue(response, ['promptId'])) || 0;
-      let padDetails = {
-        padId: getValue(response, ['padid']),
-        padUrl: getValue(response, ['etherpad_url']),
-        sessionId: getValue(response, ['sessionId']),
-      };
-      if (id == 0) {
-        EventManager.callBack(listener, false, 'Could not save MindPop');
-        return;
-      }
-      debugger
-
-      if (filesToUpload.length > 0) {
-        let datareturn = await uploadAttachments(id, filesToUpload, listener, true, id, padDetails, key);
-
-        if (listener == 'addContentCreateMemory') {
-          loaderHandler.hideLoader();
-          EventManager.callBack(listener, true, id, padDetails, key);
-        }
-        else if (listener == promptIdListener) {
-          loaderHandler.hideLoader();
-          return { status: true, id };
-        }
-        else {
-          loaderHandler.hideLoader();
-          return response;
-        }
-
-      }
-      else {
-        if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener") {
-          loaderHandler.hideLoader();
-          EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
-        }
-        else if (listener == promptIdListener) {
-          loaderHandler.hideLoader();
-          return { status: true, id };
-        }
-        else {
-          loaderHandler.hideLoader();
-          return response;
-        }
-      }
-    }
-    else {
-      if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener") {
-        loaderHandler.hideLoader();
-        EventManager.callBack(listener, false, response['ResponseMessage']);
-      }
-      else if (listener == promptIdListener) {
-        loaderHandler.hideLoader();
-        return { status: false };
-      }
-      else {
-        loaderHandler.hideLoader();
-        return response;
-      }
-      // loaderHandler.hideLoader();
-      // console.warn(" err daaaaa :", JSON.stringify(response));
-      // EventManager.callBack(listener, false, response['ResponseMessage']);
-    }
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   Promise.reject(err);
+    // });
+    // response = response.json();
 
   } catch (err) {
     loaderHandler.hideLoader();
@@ -141,7 +144,7 @@ export const GetDraftsDetails = async (nid: any) => {
       .catch((err: Error) => {
         Promise.reject(err);
       });
-    
+
     if (response != undefined && response != null) {
       if (response.ResponseCode == 200) {
         // EventManager.callBack(kDraftDetailsFetched, true, response['Data']);

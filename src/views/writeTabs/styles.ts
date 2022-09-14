@@ -63,7 +63,7 @@ const Styles = EStyleSheet.create({
   },
   tabBarUnderlineStyle: {
     backgroundColor: Colors.white,
-    height: 2
+    height: 0
   },
   tabBarTextStyle: {
     ...fontSize(16),

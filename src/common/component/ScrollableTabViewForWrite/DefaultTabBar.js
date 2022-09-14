@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    paddingVertical: 5,
+    // paddingVertical: 5,
     borderColor: Colors.white,
     width: '90%',
     alignSelf: 'center',

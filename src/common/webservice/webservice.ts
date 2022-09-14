@@ -36,19 +36,20 @@ export const logoutMultiple = (selectedAccounts: any) => {
 export async function logout() {
   loaderHandler.hideLoader();
   if (await getshowLogoutPopUp() === false) {
-    await logoutFlow();
-    await setshowLogoutPopUp(true);
     Alert.alert('', 'Your session is timed out\nPlease login again', [
       {
         text: 'Ok',
-        onPress: () => { },
+        onPress: async () => {
+          await logoutFlow();
+        },
       },
     ]);
+    await setshowLogoutPopUp(true);
   }
 };
 
 function logoutFlow() {
-  
+
   logoutMethod()
     .then((resp: any) => {
       let list = resp.rows.raw();
@@ -56,7 +57,7 @@ function logoutFlow() {
       if (accounts.length > 0) {
         let user: UserData = accounts[accounts.length - 1];
         DeviceEventEmitter.emit('logout', { accounts, user });
-      } 
+      }
       else {
         // reset({
         //   index: 0,
@@ -78,7 +79,7 @@ function logoutFlow() {
     });
 }
 
-const WebserviceCall = ( ()=> {
+const WebserviceCall = (() => {
   return {
     adminPath: '/cuebackadmin',
     path: '/cueback',
@@ -208,6 +209,81 @@ const WebserviceCall = ( ()=> {
               console.log('Error is : ', err);
               return Promise.reject(err);
             });
+        })
+        .catch((err: Error) => {
+          console.log('Error is : ', err);
+          return Promise.reject(err);
+        });
+    },
+    newPostRequest: async (
+      url: string,
+      headers: object,
+      request: object = {},
+      addRequest: boolean = true,
+      CB: (data) => void
+    ) => {
+      let reqMod = {
+        ...request,
+      };
+      let requestTime: Date = new Date()
+      if (addRequest) {
+        reqMod = {
+          ...request,
+          deviceDetail: {
+            ModelName: DeviceInfo.getModel(),
+            OSVersion: DeviceInfo.getSystemVersion(),
+            PlatformName: Platform.select({ ios: 'iOS', android: 'Android' }),
+            AppVersion: DeviceInfo.getVersion(),
+            DeviceId: DeviceInfo.getUniqueId(),
+          },
+        };
+      }
+      //console.log("URL : " + url, "\nMethod : POST\n", "Request", JSON.stringify(reqMod));
+      //console.log("Headers", JSON.stringify(headers));
+      if (!Utility.isInternetConnected) {
+        //return Promise.reject(new Error(NO_INTERNET));
+      }
+      console.log('request : login ' + url, new Date().toTimeString());
+      let responseData = await fetch(url, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(reqMod),
+      }).then((response) => response.json())
+        .then((resp: any) => {
+          // let rsp = resp.clone();
+          // console.log("headers another :", JSON.stringify(headers), url);
+
+          try {
+            console.warn(" response time :-: ", (new Date() - requestTime) / 1000)
+            // console.log('Response is : ', value);
+            if (
+              resp.ResponseCode == 405 ||
+              resp.ResponseCode == 402 ||
+              resp.ResponseCode == 401
+            ) {
+              loaderHandler.hideLoader();
+              //TODO: Consult Web team and get unique ResponseCode of invalid session.
+              console.log("Authentication token expired another :", JSON.stringify(resp), url);
+              if (
+                resp.ResponseMessage == 'Authentication token expired.' ||
+                resp.ResponseMessage == 'Invalid authentication token.'
+              ) {
+                ToastMessage('', '', true);
+                logout();
+              } //5461
+             
+              // return Promise.reject(Error(resp.ResponseMessage));
+            }
+            CB(resp)
+            // return resp;
+          } catch (error) {
+            console.error("reeee : ", error)
+          }
+
         })
         .catch((err: Error) => {
           console.log('Error is : ', err);

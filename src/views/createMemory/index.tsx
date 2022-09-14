@@ -1,4 +1,4 @@
-import React, {createRef} from 'react';
+import React, { createRef } from 'react';
 import {
   Alert,
   Image,
@@ -13,8 +13,8 @@ import {
   View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import ActionSheet, {ActionSheetItem} from '../../common/component/actionSheet';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import Text from '../../common/component/Text';
 import {
@@ -23,9 +23,9 @@ import {
   DraftActions,
   GenerateRandomID,
 } from '../../common/constants';
-import {MindPopAttachment} from '../../common/database/mindPopStore/mindPopStore';
+import { MindPopAttachment } from '../../common/database/mindPopStore/mindPopStore';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
 import {
   action_audio,
@@ -42,19 +42,19 @@ import {
   record,
   save_memory_draft,
 } from '../../images';
-import {TempFile} from '../mindPop/edit';
+import { TempFile } from '../mindPop/edit';
 import EtherPadEditing from './etherpadWebView';
-import {kSaveDraft, kShowHideMenu} from './header';
+import { kSaveDraft, kShowHideMenu } from './header';
 import styles from './styles';
 // @ts-ignore
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   CaptureImage,
   PickImage,
 } from '../../common/component/filePicker/filePicker';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
-import {MemoryDataModel} from '../memoryDetails/memoryDataModel';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import { MemoryDataModel } from '../memoryDetails/memoryDataModel';
 import {
   CreateUpdateMemory,
   DeleteDraftService,
@@ -69,7 +69,7 @@ import {
   DefaultCreateMemoryObj,
   getUserName,
 } from './dataHelper';
-import {kCollaborators, kTags, kWhoElseWhereThere} from './publish';
+import { kCollaborators, kTags, kWhoElseWhereThere } from './publish';
 import {
   EditContent,
   MemoryInitialsUpdate,
@@ -92,16 +92,16 @@ import {
 //@ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import {MemoryDraftsDataModel} from '../myMemories/MemoryDrafts/memoryDraftsDataModel';
+import { MemoryDraftsDataModel } from '../myMemories/MemoryDrafts/memoryDraftsDataModel';
 //@ts-ignore
-import {DatePickerOptions} from '@react-native-community/datetimepicker';
+import { DatePickerOptions } from '@react-native-community/datetimepicker';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import DateTimePicker from '../../common/component/DateTimePicker';
 
 import moment from 'moment';
-import {arrowRight, calendarWrite, image} from '../../../app/images';
+import { arrowRight, calendarWrite, image } from '../../../app/images';
 import CustomAlert from '../../common/component/customeAlert';
-import {CreateAMemory, GET_MEMORY_LIST, ListType} from '../dashboard/dashboardReducer';
+import { CreateAMemory, GET_MEMORY_LIST, ListType } from '../dashboard/dashboardReducer';
 import DatePicker from './../../common/component/datePicker';
 import Styles from './styles';
 
@@ -109,7 +109,7 @@ export const createNew = 'Create New';
 export const editDraft = 'Edit Draft';
 export const kPublish = 'publish';
 
-type Props = {[x: string]: any};
+type Props = { [x: string]: any };
 type State = {
   [x: string]: any;
 };
@@ -120,7 +120,7 @@ enum TempFileStatus {
   uploaded = 'uploaded',
 }
 
-type menuOption = {key: number; title: any; onPress: () => void; color?: any};
+type menuOption = { key: number; title: any; onPress: () => void; color?: any };
 
 type ItemList = {
   id: any;
@@ -142,42 +142,42 @@ type ItemList = {
 // ];
 
 const ImageActions: Array<ActionSheetItem> = [
-  {index: 0, text: 'No, discard memory', image: action_camera},
-  {index: 1, text: 'Yes, save as draft', image: action_audio},
-  {index: 2, text: 'Cancel', image: action_close},
+  { index: 0, text: 'No, discard memory', image: action_camera },
+  { index: 1, text: 'Yes, save as draft', image: action_audio },
+  { index: 2, text: 'Cancel', image: action_close },
 ];
 
 const mindpopActions: Array<ActionSheetItem> = [
-  {index: 0, text: 'No, discard memory', image: action_camera},
-  {index: 1, text: 'Yes, save as MindPop', image: action_audio},
-  {index: 2, text: 'Cancel', image: action_close},
+  { index: 0, text: 'No, discard memory', image: action_camera },
+  { index: 1, text: 'Yes, save as MindPop', image: action_audio },
+  { index: 2, text: 'Cancel', image: action_close },
 ];
 
 const publishActions: Array<ActionSheetItem> = [
-  {index: 3, text: 'Yes, publish memory', image: action_camera},
-  {index: 1, text: 'Not quite, save as draft', image: action_audio},
-  {index: 2, text: 'Cancel', image: action_close},
+  { index: 3, text: 'Yes, publish memory', image: action_camera },
+  { index: 1, text: 'Not quite, save as draft', image: action_audio },
+  { index: 2, text: 'Cancel', image: action_close },
 ];
 
 const SaveActions: Array<ActionSheetItem> = [
-  {index: 4, text: 'Save and Exit', image: save_memory_draft},
-  {index: 5, text: 'Prepare to publish', image: publish_memory_draft},
-  {index: 3, text: 'Cancel', image: action_close},
+  { index: 4, text: 'Save and Exit', image: save_memory_draft },
+  { index: 5, text: 'Prepare to publish', image: publish_memory_draft },
+  { index: 3, text: 'Cancel', image: action_close },
 ];
 
 export const months = [
-  {name: 'Jan', tid: 1},
-  {name: 'Feb', tid: 2},
-  {name: 'Mar', tid: 3},
-  {name: 'Apr', tid: 4},
-  {name: 'May', tid: 5},
-  {name: 'Jun', tid: 6},
-  {name: 'Jul', tid: 7},
-  {name: 'Aug', tid: 8},
-  {name: 'Sep', tid: 9},
-  {name: 'Oct', tid: 10},
-  {name: 'Nov', tid: 11},
-  {name: 'Dec', tid: 12},
+  { name: 'Jan', tid: 1 },
+  { name: 'Feb', tid: 2 },
+  { name: 'Mar', tid: 3 },
+  { name: 'Apr', tid: 4 },
+  { name: 'May', tid: 5 },
+  { name: 'Jun', tid: 6 },
+  { name: 'Jul', tid: 7 },
+  { name: 'Aug', tid: 8 },
+  { name: 'Sep', tid: 9 },
+  { name: 'Oct', tid: 10 },
+  { name: 'Nov', tid: 11 },
+  { name: 'Dec', tid: 12 },
 ];
 
 export const MonthObj: any = {
@@ -215,7 +215,7 @@ class CreateMemory extends React.Component<Props> {
   };
 
   //Files array list
-  files: Array<MindPopAttachment & {type: string; uri: string}>;
+  files: Array<MindPopAttachment & { type: string; uri: string }>;
 
   newMemoryYears = new CreateMemoryHelper().getDateOptions(
     'year',
@@ -255,7 +255,7 @@ class CreateMemory extends React.Component<Props> {
     locationError: '',
     locationText: '',
     showDay: true,
-    location: {description: '', reference: ''},
+    location: { description: '', reference: '' },
     selectionData: {
       actions: [],
       selectionValue: '',
@@ -377,17 +377,17 @@ class CreateMemory extends React.Component<Props> {
       // }
       let newMemoryDate = draftDetails.memory_date
         ? new Date(parseInt(draftDetails.memory_date) * 1000).getDate() +
-          '/' +
-          (new Date(parseInt(draftDetails.memory_date) * 1000).getMonth() + 1) +
-          '/' +
-          new Date(parseInt(draftDetails.memory_date) * 1000).getFullYear()
+        '/' +
+        (new Date(parseInt(draftDetails.memory_date) * 1000).getMonth() + 1) +
+        '/' +
+        new Date(parseInt(draftDetails.memory_date) * 1000).getFullYear()
         : '';
       this.setState(
         {
           title: decode_utf8(draftDetails.title),
           locationText: draftDetails.location.description,
           itemList: draftDetails.files,
-          year: {...this.state.year, value: draftDetails.date.year},
+          year: { ...this.state.year, value: draftDetails.date.year },
           month: {
             ...this.state.month,
             value: MonthObj.month[MonthObj.selectedIndex],
@@ -427,7 +427,7 @@ class CreateMemory extends React.Component<Props> {
     }, 500);
   };
 
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     this.props.setCreateMemory(true);
     DefaultPreference.get('hide_memory_draft').then((value: any) => {
       if (value == 'true') {
@@ -445,7 +445,7 @@ class CreateMemory extends React.Component<Props> {
 
       this.draftDetailsCallBack(response.status, response.responseData);
 
-    } 
+    }
     else {
       let title = decode_utf8(this.props.route.params.textTitle);
       title = title.replace(/\n/g, ' ');
@@ -467,7 +467,7 @@ class CreateMemory extends React.Component<Props> {
             ...this.state.month,
             value:
               MonthObj.month[
-                this.currentDate.getMonth() + MonthObj.serverMonthsCount
+              this.currentDate.getMonth() + MonthObj.serverMonthsCount
               ],
           },
           isCreatedByUser: true,
@@ -510,7 +510,7 @@ class CreateMemory extends React.Component<Props> {
         content: description,
         type: type,
       });
-    } catch (error) {}
+    } catch (error) { }
   }
 
   memorySaveCallback = (success: any, id?: any, padId?: any, key?: any) => {
@@ -773,7 +773,7 @@ class CreateMemory extends React.Component<Props> {
       {
         text: 'No',
         style: 'cancel',
-        onPress: () => {},
+        onPress: () => { },
       },
       {
         text: 'Yes',
@@ -860,20 +860,20 @@ class CreateMemory extends React.Component<Props> {
       return true;
     } else {
       if (this._mainItemList) {
-        this._mainItemList.scrollToOffset({animated: true, offset: 0});
+        this._mainItemList.scrollToOffset({ animated: true, offset: 0 });
       }
     }
 
     if (this.state.year.value == 'Year*') {
       this.setState({
-        year: {...this.state.year, error: true},
+        year: { ...this.state.year, error: true },
         dateError: '* Please enter a year and month to publish your memory',
       });
     }
 
     if (this.state.month.value.tid == 0) {
       this.setState({
-        month: {...this.state.month, error: true},
+        month: { ...this.state.month, error: true },
         dateError: '* Please enter a year and month to publish your memory',
       });
     }
@@ -885,7 +885,7 @@ class CreateMemory extends React.Component<Props> {
     }
 
     if (this.state.title.trim().length == 0) {
-      this.setState({titleError: '* Title is mandatory'});
+      this.setState({ titleError: '* Title is mandatory' });
     }
 
     return false;
@@ -893,11 +893,11 @@ class CreateMemory extends React.Component<Props> {
 
   /**Menu options for actions*/
   menuOptions: Array<menuOption> = [
-    {key: 1, title: 'Preview...', onPress: this.preview},
-    {key: 2, title: 'Who can see...', onPress: this.whoCanSee},
-    {key: 3, title: 'Add/Remove Tags...', onPress: this.addRemoveTags},
-    {key: 5, title: 'Who else was there...', onPress: this.whoElseWasthere},
-    {key: 4, title: 'Add to Collections...', onPress: this.addToCollections},
+    { key: 1, title: 'Preview...', onPress: this.preview },
+    { key: 2, title: 'Who can see...', onPress: this.whoCanSee },
+    { key: 3, title: 'Add/Remove Tags...', onPress: this.addRemoveTags },
+    { key: 5, title: 'Who else was there...', onPress: this.whoElseWasthere },
+    { key: 4, title: 'Add to Collections...', onPress: this.addToCollections },
     {
       key: 6,
       title: 'Delete Draft...',
@@ -941,12 +941,14 @@ class CreateMemory extends React.Component<Props> {
           filesToUpload,
           'createMemoryMainListener',
           key,
+          (resp)=>{
+            console.warn('sadadadsd ::', resp);
+            if (resp?.Status) {
+              this.memorySaveCallback(resp.Status, resp.Status, resp.padid, key);
+            }
+          }
         );
 
-        console.warn('sadadadsd ::', resp);
-        if (resp?.Status) {
-          this.memorySaveCallback(resp.Status, resp.Status, resp.padid, key);
-        }
         // }
         // }, 500);
       } else {
@@ -973,7 +975,7 @@ class CreateMemory extends React.Component<Props> {
             ? this.state.memory_date.split('/')[0]
             : '', // new Date(this.state.memory_date).getDate(),
       },
-      location: {description: '', reference: ''},
+      location: { description: '', reference: '' },
       files: this.state.itemList,
       description: '',
     };
@@ -1055,11 +1057,11 @@ class CreateMemory extends React.Component<Props> {
         editRefresh: (file: any[]) => {
           Keyboard.dismiss();
           let fid = GenerateRandomID();
-          let tempFile: TempFile[] = file.map(obj => ({...obj, fid}));
+          let tempFile: TempFile[] = file.map(obj => ({ ...obj, fid }));
           this.fileCallback(tempFile);
         },
-        reset: () => {},
-        deleteItem: () => {},
+        reset: () => { },
+        deleteItem: () => { },
       });
     }
   };
@@ -1120,7 +1122,7 @@ class CreateMemory extends React.Component<Props> {
           {this.props.route.params.editPublsihedMemory ? null : (
             <TouchableOpacity
               onPress={() => this.inviteCollaboratorFlow()}
-              style={[styles.toolbarIcons, {flexDirection: 'row'}]}>
+              style={[styles.toolbarIcons, { flexDirection: 'row' }]}>
               <Text style={styles.collaborateTextStyle}>Collaborate</Text>
               <Image source={icon_collaborators} resizeMode="contain" />
             </TouchableOpacity>
@@ -1154,7 +1156,7 @@ class CreateMemory extends React.Component<Props> {
           {this.props.route.params.editPublsihedMemory ? null : (
             <TouchableOpacity
               onPress={() => this.inviteCollaboratorFlow()}
-              style={[styles.toolbarIcons, {flexDirection: 'row'}]}>
+              style={[styles.toolbarIcons, { flexDirection: 'row' }]}>
               <Text style={styles.collaborateTextStyle}>Collaborate</Text>
               <Image source={icon_collaborators} resizeMode="contain" />
             </TouchableOpacity>
@@ -1234,7 +1236,7 @@ class CreateMemory extends React.Component<Props> {
         <View style={styles.rowConatiner}>
           <View style={styles.textContainer}>
             <Text style={styles.TextStyle}>
-              By <Text style={{fontWeight: '500'}}>{data.by}</Text> on{' '}
+              By <Text style={{ fontWeight: '500' }}>{data.by}</Text> on{' '}
               <Text>{date}</Text>
             </Text>
             {(this.state.isCreatedByUser || data.by == 'You') && (
@@ -1254,8 +1256,8 @@ class CreateMemory extends React.Component<Props> {
               onPress={() => this.fileDescriptionClicked(data)}>
               <View>
                 {(fileTitle ? fileTitle.length == 0 : true) &&
-                (fileDescription ? fileDescription.length == 0 : true) &&
-                data.by == 'You' ? (
+                  (fileDescription ? fileDescription.length == 0 : true) &&
+                  data.by == 'You' ? (
                   <Text style={styles.addDetailsTextStyle}>
                     {' '}
                     {'Add details'}
@@ -1293,12 +1295,12 @@ class CreateMemory extends React.Component<Props> {
 
   deleteFile = (fid: any, isTempFile: boolean) => {
     if (!isTempFile) {
-      this.filesToUpdate.push({fid: fid, action: 'delete'});
+      this.filesToUpdate.push({ fid: fid, action: 'delete' });
     }
     let tempFileArray = this.state.itemList;
     let index = tempFileArray.findIndex((element: any) => element.fid === fid);
     tempFileArray.splice(index, 1);
-    this.setState({itemList: tempFileArray});
+    this.setState({ itemList: tempFileArray });
   };
 
   updateFileContent = (file: any, title: any, description: any) => {
@@ -1321,7 +1323,7 @@ class CreateMemory extends React.Component<Props> {
         file_description: description,
       });
     }
-    this.setState({itemList: updatelist});
+    this.setState({ itemList: updatelist });
   };
 
   fileHolderView = (file: any) => {
@@ -1337,8 +1339,8 @@ class CreateMemory extends React.Component<Props> {
                     url: file.thumbnail_large_url
                       ? file.thumbnail_large_url
                       : file.thumbnail_url
-                      ? file.thumbnail_url
-                      : file.thumb_uri,
+                        ? file.thumbnail_url
+                        : file.thumb_uri,
                   },
                 ],
                 hideDescription: true,
@@ -1359,7 +1361,7 @@ class CreateMemory extends React.Component<Props> {
           <TouchableHighlight
             underlayColor={'#ffffff33'}
             onPress={() =>
-              this.props.navigation.navigate('pdfViewer', {file: file})
+              this.props.navigation.navigate('pdfViewer', { file: file })
             }
             style={styles.fileHolderContainer}>
             <View
@@ -1538,7 +1540,7 @@ class CreateMemory extends React.Component<Props> {
   dateSelected = (selectedItem: any) => {
     let currentDate = new Date();
     if (this.state.selectionData.fieldName == 'month') {
-      selectedItem = {name: selectedItem.text, tid: selectedItem.key};
+      selectedItem = { name: selectedItem.text, tid: selectedItem.key };
       MonthObj.month.forEach((element: any, index: any) => {
         if (element.name == selectedItem.name) {
           MonthObj.selectedIndex = index;
@@ -1557,11 +1559,11 @@ class CreateMemory extends React.Component<Props> {
           if (currentMonth < selectedMonth) {
             this.setState(
               {
-                month: {...this.state.selectionData, value: MonthObj.month[0]},
+                month: { ...this.state.selectionData, value: MonthObj.month[0] },
               },
               () => {
                 this.setState({
-                  day: {...this.state.selectionData, value: 'Day'},
+                  day: { ...this.state.selectionData, value: 'Day' },
                 });
               },
             );
@@ -1572,7 +1574,7 @@ class CreateMemory extends React.Component<Props> {
             let currentDay = currentDate.getDate();
             let selectedDay = parseInt(this.state.day.value);
             if (currentDay < selectedDay) {
-              this.setState({day: {...this.state.selectionData, value: 'Day'}});
+              this.setState({ day: { ...this.state.selectionData, value: 'Day' } });
             }
           }
         }
@@ -1584,11 +1586,11 @@ class CreateMemory extends React.Component<Props> {
           MonthObj.selectedIndex < MonthObj.serverMonthsCount
         ) {
           this.setState({
-            day: {...this.state.selectionData, value: 'Day'},
+            day: { ...this.state.selectionData, value: 'Day' },
             showDay: false,
           });
         } else if (this.state.day.value != 'Day') {
-          this.setState({showDay: true}, () => {
+          this.setState({ showDay: true }, () => {
             let currentDay = parseInt(this.state.day.value);
             if (currentDay >= 28) {
               let maxDay = 28;
@@ -1608,7 +1610,7 @@ class CreateMemory extends React.Component<Props> {
               }
               if (maxDay < currentDay) {
                 this.setState({
-                  day: {...this.state.selectionData, value: 'Day'},
+                  day: { ...this.state.selectionData, value: 'Day' },
                   showDay: true,
                 });
               }
@@ -1616,7 +1618,7 @@ class CreateMemory extends React.Component<Props> {
           });
         } else {
           this.setState({
-            day: {...this.state.selectionData, value: 'Day'},
+            day: { ...this.state.selectionData, value: 'Day' },
             showDay: true,
           });
         }
@@ -1766,7 +1768,7 @@ class CreateMemory extends React.Component<Props> {
                     maxLength={250}
                     multiline={false}
                     onChangeText={(text: any) => {
-                      this.setState({title: text, titleError: ''});
+                      this.setState({ title: text, titleError: '' });
                     }}
                     placeholder={this.state.placeholder}
                     placeholderTextColor={
@@ -1846,7 +1848,7 @@ class CreateMemory extends React.Component<Props> {
             <DateTimePicker
               isVisible={this.state.showCalender}
               onCancel={() => {
-                this.setState({showCalender: false});
+                this.setState({ showCalender: false });
                 //console.log("cancelled")
               }}
               onDateSelection={(date: any) => {
@@ -1865,7 +1867,7 @@ class CreateMemory extends React.Component<Props> {
             : */}
         <View style={Styles.buttonsContainerStyle}>
           {this.props.memoryDescription &&
-          this.props.memoryDescription != '' ? (
+            this.props.memoryDescription != '' ? (
             <>
               <TouchableOpacity
                 style={Styles.buttonsStyle}
@@ -1881,7 +1883,7 @@ class CreateMemory extends React.Component<Props> {
                 <Image source={calendarWrite} />
                 <Text style={styles.editDescriptionTextStyle}>Date</Text>
               </TouchableOpacity>
-              <View style={{width: 8}} />
+              <View style={{ width: 8 }} />
             </>
           ) : null}
           <TouchableOpacity
@@ -1894,11 +1896,11 @@ class CreateMemory extends React.Component<Props> {
             <Text style={styles.editDescriptionTextStyle}>Image</Text>
           </TouchableOpacity>
 
-          <View style={{width: 8}} />
+          <View style={{ width: 8 }} />
           <TouchableOpacity
             style={[
               Styles.buttonsStyle,
-              {backgroundColor: Colors.decadeFilterBorder},
+              { backgroundColor: Colors.decadeFilterBorder },
             ]}
             onPress={() => {
               // if (this.props.padDetails?.padId) {
@@ -1942,7 +1944,7 @@ class CreateMemory extends React.Component<Props> {
             }}>
             <Image source={arrowRight} />
             <Text
-              style={[styles.editDescriptionTextStyle, {color: Colors.white}]}>
+              style={[styles.editDescriptionTextStyle, { color: Colors.white }]}>
               Next
             </Text>
           </TouchableOpacity>
@@ -1994,8 +1996,8 @@ class CreateMemory extends React.Component<Props> {
                       ? ' and You'
                       : ', You and '
                     : this.state.taggedCount == 0
-                    ? ''
-                    : ' and '}
+                      ? ''
+                      : ' and '}
                 </Text>
               </Text>
               {this.state.taggedCount > 0 && (
@@ -2020,11 +2022,11 @@ class CreateMemory extends React.Component<Props> {
                 </TouchableOpacity>
               )}
             </View>
-            <Text style={[styles.ownerNameTextStyle, {paddingTop: 5}]}>
+            <Text style={[styles.ownerNameTextStyle, { paddingTop: 5 }]}>
               {this.state.month.value.name}{' '}
               {this.state.showDay && this.state.day.value},{' '}
               {this.state.year.value}{' '}
-              <Text style={{color: Colors.darkGray}}>
+              <Text style={{ color: Colors.darkGray }}>
                 {' '}
                 {this.state.locationText}{' '}
               </Text>
@@ -2034,7 +2036,7 @@ class CreateMemory extends React.Component<Props> {
       </View>
     );
   };
-  renderForCollaborator = () => {};
+  renderForCollaborator = () => { };
 
   cancelAction = () => {
     // Alert.alert('', `Are you sure you want to exit?`, [
@@ -2110,7 +2112,7 @@ class CreateMemory extends React.Component<Props> {
               {
                 text: 'Close and save as draft',
                 func: () => {
-                  this.setState({showCustomAlert: false}, () => {
+                  this.setState({ showCustomAlert: false }, () => {
                     // if (this.props.padDetails?.padId) {
                     //   this.setEtherPadContent('get', '', this.state.padDetails.padId);
                     // }
@@ -2125,15 +2127,15 @@ class CreateMemory extends React.Component<Props> {
               {
                 text: 'Continue editing',
                 func: () => {
-                  this.setState({showCustomAlert: false});
+                  this.setState({ showCustomAlert: false });
                   // ReactNativeHapticFeedback.trigger('impactMedium', options);
                 },
-                styles: {fontWeight: '400'},
+                styles: { fontWeight: '400' },
               },
               {
                 text: 'Cancel',
                 func: () => {
-                  this.setState({showCustomAlert: false}, () => {
+                  this.setState({ showCustomAlert: false }, () => {
                     this.props.fetchMemoryList({
                       type: ListType.Recent,
                       isLoading: true,
@@ -2147,14 +2149,14 @@ class CreateMemory extends React.Component<Props> {
                   });
                   // ReactNativeHapticFeedback.trigger('impactMedium', options);
                 },
-                styles: {fontWeight: '400'},
+                styles: { fontWeight: '400' },
               },
             ]}
           />
           <View
             style={styles.navigationHeaderContainer}
-            // onStartShouldSetResponder={() => true}
-            // onResponderStart={this.hideToolTip}
+          // onStartShouldSetResponder={() => true}
+          // onResponderStart={this.hideToolTip}
           >
             <NavigationHeaderSafeArea
               // heading={'Memory Draft'}
@@ -2165,13 +2167,13 @@ class CreateMemory extends React.Component<Props> {
                 this.props.route.params.editPublsihedMemory
                   ? 'Save'
                   : // : this.state.isCreatedByUser
-                    //   ? 'Done'
-                    'Save'
+                  //   ? 'Done'
+                  'Save'
               }
               backIcon={action_close}
-              saveValues={() => this.setState({showCustomAlert: true})} //this.saveDraft
-              // rightIcon={this.state.isCreatedByUser}
-              // showHideMenu={() => this.showMenu(!this.state.menuVisibility)}
+              saveValues={() => this.setState({ showCustomAlert: true })} //this.saveDraft
+            // rightIcon={this.state.isCreatedByUser}
+            // showHideMenu={() => this.showMenu(!this.state.menuVisibility)}
             />
             <View style={styles.borderStyle}></View>
             <StatusBar
@@ -2188,18 +2190,18 @@ class CreateMemory extends React.Component<Props> {
               modalVisible={this.state.showActionAndroid}
               setModalVisible={
                 this.state.actionSheet?.list?.actions &&
-                this.state.actionSheet?.list?.actions.length &&
-                this.state.actionSheet?.list?.actions[0] &&
-                this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
+                  this.state.actionSheet?.list?.actions.length &&
+                  this.state.actionSheet?.list?.actions[0] &&
+                  this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
                   ? `Are you done writing this memory?`
                   : `Save for later?`
               }
               title={this.state.actionSheet.title}
               message={
                 this.state.actionSheet?.list?.actions &&
-                this.state.actionSheet?.list?.actions.length &&
-                this.state.actionSheet?.list?.actions[0] &&
-                this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
+                  this.state.actionSheet?.list?.actions.length &&
+                  this.state.actionSheet?.list?.actions[0] &&
+                  this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
                   ? ``
                   : 'Choose to completely discard your work, or save writing this memory for later.'
               }
@@ -2284,8 +2286,8 @@ class CreateMemory extends React.Component<Props> {
                   // />
                   this.state.itemList?.length
                     ? this.state.itemList.map((item, index) =>
-                        this.renderRow(item, index),
-                      )
+                      this.renderRow(item, index),
+                    )
                     : null
                 }
                 {/* )} */}
@@ -2363,7 +2365,7 @@ class CreateMemory extends React.Component<Props> {
   }
 }
 
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     locationList: state.MemoryInitials.locationList,
     tagsList: state.MemoryInitials.tags,
@@ -2382,34 +2384,34 @@ const mapState = (state: {[x: string]: any}) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     onLocationUpdate: (payload: any) =>
-      dispatch({type: LocationAPI, payload: payload}),
+      dispatch({ type: LocationAPI, payload: payload }),
     fetchMemoryList: (payload: any) =>
-      dispatch({type: GET_MEMORY_LIST, payload: payload}),
-    resetLocation: () => dispatch({type: ResetLocation, payload: ''}),
+      dispatch({ type: GET_MEMORY_LIST, payload: payload }),
+    resetLocation: () => dispatch({ type: ResetLocation, payload: '' }),
     onInitialUpdate: (payload: any) =>
-      dispatch({type: MemoryInitialsUpdate, payload: payload}),
+      dispatch({ type: MemoryInitialsUpdate, payload: payload }),
     recentTags: (payload: any) =>
-      dispatch({type: MemoryTagsAPI, payload: payload}),
-    collectionAPI: () => dispatch({type: CollectinAPI}),
-    saveNid: (payload: any) => dispatch({type: SaveNid, payload: payload}),
+      dispatch({ type: MemoryTagsAPI, payload: payload }),
+    collectionAPI: () => dispatch({ type: CollectinAPI }),
+    saveNid: (payload: any) => dispatch({ type: SaveNid, payload: payload }),
     saveFiles: (payload: any) =>
-      dispatch({type: SaveAttachedFile, payload: payload}),
-    setNid: (payload: any) => dispatch({type: SaveNid, payload: payload}),
-    resetAll: (payload: any) => dispatch({type: ResetALL, payload: payload}),
-    setPadID: (payload: any) => dispatch({type: SaveNid, payload: payload}),
-    setCreateMemory: (payload: any) => dispatch({type: CreateAMemory, payload: payload}),
+      dispatch({ type: SaveAttachedFile, payload: payload }),
+    setNid: (payload: any) => dispatch({ type: SaveNid, payload: payload }),
+    resetAll: (payload: any) => dispatch({ type: ResetALL, payload: payload }),
+    setPadID: (payload: any) => dispatch({ type: SaveNid, payload: payload }),
+    setCreateMemory: (payload: any) => dispatch({ type: CreateAMemory, payload: payload }),
     showAlertCall: (payload: any) =>
-      dispatch({type: showCustomAlert, payload: payload}),
+      dispatch({ type: showCustomAlert, payload: payload }),
     showAlertCallData: (payload: any) =>
-      dispatch({type: showCustomAlertData, payload: payload}),
+      dispatch({ type: showCustomAlertData, payload: payload }),
     navigateToDashboard: (payload: any) =>
-      dispatch({type: NavigateToDashboard, payload: payload}),
+      dispatch({ type: NavigateToDashboard, payload: payload }),
     setDescription: (payload: any) =>
-      dispatch({type: SaveDescription, payload: payload}),
+      dispatch({ type: SaveDescription, payload: payload }),
     etherpadContentUpdate: (payload: any) =>
-      dispatch({type: EtherPadContentAPI, payload: payload}),
+      dispatch({ type: EtherPadContentAPI, payload: payload }),
     setEditContent: (payload: any) =>
-      dispatch({type: EditContent, payload: payload}),
+      dispatch({ type: EditContent, payload: payload }),
   };
 };
 

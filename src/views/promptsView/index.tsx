@@ -361,10 +361,10 @@ export default class PromptsView extends React.Component<State, Props> {
         //   this.promptToMemoryCallBack,
         // );
        
-        let response = await CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
-        console.warn("res > ", JSON.stringify(response))
-        this.promptToMemoryCallBack(response.status, response.id ? response.id : null)
-
+        let response: any = await CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',(response)=>{
+          this.promptToMemoryCallBack(response.status, response.id ? response.id : null)
+        });
+       
         Keyboard.dismiss();
       });
 

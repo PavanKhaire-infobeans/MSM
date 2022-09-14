@@ -5,4 +5,12 @@ function MemoryService(url: string, params: Array<any>) {
   return Webservice.postRequest(url, headers, request);
 }
 
-export {MemoryService};
+function newMemoryService(url: string, params: Array<any>,CB) {
+  const [headers, request] = params;
+  // return Webservice.postRequest(url, headers, request);
+  return Webservice.newPostRequest(url, headers, request, false, (data) => {
+    CB(data)
+  });
+}
+
+export { MemoryService, newMemoryService };
