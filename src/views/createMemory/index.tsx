@@ -101,7 +101,7 @@ import DateTimePicker from '../../common/component/DateTimePicker';
 import moment from 'moment';
 import {arrowRight, calendarWrite, image} from '../../../app/images';
 import CustomAlert from '../../common/component/customeAlert';
-import {GET_MEMORY_LIST, ListType} from '../dashboard/dashboardReducer';
+import {CreateAMemory, GET_MEMORY_LIST, ListType} from '../dashboard/dashboardReducer';
 import DatePicker from './../../common/component/datePicker';
 import Styles from './styles';
 
@@ -428,6 +428,7 @@ class CreateMemory extends React.Component<Props> {
   };
 
   componentDidMount = async() => {
+    this.props.setCreateMemory(true);
     DefaultPreference.get('hide_memory_draft').then((value: any) => {
       if (value == 'true') {
         this.state.memoryDraftVisibility = false;
@@ -2396,6 +2397,7 @@ const mapDispatch = (dispatch: Function) => {
     setNid: (payload: any) => dispatch({type: SaveNid, payload: payload}),
     resetAll: (payload: any) => dispatch({type: ResetALL, payload: payload}),
     setPadID: (payload: any) => dispatch({type: SaveNid, payload: payload}),
+    setCreateMemory: (payload: any) => dispatch({type: CreateAMemory, payload: payload}),
     showAlertCall: (payload: any) =>
       dispatch({type: showCustomAlert, payload: payload}),
     showAlertCallData: (payload: any) =>

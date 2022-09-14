@@ -25,6 +25,8 @@ export const JUMP_TO_VIEW_SHOW = "JUMP_TO_VIEW_SHOW";
 export const JUMP_TO_FROM_DATE = "JUMP_TO_FROM_DATE";
 export const JUMP_TO_TO_DATE = "JUMP_TO_TO_DATE";
 export const SET_KEYBOARD_HEIGHT = "SET_KEYBOARD_HEIGHT";
+export const CreateAMemory = 'CreateAMemory';
+
 export enum ListType {
     Recent = "feed",
     Timeline = "timeline",
@@ -48,6 +50,7 @@ type StateType = {
     timelineCount: number;
     jumpToCalled: boolean;
     isTimelineEnded: boolean;
+    createAMemory: boolean,
     isJumptoShow: boolean;
     filterName: string;
     currentTabName: string;
@@ -83,6 +86,8 @@ export const dashboardReducer = (state: DashboardState = {}, action: PayLoad): D
         case JUMP_TO_FROM_DATE: newState = { ...newState, fromDate: action.payload }
             break;
         case JUMP_TO_TO_DATE: newState = { ...newState, toDate: action.payload }
+            break;
+        case CreateAMemory: newState = { ...newState, createAMemory: action.payload }
             break;
         case SET_RECENT_LIST: if (!action.payload.isLoadMore) {
             newState.recentList = [];

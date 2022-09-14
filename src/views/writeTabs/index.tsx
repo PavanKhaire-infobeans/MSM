@@ -379,11 +379,13 @@ class WriteTabs extends React.Component<Props> {
                     this.props?.route?.name != 'addContent' &&
                     this.props?.route?.name != 'dashboard'
                   ) {
-                    this.props.navigation.navigate('addContent', {
-                      beforeBack: () => {
-                        this.setScreen();
-                      },
-                    });
+                    if (!this.props.createAMemory) {
+                      this.props.navigation.navigate('addContent', {
+                        beforeBack: () => {
+                          this.setScreen();
+                        },
+                      });
+                    }
                   }
                 }
                 if (screenName == 2) {
@@ -413,8 +415,8 @@ class WriteTabs extends React.Component<Props> {
 
             <View style={Styles.bottomBarContainer}>
               <View style={Styles.bottomBarSubContainer}>
-                <TabIcon focused={true} navigation={this.props.navigation} title={NewTabItems.Read} />
-                <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Write} />
+                <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Read} />
+                <TabIcon focused={true} navigation={this.props.navigation} title={NewTabItems.Write} />
               </View>
             </View>
 
@@ -459,6 +461,7 @@ const mapState = (state: any) => {
     showAlert: state.MemoryInitials.showAlert,
     showAlertData: state.MemoryInitials.showAlertData,
     filterName: state.dashboardReducer.filterName,
+    createAMemory: state.dashboardReducer.createAMemory,
   };
 };
 
