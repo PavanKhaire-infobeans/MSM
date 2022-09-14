@@ -1,23 +1,32 @@
 import NetInfo from '@react-native-community/netinfo';
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
-  Dimensions, FlatList, Image, Keyboard, ListRenderItemInfo, Platform, SafeAreaView, StatusBar, TouchableHighlight, View
+  Dimensions,
+  FlatList,
+  Image,
+  Keyboard,
+  ListRenderItemInfo,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import SearchBar from '../../common/component/SearchBar';
 import Text from '../../common/component/Text';
-import { Colors, fontSize, Size } from '../../common/constants';
-import { Account, LoginStore, UserData } from '../../common/loginStore';
+import {Colors, fontSize, Size} from '../../common/constants';
+import {Account, LoginStore, UserData} from '../../common/loginStore';
 import InstanceView from './instanceView';
 
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MessageDialogue from '../../common/component/messageDialogue';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import Utility from '../../common/utility';
-import { search_illustration } from '../../images';
+import {search_illustration} from '../../images';
 import GetFormData from './getFormData';
-import { GetInstances } from './reducer';
+import {GetInstances} from './reducer';
 import Styles from './styles';
 
 type Item = {
@@ -82,9 +91,11 @@ class FindCommunity extends Component<FindProps, State> {
   };
 
   UNSAFE_componentWillReceiveProps(nextProps: FindProps) {
-    if (nextProps.request.completed) {
-      this.getAll();
-      this.props.end();
+    if (this.props !== nextProps) {
+      if (nextProps.request.completed) {
+        this.getAll();
+        this.props.end();
+      }
     }
   }
 
@@ -146,15 +157,15 @@ class FindCommunity extends Component<FindProps, State> {
   };
   render() {
     return (
-      <SafeAreaView
-        style={Styles.safeAreaViewContainer}>
+      <SafeAreaView style={Styles.safeAreaViewContainer}>
         <StatusBar
-          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
           backgroundColor={Colors.NewThemeColor}
         />
         {/* <TouchableHighlight onPress={() => Keyboard.dismiss()} underlayColor="#fff" style={{ width: "100%", flex: 1, alignItems: "center" }}> */}
-        <View
-          style={Styles.communityContainer}>
+        <View style={Styles.communityContainer}>
           <Text style={Styles.communitytext}>
             Search for your private community by organization or URL
           </Text>
@@ -174,10 +185,18 @@ class FindCommunity extends Component<FindProps, State> {
             style={{backgroundColor: Colors.NewLightThemeColor}}
           />
           <View
-            style={[Styles.communityListContainer,{
-              width: this.screenSize.width,
-              marginBottom: 60 + (Platform.OS == 'ios' && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10 : 0),
-            }]}>
+            style={[
+              Styles.communityListContainer,
+              {
+                width: this.screenSize.width,
+                marginBottom:
+                  60 +
+                  (Platform.OS == 'ios' &&
+                  StaticSafeAreaInsets.safeAreaInsetsBottom
+                    ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10
+                    : 0),
+              },
+            ]}>
             {this.state.isSearching ? (
               <ListItems
                 list={this.filteredList}
@@ -185,8 +204,7 @@ class FindCommunity extends Component<FindProps, State> {
               />
             ) : (
               !this.state.selectedItem && (
-                <View
-                  style={Styles.selectedItemStyle}>
+                <View style={Styles.selectedItemStyle}>
                   <Image source={search_illustration} />
                 </View>
               )
@@ -263,12 +281,8 @@ class ListItems extends React.Component<{
           // matchFieldName={'InstanceName'}
           extraData={this.props}
           ListEmptyComponent={() => (
-            <View
-              style={Styles.noCommunityContainer}>
-              <Text
-                style={Styles.noCommunity}>
-                No Community Available
-              </Text>
+            <View style={Styles.noCommunityContainer}>
+              <Text style={Styles.noCommunity}>No Community Available</Text>
             </View>
           )}
         />

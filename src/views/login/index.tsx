@@ -222,13 +222,11 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
    */
   componentWillReceiveProps(nextProps: Props) {
     // Check for login response
-    console.log('this.props !== nextProps : ', this.props !== nextProps);
     if (
       this.props !== nextProps &&
       (nextProps?.route?.name == 'login' ||
         nextProps?.route?.name == 'prologue')
     ) {
-      console.log('nextProps?.route?.name: ', JSON.stringify(nextProps));
       this.controller.checkLoggedIn(nextProps.loginStatus);
     }
   }

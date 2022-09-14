@@ -1092,70 +1092,72 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
 
   UNSAFE_componentWillReceiveProps(nextProps: {[x: string]: any}) {
     //Delete MindPop Operation resolver
-    if (nextProps.deleteStatus && nextProps.deleteStatus.completed) {
-      loaderHandler.hideLoader();
-      if (
-        nextProps.deleteStatus.success &&
-        this.props?.route?.name == 'mindPopEdit'
-      ) {
-        let arrIds = [parseInt(this.state.id)];
-        MindPopStore._deleteMindPops(arrIds);
-        this.props.deleteMindPopsCallEnd();
+    if (this.props !== nextProps) {
+      if (nextProps.deleteStatus && nextProps.deleteStatus.completed) {
+        loaderHandler.hideLoader();
         if (
-          this.props?.route?.name == 'mindPopEdit' &&
-          !this.isDeleteForMemory
+          nextProps.deleteStatus.success &&
+          this.props?.route?.name == 'mindPopEdit'
         ) {
-          Keyboard.dismiss();
-          this.props.navigation.goBack();
-          return;
-        } else if (this.props.navigation.state.routeName == 'mindPopEdit') {
-          this.isDeleteForMemory = false;
+          let arrIds = [parseInt(this.state.id)];
+          MindPopStore._deleteMindPops(arrIds);
+          this.props.deleteMindPopsCallEnd();
+          if (
+            this.props?.route?.name == 'mindPopEdit' &&
+            !this.isDeleteForMemory
+          ) {
+            Keyboard.dismiss();
+            this.props.navigation.goBack();
+            return;
+          } else if (this.props.navigation.state.routeName == 'mindPopEdit') {
+            this.isDeleteForMemory = false;
+          }
+        } else {
+          var deleteMessage = getValue(nextProps, [
+            'deleteStatus',
+            'data',
+            'message',
+          ]);
+          ToastMessage(
+            `${deleteMessage || ERROR_MESSAGE}`,
+            deleteMessage ? 'black' : Colors.ErrorColor,
+          );
         }
-      } else {
-        var deleteMessage = getValue(nextProps, [
-          'deleteStatus',
-          'data',
-          'message',
-        ]);
-        ToastMessage(
-          `${deleteMessage || ERROR_MESSAGE}`,
-          deleteMessage ? 'black' : Colors.ErrorColor,
-        );
       }
-    }
-    //To update files on Tablet in View mode
-    if (
-      this.props?.route?.name == 'mindPopList' ||
-      Object.keys(this.props.listItem || {}).length <
-        Object.keys(nextProps.listItem || {}).length
-    ) {
-      this.setupFiles(nextProps.listItem);
-      this.updateFiles();
-    }
-    var state: {[x: string]: any} = {};
-    if (
-      ((this.state.id == '' && getValue(nextProps, ['listItem', 'id'])) ||
-        DeviceInfo.isTablet()) &&
-      this.props.navigation.state.routeName == 'mindPopList' &&
-      nextProps.listItem
-    ) {
-      let content = decode_utf8(nextProps.listItem.message || '');
-      state = {
-        id: nextProps.listItem.id,
-        content,
-        oldcontent: content,
-      };
-    }
+      //To update files on Tablet in View mode
+      if (
+        this.props?.route?.name == 'mindPopList' ||
+        Object.keys(this.props.listItem || {}).length <
+          Object.keys(nextProps.listItem || {}).length
+      ) {
+        this.setupFiles(nextProps.listItem);
+        this.updateFiles();
+      }
+      var state: {[x: string]: any} = {};
+      if (
+        ((this.state.id == '' && getValue(nextProps, ['listItem', 'id'])) ||
+          DeviceInfo.isTablet()) &&
+        this.props.navigation.state.routeName == 'mindPopList' &&
+        nextProps.listItem
+      ) {
+        let content = decode_utf8(nextProps.listItem.message || '');
+        state = {
+          id: nextProps.listItem.id,
+          content,
+          oldcontent: content,
+        };
+      }
 
-    if (this.props.isEdit != nextProps.isEdit) {
-      if (nextProps.isEdit) {
-        state['deletedAttachments'] = [];
+      if (this.props.isEdit != nextProps.isEdit) {
+        if (nextProps.isEdit) {
+          state['deletedAttachments'] = [];
+        }
+        this.isEdit = nextProps.isEdit;
+        // this.setState({});
       }
-      this.isEdit = nextProps.isEdit;
-      // this.setState({});
-    }
-    if (Object.keys(state).length > 0) {
-      this.setState(state as State);
+      if (Object.keys(state).length > 0) {
+        this.setState(state as State);
+      }
     }
   }
 

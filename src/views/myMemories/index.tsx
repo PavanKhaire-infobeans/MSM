@@ -44,9 +44,11 @@ export default class MyMemoriesContainer extends React.Component<Props> {
     );
   }
 
-  UNSAFE_componentWillReceiveProps() {
-    if (this.props.isFromMenu) {
-      setTimeout(() => this.scrollableTabView.goToPage(1), 300);
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props !== nextProps) {
+      if (this.props.isFromMenu) {
+        setTimeout(() => this.scrollableTabView.goToPage(1), 300);
+      }
     }
   }
 

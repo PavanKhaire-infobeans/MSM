@@ -274,157 +274,167 @@ class MindPopList extends React.Component<{
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: {[x: string]: any}) {
-    if (nextProps.list.completed) {
-      LoaderHandler.hideLoader();
-      if (nextProps.list.success) {
-        let {count: totalItems, fetchedItems} = getValue(nextProps, [
-          'list',
-          'data',
-        ]);
-        if (totalItems > 0) {
-          this.setState(
-            {
-              totalItems,
-              webserviceBeingCalled: false,
-              selectedIndex:
-                this.searchKeyword.trim().length != 0
-                  ? 0
-                  : this.state.selectedIndex,
-            },
-            () => {
-              this._populateListFromDB(fetchedItems, updatedSectionListData => {
-                this.props.callEnded();
-                this.setState(
-                  {listSectionItems: updatedSectionListData},
-                  () => {
-                    this.props.updateListCount(this._listItems().length);
-                    if (this.state.totalItems == 0) {
-                      this.props.cleanEdit();
-                    }
+    if (this.props !== nextProps) {
+      if (nextProps.list.completed) {
+        LoaderHandler.hideLoader();
+        if (nextProps.list.success) {
+          let {count: totalItems, fetchedItems} = getValue(nextProps, [
+            'list',
+            'data',
+          ]);
+          if (totalItems > 0) {
+            this.setState(
+              {
+                totalItems,
+                webserviceBeingCalled: false,
+                selectedIndex:
+                  this.searchKeyword.trim().length != 0
+                    ? 0
+                    : this.state.selectedIndex,
+              },
+              () => {
+                this._populateListFromDB(
+                  fetchedItems,
+                  updatedSectionListData => {
+                    this.props.callEnded();
+                    this.setState(
+                      {listSectionItems: updatedSectionListData},
+                      () => {
+                        this.props.updateListCount(this._listItems().length);
+                        if (this.state.totalItems == 0) {
+                          this.props.cleanEdit();
+                        }
+                      },
+                    );
                   },
                 );
-              });
-            },
-          );
+              },
+            );
+          } else {
+            this.props.callEnded();
+            this.setState(
+              {
+                listSectionItems: [],
+                totalItems: 0,
+                webserviceBeingCalled: false,
+              },
+              () => {
+                this.props.updateListCount(0);
+                if (this.state.totalItems == 0) {
+                  this.props.cleanEdit();
+                }
+              },
+            );
+          }
         } else {
           this.props.callEnded();
+          let data =
+            this.state.listSectionItems &&
+            this.state.listSectionItems.length > 0
+              ? this.state.listSectionItems[
+                  this.state.listSectionItems.length - 1
+                ].data || []
+              : [];
           this.setState(
-            {listSectionItems: [], totalItems: 0, webserviceBeingCalled: false},
+            {totalItems: data.length, webserviceBeingCalled: false},
             () => {
               this.props.updateListCount(0);
-              if (this.state.totalItems == 0) {
-                this.props.cleanEdit();
-              }
             },
           );
+          // No_Internet_Warning();
         }
-      } else {
-        this.props.callEnded();
-        let data =
-          this.state.listSectionItems && this.state.listSectionItems.length > 0
-            ? this.state.listSectionItems[
-                this.state.listSectionItems.length - 1
-              ].data || []
-            : [];
-        this.setState(
-          {totalItems: data.length, webserviceBeingCalled: false},
-          () => {
-            this.props.updateListCount(0);
-          },
-        );
-        // No_Internet_Warning();
-      }
-    } else if (nextProps.deleteStatus.completed) {
-      LoaderHandler.hideLoader();
-      if (nextProps.deleteStatus.success) {
-        // var deletedIds: string[] = (getValue(nextProps, ["deleteStatus", "data", "reqData", "mindPopList"]) || []).map(
-        // 	(it: { mindPopID: string }) => it.mindPopID
-        // );
+      } else if (nextProps.deleteStatus.completed) {
+        LoaderHandler.hideLoader();
+        if (nextProps.deleteStatus.success) {
+          // var deletedIds: string[] = (getValue(nextProps, ["deleteStatus", "data", "reqData", "mindPopList"]) || []).map(
+          // 	(it: { mindPopID: string }) => it.mindPopID
+          // );
 
-        var deletedIds: number[] = (
-          getValue(nextProps, [
-            'deleteStatus',
-            'data',
-            'reqData',
-            'mindPopList',
-          ]) || []
-        ).map((it: {mindPopID: string}) => parseInt(it.mindPopID));
+          var deletedIds: number[] = (
+            getValue(nextProps, [
+              'deleteStatus',
+              'data',
+              'reqData',
+              'mindPopList',
+            ]) || []
+          ).map((it: {mindPopID: string}) => parseInt(it.mindPopID));
 
-        if (this.props?.route?.name == 'mindPopList') {
-          this.props.deleteMindPopsCallEnd();
-          MindPopStore._deleteMindPops(deletedIds);
-        }
-
-        var objects: Section = this.state.listSectionItems.find(obj => {
-          return obj.title === '1';
-        });
-        if (objects) {
-          var rowItems: Array<ListItem & {id: any}> = [...objects.data];
-          var updatedItems = rowItems.filter(obj => {
-            return deletedIds.indexOf(obj.id) == -1;
-          });
-          var updatedSectionListData: SectionItems = [
-            {
-              title: '0',
-              data: [
-                {message: '', id: 'helpview'},
-                {message: '', id: 'editor'},
-              ],
-            },
-            {
-              title: '1',
-              data: updatedItems,
-            },
-          ];
-          if (updatedItems.length == 0) {
-            this.props.cleanEdit();
-            // this.props.listMindPops();
-            // MindPopStore._getMindPopFromLocalDB('');
+          if (this.props?.route?.name == 'mindPopList') {
+            this.props.deleteMindPopsCallEnd();
+            MindPopStore._deleteMindPops(deletedIds);
           }
 
-          this.setState(
-            {
-              totalItems: updatedItems.length,
-              listSectionItems:
-                updatedItems.length > 0 ? updatedSectionListData : [],
-              webserviceBeingCalled: false,
-            },
-            () => {
-              this.props.updateListCount(this._listItems().length);
+          var objects: Section = this.state.listSectionItems.find(obj => {
+            return obj.title === '1';
+          });
+          if (objects) {
+            var rowItems: Array<ListItem & {id: any}> = [...objects.data];
+            var updatedItems = rowItems.filter(obj => {
+              return deletedIds.indexOf(obj.id) == -1;
+            });
+            var updatedSectionListData: SectionItems = [
+              {
+                title: '0',
+                data: [
+                  {message: '', id: 'helpview'},
+                  {message: '', id: 'editor'},
+                ],
+              },
+              {
+                title: '1',
+                data: updatedItems,
+              },
+            ];
+            if (updatedItems.length == 0) {
+              this.props.cleanEdit();
+              // this.props.listMindPops();
+              // MindPopStore._getMindPopFromLocalDB('');
+            }
 
-              this.setState({selectedItems: []}, () => {
-                this.props.updateSelectedItemCount(
-                  this.state.selectedItems.length,
-                );
-              });
+            this.setState(
+              {
+                totalItems: updatedItems.length,
+                listSectionItems:
+                  updatedItems.length > 0 ? updatedSectionListData : [],
+                webserviceBeingCalled: false,
+              },
+              () => {
+                this.props.updateListCount(this._listItems().length);
 
-              this.props.updateSelectionState(false);
-            },
+                this.setState({selectedItems: []}, () => {
+                  this.props.updateSelectedItemCount(
+                    this.state.selectedItems.length,
+                  );
+                });
+
+                this.props.updateSelectionState(false);
+              },
+            );
+          }
+          if (this.convertToMemoryObject.callForCreateMemory) {
+            this.convertToMemoryObject.callForCreateMemory = false;
+            this.props.navigation.navigate('createMemory', {
+              attachments: this.convertToMemoryObject.attachments,
+              id: this.convertToMemoryObject.nid,
+              textTitle: this.convertToMemoryObject.details.title,
+              memoryDate: this.convertToMemoryObject.details.memory_date,
+              type: createNew,
+            });
+          }
+        } else {
+          this.props.deleteMindPopsCallEnd();
+          let errorMsg = getValue(nextProps, [
+            'deleteStatus',
+            'data',
+            'error',
+            'message',
+          ]);
+          let message: string = errorMsg || ERROR_MESSAGE;
+          ToastMessage(
+            message,
+            message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor,
           );
         }
-        if (this.convertToMemoryObject.callForCreateMemory) {
-          this.convertToMemoryObject.callForCreateMemory = false;
-          this.props.navigation.navigate('createMemory', {
-            attachments: this.convertToMemoryObject.attachments,
-            id: this.convertToMemoryObject.nid,
-            textTitle: this.convertToMemoryObject.details.title,
-            memoryDate: this.convertToMemoryObject.details.memory_date,
-            type: createNew,
-          });
-        }
-      } else {
-        this.props.deleteMindPopsCallEnd();
-        let errorMsg = getValue(nextProps, [
-          'deleteStatus',
-          'data',
-          'error',
-          'message',
-        ]);
-        let message: string = errorMsg || ERROR_MESSAGE;
-        ToastMessage(
-          message,
-          message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor,
-        );
       }
     }
   }

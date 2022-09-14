@@ -78,7 +78,9 @@ class NotificationView extends React.Component<Props> {
 
   UNSAFE_componentWillReceiveProps(props: Props) {
     // this.setState({});
-    loaderHandler.hideLoader();
+    if (this.props !== props) {
+      loaderHandler.hideLoader();
+    }
   }
 
   navigateToNotificationListing = (item: any) => {

@@ -69,7 +69,9 @@ class NotificationListing extends React.Component<Props> {
 
   UNSAFE_componentWillReceiveProps(props: Props) {
     //componentDidUpdate(props: Props){
-    this.setState({isRefreshing: false});
+    if (this.props !== props) {
+      this.setState({isRefreshing: false});
+    }
   }
 
   cancelAction = () => {

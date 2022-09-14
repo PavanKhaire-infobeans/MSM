@@ -116,6 +116,7 @@ class Prologue extends Component<Props> {
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (
+      this.props !== nextProps &&
       nextProps.request.completed &&
       this.props.navigation &&
       this.props.navigation?.state &&

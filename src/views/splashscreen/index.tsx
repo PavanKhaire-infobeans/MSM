@@ -189,149 +189,154 @@ class Splash extends Component<Props> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (
-      nextProps.user.instanceID != 0 &&
-      nextProps.user.userAuthToken != null
-    ) {
-      Account.selectedData().values = nextProps.user;
-      // this.props.navigation.reset("dashboardIndex")
-      try {
-        // this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
+    if (this.props !== nextProps) {
+      if (
+        nextProps.user.instanceID != 0 &&
+        nextProps.user.userAuthToken != null
+      ) {
+        Account.selectedData().values = nextProps.user;
+        // this.props.navigation.reset("dashboardIndex")
+        try {
+          // this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
 
-        if (this.state.fromDeeplinking) {
+          if (this.state.fromDeeplinking) {
+            if (!this.state.apiCalldoneOnce) {
+              if (Utility.isInternetConnected) {
+                if (this.state.navigateToScreen == 'mystory') {
+                  this.setState(
+                    {
+                      apiCalldoneOnce: true,
+                    },
+                    () => {
+                      // this.props.navigation.replace("createMemory", { editMode: true, draftNid: this.state.decodedDataFromURL, deepLinkBackClick: true })
+                    },
+                  );
+                } else if (this.state.navigateToScreen == 'myMemories') {
+                  this.setState(
+                    {
+                      apiCalldoneOnce: true,
+                    },
+                    () => {
+                      // this.props.navigation.replace("memoriesDrafts", { fromDeepLink: this.state.decodedDataFromURL, deepLinkBackClick: true })
+                    },
+                  );
+                } else if (this.state.navigateToScreen == 'memory') {
+                  this.setState(
+                    {
+                      apiCalldoneOnce: true,
+                    },
+                    () => {
+                      // this.props.navigation.replace("memoryDetails", { editMode: false, nid: this.state.decodedDataFromURL, type: this.state.deeplinkMemoryType, deepLinkBackClick: true })
+                    },
+                  );
+                } else if (this.state.navigateToScreen == 'about') {
+                  this.setState(
+                    {
+                      apiCalldoneOnce: true,
+                    },
+                    () => {
+                      // this.props.navigation.replace("moreOptions", { fromDeepLink: true, deepLinkBackClick: true })
+                    },
+                  );
+                } else if (this.state.navigateToScreen == 'PromptScreen') {
+                  this.setState(
+                    {
+                      apiCalldoneOnce: true,
+                    },
+                    () => {
+                      GetPromptBYPromptId(this.state.decodedDataFromURL);
+                    },
+                  );
+                } else if (this.state.navigateToScreen == 'PromptCreate') {
+                  this.setState(
+                    {
+                      apiCalldoneOnce: true,
+                    },
+                    () => {
+                      let splitArray =
+                        this.state.decodedDataFromURL.split('&&&');
+                      let id: any = splitArray[2],
+                        title: any = splitArray[4];
+                      if (Utility.isInternetConnected) {
+                        if (nextProps.user.userID == splitArray[1]) {
+                          if (
+                            splitArray[3] &&
+                            splitArray[3] === 'writeprompt'
+                          ) {
+                            loaderHandler.showLoader('Creating Memory...');
+                            let draftDetails: any = DefaultDetailsMemory(
+                              decode_utf8(title.trim()),
+                            );
+                            draftDetails.prompt_id = parseInt(id);
 
-          if (!this.state.apiCalldoneOnce) {
-            if (Utility.isInternetConnected) {
-              if (this.state.navigateToScreen == 'mystory') {
-                this.setState(
-                  {
-                    apiCalldoneOnce: true,
-                  },
-                  () => {
-                    // this.props.navigation.replace("createMemory", { editMode: true, draftNid: this.state.decodedDataFromURL, deepLinkBackClick: true })
-                  },
-                );
-              } else if (this.state.navigateToScreen == 'myMemories') {
-                this.setState(
-                  {
-                    apiCalldoneOnce: true,
-                  },
-                  () => {
-                    // this.props.navigation.replace("memoriesDrafts", { fromDeepLink: this.state.decodedDataFromURL, deepLinkBackClick: true })
-                  },
-                );
-              } else if (this.state.navigateToScreen == 'memory') {
-                this.setState(
-                  {
-                    apiCalldoneOnce: true,
-                  },
-                  () => {
-                    // this.props.navigation.replace("memoryDetails", { editMode: false, nid: this.state.decodedDataFromURL, type: this.state.deeplinkMemoryType, deepLinkBackClick: true })
-                  },
-                );
-              } else if (this.state.navigateToScreen == 'about') {
-                this.setState(
-                  {
-                    apiCalldoneOnce: true,
-                  },
-                  () => {
-                    // this.props.navigation.replace("moreOptions", { fromDeepLink: true, deepLinkBackClick: true })
-                  },
-                );
-              } else if (this.state.navigateToScreen == 'PromptScreen') {
-                this.setState(
-                  {
-                    apiCalldoneOnce: true,
-                  },
-                  () => {
-                    GetPromptBYPromptId(this.state.decodedDataFromURL);
-                  },
-                );
-              } else if (this.state.navigateToScreen == 'PromptCreate') {
-                this.setState(
-                  {
-                    apiCalldoneOnce: true,
-                  },
-                  () => {
-                    let splitArray = this.state.decodedDataFromURL.split('&&&');
-                    let id: any = splitArray[2],
-                      title: any = splitArray[4];
-                    if (Utility.isInternetConnected) {
-                      if (nextProps.user.userID == splitArray[1]) {
-                        if (splitArray[3] && splitArray[3] === 'writeprompt') {
-                          loaderHandler.showLoader('Creating Memory...');
-                          let draftDetails: any = DefaultDetailsMemory(
-                            decode_utf8(title.trim()),
-                          );
-                          draftDetails.prompt_id = parseInt(id);
-
-                          CreateUpdateMemory(
-                            draftDetails,
-                            [],
-                            promptIdListener,
-                            'save',
-                          );
-                        } else if (
-                          splitArray[3] &&
-                          splitArray[3] === 'mindpopup'
-                        ) {
-                          // this.props.navigation.replace("mindPop", { nid: id, fromDeeplinking: true, deepLinkBackClick: true })
+                            CreateUpdateMemory(
+                              draftDetails,
+                              [],
+                              promptIdListener,
+                              'save',
+                            );
+                          } else if (
+                            splitArray[3] &&
+                            splitArray[3] === 'mindpopup'
+                          ) {
+                            // this.props.navigation.replace("mindPop", { nid: id, fromDeeplinking: true, deepLinkBackClick: true })
+                          } else {
+                            // this.props.navigation.replace('dashBoard');
+                          }
                         } else {
                           // this.props.navigation.replace('dashBoard');
                         }
                       } else {
-                        // this.props.navigation.replace('dashBoard');
+                        No_Internet_Warning();
                       }
-                    } else {
-                      No_Internet_Warning();
-                    }
-                  },
-                );
+                    },
+                  );
+                } else {
+                  // this.props.navigation.replace('dashBoard');
+                }
               } else {
-                // this.props.navigation.replace('dashBoard');
+                No_Internet_Warning();
+                this.props.navigation.reset({
+                  index: 0,
+                  routes: [{name: 'prologue'}],
+                });
               }
-            } else {
-              No_Internet_Warning();
+            }
+          } else {
+            this.props.navigation.reset({
+              index: 0,
+              routes: [{name: 'dashBoard'}],
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (
+        (nextProps.user.instanceID != 0 &&
+          (nextProps.user.userAuthToken == null ||
+            nextProps.user.userAuthToken.length == 0)) ||
+        nextProps.user.notLoggedIn
+      ) {
+        DefaultPreference.get('hide_app_intro').then((value: any) => {
+          if (value == 'true') {
+            try {
+              // Actions.prologue();
               this.props.navigation.reset({
                 index: 0,
                 routes: [{name: 'prologue'}],
               });
+            } catch (error) {
+              console.log(error);
             }
-          }
-        } else {
-          this.props.navigation.reset({
-            index: 0,
-            routes: [{name: 'dashBoard'}],
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (
-      (nextProps.user.instanceID != 0 &&
-        (nextProps.user.userAuthToken == null ||
-          nextProps.user.userAuthToken.length == 0)) ||
-      nextProps.user.notLoggedIn
-    ) {
-      DefaultPreference.get('hide_app_intro').then((value: any) => {
-        if (value == 'true') {
-          try {
-            // Actions.prologue();
+          } else {
+            // Actions.appIntro();
             this.props.navigation.reset({
               index: 0,
               routes: [{name: 'prologue'}],
             });
-          } catch (error) {
-            console.log(error);
           }
-        } else {
-          // Actions.appIntro();
-          this.props.navigation.reset({
-            index: 0,
-            routes: [{name: 'prologue'}],
-          });
-        }
-      });
+        });
+      }
     }
   }
 

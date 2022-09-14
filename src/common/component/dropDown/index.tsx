@@ -1,11 +1,9 @@
 import React from 'react';
-import {
-  Animated,Platform,TouchableHighlight, View
-} from 'react-native';
-import { Colors } from '../../constants';
+import {Animated, Platform, TouchableHighlight, View} from 'react-native';
+import {Colors} from '../../constants';
 import Text from '../Text';
 import styles from './styles';
-import { Props, State } from './types';
+import {Props, State} from './types';
 
 const kTop = 19,
   kTopAnimated = 5;
@@ -18,7 +16,7 @@ export default class DropDownSelector extends React.Component<Props, State> {
     errorMessage: '',
     showError: false,
     value: '',
-    onOptionSelected: () => { },
+    onOptionSelected: () => {},
     viewID: 0,
     isRequired: false,
     inputViewStyle: styles.inputViewStyle,
@@ -42,9 +40,10 @@ export default class DropDownSelector extends React.Component<Props, State> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    let selectedValue = this.props.selectedValue || '';
-    let nextSelectedValue = nextProps.selectedValue || '';
-    if (this.props.showError !== nextProps.showError) {
+    if (
+      this.props !== nextProps &&
+      this.props.showError !== nextProps.showError
+    ) {
       Animated.parallel([
         Animated.timing(this.state.height, {
           toValue: 56,
@@ -58,20 +57,6 @@ export default class DropDownSelector extends React.Component<Props, State> {
         }),
       ]).start();
     }
-    // if (nextSelectedValue !== selectedValue) {
-    // 	Animated.parallel([
-    // 		Animated.timing(this.state.sizeFnt, {
-    // 			toValue: (nextSelectedValue.length > 0) ? 13 : kPlaceHolderFontSize,
-    // 			duration: 300
-    // useNativeDriver:true,
-    // 		}),
-    // 		Animated.timing(this.state.top, {
-    // 			toValue: (nextSelectedValue.length > 0) ? kTopAnimated : kTop,
-    // 			duration: 300
-    // useNativeDriver:true,
-    // 		})
-    // 	]).start();
-    // }
   }
 
   showPicker = () => {
@@ -81,41 +66,60 @@ export default class DropDownSelector extends React.Component<Props, State> {
   render() {
     let selectedValue = this.props.selectedValue || '';
     return (
-      <View style={[this.props.style, { flexDirection: 'column' }]}>
+      <View style={[this.props.style, {flexDirection: 'column'}]}>
         <View style={styles.textContainer}>
           <TouchableHighlight
             underlayColor="#cccccc3e"
             onPress={this.showPicker}>
             <Animated.View
-              style={[styles.innerView, {
-                backgroundColor: this.props.isCuebackRegistration ? '#fff' : Colors.unSelectedFilterbg,
-                height: this.state.height,
-                borderColor: this.props.showError ? Colors.NewRadColor : this.props.isCuebackRegistration
-                  ? Colors.TextColor : 'transparent',
-              }]}>
-              <View style={[this.props.inputViewStyle, styles.animatedtextContainer]}>
-
+              style={[
+                styles.innerView,
+                {
+                  backgroundColor: this.props.isCuebackRegistration
+                    ? '#fff'
+                    : Colors.unSelectedFilterbg,
+                  height: this.state.height,
+                  borderColor: this.props.showError
+                    ? Colors.NewRadColor
+                    : this.props.isCuebackRegistration
+                    ? Colors.TextColor
+                    : 'transparent',
+                },
+              ]}>
+              <View
+                style={[
+                  this.props.inputViewStyle,
+                  styles.animatedtextContainer,
+                ]}>
                 <Animated.Text
-                  style={[styles.animatedtextStyle, {
-                    color: this.props.isCuebackRegistration ? Colors.TextColor : selectedValue.length > 0
-                      ? Colors.TextColor : this.props.placeholderTextColor,
-                    opacity: this.props.isCuebackRegistration ? 0.6 : 1,
-                  }]}>
-
+                  style={[
+                    styles.animatedtextStyle,
+                    {
+                      color: this.props.isCuebackRegistration
+                        ? Colors.TextColor
+                        : selectedValue.length > 0
+                        ? Colors.TextColor
+                        : this.props.placeholderTextColor,
+                      opacity: this.props.isCuebackRegistration ? 0.6 : 1,
+                    },
+                  ]}>
                   {this.props.placeholderText}
 
-                  {
-                    this.props.isRequired ?
-                      <Animated.Text style={{ color: Colors.NewRadColor }}>
-                        {' *'}
-                      </Animated.Text>
-                      :
-                      null
-                  }
-
+                  {this.props.isRequired ? (
+                    <Animated.Text style={{color: Colors.NewRadColor}}>
+                      {' *'}
+                    </Animated.Text>
+                  ) : null}
                 </Animated.Text>
                 <Text
-                  style={[styles.starStyle, { color: this.props.isCuebackRegistration ? Colors.TextColor : Colors.TextColor, }]}>
+                  style={[
+                    styles.starStyle,
+                    {
+                      color: this.props.isCuebackRegistration
+                        ? Colors.TextColor
+                        : Colors.TextColor,
+                    },
+                  ]}>
                   {selectedValue}
                 </Text>
               </View>
@@ -141,13 +145,14 @@ export default class DropDownSelector extends React.Component<Props, State> {
         </View>
         <Animated.View
           style={[
-            styles.errorMessageContainer, {
+            styles.errorMessageContainer,
+            {
               height: this.props.animatedViewHeight,
               opacity: this.state.opacity,
-            }]}>
+            },
+          ]}>
           <View style={styles.minWidth}>
-            <Text
-              style={styles.errorTextStyle}>
+            <Text style={styles.errorTextStyle}>
               {`*${this.props.errorMessage}`}
             </Text>
           </View>

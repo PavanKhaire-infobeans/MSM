@@ -1,13 +1,19 @@
-import React, { RefObject } from 'react';
+import React, {RefObject} from 'react';
 import {
-  Image, ImageStyle, Platform, StyleProp, TextInput, TouchableOpacity, View
+  Image,
+  ImageStyle,
+  Platform,
+  StyleProp,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { icon_close_black, searchIcon } from '../../../images';
-import { Colors } from '../../constants';
+import {icon_close_black, searchIcon} from '../../../images';
+import {Colors} from '../../constants';
 import Text from '../Text';
 import searchStyle from './styles';
 
-type Props = { [x: string]: any; placeholder: string };
+type Props = {[x: string]: any; placeholder: string};
 export default class SearchBar extends React.Component<Props> {
   inputField: RefObject<TextInput> = React.createRef<TextInput>();
   state = {
@@ -19,13 +25,15 @@ export default class SearchBar extends React.Component<Props> {
   };
 
   UNSAFE_componentWillReceiveProps(props: Props) {
-    if (this.props.value != props.value && props.value != this.state.value) {
-      this.setState({ value: props.value || '' });
+    if (this.props !== props) {
+      if (this.props.value != props.value && props.value != this.state.value) {
+        this.setState({value: props.value || ''});
+      }
     }
   }
 
   componentDidMount() {
-    this.setState({ isFocused: this.inputField.current.isFocused() });
+    this.setState({isFocused: this.inputField.current.isFocused()});
   }
 
   constructor(props: Props) {
@@ -38,7 +46,7 @@ export default class SearchBar extends React.Component<Props> {
 
   static defaultProps = {
     placeholder: 'Search',
-    onFocus: () => { },
+    onFocus: () => {},
   };
 
   render() {
@@ -62,7 +70,7 @@ export default class SearchBar extends React.Component<Props> {
       <View
         style={[
           searchStyle.parent,
-          { backgroundColor: this.props.barTintColor, flexDirection: 'row' },
+          {backgroundColor: this.props.barTintColor, flexDirection: 'row'},
           this.props.style || {},
         ]}>
         <View
@@ -86,7 +94,6 @@ export default class SearchBar extends React.Component<Props> {
                 searchStyle.placeholder,
                 {
                   opacity: this.state.value.length > 0 ? 0 : 1,
-                  
                 },
               ]}>
               {this.props.placeholder}
@@ -102,22 +109,23 @@ export default class SearchBar extends React.Component<Props> {
               style={searchStyle.inputStyle}
               maxLength={20}
               onChangeText={text => {
-                this.setState({
-                  value: text,
-                },()=>{
-                  if (this.props.onChangeText) {
-                    this.props.onChangeText(text);
-                  }
-  
-                  if (this.props.onClearField && text.length == 0) {
-                    if (!this.props.retainFocus) {
-                      this.inputField.current.blur();
+                this.setState(
+                  {
+                    value: text,
+                  },
+                  () => {
+                    if (this.props.onChangeText) {
+                      this.props.onChangeText(text);
                     }
-                    this.props.onClearField();
-                  }
-                });
 
-                
+                    if (this.props.onClearField && text.length == 0) {
+                      if (!this.props.retainFocus) {
+                        this.inputField.current.blur();
+                      }
+                      this.props.onClearField();
+                    }
+                  },
+                );
               }}
               keyboardType="ascii-capable"
               value={this.state.value}
@@ -145,32 +153,37 @@ export default class SearchBar extends React.Component<Props> {
   }
 
   focus() {
-    this.setState({
-      editing: true,
-    },()=>{
-      if (this.props.onFocus) {
-        this.props.onFocus();
-      }
-    });
+    this.setState(
+      {
+        editing: true,
+      },
+      () => {
+        if (this.props.onFocus) {
+          this.props.onFocus();
+        }
+      },
+    );
   }
 
   blur() {
-    this.setState({
-      editing: false,
-    },()=>{
-      if (this.inputField) {
-        this.inputField.current.blur();
-      }
-      if (this.props.onBlur) {
-        this.props.onBlur();
-      }
-    });
-   
+    this.setState(
+      {
+        editing: false,
+      },
+      () => {
+        if (this.inputField) {
+          this.inputField.current.blur();
+        }
+        if (this.props.onBlur) {
+          this.props.onBlur();
+        }
+      },
+    );
   }
 
   clearField() {
     this.inputField.current.clear();
-    this.setState({ value: '' },()=>{
+    this.setState({value: ''}, () => {
       if (this.props.onClearField) {
         this.props.onClearField();
       }
@@ -214,4 +227,3 @@ export default class SearchBar extends React.Component<Props> {
     return null;
   }
 }
-
