@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   FlatList,
   Image,
   ImageBackground,
-  Platform,
   SafeAreaView,
   StatusBar,
   TouchableHighlight,
@@ -14,17 +13,11 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import DefaultListItem from '../../common/component/defaultListItem';
 import TextNew from '../../common/component/Text';
 import {No_Internet_Warning} from '../../common/component/Toast';
-import {
-  Colors,
-  fontFamily,
-  fontSize,
-  getValue,
-  Storage,
-} from '../../common/constants';
+import {Colors, Storage} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import {Account, LoginStore, UserData} from '../../common/loginStore';
 import Utility from '../../common/utility';
-import { logoutMethod } from '../../common/webservice/webservice';
+import {logoutMethod} from '../../common/webservice/webservice';
 import {
   icon_drafts,
   icon_idea,
@@ -32,25 +25,13 @@ import {
   icon_password,
   profile_placeholder,
 } from '../../images';
-import {kLogoutPressed} from '../../views/menu';
 import NavigationBar from '../dashboard/NavigationBar';
-import {
-  kProfilePicUpdated,
-  ProfileDataModel,
-} from '../profile/profileDataModel';
+import useProfileData from '../profile/profileDataModel';
 import {
   kGetUserProfileData,
   UserProfile,
 } from '../profile/userProfileWebService';
 import Styles from './styles';
-type items = {
-  title: string;
-  showArrow: boolean;
-  icon: any;
-  count: number;
-  key: string;
-  isLast?: boolean;
-};
 
 const MyMessages = 'Messages';
 const Mindops = 'MindPops';
@@ -60,53 +41,36 @@ const Tickets = 'Tickets';
 const ChangePassword = 'Change Password';
 const Logout = 'Logout';
 
-export default class MyAccount extends React.Component {
-  profilePicUpdate: EventManager;
-  checkProfile: EventManager;
-  profileData: ProfileDataModel;
-  state = {
-    Items: [],
-    userImage: null,
-  };
+const MyAccount = props => {
+  const [Items, setItems] = useState([]);
+  const [userImage, setUserImage] = useState(null);
 
-  constructor(props: object) {
-    super(props);
+  const [userProfileDetails, setUserProfileDetails] = useState({});
+  const {basicInfo} = useProfileData(userProfileDetails);
 
-    this.checkProfile = EventManager.addListener(
+  useEffect(() => {
+    initiazeItems();
+    const checkProfile = EventManager.addListener(
       kGetUserProfileData,
-      this.getUserProfileDataCallBack,
+      getUserProfileDataCallBack,
     );
-    // this.userProfileUpdated = EventManager.addListener(kUserAccountUpdated, this.userAccountChanged);
-    this.profileData = new ProfileDataModel();
-    // if ( this.props.navigation.state.routeName == 'myAccount' || this.props.navigation.state.routeName == 'profile' ) {
-    this.getUserProfileData();
-    // }
+    getUserProfileData();
 
-    this.profilePicUpdate = EventManager.addListener(
-      kProfilePicUpdated,
-      this.updateProfilePic,
-    );
-  }
+    return () => {
+      checkProfile.removeListener();
+    };
+  }, []);
 
-  fullname =
-    Account.selectedData().firstName + ' ' + Account.selectedData().lastName;
-
-  componentWillUnmount = () => {
-    this.checkProfile.removeListener();
-    this.profilePicUpdate.removeListener();
-  };
-
-  segregateItemClick(identifier: any) {
+  const segregateItemClick = (identifier: any) => {
     switch (identifier) {
       case MyMessages:
         break;
       case Mindops:
-        this.props.navigation.navigate('mindPop');
+        props.navigation.navigate('mindPop');
         break;
       case Drafts:
-        // this.props.navigation.jumpTo('memoriesDrafts', {isFromMenu: true});
-        this.props.navigation.navigate('writeTabs', {
-          navigation: this.props.navigation,
+        props.navigation.navigate('writeTabs', {
+          navigation: props.navigation,
         });
         break;
       case Memories:
@@ -114,59 +78,57 @@ export default class MyAccount extends React.Component {
       case Tickets:
         break;
       case ChangePassword:
-        this.props.navigation.navigate('changePassword');
+        props.navigation.navigate('changePassword');
         break;
       case Logout:
-        this._logout()
+        _logout();
         break;
       default:
     }
-  }
+  };
 
-
-  _logout = () => {
-
+  const _logout = () => {
     LoginStore.listAllAccounts()
       .then((resp: any) => {
         let list = resp.rows.raw();
         list = list.filter((it: UserData) => it.userAuthToken != '');
-       
-          Alert.alert('', `Are you sure you want to log out ?`, [
-            {
-              text: 'No',
-              style: 'cancel',
-              onPress: () => { },
-            },
-            {
-              text: 'Yes',
-              style: 'default',
-              onPress: () => {
-                logoutMethod()
-                  .then((resp: any) => {
-                      this.props.navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'prologue' }]
-                      });
-                    // }
-                  })
-                  .catch(() => {
-                    this.props.navigation.reset({
-                      index: 0,
-                      routes: [{ name: 'prologue' }]
-                    });
+
+        Alert.alert('', `Are you sure you want to log out ?`, [
+          {
+            text: 'No',
+            style: 'cancel',
+            onPress: () => {},
+          },
+          {
+            text: 'Yes',
+            style: 'default',
+            onPress: () => {
+              logoutMethod()
+                .then(() => {
+                  props.navigation.reset({
+                    index: 0,
+                    routes: [{name: 'prologue'}],
                   });
-              },
+                  // }
+                })
+                .catch(() => {
+                  props.navigation.reset({
+                    index: 0,
+                    routes: [{name: 'prologue'}],
+                  });
+                });
             },
-          ]);
+          },
+        ]);
       })
       .catch(() => {
         //console.log(err);
       });
   };
 
-  componentDidMount = () => {
+  const initiazeItems = () => {
     let items = [{}];
-    this.getUserProfileDataImage();
+    getUserProfileDataImage();
     if (Account.selectedData().isSSOLogin) {
       items = [
         {
@@ -225,27 +187,28 @@ export default class MyAccount extends React.Component {
         },
       ];
     }
-    this.setState({Items: items});
+    setItems(items);
   };
 
-  getUserProfileDataImage = async () => {
+  const getUserProfileDataImage = async () => {
     let userImage = await Storage.get('user_profile_image');
-    this.setState({userImage});
+    setUserImage(userImage);
   };
 
   // CallBack for Profile data web service
-  getUserProfileDataCallBack = (success: boolean, profileDetails: any) => {
+  const getUserProfileDataCallBack = (
+    success: boolean,
+    profileDetails: any,
+  ) => {
     //stop refresh control
     if (success) {
-      this.profileData.updateValues(profileDetails);
-      // this.setState({ refreshing: false });
+      setUserProfileDetails(profileDetails);
       loaderHandler.hideLoader();
     }
-    // this.setState({ refreshing: false });
   };
 
   // Web-service call to fetch profile data
-  getUserProfileData = () => {
+  const getUserProfileData = () => {
     if (Utility.isInternetConnected) {
       // loaderHandler.showLoader('Loading...');
       UserProfile();
@@ -254,85 +217,75 @@ export default class MyAccount extends React.Component {
     }
   };
 
-  updateProfilePic = () => {
-    this.fullname =
-      Account.selectedData().firstName + ' ' + Account.selectedData().lastName;
-    // this.setState({});
+  const getFullName = () => {
+    return basicInfo?.first_name + ' ' + basicInfo?.last_name;
   };
 
-  render() {
-    let profilePic = Account.selectedData().profileImage;
-    let imageURL =
-      getValue(this.profileData, ['basicInfo', 'profilePicUri']) || '';
-    let profilePicURL =
-      imageURL != '' ? Utility.getFileURLFromPublicURL(imageURL) : '';
-    return (
-      <View style={Styles.container}>
-        <SafeAreaView style={Styles.noViewStyle} />
-        <SafeAreaView style={Styles.safeAreaContextStyle}>
-          <View style={Styles.container}>
-            <NavigationBar
-              title={'My Account'}
-              showClose={true}
-              navigation={this.props.navigation}
-            />
-            <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
-              }
-              backgroundColor={Colors.NewThemeColor}
-            />
-            <View style={Styles.profileImage}>
-              <ImageBackground
-                style={Styles.imagebackGroundStyle}
-                imageStyle={Styles.imageStyle}
-                source={profile_placeholder}>
-                <Image
-                  source={
-                    profilePic != '' ? {uri: profilePic} : profile_placeholder
-                    // this.state.userImage ? { uri: this.state.userImage } : profilePic != '' ? { uri: profilePic } : profile_placeholder
-                  }
-                  style={Styles.imageStyle}
-                />
-              </ImageBackground>
+  return (
+    <View style={Styles.container}>
+      <SafeAreaView style={Styles.noViewStyle} />
+      <SafeAreaView style={Styles.safeAreaContextStyle}>
+        <View style={Styles.container}>
+          <NavigationBar
+            title={'My Account'}
+            showClose={true}
+            navigation={props.navigation}
+          />
+          <StatusBar
+            barStyle={
+              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+            }
+            backgroundColor={Colors.NewThemeColor}
+          />
+          <View style={Styles.profileImage}>
+            <ImageBackground
+              style={Styles.imagebackGroundStyle}
+              imageStyle={Styles.imageStyle}
+              source={profile_placeholder}>
+              <Image
+                source={
+                  Account.selectedData().profileImage != ''
+                    ? {uri: Account.selectedData().profileImage}
+                    : profile_placeholder
+                }
+                style={Styles.imageStyle}
+              />
+            </ImageBackground>
 
-              <View style={Styles.fullNameContainer}>
-                <TextNew style={Styles.fullName}>{this.fullname}</TextNew>
-                <TouchableHighlight
-                  underlayColor="#cccccc3e"
-                  onPress={() => {
-                    this.props.navigation.navigate('profile');
-                  }}>
-                  <TextNew style={Styles.viewProfile}>
-                    View your Profile
-                  </TextNew>
-                </TouchableHighlight>
-              </View>
+            <View style={Styles.fullNameContainer}>
+              <TextNew style={Styles.fullName}>{getFullName()}</TextNew>
+              <TouchableHighlight
+                underlayColor="#cccccc3e"
+                onPress={() => {
+                  props.navigation.navigate('profile');
+                }}>
+                <TextNew style={Styles.viewProfile}>View your Profile</TextNew>
+              </TouchableHighlight>
             </View>
-            <FlatList
-              data={this.state.Items}
-              keyExtractor={(_, index: number) => `${index}`}
-              style={Styles.flatListStyle}
-              renderItem={({item: data}) => {
-                return (
-                  <DefaultListItem
-                    title={data.title}
-                    showArrow={data.showArrow}
-                    icon={data.icon ? data.icon : ''}
-                    count={data.count}
-                    identifier={data.key}
-                    isLast={data.isLast ? data.isLast : false}
-                    onPress={(identifier: any) => {
-                      this.segregateItemClick(identifier);
-                    }}></DefaultListItem>
-                );
-              }}
-            />
           </View>
-        </SafeAreaView>
-      </View>
-    );
-  }
-}
+          <FlatList
+            data={Items}
+            keyExtractor={(_, index: number) => `${index}`}
+            style={Styles.flatListStyle}
+            renderItem={({item: data}) => {
+              return (
+                <DefaultListItem
+                  title={data.title}
+                  showArrow={data.showArrow}
+                  icon={data.icon ? data.icon : ''}
+                  count={data.count}
+                  identifier={data.key}
+                  isLast={data.isLast ? data.isLast : false}
+                  onPress={(identifier: any) => {
+                    segregateItemClick(identifier);
+                  }}></DefaultListItem>
+              );
+            }}
+          />
+        </View>
+      </SafeAreaView>
+    </View>
+  );
+};
+
+export default MyAccount;

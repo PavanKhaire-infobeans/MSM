@@ -1,11 +1,10 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Alert,
   Dimensions,
   FlatList,
   Image,
   ImageBackground,
-  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -13,10 +12,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Keyboard,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import ImageCropPicker, {
   Image as PickerImage,
+  Options,
 } from 'react-native-image-crop-picker';
 import ActionSheet, {
   ActionSheetItem as ImageSelectionSheetItem,
@@ -28,8 +29,6 @@ import Text from '../../common/component/Text';
 import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import {
   Colors,
-  fontFamily,
-  fontSize,
   GenerateRandomID,
   getValue,
   requestPermission,
@@ -50,7 +49,7 @@ import {
   rubbish,
 } from '../../images';
 import NavigationBar from '../dashboard/NavigationBar';
-import {ProfileDataModel} from './profileDataModel';
+import useUserProfileData from './profileDataModel';
 import Styles from './styles';
 import {
   kGetUserProfileData,
@@ -60,74 +59,58 @@ import {
   UserProfile,
 } from './userProfileWebService';
 
-type State = {
-  [key: string]: any | string;
-  error: {[x: string]: {error: boolean; message: string}};
-  actionSheet: {
-    type: 'none' | 'image' | 'audio';
-    list: Array<ImageSelectionSheetItem>;
-  };
-  hasProfilePicLoaded: boolean;
-  hasCoverPicLoaded: boolean;
+const {width: deviceWidth} = Dimensions.get('window');
+
+const options: Options = {
+  multiple: false,
+  mediaType: 'photo',
+  cropping: false,
+  waitAnimationEnd: false,
+  smartAlbums: ['UserLibrary', 'PhotoStream', 'Panoramas', 'Bursts'],
 };
-export default class Profile extends React.Component<object> {
-  bottomPicker: React.RefObject<BottomPicker> = React.createRef<BottomPicker>();
-  showEditButtonOption: boolean = true;
-  checkProfile: EventManager;
-  // userProfileUpdated: EventManager;
-  profileData: ProfileDataModel;
-  _actionSheet: any | ActionSheet = null;
 
-  state: State = {
-    error: {},
-    refreshing: false,
-    selectionData: {
-      actions: [],
-      selectionValue: '',
-      isMultiSelect: false,
-      fieldName: '',
-    },
-    actionSheet: {
-      type: 'none',
-      list: [],
-    },
-    hasProfilePicLoaded: true,
-    hasCoverPicLoaded: true,
-  };
+const Profile = props => {
+  const _actionSheet = useRef(null);
 
-  constructor(props: object) {
-    super(props);
-    this.checkProfile = EventManager.addListener(
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [actionSheet, setActionSheet] = useState({
+    type: 'none',
+    list: [],
+  });
+  const [hasProfilePicLoaded, setHasProfilePicLoaded] = useState(true);
+  const [hasCoverPicLoaded, setHasCoverPicLoaded] = useState(true);
+
+  const [userProfileDetails, setUserProfileDetails] = useState({});
+
+  const {
+    basicInfo,
+    basicInfoSection,
+    contactInfo,
+    contactInfoSection,
+    allFormSections,
+    userProfilePicInfo,
+    userCoverPicInfo,
+    setAllFormSections,
+  } = useUserProfileData(userProfileDetails);
+
+  useEffect(() => {
+    const checkProfile = EventManager.addListener(
       kGetUserProfileData,
-      this.getUserProfileDataCallBack,
+      getUserProfileDataCallBack,
     );
-    // this.userProfileUpdated = EventManager.addListener(kUserAccountUpdated, this.userAccountChanged);
-    this.profileData = new ProfileDataModel();
-    if (
-      this.props?.route?.name == 'myAccount' ||
-      this.props?.route?.name == 'profile'
-    ) {
-      this.getUserProfileData();
+    if (props?.route?.name == 'myAccount' || props?.route?.name == 'profile') {
+      getUserProfileData();
     }
-  }
 
-  componentWillUnmount() {
-    this.checkProfile.removeListener();
-  }
-
-  // userAccountChanged=()=>{
-  //     this.profileData.allFormSections = [];
-  //     this.profileData.basicInfoSection = { heading: "", fields: [] };
-  //     this.profileData.contactInfoSection = { heading: "", fields: [] };
-  //     this.setState({});
-  //     this.getUserProfileData();
-  // }
-  // UNSAFE_componentWillReceiveProps(){
-  //     this.getUserProfileData()
-  // }
+    return () => {
+      checkProfile.removeListener();
+    };
+  }, []);
 
   // Web-service call to fetch profile data
-  getUserProfileData = () => {
+  const getUserProfileData = () => {
+    setAllFormSections([]);
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader('Loading...');
       UserProfile();
@@ -137,27 +120,30 @@ export default class Profile extends React.Component<object> {
   };
 
   // CallBack for Profile data web service
-  getUserProfileDataCallBack = (success: boolean, profileDetails: any) => {
+  const getUserProfileDataCallBack = (
+    success: boolean,
+    profileDetails: any,
+  ) => {
     //stop refresh control
     if (success) {
-      this.profileData.updateValues(profileDetails);
-      this.setState({refreshing: false});
+      setUserProfileDetails(profileDetails);
+      setRefreshing(false);
     }
     loaderHandler.hideLoader();
-    this.setState({refreshing: false});
+    setRefreshing(false);
   };
 
-  editForMultipleValues = (section: any, basicInfo: boolean) => {
+  const editForMultipleValues = (section: any, basicInfo: any) => {
     if (section.fields && section.fields.length > 0) {
       if (basicInfo) {
-        this.props.navigation.navigate('multipleValuesEdit', {
-          basicInfo: this.profileData.basicInfoSection,
-          profilePicUri: this.profileData.basicInfo.profilePicUri,
+        props.navigation.navigate('multipleValuesEdit', {
+          basicInfo,
+          profilePicUri: basicInfo?.profilePicUri,
           sectionHeading: section.heading,
           editableFields: section.fields,
         });
       } else {
-        this.props.navigation.multipleValuesEdit({
+        props.navigation.navigate('multipleValuesEdit', {
           sectionHeading: section.heading,
           editableFields: section.fields,
         });
@@ -167,20 +153,18 @@ export default class Profile extends React.Component<object> {
     }
   };
 
-  _onRefresh = () => {
-    this.setState({refreshing: true}, () => {
-      this.getUserProfileData();
-    });
+  const _onRefresh = () => {
+    setAllFormSections([]);
+    setRefreshing(true);
+    getUserProfileData();
   };
 
-  prepareFormSections() {
-    let allSections = this.profileData.allFormSections;
-    let allFormSections: Array<JSX.Element> = [];
-    allFormSections = allSections.map(this.prepareCard);
-    return allFormSections;
-  }
+  const prepareFormSections = () => {
+    let allSections = [...allFormSections];
+    return allSections.map(prepareCard);
+  };
 
-  prepareCard = (
+  const prepareCard = (
     {heading, fields}: {heading: string; fields: Array<any>},
     index: number,
   ) => {
@@ -189,7 +173,7 @@ export default class Profile extends React.Component<object> {
         key={`${index}`}
         showEdit={true}
         editButtonClicked={() =>
-          this.editForMultipleValues({heading: heading, fields: fields}, false)
+          editForMultipleValues({heading: heading, fields: fields}, false)
         }
         heading={heading}>
         <View style={Styles.cardContainer}>
@@ -250,19 +234,15 @@ export default class Profile extends React.Component<object> {
     );
   };
 
-  prepareBasicInfo = () => {
-    let imageURL =
-      getValue(this.profileData, ['basicInfo', 'profilePicUri']) || '';
+  const prepareBasicInfo = () => {
+    let imageURL = userProfilePicInfo?.profilePicUri ?? '';
     let profilePicURL =
       imageURL != '' ? Utility.getFileURLFromPublicURL(imageURL) : '';
-    let covImageURL =
-      getValue(this.profileData, ['basicInfo', 'coverPicUri']) || '';
+    let covImageURL = userCoverPicInfo?.coverPicUri ?? '';
     let coverImageURL =
       covImageURL != '' ? Utility.getFileURLFromPublicURL(covImageURL) : '';
-    let isCoverImageAvailable = this.profileData.basicInfo.isCoverPicAvailable;
-    let isProfieImageAvailable =
-      this.profileData.basicInfo.isProfilePicAvailable;
-    // this.props.updateName();
+    let isCoverImageAvailable = userCoverPicInfo.isCoverPicAvailable;
+    let isProfieImageAvailable = userProfilePicInfo.isProfilePicAvailable;
     return (
       <View style={Styles.prepareBasicInfoContainer}>
         <ImageBackground
@@ -283,29 +263,21 @@ export default class Profile extends React.Component<object> {
                   resizeMode: isCoverImageAvailable ? 'cover' : 'stretch',
                 },
               ]}
-              onLoad={() => this.setState({hasCoverPicLoaded: true})}
-              onLoadStart={() => this.setState({hasCoverPicLoaded: false})}
+              onLoad={() => setHasCoverPicLoaded(true)}
+              onLoadStart={() => setHasCoverPicLoaded(false)}
             />
-            {!this.state.hasCoverPicLoaded ? (
-              <ActivityIndicatorView size="small" />
-            ) : null}
+            {!hasCoverPicLoaded ? <ActivityIndicatorView size="small" /> : null}
           </View>
         </ImageBackground>
         <TouchableOpacity
           style={Styles.editButtonStyle}
           onPress={() => {
-            this.setState(
-              {
-                actionSheet: {
-                  ...this.state.actionSheet,
-                  type: 'image',
-                  list: this.getImagePickerActions(isCoverImageAvailable),
-                },
-              },
-              () => {
-                this._actionSheet && this._actionSheet.showSheet();
-              },
-            );
+            setActionSheet({
+              ...actionSheet,
+              type: 'image',
+              list: getImagePickerActions(isCoverImageAvailable),
+            });
+            _actionSheet?.current?.showSheet();
           }}>
           <Image source={edit_icon} />
         </TouchableOpacity>
@@ -313,10 +285,7 @@ export default class Profile extends React.Component<object> {
           <TouchableOpacity
             style={cardStyles.buttonStyle}
             onPress={() => {
-              this.editForMultipleValues(
-                this.profileData.basicInfoSection,
-                true,
-              );
+              editForMultipleValues(basicInfoSection, true);
             }}>
             <Image source={edit_icon} />
           </TouchableOpacity>
@@ -331,32 +300,31 @@ export default class Profile extends React.Component<object> {
                   : profile_placeholder
               }
               style={Styles.profileimage}
-              onLoad={() => this.setState({hasProfilePicLoaded: true})}
-              onLoadStart={() => this.setState({hasProfilePicLoaded: false})}
+              onLoad={() => setHasProfilePicLoaded(true)}
+              onLoadStart={() => setHasProfilePicLoaded(false)}
             />
-            {!this.state.hasProfilePicLoaded ? (
+            {!hasProfilePicLoaded ? (
               <ActivityIndicatorView size="small" />
             ) : null}
           </View>
           <Text style={Styles.usernameStyle}>
             {' '}
-            {this.profileData.basicInfo.first_name}{' '}
-            {this.profileData.basicInfo.last_name}
+            {basicInfo.first_name} {basicInfo.last_name}
           </Text>
           <Text style={Styles.birthDate}>
             {' '}
             Birthday:{' '}
-            {this.profileData.basicInfo.birthday != undefined
-              ? this.profileData.basicInfo.birthday.length > 0
-                ? this.profileData.basicInfo.birthday
+            {basicInfo.birthday != undefined
+              ? basicInfo.birthday.length > 0
+                ? basicInfo.birthday
                 : 'None'
               : 'None'}
           </Text>
           <Text style={Styles.relationStatus}>
             {' '}
             Relationship Status:{' '}
-            {this.profileData.basicInfo.relationship_status.length > 0
-              ? this.profileData.basicInfo.relationship_status
+            {basicInfo.relationship_status.length > 0
+              ? basicInfo.relationship_status
               : 'None'}
           </Text>
         </View>
@@ -364,14 +332,14 @@ export default class Profile extends React.Component<object> {
     );
   };
 
-  prepareContactInfo = () => {
+  const prepareContactInfo = () => {
     return (
       <Card
         showEdit={true}
         editButtonClicked={() => {
-          this.props.navigation.navigate('multipleValuesEdit', {
-            sectionHeading: this.profileData.contactInfoSection.heading,
-            editableFields: this.profileData.contactInfoSection.fields,
+          props.navigation.navigate('multipleValuesEdit', {
+            sectionHeading: contactInfoSection.heading,
+            editableFields: contactInfoSection.fields,
           });
         }}
         heading="Contact Info">
@@ -379,8 +347,8 @@ export default class Profile extends React.Component<object> {
           <TextWithIcon
             iconUri={icon_location}
             items={[
-              this.profileData.contactInfo.completeAddress.length > 0
-                ? this.profileData.contactInfo.completeAddress
+              contactInfo.completeAddress.length > 0
+                ? contactInfo.completeAddress
                 : 'None',
             ]}
           />
@@ -388,90 +356,22 @@ export default class Profile extends React.Component<object> {
             iconUri={icon_mail}
             items={[
               Account.selectedData().email,
-              this.profileData.contactInfo.secondary_email_address.length > 0
-                ? this.profileData.contactInfo.secondary_email_address
+              contactInfo.secondary_email_address.length > 0
+                ? contactInfo.secondary_email_address
                 : 'None',
             ]}
           />
           <TextWithIcon
             iconUri={icon_telephone}
-            items={[
-              this.profileData.contactInfo.phone.length > 0
-                ? this.profileData.contactInfo.phone
-                : 'None',
-            ]}
+            items={[contactInfo.phone.length > 0 ? contactInfo.phone : 'None']}
           />
         </View>
       </Card>
     );
   };
 
-  render() {
-    const {width: deviceWidth} = Dimensions.get('window');
-    //console.log(Utility.isInternetConnected);
-    return (
-      //showClose={true} hideNavBar={false} navBar={NavigationBar}
-      <View style={Styles.container}>
-        <SafeAreaView style={Styles.noViewStyle} />
-        <SafeAreaView style={Styles.safeAreaContextStyle}>
-          <View style={Styles.safeAreaSubContextStyle}>
-            <NavigationBar
-              title={'My Profile'}
-              showClose={true}
-              navigation={this.props.navigation}
-            />
-            <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
-              }
-              backgroundColor={Colors.NewThemeColor}
-            />
-            {Utility.isInternetConnected ? (
-              <ScrollView
-                contentContainerStyle={{width: deviceWidth}}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh}
-                  />
-                }>
-                {this.prepareBasicInfo()}
-                {this.prepareContactInfo()}
-                {this.prepareFormSections()}
-              </ScrollView>
-            ) : (
-              <NoInternetView
-                tryAgain={() => {
-                  this.getUserProfileData();
-                }}>
-                {' '}
-              </NoInternetView>
-            )}
-
-            <ActionSheet
-              ref={ref => (this._actionSheet = ref)}
-              width={DeviceInfo.isTablet() ? '65%' : '100%'}
-              actions={this.state.actionSheet.list}
-              onActionClick={this.onActionItemClicked.bind(this)}
-            />
-          </View>
-        </SafeAreaView>
-      </View>
-    );
-  }
-
-  onActionItemClicked = (index: number): void => {
-    if (this.state.actionSheet.type == 'image') {
-      let options = {
-        multiple: false,
-        mediaType: 'photo',
-        cropping: false,
-        waitAnimationEnd: false,
-        smartAlbums: ['UserLibrary', 'PhotoStream', 'Panoramas', 'Bursts'],
-      };
-
+  const onActionItemClicked = (index: number): void => {
+    if (actionSheet?.type == 'image') {
       switch (index) {
         case 0:
           requestPermission('camera').then(success => {
@@ -512,22 +412,14 @@ export default class Profile extends React.Component<object> {
 
                     tempfilesArr = [tempfile];
                   }
-
-                  //console.log(response, typeof response);
                   if (tempfilesArr.length > 0) {
                     let tempfile = tempfilesArr[0];
-                    this.setState(
-                      {
-                        basicInfo: {
-                          ...this.state.basicInfo,
-                          coverPicUri: tempfile.filePath,
-                        },
-                      },
-                      () => {
-                        this.profileData.basicInfo.isCoverPicAvailable = true;
-                        this.uploadImage(tempfile);
-                      },
-                    );
+                    // setBasicInfo({
+                    //   ...basicInfo,
+                    //   coverPicUri: tempfile.filePath,
+                    //   isCoverPicAvailable: true,
+                    // });
+                    uploadImage(tempfile);
                   }
                 })
                 .catch(e => {});
@@ -540,7 +432,6 @@ export default class Profile extends React.Component<object> {
             if (success) {
               ImageCropPicker.openPicker(options)
                 .then((response: PickerImage) => {
-                  //console.log(response, typeof response);
                   let path =
                     response.path.indexOf('file://') != -1
                       ? response.path
@@ -554,53 +445,49 @@ export default class Profile extends React.Component<object> {
                     type: '',
                     status: TempFileStatus.needsToUpload,
                   };
-                  this.setState(
-                    {
-                      basicInfo: {
-                        ...this.state.basicInfo,
-                        coverPicUri: tempfile.filePath,
-                      },
-                    },
-                    () => {
-                      this.profileData.basicInfo.isCoverPicAvailable = true;
-                      this.uploadImage(tempfile);
-                    },
-                  );
-                  // this.saveTempFiles(tempfiles);
-                  // this.props.setValue(false);
+                  // setBasicInfo({
+                  //   ...basicInfo,
+                  //   coverPicUri: tempfile.filePath,
+                  //   isCoverPicAvailable: true,
+                  // });
+                  uploadImage(tempfile);
                 })
                 .catch(e => {});
             }
           });
           break;
-        case this.state.actionSheet.list.length - 2:
-          this.removeImage();
+        case actionSheet?.list.length - 2:
+          removeImage();
           break;
       }
     }
   };
 
   //Upload Image
-  uploadImage = (imageFile: TempFile) => {
+  const uploadImage = (imageFile: TempFile) => {
     loaderHandler.showLoader();
     UploadProfilePic(imageFile, PhotoType.cover)
       .then((response: any) => {
         loaderHandler.hideLoader();
-        this.getUserProfileData();
-        this.setState({hasCoverPicLoaded: true}, () => {
-          this.profileData.basicInfo.isCoverPicAvailable = true;
-        });
+        getUserProfileData();
+        setHasCoverPicLoaded(true);
+        // setBasicInfo({
+        //   ...basicInfo,
+        //   isCoverPicAvailable: true,
+        // });
       })
       .catch((error: any) => {
         loaderHandler.hideLoader();
-        this.setState({hasCoverPicLoaded: true}, () => {
-          this.profileData.basicInfo.isCoverPicAvailable = false;
-        });
+        setHasCoverPicLoaded(true);
+        // setBasicInfo({
+        //   ...basicInfo,
+        //   isCoverPicAvailable: false,
+        // });
       });
   };
 
   //remove image
-  removeImage = () => {
+  const removeImage = () => {
     Alert.alert(
       '',
       `Are you sure? Your cover picture will be permanently deleted.`,
@@ -619,10 +506,13 @@ export default class Profile extends React.Component<object> {
               .then((response: any) => {
                 loaderHandler.hideLoader();
                 //reload UI
-                this.profileData.basicInfo.coverPicUri = '';
-                this.profileData.basicInfo.isCoverPicAvailable = false;
-                this.getUserProfileData();
-                // this.setState({});
+                // setBasicInfo({
+                //   ...basicInfo,
+                //   coverPicUri: '',
+                //   isCoverPicAvailable: false,
+                // });
+                getUserProfileData();
+                // setState({});
               })
               .catch((error: any) => {
                 ToastMessage(error.message, Colors.ErrorColor);
@@ -634,104 +524,147 @@ export default class Profile extends React.Component<object> {
     );
   };
 
-  getImagePickerActions(isImageAvailable: boolean) {
-    //console.log("is image available:", isImageAvailable);
+  const getImagePickerActions = (isImageAvailable: boolean) => {
     return isImageAvailable ? AllImageActions : ImageActions;
-  }
-}
-// const mapState = (state: any) => ({
-//     account : state.account
-// })
+  };
 
-// export default connect(
-// 	mapState
-// )(Profile);
-
-const FriendListView = (props: {
-  heading: String;
-  friendsList: Array<{uri: any; name: String; index?: any}>;
-  viewFriendsList: () => void;
-}) => {
-  return (
-    <View style={cardStyles.container}>
-      <View style={cardStyles.headerComponent}>
-        <Text style={Styles.heading}>{props.heading}</Text>
-        <TouchableOpacity onPress={() => props.viewFriendsList}>
-          <Text style={Styles.ViewAll}>View all</Text>
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={props.friendsList}
-        horizontal
-        keyExtractor={(_, index: number) => `${index}`}
-        showsHorizontalScrollIndicator={false}
-        style={Styles.friendListStyle}
-        onScroll={() => {
-          Keyboard.dismiss();
-        }}
-        renderItem={({item}) => (
-          <View style={Styles.friendlistContainer}>
-            <Image source={item.uri} style={Styles.friendIcon} />
-            <Text style={Styles.friendName}> {item.name} </Text>
-          </View>
-        )}
-        keyExtractor={(item, index) => item.index}
-      />
-    </View>
-  );
-};
-const Card = (props: {
-  showEdit: boolean;
-  editButtonClicked: () => void;
-  children?: JSX.Element;
-  heading: string;
-}) => {
-  return (
-    <View style={cardStyles.container}>
-      <View style={cardStyles.headerComponent}>
-        <Text style={Styles.heading}>{props.heading}</Text>
-        {props.showEdit ? (
-          <TouchableOpacity
-            style={cardStyles.buttonStyle}
-            onPress={props.editButtonClicked}>
-            <Image source={edit_icon} />
-          </TouchableOpacity>
-        ) : null}
-      </View>
-      {props.children}
-    </View>
-  );
-};
-
-const TextViewWithHeading = (props: {heading: String; value: String}) => {
-  return (
-    <View style={Styles.TextViewWithHeadingContainer}>
-      <Text style={Styles.headingText}> {props.heading} </Text>
-      <Text style={Styles.valueText} multiLine={true}>
-        {props.value}{' '}
-      </Text>
-    </View>
-  );
-};
-
-const TextWithIcon = (props: {iconUri: any; items: Array<String>}) => {
-  if (props.iconUri != null)
+  const FriendListView = (props: {
+    heading: String;
+    friendsList: Array<{uri: any; name: String; index?: any}>;
+    viewFriendsList: () => void;
+  }) => {
     return (
-      <View style={Styles.TextWithIconContainer}>
-        <Image style={Styles.TextWithIconStyle} source={props.iconUri} />
-        <View style={{flexDirection: 'column'}}>
-          {props.items.map((itemInformation, index) => {
-            return (
-              <Text key={`${index}`} style={Styles.information}>
-                {itemInformation}
-              </Text>
-            );
-          })}
+      <View style={cardStyles.container}>
+        <View style={cardStyles.headerComponent}>
+          <Text style={Styles.heading}>{props.heading}</Text>
+          <TouchableOpacity onPress={() => props.viewFriendsList}>
+            <Text style={Styles.ViewAll}>View all</Text>
+          </TouchableOpacity>
         </View>
+        <FlatList
+          data={props.friendsList}
+          horizontal
+          keyExtractor={(_, index: number) => `${index}`}
+          showsHorizontalScrollIndicator={false}
+          style={Styles.friendListStyle}
+          onScroll={() => {
+            Keyboard.dismiss();
+          }}
+          renderItem={({item}) => (
+            <View style={Styles.friendlistContainer}>
+              <Image source={item.uri} style={Styles.friendIcon} />
+              <Text style={Styles.friendName}> {item.name} </Text>
+            </View>
+          )}
+        />
       </View>
     );
-  return null;
+  };
+
+  const Card = (props: {
+    showEdit: boolean;
+    editButtonClicked: () => void;
+    children?: JSX.Element;
+    heading: string;
+  }) => {
+    return (
+      <View style={cardStyles.container}>
+        <View style={cardStyles.headerComponent}>
+          <Text style={Styles.heading}>{props.heading}</Text>
+          {props.showEdit ? (
+            <TouchableOpacity
+              style={cardStyles.buttonStyle}
+              onPress={props.editButtonClicked}>
+              <Image source={edit_icon} />
+            </TouchableOpacity>
+          ) : null}
+        </View>
+        {props.children}
+      </View>
+    );
+  };
+
+  const TextViewWithHeading = (props: {heading: String; value: String}) => {
+    return (
+      <View style={Styles.TextViewWithHeadingContainer}>
+        <Text style={Styles.headingText}> {props.heading} </Text>
+        <Text style={Styles.valueText} multiLine={true}>
+          {props.value}{' '}
+        </Text>
+      </View>
+    );
+  };
+
+  const TextWithIcon = (props: {iconUri: any; items: Array<String>}) => {
+    if (props.iconUri != null)
+      return (
+        <View style={Styles.TextWithIconContainer}>
+          <Image style={Styles.TextWithIconStyle} source={props.iconUri} />
+          <View style={{flexDirection: 'column'}}>
+            {props.items.map((itemInformation, index) => {
+              return (
+                <Text key={`${index}`} style={Styles.information}>
+                  {itemInformation}
+                </Text>
+              );
+            })}
+          </View>
+        </View>
+      );
+    return null;
+  };
+
+  return (
+    <View style={Styles.container}>
+      <SafeAreaView style={Styles.noViewStyle} />
+      <SafeAreaView style={Styles.safeAreaContextStyle}>
+        <View style={Styles.safeAreaSubContextStyle}>
+          <NavigationBar
+            title={'My Profile'}
+            showClose={true}
+            navigation={props.navigation}
+          />
+          <StatusBar
+            barStyle={
+              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+            }
+            backgroundColor={Colors.NewThemeColor}
+          />
+          {Utility.isInternetConnected ? (
+            <ScrollView
+              contentContainerStyle={{width: deviceWidth}}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={_onRefresh}
+                />
+              }>
+              {prepareBasicInfo()}
+              {prepareContactInfo()}
+              {prepareFormSections()}
+            </ScrollView>
+          ) : (
+            <NoInternetView
+              tryAgain={() => {
+                getUserProfileData();
+              }}>
+              {' '}
+            </NoInternetView>
+          )}
+
+          <ActionSheet
+            ref={_actionSheet}
+            width={DeviceInfo.isTablet() ? '65%' : '100%'}
+            actions={actionSheet?.list}
+            onActionClick={onActionItemClicked}
+          />
+        </View>
+      </SafeAreaView>
+    </View>
+  );
 };
+
+export default Profile;
 
 const cardStyles = StyleSheet.create({
   container: {

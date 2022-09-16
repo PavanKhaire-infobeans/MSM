@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   ImageBackground,
   Linking,
@@ -42,41 +42,28 @@ type Props = {
   user: UserData & {notLoggedIn: boolean};
   fetchFiltersDataTimeline: Function;
 };
-class Splash extends Component<Props> {
-  state = {
-    fromDeeplinking: false,
-    navigateToScreen: '',
-    decodedDataFromURL: '',
-    deeplinkMemoryType: '',
-    apiCalldoneOnce: false,
-  };
-  memoryFromPrompt: EventManager;
-  getPromptListener: EventManager;
+const Splash = props => {
+  const [fromDeeplinking, setFromDeepLinking] = useState(false);
+  const [navigateToScreen, setNavigateToScreen] = useState('');
+  const [decodedDataFromURL, setDecodedDataFromURL] = useState('');
+  const [deeplinkMemoryType, setDeeplinkMemoryType] = useState('');
+  const [apiCalldoneOnce, setApiCallDoneOnce] = useState(false);
 
-  promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    // setTimeout(() => {
-    //   loaderHandler.hideLoader();
-    // }, 500);
+  const promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
     if (success) {
-      // this.props.navigation.navigate('createMemory', {
-      //   editMode: true,
-      //   draftNid: draftDetails,
-      //   isFromPrompt: true,
-      //   deepLinkBackClick: true
-      // });
     } else {
       loaderHandler.hideLoader();
       ToastMessage(draftDetails);
     }
   };
 
-  async componentWillMount() {
-    this.memoryFromPrompt = EventManager.addListener(
+  useEffect(() => {
+    const memoryFromPrompt = EventManager.addListener(
       promptIdListener,
-      this.promptToMemoryCallBack,
+      promptToMemoryCallBack,
     );
 
-    this.getPromptListener = EventManager.addListener(
+    const getPromptListener = EventManager.addListener(
       kGetPromptByID,
       (success: boolean, fetchPrompt?: any) => {
         if (
@@ -87,7 +74,7 @@ class Splash extends Component<Props> {
           if (Utility.isInternetConnected) {
             loaderHandler.showLoader('Creating Memory...');
             let draftDetails: any = DefaultDetailsMemory(fetchPrompt.title);
-            draftDetails.prompt_id = parseInt(this.state.decodedDataFromURL);
+            draftDetails.prompt_id = parseInt(decodedDataFromURL);
 
             CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
           } else {
@@ -99,81 +86,65 @@ class Splash extends Component<Props> {
       },
     );
 
-    const initialUrl = await Linking.getInitialURL()
-      .then(async url => {
-        if (url) {
-          if (Utility.isInternetConnected) {
-            this.setState(
-              {
-                fromDeeplinking: true,
-              },
-              () => {
-                let splitUrl = url.split('/');
-                let urlreDirectTo = splitUrl && splitUrl[3];
-                if (urlreDirectTo && urlreDirectTo.includes('edit')) {
-                  if (splitUrl[4].includes('prompt')) {
-                    this.setState({
-                      navigateToScreen: 'PromptScreen',
-                      decodedDataFromURL: splitUrl[5]
-                        ? base64.decode(splitUrl[5])
-                        : '',
-                    });
-                  } else if (splitUrl[4].includes('mystory')) {
-                    this.setState({
-                      navigateToScreen: 'mystory',
-                      decodedDataFromURL: splitUrl[5]
-                        ? base64.decode(splitUrl[5])
-                        : '',
-                    });
-                  } else {
-                    // this.props.navigation.replace('dashBoard');
-                  }
-                } else if (urlreDirectTo && urlreDirectTo == 'memory') {
-                  let urlData = splitUrl[4] ? base64.decode(splitUrl[4]) : '';
-                  let splitData = urlData != '' ? urlData.split('/') : '';
-                  let idData = escape(splitData[1]).split('%');
-                  this.setState({
-                    navigateToScreen: 'memory',
-                    decodedDataFromURL: idData[0],
-                    deeplinkMemoryType: splitData[0],
-                  });
-                } else if (
-                  urlreDirectTo &&
-                  urlreDirectTo.includes('memory_draft')
-                ) {
-                  this.setState({
-                    navigateToScreen: 'myMemories',
-                    decodedDataFromURL: splitUrl[4] ? true : false,
-                  });
-                } else if (
-                  urlreDirectTo &&
-                  urlreDirectTo.includes('email_request?a=')
-                ) {
-                  //
-                  let tempurl = urlreDirectTo;
-                  let getData = tempurl.replace('email_request?a=', '');
+    const initiateDeepLink = async () => {
+      const initialUrl = await Linking.getInitialURL()
+        .then(async url => {
+          if (url) {
+            if (Utility.isInternetConnected) {
+              setFromDeepLinking(true);
 
-                  this.setState({
-                    navigateToScreen: 'PromptCreate',
-                    decodedDataFromURL: base64.decode(getData),
-                  });
-                } else if (urlreDirectTo && urlreDirectTo == 'about') {
-                  this.setState({
-                    navigateToScreen: 'about',
-                    decodedDataFromURL: '',
-                  });
+              let splitUrl = url.split('/');
+              let urlreDirectTo = splitUrl && splitUrl[3];
+              if (urlreDirectTo && urlreDirectTo.includes('edit')) {
+                if (splitUrl[4].includes('prompt')) {
+                  setNavigateToScreen('PromptScreen');
+                  setDecodedDataFromURL(
+                    splitUrl[5] ? base64.decode(splitUrl[5]) : '',
+                  );
+                } else if (splitUrl[4].includes('mystory')) {
+                  setNavigateToScreen('mystory');
+                  setDecodedDataFromURL(
+                    splitUrl[5] ? base64.decode(splitUrl[5]) : '',
+                  );
                 } else {
                   // this.props.navigation.replace('dashBoard');
                 }
-              },
-            );
-          } else {
-            No_Internet_Warning();
+              } else if (urlreDirectTo && urlreDirectTo == 'memory') {
+                let urlData = splitUrl[4] ? base64.decode(splitUrl[4]) : '';
+                let splitData = urlData != '' ? urlData.split('/') : '';
+                let idData = escape(splitData[1]).split('%');
+                setNavigateToScreen('memory');
+                setDecodedDataFromURL(idData[0]);
+                setDeeplinkMemoryType(splitData[0]);
+              } else if (
+                urlreDirectTo &&
+                urlreDirectTo.includes('memory_draft')
+              ) {
+                setNavigateToScreen('myMemories');
+                setDecodedDataFromURL(splitUrl[4] ? 'true' : 'false');
+              } else if (
+                urlreDirectTo &&
+                urlreDirectTo.includes('email_request?a=')
+              ) {
+                //
+                let tempurl = urlreDirectTo;
+                let getData = tempurl.replace('email_request?a=', '');
+                setNavigateToScreen('PromptCreate');
+                setDecodedDataFromURL(base64.decode(getData));
+              } else if (urlreDirectTo && urlreDirectTo == 'about') {
+                setNavigateToScreen('about');
+                setDecodedDataFromURL('');
+              } else {
+                // this.props.navigation.replace('dashBoard');
+              }
+            } else {
+              No_Internet_Warning();
+            }
           }
-        }
-      })
-      .catch(err => console.log('An error occurred' + err));
-
+        })
+        .catch(err => console.log('An error occurred' + err));
+    };
+    initiateDeepLink();
     LoginStore.listAllAccounts().then((resp: any) => {
       let list = resp.rows.raw() as Array<UserData>;
       let obj = {};
@@ -184,195 +155,135 @@ class Splash extends Component<Props> {
       console.log('Notification object has : ', Utility.unreadNotification);
     });
     setTimeout(() => {
-      this.props.getUser();
+      props.getUser();
     }, 2500);
-  }
 
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (this.props !== nextProps) {
-      if (
-        nextProps.user.instanceID != 0 &&
-        nextProps.user.userAuthToken != null
-      ) {
-        Account.selectedData().values = nextProps.user;
-        // this.props.navigation.reset("dashboardIndex")
-        try {
-          // this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
+    return () => {
+      memoryFromPrompt.removeListener();
+      getPromptListener.removeListener();
+    };
+  }, []);
 
-          if (this.state.fromDeeplinking) {
-            if (!this.state.apiCalldoneOnce) {
-              if (Utility.isInternetConnected) {
-                if (this.state.navigateToScreen == 'mystory') {
-                  this.setState(
-                    {
-                      apiCalldoneOnce: true,
-                    },
-                    () => {
-                      // this.props.navigation.replace("createMemory", { editMode: true, draftNid: this.state.decodedDataFromURL, deepLinkBackClick: true })
-                    },
-                  );
-                } else if (this.state.navigateToScreen == 'myMemories') {
-                  this.setState(
-                    {
-                      apiCalldoneOnce: true,
-                    },
-                    () => {
-                      // this.props.navigation.replace("memoriesDrafts", { fromDeepLink: this.state.decodedDataFromURL, deepLinkBackClick: true })
-                    },
-                  );
-                } else if (this.state.navigateToScreen == 'memory') {
-                  this.setState(
-                    {
-                      apiCalldoneOnce: true,
-                    },
-                    () => {
-                      // this.props.navigation.replace("memoryDetails", { editMode: false, nid: this.state.decodedDataFromURL, type: this.state.deeplinkMemoryType, deepLinkBackClick: true })
-                    },
-                  );
-                } else if (this.state.navigateToScreen == 'about') {
-                  this.setState(
-                    {
-                      apiCalldoneOnce: true,
-                    },
-                    () => {
-                      // this.props.navigation.replace("moreOptions", { fromDeepLink: true, deepLinkBackClick: true })
-                    },
-                  );
-                } else if (this.state.navigateToScreen == 'PromptScreen') {
-                  this.setState(
-                    {
-                      apiCalldoneOnce: true,
-                    },
-                    () => {
-                      GetPromptBYPromptId(this.state.decodedDataFromURL);
-                    },
-                  );
-                } else if (this.state.navigateToScreen == 'PromptCreate') {
-                  this.setState(
-                    {
-                      apiCalldoneOnce: true,
-                    },
-                    () => {
-                      let splitArray =
-                        this.state.decodedDataFromURL.split('&&&');
-                      let id: any = splitArray[2],
-                        title: any = splitArray[4];
-                      if (Utility.isInternetConnected) {
-                        if (nextProps.user.userID == splitArray[1]) {
-                          if (
-                            splitArray[3] &&
-                            splitArray[3] === 'writeprompt'
-                          ) {
-                            loaderHandler.showLoader('Creating Memory...');
-                            let draftDetails: any = DefaultDetailsMemory(
-                              decode_utf8(title.trim()),
-                            );
-                            draftDetails.prompt_id = parseInt(id);
+  useEffect(() => {
+    if (props.user.instanceID != 0 && props.user.userAuthToken != null) {
+      Account.selectedData().values = props.user;
+      // this.props.navigation.reset("dashboardIndex")
+      try {
+        // this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
 
-                            CreateUpdateMemory(
-                              draftDetails,
-                              [],
-                              promptIdListener,
-                              'save',
-                            );
-                          } else if (
-                            splitArray[3] &&
-                            splitArray[3] === 'mindpopup'
-                          ) {
-                            // this.props.navigation.replace("mindPop", { nid: id, fromDeeplinking: true, deepLinkBackClick: true })
-                          } else {
-                            // this.props.navigation.replace('dashBoard');
-                          }
-                        } else {
-                          // this.props.navigation.replace('dashBoard');
-                        }
-                      } else {
-                        No_Internet_Warning();
-                      }
-                    },
-                  );
+        if (fromDeeplinking) {
+          if (!apiCalldoneOnce) {
+            if (Utility.isInternetConnected) {
+              if (navigateToScreen == 'mystory') {
+                setApiCallDoneOnce(true);
+              } else if (navigateToScreen == 'myMemories') {
+                setApiCallDoneOnce(true);
+              } else if (navigateToScreen == 'memory') {
+                setApiCallDoneOnce(true);
+              } else if (navigateToScreen == 'about') {
+                setApiCallDoneOnce(true);
+              } else if (navigateToScreen == 'PromptScreen') {
+                setApiCallDoneOnce(true);
+                GetPromptBYPromptId(decodedDataFromURL);
+              } else if (navigateToScreen == 'PromptCreate') {
+                setApiCallDoneOnce(true);
+                let splitArray = decodedDataFromURL.split('&&&');
+                let id: any = splitArray[2],
+                  title: any = splitArray[4];
+                if (Utility.isInternetConnected) {
+                  if (props.user.userID == splitArray[1]) {
+                    if (splitArray[3] && splitArray[3] === 'writeprompt') {
+                      loaderHandler.showLoader('Creating Memory...');
+                      let draftDetails: any = DefaultDetailsMemory(
+                        decode_utf8(title.trim()),
+                      );
+                      draftDetails.prompt_id = parseInt(id);
+
+                      CreateUpdateMemory(
+                        draftDetails,
+                        [],
+                        promptIdListener,
+                        'save',
+                      );
+                    } else if (splitArray[3] && splitArray[3] === 'mindpopup') {
+                      // this.props.navigation.replace("mindPop", { nid: id, fromDeeplinking: true, deepLinkBackClick: true })
+                    } else {
+                      // this.props.navigation.replace('dashBoard');
+                    }
+                  } else {
+                    // this.props.navigation.replace('dashBoard');
+                  }
                 } else {
-                  // this.props.navigation.replace('dashBoard');
+                  No_Internet_Warning();
                 }
               } else {
-                No_Internet_Warning();
-                this.props.navigation.reset({
-                  index: 0,
-                  routes: [{name: 'prologue'}],
-                });
+                // this.props.navigation.replace('dashBoard');
               }
-            }
-          } else {
-            this.props.navigation.reset({
-              index: 0,
-              routes: [{name: 'dashBoard'}],
-            });
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      } else if (
-        (nextProps.user.instanceID != 0 &&
-          (nextProps.user.userAuthToken == null ||
-            nextProps.user.userAuthToken.length == 0)) ||
-        nextProps.user.notLoggedIn
-      ) {
-        DefaultPreference.get('hide_app_intro').then((value: any) => {
-          if (value == 'true') {
-            try {
-              // Actions.prologue();
-              this.props.navigation.reset({
+            } else {
+              No_Internet_Warning();
+              props.navigation.reset({
                 index: 0,
                 routes: [{name: 'prologue'}],
               });
-            } catch (error) {
-              console.log(error);
             }
-          } else {
-            // Actions.appIntro();
-            this.props.navigation.reset({
+          }
+        } else {
+          props.navigation.reset({
+            index: 0,
+            routes: [{name: 'dashBoard'}],
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (
+      (props.user.instanceID != 0 &&
+        (props.user.userAuthToken == null ||
+          props.user.userAuthToken.length == 0)) ||
+      props.user.notLoggedIn
+    ) {
+      DefaultPreference.get('hide_app_intro').then((value: any) => {
+        if (value == 'true') {
+          try {
+            // Actions.prologue();
+            props.navigation.reset({
               index: 0,
               routes: [{name: 'prologue'}],
             });
+          } catch (error) {
+            console.log(error);
           }
-        });
-      }
+        } else {
+          // Actions.appIntro();
+          props.navigation.reset({
+            index: 0,
+            routes: [{name: 'prologue'}],
+          });
+        }
+      });
     }
-  }
+  }, [props.user]);
 
-  componentWillUnmount = () => {
-    this.memoryFromPrompt.removeListener();
-    this.getPromptListener.removeListener();
-  };
-
-  render() {
-    let versionNumber = DeviceInfo.getVersion();
-    return (
-      <View style={Styles.container}>
-        <StatusBar
-          barStyle={
-            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-          }
-          translucent
-          backgroundColor="transparent"
-        />
-        {/* <StatusBar
-          barStyle={'dark-content'}
-          backgroundColor={Colors.Theme51D1FF}
-        /> */}
-        <ImageBackground source={splash_bg} style={Styles.imageBackGroundStyle}>
-          {/*<View style={{ maxWidth: 240, alignItems: "center", alignSelf: 'center', paddingTop : 30 }}>
-					<Image style={{ width: 300, height: 100 }} resizeMode="contain" source={msm_coloured_banner} />
-					<Image style={{ width: 240, height: 65, marginTop: 24, tintColor: "#000"}}resizeMode="center" source={splashText}/>
-		</View>*/}
-          <View style={Styles.versionContainer}>
-            <Text style={Styles.Version}>Version: {versionNumber}</Text>
-          </View>
-        </ImageBackground>
-      </View>
-    );
-  }
-}
+  return (
+    <View style={Styles.container}>
+      <StatusBar
+        barStyle={
+          Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+        }
+        translucent
+        backgroundColor="transparent"
+      />
+      <ImageBackground source={splash_bg} style={Styles.imageBackGroundStyle}>
+        <View style={Styles.versionContainer}>
+          <Text
+            style={
+              Styles.Version
+            }>{`Version: ${DeviceInfo.getVersion()}`}</Text>
+        </View>
+      </ImageBackground>
+    </View>
+  );
+};
 
 const mapState = (state: {[x: string]: any}): {user: UserData} => ({
   user: state.account,
