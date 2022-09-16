@@ -750,10 +750,10 @@ const App = _props => {
             });
         })
         .catch(_error => {
-          //console.log("Error fetching token " + error)
+          //showConsoleLog(ConsoleType.ERROR,"Error fetching token " + error)
         });
     } catch (error) {
-      //console.log("Error fetching token " + error)
+      //showConsoleLog(ConsoleType.ERROR,"Error fetching token " + error)
     }
     // }
     // })
@@ -768,7 +768,7 @@ const App = _props => {
     } catch (error) {
       // User has rejected permissions
       return false;
-      //console.log('permission rejected');
+      //showConsoleLog(ConsoleType.ERROR,'permission rejected');
     }
   };
 

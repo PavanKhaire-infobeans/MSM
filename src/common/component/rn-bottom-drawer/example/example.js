@@ -25,8 +25,8 @@ export default class App extends React.Component {
       <BottomDrawer
         containerHeight={100}
         offset={TAB_BAR_HEIGHT + HEADER_HEIGHT}
-        onExpanded = {() => {//console.log('expanded')}}
-        onCollapsed = {() => {//console.log('collapsed')}}
+        onExpanded = {() => {//showConsoleLog(ConsoleType.LOG,'expanded')}}
+        onCollapsed = {() => {//showConsoleLog(ConsoleType.LOG,'collapsed')}}
       >
         {this.renderContent()}
       </BottomDrawer>

@@ -1,5 +1,5 @@
 import { all, call, delay, put, takeLatest } from 'redux-saga/effects';
-import { getValue, Storage, TimeStampMilliSeconds } from '../../common/constants';
+import { ConsoleType, getValue, showConsoleLog, Storage, TimeStampMilliSeconds } from '../../common/constants';
 import { Account } from '../../common/loginStore';
 import { MemoryService } from '../../common/webservice/memoryServices';
 import {
@@ -98,7 +98,7 @@ function* getMemoryTags(requestData: any) {
       return await request;
     });
     let value = '';
-    console.warn("getMemoryTagsList response time :-: ", (new Date() - requestTime) / 1000)
+    showConsoleLog(ConsoleType.WARN,"getMemoryTagsList response time :-: ", (new Date() - requestTime) / 1000)
     if (searchType == kSearchTags) {
       value = getValue(responseBody, ['MemoryTags']);
       if (value && value.length > 0) {
@@ -121,7 +121,7 @@ function* getMemoryTags(requestData: any) {
       }
     }
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
   }
 }
 
@@ -172,7 +172,7 @@ function* getUsers(requestData: any) {
       });
     }
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
   }
 }
 
@@ -197,7 +197,7 @@ function* getCollections() {
       yield put({ type: CollectionList, payload: value });
     }
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
   }
 }
 
@@ -222,7 +222,7 @@ function* getLocationList(requestData: any) {
       yield put({ type: LocationListUpdated, payload: value });
     }
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
   }
 }
 
@@ -248,7 +248,7 @@ function* getCollaborators(requestData: any) {
       yield put({ type: SaveCollaborators, payload: value });
     }
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
   }
 }
 
@@ -277,7 +277,7 @@ function* etherPadEditing(requestData: any) {
       }
     }
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
   }
 }
 

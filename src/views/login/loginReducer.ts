@@ -1,4 +1,5 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
+import { showConsoleLog, ConsoleType } from '../../common/constants';
 import {
   loginInstanceRequest, loginRequest
 } from '../../common/webservice/loginServices';
@@ -144,7 +145,7 @@ export const loginStatus = (
  * @param params
  */
 function* fetchRequest(params: any) {
-  console.log("params is : ", JSON.stringify(params))
+  showConsoleLog(ConsoleType.LOG,"params is : ", JSON.stringify(params))
 
   return loginRequest(`${kAdmin}`, params)
     .then((response: Response) => response.json())
@@ -177,7 +178,7 @@ function* loginInstanceService(...action: any[]) {
       });
     }
 
-    console.log("resp insts :",JSON.stringify(responseBody))
+    showConsoleLog(ConsoleType.LOG,"resp insts :",JSON.stringify(responseBody))
     if (responseBody.ResponseCode !== 200) {
       yield put({
         type: LoginInstanceStatus.RequestFailed,
@@ -190,7 +191,7 @@ function* loginInstanceService(...action: any[]) {
       payload: responseBody,
     });
   } catch (err) {
-    console.log("Login Service Error: ", err);
+    showConsoleLog(ConsoleType.LOG,"Login Service Error: ", err);
     yield put({ type: LoginInstanceStatus.RequestFailed, payload: err });
   }
 }
@@ -219,7 +220,7 @@ function* loginService(...action: any[]) {
     }
     yield put({ type: LoginServiceStatus.RequestSuccess, payload: responseBody });
   } catch (err) {
-    //console.log("Login Service Error: ", err);
+    //showConsoleLog(ConsoleType.LOG,"Login Service Error: ", err);
     yield put({ type: LoginServiceStatus.RequestFailed, payload: err });
   }
 }

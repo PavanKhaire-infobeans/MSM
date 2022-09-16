@@ -1,10 +1,8 @@
 import React from 'react';
-import {
-  Image,TouchableHighlight, View
-} from 'react-native';
+import {Image, TouchableHighlight, View} from 'react-native';
 import Text from '../../component/Text';
 //@ts-ignore
-import { icon_arrow } from '../../../images';
+import {icon_arrow} from '../../../images';
 import styles from './styles';
 
 type Props = {
@@ -29,7 +27,6 @@ export default class DefaultListItem extends React.Component<Props> {
   };
 
   render() {
-    //console.log("Key is " + this.props.identifier);
     return (
       <TouchableHighlight
         underlayColor="#cccccc3e"
@@ -40,23 +37,14 @@ export default class DefaultListItem extends React.Component<Props> {
             styles.container,
             {borderBottomWidth: this.props.isLast ? 0 : 1},
           ]}>
-          <View
-            style={styles.headercontainer}>
+          <View style={styles.headercontainer}>
             {this.props.icon && (
-              <Image
-                style={styles.imageStyle}
-                source={this.props.icon}
-              />
+              <Image style={styles.imageStyle} source={this.props.icon} />
             )}
             <View style={styles.textContainer}>
-              <Text style={styles.title}>
-                {this.props.title}
-              </Text>
+              <Text style={styles.title}>{this.props.title}</Text>
               {this.props.subTitle && (
-                <Text
-                  style={styles.subTitle}>
-                  {this.props.subTitle}
-                </Text>
+                <Text style={styles.subTitle}>{this.props.subTitle}</Text>
               )}
             </View>
           </View>

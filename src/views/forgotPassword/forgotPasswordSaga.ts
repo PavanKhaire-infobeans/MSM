@@ -28,7 +28,7 @@ function* ForgotPasswordService(...action: any[]) {
       payload: responseBody,
     });
   } catch (err) {
-    //console.log("Login Service Error: ", err);
+    //showConsoleLog(ConsoleType.LOG,"Login Service Error: ", err);
     yield put({ type: ForgotPasswordServiceStatus.RequestFailed, payload: err });
   }
 }

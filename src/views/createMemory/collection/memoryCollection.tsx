@@ -1,27 +1,42 @@
 import React from 'react';
 import {
-  FlatList, Image, Keyboard, Platform, SafeAreaView,
-  StatusBar, Text, TouchableHighlight, View
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
 // @ts-ignore
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import {No_Internet_Warning} from '../../../common/component/Toast';
 import {
-  No_Internet_Warning
-} from '../../../common/component/Toast';
-import { Colors, decode_utf8, fontFamily, fontSize } from '../../../common/constants';
+  Colors,
+  ConsoleType,
+  decode_utf8,
+  fontFamily,
+  fontSize,
+  showConsoleLog,
+} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
 import Utility from '../../../common/utility';
 import {
-  add_icon, checkbox, checkbox_active, settings_icon
+  add_icon,
+  checkbox,
+  checkbox_active,
+  settings_icon,
 } from '../../../images';
 import {
   GetPublishedMemoryCollections,
   kPublishedMemoryCollections,
-  MemoryAction
+  MemoryAction,
 } from '../../myMemories/myMemoriesWebService';
-import { CollectinAPI } from '../saga';
+import {CollectinAPI} from '../saga';
 import styles from './styles';
 
 type State = {[x: string]: any};
@@ -50,7 +65,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
     this.checkForScroll = true;
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.publishedMemoryCollectionsListener.removeListener();
   }
 
@@ -74,7 +89,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
 
   saveValue = () => {
     let collections_nids: any = [];
-    this.state.collections.forEach((element:any) => {
+    this.state.collections.forEach((element: any) => {
       collections_nids.push(element.nid ? element.nid : element.tid);
     });
     if (Utility.isInternetConnected) {
@@ -110,7 +125,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
       }
       this.setState({collections: collections});
     } catch (error) {
-      console.log(error);
+      showConsoleLog(ConsoleType.LOG, error);
     }
   };
   renderRow = (item: any) => {
@@ -181,7 +196,11 @@ class MemoryCollectionList extends React.Component<Props, State> {
               saveValues={this.saveValue}
             />
             <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             <TouchableHighlight

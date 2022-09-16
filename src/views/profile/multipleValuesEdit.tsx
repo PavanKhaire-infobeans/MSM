@@ -25,10 +25,12 @@ import BottomPicker, {
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
   Colors,
+  ConsoleType,
   fontSize,
   GenerateRandomID,
   getValue,
   requestPermission,
+  showConsoleLog,
   testEmail,
   testPhone,
 } from '../../common/constants';
@@ -102,7 +104,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
 
   constructor(props: Props) {
     super(props);
-    console.log('Editable fields : ', this.props);
+    showConsoleLog(ConsoleType.LOG, 'Editable fields : ', this.props);
     this.props.route.params.editableFields.forEach((element: any) => {
       this.setState({
         [element.field_name]: element.default_value,
@@ -265,7 +267,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
       let valueArray: string[] = [];
       let default_values = getValue(field, ['default_value']) || {};
       for (let key in default_values) {
-        //console.log("Values while selection ", default_values[key])
+        //showConsoleLog(ConsoleType.LOG,"Values while selection ", default_values[key])
         valueArray.push(default_values[key]);
       }
       default_value = valueArray.join(', ');
@@ -335,7 +337,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                 ? this.state[field.field_name]
                 : field.default_value;
               for (let key in default_values) {
-                //console.log("Values while selection ", default_values[key])
+                //showConsoleLog(ConsoleType.LOG,"Values while selection ", default_values[key])
                 valueArray.push(default_values[key]);
               }
               default_value = valueArray.join(', ');
@@ -416,7 +418,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                     ? this.state[field.field_name].value2
                     : field.default_value.value2
                   : field.default_value.value2;
-                //console.log("For date select");
+                //showConsoleLog(ConsoleType.LOG,"For date select");
                 default_value_from = Utility.dateAccordingToFormat(
                   default_value_from,
                   'Y',
@@ -624,7 +626,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
           };
         }
       }
-      //console.log("existing value to update:", existingValue)
+      //showConsoleLog(ConsoleType.LOG,"existing value to update:", existingValue)
       //if the field is requird and has existing value or the value is changed
       //then only web service will be called else error will be shown
       if (!(hasExistingValue || isUpdated) && isRequired) {
@@ -738,7 +740,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                 isVisible={this.state.isDatePickerVisible}
                 onCancel={() => {
                   this.setState({isDatePickerVisible: false});
-                  //console.log("cancelled")
+                  //showConsoleLog(ConsoleType.LOG,"cancelled")
                 }}
                 onDateSelection={(date: any) => {
                   this.setState({
@@ -807,7 +809,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                 [fieldName]: {error: false, message: ''},
               },
             });
-            //console.log(this.state)
+            //showConsoleLog(ConsoleType.LOG,this.state)
           }}
         />
       </View>
@@ -865,7 +867,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                     };
                     tempfilesArr = [tempfile];
                   }
-                  //console.log(response, typeof response);
+                  //showConsoleLog(ConsoleType.LOG,response, typeof response);
                   if (tempfilesArr.length > 0) {
                     let tempfile = tempfilesArr[0];
                     this.setState({
@@ -889,7 +891,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
             if (success) {
               ImageCropPicker.openPicker(options)
                 .then((response: PickerImage) => {
-                  //console.log(response, typeof response);
+                  //showConsoleLog(ConsoleType.LOG,response, typeof response);
                   let path =
                     response.path.indexOf('file://') != -1
                       ? response.path

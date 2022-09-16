@@ -1,6 +1,6 @@
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import { No_Internet_Warning } from '../../common/component/Toast';
-import { getValue } from '../../common/constants';
+import { ConsoleType, getValue, showConsoleLog } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
@@ -77,8 +77,8 @@ export const checkUserRegistration = async (submitData: any) => {
       } = await (async () => chkResponse.json())();
       loaderHandler.hideLoader();
 
-      console.log("reg resp : ", JSON.stringify(chkResponse))
-      console.log(" resp : ", JSON.stringify(resp))
+      showConsoleLog(ConsoleType.LOG,"reg resp : ", JSON.stringify(chkResponse))
+      showConsoleLog(ConsoleType.LOG," resp : ", JSON.stringify(resp))
       EventManager.callBack(
         kCheckUserProfile,
         true,
@@ -97,7 +97,7 @@ export const submitRegistration = async (registrationData: any) => {
   try {
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader('Requesting...');
-      console.log("registrationData : " + JSON.stringify(registrationData));
+      showConsoleLog(ConsoleType.LOG,"registrationData : " + JSON.stringify(registrationData));
       let resp: {
         ResponseCode: number;
         ResponseMessage: string;
@@ -109,7 +109,7 @@ export const submitRegistration = async (registrationData: any) => {
         return response.json();
       });
       //debugger
-      console.log('registration response:', resp);
+      showConsoleLog(ConsoleType.LOG,'registration response:', resp);
       // let resp: { ResponseCode: number; ResponseMessage: string; userId: number } = await (async () => response.json())();
       loaderHandler.hideLoader();
       if (resp.ResponseCode == 200) {

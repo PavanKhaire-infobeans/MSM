@@ -185,7 +185,6 @@ export default class PublishedMemory extends React.Component<Props, State> {
     commentCount: any,
     likeFlag: any,
   ) => {
-    //console.log(likeCount + "  " + commentCount);
     publishedMemoriesArray.forEach((element: any, index: any) => {
       if (element.nid == nid) {
         element.noOfLikes = likeCount;
@@ -193,7 +192,6 @@ export default class PublishedMemory extends React.Component<Props, State> {
         element.isLikedByUser = likeFlag;
       }
     });
-    // this.setState({});
   };
 
   onRefresh = () => {
@@ -332,7 +330,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     type?: any,
     uid?: any,
   ) => {
-    console.log('response no listner next> ', nid);
+    showConsoleLog(ConsoleType.ERROR, 'response no listner next> ', nid);
     loaderHandler.hideLoader();
     if (fetched) {
       if (type == MemoryActionKeys.removeMeFromThisPostKey) {
@@ -731,7 +729,7 @@ export const onActionItemClicked = async (
   data: any,
   navigation: any,
 ) => {
-  // console.log(JSON.stringify(data));
+  // showConsoleLog(ConsoleType.ERROR,JSON.stringify(data));
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
       _addToCollection(data.nid, navigation);

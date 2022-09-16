@@ -2,7 +2,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { Appearance, Dimensions } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
 import DeviceInfo from 'react-native-device-info';
-import { constant, MemoryActionKeys } from '../common/constants';
+import { ConsoleType, constant, MemoryActionKeys, showConsoleLog } from '../common/constants';
 let showLogoutPopUp = false;
 
 export const getshowLogoutPopUp = () => {
@@ -357,14 +357,14 @@ export default class Utility {
 export function* networkConnectivitySaga() {
   // const channel = yield call(createNetworkChangeChannel);
   const unsubscribe = NetInfo.addEventListener(state => {
-    console.log('Connection type', state.type);
-    console.log('Is connected?', state.isConnected);
+    showConsoleLog(ConsoleType.LOG,'Connection type', state.type);
+    showConsoleLog(ConsoleType.LOG,'Is connected?', state.isConnected);
     Utility.isInternetConnected = state.isConnected;
   });
   /* try {
         while (true) {
             const connected = yield take(channel);
-            console.log("Network Status", connected, Utility.isInternetConnected);
+            showConsoleLog(ConsoleType.LOG,"Network Status", connected, Utility.isInternetConnected);
              Utility.isInternetConnected = state;
         }
     } finally {
@@ -402,8 +402,8 @@ export function getFontScale() {
 export function createNetworkChangeChannel() {
   // Subscribe
   const unsubscribe = NetInfo.addEventListener(state => {
-    console.log('Connection type', state.type);
-    console.log('Is connected?', state.isConnected);
+    showConsoleLog(ConsoleType.LOG,'Connection type', state.type);
+    showConsoleLog(ConsoleType.LOG,'Is connected?', state.isConnected);
   });
 
   // Unsubscribe

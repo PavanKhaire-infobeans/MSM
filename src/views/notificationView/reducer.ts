@@ -1,3 +1,4 @@
+import { showConsoleLog, ConsoleType } from '../../common/constants';
 import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
 
@@ -75,7 +76,7 @@ export const NotificationsRedux = (
       newState.notificationData.forEach((element: any, index: any) => {
         if (element.group_id == action.payload.group_id) {
           let activityList = action.payload.details.concat(element.data);
-          //console.log("test list size"+activityList);
+          //showConsoleLog(ConsoleType.LOG,"test list size"+activityList);
           selectedIndex = index;
           notificationList = activityList.slice(0);
         }
@@ -109,6 +110,6 @@ export const NotificationsRedux = (
       newState.unreadNot = true;
       break;
   }
-  console.log('Utility notification count : ', action.type);
+  showConsoleLog(ConsoleType.LOG,'Utility notification count : ', action.type);
   return newState;
 };

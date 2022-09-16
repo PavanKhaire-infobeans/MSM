@@ -19,11 +19,11 @@ export type UserData = {
 };
 const LoginStore = (() => {
   function errorCB(err: Error) {
-    //console.log("SQL Error: " + err);
+    //showConsoleLog(ConsoleType.LOG,"SQL Error: " + err);
   }
 
   function openCB() {
-    //console.log("Database OPENED");
+    //showConsoleLog(ConsoleType.LOG,"Database OPENED");
   }
 
   function checkDB(db: any) {
@@ -39,7 +39,7 @@ const LoginStore = (() => {
           [],
           (_: any, results: any) => {
             if (results) {
-              console.log('Query completed', results);
+              showConsoleLog(ConsoleType.LOG,'Query completed', results);
               resolve(results);
             } else {
               resolve(false);
@@ -86,7 +86,7 @@ const LoginStore = (() => {
                   `'${loginDetails.is_public_site}',` +
                   `'${loginDetails.isSSOLogin}'` +
                   ')';
-                console.log('Query is : ', query);
+                showConsoleLog(ConsoleType.LOG,'Query is : ', query);
                 tx.executeSql(
                   query,
                   [],
@@ -98,17 +98,17 @@ const LoginStore = (() => {
                     }
                   },
                   (err: any) => {
-                    // console.log(err)
+                    // showConsoleLog(ConsoleType.LOG,err)
                     LoginStore.updateLogin(loginDetails);
                   },
                 );
               } else {
-                // console.log("Transaction not completed")
+                // showConsoleLog(ConsoleType.LOG,"Transaction not completed")
                 reject('Transaction not available');
               }
             });
           } else {
-            // console.log("DB failed to connect")
+            // showConsoleLog(ConsoleType.LOG,"DB failed to connect")
             reject('DB failed to connect');
           }
         });
@@ -126,9 +126,9 @@ const LoginStore = (() => {
                   `${instanceID}` +
                   ' AND userID=' +
                   `${userID}`;
-                //  console.log("Query is : ", query);
+                //  showConsoleLog(ConsoleType.LOG,"Query is : ", query);
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  //  console.log("Query completed", results);
+                  //  showConsoleLog(ConsoleType.LOG,"Query completed", results);
                   if (results) {
                     resolve(results);
                   } else {
@@ -175,9 +175,9 @@ const LoginStore = (() => {
                   `${loginDetails.instanceID}` +
                   ' AND userID=' +
                   `${loginDetails.userID}`;
-                // console.log("Update query is : ", query)
+                // showConsoleLog(ConsoleType.LOG,"Update query is : ", query)
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  //  console.log("Query completed", results);
+                  //  showConsoleLog(ConsoleType.LOG,"Query completed", results);
                   if (results) {
                     resolve(results);
                   } else {
@@ -206,9 +206,9 @@ const LoginStore = (() => {
                   `'${loginDetails.profileImage}'` +
                   ' WHERE instanceID=' +
                   `${loginDetails.instanceID}`;
-                //  console.log("Query ", query);
+                //  showConsoleLog(ConsoleType.LOG,"Query ", query);
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  //  console.log("Query completed", results);
+                  //  showConsoleLog(ConsoleType.LOG,"Query completed", results);
                   if (results) {
                     resolve(results);
                   } else {
@@ -235,7 +235,7 @@ const LoginStore = (() => {
                   'SELECT * FROM accounts_table order by email',
                   [],
                   (_: any, results: any) => {
-                    // console.log("Query completed", results);
+                    // showConsoleLog(ConsoleType.LOG,"Query completed", results);
                     if (results) {
                       resolve(results);
                     } else {
@@ -263,7 +263,7 @@ const LoginStore = (() => {
                   'SELECT * FROM accounts_table WHERE instanceID=' + instanceID,
                   [],
                   (_: any, results: any) => {
-                    //console.log("Query completed", results);
+                    //showConsoleLog(ConsoleType.LOG,"Query completed", results);
                     if (results) {
                       resolve(results);
                     } else {
@@ -289,7 +289,7 @@ const LoginStore = (() => {
 
   function getSanitizedString(input: string) {
     input = input.replace(/["']/g, "\\'");
-    //console.log(input);
+    //showConsoleLog(ConsoleType.LOG,input);
     return input;
   }
 })();

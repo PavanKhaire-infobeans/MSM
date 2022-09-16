@@ -1039,7 +1039,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
             );
             MindPopStore.deleteMindPopAttachment(ids)
               .then((resp: any) => {
-                //console.log("message", resp);
+                //showConsoleLog(ConsoleType.LOG,"message", resp);
                 // this._prevUpdate();
                 DeviceEventEmitter.emit('updateSelected', 0);
                 this.props.updateList && this.props.updateList();
@@ -1056,7 +1056,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
                 // this._prevUpdate();
                 DeviceEventEmitter.emit('updateSelected', 0);
                 this.props.updateList && this.props.updateList();
-                //console.log("Error", error);
+                //showConsoleLog(ConsoleType.LOG,"Error", error);
                 if (DeviceInfo.isTablet()) {
                   Keyboard.dismiss();
                   this.props.navigation.goBack();
@@ -1424,7 +1424,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
         });
       },
     };
-    //console.log("Thumbnail Image:", item.thumb_uri);
+    //showConsoleLog(ConsoleType.LOG,"Thumbnail Image:", item.thumb_uri);
     var found: boolean = false;
     var thumb_uri = item.thumb_uri;
     if (item.fid) {

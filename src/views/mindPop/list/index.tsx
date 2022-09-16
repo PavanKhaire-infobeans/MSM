@@ -803,7 +803,7 @@ class MindPopList extends React.Component<{
           {/*
 				<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]}
 					onPress={_ => {
-						//console.log("Convert To memory pressed");
+						//showConsoleLog(ConsoleType.LOG,"Convert To memory pressed");
 					}}>
 					<Image source={mindPopListCell_MindPopIcon} />
 					<Text style={styles.backTextWhite}>Convert to memory</Text>

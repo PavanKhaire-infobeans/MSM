@@ -14,7 +14,12 @@ import {connect} from 'react-redux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import Text from '../../common/component/Text';
 import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
-import {decode_utf8, fontSize} from '../../common/constants';
+import {
+  ConsoleType,
+  decode_utf8,
+  fontSize,
+  showConsoleLog,
+} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import {Account} from '../../common/loginStore';
 import LoginStore, {UserData} from '../../common/loginStore/database';
@@ -142,7 +147,9 @@ const Splash = props => {
             }
           }
         })
-        .catch(err => console.log('An error occurred' + err));
+        .catch(err =>
+          showConsoleLog(ConsoleType.LOG, 'An error occurred' + err),
+        );
     };
     initiateDeepLink();
     LoginStore.listAllAccounts().then((resp: any) => {
@@ -152,7 +159,11 @@ const Splash = props => {
         obj = {...obj, [`${element.instanceID}_${element.userID}`]: 0};
       });
       Utility.unreadNotification = {...obj};
-      console.log('Notification object has : ', Utility.unreadNotification);
+      showConsoleLog(
+        ConsoleType.LOG,
+        'Notification object has : ',
+        Utility.unreadNotification,
+      );
     });
     setTimeout(() => {
       props.getUser();
@@ -234,7 +245,7 @@ const Splash = props => {
           });
         }
       } catch (error) {
-        console.log(error);
+        showConsoleLog(ConsoleType.LOG, error);
       }
     } else if (
       (props.user.instanceID != 0 &&
@@ -251,7 +262,7 @@ const Splash = props => {
               routes: [{name: 'prologue'}],
             });
           } catch (error) {
-            console.log(error);
+            showConsoleLog(ConsoleType.LOG, error);
           }
         } else {
           // Actions.appIntro();

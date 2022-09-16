@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View, Animated, Platform } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Animated, Platform} from 'react-native';
 import Text from '../Text';
-import { Props } from './types';
-import styles  from './styles';
-import { Colors } from '../../constants';
-import BottomPicker, { ActionSheetItem } from '../bottomPicker';
+import {Props} from './types';
+import styles from './styles';
+import {Colors} from '../../constants';
+import BottomPicker, {ActionSheetItem} from '../bottomPicker';
 import DropDownSelector from '../dropDown';
 const defaultProps = {
   placeholderText: '',
@@ -12,7 +12,7 @@ const defaultProps = {
   errorMessage: '',
   showError: false,
   value: '',
-  onOptionSelected: () => { },
+  onOptionSelected: () => {},
   viewID: 0,
   isRequired: false,
   inputViewStyle: styles.inputViewStyle,
@@ -20,7 +20,8 @@ const defaultProps = {
   selectedValue: '',
 };
 const MultipleDropDownSelector = (props: Props) => {
-  let bottomPicker: React.RefObject<BottomPicker> = React.useRef<BottomPicker>();
+  let bottomPicker: React.RefObject<BottomPicker> =
+    React.useRef<BottomPicker>();
 
   const [state, setState] = useState({
     opacity: new Animated.Value(0),
@@ -46,50 +47,43 @@ const MultipleDropDownSelector = (props: Props) => {
       duration: 100,
       useNativeDriver: true,
     }).start();
-  }, [props.showError])
+  }, [props.showError]);
 
   return (
-    <View
-      style={[
-        props.style,
-        styles.mainContainer,
-      ]}>
+    <View style={[props.style, styles.mainContainer]}>
       <View style={styles.placeholderContainer}>
-        <Text style={styles.placeholderTextStyle}>
-          {props.placeholderText}
-        </Text>
+        <Text style={styles.placeholderTextStyle}>{props.placeholderText}</Text>
         {props.isRequired ? (
-          <Text style={{ color: Colors.NewRadColor }}>{' *'}</Text>
+          <Text style={{color: Colors.NewRadColor}}>{' *'}</Text>
         ) : null}
       </View>
 
-      <View
-        style={styles.dropDownContainer}>
+      <View style={styles.dropDownContainer}>
         <DropDownSelector
           value={[props.view1Value]}
           placeholderText={props.view1Title}
           selectedValue={props.view1Value}
           onOptionSelected={() => {
             setSelectedOption(props.view1Title);
-            props.onOptionSelected(props.view1Title)
-          }
-          }></DropDownSelector>
+            props.onOptionSelected(props.view1Title);
+          }}></DropDownSelector>
         <DropDownSelector
           value={[props.view2Value]}
           placeholderText={props.view2Title}
           selectedValue={props.view2Value}
           onOptionSelected={() => {
             setSelectedOption(props.view2Title);
-            props.onOptionSelected(props.view2Title)
-          }
-          }></DropDownSelector>
+            props.onOptionSelected(props.view2Title);
+          }}></DropDownSelector>
       </View>
 
       <Animated.View
-        style={[styles.animatedViewContainer, { height: props.animatedViewHeight, opacity: state.opacity, }]}>
+        style={[
+          styles.animatedViewContainer,
+          {height: props.animatedViewHeight, opacity: state.opacity},
+        ]}>
         <View style={styles.minWidth}>
-          <Text
-            style={styles.errormessageTextStyle}>
+          <Text style={styles.errormessageTextStyle}>
             {`*${props.errorMessage}`}
           </Text>
         </View>
@@ -99,7 +93,7 @@ const MultipleDropDownSelector = (props: Props) => {
         onItemSelect={(selectedItem: ActionSheetItem) => {
           //let fieldName = state.selectionData.fieldName;
           //setState({ [fieldName]: { [selectedItem.key]: selectedItem.text } });
-          //console.log(state)
+          //showConsoleLog(ConsoleType.LOG,state)
         }}
         title={props.view2Title}
         actions={state.selectionData.actions}
@@ -113,7 +107,6 @@ const MultipleDropDownSelector = (props: Props) => {
       />
     </View>
   );
-
 };
 
 export default MultipleDropDownSelector;

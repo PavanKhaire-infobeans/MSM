@@ -105,7 +105,7 @@ export const addEditMindPop = async (
       false,
       getValue(err, ['message']) || ERROR_MESSAGE,
     );
-    //console.log("Add/Edit MindPop Service Error: ", err);
+    //showConsoleLog(ConsoleType.LOG,"Add/Edit MindPop Service Error: ", err);
   }
 };
 
@@ -120,7 +120,7 @@ async function uploadAttachments(mindpopId: number, files: TempFile[]) {
         }
         resolve(resp);
       } catch (err) {
-        //console.log("Error in uploading files: ", err)
+        //showConsoleLog(ConsoleType.LOG,"Error in uploading files: ", err)
         reject(err);
       }
     });
@@ -157,7 +157,7 @@ async function uploadFile(mindpopID: number, file: TempFile) {
   return new Promise((resolve, reject) => {
     uploadTask(
       (data: any) => {
-        //console.log("After upload", data);
+        //showConsoleLog(ConsoleType.LOG,"After upload", data);
         let response = JSON.parse(data.responseBody);
         if (response.ResponseCode == '200') {
           resolve(response);
@@ -166,7 +166,7 @@ async function uploadFile(mindpopID: number, file: TempFile) {
         }
       },
       (err: Error) => {
-        //console.log("Upload error!", err);
+        //showConsoleLog(ConsoleType.LOG,"Upload error!", err);
         reject(err);
       },
     )(options);

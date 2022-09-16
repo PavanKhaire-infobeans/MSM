@@ -176,7 +176,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     commentCount: any,
     likeFlag: any,
   ) => {
-    //console.log(likeCount + "  " + commentCount);
+    //showConsoleLog(ConsoleType.LOG,likeCount + "  " + commentCount);
     publishedMemoriesArray.forEach((element: any, index: any) => {
       if (element.nid == nid) {
         element.noOfLikes = likeCount;
@@ -776,7 +776,7 @@ const _onEditMemory = (nid: any) => {
 };
 
 export const onActionItemClicked = (index: number, data: any): void => {
-  //console.log(data);
+  //showConsoleLog(ConsoleType.LOG,data);
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
       _addToCollection(data.nid);

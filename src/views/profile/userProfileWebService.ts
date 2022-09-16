@@ -118,7 +118,7 @@ export const UpdateFormValues = (state: any, editableFields: any) => {
           if (keys.length > 0) {
             value = value[keys[0]];
           }
-          //console.log("value is : ", value)
+          //showConsoleLog(ConsoleType.LOG,"value is : ", value)
           break;
         case 'text_textfield':
           break;
@@ -155,7 +155,7 @@ const updateUserProfile = async (updatedFieldsData: Object) => {
   let profileDetails: any = {};
   try {
     let data = await Storage.get('userData');
-    //console.log(data);
+    //showConsoleLog(ConsoleType.LOG,data);
     let response = await userProfile(
       `https://${Account.selectedData().instanceURL}/api/alumni/update`,
       [
@@ -237,7 +237,7 @@ export const UploadProfilePic = async function uploadProfilePicture(
   return new Promise((resolve, reject) => {
     uploadTask(
       (data: any) => {
-        //console.log("After upload profile pic", data);
+        //showConsoleLog(ConsoleType.LOG,"After upload profile pic", data);
         let response = JSON.parse(data.responseBody);
         if (response.ResponseCode == '200') {
           resolve(response);
@@ -246,7 +246,7 @@ export const UploadProfilePic = async function uploadProfilePicture(
         }
       },
       (err: Error) => {
-        //console.log("Upload error!", err);
+        //showConsoleLog(ConsoleType.LOG,"Upload error!", err);
         reject(err);
       },
     )(options);

@@ -66,7 +66,7 @@ function* getListFlow(requestData: any) {
         payload: {count: fetchedItems.rows.length, fetchedItems},
       });
     } else {
-      //console.log("List MindPop Service Error: ", err);
+      //showConsoleLog(ConsoleType.LOG,"List MindPop Service Error: ", err);
       yield put({type: GetMindPopStatus.RequestFailed, payload: err});
     }
   }

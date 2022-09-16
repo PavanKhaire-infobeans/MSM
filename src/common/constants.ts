@@ -274,7 +274,7 @@ export function uploadTask(
     try {
       asyncGen(function* () {
 
-        // console.log("File Upload payload:",JSON.stringify(options));
+        // showConsoleLog(ConsoleType.LOG,"File Upload payload:",JSON.stringify(options));
         loaderHandler.showLoader('Uploading..');
         try {
           let uploadId = yield Upload.startUpload(options);
@@ -301,25 +301,25 @@ export function uploadTask(
           }
 
           // Upload.startUpload(options).then((uploadId) => {
-          //   console.log('Upload started')
+          //   showConsoleLog(ConsoleType.LOG,'Upload started')
           //   Upload.addListener('progress', uploadId, (data) => {
-          //     console.log(`Progress: ${data.progress}%`)
+          //     showConsoleLog(ConsoleType.LOG,`Progress: ${data.progress}%`)
           //   })
           //   Upload.addListener('error', uploadId, (data) => {
-          //     console.log(`Error: ${data.error}%`)
+          //     showConsoleLog(ConsoleType.LOG,`Error: ${data.error}%`)
           //     failure(data);
           //   })
           //   Upload.addListener('cancelled', uploadId, (data) => {
-          //     console.log(`Cancelled!`)
+          //     showConsoleLog(ConsoleType.LOG,`Cancelled!`)
           //     failure({ message: 'Upload cancelled', uploadId, data });
           //   })
           //   Upload.addListener('completed', uploadId, (data) => {
           //     // data includes responseCode: number and responseBody: Object
           //     success(data);
-          //     console.log('Completed!')
+          //     showConsoleLog(ConsoleType.LOG,'Completed!')
           //   })
           // }).catch((err) => {
-          //   console.log('Upload error!', err)
+          //   showConsoleLog(ConsoleType.LOG,'Upload error!', err)
           //   failure(err);
           // })
         } catch (err) {
@@ -379,7 +379,7 @@ export const Storage = (() => {
           }`;
         await AsyncStorage.setItem(path, storeVal);
       } catch (err) {
-        //console.log(err);
+        //showConsoleLog(ConsoleType.LOG,err);
       }
     },
     get: async (path: string) => {
@@ -393,21 +393,21 @@ export const Storage = (() => {
           return dataValue;
         }
       } catch (err) {
-        //console.log(err);
+        //showConsoleLog(ConsoleType.LOG,err);
       }
     },
     delete: async (path: string) => {
       try {
         await AsyncStorage.removeItem(path);
       } catch (err) {
-        //console.log(err);
+        //showConsoleLog(ConsoleType.LOG,err);
       }
     },
     deleteAll: async () => {
       try {
         await AsyncStorage.clear((err: Error) => { });
       } catch (err) {
-        //console.log(err);
+        //showConsoleLog(ConsoleType.LOG,err);
       }
     },
   };
@@ -540,7 +540,7 @@ export const CommonTextStyles = {
     }
     return permission == "authorized";
   } catch (error) {
-    //console.log(error);
+    //showConsoleLog(ConsoleType.LOG,error);
     return false;
   }
 }; */
@@ -551,25 +551,25 @@ const checkPermissionFor = (data) => {
     .then((result) => {
       switch (result) {
         // case RESULTS.UNAVAILABLE:
-        //   console.log('This feature is not available (on this device / in this context)');
+        //   showConsoleLog(ConsoleType.LOG,'This feature is not available (on this device / in this context)');
         //   break;
         case RESULTS.DENIED:
           Permissions.openSettings();
-          // console.log('The permission has not been requested / is denied but requestable');
+          // showConsoleLog(ConsoleType.LOG,'The permission has not been requested / is denied but requestable');
           // return false;
           break;
         case RESULTS.LIMITED:
           // Permissions.openSettings();
           // return false;
-          console.log('The permission is limited: some actions are possible');
+          showConsoleLog(ConsoleType.LOG,'The permission is limited: some actions are possible');
           break;
         case RESULTS.GRANTED:
-          console.log('The permission is granted');
+          showConsoleLog(ConsoleType.LOG,'The permission is granted');
           break;
         case RESULTS.BLOCKED:
           Permissions.openSettings();
           return false;
-          console.log('The permission is denied and not requestable anymore');
+          showConsoleLog(ConsoleType.LOG,'The permission is denied and not requestable anymore');
           break;
       }
     })
@@ -666,7 +666,33 @@ export const requestPermission = async (type: string): Promise<boolean> => {
     }*/
     //return permission == "authorized";
   } catch (error) {
-    //console.log(error);
+    //showConsoleLog(ConsoleType.LOG,error);
     return false;
   }
 };
+
+export enum ConsoleType{
+  ERROR,
+  WARN,
+  LOG,
+  INFO
+}
+
+export const showConsoleLog = (type:ConsoleType, ...optionalParams: any)=>{
+  switch (type) {
+    case ConsoleType.ERROR:
+      console.error(...optionalParams)
+      break;
+    case ConsoleType.WARN:
+      console.warn(...optionalParams)
+      break;
+    case ConsoleType.LOG:
+      console.log(...optionalParams)
+      break;
+    case ConsoleType.INFO:
+      console.info(...optionalParams)
+      break;
+    default:
+      break;
+  }
+}

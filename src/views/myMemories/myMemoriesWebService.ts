@@ -1,4 +1,4 @@
-import { MemoryActionKeys, Storage } from '../../common/constants';
+import { ConsoleType, MemoryActionKeys, showConsoleLog, Storage } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
 import { MemoryService } from '../../common/webservice/memoryServices';
@@ -282,7 +282,7 @@ export const GetBlockedUsersAndMemory = async (type: any) => {
 // 			}
 // 		}
 // 	} catch (err) {
-// 		//console.log("Error is : ", err)
+// 		//showConsoleLog(ConsoleType.LOG,"Error is : ", err)
 // 		EventManager.callBack(kSeenData, false, index, "Unable to process your request. Please try again later");
 // 	}
 // };
@@ -410,7 +410,7 @@ export const GetPrompts = async (
 ) => {
   try {
 
-    console.log("categories: categories, ",categories)
+    showConsoleLog(ConsoleType.LOG,"categories: categories, ",categories)
     let data = await Storage.get('userData');
     let response = await MemoryService(
       `https://${Account.selectedData().instanceURL}/api/prompts/list`,
@@ -434,7 +434,7 @@ export const GetPrompts = async (
       });
     if (response != undefined && response != null) {
       if (response.ResponseCode == 200) {
-        console.log("kPromptsList :",JSON.stringify(response.ResponseMessage))
+        showConsoleLog(ConsoleType.LOG,"kPromptsList :",JSON.stringify(response.ResponseMessage))
         EventManager.callBack(
           kPromptsList,
           true,
@@ -485,7 +485,7 @@ export const GetPromptBYPromptId = async (
         Promise.reject(err);
       });
     if (response != undefined && response != null) {
-      console.log("ResponseMessage > ",JSON.stringify(response))
+      showConsoleLog(ConsoleType.LOG,"ResponseMessage > ",JSON.stringify(response))
       if (response.ResponseCode == 200) {
         EventManager.callBack(
           kGetPromptByID,

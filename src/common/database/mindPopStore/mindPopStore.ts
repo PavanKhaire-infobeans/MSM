@@ -1,5 +1,5 @@
 import { DatabaseName, Table } from '../';
-import { getValue } from '../../constants';
+import { ConsoleType, getValue, showConsoleLog } from '../../constants';
 import { Account } from '../../loginStore';
 
 const SQLite = require('react-native-sqlite-storage');
@@ -66,11 +66,11 @@ export const Convert = (value: MindPopAttachment) => {
 
 const MindPopStore = (() => {
   function errorCB(err: Error) {
-    console.log('SQL Error: ' + err);
+    showConsoleLog(ConsoleType.LOG,'SQL Error: ' + err);
   }
 
   function openCB() {
-    console.log('Database OPENED');
+    showConsoleLog(ConsoleType.LOG,'Database OPENED');
   }
 
   function checkDB(db: any) {
@@ -103,21 +103,21 @@ const MindPopStore = (() => {
                                 ${Table.MindPop.userId} INTEGER NOT NULL,
                                 PRIMARY KEY (${Table.MindPopAttachment.instanceID}, 
                                     ${Table.MindPopAttachment.mindPopID}, ${Table.MindPopAttachment.id}, ${Table.MindPop.userId}));`;
-        console.log('Query to create MindPop Table:', queryCreateMindPop);
-        console.log(
+        showConsoleLog(ConsoleType.LOG,'Query to create MindPop Table:', queryCreateMindPop);
+        showConsoleLog(ConsoleType.LOG,
           'Query to create MindPop Attachment Table:',
           queryCreateMindPopAttachment,
         );
 
         tx.executeSql(queryCreateMindPop, [], (_: any, results: any) => {
-          console.log('Mindpop create table Query completed', results);
+          showConsoleLog(ConsoleType.LOG,'Mindpop create table Query completed', results);
           if (results) {
             //create mind pop attachment tables
             tx.executeSql(
               queryCreateMindPopAttachment,
               [],
               (_: any, results: any) => {
-                console.log(
+                showConsoleLog(ConsoleType.LOG,
                   'Mindpop attachment create table Query completed',
                   results,
                 );
@@ -257,7 +257,7 @@ const MindPopStore = (() => {
 
     statementString =
       arrayOfAttachmentValue.length > 0 ? arrayOfAttachmentValue.join(',') : '';
-    console.log('Attachment Statement', statementString);
+    showConsoleLog(ConsoleType.LOG,'Attachment Statement', statementString);
     // return statementString
     return arrayOfAttachmentValue;
   }
@@ -271,13 +271,13 @@ const MindPopStore = (() => {
               var query =
                 `REPLACE INTO ${Table.Names.MindPopAttachments} VALUES` + ' ';
               query = query + statement;
-              console.log('Insert Attachment Query: ', query);
+              showConsoleLog(ConsoleType.LOG,'Insert Attachment Query: ', query);
               tx.executeSql(query, [], (_: any, results: any) => {
-                console.log('Query completed', results);
+                showConsoleLog(ConsoleType.LOG,'Query completed', results);
                 if (results) {
                   resolve(results);
                 } else {
-                  console.log('Unable to save attachment', results);
+                  showConsoleLog(ConsoleType.LOG,'Unable to save attachment', results);
                   resolve(false);
                 }
               });
@@ -315,11 +315,11 @@ const MindPopStore = (() => {
     let promise = new Promise((resolve: Function, reject: Function) => {
       openDB((db: any) => {
         if (db) {
-          console.log('Query to delete mindpop attachemnt', query);
+          showConsoleLog(ConsoleType.LOG,'Query to delete mindpop attachemnt', query);
           db.transaction((tx: any) => {
             if (tx) {
               tx.executeSql(query, [], (_: any, results: any) => {
-                console.log('Query completed', results);
+                showConsoleLog(ConsoleType.LOG,'Query completed', results);
                 if (results) {
                   resolve(results);
                 } else {
@@ -346,7 +346,7 @@ const MindPopStore = (() => {
       let mindPopDBEntities: MindPop[] = _createDBEntities(dataObj);
 
       let promise = new Promise((resolve: Function, reject: Function) => {
-        console.log('total mindpops: ', mindPopDBEntities.length);
+        showConsoleLog(ConsoleType.LOG,'total mindpops: ', mindPopDBEntities.length);
         if (mindPopDBEntities.length > 0) {
           openDB((db: any) => {
             if (db) {
@@ -375,12 +375,12 @@ const MindPopStore = (() => {
 
                   let valueString = arrayOfValues.join(',');
                   query = query + valueString;
-                  console.log('Insert Query: ', query);
+                  showConsoleLog(ConsoleType.LOG,'Insert Query: ', query);
 
                   queryAttachment = arrayOfAttachmentValue.join(',');
 
                   tx.executeSql(query, [], (_: any, results: any) => {
-                    console.log('Query completed', results);
+                    showConsoleLog(ConsoleType.LOG,'Query completed', results);
                     if (results) {
                       if (queryAttachment.trim().length != 0) {
                         saveMindPopAttachments(queryAttachment).then(
@@ -388,7 +388,7 @@ const MindPopStore = (() => {
                             resolve(result);
                           },
                           error => {
-                            console.log('Query completed', error);
+                            showConsoleLog(ConsoleType.LOG,'Query completed', error);
                             resolve(false);
                           },
                         );
@@ -432,7 +432,7 @@ const MindPopStore = (() => {
       }
       let valueString = arrayOfValues.join(',');
       query = query + valueString;
-      console.log('Insert Query: ', query);
+      showConsoleLog(ConsoleType.LOG,'Insert Query: ', query);
       return new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
           if (db) {
@@ -473,7 +473,7 @@ const MindPopStore = (() => {
       }
       let valueString = arrayOfValues.join(',');
       query = query + valueString;
-      console.log('Insert Query: ', query);
+      showConsoleLog(ConsoleType.LOG,'Insert Query: ', query);
       return new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
           if (db) {
@@ -507,9 +507,9 @@ const MindPopStore = (() => {
                   } mpa on mp.id = mpa.mindPopID WHERE mp.message  like '%${searchKeyword}%' and mp.instanceID = ${Account.selectedData().instanceID
                   }  and mp.userId = ${Account.selectedData().userID
                   } ORDER BY mp.id DESC, mpa.id DESC`;
-                console.log('Query to search mindpop', query);
+                showConsoleLog(ConsoleType.LOG,'Query to search mindpop', query);
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  console.log('Query completed', results);
+                  showConsoleLog(ConsoleType.LOG,'Query completed', results);
                   if (results) {
                     resolve(results);
                   } else {
@@ -547,7 +547,7 @@ const MindPopStore = (() => {
             db.transaction((tx: any) => {
               if (tx) {
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  console.log('Query completed', results);
+                  showConsoleLog(ConsoleType.LOG,'Query completed', results);
                   if (results) {
                     resolve(results);
                   } else {
@@ -568,12 +568,12 @@ const MindPopStore = (() => {
       return promise.then(
         () => {
           return _deleteMindPopAttachment(null, ids).then((result: any) => {
-            console.log(`delete mind pop ${result}`);
+            showConsoleLog(ConsoleType.LOG,`delete mind pop ${result}`);
             return Promise.resolve(result);
           });
         },
         failedResult => {
-          console.log(`failed to delete mind pop ${failedResult}`);
+          showConsoleLog(ConsoleType.LOG,`failed to delete mind pop ${failedResult}`);
           return Promise.reject(failedResult);
         },
       );
@@ -589,11 +589,11 @@ const MindPopStore = (() => {
       let promise = new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
           if (db) {
-            console.log('Get Mindpop attachments', query);
+            showConsoleLog(ConsoleType.LOG,'Get Mindpop attachments', query);
             db.transaction((tx: any) => {
               if (tx) {
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  console.log('Query completed', results);
+                  showConsoleLog(ConsoleType.LOG,'Query completed', results);
                   if (results) {
                     resolve(results);
                   } else {
@@ -621,11 +621,11 @@ const MindPopStore = (() => {
       let promise = new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
           if (db) {
-            console.log('Query to delete mindpop attachemnt', query);
+            showConsoleLog(ConsoleType.LOG,'Query to delete mindpop attachemnt', query);
             db.transaction((tx: any) => {
               if (tx) {
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  console.log('Query completed', results);
+                  showConsoleLog(ConsoleType.LOG,'Query completed', results);
                   if (results) {
                     resolve(results);
                   } else {

@@ -1,41 +1,55 @@
 import React from 'react';
 import {
-  Alert, Image, Keyboard, SafeAreaView, TextInput, TouchableOpacity, View
+  Alert,
+  Image,
+  Keyboard,
+  SafeAreaView,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import DropDown from '../../common/component/dropDown';
 import TextField from '../../common/component/textField';
-import { profile_placeholder } from '../../images';
+import {profile_placeholder} from '../../images';
 
 import ImageCropPicker, {
-  Image as PickerImage
+  Image as PickerImage,
 } from 'react-native-image-crop-picker';
 import ActionSheet, {
-  ActionSheetItem as ImageSelectionSheetItem
+  ActionSheetItem as ImageSelectionSheetItem,
 } from '../../common/component/actionSheet';
 import BottomPicker, {
-  ActionSheetItem
+  ActionSheetItem,
 } from '../../common/component/bottomPicker';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
-  Colors, fontSize, GenerateRandomID, getValue, requestPermission, testEmail, testPhone
+  Colors,
+  fontSize,
+  GenerateRandomID,
+  getValue,
+  requestPermission,
+  testEmail,
+  testPhone,
 } from '../../common/constants';
 import Utility from '../../common/utility';
-import { action_camera, action_close, action_picture } from '../../images';
+import {action_camera, action_close, action_picture} from '../../images';
 import {
-  RemoveProfilePic, UpdateFormValues,
-  UploadProfilePic, UserProfile
+  RemoveProfilePic,
+  UpdateFormValues,
+  UploadProfilePic,
+  UserProfile,
 } from './userProfileWebService';
 //@ts-ignore
-import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
+import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
 // import DatePickerView from "../../common/component/DatePicker";
 import ActivityIndicatorView from '../../common/component/ActivityIndicatorView';
 import DateTimePicker from '../../common/component/DateTimePicker';
 import NavigationBarForEdit from '../../common/component/navigationBarForEdit';
 import TextNew from '../../common/component/Text';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import { kSetUserProfileData } from './userProfileWebService';
+import {kSetUserProfileData} from './userProfileWebService';
 import Styles from './styles';
 type State = {
   actionSheet: {
@@ -77,11 +91,10 @@ export default class UserProfileEdit extends React.Component<Props> {
   };
 
   _closeAction = () => {
-    this.setState({modalVisible: false},()=>{
+    this.setState({modalVisible: false}, () => {
       Keyboard.dismiss();
       this.props.navigation.goBack();
     });
-    
   };
 
   constructor(prop: Props) {
@@ -98,7 +111,6 @@ export default class UserProfileEdit extends React.Component<Props> {
       this.isProfilePicAvailable =
         getValue(this.props, ['profilePicUri']) != '';
     });
-    
   }
 
   componentWillUnmount() {
@@ -175,7 +187,7 @@ export default class UserProfileEdit extends React.Component<Props> {
               ? this.state[field.field_name]
               : field.default_value;
             for (let key in default_values) {
-              //console.log("Values while selection ", default_values[key])
+              //showConsoleLog(ConsoleType.LOG,"Values while selection ", default_values[key])
               valueArray.push(default_values[key]);
             }
             default_value = valueArray.join(', ');
@@ -268,15 +280,14 @@ export default class UserProfileEdit extends React.Component<Props> {
           isVisible={this.state.isDatePickerVisible}
           onCancel={() => {
             this.setState({isDatePickerVisible: false});
-            //console.log("cancelled")
+            //showConsoleLog(ConsoleType.LOG,"cancelled")
           }}
           onDateSelection={(date: any) => {
-            this.setState(
-              {
-                isDatePickerVisible: false,
-                [this.state.selectionData.fieldName]:
-                  Utility.dateObjectToDefaultFormat(date),
-              });
+            this.setState({
+              isDatePickerVisible: false,
+              [this.state.selectionData.fieldName]:
+                Utility.dateObjectToDefaultFormat(date),
+            });
           }}
         />
       </View>
@@ -354,8 +365,8 @@ export default class UserProfileEdit extends React.Component<Props> {
         }
       }
 
-      //console.log("existing value to update:", existingValue)
-      //console.log("updated value:", this.state[currentField.field_name])
+      //showConsoleLog(ConsoleType.LOG,"existing value to update:", existingValue)
+      //showConsoleLog(ConsoleType.LOG,"updated value:", this.state[currentField.field_name])
       //if the field is requird and has existing value or the value is changed
       //then only web service will be called else error will be shown
       if (!(hasExistingValue || isUpdated) && isRequired) {
@@ -406,7 +417,7 @@ export default class UserProfileEdit extends React.Component<Props> {
       let valueArray: string[] = [];
       let default_values = getValue(field, ['default_value']) || {};
       for (let key in default_values) {
-        //console.log("Values while selection ", default_values[key])
+        //showConsoleLog(ConsoleType.LOG,"Values while selection ", default_values[key])
         valueArray.push(default_values[key]);
       }
       default_value = valueArray.join(', ');
@@ -460,7 +471,10 @@ export default class UserProfileEdit extends React.Component<Props> {
           heading={'Basic Info'}
           cancelAction={() => this._closeAction()}></NavigationBarForEdit>
         <SafeAreaView
-          style={[Styles.basicInfoSubContainer,{backgroundColor:Colors.white}]}>
+          style={[
+            Styles.basicInfoSubContainer,
+            {backgroundColor: Colors.white},
+          ]}>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="always"
             keyboardDismissMode="on-drag"
@@ -539,7 +553,7 @@ export default class UserProfileEdit extends React.Component<Props> {
             this.setState({
               [fieldName]: {[selectedItem.key]: selectedItem.text},
             });
-            //console.log(this.state)
+            //showConsoleLog(ConsoleType.LOG,this.state)
           }}
           actions={this.state.selectionData.actions}
           value={this.state.selectionData.selectionValue}
@@ -551,7 +565,7 @@ export default class UserProfileEdit extends React.Component<Props> {
           saveSelectedValues={(selectedValueObjects: any) => {
             let fieldName = this.state.selectionData.fieldName;
             this.setState({[fieldName]: selectedValueObjects});
-            //console.log(this.state)
+            //showConsoleLog(ConsoleType.LOG,this.state)
           }}
         />
       </View>
@@ -612,19 +626,21 @@ export default class UserProfileEdit extends React.Component<Props> {
                     tempfilesArr = [tempfile];
                   }
 
-                  //console.log(response, typeof response);
+                  //showConsoleLog(ConsoleType.LOG,response, typeof response);
                   if (tempfilesArr.length > 0) {
                     let tempfile = tempfilesArr[0];
-                    this.setState({
-                      basicInfo: {
-                        ...this.state.basicInfo,
-                        profilePicUri: tempfile.filePath,
+                    this.setState(
+                      {
+                        basicInfo: {
+                          ...this.state.basicInfo,
+                          profilePicUri: tempfile.filePath,
+                        },
                       },
-                    },()=>{
-                      this.uploadImage(tempfile);
-                      this.isProfilePicAvailable = true;
-                    });
-                    
+                      () => {
+                        this.uploadImage(tempfile);
+                        this.isProfilePicAvailable = true;
+                      },
+                    );
                   }
 
                   //this.saveTempFiles(tempfilesArr);
@@ -640,7 +656,7 @@ export default class UserProfileEdit extends React.Component<Props> {
             if (success) {
               ImageCropPicker.openPicker(options)
                 .then((response: PickerImage) => {
-                  //console.log(response, typeof response);
+                  //showConsoleLog(ConsoleType.LOG,response, typeof response);
                   let path =
                     response.path.indexOf('file://') != -1
                       ? response.path
@@ -655,14 +671,17 @@ export default class UserProfileEdit extends React.Component<Props> {
                     status: TempFileStatus.needsToUpload,
                   };
                   this.isProfilePicAvailable = true;
-                  this.setState({
-                    basicInfo: {
-                      ...this.state.basicInfo,
-                      profilePicUri: tempfile.filePath,
+                  this.setState(
+                    {
+                      basicInfo: {
+                        ...this.state.basicInfo,
+                        profilePicUri: tempfile.filePath,
+                      },
                     },
-                  },()=>{
-                    this.uploadImage(tempfile);
-                  });
+                    () => {
+                      this.uploadImage(tempfile);
+                    },
+                  );
 
                   // this.saveTempFiles(tempfiles);
                   // this.props.setValue(false);
@@ -683,13 +702,12 @@ export default class UserProfileEdit extends React.Component<Props> {
         UserProfile();
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = true;
-        this.setState({hasLoaded: true},()=>loaderHandler.hideLoader());
-        
+        this.setState({hasLoaded: true}, () => loaderHandler.hideLoader());
       })
       .catch((error: any) => {
         loaderHandler.hideLoader();
         this.isProfilePicAvailable = false;
-        this.setState({hasLoaded: true},()=>loaderHandler.hideLoader());
+        this.setState({hasLoaded: true}, () => loaderHandler.hideLoader());
       });
   };
 

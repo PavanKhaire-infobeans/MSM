@@ -46,7 +46,7 @@ class Menu extends React.Component<MenuProps> {
         });
       })
       .catch(() => {
-        //console.log(err);
+        //showConsoleLog(ConsoleType.LOG,err);
       });
   }
 
@@ -112,8 +112,7 @@ class Menu extends React.Component<MenuProps> {
             type: 'logout',
             onClick: logoutWorkFlow,
           });
-        } 
-        else {
+        } else {
           Alert.alert('', `Are you sure you want to log out ?`, [
             {
               text: 'No',
@@ -134,15 +133,15 @@ class Menu extends React.Component<MenuProps> {
                       EventManager.callBack(kOnLogout, accounts);
                     } else {
                       this.props.navigation.reset({
-                          index: 0,
-                          routes: [{ name: 'prologue' }]
-                        });
+                        index: 0,
+                        routes: [{name: 'prologue'}],
+                      });
                     }
                   })
                   .catch(() => {
                     this.props.navigation.reset({
                       index: 0,
-                      routes: [{ name: 'prologue' }]
+                      routes: [{name: 'prologue'}],
                     });
                   });
               },
@@ -151,7 +150,7 @@ class Menu extends React.Component<MenuProps> {
         }
       })
       .catch(() => {
-        //console.log(err);
+        //showConsoleLog(ConsoleType.LOG,err);
       });
   };
 

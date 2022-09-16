@@ -190,7 +190,7 @@ class WriteTabs extends React.Component<Props> {
         details.data,
         false,
       )[0];
-      // console.log("Final data:",details);
+      // showConsoleLog(ConsoleType.LOG,"Final data:",details);
       if (Utility.notificationObject.isBackgroundNotification) {
         SetSeenActivity({ids: details.ids}, 0);
         if (
@@ -217,7 +217,7 @@ class WriteTabs extends React.Component<Props> {
           }
         }
       } else {
-        //console.log("foreground",details);
+        //showConsoleLog(ConsoleType.LOG,"foreground",details);
         if (
           details.notificationType !== 'prompt_of_the_week_email' &&
           details.type !== 'prompts'

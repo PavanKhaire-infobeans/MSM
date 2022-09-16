@@ -1,25 +1,23 @@
-import React, { Component } from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {Image, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
 import Text from '../../Text';
 
-import { rubbish } from '../../../../images';
+import {rubbish} from '../../../../images';
 import styles from './styles';
 
 class SelectionStatusBar extends Component<{[x: string]: any}> {
   render() {
     return (
-      <View
-        style={styles.container}>
-        <View
-          style={styles.subContainer}>
+      <View style={styles.container}>
+        <View style={styles.subContainer}>
           <Text style={styles.countTextStyle}>
             {this.props.selectedItemCount} Selected
           </Text>
         </View>
 
         {/*<TouchableHighlight key="convToMem"
-                    onPress={() => { //console.log('Convert to memory pressed') }}
+                    onPress={() => { //showConsoleLog(ConsoleType.LOG,'Convert to memory pressed') }}
                 >
                     <Text style={{ fontSize: 18, color: Colors.ThemeColor }}>Convert to Memory</Text>
         </TouchableHighlight>*/}

@@ -21,7 +21,7 @@ export default class DateTimePickerView extends Component<Props> {
   _hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
 
   _handleDatePicked = (date: any) => {
-    //console.log('A date has been picked: ', date);
+    //showConsoleLog(ConsoleType.LOG,'A date has been picked: ', date);
     this._hideDateTimePicker();
     this.props.onDateSelection(date);
   };

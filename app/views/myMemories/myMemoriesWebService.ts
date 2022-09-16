@@ -1,4 +1,4 @@
-import { MemoryActionKeys, Storage } from './../../../src/common/constants';
+import { ConsoleType, MemoryActionKeys, showConsoleLog, Storage } from './../../../src/common/constants';
 import EventManager from './../../../src/common/eventManager';
 import { Account } from './../../../src/common/loginStore';
 import { MemoryService } from './../../../src/common/webservice/memoryServices';
@@ -229,63 +229,6 @@ export const GetBlockedUsersAndMemory = async (type: any) => {
   }
 };
 
-// export const GetActivities = async (offset: any) => {
-// 	try {
-// 		let data = await Storage.get('userData')
-// 		let response = await MemoryService(`https://${Account.selectedData().instanceURL}/api/activities/get_activity_data`,
-// 		[{ "X-CSRF-TOKEN": data.userAuthToken, "Content-Type": "application/json" },
-// 		{   "configurationTimestamp" : "0",
-// 			"details": {
-// 					"type": "activities",
-// 					"limit": 10,
-// 					"offset": offset
-// 			}
-// 		}
-// 		])
-// 		.then((response: Response) => response.json())
-// 		.catch((err: Error) => {
-// 			Promise.reject(err)
-// 		});
-// 		if (response != undefined && response != null){
-// 			if(response.ResponseCode==200){
-// 				EventManager.callBack(kActivities, true, response["Details"]);
-// 			}
-// 			else{
-// 				EventManager.callBack(kActivities, false, response["ResponseMessage"]);
-// 			}
-// 		}
-// 	} catch (err) {
-// 		EventManager.callBack(kActivities, false, "Unable to process your request. Please try again later");
-// 	}
-// }
-
-// export const SetSeenActivity = async (ids: any, index : any) => {
-// 	try {
-// 		let data = await Storage.get('userData')
-// 		let response = await MemoryService(`https://${Account.selectedData().instanceURL}/api/notifications/set_seen_data`,
-// 		[{ "X-CSRF-TOKEN": data.userAuthToken, "Content-Type": "application/json" },
-// 		{   "configurationTimestamp" : "0",
-// 			"details": ids
-// 		}
-// 		])
-// 		.then((response: Response) => response.json())
-// 		.catch((err: Error) => {
-// 			Promise.reject(err)
-// 		});
-// 		if (response != undefined && response != null){
-// 			if(response.ResponseCode==200){
-// 				EventManager.callBack(kSeenData, true, index);
-// 			}
-// 			else{
-// 				EventManager.callBack(kSeenData, false, index, response["ResponseMessage"]);
-// 			}
-// 		}
-// 	} catch (err) {
-// 		//console.log("Error is : ", err)
-// 		EventManager.callBack(kSeenData, false, index, "Unable to process your request. Please try again later");
-// 	}
-// };
-
 export const MemoryAction = async (
   type: any,
   nid: any,
@@ -326,14 +269,18 @@ export const MemoryAction = async (
     if (response != undefined && response != null) {
       if (response.ResponseCode == 200) {
         if (listner == kMemoryMoveToDrafts) {
-          console.log("response lisner> ", listner)
+          showConsoleLog(
+            ConsoleType.ERROR,
+            "response lisner> ", listner)
           return response;
         }
         else if (listner) {
           EventManager.callBack(listner, true, 'Data', nid, actionType, uid);
         }
         else {
-          console.log("response no listner> ", listner)
+          showConsoleLog(
+            ConsoleType.ERROR,
+            "response no listner> ", listner)
           EventManager.callBack(
             kMemoryActionPerformedPublished,
             true,
@@ -418,7 +365,9 @@ export const GetPrompts = async (
 ) => {
   try {
 
-    console.log("categories: categories, ", categories)
+    showconsolelog(
+                    consoletype.error,
+                    "categories: categories, ", categories)
     let data = await Storage.get('userData');
     let response = await MemoryService(
       `https://${Account.selectedData().instanceURL}/api/prompts/list`,
@@ -492,7 +441,7 @@ export const GetPromptBYPromptId = async (
         Promise.reject(err);
       });
     if (response != undefined && response != null) {
-      console.log("ResponseMessage > ", JSON.stringify(response))
+      showConsoleLog(ConsoleType.LOG,"ResponseMessage > ", JSON.stringify(response))
       if (response.ResponseCode == 200) {
         EventManager.callBack(
           kGetPromptByID,

@@ -1,4 +1,4 @@
-import { CueBackInsatance } from '../constants';
+import { ConsoleType, CueBackInsatance, showConsoleLog } from '../constants';
 import EventManager from '../eventManager';
 import Webservice from './webservice';
 
@@ -84,7 +84,7 @@ export const SSOLogin = async (params: any) => {
         );
       });
     if (response != undefined && response != null) {
-      console.log(response);
+      showConsoleLog(ConsoleType.LOG,response);
       if (response.ResponseCode == 200) {
         EventManager.callBack(kSSOLogin, true, response);
       } else {

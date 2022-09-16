@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
-  Animated,Dimensions,FlatList, Image, Keyboard,Platform,StatusBar, TouchableHighlight, TouchableOpacity, View
+  Animated,
+  Dimensions,
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  StatusBar,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import SearchBar from '../../../common/component/SearchBar';
-import {
-  checkbox,checkbox_active, icon_close_black
-} from '../../../images';
-import { Colors } from '../../constants';
+import {checkbox, checkbox_active, icon_close_black} from '../../../images';
+import {Colors} from '../../constants';
 import ProfileEditHeader from '../profileEditHeader';
 import Text from '../Text';
-const { height } = Dimensions.get('screen');
+const {height} = Dimensions.get('screen');
 
 import Utility from '../../utility';
 import styles from './styles';
@@ -40,7 +47,6 @@ type Props = {
   hideCallBack?: () => void;
 };
 
-
 const BottomPicker = (props: Props) => {
   let keyboardDidShowListener: any;
   let keyboardDidHideListener: any;
@@ -63,15 +69,14 @@ const BottomPicker = (props: Props) => {
     showError: false,
   });
 
-
   const hidePicker = () => {
     Animated.timing(state.bottom, {
       toValue: -height,
       duration: 200,
-      useNativeDriver:true,
+      useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
-        setState(prev => ({ ...prev, hidden: true }));
+        setState(prev => ({...prev, hidden: true}));
       }, 20);
     });
     state.allSelected = false;
@@ -100,7 +105,7 @@ const BottomPicker = (props: Props) => {
       }));
     }
     setStateForSelectedIndex(selectionValues, selectedValueObject);
-  }
+  };
   const saveSelectedValues = () => {
     hidePicker();
     props.saveSelectedValues(state.selectedValueObjects);
@@ -125,7 +130,7 @@ const BottomPicker = (props: Props) => {
     let currentSelectedValues = state.selectedValues;
     let currentSelectedValueObj: any = state.selectedValueObjects;
     let index = currentSelectedValues.indexOf(selectedIndex);
-    setState(prev => ({ ...prev, showError: false }));
+    setState(prev => ({...prev, showError: false}));
     if (index >= 0) {
       delete currentSelectedValueObj[selectedIndex];
       currentSelectedValues.splice(index, 1);
@@ -159,13 +164,14 @@ const BottomPicker = (props: Props) => {
       setStateForAllSelected(false);
     }
     allSelected(state.filteredList, currentSelectedValues);
-    setStateForSelectedIndex(
-      currentSelectedValues,
-      currentSelectedValueObj,
-    );
+    setStateForSelectedIndex(currentSelectedValues, currentSelectedValueObj);
   };
 
-  const saveCurrentItemValue = (key: string, text: string, disabled: boolean) => {
+  const saveCurrentItemValue = (
+    key: string,
+    text: string,
+    disabled: boolean,
+  ) => {
     if (disabled) {
       // Do noting
     } else {
@@ -176,7 +182,7 @@ const BottomPicker = (props: Props) => {
         });
         hidePicker();
       } else if (!state.isMultiSelect) {
-        props.onItemSelect({ key, text });
+        props.onItemSelect({key, text});
         hidePicker();
       } else {
         onItemClickInMultiSelect(key, text);
@@ -196,7 +202,7 @@ const BottomPicker = (props: Props) => {
           // selectedValueObject = selectedValueObject.filter((x: any, i: any) => i != index)
           delete selectedValueObject[element.key];
         }
-        //console.log(selectedValueObject);
+        //showConsoleLog(ConsoleType.LOG,selectedValueObject);
       });
       setStateForSelectedIndex(selectedValues, selectedValueObject);
     } else {
@@ -228,7 +234,6 @@ const BottomPicker = (props: Props) => {
       selectedValueObjects: selectedValueObject,
     }));
   };
-
 
   const searchInFilteredList = () => {
     if (state.isSearching) {
@@ -278,15 +283,16 @@ const BottomPicker = (props: Props) => {
   var deviceHeight = state.availableHeight;
   if (state.hidden || props.actions.length == 0) {
     return <View style={styles.invisibleView} />;
-  }
-  else {
+  } else {
     return (
       <View
         style={styles.container}
         onStartShouldSetResponder={() => true}
         onResponderStart={hidePicker}>
         <StatusBar
-          barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
           backgroundColor={Colors.NewThemeColor}
         />
         <Animated.View
@@ -295,17 +301,16 @@ const BottomPicker = (props: Props) => {
             Platform.OS === 'ios'
               ? styles.halfScreenAnimatedView
               : props.fullscreen
-                ? styles.fullScreenAnimatedView
-                : styles.halfScreenAnimatedView,
-            { height: props.fullscreen ? deviceHeight : 290 },
+              ? styles.fullScreenAnimatedView
+              : styles.halfScreenAnimatedView,
+            {height: props.fullscreen ? deviceHeight : 290},
           ]}
           onStartShouldSetResponder={() => true}>
           {props.fullscreen ? (
             <View>
               {/* showRightText={state.isMultiSelect} rightText="Done" fieldName={props.label} closeCurrentView={() => hidePicker()} saveValues={() => { saveSelectedValues() }} */}
               {Platform.OS === 'ios' ? (
-                <View
-                  style={styles.containerFull}>
+                <View style={styles.containerFull}>
                   <ProfileEditHeader
                     showRightText={state.isMultiSelect}
                     heading={props.label}
@@ -317,8 +322,7 @@ const BottomPicker = (props: Props) => {
                   />
                 </View>
               ) : (
-                <View
-                  style={styles.profileEditor}>
+                <View style={styles.profileEditor}>
                   <ProfileEditHeader
                     showRightText={state.isMultiSelect}
                     heading={props.label}
@@ -332,43 +336,39 @@ const BottomPicker = (props: Props) => {
               )}
 
               {state.showError && (
-                <View
-                  style={styles.errorContainer}>
-                  <Text
-                    numberOfLines={2}
-                    style={styles.errorText}>
+                <View style={styles.errorContainer}>
+                  <Text numberOfLines={2} style={styles.errorText}>
                     {state.errorMessage}
                   </Text>
                 </View>
               )}
               <SearchBar
                 onChangeText={(text: string) => {
-                  setState(prev => ({ ...prev, searchText: text }));
+                  setState(prev => ({...prev, searchText: text}));
                   searchInFilteredList();
                 }}
                 onClearField={() => {
-                  setState(prev => ({ ...prev, searchText: '', isSearching: false }));
+                  setState(prev => ({
+                    ...prev,
+                    searchText: '',
+                    isSearching: false,
+                  }));
                   searchInFilteredList();
                 }}
                 placeholder="Search community here..."
                 onFocus={() => {
-                  setState(prev => ({ ...prev, isSearching: true }));
+                  setState(prev => ({...prev, isSearching: true}));
                   searchInFilteredList();
                 }}
                 showCancelClearButton={false}
                 style={styles.searchBar}
-                onSearchButtonPress={() => { }}
+                onSearchButtonPress={() => {}}
               />
             </View>
           ) : (
-            <View
-              style={styles.pickerContainer}>
-              <View
-                style={styles.pickerSubContainer}>
-                <Text
-                  style={styles.pickerText}>
-                  Choose Your {props.title}
-                </Text>
+            <View style={styles.pickerContainer}>
+              <View style={styles.pickerSubContainer}>
+                <Text style={styles.pickerText}>Choose Your {props.title}</Text>
               </View>
               <View style={styles.height100}>
                 <TouchableOpacity
@@ -396,23 +396,16 @@ const BottomPicker = (props: Props) => {
                   selectAll();
                 }}>
                 <View>
-                  <View
-                    style={styles.checkboxContainer}>
+                  <View style={styles.checkboxContainer}>
                     <Image
                       style={styles.imageMargin}
-                      source={
-                        state.allSelected ? checkbox_active : checkbox
-                      }
+                      source={state.allSelected ? checkbox_active : checkbox}
                       resizeMode="contain"
                     />
-                    <Text style={styles.sellectAllText}>
-                      {'Select All'}
-                    </Text>
+                    <Text style={styles.sellectAllText}>{'Select All'}</Text>
                   </View>
 
-                  <View
-                    style={styles.emptyView}
-                  />
+                  <View style={styles.emptyView} />
                 </View>
               </TouchableOpacity>
             )}
@@ -425,11 +418,9 @@ const BottomPicker = (props: Props) => {
               Keyboard.dismiss();
             }}
             ItemSeparatorComponent={() => (
-              <View
-                style={styles.renderSeparator}
-              />
+              <View style={styles.renderSeparator} />
             )}
-            renderItem={({ item: data }: { item: ActionSheetItem }) => {
+            renderItem={({item: data}: {item: ActionSheetItem}) => {
               return (
                 <TouchableHighlight
                   underlayColor={data.disabled ? 'transparent' : '#cccccc99'}
@@ -441,11 +432,21 @@ const BottomPicker = (props: Props) => {
                     );
                   }}>
                   <View
-                    style={[styles.flatlistContainer, {
-                      justifyContent: !props.fullscreen ? 'center' : 'flex-start',
-                      backgroundColor: props.value == data.key || (!state.isMultiSelect && state.selectedValues.length > 0 &&
-                        state.selectedValues[0] == data.key) ? `${Colors.unSelectedFilterbg}23` : '#fff',
-                    }]}>
+                    style={[
+                      styles.flatlistContainer,
+                      {
+                        justifyContent: !props.fullscreen
+                          ? 'center'
+                          : 'flex-start',
+                        backgroundColor:
+                          props.value == data.key ||
+                          (!state.isMultiSelect &&
+                            state.selectedValues.length > 0 &&
+                            state.selectedValues[0] == data.key)
+                            ? `${Colors.unSelectedFilterbg}23`
+                            : '#fff',
+                      },
+                    ]}>
                     {state.isMultiSelect && (
                       <Image
                         style={styles.imageMargin}
@@ -457,10 +458,7 @@ const BottomPicker = (props: Props) => {
                         resizeMode="contain"
                       />
                     )}
-                    <Text
-                      style={styles.sellectAllText}>
-                      {data.text}
-                    </Text>
+                    <Text style={styles.sellectAllText}>{data.text}</Text>
                   </View>
                 </TouchableHighlight>
               );
@@ -478,10 +476,10 @@ BottomPicker.defaultProps = {
   width: '100%',
   value: '',
   selectionType: 0,
-  onItemSelect: () => { },
+  onItemSelect: () => {},
   fullscreen: false,
   selectionLimit: 1,
-  saveSelectedValues: () => { },
+  saveSelectedValues: () => {},
   selectedValues: {},
   maxLimit: 1,
 };

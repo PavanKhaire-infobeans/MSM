@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React, {createRef} from 'react';
 import {
   DeviceEventEmitter,
   Image,
@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import NewNavigationBar from '../../../app/components/NewNavigationBar';
 import TabIcon, {
   kNotificationIndicator,
@@ -17,13 +17,15 @@ import TabIcon, {
 } from '../../common/component/TabBarIcons';
 import {
   Colors,
+  ConsoleType,
   decode_utf8,
   fontFamily,
   fontSize,
+  showConsoleLog,
   Storage,
 } from '../../common/constants';
 import Utility from '../../common/utility';
-import { configurations } from '../../common/webservice/loginServices';
+import {configurations} from '../../common/webservice/loginServices';
 import {
   ACTIVE_TAB_ON_DASHBOARD,
   CreateAMemory,
@@ -41,19 +43,19 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import CustomAlert from '../../common/component/customeAlert';
 import ScrollableTabView from '../../common/component/ScrollableTabView';
 import TextNew from '../../common/component/Text';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import { Account } from '../../common/loginStore';
-import { filter_icon } from '../../images';
-import { MonthObj, months } from '../createMemory';
+import {Account} from '../../common/loginStore';
+import {filter_icon} from '../../images';
+import {MonthObj, months} from '../createMemory';
 import {
   CreateUpdateMemory,
   promptIdListener,
 } from '../createMemory/createMemoryWebService';
-import { DefaultDetailsMemory } from '../createMemory/dataHelper';
-import { showCustomAlert } from '../createMemory/reducer';
-import { kMemoryActionPerformedOnDashboard } from '../myMemories/myMemoriesWebService';
-import { NotificationDataModel } from '../notificationView/notificationDataModel';
+import {DefaultDetailsMemory} from '../createMemory/dataHelper';
+import {showCustomAlert} from '../createMemory/reducer';
+import {kMemoryActionPerformedOnDashboard} from '../myMemories/myMemoriesWebService';
+import {NotificationDataModel} from '../notificationView/notificationDataModel';
 import {
   GetActivities,
   kActivityListener,
@@ -63,18 +65,18 @@ import {
   kGetInvidualNotification,
   SetSeenActivity,
 } from '../notificationView/notificationServices';
-import { kProfilePicUpdated } from '../profile/profileDataModel';
+import {kProfilePicUpdated} from '../profile/profileDataModel';
 import AppGuidedTour from './appGuidedTour';
 import Recent from './recent';
 import Styles from './styles';
 import Timeline from './timeline';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const options = {
   enableVibrateFallback: true,
   ignoreAndroidSystemSettings: false,
 };
-type Props = { [x: string]: any };
+type Props = {[x: string]: any};
 
 class DashboardIndex extends React.Component<Props> {
   notificationListener: EventManager;
@@ -205,9 +207,9 @@ class DashboardIndex extends React.Component<Props> {
         details.data,
         false,
       )[0];
-      // console.log("Final data:",details);
+      // showConsoleLog(ConsoleType.LOG,"Final data:",details);
       if (Utility.notificationObject.isBackgroundNotification) {
-        SetSeenActivity({ ids: details.ids }, 0);
+        SetSeenActivity({ids: details.ids}, 0);
         if (
           details.status == 0 &&
           (details.notificationType.indexOf('collaboration') != -1 ||
@@ -226,7 +228,7 @@ class DashboardIndex extends React.Component<Props> {
           }
         }
       } else {
-        //console.log("foreground",details);
+        //showConsoleLog(ConsoleType.LOG,"foreground",details);
         if (
           details.notificationType !== 'prompt_of_the_week_email' &&
           details.type !== 'prompts'
@@ -299,7 +301,7 @@ class DashboardIndex extends React.Component<Props> {
       //     publishedMemoriesArray = publishedMemoriesArray.filter((element: any) => element.nid != nid)
       // }
       // this.publishedMemoryDataModel.updatePublishedMemories(publishedMemoriesArray)
-      this.props.sendMemoryActions({ nid, type, uid });
+      this.props.sendMemoryActions({nid, type, uid});
       // this.setState({});
     } else {
       ToastMessage(responseMessage, Colors.ErrorColor);
@@ -307,7 +309,7 @@ class DashboardIndex extends React.Component<Props> {
   };
 
   onFilterClick = () => {
-    this.setState({ currentScreen: this.screen }, () => {
+    this.setState({currentScreen: this.screen}, () => {
       // this.props.navigation.navigate("filtersScreen", { currentScreen: this.screen });
     });
   };
@@ -375,11 +377,14 @@ class DashboardIndex extends React.Component<Props> {
               tabBarPosition="bottom"
               tabBarTextStyle={{
                 ...fontSize(16),
-                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                fontFamily:
+                  Platform.OS === 'ios'
+                    ? fontFamily.Inter
+                    : fontFamily.InterMedium,
               }}
               tabBarActiveTextColor={Colors.TextColor}
               // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
-              tabBarUnderlineStyle={{ backgroundColor: Colors.white, height: 0 }}>
+              tabBarUnderlineStyle={{backgroundColor: Colors.white, height: 0}}>
               <Recent
                 tabLabel={'Recent'}
                 filterClick={() => this.onFilterClick.bind(this)}
@@ -397,17 +402,25 @@ class DashboardIndex extends React.Component<Props> {
 
           <View style={Styles.bottomBarContainer}>
             <View style={Styles.bottomBarSubContainer}>
-              <TabIcon focused={true} navigation={this.props.navigation} title={NewTabItems.Read} />
-              <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Write} />
+              <TabIcon
+                focused={true}
+                navigation={this.props.navigation}
+                title={NewTabItems.Read}
+              />
+              <TabIcon
+                focused={false}
+                navigation={this.props.navigation}
+                title={NewTabItems.Write}
+              />
             </View>
           </View>
         </SafeAreaView>
         {this.state.appTourVisibility && (
           <AppGuidedTour
             cancelAppTour={() => {
-              this.setState({ appTourVisibility: false }, () =>
+              this.setState({appTourVisibility: false}, () =>
                 DefaultPreference.set('hide_guide_tour', 'true').then(
-                  function () { },
+                  function () {},
                 ),
               );
             }}
@@ -429,15 +442,15 @@ class DashboardIndex extends React.Component<Props> {
           .catch((err: Error) => {
             this.props.navigation.reset({
               index: 0,
-              routes: [{ name: 'prologue' }],
+              routes: [{name: 'prologue'}],
             });
             return Promise.reject(err);
           });
         DefaultPreference.set(
           'seasons',
           JSON.stringify(response.Details.seasons),
-        ).then(function () { });
-        let monthArray = [{ name: 'Month*', tid: 0 }];
+        ).then(function () {});
+        let monthArray = [{name: 'Month*', tid: 0}];
         let seasonArray = response.Details.seasons
           ? response.Details.seasons
           : [];
@@ -452,43 +465,43 @@ class DashboardIndex extends React.Component<Props> {
         DefaultPreference.set(
           'allow_redaction',
           response.Details.allow_redaction,
-        ).then(function () { });
+        ).then(function () {});
         DefaultPreference.set(
           'default_share_option',
           response.Details.default_share_option,
-        ).then(function () { });
+        ).then(function () {});
         DefaultPreference.set(
           'digital_archive_checkbox',
           response.Details.digital_archive_checkbox,
-        ).then(function () { });
+        ).then(function () {});
         DefaultPreference.set(
           'etherpad_key',
           response.Details.etherpad_key,
-        ).then(function () { });
+        ).then(function () {});
         DefaultPreference.set(
           'internal_filter',
           response.Details.internal_filter,
-        ).then(function () { });
+        ).then(function () {});
         DefaultPreference.set(
           'privacy_policy_url',
           response.Details.privacy_policy_url,
-        ).then(function () { });
+        ).then(function () {});
         DefaultPreference.set(
           'public_file_path',
           response.Details.public_file_path,
-        ).then(function () { });
+        ).then(function () {});
         DefaultPreference.set('site_logo', response.Details.site_logo).then(
-          function () { },
+          function () {},
         );
         DefaultPreference.set(
           'site_short_name',
           response.Details.site_short_name,
-        ).then(function () { });
+        ).then(function () {});
         DefaultPreference.set('start_year', response.Details.years.start).then(
-          function () { },
+          function () {},
         );
         DefaultPreference.set('end_year', response.Details.years.end).then(
-          function () { },
+          function () {},
         );
         DefaultPreference.get('public_file_path').then((value: any) => {
           Utility.setPublicURL();
@@ -506,11 +519,11 @@ class DashboardIndex extends React.Component<Props> {
           // });
         });
       } catch (err) {
-        console.log('Error fetching configurations', err);
+        showConsoleLog(ConsoleType.LOG, 'Error fetching configurations', err);
       }
     } else {
       setTimeout(() => {
-        this.setState({ showNoInternetView: true });
+        this.setState({showNoInternetView: true});
       }, 500);
     }
   };
@@ -543,19 +556,20 @@ const mapState = (state: any) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    setCreateMemory: (payload: any) => dispatch({ type: CreateAMemory, payload: payload }),
+    setCreateMemory: (payload: any) =>
+      dispatch({type: CreateAMemory, payload: payload}),
     fetchFiltersData: (payload: any) =>
-      dispatch({ type: GET_FILTERS_DATA, payload: payload }),
+      dispatch({type: GET_FILTERS_DATA, payload: payload}),
     fetchFiltersDataTimeline: (payload: any) =>
-      dispatch({ type: GET_FILTERS_DATA_TIMELINE, payload: payload }),
+      dispatch({type: GET_FILTERS_DATA_TIMELINE, payload: payload}),
     fetchMemoryList: (payload: any) =>
-      dispatch({ type: GET_MEMORY_LIST, payload: payload }),
+      dispatch({type: GET_MEMORY_LIST, payload: payload}),
     showAlertCall: (payload: any) =>
-      dispatch({ type: showCustomAlert, payload: payload }),
+      dispatch({type: showCustomAlert, payload: payload}),
     sendMemoryActions: (payload: any) =>
-      dispatch({ type: MEMORY_ACTIONS_DASHBOARD, payload: payload }),
+      dispatch({type: MEMORY_ACTIONS_DASHBOARD, payload: payload}),
     setCurrentTabActions: (payload: any) =>
-      dispatch({ type: ACTIVE_TAB_ON_DASHBOARD, payload: payload }),
+      dispatch({type: ACTIVE_TAB_ON_DASHBOARD, payload: payload}),
   };
 };
 

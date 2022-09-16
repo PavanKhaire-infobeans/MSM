@@ -81,7 +81,7 @@ export class DashboardDataModel {
                 parsedMemory.memoryDescription = parsedMemory['version_data']['data'][0]['content'];
             }
 
-            // console.warn("parsedMemory.description > ",parsedMemory.description)
+            // showConsoleLog(ConsoleType.WARN,"parsedMemory.description > ",parsedMemory.description)
             parsedMemory.description = parsedMemory.description.replace(/<\/p><br\/><p>/ig, ' \n \n');
             parsedMemory.description = parsedMemory.description.replace(/<\/p><br><p>/ig, ' \n \n');
             parsedMemory.description = parsedMemory.description.replace(/<\/p><p>/ig, ' \n');
@@ -91,7 +91,7 @@ export class DashboardDataModel {
             parsedMemory.description = parsedMemory.description.replace(/<p>/ig, '');
             parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');
             parsedMemory.description = parsedMemory.description.trim();
-            // console.warn("after replace > ",JSON.stringify(parsedMemory.description))
+            // showConsoleLog(ConsoleType.WARN,"after replace > ",JSON.stringify(parsedMemory.description))
             memories.push(parsedMemory);
         });
         return memories;

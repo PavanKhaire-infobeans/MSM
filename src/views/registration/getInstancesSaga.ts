@@ -26,7 +26,7 @@ function* fetchInstances() {
         return await AsyncStorage.getItem(kStoreInstance);
       });
       if (storedData) {
-        // console.log('Stored Data : ', storedData);
+        // showConsoleLog(ConsoleType.LOG,'Stored Data : ', storedData);
         yield put({
           type: GetInstances.GetSuccess,
           payload: JSON.parse(storedData),

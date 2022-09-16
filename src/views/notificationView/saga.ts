@@ -52,7 +52,7 @@ function* setSeenFlag(params: any) {
       {details: params.payload},
     ]);
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
   }
 }
 
@@ -79,7 +79,7 @@ function* getActivityType() {
       yield put({type: GetActivity, payload: responseBody.Details});
     }
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
   }
 }
 
@@ -107,7 +107,7 @@ function* loadMoreNotifications(params: any) {
       });
     }
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
   }
 }
 

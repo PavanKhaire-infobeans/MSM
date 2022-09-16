@@ -1,22 +1,38 @@
 import React from 'react';
 import {
-  FlatList, Image, Keyboard, Platform, SafeAreaView, StatusBar, Text, TouchableHighlight, View
+  FlatList,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { Colors, decode_utf8, fontFamily, fontSize } from '../../../common/constants';
+import {
+  Colors,
+  ConsoleType,
+  decode_utf8,
+  fontFamily,
+  fontSize,
+  showConsoleLog,
+} from '../../../common/constants';
 import Utility from '../../../common/utility';
 import {
-  add_icon, checkbox, checkbox_active, settings_icon
+  add_icon,
+  checkbox,
+  checkbox_active,
+  settings_icon,
 } from '../../../images';
-import { SaveCollection } from '../reducer';
-import {
-  CollectinAPI
-} from '../saga';
+import {SaveCollection} from '../reducer';
+import {CollectinAPI} from '../saga';
 import Styles from './styles';
 
-type State = { [x: string]: any };
-type Props = { [x: string]: any };
+type State = {[x: string]: any};
+type Props = {[x: string]: any};
 
 class CollectionList extends React.Component<Props, State> {
   _listRef: any;
@@ -36,19 +52,19 @@ class CollectionList extends React.Component<Props, State> {
     }
     if (this.props.collections) {
       let empty = this.props.collections;
-      //console.log(Object.keys(empty).length === 0 && empty.constructor === Object);
+      //showConsoleLog(ConsoleType.LOG,Object.keys(empty).length === 0 && empty.constructor === Object);
       if (Object.keys(empty).length === 0 && empty.constructor === Object) {
         this.setState({
           collections: [],
         });
       } else {
-        // console.log("2");
+        // showConsoleLog(ConsoleType.LOG,"2");
         this.setState({
           collections: this.props.collections,
         });
       }
     } else {
-      // console.log("3");
+      // showConsoleLog(ConsoleType.LOG,"3");
       this.setState({
         collections: [],
       });
@@ -91,7 +107,7 @@ class CollectionList extends React.Component<Props, State> {
   };
 
   setCollection = (item: any) => {
-    console.log('collections..', this.state.collections);
+    showConsoleLog(ConsoleType.LOG, 'collections..', this.state.collections);
     let collections = this.state.collections;
     let found = false;
     try {
@@ -104,9 +120,9 @@ class CollectionList extends React.Component<Props, State> {
       if (!found) {
         collections.push(item);
       }
-      this.setState({ collections: collections });
+      this.setState({collections: collections});
     } catch (error) {
-      console.log(error);
+      showConsoleLog(ConsoleType.LOG, error);
     }
   };
   renderRow = (item: any) => {
@@ -160,7 +176,7 @@ class CollectionList extends React.Component<Props, State> {
   };
 
   newCollectionCreated = (collection: any) => {
-    this.setState({ collection: collection });
+    this.setState({collection: collection});
   };
 
   render() {
@@ -177,7 +193,11 @@ class CollectionList extends React.Component<Props, State> {
               saveValues={this.saveValue}
             />
             <StatusBar
-              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.NewThemeColor}
             />
             <TouchableHighlight
@@ -216,7 +236,7 @@ class CollectionList extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: { [x: string]: any }) => {
+const mapState = (state: {[x: string]: any}) => {
   return {
     collections: state.MemoryInitials.collections,
     collectionList: state.MemoryInitials.collectionList,
@@ -226,10 +246,10 @@ const mapState = (state: { [x: string]: any }) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    collectionAPI: () => dispatch({ type: CollectinAPI }),
+    collectionAPI: () => dispatch({type: CollectinAPI}),
     //   MemoryCollectionsAPI : (payload: any) => dispatch({type: MemoryCollectionsAPI, payload : payload}),
     setCollection: (payload: any) =>
-      dispatch({ type: SaveCollection, payload: payload }),
+      dispatch({type: SaveCollection, payload: payload}),
   };
 };
 

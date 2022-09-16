@@ -14,7 +14,12 @@ import {
 import {connect} from 'react-redux';
 import Text from '../../common/component/Text';
 import TextField from '../../common/component/textField';
-import {Colors, CommonTextStyles} from '../../common/constants';
+import {
+  Colors,
+  CommonTextStyles,
+  ConsoleType,
+  showConsoleLog,
+} from '../../common/constants';
 import {Account, LoginStore} from '../../common/loginStore';
 import {UserData} from '../../common/loginStore/database';
 import {UserAccount} from '../menu/reducer';
@@ -204,7 +209,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
         }
       })
       .catch((err: Error) => {
-        //console.log(err);
+        //showConsoleLog(ConsoleType.LOG,err);
       });
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -241,7 +246,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   _keyboardDidShow = e => {
     try {
       const {height, screenX, screenY, width} = e.endCoordinates;
-      // console.log(height)
+      // showConsoleLog(ConsoleType.LOG,height)
 
       if (height) {
         // alert( e.endCoordinates.height)
@@ -255,7 +260,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
         );
       }
     } catch (error) {
-      console.warn(error);
+      showConsoleLog(ConsoleType.WARN, error);
     }
   };
 

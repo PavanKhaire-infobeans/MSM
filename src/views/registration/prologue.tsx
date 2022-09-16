@@ -17,8 +17,10 @@ import Text from '../../common/component/Text';
 import {
   Colors,
   CommonTextStyles,
+  ConsoleType,
   fontFamily,
   fontSize,
+  showConsoleLog,
 } from '../../common/constants';
 import {GetInstances} from './reducer';
 //@ts-ignore
@@ -90,7 +92,7 @@ class Prologue extends Component<Props> {
     // Alert.alert("Screen Width : " + width + "Height : " + height);
     // SafeArea.getSafeAreaInsetsForRootView()
     // .then((result) => {
-    // 	console.log(result)
+    // 	showConsoleLog(ConsoleType.LOG,result)
     // 	// { safeAreaInsets: { top: 44, left: 0, bottom: 34, right: 0 } }
     // })
     this.setState({isBottomPickerVisible: false}, () => {
@@ -192,7 +194,7 @@ class Prologue extends Component<Props> {
           break;
       }
     } catch (error) {
-      console.log('errrrr ', error);
+      showConsoleLog(ConsoleType.LOG, 'errrrr ', error);
     }
   };
 
@@ -258,7 +260,11 @@ class Prologue extends Component<Props> {
   };
 
   prologueHeader = () => {
-    console.log('Login controller ref : ', this.loginControllerRef);
+    showConsoleLog(
+      ConsoleType.LOG,
+      'Login controller ref : ',
+      this.loginControllerRef,
+    );
     return (
       <View>
         {/* <View style={{ flexDirection: "row", width: "100%", justifyContent: "flex-start", 								
@@ -300,7 +306,7 @@ class Prologue extends Component<Props> {
   render() {
     let heightScreenHeight = Dimensions.get('window').height;
     const {navigate} = this.props.navigation;
-    // console.log("Device interensic height is : ", StaticSafeAreaInsets.safeAreaInsetsBottom);
+    // showConsoleLog(ConsoleType.LOG,"Device interensic height is : ", StaticSafeAreaInsets.safeAreaInsetsBottom);
     return (
       <View style={Styles.flexContainer}>
         <StatusBar

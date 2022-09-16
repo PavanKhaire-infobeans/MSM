@@ -84,7 +84,7 @@ export const SetSeenActivity = async (ids: any, index: any) => {
       }
     }
   } catch (err) {
-    //console.log("Error is : ", err)
+    //showConsoleLog(ConsoleType.LOG,"Error is : ", err)
     EventManager.callBack(
       kSeenData,
       false,

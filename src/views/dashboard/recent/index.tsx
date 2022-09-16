@@ -29,7 +29,12 @@ import {
   No_Internet_Warning,
   ToastMessage,
 } from '../../../common/component/Toast';
-import {Colors, decode_utf8} from '../../../common/constants';
+import {
+  Colors,
+  ConsoleType,
+  decode_utf8,
+  showConsoleLog,
+} from '../../../common/constants';
 import Utility from '../../../common/utility';
 import {Like, Unlike} from '../../memoryDetails/detailsWebService';
 import {kLiked, kUnliked} from '../../myMemories/myMemoriesWebService';
@@ -115,7 +120,7 @@ const Recent = (props: Props) => {
           memoryDetails = props.recentList[props.recentList.length - 1];
         }
         // if(props.totalCount > 5)
-        // console.log("memoryDetails >"+memoryDetails.memoryDate)
+        // showConsoleLog(ConsoleType.LOG,"memoryDetails >"+memoryDetails.memoryDate)
         props.fetchMemoryList({
           type: ListType.Recent,
           isLoadMore: true,
@@ -144,7 +149,7 @@ const Recent = (props: Props) => {
 
   const audioView = (item: any) => {
     if (item.audios.length > 0) {
-      // console.log("AudioSV :",JSON.stringify(item.audios))
+      // showConsoleLog(ConsoleType.LOG,"AudioSV :",JSON.stringify(item.audios))
       return (
         <View style={styles.audioContainer}>
           <View style={[styles.boxShadow]}>
@@ -292,7 +297,7 @@ const Recent = (props: Props) => {
   };
 
   const playerCallback = (event: any) => {
-    console.log('playerCallback :', event);
+    showConsoleLog(ConsoleType.LOG, 'playerCallback :', event);
     let audioFile = state.audioFile;
     switch (event) {
       case kEnded:

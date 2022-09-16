@@ -22,8 +22,10 @@ import TextField from '../../common/component/textField';
 import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import {
   Colors,
+  ConsoleType,
   fontSize,
   getValue,
+  showConsoleLog,
   Size,
   testEmail,
 } from '../../common/constants';
@@ -227,7 +229,7 @@ class ForgotPassword extends React.Component<Props> {
       this.FetchLoginInstance([
         {payload: {emailId: this.state.email, details: {type: 'public'}}},
       ]);
-      console.log('Call Login service');
+      showConsoleLog(ConsoleType.LOG, 'Call Login service');
     } else {
       No_Internet_Warning();
     }
@@ -246,9 +248,13 @@ class ForgotPassword extends React.Component<Props> {
       loaderHandler.showLoader();
       let response = await loginInstanceRequest(`${kAdmin}`, params)
         .then((response: Response) => response.json())
-        .catch((err: any) => console.log(err));
+        .catch((err: any) => showConsoleLog(ConsoleType.LOG, err));
 
-      console.log('response of instance is: ', JSON.stringify(response));
+      showConsoleLog(
+        ConsoleType.LOG,
+        'response of instance is: ',
+        JSON.stringify(response),
+      );
       if (response.ResponseCode == 200) {
         if (response.Response.length > 1) {
           this.props.navigation.navigate('commonInstanceListsSelection', {

@@ -1,11 +1,16 @@
 import React from 'react';
 import {
-  ActivityIndicator, Image, Keyboard, SafeAreaView, TouchableOpacity, View
+  ActivityIndicator,
+  Image,
+  Keyboard,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Text from '../../../common/component/Text';
-import { Colors, fontSize, getValue } from '../../../common/constants';
+import {Colors, fontSize, getValue} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
-import { rubbish } from '../../../images';
+import {rubbish} from '../../../images';
 import Styles from './styles';
 
 type Props = {
@@ -57,9 +62,9 @@ export default class ImagePreview extends React.Component<Props, State> {
 
   render() {
     if (getValue(this.props.selectedItem, ['isLocal'])) {
-      //console.log("local")
+      //showConsoleLog(ConsoleType.LOG,"local")
     } else {
-      //console.log("uploaded")
+      //showConsoleLog(ConsoleType.LOG,"uploaded")
     }
     if (this.props.selectedItem.thumb_uri) {
       this.props.selectedItem.uri = this.props.selectedItem.thumb_uri;
@@ -124,7 +129,7 @@ export default class ImagePreview extends React.Component<Props, State> {
   }
 
   _errorHandler = (error: any) => {
-    //console.log("error in loading image", error)
+    //showConsoleLog(ConsoleType.LOG,"error in loading image", error)
     this.setState({hasLoaded: true, error: true});
   };
 }

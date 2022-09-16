@@ -122,7 +122,7 @@ const MyAccount = props => {
         ]);
       })
       .catch(() => {
-        //console.log(err);
+        //showConsoleLog(ConsoleType.LOG,err);
       });
   };
 

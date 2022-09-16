@@ -22,7 +22,13 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {connect} from 'react-redux';
 import {kNotificationIndicator} from '../../common/component/TabBarIcons';
-import {Colors, fontFamily, fontSize} from '../../common/constants';
+import {
+  Colors,
+  ConsoleType,
+  fontFamily,
+  fontSize,
+  showConsoleLog,
+} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import {Account} from '../../common/loginStore';
 import Utility from '../../common/utility';
@@ -211,7 +217,7 @@ class NavigationBar extends React.Component<Props> {
 
   _closeAction = () => {
     Keyboard.dismiss();
-    console.log('Props : ', this.props);
+    showConsoleLog(ConsoleType.LOG, 'Props : ', this.props);
     this.props.navigation.goBack();
   };
 

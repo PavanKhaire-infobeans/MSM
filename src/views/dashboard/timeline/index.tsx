@@ -240,7 +240,7 @@ const Timeline = (props: Props) => {
 
   const audioView = (item: any) => {
     if (item.audios.length > 0) {
-      // console.log("item.audios :: ", JSON.stringify(item.audios))
+      // showConsoleLog(ConsoleType.LOG,"item.audios :: ", JSON.stringify(item.audios))
       return (
         <View style={styles.audioViewContainerStyle}>
           <View style={[styles.audioViewSubContainerStyle, styles.boxShadow]}>
@@ -313,7 +313,11 @@ const Timeline = (props: Props) => {
   };
 
   const togglePlayPause = (item: any) => {
-    console.log('togglePlayPause :: ', JSON.stringify(item.audios));
+    showConsoleLog(
+      ConsoleType.LOG,
+      'togglePlayPause :: ',
+      JSON.stringify(item.audios),
+    );
     if (item.audios[0].fid == state.audioFile.index) {
       audioPlayer.current.tooglePlayPause();
     } else {
@@ -335,7 +339,7 @@ const Timeline = (props: Props) => {
     if (Utility.isInternetConnected) {
       let playing = state.audioFile.isPlaying;
       let fid = state.audioFile.fid;
-      // console.log("_onOpenAudios :: ", JSON.stringify(item.audios[0].fid), fid)
+      // showConsoleLog(ConsoleType.LOG,"_onOpenAudios :: ", JSON.stringify(item.audios[0].fid), fid)
       if (item.audios[0].fid == fid) {
         playing = !playing;
       } else {
@@ -790,12 +794,12 @@ const Timeline = (props: Props) => {
                 // let next = '', prev = '', currentIndex = memoryYears.indexOf(currentItemYear);
                 // prev = memoryYears[currentIndex] ? memoryYears[currentIndex + 1] : memoryYears[0]
                 // next = currentIndex > 0 ? memoryYears[currentIndex - 1] : null
-                // // console.log("aaa :", currentIndex, " ", JSON.stringify(memoryYears), currentItemYear, prev, next)
+                // // showConsoleLog(ConsoleType.LOG,"aaa :", currentIndex, " ", JSON.stringify(memoryYears), currentItemYear, prev, next)
 
                 // setPreviousItemYear(prev);
                 // setNextItemYear(next);
 
-                // console.warn("next : ",next ," prev : ",prev, " ",JSON.stringify(allYears))
+                // showConsoleLog(ConsoleType.WARN,"next : ",next ," prev : ",prev, " ",JSON.stringify(allYears))
               }
               Keyboard.dismiss();
             }}

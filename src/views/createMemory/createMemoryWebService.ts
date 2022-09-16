@@ -1,7 +1,8 @@
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
   asyncGen,
-  getValue, Storage, uploadTask
+  ConsoleType,
+  getValue, showConsoleLog, Storage, uploadTask
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
@@ -28,7 +29,7 @@ export const CreateUpdateMemory = async (
   CB?: any
 ) => {
   try {
-    console.log('params..', params);
+    showConsoleLog(ConsoleType.LOG,'params..', params);
     let data = await Storage.get('userData');
     let response: any = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/mystory/create_update`,
@@ -101,7 +102,7 @@ export const CreateUpdateMemory = async (
             return CB(response);
           }
           // loaderHandler.hideLoader();
-          // console.warn(" err daaaaa :", JSON.stringify(response));
+          // showConsoleLog(ConsoleType.WARN," err daaaaa :", JSON.stringify(response));
           // EventManager.callBack(listener, false, response['ResponseMessage']);
         }
 
@@ -115,7 +116,7 @@ export const CreateUpdateMemory = async (
 
   } catch (err) {
     loaderHandler.hideLoader();
-    console.warn(" errr daaaaa :", (err));
+    showConsoleLog(ConsoleType.WARN," errr daaaaa :", (err));
     EventManager.callBack(listener, false, 'Unable to create memory!!');
   }
 };
@@ -386,7 +387,7 @@ export const CollaboratorActionAPI = async (params: any) => {
       EventManager.callBack(kCollaboratorsActions, false);
     }
   } catch (err) {
-    //console.log(err);
+    //showConsoleLog(ConsoleType.LOG,err);
     EventManager.callBack(kCollaboratorsActions, false);
   }
 };
@@ -410,7 +411,7 @@ async function uploadAttachments(memoryId: number, files: TempFile[], listener: 
         // loaderHandler.hideLoader();
         // EventManager.callBack(listener, res, id, padDetails, key);
       } catch (err) {
-        //console.log("Error in uploading files: ", err)
+        //showConsoleLog(ConsoleType.LOG,"Error in uploading files: ", err)
         reject(err);
       }
     });
@@ -423,10 +424,10 @@ async function uploadAttachments(memoryId: number, files: TempFile[], listener: 
 
   // await Promise.all(promises).then(results => {
   //   // const videos = results.map(result => result.items[0]);
-  //   console.log("videos >>>>>>",JSON.stringify(results));
+  //   showConsoleLog(ConsoleType.LOG,"videos >>>>>>",JSON.stringify(results));
 
   // })
-  // console.log("videos data>>>>>>",JSON.stringify(promises));
+  // showConsoleLog(ConsoleType.LOG,"videos data>>>>>>",JSON.stringify(promises));
   // return promises
 }
 
@@ -468,7 +469,7 @@ async function uploadFile(memoryId: number, file: TempFile) {
     uploadTask(
       (data: any) => {
         let response = JSON.parse(data.responseBody);
-        console.log("After upload", JSON.stringify(response));
+        showConsoleLog(ConsoleType.LOG,"After upload", JSON.stringify(response));
 
         if (response.ResponseCode == '200') {
           resolve(response);
@@ -477,7 +478,7 @@ async function uploadFile(memoryId: number, file: TempFile) {
         }
       },
       (err: Error) => {
-        //console.log("Upload error!", err);
+        //showConsoleLog(ConsoleType.LOG,"Upload error!", err);
         reject(err);
       },
     )(options);

@@ -367,13 +367,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           this.state.allCommentsList = this.state.allCommentsList.filter(
             (element: any) => element.cid != cid,
           );
-          //console.log(this.state.allCommentsList);
-          // let allList = this.state.allCommentsList;
-          // allList.push(comment);
           this.state.allCommentsList.push(commentItem);
-          //console.log(this.state.allCommentsList);
-
-          // this.setState({})
           this.setState({
             bottomToolbar: 0,
             commentValue: '',
@@ -394,13 +388,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
             this.memoryDataModel.likesComments.commentsList.filter(
               (element: any) => element.cid != cid,
             );
-          //console.log(this.memoryDataModel.likesComments.commentsList);
-          // let allList = this.state.allCommentsList;
-          // allList.push(comment);
           this.memoryDataModel.likesComments.commentsList.push(commentItem);
-          //console.log(this.memoryDataModel.likesComments.commentsList);
-
-          // this.setState({});
           this.setState({
             bottomToolbar: 0,
             commentValue: '',
@@ -1707,7 +1695,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
   }
 
   InternalQueue = () => {
-    // console.log("descmem :", this.memoryDataModel.memory.description)
     return (
       <View style={style.InternalQueueContainer}>
         <Text style={style.memoryTitleStyle}>

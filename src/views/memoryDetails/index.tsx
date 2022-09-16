@@ -367,11 +367,11 @@ export default class MemoryDetails extends React.Component<Props, State> {
           this.state.allCommentsList = this.state.allCommentsList.filter(
             (element: any) => element.cid != cid,
           );
-          //console.log(this.state.allCommentsList);
+          //showConsoleLog(ConsoleType.LOG,this.state.allCommentsList);
           // let allList = this.state.allCommentsList;
           // allList.push(comment);
           this.state.allCommentsList.push(commentItem);
-          //console.log(this.state.allCommentsList);
+          //showConsoleLog(ConsoleType.LOG,this.state.allCommentsList);
 
           // this.setState({})
           this.setState({
@@ -394,11 +394,11 @@ export default class MemoryDetails extends React.Component<Props, State> {
             this.memoryDataModel.likesComments.commentsList.filter(
               (element: any) => element.cid != cid,
             );
-          //console.log(this.memoryDataModel.likesComments.commentsList);
+          //showConsoleLog(ConsoleType.LOG,this.memoryDataModel.likesComments.commentsList);
           // let allList = this.state.allCommentsList;
           // allList.push(comment);
           this.memoryDataModel.likesComments.commentsList.push(commentItem);
-          //console.log(this.memoryDataModel.likesComments.commentsList);
+          //showConsoleLog(ConsoleType.LOG,this.memoryDataModel.likesComments.commentsList);
 
           // this.setState({});
           this.setState({
@@ -562,7 +562,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     try {
       this.audioPlayer.current.hidePlayer();
     } catch (e) {
-      //console.log(e);
+      //showConsoleLog(ConsoleType.LOG,e);
     }
     this.memoryDetailsListener.removeListener();
   }

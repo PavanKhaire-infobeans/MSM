@@ -158,7 +158,7 @@ export default class AudioRecorderView extends React.Component<
   // 						this.time();
   // 					})
   // 					.catch((err: Error) => {
-  // 						//console.log("Error", err);
+  // 						//showConsoleLog(ConsoleType.LOG,"Error", err);
   // 					});
   // 				// this.recorder = new Recorder(this.recording);
   // 				// this.recorder.prepare((error: any, path: string) => {

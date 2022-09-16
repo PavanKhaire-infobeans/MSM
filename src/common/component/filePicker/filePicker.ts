@@ -4,7 +4,7 @@ import ImageCropPicker, {
 import { launchImageLibrary } from 'react-native-image-picker';
 import { TempFile } from '../../../views/mindPop/edit';
 import {
-  Colors, decode_utf8, encode_utf8, GenerateRandomID, requestPermission
+  Colors, ConsoleType, decode_utf8, encode_utf8, GenerateRandomID, requestPermission, showConsoleLog
 } from '../../constants';
 import { FileType } from '../../database/mindPopStore/mindPopStore';
 import { ToastMessage } from '../Toast';
@@ -32,9 +32,9 @@ enum TempFileStatus {
 
 export const CaptureImage = (callback: any) => {
   requestPermission('camera').then(success => {
-    console.log('camera: ', success);
+    showConsoleLog(ConsoleType.LOG,'camera: ', success);
     if (success) {
-      console.log('camera In: ', success);
+      showConsoleLog(ConsoleType.LOG,'camera In: ', success);
       ImageCropPicker.openCamera(options)
         .then((response: PickerImage | any[]) => {
           var tempfilesArr: TempFile[] = [];
@@ -92,7 +92,7 @@ export const CaptureImage = (callback: any) => {
           return tempfilesArr;
         })
         .catch(e => {
-          console.log("error in camera", e)
+          showConsoleLog(ConsoleType.LOG,"error in camera", e)
         });
     }
   });
@@ -103,7 +103,7 @@ const selectAudio = async callback => {
     const res = await DocumentPicker.pick({
       type: [DocumentPicker.types.audio],
     });
-    console.log('res : ' + JSON.stringify(res));
+    showConsoleLog(ConsoleType.LOG,'res : ' + JSON.stringify(res));
     if (res) {
       // let path = res.uri.indexOf("file://") != -1 ? res.uri : "file://" + res.uri;
       let fid = GenerateRandomID();
@@ -132,12 +132,12 @@ const selectAudio = async callback => {
         RNFetchBlob.fs.readFile(res.uri, 'base64').then(fileData => {
           // this.setState({base64Str:files
           // })
-          // //console.log(fileData)
+          // //showConsoleLog(ConsoleType.LOG,fileData)
           // const path = '${RNFS.DocumentDirectoryPath}/${attachment}.aac';
           RNFetchBlob.fs
             .stat(res.uri)
             .then(stats => {
-              //console.log(stats)
+              //showConsoleLog(ConsoleType.LOG,stats)
               const path = stats.path;
               var tempfile: TempFile = {
                 fid: fid,
@@ -159,10 +159,10 @@ const selectAudio = async callback => {
               callback([tempfile]);
             })
             .catch(err => {
-              //console.log(err)
+              //showConsoleLog(ConsoleType.LOG,err)
               //    const path  =  RNFetchBlob.fs.dirs.DocumentDir + "/" + res.fileName;
               //    RNFetchBlob.fs.writeFile(encode_utf8(path),  fileData, "base64").then(() =>
-              //     // //console.log(encode_utf8(path)),
+              //     // //showConsoleLog(ConsoleType.LOG,encode_utf8(path)),
               //     {
               //         var tempfile: TempFile = {
               //             fid: fid,
@@ -182,7 +182,7 @@ const selectAudio = async callback => {
               //     }
               // )
               // .catch((err) => {
-              //     //console.log(err);
+              //     //showConsoleLog(ConsoleType.LOG,err);
               // })
             });
         });
@@ -214,10 +214,10 @@ const selectAudio = async callback => {
     //Handling any exception (If any)
     if (DocumentPicker.isCancel(err)) {
       //If user canceled the document selection
-      console.log('Canceled from single doc picker');
+      showConsoleLog(ConsoleType.LOG,'Canceled from single doc picker');
     } else {
       //For Unknown Error
-      console.log('Unknown Error: ' + JSON.stringify(err));
+      showConsoleLog(ConsoleType.LOG,'Unknown Error: ' + JSON.stringify(err));
       throw err;
     }
   }
@@ -225,9 +225,9 @@ const selectAudio = async callback => {
 
 export const PickAudio = (callback: any) => {
   console;
-  console.log(callback);
+  showConsoleLog(ConsoleType.LOG,callback);
   requestPermission('storage').then(success => {
-    console.log(success);
+    showConsoleLog(ConsoleType.LOG,success);
     selectAudio(callback);
   });
 };
@@ -237,7 +237,7 @@ const selectPDF = async callback => {
     const res = await DocumentPicker.pick({
       type: [DocumentPicker.types.pdf],
     });
-    console.log('res : ' + JSON.stringify(res));
+    showConsoleLog(ConsoleType.LOG,'res : ' + JSON.stringify(res));
     if (res) {
       let path =
         res.uri.indexOf('file://') != -1 ? res.uri : 'file://' + res.uri;
@@ -265,10 +265,10 @@ const selectPDF = async callback => {
     //Handling any exception (If any)
     if (DocumentPicker.isCancel(err)) {
       //If user canceled the document selection
-      console.log('Canceled from single doc picker');
+      showConsoleLog(ConsoleType.LOG,'Canceled from single doc picker');
     } else {
       //For Unknown Error
-      console.log('Unknown Error: ' + JSON.stringify(err));
+      showConsoleLog(ConsoleType.LOG,'Unknown Error: ' + JSON.stringify(err));
       throw err;
     }
   }
@@ -282,13 +282,13 @@ export const PickPDF = async (callback: any) => {
 
 export const PickImage = async (callback: any) => {
   requestPermission('photo').then(async (success) => {
-    console.log('PickImage: ', success);
+    showConsoleLog(ConsoleType.LOG,'PickImage: ', success);
     if (success) {
 
       // try {
       //   // ImageCropPicker.openPicker(options)
       //   //   .then(response => {
-      //   //     //console.log(response, typeof response);
+      //   //     //showConsoleLog(ConsoleType.LOG,response, typeof response);
       //   //     var tempfiles: TempFile[] = (response as Array<PickerImage>).map(
       //   //       obj => {
       //   //         let path =
@@ -360,7 +360,7 @@ export const PickImage = async (callback: any) => {
       //       callback(tempfiles);
       //       return tempfiles;
       //     } catch (error) {
-      //       console.log(error)
+      //       showConsoleLog(ConsoleType.LOG,error)
       //     }
 
       //   });
@@ -368,10 +368,10 @@ export const PickImage = async (callback: any) => {
       //   //Handling any exception (If any)
       //   if (DocumentPicker.isCancel(err)) {
       //     //If user canceled the document selection
-      //     console.log('Canceled from single doc picker');
+      //     showConsoleLog(ConsoleType.LOG,'Canceled from single doc picker');
       //   } else {
       //     //For Unknown Error
-      //     console.log('Unknown Error: ' + JSON.stringify(err));
+      //     showConsoleLog(ConsoleType.LOG,'Unknown Error: ' + JSON.stringify(err));
       //     throw err;
       //   }
       // }
@@ -412,12 +412,12 @@ export const PickImage = async (callback: any) => {
             callback(tempfiles);
             return tempfiles;
           } catch (error) {
-            console.log(error)
+            showConsoleLog(ConsoleType.LOG,error)
           }
 
         });
 
-        //console.log(response, typeof response);
+        //showConsoleLog(ConsoleType.LOG,response, typeof response);
         // try {
         //   var tempfiles: TempFile[] = []//.map(
 
@@ -454,13 +454,13 @@ export const PickImage = async (callback: any) => {
         //   callback(tempfiles);
         //   return tempfiles;
         // } catch (error) {
-        //   console.log(error)
+        //   showConsoleLog(ConsoleType.LOG,error)
         // }
 
 
         // openPicker({compressImageQuality:0.8,mediaType:'photo'})
         // .then(response => {
-        //   //console.log(response, typeof response);
+        //   //showConsoleLog(ConsoleType.LOG,response, typeof response);
         //   try {
         //     var tempfiles: TempFile[] = (response as Array<PickerImage>).map(
         //       obj => {
@@ -495,13 +495,13 @@ export const PickImage = async (callback: any) => {
         //     callback(tempfiles);
         //     return tempfiles;
         //   } catch (error) {
-        //     console.log(error)
+        //     showConsoleLog(ConsoleType.LOG,error)
         //   }
 
         // })
         // .catch(e => {});
       } catch (error) {
-        console.log("error in file picker :", error)
+        showConsoleLog(ConsoleType.LOG,"error in file picker :", error)
       }
     }
   });

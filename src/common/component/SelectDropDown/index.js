@@ -1,11 +1,28 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, Platform, Animated, Easing } from 'react-native';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Dimensions,
+  ActivityIndicator,
+  Modal,
+  Platform,
+  Animated,
+  Easing,
+} from 'react-native';
 import styles from './styles';
 // import findIndexInArr from './helpers/findIndexInArr';
 import calculateDropdownHeight from './helpers/calculateDropdownHeight';
 import isExist from './helpers/isExist';
-import { Colors } from '../../constants';
-const { height, width } = Dimensions.get('window');
+import {Colors} from '../../constants';
+const {height, width} = Dimensions.get('window');
 
 const SelectDropdown = (
   {
@@ -90,23 +107,22 @@ const SelectDropdown = (
   }, [defaultValue]);
   // for height changes
   useEffect(() => {
-    setDropdownHEIGHT(calculateDropdownHeight(dropdownStyle, rowStyle, data?.length || 0));
+    setDropdownHEIGHT(
+      calculateDropdownHeight(dropdownStyle, rowStyle, data?.length || 0),
+    );
   }, [dropdownStyle, rowStyle, data]);
   ///////////////////////////////////////////////////////
   /* ******************** Methods ******************** */
   const openDropdown = () => {
-    Animated.timing(
-      fadeAnim,
-      {
-        toValue: 1,
-        duration: 500,
-        easing: Easing.inOut(Easing.cubic),
-        useNativeDriver: true
-      }
-    ).start();
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      easing: Easing.inOut(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
 
     DropdownButton.current.measure((fx, fy, w, h, px, py) => {
-      // console.log('position y => ', py, '\nheight', h, '\nposition x => ', px)
+      // showConsoleLog(ConsoleType.LOG,'position y => ', py, '\nheight', h, '\nposition x => ', px)
       if (height - 18 < py + h + dropdownHEIGHT) {
         setDropdownPX(px);
         setDropdownPY(py - 2 - dropdownHEIGHT);
@@ -120,15 +136,12 @@ const SelectDropdown = (
     });
   };
   const closeDropdown = () => {
-    Animated.timing(
-      fadeAnim,
-      {
-        toValue: 0,
-        duration: 1000,
-        easing: Easing.inOut(Easing.cubic),
-        useNativeDriver: true
-      }
-    ).start();
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 1000,
+      easing: Easing.inOut(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
     setIsVisible(false);
     onBlur && onBlur();
   };
@@ -152,7 +165,8 @@ const SelectDropdown = (
     }
     if (index >= 3 && dropDownFlatlistRef) {
       dropDownFlatlistRef.current.scrollToOffset({
-        offset: rowStyle && rowStyle.height ? rowStyle.height * index : 50 * index,
+        offset:
+          rowStyle && rowStyle.height ? rowStyle.height * index : 50 * index,
         animated: true,
       });
     }
@@ -165,33 +179,41 @@ const SelectDropdown = (
   };
   ///////////////////////////////////////////////////////
   /* ******************** Render Methods ******************** */
-  const renderFlatlistItem = ({ item, index }) => {
+  const renderFlatlistItem = ({item, index}) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        style={[data && data.length && data.length - 1 === index ? { ...styles.dropdownRow, ...rowStyle, borderBottomWidth: 0 } : { ...styles.dropdownRow, ...rowStyle }]}
+        style={[
+          data && data.length && data.length - 1 === index
+            ? {...styles.dropdownRow, ...rowStyle, borderBottomWidth: 0}
+            : {...styles.dropdownRow, ...rowStyle},
+        ]}
         onPress={() => onSelectItem(item, index)}>
         {renderCustomizedRowChild ? (
-          <View style={styles.dropdownCustomizedRowParent}>{renderCustomizedRowChild(item, index)}</View>
+          <View style={styles.dropdownCustomizedRowParent}>
+            {renderCustomizedRowChild(item, index)}
+          </View>
         ) : (
-          <Text numberOfLines={1} allowFontScaling={false} style={[styles.dropdownRowText, rowTextStyle]}>
-            {rowTextForSelection ? rowTextForSelection(item, index) : item.text.toString().replace("Memory", "memory")}
+          <Text
+            numberOfLines={1}
+            allowFontScaling={false}
+            style={[styles.dropdownRowText, rowTextStyle]}>
+            {rowTextForSelection
+              ? rowTextForSelection(item, index)
+              : item.text.toString().replace('Memory', 'memory')}
           </Text>
         )}
       </TouchableOpacity>
     );
   };
 
-
-  const fadeAnim = useRef(new Animated.Value(0)).current
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // useEffect(() => {
 
   // }, [fadeAnim])
 
-
   const renderDropdown = () => {
-
     return (
       isVisible && (
         <Modal
@@ -219,16 +241,19 @@ const SelectDropdown = (
                 position: 'absolute',
                 top: dropdownPY,
                 height: dropdownHEIGHT,
-                width: Platform.OS === 'ios' ? 254 : undefined,//dropdownWIDTH
+                width: Platform.OS === 'ios' ? 254 : undefined, //dropdownWIDTH
                 right: 40,
                 elevation: 10,
                 borderWidth: 1,
                 borderColor: 'transparent',
-                backgroundColor: Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white,
+                backgroundColor:
+                  Platform.OS === 'ios' ? Colors.actionBgHex : Colors.white,
                 overflow: 'hidden',
-                transform: [{
-                  scale: fadeAnim
-                }]
+                transform: [
+                  {
+                    scale: fadeAnim,
+                  },
+                ],
               },
               // ...(I18nManager.isRTL
               //   ? {right: dropdownStyle?.right || dropdownPX}
@@ -238,19 +263,17 @@ const SelectDropdown = (
               <View style={styles.dropdownActivityIndicatorView}>
                 <ActivityIndicator size="small" color={'#999999'} />
               </View>
-            )
-              :
-              (
-                <FlatList
-                  data={data}
-                  scrollEnabled={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  ref={ref => (dropDownFlatlistRef.current = ref)}
-                  renderItem={renderFlatlistItem}
-                  getItemLayout={getItemLayout}
-                  onLayout={onLayout}
-                />
-              )}
+            ) : (
+              <FlatList
+                data={data}
+                scrollEnabled={false}
+                keyExtractor={(item, index) => index.toString()}
+                ref={ref => (dropDownFlatlistRef.current = ref)}
+                renderItem={renderFlatlistItem}
+                getItemLayout={getItemLayout}
+                onLayout={onLayout}
+              />
+            )}
           </Animated.View>
         </Modal>
       )
@@ -264,16 +287,23 @@ const SelectDropdown = (
       activeOpacity={0.8}
       style={{
         ...styles.dropdownButton,
-        ...(dropdownIconPosition == 'left' ? { flexDirection: 'row' } : { flexDirection: 'row-reverse' }),
+        ...(dropdownIconPosition == 'left'
+          ? {flexDirection: 'row'}
+          : {flexDirection: 'row-reverse'}),
         ...buttonStyle,
       }}
       onPress={() => openDropdown()}>
       {renderDropdown()}
       {renderDropdownIcon && renderDropdownIcon(isVisible)}
       {renderCustomizedButtonChild ? (
-        <View style={styles.dropdownCustomizedButtonParent}>{renderCustomizedButtonChild(selectedItem, index)}</View>
+        <View style={styles.dropdownCustomizedButtonParent}>
+          {renderCustomizedButtonChild(selectedItem, index)}
+        </View>
       ) : (
-        <Text numberOfLines={1} allowFontScaling={false} style={{ ...styles.dropdownButtonText, ...buttonTextStyle }}>
+        <Text
+          numberOfLines={1}
+          allowFontScaling={false}
+          style={{...styles.dropdownButtonText, ...buttonTextStyle}}>
           {isExist(selectedItem)
             ? buttonTextAfterSelection
               ? buttonTextAfterSelection(selectedItem, index)

@@ -3,10 +3,12 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import {
   Colors,
+  ConsoleType,
   CueBackInsatance,
   ERROR_MESSAGE,
   getValue,
   NO_INTERNET,
+  showConsoleLog,
   testEmail,
 } from '../../common/constants';
 import ViewProtocol from '../../common/interfaces/viewProtocol';
@@ -106,7 +108,7 @@ export class LoginController implements LoginControllerProtocol {
         'Unable to fetch details from Apple Sign in',
       );
     }
-    console.log(user);
+    showConsoleLog(ConsoleType.LOG,user);
   }
 
   onClickAppleSignIn() {
@@ -288,7 +290,7 @@ export class LoginController implements LoginControllerProtocol {
       };
     }
     this.view.updateState(state);
-    console.log(state);
+    showConsoleLog(ConsoleType.LOG,state);
     this.view.showErrorMessage(false);
   }
 
@@ -363,7 +365,7 @@ export class LoginController implements LoginControllerProtocol {
       this.view.dataWasStored = userID;
       this.view.props.setUser(this.view.selectedCommunity);
     } catch (error) {
-      console.log("login info err :", error)
+      showConsoleLog(ConsoleType.LOG,"login info err :", error)
     }
   };
 
@@ -417,7 +419,7 @@ export class LoginController implements LoginControllerProtocol {
           let errorMessage = getValue(loginStatus, ['data', 'message'])
             ? getValue(loginStatus, ['data', 'message'])
             : ERROR_MESSAGE;
-          console.log(errorMessage);
+          showConsoleLog(ConsoleType.LOG,errorMessage);
           this.view.showErrorMessage(true, errorMessage);
         }
       } else {
@@ -427,7 +429,7 @@ export class LoginController implements LoginControllerProtocol {
           ['logindata'],
         );
         var message = msg?.message || msg?.ResponseMessage || ERROR_MESSAGE;
-        console.log(message);
+        showConsoleLog(ConsoleType.LOG,message);
         this.view.showErrorMessage(true, message);
       }
     } else if (loginStatus.instanceCompleted && !loginStatus.loginStarted) {
@@ -457,7 +459,7 @@ export class LoginController implements LoginControllerProtocol {
                 isDisabledAccount
               ) {
                 loaderHandler.hideLoader();
-                console.log(loginStatus.instanceData.Response);
+                showConsoleLog(ConsoleType.LOG,loginStatus.instanceData.Response);
                 this.view.updateState({
                   ...this.view.state,
                   isVisible: true,
@@ -471,7 +473,7 @@ export class LoginController implements LoginControllerProtocol {
               }
             })
             .catch((err: Error) => {
-              //console.log(err);
+              //showConsoleLog(ConsoleType.LOG,err);
             });
         } else {
           this.view._show(NO_INTERNET, Colors.WarningColor);
@@ -482,7 +484,7 @@ export class LoginController implements LoginControllerProtocol {
           ['instanceData'],
         );
         var message = msg?.message || msg?.ResponseMessage || ERROR_MESSAGE;
-        console.log(message);
+        showConsoleLog(ConsoleType.LOG,message);
         this.view.showErrorMessage(true, message);
       }
     }
