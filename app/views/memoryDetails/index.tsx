@@ -175,9 +175,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
   shakeAnimation: any = new Animated.Value(0);
   constructor(props: Props) {
     super(props);
-    if (props.nid && props.type) {
-      this.nid = props.nid;
-      this.storyType = props.type;
+    if (props?.route?.params?.nid && props?.route?.params?.type) {
+      this.nid = props?.route?.params?.nid;
+      this.storyType = props?.route?.params?.type;
     }
     this.memoryDataModel = new MemoryDataModel();
     if (!this.props.previewDraft) {
