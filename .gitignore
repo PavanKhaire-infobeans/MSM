@@ -59,3 +59,8 @@ buck-out/
 /ios/Pods/
 ios/Podfile.lock
 ios/MyStoriesMatter.xcodeproj/project.pbxproj
+android/app/src/main/res/drawable-hdpi/*
+android/app/src/main/res/raw/*
+android/app/src/main/assets/index.android.bundle
+ios/assets/*
+android/app/src/main/res/*
