@@ -2014,6 +2014,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                     <CarousalFilesView
                       files={this.memoryDataModel.files.images}
                       type={kImage}
+                      navigation={this.props.navigation}
                     />
                     {this.audioView()}
                     <CarousalFilesView
