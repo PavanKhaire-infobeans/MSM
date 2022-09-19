@@ -1,4 +1,4 @@
-import React, {createRef} from 'react';
+import React, { createRef } from 'react';
 import {
   Alert,
   FlatList,
@@ -32,8 +32,8 @@ import {
 } from '../../images';
 // @ts-ignore
 import DeviceInfo from 'react-native-device-info';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import ActionSheet, {ActionSheetItem} from '../../common/component/actionSheet';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
   CaptureImage,
@@ -42,7 +42,7 @@ import {
   PickPDF,
 } from '../../common/component/filePicker/filePicker';
 import Text from '../../common/component/Text';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
   Colors,
   encode_utf8,
@@ -52,13 +52,13 @@ import {
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {createNew} from '../createMemory';
-import {CreateUpdateMemory} from '../createMemory/createMemoryWebService';
+import { createNew } from '../createMemory';
+import { CreateUpdateMemory } from '../createMemory/createMemoryWebService';
 import {
   DefaultDetailsMemory,
   DefaultDetailsWithoutTitleMemory,
 } from '../createMemory/dataHelper';
-import {TempFile} from '../mindPop/edit';
+import { TempFile } from '../mindPop/edit';
 import {
   addEditMindPop,
   kMindPopUploadedIdentifier,
@@ -66,20 +66,20 @@ import {
 import DefaultPreference from 'react-native-default-preference';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import CustomAlert from '../../common/component/customeAlert';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import CreateMemoryIntro from '../createMemory/createMemoryIntro';
-import {showCustomAlert, showCustomAlertData} from '../createMemory/reducer';
+import { showCustomAlert, showCustomAlertData } from '../createMemory/reducer';
 import style from './styles';
 
-type State = {[key: string]: any};
+type State = { [key: string]: any };
 
 const ImageActions: Array<ActionSheetItem> = [
-  {index: 0, text: 'Image', image: action_camera},
-  {index: 1, text: 'Audio', image: action_audio},
-  {index: 2, text: 'PDF', image: action_pdf},
-  {index: 3, text: 'Cancel', image: action_close},
+  { index: 0, text: 'Image', image: action_camera },
+  { index: 1, text: 'Audio', image: action_audio },
+  { index: 2, text: 'PDF', image: action_pdf },
+  { index: 3, text: 'Cancel', image: action_close },
 ];
 
 const options = {
@@ -108,7 +108,7 @@ class AddContentDetails extends React.Component {
       type: 'none',
       list: ImageActions,
     },
-    listItems: [{itemType: 'editor'}],
+    listItems: [{ itemType: 'editor' }],
     content: '',
     showNextDialog: false,
     mindPopClick: false,
@@ -125,9 +125,9 @@ class AddContentDetails extends React.Component {
     // setTimeout(() => {
     DefaultPreference.get('hide_memory_intro').then((value: any) => {
       if (value == 'true') {
-        this.setState({memoryIntroVisibility: false});
+        this.setState({ memoryIntroVisibility: false });
       } else {
-        this.setState({memoryIntroVisibility: true});
+        this.setState({ memoryIntroVisibility: true });
       }
     });
     // }, 200);
@@ -184,7 +184,7 @@ class AddContentDetails extends React.Component {
                 },
               );
             },
-            styles: {fontWeight: '400'},
+            styles: { fontWeight: '400' },
           },
         ]}
       />
@@ -292,7 +292,7 @@ class AddContentDetails extends React.Component {
         textTitle: this.draftDetails.title,
         editMode: false,
         padDetails: padDetails,
-        location: {description: '', reference: ''},
+        location: { description: '', reference: '' },
         memoryDate: this.draftDetails.memory_date,
         type: createNew,
       });
@@ -311,7 +311,7 @@ class AddContentDetails extends React.Component {
             style: 'cancel',
             onPress: () => {
               let content = this.state.oldcontent;
-              this.setState({content}, () => {
+              this.setState({ content }, () => {
                 //Go Back
                 Keyboard.dismiss();
                 this.props.navigation.goBack();
@@ -426,7 +426,12 @@ class AddContentDetails extends React.Component {
             ); //.trim()
           }
           loaderHandler.showLoader('Loading...');
-          CreateUpdateMemory(this.draftDetails, [], 'addContentCreateMemory');
+          CreateUpdateMemory(this.draftDetails, [], 'addContentCreateMemory', '',
+            res => {
+              if (res.status) {
+                this.createMemoryCallBack(res.status, res.id, res.padDetails)
+              }
+            });
         } else {
           No_Internet_Warning();
         }
@@ -491,11 +496,11 @@ class AddContentDetails extends React.Component {
       editRefresh: (file: any[]) => {
         Keyboard.dismiss();
         let fid = GenerateRandomID();
-        let tempFile: TempFile[] = file.map(obj => ({...obj, fid}));
+        let tempFile: TempFile[] = file.map(obj => ({ ...obj, fid }));
         this.fileCallback(tempFile);
       },
-      reset: () => {},
-      deleteItem: () => {},
+      reset: () => { },
+      deleteItem: () => { },
     });
   };
 
@@ -510,11 +515,11 @@ class AddContentDetails extends React.Component {
         }
         break;
       case 'files':
-        this.props.navigation.navigate('pdfViewer', {file: file});
+        this.props.navigation.navigate('pdfViewer', { file: file });
         break;
       case 'images':
         this.props.navigation.navigate('imageViewer', {
-          files: [{url: file.thumb_uri}],
+          files: [{ url: file.thumb_uri }],
           hideDescription: true,
         });
         break;
@@ -814,7 +819,7 @@ class AddContentDetails extends React.Component {
         key={element.fid}
         style={style.padding15}>
         <View>
-          <View style={[style.RecordContainer, {width}]}>
+          <View style={[style.RecordContainer, { width }]}>
             {element.type == 'audios' ? (
               <ImageBackground
                 style={style.RecordContainerImgBackgrounStyle}
@@ -831,8 +836,8 @@ class AddContentDetails extends React.Component {
               </ImageBackground>
             ) : element.type == 'images' ? (
               <Image
-                source={{uri: element.thumb_uri}}
-                style={{width: width, height: 120}}
+                source={{ uri: element.thumb_uri }}
+                style={{ width: width, height: 120 }}
                 resizeMode="contain"
               />
             ) : element.type == 'files' ? (
@@ -924,7 +929,7 @@ class AddContentDetails extends React.Component {
                         });
                       }}
                       onFocus={() => {
-                        this.setState({placeholder: 'Start writing...'});
+                        this.setState({ placeholder: 'Start writing...' });
                       }}
                       placeholderTextColor={Colors.bordercolor}
                       value={this.state.content}
@@ -956,7 +961,7 @@ class AddContentDetails extends React.Component {
                           marginBottom:
                             this.state.bottomBar.bottom > 0
                               ? this.state.bottomBar.bottom -
-                                (Platform.OS == 'android' ? 230 : 160)
+                              (Platform.OS == 'android' ? 230 : 160)
                               : 120,
                         },
                       ]}
@@ -975,8 +980,8 @@ class AddContentDetails extends React.Component {
                         Platform.OS == 'android'
                           ? 0
                           : this.state.bottomBar.bottom == 0
-                          ? 130
-                          : this.state.bottomBar.bottom,
+                            ? 130
+                            : this.state.bottomBar.bottom,
                     }}></View>
                 )}
               </View>
@@ -997,9 +1002,9 @@ class AddContentDetails extends React.Component {
         {this.state.memoryIntroVisibility && (
           <CreateMemoryIntro
             cancelMemoryIntro={() => {
-              this.setState({memoryIntroVisibility: false}, () => {
+              this.setState({ memoryIntroVisibility: false }, () => {
                 DefaultPreference.set('hide_memory_intro', 'true').then(
-                  function () {},
+                  function () { },
                 );
               });
             }}></CreateMemoryIntro>
@@ -1009,16 +1014,16 @@ class AddContentDetails extends React.Component {
   }
 }
 
-const mapState = (state: {[x: string]: any}) => ({
+const mapState = (state: { [x: string]: any }) => ({
   showAlert: state.MemoryInitials.showAlert,
 });
 
 const mapDispatch = (dispatch: Function) => {
   return {
     showAlertCall: (payload: any) =>
-      dispatch({type: showCustomAlert, payload: payload}),
+      dispatch({ type: showCustomAlert, payload: payload }),
     showAlertCallData: (payload: any) =>
-      dispatch({type: showCustomAlertData, payload: payload}),
+      dispatch({ type: showCustomAlertData, payload: payload }),
   };
 };
 export default connect(mapState, mapDispatch)(AddContentDetails);

@@ -1,3 +1,4 @@
+import { ConsoleType, showConsoleLog } from '../constants';
 import { DatabaseName } from '../database';
 import MindPopStore from '../database/mindPopStore/mindPopStore';
 

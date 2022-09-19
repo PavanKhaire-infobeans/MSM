@@ -26,7 +26,7 @@ import AudioPlayer, {
 } from '../../../common/component/audio_player/audio_player';
 import {MemoryActionsSheetItem} from '../../../common/component/memoryActionsSheet';
 import {No_Internet_Warning} from '../../../common/component/Toast';
-import {Colors, MemoryActionKeys} from '../../../common/constants';
+import {Colors, ConsoleType, MemoryActionKeys, showConsoleLog} from '../../../common/constants';
 import Utility from '../../../common/utility';
 import {cancelActions} from '../../../images';
 import {Like, Unlike} from '../../memoryDetails/detailsWebService';
@@ -560,7 +560,7 @@ const Timeline = (props: Props) => {
                         if (flatListRef.current) {
                           flatListRef.current.scrollToOffset({
                             animated: true,
-                            offset: 56,
+                            offset: 8,
                           });
                         }
                         // setPreviousItemYear(null)
@@ -619,7 +619,7 @@ const Timeline = (props: Props) => {
                               if (flatListRef.current) {
                                 flatListRef.current.scrollToOffset({
                                   animated: true,
-                                  offset: 50,
+                                  offset: 8,
                                 });
                               }
                               props.fetchMemoryList({
@@ -715,7 +715,7 @@ const Timeline = (props: Props) => {
                         if (flatListRef.current) {
                           flatListRef.current.scrollToOffset({
                             animated: true,
-                            offset: 50,
+                            offset: 8,
                           });
                         }
                         setTimelineBarNextPrevClick(true);

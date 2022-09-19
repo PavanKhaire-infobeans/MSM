@@ -13,7 +13,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {Provider} from 'react-redux';
 import Busyindicator from './common/component/busyindicator';
 import TabIcon, {NewTabItems} from './common/component/TabBarIcons';
-import {Colors} from './common/constants';
+import {Colors, ConsoleType, showConsoleLog} from './common/constants';
 import EventManager from './common/eventManager';
 import store from './common/reducer/reducers';
 import Utility, {
@@ -768,7 +768,7 @@ const App = _props => {
     } catch (error) {
       // User has rejected permissions
       return false;
-      //showConsoleLog(ConsoleType.ERROR,'permission rejected');
+      // showConsoleLog(ConsoleType.ERROR,'permission rejected');
     }
   };
 

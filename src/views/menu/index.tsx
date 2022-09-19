@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import Text from '../../common/component/Text';
-import {Colors, fontSize, Size} from '../../common/constants';
+import {Colors, ConsoleType, fontSize, showConsoleLog, Size} from '../../common/constants';
 import {Account, LoginStore, UserData} from '../../common/loginStore';
 import styles from './styles';
 import {connect} from 'react-redux';
@@ -51,9 +51,9 @@ class Menu extends React.Component<MenuProps> {
   }
 
   componentWillUnmount() {
-    this.onlogout.removeListener();
-    DeviceEventEmitter.removeAllListeners('logout');
-    this.logoutPressed?.removeListener();
+    // this.onlogout.removeListener();
+    // DeviceEventEmitter.removeAllListeners('logout');
+    // this.logoutPressed?.removeListener();
   }
 
   render() {
@@ -96,7 +96,7 @@ class Menu extends React.Component<MenuProps> {
   updateUser = ({accounts, user}: {accounts: UserData[]; user: UserData}) => {
     this.setState({list: accounts}, () => {
       this.props.setUser(user);
-      this.props.navigation.reset({index: 0, routes: [{name: 'dashBoard'}]});
+      this.props.navigation.reset({index: 0, routes: [{name: 'prologue'}]});
     });
   };
 
@@ -149,8 +149,8 @@ class Menu extends React.Component<MenuProps> {
           ]);
         }
       })
-      .catch(() => {
-        //showConsoleLog(ConsoleType.LOG,err);
+      .catch((err) => {
+        showConsoleLog(ConsoleType.LOG,err);
       });
   };
 

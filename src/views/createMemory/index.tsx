@@ -533,7 +533,7 @@ class CreateMemory extends React.Component<Props> {
         });
         // this.props.navigateToDashboard(true);
         // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
-        // loaderHandler.showLoader();
+        loaderHandler.showLoader();
         this.props.navigation.reset({
           index: 0,
           routes: [{name: 'dashBoard'}],
@@ -579,7 +579,7 @@ class CreateMemory extends React.Component<Props> {
         // EventManager.callBack('memoryUpdateTimelineListener');
         // EventManager.callBack('memoryUpdatePublishedListener');
         // EventManager.callBack('memoryDetailsListener');
-        this.props.navigation.goBack();
+        this.props.navigation.replace('writeTabs');
         // this.props.navigation.writeTabs();
         // loaderHandler.showLoader();
       } else {

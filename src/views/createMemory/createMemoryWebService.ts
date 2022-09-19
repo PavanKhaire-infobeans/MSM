@@ -29,7 +29,7 @@ export const CreateUpdateMemory = async (
   CB?: any
 ) => {
   try {
-    showConsoleLog(ConsoleType.LOG,'params..', params);
+    showConsoleLog(ConsoleType.LOG, 'params..', params);
     let data = await Storage.get('userData');
     let response: any = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/mystory/create_update`,
@@ -61,7 +61,8 @@ export const CreateUpdateMemory = async (
 
             if (listener == 'addContentCreateMemory') {
               loaderHandler.hideLoader();
-              EventManager.callBack(listener, true, id, padDetails, key);
+              // EventManager.callBack(listener, true, id, padDetails, key);
+              return { status: true, id, padDetails, key };
             }
             else if (listener == promptIdListener) {
               loaderHandler.hideLoader();
@@ -74,9 +75,14 @@ export const CreateUpdateMemory = async (
 
           }
           else {
-            if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener") {
+            if (listener == "mindpopEditMemoryListener") {
               loaderHandler.hideLoader();
               EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
+            }
+            else if (listener == 'addContentCreateMemory') {
+              loaderHandler.hideLoader();
+              CB({ status: true, id, padDetails, key });
+
             }
             else if (listener == promptIdListener) {
               // loaderHandler.hideLoader();
@@ -89,9 +95,13 @@ export const CreateUpdateMemory = async (
           }
         }
         else {
-          if (listener == 'addContentCreateMemory' || listener == "mindpopEditMemoryListener") {
+          if (listener == "mindpopEditMemoryListener") {
             loaderHandler.hideLoader();
             EventManager.callBack(listener, false, response['ResponseMessage']);
+          }
+          else if (listener == 'addContentCreateMemory') {
+            loaderHandler.hideLoader();
+            CB({ status: false, message: response['ResponseMessage'] });
           }
           else if (listener == promptIdListener) {
             loaderHandler.hideLoader();
@@ -116,7 +126,7 @@ export const CreateUpdateMemory = async (
 
   } catch (err) {
     loaderHandler.hideLoader();
-    showConsoleLog(ConsoleType.WARN," errr daaaaa :", (err));
+    showConsoleLog(ConsoleType.WARN, " errr daaaaa :", (err));
     EventManager.callBack(listener, false, 'Unable to create memory!!');
   }
 };
@@ -345,9 +355,9 @@ export const DeleteDraftService = async (
       ],
       response => {
         if (response.ResponseCode == 200) {
-          CB({status:true, data:response });
+          CB({ status: true, data: response });
         } else {
-          CB({status:false, data:response });
+          CB({ status: false, data: response });
         }
       }
     )
@@ -357,7 +367,7 @@ export const DeleteDraftService = async (
     // });
 
   } catch (err) {
-    CB({status:false, data:"" });
+    CB({ status: false, data: "" });
   }
 };
 
@@ -471,7 +481,7 @@ async function uploadFile(memoryId: number, file: TempFile) {
     uploadTask(
       (data: any) => {
         let response = JSON.parse(data.responseBody);
-        showConsoleLog(ConsoleType.LOG,"After upload", JSON.stringify(response));
+        showConsoleLog(ConsoleType.LOG, "After upload", JSON.stringify(response));
 
         if (response.ResponseCode == '200') {
           resolve(response);

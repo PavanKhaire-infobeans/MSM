@@ -24,6 +24,7 @@ import Text from '../../common/component/Text';
 import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import {
   Colors,
+  ConsoleType,
   decode_utf8,
   encode_utf8,
   fontFamily,
@@ -34,6 +35,7 @@ import {
   keyInt,
   keyString,
   MemoryActionKeys,
+  showConsoleLog,
   TimeStampMilliSeconds,
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
@@ -562,7 +564,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     try {
       this.audioPlayer.current.hidePlayer();
     } catch (e) {
-      //showConsoleLog(ConsoleType.LOG,e);
+      // showConsoleLog(ConsoleType.LOG,e);
     }
     this.memoryDetailsListener.removeListener();
   }

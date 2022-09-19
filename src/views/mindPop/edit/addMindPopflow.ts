@@ -1,7 +1,7 @@
 import { TempFile } from '.';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import {
-  asyncGen, ERROR_MESSAGE, getValue, Storage, TimeStampMilliSeconds, uploadTask
+  asyncGen, ConsoleType, ERROR_MESSAGE, getValue, showConsoleLog, Storage, TimeStampMilliSeconds, uploadTask
 } from '../../../common/constants';
 import MindPopStore from '../../../common/database/mindPopStore/mindPopStore';
 import EventManager from '../../../common/eventManager';
@@ -105,7 +105,7 @@ export const addEditMindPop = async (
       false,
       getValue(err, ['message']) || ERROR_MESSAGE,
     );
-    //showConsoleLog(ConsoleType.LOG,"Add/Edit MindPop Service Error: ", err);
+    showConsoleLog(ConsoleType.LOG,"Add/Edit MindPop Service Error: ", err);
   }
 };
 

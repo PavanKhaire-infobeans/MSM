@@ -139,7 +139,6 @@ export default class ImageViewer extends React.Component<Props> {
     return false;
   };
   render() {
-    //showConsoleLog(ConsoleType.LOG,this.props.files);
     var urls: any[];
     urls = [];
     for (let fl of this.props?.route?.params?.files) {

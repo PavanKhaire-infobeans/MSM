@@ -1,6 +1,6 @@
-import {Keyboard} from 'react-native';
+import { Keyboard } from 'react-native';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
   Colors,
   ConsoleType,
@@ -12,17 +12,17 @@ import {
   testEmail,
 } from '../../common/constants';
 import ViewProtocol from '../../common/interfaces/viewProtocol';
-import {Account, LoginStore, UserData} from '../../common/loginStore';
+import { Account, LoginStore, UserData } from '../../common/loginStore';
 import Utility from '../../common/utility';
 // @ts-ignore
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import {NativeEventEmitter, NativeModules} from 'react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
 import EventManager from '../../common/eventManager';
-import {kSSOLogin, SSOLogin} from '../../common/webservice/loginServices';
+import { kSSOLogin, SSOLogin } from '../../common/webservice/loginServices';
 
 let userInfo: any = {};
 export const kAppleCredentials = 'appleUserCredentials';
@@ -70,7 +70,7 @@ export class LoginController implements LoginControllerProtocol {
 
   appleLoginCallBack(params: any) {
     this.appleSubscriber.remove();
-    let user = {id: params.id};
+    let user = { id: params.id };
     if (params.id != null && params.id.trim() != '') {
       loaderHandler.showLoader();
       if (params.email != null && params.email.trim() != '') {
@@ -83,7 +83,7 @@ export class LoginController implements LoginControllerProtocol {
           name: params.givenName + ' ' + params.familyName,
         };
       }
-      userInfo = {user};
+      userInfo = { user };
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
           params = {
@@ -108,7 +108,7 @@ export class LoginController implements LoginControllerProtocol {
         'Unable to fetch details from Apple Sign in',
       );
     }
-    showConsoleLog(ConsoleType.LOG,user);
+    showConsoleLog(ConsoleType.LOG, user);
   }
 
   onClickAppleSignIn() {
@@ -192,7 +192,7 @@ export class LoginController implements LoginControllerProtocol {
 
   onClick() {
     if (Utility.isInternetConnected) {
-      const {username, password} = this.view.state;
+      const { username, password } = this.view.state;
       if (username.length == 0 || password.length == 0) {
         var state = {};
         if (username.length == 0) {
@@ -262,7 +262,7 @@ export class LoginController implements LoginControllerProtocol {
    * @param value
    */
   onTextChange(key: string, value: string) {
-    var state: {[x: string]: any} = {[key]: value};
+    var state: { [x: string]: any } = { [key]: value };
     if (
       key == 'username' &&
       this.view.state.userNameError.error == true &&
@@ -290,7 +290,7 @@ export class LoginController implements LoginControllerProtocol {
       };
     }
     this.view.updateState(state);
-    showConsoleLog(ConsoleType.LOG,state);
+    showConsoleLog(ConsoleType.LOG, state);
     this.view.showErrorMessage(false);
   }
 
@@ -305,14 +305,14 @@ export class LoginController implements LoginControllerProtocol {
 
   loginUserAccounts = (portal_ids?: any) => {
     loaderHandler.showLoader();
-    const {username, password} = this.view.state;
-    let loginObj: any = {emailId: username, password: password, fcm_token: ''};
+    const { username, password } = this.view.state;
+    let loginObj: any = { emailId: username, password: password, fcm_token: '' };
     if (portal_ids) {
-      loginObj = {...loginObj, portal_ids: portal_ids};
+      loginObj = { ...loginObj, portal_ids: portal_ids };
     }
     DefaultPreference.get('firebaseToken').then(
       (value: any) => {
-        this.view.props.loginServiceCall({...loginObj, fcm_token: value});
+        this.view.props.loginServiceCall({ ...loginObj, fcm_token: value });
       },
       (err: any) => {
         this.view.props.loginServiceCall(loginObj);
@@ -365,7 +365,7 @@ export class LoginController implements LoginControllerProtocol {
       this.view.dataWasStored = userID;
       this.view.props.setUser(this.view.selectedCommunity);
     } catch (error) {
-      showConsoleLog(ConsoleType.LOG,"login info err :", error)
+      showConsoleLog(ConsoleType.LOG, "login info err :", error)
     }
   };
 
@@ -373,6 +373,8 @@ export class LoginController implements LoginControllerProtocol {
    * Check if user is logged in after web service call or not
    */
   checkLoggedIn = (loginStatus: any) => {
+    // showConsoleLog(ConsoleType.LOG, "show data :", loginStatus);
+
     if (loginStatus.logincompleted) {
       loaderHandler.hideLoader();
       //If Login is success full
@@ -419,7 +421,7 @@ export class LoginController implements LoginControllerProtocol {
           let errorMessage = getValue(loginStatus, ['data', 'message'])
             ? getValue(loginStatus, ['data', 'message'])
             : ERROR_MESSAGE;
-          showConsoleLog(ConsoleType.LOG,errorMessage);
+          showConsoleLog(ConsoleType.LOG, errorMessage);
           this.view.showErrorMessage(true, errorMessage);
         }
       } else {
@@ -429,7 +431,7 @@ export class LoginController implements LoginControllerProtocol {
           ['logindata'],
         );
         var message = msg?.message || msg?.ResponseMessage || ERROR_MESSAGE;
-        showConsoleLog(ConsoleType.LOG,message);
+        showConsoleLog(ConsoleType.LOG, message);
         this.view.showErrorMessage(true, message);
       }
     } else if (loginStatus.instanceCompleted && !loginStatus.loginStarted) {
@@ -454,12 +456,13 @@ export class LoginController implements LoginControllerProtocol {
                   });
                 },
               );
+
               if (
                 loginStatus.instanceData.Response.length > 1 ||
                 isDisabledAccount
               ) {
                 loaderHandler.hideLoader();
-                showConsoleLog(ConsoleType.LOG,loginStatus.instanceData.Response);
+                showConsoleLog(ConsoleType.LOG, loginStatus.instanceData.Response);
                 this.view.updateState({
                   ...this.view.state,
                   isVisible: true,
@@ -473,18 +476,18 @@ export class LoginController implements LoginControllerProtocol {
               }
             })
             .catch((err: Error) => {
-              //showConsoleLog(ConsoleType.LOG,err);
+              showConsoleLog(ConsoleType.LOG, err);
             });
         } else {
           this.view._show(NO_INTERNET, Colors.WarningColor);
         }
       } else {
-        var msg: {message: string; ResponseMessage: string} = getValue(
+        var msg: { message: string; ResponseMessage: string } = getValue(
           loginStatus,
           ['instanceData'],
         );
         var message = msg?.message || msg?.ResponseMessage || ERROR_MESSAGE;
-        showConsoleLog(ConsoleType.LOG,message);
+        showConsoleLog(ConsoleType.LOG, message);
         this.view.showErrorMessage(true, message);
       }
     }

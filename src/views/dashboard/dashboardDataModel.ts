@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { getDetails, keyArray, keyInt, keyObject, keyString } from "../../common/constants";
+import { ConsoleType, getDetails, keyArray, keyInt, keyObject, keyString, showConsoleLog } from "../../common/constants";
 import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
 import { profile_placeholder } from '../../images';

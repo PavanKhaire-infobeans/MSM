@@ -125,7 +125,6 @@ class MemoryCollectionList extends React.Component<Props, State> {
       }
       this.setState({collections: collections});
     } catch (error) {
-      showConsoleLog(ConsoleType.LOG, error);
     }
   };
   renderRow = (item: any) => {

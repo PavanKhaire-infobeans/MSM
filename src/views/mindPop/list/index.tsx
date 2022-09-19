@@ -785,11 +785,10 @@ class MindPopList extends React.Component<{
     }
   };
 
-  _renderBackHiddenCell = (data: any, rowMap: any): JSX.Element => {
-    let ItemInProgress =
-      MindPopsInProgress.indexOf(parseInt(data.item.id)) != -1 ? true : false;
+  _renderBackHiddenCell = (data: any, rowMap: any) => {
+    let ItemInProgress =  MindPopsInProgress.indexOf(parseInt(data.item.id)) != -1 ? true : false;
     if (data.section.title === '1') {
-      return ItemInProgress ? null : (
+      return (ItemInProgress ? null : 
         <View style={styles.rowBack}>
           <TouchableOpacity
             style={[styles.backRightBtn, styles.backRightBtnLeft]}

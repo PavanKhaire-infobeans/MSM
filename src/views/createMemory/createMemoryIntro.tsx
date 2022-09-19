@@ -68,6 +68,7 @@ export default class CreateMemoryIntro extends React.Component<Props> {
     let index = item.index;
     return (
       <View
+        key={index}
         style={styles.createMemoryIntroContainer}>
         <TextNew
           style={styles.introTitle}>
@@ -125,6 +126,7 @@ export default class CreateMemoryIntro extends React.Component<Props> {
               {this.createMemoryIntro.map((obj: any, index1: any) => {
                 return (
                   <View
+                    key={index1}
                     style={[styles.createMemoryIntroContainerStyle,{
                       backgroundColor: index1 <= this.state.currentIndex ? Colors.BtnBgColor : Colors.newBagroundColor,
                     }]}

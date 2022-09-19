@@ -165,7 +165,6 @@ export default class CollectionDetails extends React.Component<Props, State> {
       finalSequence.push(element.id);
     });
     this.setState({collectionList: item.data, finalSequence: finalSequence});
-    //showConsoleLog(ConsoleType.LOG,item);
   }
 
   renderItem = ({item, index, move, moveEnd, isActive}: any) => {

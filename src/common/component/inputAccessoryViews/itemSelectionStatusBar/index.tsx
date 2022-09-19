@@ -17,7 +17,7 @@ class SelectionStatusBar extends Component<{[x: string]: any}> {
         </View>
 
         {/*<TouchableHighlight key="convToMem"
-                    onPress={() => { //showConsoleLog(ConsoleType.LOG,'Convert to memory pressed') }}
+                    onPress={() => {  }}
                 >
                     <Text style={{ fontSize: 18, color: Colors.ThemeColor }}>Convert to Memory</Text>
         </TouchableHighlight>*/}

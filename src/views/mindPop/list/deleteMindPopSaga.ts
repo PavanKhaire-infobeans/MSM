@@ -28,7 +28,6 @@ function* deleteMindPopServiceCall(...action: any[]) {
       payload: responseBody,
     });
   } catch (err) {
-    //showConsoleLog(ConsoleType.LOG,"Delete MindPop Service Error: ", err);
     yield put({type: DeleteMindPopOperation.RequestFailed, payload: err});
   }
 }

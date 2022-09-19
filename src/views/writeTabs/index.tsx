@@ -39,7 +39,7 @@ import {
 } from '../createMemory/createMemoryWebService';
 import {DefaultDetailsMemory} from '../createMemory/dataHelper';
 import {showCustomAlert} from '../createMemory/reducer';
-import {ACTIVE_TAB_ON_DASHBOARD} from '../dashboard/dashboardReducer';
+import {ACTIVE_TAB_ON_DASHBOARD, CreateAMemory} from '../dashboard/dashboardReducer';
 import {kMemoryActionPerformedOnDashboard} from '../myMemories/myMemoriesWebService';
 import {NotificationDataModel} from '../notificationView/notificationDataModel';
 import {
@@ -92,6 +92,7 @@ class WriteTabs extends React.Component<Props> {
   };
 
   componentDidMount = () => {
+    this.props.setCreateMemory(false);
     // this.eventManager = EventManager.addListener("addContentTabPressed", this.navigateToAddContent);
     this.notificationListener = EventManager.addListener(
       kGetInvidualNotification,
@@ -234,6 +235,7 @@ class WriteTabs extends React.Component<Props> {
   };
 
   convertToMemory(id: any, title: any) {
+    
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader('Creating Memory...');
       let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
@@ -370,7 +372,7 @@ class WriteTabs extends React.Component<Props> {
               style={Styles.fullWidth}
               scrollEnabled={Platform.OS == 'ios' ? true : false}
               locked={Platform.OS == 'ios' ? false : true}
-              initialPage={2}
+              initialPage={0}
               currentScreen={(screenName: any) => {
                 if (screenName == 1) {
                   if (
@@ -468,6 +470,7 @@ const mapState = (state: any) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     showAlertCall: (payload: any) => dispatch({type: showCustomAlert, payload: payload}),
+    setCreateMemory: (payload: any) => dispatch({type: CreateAMemory, payload: payload}),
     // fetchFiltersData: (payload: any) => dispatch({ type: GET_FILTERS_DATA, payload: payload }),
     // fetchFiltersDataTimeline: (payload: any) => dispatch({ type: GET_FILTERS_DATA_TIMELINE, payload: payload }),
     // fetchMemoryList: (payload: any) => dispatch({ type: GET_MEMORY_LIST, payload: payload }),

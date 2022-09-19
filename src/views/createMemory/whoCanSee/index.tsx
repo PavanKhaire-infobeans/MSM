@@ -110,7 +110,6 @@ class WhoCanSee extends React.Component<Props, State> {
   };
 
   renderItem = (item: any) => {
-    //showConsoleLog(ConsoleType.LOG,item);
     return (
       <TouchableHighlight
         underlayColor={'#ffffff33'}

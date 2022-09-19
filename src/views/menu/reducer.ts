@@ -53,7 +53,6 @@ function* getUserData() {
       yield put({ type: UserAccount.NotLoggedIn });
     }
   } catch (err) {
-    //showConsoleLog(ConsoleType.LOG,"Error getting user data", err)
   }
 }
 

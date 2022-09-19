@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import SearchBar from '../../../common/component/SearchBar';
 import {checkbox, checkbox_active, icon_close_black} from '../../../images';
-import {Colors} from '../../constants';
+import {Colors, ConsoleType, showConsoleLog} from '../../constants';
 import ProfileEditHeader from '../profileEditHeader';
 import Text from '../Text';
 const {height} = Dimensions.get('screen');
@@ -202,7 +202,7 @@ const BottomPicker = (props: Props) => {
           // selectedValueObject = selectedValueObject.filter((x: any, i: any) => i != index)
           delete selectedValueObject[element.key];
         }
-        //showConsoleLog(ConsoleType.LOG,selectedValueObject);
+        // showConsoleLog(ConsoleType.LOG,selectedValueObject);
       });
       setStateForSelectedIndex(selectedValues, selectedValueObject);
     } else {
