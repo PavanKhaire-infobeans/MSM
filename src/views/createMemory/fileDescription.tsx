@@ -1,117 +1,89 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Alert, Image, Keyboard, Platform, SafeAreaView, Text,
-  TextInput, TouchableOpacity, View
+  Alert,
+  Image,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { Colors } from '../../common/constants';
+import {Colors} from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import { pdf_icon } from '../../images';
+import {pdf_icon} from '../../images';
 import Styles from './styles';
 
-type State = { [x: string]: any };
-type Props = { [x: string]: any };
+const FileDescription = props => {
+  let fileTitle = '';
+  let fileDesc = '';
+  const [file_title, setFileTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [supportView, setSupportView] = useState(0);
 
-export default class FileDescription extends React.Component<Props, State> {
-  keyboardDidShowListener: any;
-  keyboardDidHideListener: any;
-  backListner: EventManager;
-  file_title: '';
-  description: '';
-  state = {
-    file_title: '',
-    description: '',
-    supportView: 0,
-  };
-  constructor(props: Props) {
-    super(props);
-  }
+  useEffect(() => {
+    fileTitle = props.route.params.file.file_title;
+    fileDesc = props.route.params.file.file_description;
+    setFileTitle(props.route.params.file.file_title);
+    setDescription(props.route.params.file.file_description);
+    const backListner = EventManager.addListener(
+      'hardwareBackPress',
+      cancelAction,
+    );
 
-  componentDidMount() {
-    this.file_title = this.props.file.file_title;
-    this.description = this.props.file.file_description;
-    this.setState({
-      file_title: this.file_title,
-      description: this.description,
-    }, () => {
-      this.backListner = EventManager.addListener(
-        'hardwareBackPress',
-        this.cancelAction,
-      );
-      if (Platform.OS == 'android') {
-        this.keyboardDidShowListener = Keyboard.addListener(
-          'keyboardDidShow',
-          this._keyboardDidShow,
-        );
-        this.keyboardDidHideListener = Keyboard.addListener(
-          'keyboardDidHide',
-          this._keyboardDidHide,
-        );
-      } else {
-        this.keyboardDidShowListener = Keyboard.addListener(
-          'keyboardWillShow',
-          this._keyboardDidShow,
-        );
-        this.keyboardDidHideListener = Keyboard.addListener(
-          'keyboardWillHide',
-          this._keyboardDidHide,
-        );
-      }
-    });
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow',
+      _keyboardDidShow,
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS == 'android' ? 'keyboardDidHide' : 'keyboardWillHide',
+      _keyboardDidHide,
+    );
+    return () => {
+      backListner.removeListener();
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
-  }
-
-  _keyboardDidShow = (e: any) => {
-    this.setState({
-      supportView: e.endCoordinates.height - 30,
-    });
+  const _keyboardDidShow = (e: any) => {
+    setSupportView(e.endCoordinates.height - 30);
   };
 
-  _keyboardDidHide = (e: any) => {
-    this.setState({
-      supportView: 0,
-    });
+  const _keyboardDidHide = (e: any) => {
+    setSupportView(0);
   };
 
-  componentWillUnmount() {
-    this.backListner.removeListener()
-    Keyboard.removeAllListeners("keyboardDidShow")
-    Keyboard.removeAllListeners("keyboardDidHide")
-    Keyboard.removeAllListeners("keyboardWillShow")
-    Keyboard.removeAllListeners("keyboardWillHide")
-  }
-  cancelAction = () => {
-    if (
-      this.state.file_title == this.file_title &&
-      this.state.description == this.description
-    ) {
+  const cancelAction = () => {
+    if (file_title == fileTitle && description == fileDesc) {
       Keyboard.dismiss();
-      this.props.navigation.goBack();
+      props.navigation.goBack();
     } else {
-
       Alert.alert('Save changes?', `Do you want to save your changes?`, [
         {
           text: 'No',
           style: 'cancel',
           onPress: () => {
             Keyboard.dismiss();
-            this.props.navigation.goBack();
+            props.navigation.goBack();
           },
         },
         {
           text: 'Yes',
           style: 'default',
           onPress: () => {
-            this.saveValue();
+            saveValue();
           },
         },
       ]);
     }
   };
 
-  renderFileView = () => {
-    let file = this.props.file;
-    switch (file.type) {
+  const renderFileView = () => {
+    let file = props.route.params.file;
+    switch (file?.type) {
       case 'images':
         return (
           <View style={Styles.fileHolderContainer}>
@@ -125,7 +97,6 @@ export default class FileDescription extends React.Component<Props, State> {
             </View>
           </View>
         );
-        break;
       case 'files':
         return (
           <View style={Styles.fileHolderContainer}>
@@ -139,7 +110,6 @@ export default class FileDescription extends React.Component<Props, State> {
             </View>
           </View>
         );
-        break;
       case 'audios':
         return (
           <View style={Styles.audioContainer}>
@@ -159,75 +129,59 @@ export default class FileDescription extends React.Component<Props, State> {
             </View>
           </View>
         );
-        break;
     }
   };
 
-  saveValue = () => {
-    if (
-      this.state.file_title != this.file_title ||
-      this.state.description != this.description
-    ) {
-      this.props.done(
-        this.props.file,
-        this.state.file_title.trim(),
-        this.state.description.trim(),
+  const saveValue = () => {
+    if (file_title != fileTitle || description != fileDesc) {
+      props?.route.params.done(
+        props.route.params.file,
+        file_title.trim(),
+        description.trim(),
       );
     }
     Keyboard.dismiss();
-    this.props.navigation.goBack();
+    props.navigation.goBack();
   };
 
-  render() {
-    return (
-      <View style={Styles.fullFlex}>
-        <SafeAreaView style={Styles.emptySafeAreaStyle} />
-        <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
-          <View style={Styles.fullFlex}>
-            <NavigationHeaderSafeArea
-              heading={'Add Details'}
-              cancelAction={() => this.cancelAction()}
-              showRightText={true}
-              rightText={'Done'}
-              saveValues={this.saveValue}
-            />
-            {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
-            {/* <StatusBar
-              barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
-              backgroundColor={Colors.ThemeColor}
-            /> */}
-            {this.renderFileView()}
-            <View style={[Styles.imagebuttonStyle, Styles.fullFlex]}>
-              <TextInput
-                style={Styles.titleTextInputStyle}
-                placeholder="Enter title here..."
-                placeholderTextColor={Colors.darkGray}
-                multiline={true}
-                numberOfLines={5}
-                value={this.state.file_title}
-                onChangeText={(text: any) =>
-                  this.setState({file_title: text})
-                }></TextInput>
-
-              <TextInput
-                style={Styles.descTextInputStyle}
-                placeholder="Enter description..."
-                placeholderTextColor={Colors.darkGray}
-                onChangeText={(text: any) => this.setState({description: text})}
-                value={this.state.description}
-                onScroll={() => {}}
-                multiline={true}></TextInput>
-            </View>
-            {Platform.OS == 'ios' && (
-              <View
-                style={[
-                  Styles.fullWidth,
-                  {height: this.state.supportView},
-                ]}></View>
-            )}
+  return (
+    <View style={Styles.fullFlex}>
+      <SafeAreaView style={Styles.emptySafeAreaStyle} />
+      <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
+        <View style={Styles.fullFlex}>
+          <NavigationHeaderSafeArea
+            heading={'Add Details'}
+            cancelAction={() => cancelAction()}
+            showRightText={true}
+            rightText={'Done'}
+            saveValues={saveValue}
+          />
+          {renderFileView()}
+          <View style={[Styles.imagebuttonStyle, Styles.fullFlex]}>
+            <TextInput
+              style={Styles.titleTextInputStyle}
+              placeholder="Enter title here..."
+              placeholderTextColor={Colors.darkGray}
+              multiline={true}
+              numberOfLines={5}
+              value={file_title}
+              onChangeText={(text: any) => setFileTitle(text)}></TextInput>
+            <TextInput
+              style={Styles.descTextInputStyle}
+              placeholder="Enter description..."
+              placeholderTextColor={Colors.darkGray}
+              onChangeText={(text: any) => setDescription(text)}
+              value={description}
+              onScroll={() => {}}
+              multiline={true}></TextInput>
           </View>
-        </SafeAreaView>
-      </View>
-    );
-  }
-}
+          {Platform.OS == 'ios' && (
+            <View style={[Styles.fullWidth, {height: supportView}]}></View>
+          )}
+        </View>
+      </SafeAreaView>
+    </View>
+  );
+};
+
+export default FileDescription;

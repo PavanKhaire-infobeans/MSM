@@ -457,6 +457,7 @@ export const CarousalFilesView = (props: {
   files: any;
   type: string;
   togglePlayPause?: any;
+  navigation?: any;
 }) => {
   if (props.files.length > 0)
     return (
@@ -469,6 +470,7 @@ export const CarousalFilesView = (props: {
                 showDesc={false}
                 file={item.item}
                 files={props.files}
+                navigation={props.navigation}
               />
             )}
             sliderWidth={Dimensions.get('window').width}
@@ -533,6 +535,7 @@ export const CommonImageView = (props: {
   file: any;
   files: any;
   showDesc?: boolean;
+  navigation?: any;
 }) => {
   let currentIndex = props.files.indexOf(props.file);
   return (
@@ -540,7 +543,7 @@ export const CommonImageView = (props: {
       <TouchableWithoutFeedback
         onPress={() => {
           if (Utility.isInternetConnected) {
-            this.props.navigation.navigate('imageViewer', {
+            props.navigation?.navigate('imageViewer', {
               files: props.files,
               index: currentIndex,
             });

@@ -1225,6 +1225,7 @@ class CreateMemory extends React.Component<Props> {
   };
 
   fileDescriptionClicked = (file: any) => {
+    alert('here');
     this.hideToolTip();
     this.props.navigation.navigate('fileDescription', {
       file: file,
@@ -1315,8 +1316,6 @@ class CreateMemory extends React.Component<Props> {
   };
 
   updateFileContent = (file: any, title: any, description: any) => {
-    // title = title.trim();
-    // description = description.trim();
     let updatelist = this.state.itemList;
     updatelist.forEach((element: any, index: any) => {
       if (element.fid == file.fid) {

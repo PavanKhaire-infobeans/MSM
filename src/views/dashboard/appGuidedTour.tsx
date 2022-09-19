@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   Animated,
   BackHandler,
   Dimensions,
@@ -60,6 +61,7 @@ export default class AppGuidedTour extends React.Component<Props> {
     showPromptAnim: false,
     showMemoryCreationView: false,
     initialView: true,
+    lottieLoader: true,
   };
   width_X = Dimensions.get('window').width;
 
@@ -284,36 +286,40 @@ export default class AppGuidedTour extends React.Component<Props> {
               {this.appIntro[index].desc}
             </TextNew>
           </View>
-          <View
-            style={Styles.lottieContainer}
-            onStartShouldSetResponder={e => {
-              if (this.state.currentIndex == this.appIntro.length - 1)
-                this.setState({showPromptAnim: true});
-              return true;
-            }}>
-            {/* { !this.state.showPromptAnim && <Image style={{width: "90%", flex:1,bottom:0, height: "90%",backgroundColor:"yellow"}} source={require("../../common/lottieFiles/1_alternate.gif")} /> } */}
-
-            {!this.state.showPromptAnim && (
-              <LottieView
-                loop={true}
-                speed={0.8}
-                autoPlay={true}
-                ref={(animation: any) => {
-                  this.animation = animation;
-                }}
-                style={Styles.lottieImageSourceStyle}
-                source={this.appIntro[index].imageSource}
-              />
-            )}
-            {this.state.showPromptAnim && (
-              <LottieView
-                speed={0.8}
-                autoPlay={true}
-                style={Styles.lottieImageSourceStyle}
-                source={require('../../common/lottieFiles/msm_guidedTour_animation5_part2.json')}
-              />
-            )}
-          </View>
+          {this.state.lottieLoader ? (
+            <View style={Styles.lottieContainer}>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <View
+              style={Styles.lottieContainer}
+              onStartShouldSetResponder={e => {
+                if (this.state.currentIndex == this.appIntro.length - 1)
+                  this.setState({showPromptAnim: true});
+                return true;
+              }}>
+              {!this.state.showPromptAnim && (
+                <LottieView
+                  loop={true}
+                  speed={0.8}
+                  autoPlay={true}
+                  ref={(animation: any) => {
+                    this.animation = animation;
+                  }}
+                  style={Styles.lottieImageSourceStyle}
+                  source={this.appIntro[index].imageSource}
+                />
+              )}
+              {this.state.showPromptAnim && (
+                <LottieView
+                  speed={0.8}
+                  autoPlay={true}
+                  style={Styles.lottieImageSourceStyle}
+                  source={require('../../common/lottieFiles/msm_guidedTour_animation5_part2.json')}
+                />
+              )}
+            </View>
+          )}
         </View>
       </View>
     );
@@ -350,7 +356,6 @@ export default class AppGuidedTour extends React.Component<Props> {
                   onPress={() => {
                     this.setState({beginTour: true}, () => {
                       this.resumeTour();
-                      // this.setState({tourEnded: false});
                     });
                   }}
                 />
@@ -686,6 +691,9 @@ export default class AppGuidedTour extends React.Component<Props> {
                               initialView: false,
                               beginTour: true,
                             });
+                            setTimeout(() => {
+                              this.setState({lottieLoader: false});
+                            }, 500);
                           }}
                         />
                       </View>

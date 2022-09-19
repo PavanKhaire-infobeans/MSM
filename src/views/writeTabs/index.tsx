@@ -1,26 +1,19 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
-  Image,
   Platform,
   SafeAreaView,
   StatusBar,
   TouchableHighlight,
   View,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import TabIcon, {
   kNotificationIndicator,
   NewTabItems,
   TabItems,
 } from '../../common/component/TabBarIcons';
-import {
-  Colors,
-  decode_utf8,
-  fontFamily,
-  fontSize,
-} from '../../common/constants';
+import {Colors, decode_utf8} from '../../common/constants';
 import Utility from '../../common/utility';
-// import { ACTIVE_TAB_ON_DASHBOARD, GET_FILTERS_DATA, GET_FILTERS_DATA_TIMELINE, GET_MEMORY_LIST, ListType, MEMORY_ACTIONS_DASHBOARD } from './dashboardReducer';
 import NewNavigationBar from '../../../app/components/NewNavigationBarWrite';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
@@ -28,18 +21,16 @@ import DefaultPreference from 'react-native-default-preference';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import CustomAlert from '../../common/component/customeAlert';
 import ScrollableTabViewForWrite from '../../common/component/ScrollableTabViewForWrite';
-import TextNew from '../../common/component/Text';
 import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
 import {Account} from '../../common/loginStore';
-import {filter_icon} from '../../images';
 import {
   CreateUpdateMemory,
   promptIdListener,
 } from '../createMemory/createMemoryWebService';
 import {DefaultDetailsMemory} from '../createMemory/dataHelper';
 import {showCustomAlert} from '../createMemory/reducer';
-import {ACTIVE_TAB_ON_DASHBOARD, CreateAMemory} from '../dashboard/dashboardReducer';
+import {ACTIVE_TAB_ON_DASHBOARD} from '../dashboard/dashboardReducer';
 import {kMemoryActionPerformedOnDashboard} from '../myMemories/myMemoriesWebService';
 import {NotificationDataModel} from '../notificationView/notificationDataModel';
 import {
@@ -56,91 +47,70 @@ import MyMemories from './../myMemories';
 import Prompts from './../promptsView';
 import Styles from './styles';
 
-const options = {
-  enableVibrateFallback: true,
-  ignoreAndroidSystemSettings: false,
-};
-type Props = {[x: string]: any};
+const WriteTabs = props => {
+  let notificationModel: NotificationDataModel;
+  const scrollableTabView = useRef(null);
+  const [appTourVisibility, setAppTourVisibility] = useState(false);
+  const [showCustomAlert, setShowCustomAlert] = useState(false);
 
-class WriteTabs extends React.Component<Props> {
-  notificationListener: EventManager;
-  foregroundNotification: EventManager;
-  backgroundNotification: EventManager;
-  eventManager: EventManager;
-  memoryActionsListener: EventManager;
-  eventListener: EventManager;
-  notificationModel: NotificationDataModel;
-  scrollableTabView: any;
-  state = {
-    filterScreenVisibility: false,
-    jumpToVisibility: false,
-    currentScreen: 'Edit',
-    appTourVisibility: false,
-    showCustomAlert: false,
-    setInitial: 0,
-  };
-  memoryFromPrompt: EventManager;
-  screen = '';
-  constructor(props: Props) {
-    super(props);
-    this.notificationModel = new NotificationDataModel();
-  }
-
-  navigateToAddContent = () => {
-    // ReactNativeHapticFeedback.trigger("notificationSuccess", options);
-    // this.props.navigation.navigate("addContent");
-  };
-
-  componentDidMount = () => {
-    this.props.setCreateMemory(false);
-    // this.eventManager = EventManager.addListener("addContentTabPressed", this.navigateToAddContent);
-    this.notificationListener = EventManager.addListener(
+  useEffect(() => {
+    notificationModel = new NotificationDataModel();
+    const notificationListener = EventManager.addListener(
       kGetInvidualNotification,
-      this.notificationCallback,
+      notificationCallback,
     );
-    this.foregroundNotification = EventManager.addListener(
+    const foregroundNotification = EventManager.addListener(
       kForegroundNotice,
-      this.foregroundNotificationCallback,
+      foregroundNotificationCallback,
     );
-    this.backgroundNotification = EventManager.addListener(
+    const backgroundNotification = EventManager.addListener(
       kBackgroundNotice,
-      this.checkNotificationAvailiability,
+      checkNotificationAvailiability,
     );
-    this.eventListener = EventManager.addListener(
+    const eventListener = EventManager.addListener(
       kNotificationIndicator,
-      this.changeNotification,
+      changeNotification,
     );
-    this.memoryActionsListener = EventManager.addListener(
+    const memoryActionsListener = EventManager.addListener(
       kMemoryActionPerformedOnDashboard,
-      this.memoryActionCallBack,
+      memoryActionCallBack,
     );
+    const memoryFromPrompt = EventManager.addListener(
+      promptIdListener,
+      promptToMemoryCallBack,
+    );
+    if (props.showPublishedPopup) {
+      setShowCustomAlert(true);
+    }
+    // if (props.setTimer == 'false') {
+    //   setAppTourVisibility(true);
+    // } else {
+    //   setTimeout(() => {
+    //     DefaultPreference.get('hide_guide_tour').then((value: any) => {
+    //       if (value == 'true') {
+    //         setAppTourVisibility(false);
+    //       } else {
+    //         setAppTourVisibility(true);
+    //       }
+    //     });
+    //   }, 2000);
+    // }
+    return () => {
+      props.showAlertCall(false);
+      notificationListener.removeListener();
+      foregroundNotification.removeListener();
+      backgroundNotification.removeListener();
+      memoryActionsListener.removeListener();
+      eventListener.removeListener();
+      memoryFromPrompt.removeListener();
+    };
+  }, []);
 
-    debugger;
-    if (this.props.showPublishedPopup) {
-      this.setState({
-        showCustomAlert: true,
-      });
-    }
-    if (this.props.setTimer == 'false') {
-      this.state.appTourVisibility = true;
-    } else {
-      setTimeout(() => {
-        DefaultPreference.get('hide_guide_tour').then((value: any) => {
-          if (value == 'true') {
-            this.state.appTourVisibility = false;
-          } else {
-            this.state.appTourVisibility = true;
-          }
-        });
-      }, 2000);
-    }
+  const changeNotification = () => {
+    props.navigation.reset();
   };
 
-  changeNotification = () => {
-    this.props.navigation.reset();
-  };
-
-  foregroundNotificationCallback = (details: any) => {
+  const foregroundNotificationCallback = (details: any) => {
     if (Utility.isInternetConnected) {
       let key =
         Account.selectedData().instanceID + '_' + Account.selectedData().userID;
@@ -163,7 +133,7 @@ class WriteTabs extends React.Component<Props> {
     }
   };
 
-  checkNotificationAvailiability() {
+  const checkNotificationAvailiability = () => {
     if (Utility.notificationObject.hasNotification) {
       if (Utility.isInternetConnected) {
         Utility.notificationObject.hasNotification = false;
@@ -182,16 +152,15 @@ class WriteTabs extends React.Component<Props> {
         No_Internet_Warning();
       }
     }
-  }
+  };
 
-  notificationCallback = (success: any, details: any) => {
+  const notificationCallback = (success: any, details: any) => {
     loaderHandler.hideLoader();
     if (success && Utility.isInternetConnected) {
-      details = this.notificationModel.getNotificationDetails(
+      details = notificationModel.getNotificationDetails(
         details.data,
         false,
       )[0];
-      // showConsoleLog(ConsoleType.LOG,"Final data:",details);
       if (Utility.notificationObject.isBackgroundNotification) {
         SetSeenActivity({ids: details.ids}, 0);
         if (
@@ -199,7 +168,7 @@ class WriteTabs extends React.Component<Props> {
           (details.notificationType.indexOf('collaboration') != -1 ||
             details.notificationType.indexOf('new_edits') != -1)
         ) {
-          this.props.navigation.navigate('createMemory', {
+          props.navigation.navigate('createMemory', {
             editMode: true,
             draftNid: details.nid,
           });
@@ -209,22 +178,21 @@ class WriteTabs extends React.Component<Props> {
             details.type === 'prompts'
           ) {
             //handle prompts to memory here
-            this.convertToMemory(details.nid, details.title);
+            convertToMemory(details.nid, details.title);
           } else {
-            this.props.navigation.navigate('memoryDetails', {
+            props.navigation.navigate('memoryDetails', {
               nid: details.nid,
               type: details.type,
             });
           }
         }
       } else {
-        //showConsoleLog(ConsoleType.LOG,"foreground",details);
         if (
           details.notificationType !== 'prompt_of_the_week_email' &&
           details.type !== 'prompts'
         ) {
           EventManager.callBack(kForegroundNotificationListener, details);
-          if (this.notificationModel.isPartOfActivity(details)) {
+          if (notificationModel.isPartOfActivity(details)) {
             EventManager.callBack(kActivityListener, [details]);
           }
         }
@@ -234,28 +202,23 @@ class WriteTabs extends React.Component<Props> {
     }
   };
 
-  convertToMemory(id: any, title: any) {
-    
+  const convertToMemory = (id: any, title: any) => {
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader('Creating Memory...');
       let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
       draftDetails.prompt_id = parseInt(id);
-      this.memoryFromPrompt = EventManager.addListener(
-        promptIdListener,
-        this.promptToMemoryCallBack,
-      );
       CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
     } else {
       No_Internet_Warning();
     }
-  }
+  };
 
-  promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
+  const promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
     setTimeout(() => {
       loaderHandler.hideLoader();
     }, 500);
     if (success) {
-      this.props.navigation.navigate('createMemory', {
+      props.navigation.navigate('createMemory', {
         editMode: true,
         draftNid: draftDetails,
         isFromPrompt: true,
@@ -266,18 +229,7 @@ class WriteTabs extends React.Component<Props> {
     }
   };
 
-  componentWillUnmount = () => {
-    this.props.showAlertCall(false);
-    this.notificationListener.removeListener();
-    this.foregroundNotification.removeListener();
-    this.backgroundNotification.removeListener();
-    // this.eventManager.removeListener();
-    this.memoryActionsListener.removeListener();
-    this.eventListener.removeListener();
-    // this.eventManager.removeListener();
-  };
-
-  memoryActionCallBack = (
+  const memoryActionCallBack = (
     fetched: boolean,
     responseMessage: any,
     nid?: any,
@@ -286,172 +238,125 @@ class WriteTabs extends React.Component<Props> {
   ) => {
     loaderHandler.hideLoader();
     if (fetched) {
-      // if (type == MemoryActionKeys.removeMeFromThisPostKey){
-      //     publishedMemoriesArray.forEach((element: any, index: any) => {
-      //         if (element.nid == nid) {
-      //             delete publishedMemoriesArray[index].actions_on_memory.remove_me_from_this_post
-      //         }
-      //     });
-      // }
-      // else if(type == MemoryActionKeys.blockAndReportKey || type == MemoryActionKeys.blockUserKey){
-      //     publishedMemoriesArray = publishedMemoriesArray.filter((element: any) => element.user_details.uid != uid)
-      // }
-      // else{
-      //     publishedMemoriesArray = publishedMemoriesArray.filter((element: any) => element.nid != nid)
-      // }
-      // this.publishedMemoryDataModel.updatePublishedMemories(publishedMemoriesArray)
-      this.props.sendMemoryActions({nid, type, uid});
-      // this.setState({});
+      props.sendMemoryActions({nid, type, uid});
     } else {
       ToastMessage(responseMessage, Colors.ErrorColor);
     }
   };
 
-  onFilterClick = () => {
-    this.setState({currentScreen: this.screen}, () => {
-      this.props.navigation.navigate('filtersScreen', {
-        currentScreen: this.screen,
-      });
-    });
-  };
-
-  setScreen = () => {
-    if (this.scrollableTabView?.goToPage) {
-      this.scrollableTabView.goToPage(0);
+  const setScreen = () => {
+    if (scrollableTabView?.current?.goToPage) {
+      scrollableTabView?.current?.goToPage(0);
     }
   };
 
-  render() {
-    return (
-      <View style={Styles.fullFlex}>
-        <SafeAreaView style={Styles.emptySafeAreaStyle} />
-        <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
-          <View style={Styles.fullFlex}>
-            {this.props.showAlert && this.props.showAlertData?.title ? (
-              <CustomAlert
-                // modalVisible={this.state.showCustomAlert}
-                modalVisible={this.props.showAlert}
-                // setModalVisible={setModalVisible}
-                title={this.props.showAlertData?.title}
-                message={this.props.showAlertData?.desc}
-                buttons={[
-                  {
-                    text: Platform.OS === 'android' ? 'GREAT!' : 'Great!',
-                    func: () => {
-                      this.props.showAlertCall(false);
-                    },
+  return (
+    <View style={Styles.fullFlex}>
+      <SafeAreaView style={Styles.emptySafeAreaStyle} />
+      <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
+        <View style={Styles.fullFlex}>
+          {props.showAlert && props.showAlertData?.title ? (
+            <CustomAlert
+              modalVisible={props.showAlert}
+              title={props.showAlertData?.title}
+              message={props.showAlertData?.desc}
+              buttons={[
+                {
+                  text: Platform.OS === 'android' ? 'GREAT!' : 'Great!',
+                  func: () => {
+                    props.showAlertCall(false);
                   },
-                ]}
-              />
-            ) : null}
-
-            {/* <NavigationBar title={TabItems.AllMemories}/> */}
-            <NewNavigationBar
-              isWhite={true}
-              // filterClick={() => this.onFilterClick()}
-              title={
-                this.props.filterName
-                  ? this.props.filterName
-                  : TabItems.AllMemories
-              }
-              showRight={false}
+                },
+              ]}
             />
-
-            <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
-              }
-              backgroundColor="#ffffff"
-            />
-            <ScrollableTabViewForWrite
-              ref={(ref: any) => {
-                this.scrollableTabView = ref;
-              }}
-              style={Styles.fullWidth}
-              scrollEnabled={Platform.OS == 'ios' ? true : false}
-              locked={Platform.OS == 'ios' ? false : true}
-              initialPage={0}
-              currentScreen={(screenName: any) => {
-                if (screenName == 1) {
-                  if (
-                    this.props?.route?.name != 'createMemory' &&
-                    this.props?.route?.name != 'mindPopList' &&
-                    this.props?.route?.name != 'addContent' &&
-                    this.props?.route?.name != 'dashboard'
-                  ) {
-                    if (!this.props.createAMemory) {
-                      this.props.navigation.navigate('addContent', {
-                        beforeBack: () => {
-                          this.setScreen();
-                        },
-                      });
-                    }
-                  }
-                }
-                if (screenName == 2) {
-                  if (this.props?.route?.name === 'myAccount') {
-                    this.setScreen();
-                  }
-                }
-              }}
-              tabBarBackgroundColor={Colors.white}
-              tabBarPosition="bottom"
-              tabBarTextStyle={Styles.tabBarTextStyle}
-              tabBarActiveTextColor={Colors.TextColor}
-              // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
-              tabBarUnderlineStyle={Styles.tabBarUnderlineStyle}>
-              <MyMemories
-                tabLabel={'Edit'}
-                navigation={this.props.navigation}
-              />
-              <MyMemories tabLabel={'New'} />
-              {/* <AddContent tabLabel={'New'} /> */}
-              {/* <View tabLabel={'New'} ></View> */}
-              <Prompts
-                tabLabel={'Prompts'}
-                navigation={this.props.navigation}
-              />
-            </ScrollableTabViewForWrite>
-
-            <View style={Styles.bottomBarContainer}>
-              <View style={Styles.bottomBarSubContainer}>
-                <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Read} />
-                <TabIcon focused={true} navigation={this.props.navigation} title={NewTabItems.Write} />
-              </View>
-            </View>
-
-            {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
-          </View>
-        </SafeAreaView>
-        {this.state.appTourVisibility && (
-          <AppGuidedTour
-            cancelAppTour={() => {
-              this.setState({appTourVisibility: false}, () =>
-                DefaultPreference.set('hide_guide_tour', 'true').then(
-                  function () {},
-                ),
-              );
-            }}
+          ) : null}
+          <NewNavigationBar
+            isWhite={true}
+            title={props.filterName ? props.filterName : TabItems.AllMemories}
+            showRight={false}
           />
-        )}
-      </View>
-    );
-  }
-}
+
+          <StatusBar
+            barStyle={
+              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+            }
+            backgroundColor="#ffffff"
+          />
+          <ScrollableTabViewForWrite
+            ref={scrollableTabView}
+            style={Styles.fullWidth}
+            scrollEnabled={Platform.OS == 'ios' ? true : false}
+            locked={Platform.OS == 'ios' ? false : true}
+            initialPage={2}
+            currentScreen={(screenName: any) => {
+              if (screenName == 1) {
+                if (
+                  props?.route?.name != 'createMemory' &&
+                  props?.route?.name != 'mindPopList' &&
+                  props?.route?.name != 'addContent' &&
+                  props?.route?.name != 'dashboard'
+                ) {
+                  if (props.createAMemory) {
+                    props.navigation.navigate('addContent', {
+                      beforeBack: () => {
+                        setScreen();
+                      },
+                    });
+                  }
+                }
+              }
+              if (screenName == 2) {
+                if (props?.route?.name === 'myAccount') {
+                  setScreen();
+                }
+              }
+            }}
+            tabBarBackgroundColor={Colors.white}
+            tabBarPosition="bottom"
+            tabBarTextStyle={Styles.tabBarTextStyle}
+            tabBarActiveTextColor={Colors.TextColor}
+            tabBarUnderlineStyle={Styles.tabBarUnderlineStyle}>
+            <MyMemories tabLabel={'Edit'} navigation={props.navigation} />
+            <MyMemories tabLabel={'New'} />
+            <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
+          </ScrollableTabViewForWrite>
+
+          <View style={Styles.bottomBarContainer}>
+            <View style={Styles.bottomBarSubContainer}>
+              <TabIcon
+                focused={false}
+                navigation={props.navigation}
+                title={NewTabItems.Read}
+              />
+              <TabIcon
+                focused={true}
+                navigation={props.navigation}
+                title={NewTabItems.Write}
+              />
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+      {appTourVisibility && (
+        <AppGuidedTour
+          cancelAppTour={() => {
+            setAppTourVisibility(false);
+            DefaultPreference.set('hide_guide_tour', 'true').then(
+              function () {},
+            );
+          }}
+        />
+      )}
+    </View>
+  );
+};
 
 export const filterView = (onClick: any, screen: any) => {
   return (
     <TouchableHighlight
       onPress={() => onClick(screen)}
       underlayColor={Colors.transparent}
-      style={Styles.filterButnContainerStyle}>
-      {/* <View style={[Styles.navigationHeaderContainer, { flexDirection: 'row', paddingRight: 16, paddingLeft: 16 }]}>
-                <TextNew style={{ ...fontSize(16) }}>Filters</TextNew>
-                <Image source={filter_icon}></Image>
-            </View> */}
-    </TouchableHighlight>
+      style={Styles.filterButnContainerStyle}></TouchableHighlight>
   );
 };
 
@@ -469,12 +374,10 @@ const mapState = (state: any) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    showAlertCall: (payload: any) => dispatch({type: showCustomAlert, payload: payload}),
-    setCreateMemory: (payload: any) => dispatch({type: CreateAMemory, payload: payload}),
-    // fetchFiltersData: (payload: any) => dispatch({ type: GET_FILTERS_DATA, payload: payload }),
-    // fetchFiltersDataTimeline: (payload: any) => dispatch({ type: GET_FILTERS_DATA_TIMELINE, payload: payload }),
-    // fetchMemoryList: (payload: any) => dispatch({ type: GET_MEMORY_LIST, payload: payload }),
-    // sendMemoryActions: (payload: any) => dispatch({ type: MEMORY_ACTIONS_DASHBOARD, payload: payload }),
+    showAlertCall: (payload: any) =>
+      dispatch({type: showCustomAlert, payload: payload}),
+    setCurrentTabActions: (payload: any) =>
+      dispatch({type: ACTIVE_TAB_ON_DASHBOARD, payload: payload}),
   };
 };
 
