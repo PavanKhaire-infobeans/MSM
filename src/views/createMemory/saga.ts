@@ -1,7 +1,7 @@
 import { all, call, delay, put, takeLatest } from 'redux-saga/effects';
 import { ConsoleType, getValue, showConsoleLog, Storage, TimeStampMilliSeconds } from '../../common/constants';
 import { Account } from '../../common/loginStore';
-import { MemoryService } from '../../common/webservice/memoryServices';
+import { MemoryService, newMemoryService } from '../../common/webservice/memoryServices';
 import {
   CollectionList, LocationListUpdated,
   RecentTags, SaveCollaborators,
@@ -69,13 +69,16 @@ function* getCollaboratorsList(params: any) {
     .catch((err: Error) => Promise.reject(err));
 }
 
-function* etherpadEditingData(params: any) {
-  return MemoryService(
+function* etherpadEditingData(params: any, CB: any) {
+  return newMemoryService(
     `https://${Account.selectedData().instanceURL}/api/etherpad/get_set_text`,
     params,
-  )
-    .then((response: Response) => response.json())
-    .catch((err: Error) => Promise.reject(err));
+    response => {
+      CB(response)
+    }
+  );
+  // .then((response: Response) => response.json())
+  // .catch((err: Error) => Promise.reject(err));
 }
 
 function* getMemoryTags(requestData: any) {
@@ -257,6 +260,7 @@ function* etherPadEditing(requestData: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
+    let dataResponse = {};
     let request = yield call(etherpadEditingData, [
       { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       {
@@ -265,13 +269,16 @@ function* etherPadEditing(requestData: any) {
           text: requestData.payload.content,
           type: requestData.payload.type,
         },
-      },
-    ]);
+      }
+    ],
+      (resp) => {
+        dataResponse = resp;
+    });
     const responseBody = yield call(async () => {
       return await request;
     });
-    if (requestData.payload.type == 'get') {
-      let value = getValue(responseBody, ['Data']);
+      if (requestData.payload.type == 'get') {
+      let value = yield getValue( dataResponse, ['Data']);
       if (value.text) {
         yield put({ type: SaveDescription, payload: value.text.trim() });
       }

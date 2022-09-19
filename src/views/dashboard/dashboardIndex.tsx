@@ -377,10 +377,7 @@ class DashboardIndex extends React.Component<Props> {
               tabBarPosition="bottom"
               tabBarTextStyle={{
                 ...fontSize(16),
-                fontFamily:
-                  Platform.OS === 'ios'
-                    ? fontFamily.Inter
-                    : fontFamily.InterMedium,
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
               }}
               tabBarActiveTextColor={Colors.TextColor}
               // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
@@ -402,16 +399,8 @@ class DashboardIndex extends React.Component<Props> {
 
           <View style={Styles.bottomBarContainer}>
             <View style={Styles.bottomBarSubContainer}>
-              <TabIcon
-                focused={true}
-                navigation={this.props.navigation}
-                title={NewTabItems.Read}
-              />
-              <TabIcon
-                focused={false}
-                navigation={this.props.navigation}
-                title={NewTabItems.Write}
-              />
+              <TabIcon focused={true} navigation={this.props.navigation} title={NewTabItems.Read} />
+              <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Write} />
             </View>
           </View>
         </SafeAreaView>
@@ -437,87 +426,94 @@ class DashboardIndex extends React.Component<Props> {
         let response: any = await configurations(
           `https://${data.instanceURL}`,
           data.userAuthToken,
+          response => {
+
+            if (response && response.ResponseCode == 200) {
+              DefaultPreference.set(
+                'seasons',
+                JSON.stringify(response.Details.seasons),
+              ).then(function () { });
+              let monthArray = [{ name: 'Month*', tid: 0 }];
+              let seasonArray = response.Details.seasons
+                ? response.Details.seasons
+                : [];
+              seasonArray.forEach((element: any) => {
+                monthArray.push(element);
+              });
+              MonthObj.serverMonthsCount = monthArray.length;
+              monthArray = monthArray.concat(months);
+              MonthObj.month = monthArray;
+              // Account.selectedData().start_year = response.Details.years.start;
+              // Account.selectedData().end_year = response.Details.years.end;
+              DefaultPreference.set(
+                'allow_redaction',
+                response.Details.allow_redaction,
+              ).then(function () { });
+              DefaultPreference.set(
+                'default_share_option',
+                response.Details.default_share_option,
+              ).then(function () { });
+              DefaultPreference.set(
+                'digital_archive_checkbox',
+                response.Details.digital_archive_checkbox,
+              ).then(function () { });
+              DefaultPreference.set(
+                'etherpad_key',
+                response.Details.etherpad_key,
+              ).then(function () { });
+              DefaultPreference.set(
+                'internal_filter',
+                response.Details.internal_filter,
+              ).then(function () { });
+              DefaultPreference.set(
+                'privacy_policy_url',
+                response.Details.privacy_policy_url,
+              ).then(function () { });
+              DefaultPreference.set(
+                'public_file_path',
+                response.Details.public_file_path,
+              ).then(function () { });
+              DefaultPreference.set('site_logo', response.Details.site_logo).then(
+                function () { },
+              );
+              DefaultPreference.set(
+                'site_short_name',
+                response.Details.site_short_name,
+              ).then(function () { });
+              DefaultPreference.set('start_year', response.Details.years.start).then(
+                function () { },
+              );
+              DefaultPreference.set('end_year', response.Details.years.end).then(
+                function () { },
+              );
+              DefaultPreference.get('public_file_path').then((value: any) => {
+                Utility.setPublicURL();
+                var actualPath = Account.selectedData().profileImage.replace(
+                  'public://',
+                  value,
+                );
+                Account.selectedData().profileImage = actualPath;
+                DeviceEventEmitter.emit(kProfilePicUpdated);
+                // DefaultPreference.get('start_year').then((value: any) => {
+                // Account.selectedData().start_year = value
+                // DefaultPreference.get('end_year').then((value: any) => {
+                //     Account.selectedData().end_year = value;
+                // });
+                // });
+              });
+            }
+
+          }
         )
-          .then((response: Response) => response.json())
-          .catch((err: Error) => {
-            this.props.navigation.reset({
-              index: 0,
-              routes: [{name: 'prologue'}],
-            });
-            return Promise.reject(err);
-          });
-        DefaultPreference.set(
-          'seasons',
-          JSON.stringify(response.Details.seasons),
-        ).then(function () {});
-        let monthArray = [{name: 'Month*', tid: 0}];
-        let seasonArray = response.Details.seasons
-          ? response.Details.seasons
-          : [];
-        seasonArray.forEach((element: any) => {
-          monthArray.push(element);
-        });
-        MonthObj.serverMonthsCount = monthArray.length;
-        monthArray = monthArray.concat(months);
-        MonthObj.month = monthArray;
-        // Account.selectedData().start_year = response.Details.years.start;
-        // Account.selectedData().end_year = response.Details.years.end;
-        DefaultPreference.set(
-          'allow_redaction',
-          response.Details.allow_redaction,
-        ).then(function () {});
-        DefaultPreference.set(
-          'default_share_option',
-          response.Details.default_share_option,
-        ).then(function () {});
-        DefaultPreference.set(
-          'digital_archive_checkbox',
-          response.Details.digital_archive_checkbox,
-        ).then(function () {});
-        DefaultPreference.set(
-          'etherpad_key',
-          response.Details.etherpad_key,
-        ).then(function () {});
-        DefaultPreference.set(
-          'internal_filter',
-          response.Details.internal_filter,
-        ).then(function () {});
-        DefaultPreference.set(
-          'privacy_policy_url',
-          response.Details.privacy_policy_url,
-        ).then(function () {});
-        DefaultPreference.set(
-          'public_file_path',
-          response.Details.public_file_path,
-        ).then(function () {});
-        DefaultPreference.set('site_logo', response.Details.site_logo).then(
-          function () {},
-        );
-        DefaultPreference.set(
-          'site_short_name',
-          response.Details.site_short_name,
-        ).then(function () {});
-        DefaultPreference.set('start_year', response.Details.years.start).then(
-          function () {},
-        );
-        DefaultPreference.set('end_year', response.Details.years.end).then(
-          function () {},
-        );
-        DefaultPreference.get('public_file_path').then((value: any) => {
-          Utility.setPublicURL();
-          var actualPath = Account.selectedData().profileImage.replace(
-            'public://',
-            value,
-          );
-          Account.selectedData().profileImage = actualPath;
-          DeviceEventEmitter.emit(kProfilePicUpdated);
-          // DefaultPreference.get('start_year').then((value: any) => {
-          // Account.selectedData().start_year = value
-          // DefaultPreference.get('end_year').then((value: any) => {
-          //     Account.selectedData().end_year = value;
-          // });
-          // });
-        });
+        // .then((response: Response) => response.json())
+        // .catch((err: Error) => {
+        //   this.props.navigation.reset({
+        //     index: 0,
+        //     routes: [{ name: 'prologue' }],
+        //   });
+        //   return Promise.reject(err);
+        // });
+
       } catch (err) {
         showConsoleLog(ConsoleType.LOG, 'Error fetching configurations', err);
       }

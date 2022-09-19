@@ -95,7 +95,7 @@ export const CreateUpdateMemory = async (
           }
           else if (listener == promptIdListener) {
             loaderHandler.hideLoader();
-            CB({ status: false, id: 0 });
+            CB({ status: false, ResponseMessage: response['ResponseMessage'] });
           }
           else {
             loaderHandler.hideLoader();
@@ -324,11 +324,11 @@ export const InviteCollaborators = async (
 export const DeleteDraftService = async (
   id: any,
   action: any,
-  listener: any,
+  CB: any,
 ) => {
   try {
     let data = await Storage.get('userData');
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/actions/memory`,
       [
         {
@@ -343,19 +343,21 @@ export const DeleteDraftService = async (
           },
         },
       ],
+      response => {
+        if (response.ResponseCode == 200) {
+          CB({status:true, data:response });
+        } else {
+          CB({status:false, data:response });
+        }
+      }
     )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   Promise.reject(err);
+    // });
 
-    if (response.ResponseCode == 200) {
-      EventManager.callBack(listener, true, response, id);
-    } else {
-      EventManager.callBack(listener, false);
-    }
   } catch (err) {
-    EventManager.callBack(listener, false);
+    CB({status:false, data:"" });
   }
 };
 

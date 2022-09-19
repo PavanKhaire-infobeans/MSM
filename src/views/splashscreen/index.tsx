@@ -81,7 +81,21 @@ const Splash = props => {
             let draftDetails: any = DefaultDetailsMemory(fetchPrompt.title);
             draftDetails.prompt_id = parseInt(decodedDataFromURL);
 
-            CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
+            CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
+              response => {
+                if (response.success) {
+                  this.props.navigation.navigate('createMemory', {
+                    editMode: true,
+                    draftNid: response.id,
+                    isFromPrompt: true,
+                    deepLinkBackClick: true
+                  });
+                } else {
+                  loaderHandler.hideLoader();
+                  ToastMessage(response?.ResponseMessage ? response?.ResponseMessage : 'Error while proccessing');
+                }
+              }
+            );
           } else {
             No_Internet_Warning();
           }
@@ -180,7 +194,7 @@ const Splash = props => {
       Account.selectedData().values = props.user;
       // this.props.navigation.reset("dashboardIndex")
       try {
-        // this.props.fetchFiltersDataTimeline({ type: ListType.Timeline });
+        props.fetchFiltersDataTimeline({ type: ListType.Timeline });
 
         if (fromDeeplinking) {
           if (!apiCalldoneOnce) {

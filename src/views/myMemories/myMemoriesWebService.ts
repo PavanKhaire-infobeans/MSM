@@ -1,7 +1,7 @@
 import { ConsoleType, MemoryActionKeys, showConsoleLog, Storage } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
-import { MemoryService } from '../../common/webservice/memoryServices';
+import { MemoryService, newMemoryService } from '../../common/webservice/memoryServices';
 export const kMemoryDraftsFetched = 'memoryDrafts';
 export const kPublishedMemoriesFetched = 'publishedMemories';
 export const kPublishedMemoryCollections = 'publishedMemoryCollections';
@@ -29,10 +29,11 @@ export const GetMemoryDrafts = async (
   type: any,
   mineType: any,
   offset: any,
+  CB: any
 ) => {
   try {
     let data = await Storage.get('userData');
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/memory_draft/get`,
       [
         {
@@ -51,34 +52,42 @@ export const GetMemoryDrafts = async (
           },
         },
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-    if (response != undefined && response != null) {
-      if (response.ResponseCode == 200) {
-        EventManager.callBack(kMemoryDraftsFetched, true, response['Data']);
-      } else {
-        EventManager.callBack(
-          kMemoryDraftsFetched,
-          false,
-          response['ResponseMessage'],
-        );
+      response => {
+        if (response != undefined && response != null) {
+          if (response.ResponseCode == 200) {
+            // EventManager.callBack(kMemoryDraftsFetched, true, response['Data']);
+            CB({ status: true, data: response['Data'] })
+          }
+          else {
+            CB({ status: false, ResponseMessage: response['ResponseMessage'] })
+            // EventManager.callBack(
+            //   kMemoryDraftsFetched,
+            //   false,
+            //   response['ResponseMessage'],
+            // );
+          }
+        } else {
+          CB({ status: false, ResponseMessage: 'Unable to process your request. Please try again later' })
+          // EventManager.callBack(
+          //   kMemoryDraftsFetched,
+          //   false,
+          //   'Unable to process your request. Please try again later',
+          // );
+        }
       }
-    } else {
-      EventManager.callBack(
-        kMemoryDraftsFetched,
-        false,
-        'Unable to process your request. Please try again later',
-      );
-    }
+    )
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   Promise.reject(err);
+    // });
+
   } catch (err) {
-    EventManager.callBack(
-      kMemoryDraftsFetched,
-      false,
-      'Unable to process your request. Please try again later',
-    );
+    CB({ status: false, ResponseMessage: 'Unable to process your request. Please try again later' })
+    // EventManager.callBack(
+    //   kMemoryDraftsFetched,
+    //   false,
+    //   'Unable to process your request. Please try again later',
+    // );
   }
 };
 
@@ -141,8 +150,7 @@ export const GetPublishedMemoryCollections = async (requestId: any) => {
   try {
     let data = await Storage.get('userData');
     let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/collection/list_memory_collections`,
       [
         {
@@ -189,8 +197,7 @@ export const GetBlockedUsersAndMemory = async (type: any) => {
   try {
     let data = await Storage.get('userData');
     let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/get/users_blocked_data`,
       [
         {

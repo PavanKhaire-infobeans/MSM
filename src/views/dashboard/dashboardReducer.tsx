@@ -7,9 +7,9 @@ import {
   Storage,
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
-import {MemoryService} from '../../common/webservice/memoryServices';
-import {DashboardDataModel} from './dashboardDataModel';
+import { Account } from '../../common/loginStore';
+import { MemoryService, newMemoryService } from '../../common/webservice/memoryServices';
+import { DashboardDataModel } from './dashboardDataModel';
 
 export const SET_FILTERS_NAME = 'SET_FILTERS_NAME';
 export const SET_TIMELINE_FILTERS = 'SET_TIMELINE_FILTERS';
@@ -224,13 +224,11 @@ const filteredList = (payload: any, list: any) => {
   return list;
 };
 
-function* fetchFilters(params: any) {
-  return MemoryService(
-    `https://${Account.selectedData().instanceURL}/api/timeline/filters`,
-    params,
-  )
-    .then((response: Response) => response.json())
-    .catch((err: Error) => Promise.reject(err));
+function* fetchFilters(params: any, CB: any) {
+    return newMemoryService(`https://${Account.selectedData().instanceURL}/api/timeline/filters`, params,
+        res => CB(res))
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => Promise.reject(err));
 }
 
 function* fetchMemoryList(params: any) {
@@ -252,43 +250,43 @@ function* getFiltersTimeLine(action: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
-    let request = yield call(fetchFilters, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
-      {
-        details: {
-          type: action.payload.type,
-        },
-        configurationTimestamp: '0',
-      },
-    ]);
-    const responseBody = yield call(async function () {
-      return await request;
-    });
+        let dataset = {};
+        let request = yield call(fetchFilters,
+            [{ "X-CSRF-TOKEN": data.userAuthToken, "Content-Type": "application/json" },
+            {
+                "details": {
+                    "type": action.payload.type
+                },
+                "configurationTimestamp": "0"
+            }
+            ],
+            responseBody => {
+                if (responseBody.ResponseCode == 200) {
+                    responseBody.Details.allSelected = { name: 'All', id: 'all', value: 1 }
+                    responseBody.Details.cueSelected = { name: 'My Stories Matter', id: 'msm', value: 1 };
 
-    if (responseBody.ResponseCode == 200) {
-      responseBody.Details.allSelected = {name: 'All', id: 'all', value: 1};
-      responseBody.Details.cueSelected = {
-        name: 'My Stories Matter',
-        id: 'msm',
-        value: 1,
-      };
+                    if (responseBody.Details && responseBody.Details.timeline_years) {
 
-      if (responseBody.Details && responseBody.Details.timeline_years) {
-        DefaultPreference.set(
-          'timeline_years',
-          JSON.stringify(responseBody.Details.timeline_years),
-        ).then(function () {});
-        Account.selectedData().start_year =
-          responseBody.Details.timeline_years.start_year;
-        Account.selectedData().end_year =
-          responseBody.Details.timeline_years.end_year;
-      }
+                        DefaultPreference.set('timeline_years', JSON.stringify(responseBody.Details.timeline_years)).then(function () {
+                        });
+                        Account.selectedData().start_year = responseBody.Details.timeline_years.start_year;
+                        Account.selectedData().end_year = responseBody.Details.timeline_years.end_year;
+                    }
 
-      yield put({type: SET_TIMELINE_FILTERS, payload: responseBody.Details});
+                    dataset = responseBody.Details
+                }
+            }
+        );
+
+        const responseBody = yield call(async function () {
+            return await request;
+        });
+
+        yield put({ type: SET_TIMELINE_FILTERS, payload: yield dataset })
+
+    } catch (err) {
+        showConsoleLog(ConsoleType.LOG, err);
     }
-  } catch (err) {
-    showConsoleLog(ConsoleType.LOG, err);
-  }
 }
 
 /**

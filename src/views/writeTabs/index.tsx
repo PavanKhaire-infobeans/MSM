@@ -467,14 +467,11 @@ const mapState = (state: any) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    showAlertCall: (payload: any) =>
-      dispatch({type: showCustomAlert, payload: payload}),
+    showAlertCall: (payload: any) => dispatch({type: showCustomAlert, payload: payload}),
     // fetchFiltersData: (payload: any) => dispatch({ type: GET_FILTERS_DATA, payload: payload }),
     // fetchFiltersDataTimeline: (payload: any) => dispatch({ type: GET_FILTERS_DATA_TIMELINE, payload: payload }),
     // fetchMemoryList: (payload: any) => dispatch({ type: GET_MEMORY_LIST, payload: payload }),
     // sendMemoryActions: (payload: any) => dispatch({ type: MEMORY_ACTIONS_DASHBOARD, payload: payload }),
-    setCurrentTabActions: (payload: any) =>
-      dispatch({type: ACTIVE_TAB_ON_DASHBOARD, payload: payload}),
   };
 };
 

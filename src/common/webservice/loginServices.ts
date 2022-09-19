@@ -55,12 +55,13 @@ function logout(url: string, userAuthToken: string) {
   );
 }
 
-function configurations(url: string, userAuthToken: string) {
-  return Webservice.postRequest(
+function configurations(url: string, userAuthToken: string,CB:any) {
+  return Webservice.newPostRequest(
     `${url}/api/configurations/get`,
     {'X-CSRF-TOKEN': userAuthToken, 'Content-Type': 'application/json'},
     {type: 'site'},
     false,
+    data => CB(data)
   );
 }
 

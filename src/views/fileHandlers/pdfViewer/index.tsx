@@ -23,15 +23,15 @@ export default class PDFViewer extends React.Component<Props> {
   };
 
   render() {
-    let filePath = this.props.file.url
-      ? unescape(this.props.file.url)
-      : this.props.file.filePath;
+    let filePath = this.props?.route?.params?.file.url
+      ? unescape(this.props?.route?.params?.file.url)
+      : this.props?.route?.params?.file.filePath;
     if (filePath.indexOf('file://') > -1) {
       filePath = decode_utf8(filePath);
     }
     let source = {uri: filePath, cache: false};
 
-    // if(this.props.file.isLocal){
+    // if(this.props?.route?.params?.file.isLocal){
     //     source = {uri:filePath,cache:true};
     // }
 

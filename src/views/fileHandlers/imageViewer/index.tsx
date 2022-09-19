@@ -71,15 +71,15 @@ export default class ImageViewer extends React.Component<Props> {
   };
   constructor(props: Props) {
     super(props);
-    let activeSlideNumber = this.props.index ? this.props.index : 0;
-    currentIndex = this.props.index ? this.props.index : 0;
+    let activeSlideNumber = this.props?.route?.params?.index ? this.props?.route?.params?.index : 0;
+    currentIndex = this.props?.route?.params?.index ? this.props?.route?.params?.index : 0;
     this.setState({
       activeSlide: activeSlideNumber,
     });
   }
 
   componentDidMount() {
-    let activeSlideNumber = this.props.index ? this.props.index : 0;
+    let activeSlideNumber = this.props?.route?.params?.index ? this.props?.route?.params?.index : 0;
     this.setState({
       activeSlide: activeSlideNumber,
     });
@@ -125,14 +125,14 @@ export default class ImageViewer extends React.Component<Props> {
 
   checkIfDescriptionIsDisabled = () => {
     if (
-      (this.props.files[this.state.activeSlide].file_description &&
-        this.props.files[this.state.activeSlide].file_description.length > 0) ||
-      (this.props.files[this.state.activeSlide].file_title &&
-        this.props.files[this.state.activeSlide].file_title.length > 0) ||
-      (this.props.files[this.state.activeSlide].description &&
-        this.props.files[this.state.activeSlide].description.length > 0) ||
-      (this.props.files[this.state.activeSlide].title &&
-        this.props.files[this.state.activeSlide].title.length > 0)
+      (this.props?.route?.params?.files[this.state.activeSlide].file_description &&
+        this.props?.route?.params?.files[this.state.activeSlide].file_description.length > 0) ||
+      (this.props?.route?.params?.files[this.state.activeSlide].file_title &&
+        this.props?.route?.params?.files[this.state.activeSlide].file_title.length > 0) ||
+      (this.props?.route?.params?.files[this.state.activeSlide].description &&
+        this.props?.route?.params?.files[this.state.activeSlide].description.length > 0) ||
+      (this.props?.route?.params?.files[this.state.activeSlide].title &&
+        this.props?.route?.params?.files[this.state.activeSlide].title.length > 0)
     ) {
       return true;
     }
@@ -142,7 +142,7 @@ export default class ImageViewer extends React.Component<Props> {
     //showConsoleLog(ConsoleType.LOG,this.props.files);
     var urls: any[];
     urls = [];
-    for (let fl of this.props.files) {
+    for (let fl of this.props?.route?.params?.files) {
       if (fl.thumbnail_large_url) {
         fl.url = fl.thumbnail_large_url;
       }
@@ -185,10 +185,10 @@ export default class ImageViewer extends React.Component<Props> {
             <View style={Styles.viewDetailsContainer}>
               <ScrollView>
                 <Text style={Styles.fileTitle}>
-                  {this.props.files[this.state.activeSlide].file_title}
+                  {this.props?.route?.params?.files[this.state.activeSlide].file_title}
                 </Text>
                 <Text style={Styles.fileDesc}>
-                  {this.props.files[this.state.activeSlide].file_description}
+                  {this.props?.route?.params?.files[this.state.activeSlide].file_description}
                 </Text>
               </ScrollView>
             </View>
@@ -200,8 +200,8 @@ export default class ImageViewer extends React.Component<Props> {
           {!this.props.hideDescription && (
             <View style={Styles.hideDescriptionContainer}>
               <Text style={Styles.fileStext}>
-                {this.props.files.length > 1
-                  ? this.state.activeSlide + 1 + '/' + this.props.files.length
+                {this.props?.route?.params?.files.length > 1
+                  ? this.state.activeSlide + 1 + '/' + this.props?.route?.params?.files.length
                   : ''}
               </Text>
               <TouchableOpacity
