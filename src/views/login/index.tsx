@@ -75,8 +75,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   //User state
   state = {
     _isRemeberMe: false,
-    username: 'rishabh.shah@infobeans.com',
-    password: 'Admin@123',
+    username: '',
+    password: '',
     userNameError: {
       error: false,
       text: '',

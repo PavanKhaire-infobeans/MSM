@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -25,7 +25,7 @@ import {
 } from '../../images';
 // @ts-ignore
 import DeviceInfo from 'react-native-device-info';
-import ActionSheet, {ActionSheetItem} from '../../common/component/actionSheet';
+import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
   PickAudio,
@@ -33,40 +33,42 @@ import {
   PickPDF,
 } from '../../common/component/filePicker/filePicker';
 import Text from '../../common/component/Text';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
   Colors,
+  ConsoleType,
   encode_utf8,
   GenerateRandomID,
+  showConsoleLog,
   TimeStampMilliSeconds,
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {createNew} from '../createMemory';
-import {CreateUpdateMemory} from '../createMemory/createMemoryWebService';
+import { createNew } from '../createMemory';
+import { CreateUpdateMemory } from '../createMemory/createMemoryWebService';
 import {
   DefaultDetailsMemory,
   DefaultDetailsWithoutTitleMemory,
 } from '../createMemory/dataHelper';
-import {TempFile} from '../mindPop/edit';
+import { TempFile } from '../mindPop/edit';
 import {
   addEditMindPop,
   kMindPopUploadedIdentifier,
 } from '../mindPop/edit/addMindPopflow';
-import DefaultPreference from 'react-native-default-preference';
+// import DefaultPreference from 'react-native-default-preference';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import CustomAlert from '../../common/component/customeAlert';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import CreateMemoryIntro from '../createMemory/createMemoryIntro';
-import {showCustomAlert, showCustomAlertData} from '../createMemory/reducer';
+import { showCustomAlert, showCustomAlertData } from '../createMemory/reducer';
 import style from './styles';
 
 const ImageActions: Array<ActionSheetItem> = [
-  {index: 0, text: 'Image', image: action_camera},
-  {index: 1, text: 'Audio', image: action_audio},
-  {index: 2, text: 'PDF', image: action_pdf},
-  {index: 3, text: 'Cancel', image: action_close},
+  { index: 0, text: 'Image', image: action_camera },
+  { index: 1, text: 'Audio', image: action_audio },
+  { index: 2, text: 'PDF', image: action_pdf },
+  { index: 3, text: 'Cancel', image: action_close },
 ];
 
 const options = {
@@ -80,7 +82,7 @@ const AddContentDetails = props => {
   const inputRef = useRef(null);
 
   const [memoryIntroVisibility, setMemoryIntroVisibility] = useState(false);
-  const [files, setFiles] = useState([]);
+  const [files, setFiles]: any[] = useState([]);
   const [bottomBar, setBottomBar] = useState({
     keyboardVisible: false,
     bottom: 0,
@@ -89,43 +91,45 @@ const AddContentDetails = props => {
     type: 'none',
     list: ImageActions,
   });
+
   const [content, setContent] = useState('');
   const [showNextDialog, setShowNextDialog] = useState(false);
   const [titleError, setTitleError] = useState('');
   const [placeholder, setPlaceholder] = useState('|Tap to start writing...');
 
   useEffect(() => {
-    DefaultPreference.get('hide_memory_intro').then((value: any) => {
-      if (value == 'true') {
-        setMemoryIntroVisibility(false);
-      } else {
-        setMemoryIntroVisibility(true);
-      }
-    });
-    const keyboardDidShowListener = Keyboard.addListener(
-      Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow',
-      _keyboardDidShow,
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide',
-      _keyboardDidHide,
-    );
-    const mindPopCallback = EventManager.addListener(
-      kMindPopUploadedIdentifier,
-      mindPopUpdated,
-    );
-    const backListner = EventManager.addListener('hardwareBackPress', _onBack);
-    const createMemoryListener = EventManager.addListener(
-      'addContentCreateMemory',
-      createMemoryCallBack,
-    );
+    // DefaultPreference.get('hide_memory_intro').then((value: any) => {
+    //   if (value == 'true') {
+    //     setMemoryIntroVisibility(false);
+    //   } else {
+    //     setMemoryIntroVisibility(true);
+    //   }
+    // });
+    // const keyboardDidShowListener = Keyboard.addListener(
+    //   Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow',
+    //   _keyboardDidShow,
+    // );
+    // const keyboardDidHideListener = Keyboard.addListener(
+    //   Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide',
+    //   _keyboardDidHide,
+    // );
+    // const mindPopCallback = EventManager.addListener(
+    //   kMindPopUploadedIdentifier,
+    //   mindPopUpdated,
+    // );
+    // const backListner = EventManager.addListener('hardwareBackPress', _onBack);
+    // const createMemoryListener = EventManager.addListener(
+    //   'addContentCreateMemory',
+    //   createMemoryCallBack,
+    // );
 
     return () => {
-      mindPopCallback.removeListener();
-      backListner.removeListener();
-      createMemoryListener.removeListener();
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      // mindPopCallback.removeListener();
+      // backListner.removeListener();
+      // createMemoryListener.removeListener();
+      // keyboardDidShowListener.remove();
+      // keyboardDidHideListener.remove();
+      props?.route?.params?.beforeBack && props?.route?.params?.beforeBack();
     };
   });
 
@@ -166,7 +170,7 @@ const AddContentDetails = props => {
                 props?.route?.params?.beforeBack();
               props?.navigation?.goBack();
             },
-            styles: {fontWeight: '400'},
+            styles: { fontWeight: '400' },
           },
         ]}
       />
@@ -178,6 +182,7 @@ const AddContentDetails = props => {
     nid: any,
     padDetails: any,
   ) => {
+    showConsoleLog(ConsoleType.WARN, 'in call back ::', success);
     loaderHandler.hideLoader();
     if (success) {
       props.navigation.replace('createMemory', {
@@ -186,7 +191,7 @@ const AddContentDetails = props => {
         textTitle: draftDetails.title,
         editMode: false,
         padDetails: padDetails,
-        location: {description: '', reference: ''},
+        location: { description: '', reference: '' },
         memoryDate: draftDetails.memory_date,
         type: createNew,
       });
@@ -274,8 +279,23 @@ const AddContentDetails = props => {
         'addContentCreateMemory',
         '',
         res => {
+          showConsoleLog(ConsoleType.WARN, 'sadadadsd ::', res);
           if (res.status) {
-            createMemoryCallBack(res.status, res.id, res.padDetails);
+            // createMemoryCallBack(res.status, res.id, res.padDetails);
+            if (res.status) {
+              props.navigation.replace('createMemory', {
+                attachments: files,
+                id: res.id,
+                textTitle: draftDetails.title,
+                editMode: false,
+                padDetails: res.padDetails,
+                location: { description: '', reference: '' },
+                memoryDate: draftDetails.memory_date,
+                type: createNew,
+              });
+            } else {
+              ToastMessage('Unable to create memory');
+            }
           }
         },
       );
@@ -313,7 +333,7 @@ const AddContentDetails = props => {
   };
 
   const fileCallback = (file: any) => {
-    let tempfiles = [...files];
+    let tempfiles: any[] = [...files];
     file.forEach((element: any) => {
       tempfiles.push(element);
     });
@@ -329,11 +349,11 @@ const AddContentDetails = props => {
       editRefresh: (file: any[]) => {
         Keyboard.dismiss();
         let fid = GenerateRandomID();
-        let tempFile: TempFile[] = file.map(obj => ({...obj, fid}));
+        let tempFile: TempFile[] = file.map(obj => ({ ...obj, fid }));
         fileCallback(tempFile);
       },
-      reset: () => {},
-      deleteItem: () => {},
+      reset: () => { },
+      deleteItem: () => { },
     });
   };
 
@@ -348,11 +368,11 @@ const AddContentDetails = props => {
         }
         break;
       case 'files':
-        props.navigation.navigate('pdfViewer', {file: file});
+        props.navigation.navigate('pdfViewer', { file: file });
         break;
       case 'images':
         props.navigation.navigate('imageViewer', {
-          files: [{url: file.thumb_uri}],
+          files: [{ url: file.thumb_uri }],
           hideDescription: true,
         });
         break;
@@ -389,7 +409,7 @@ const AddContentDetails = props => {
         key={element.fid}
         style={style.padding15}>
         <View>
-          <View style={[style.RecordContainer, {width}]}>
+          <View style={[style.RecordContainer, { width }]}>
             {element.type == 'audios' ? (
               <ImageBackground
                 style={style.RecordContainerImgBackgrounStyle}
@@ -406,8 +426,8 @@ const AddContentDetails = props => {
               </ImageBackground>
             ) : element.type == 'images' ? (
               <Image
-                source={{uri: element.thumb_uri}}
-                style={{width: width, height: 120}}
+                source={{ uri: element.thumb_uri }}
+                style={{ width: width, height: 120 }}
                 resizeMode="contain"
               />
             ) : element.type == 'files' ? (
@@ -506,7 +526,7 @@ const AddContentDetails = props => {
                         marginBottom:
                           bottomBar.bottom > 0
                             ? bottomBar.bottom -
-                              (Platform.OS == 'android' ? 230 : 160)
+                            (Platform.OS == 'android' ? 230 : 160)
                             : 120,
                       },
                     ]}
@@ -522,8 +542,8 @@ const AddContentDetails = props => {
                       Platform.OS == 'android'
                         ? 0
                         : bottomBar.bottom == 0
-                        ? 130
-                        : bottomBar.bottom,
+                          ? 130
+                          : bottomBar.bottom,
                   }}></View>
               )}
             </View>
@@ -543,25 +563,25 @@ const AddContentDetails = props => {
         <CreateMemoryIntro
           cancelMemoryIntro={() => {
             setMemoryIntroVisibility(false);
-            DefaultPreference.set('hide_memory_intro', 'true').then(
-              function () {},
-            );
+            // DefaultPreference.set('hide_memory_intro', 'true').then(
+            //   function () {},
+            // );
           }}></CreateMemoryIntro>
       )}
     </SafeAreaView>
   );
 };
 
-const mapState = (state: {[x: string]: any}) => ({
+const mapState = (state: { [x: string]: any }) => ({
   showAlert: state.MemoryInitials.showAlert,
 });
 
 const mapDispatch = (dispatch: Function) => {
   return {
     showAlertCall: (payload: any) =>
-      dispatch({type: showCustomAlert, payload: payload}),
+      dispatch({ type: showCustomAlert, payload: payload }),
     showAlertCallData: (payload: any) =>
-      dispatch({type: showCustomAlertData, payload: payload}),
+      dispatch({ type: showCustomAlertData, payload: payload }),
   };
 };
 export default connect(mapState, mapDispatch)(AddContentDetails);

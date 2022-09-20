@@ -75,6 +75,7 @@ export const CreateUpdateMemory = async (
 
           }
           else {
+            showConsoleLog(ConsoleType.LOG, "done dT >>>>>>");
             if (listener == "mindpopEditMemoryListener") {
               loaderHandler.hideLoader();
               EventManager.callBack(listener, true, id, padDetails, key, prompt_id);

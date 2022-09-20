@@ -56,13 +56,13 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
       duration: 200,
       useNativeDriver: true,
     }).start(() => {
-      setTimeout(() => {
+      // setTimeout(() => {
         setState(prevState =>
         ({
           ...prevState,
           hidden: true
         }))
-      }, 20);
+      // }, 20);
     });
   };
 
@@ -88,13 +88,13 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
           duration: 200,
           useNativeDriver: true,
         }).start(() => {
-          setTimeout(() => {
+          // setTimeout(() => {
             setState(prevState =>
             ({
               ...prevState,
               hidden: true
             }))
-          }, 20);
+          // }, 20);
         });
       }
 

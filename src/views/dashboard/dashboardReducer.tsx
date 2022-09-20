@@ -430,7 +430,7 @@ function* getTimelineList(action: any) {
 }
 
 const getCallerObject = (action: any) => {
-  showConsoleLog(ConsoleType.WARN, 'action >', JSON.stringify(action));
+  // showConsoleLog(ConsoleType.WARN, 'action >', JSON.stringify(action));
   if (action.payload.type == ListType.Recent) {
     if (action.payload.isLoading) {
       promptPagination = 0;

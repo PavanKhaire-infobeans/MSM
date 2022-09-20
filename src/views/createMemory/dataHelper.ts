@@ -155,7 +155,7 @@ export const DefaultCreateMemoryObj = (
       // },
       location: initialState.location,
       nid: initialState.nid,
-      share_option: "'allfriends'",// initialState.shareOption,
+      share_option: 'only_me',//"'allfriends'",// initialState.shareOption,
       description: description,
     };
     if (

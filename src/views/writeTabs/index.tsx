@@ -1,18 +1,20 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Dimensions,
+  FlatList,
   Platform,
   SafeAreaView,
   StatusBar,
   TouchableHighlight,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import TabIcon, {
   kNotificationIndicator,
   NewTabItems,
   TabItems,
 } from '../../common/component/TabBarIcons';
-import {Colors, decode_utf8} from '../../common/constants';
+import { Colors, decode_utf8 } from '../../common/constants';
 import Utility from '../../common/utility';
 import NewNavigationBar from '../../../app/components/NewNavigationBarWrite';
 // @ts-ignore
@@ -20,19 +22,21 @@ import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import CustomAlert from '../../common/component/customeAlert';
-import ScrollableTabViewForWrite from '../../common/component/ScrollableTabViewForWrite';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import DefaultTabBar from '../../common/component/ScrollableTabViewForWrite/DefaultTabBar';
+// import ScrollableTabViewForWrite from '../../common/component/ScrollableTabViewForWrite/DefaultTabBar';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import AddContentDetails from '../addContent';
+import { Account } from '../../common/loginStore';
 import {
   CreateUpdateMemory,
   promptIdListener,
 } from '../createMemory/createMemoryWebService';
-import {DefaultDetailsMemory} from '../createMemory/dataHelper';
-import {showCustomAlert} from '../createMemory/reducer';
-import {ACTIVE_TAB_ON_DASHBOARD} from '../dashboard/dashboardReducer';
-import {kMemoryActionPerformedOnDashboard} from '../myMemories/myMemoriesWebService';
-import {NotificationDataModel} from '../notificationView/notificationDataModel';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
+import { showCustomAlert } from '../createMemory/reducer';
+import { ACTIVE_TAB_ON_DASHBOARD } from '../dashboard/dashboardReducer';
+import { kMemoryActionPerformedOnDashboard } from '../myMemories/myMemoriesWebService';
+import { NotificationDataModel } from '../notificationView/notificationDataModel';
 import {
   GetActivities,
   kActivityListener,
@@ -52,6 +56,8 @@ const WriteTabs = props => {
   const scrollableTabView = useRef(null);
   const [appTourVisibility, setAppTourVisibility] = useState(false);
   const [showCustomAlert, setShowCustomAlert] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  let flatListRef = useRef(null);
 
   useEffect(() => {
     notificationModel = new NotificationDataModel();
@@ -162,7 +168,7 @@ const WriteTabs = props => {
         false,
       )[0];
       if (Utility.notificationObject.isBackgroundNotification) {
-        SetSeenActivity({ids: details.ids}, 0);
+        SetSeenActivity({ ids: details.ids }, 0);
         if (
           details.status == 0 &&
           (details.notificationType.indexOf('collaboration') != -1 ||
@@ -238,7 +244,7 @@ const WriteTabs = props => {
   ) => {
     loaderHandler.hideLoader();
     if (fetched) {
-      props.sendMemoryActions({nid, type, uid});
+      props.sendMemoryActions({ nid, type, uid });
     } else {
       ToastMessage(responseMessage, Colors.ErrorColor);
     }
@@ -249,6 +255,51 @@ const WriteTabs = props => {
       scrollableTabView?.current?.goToPage(0);
     }
   };
+
+  const onScroll = (e: any) => {
+    let page = Math.ceil(e.nativeEvent.contentOffset.x / Dimensions.get('window').width);
+    if (page !== currentIndex) {
+      if (page >= 3) {
+        page = 2;
+      }
+      setCurrentIndex(page);
+    }
+  }
+
+  const _renderItem = ({ item, index }) => (
+    index === 0 ?
+      <View style={{ width: Dimensions.get('window').width }}>
+        <MyMemories tabLabel={'Edit'} navigation={props.navigation} />
+      </View>
+      :
+      index === 1 ?
+        // props.navigation.navigate('addContent', {
+        //   beforeBack: () => {
+        //     setScreen();
+        //   },
+        // })
+        <View style={{ width: Dimensions.get('window').width }}>
+          {/* <AddContentDetails navigation={props.navigation} tabLabel={'New'} /> */}
+        </View>
+        :
+        <View style={{ width: Dimensions.get('window').width }}>
+          <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
+        </View>
+  );
+
+  const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
+    if (viewableItems && viewableItems.length) {
+      if (viewableItems.length === 1) {
+        if (viewableItems[0].index === 1) {
+          props.navigation.navigate('addContent', {
+            beforeBack: () => {
+              setScreen();
+            },
+          });
+        }
+      }
+    }
+  }, []);
 
   return (
     <View style={Styles.fullFlex}>
@@ -282,12 +333,26 @@ const WriteTabs = props => {
             }
             backgroundColor="#ffffff"
           />
-          <ScrollableTabViewForWrite
+
+          <FlatList
+            data={[1, 2, 3]}
+            ref={flatListRef}
+            style={Styles.fullWidth}
+            initialNumToRender={3}
+            renderItem={_renderItem}
+            horizontal={true}
+            pagingEnabled={true}
+            onViewableItemsChanged={onViewableItemsChanged}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(_item, index) => index + ''}
+            onScroll={(e) => onScroll(e)}
+          />
+          {/* <ScrollableTabViewForWrite
             ref={scrollableTabView}
             style={Styles.fullWidth}
             scrollEnabled={Platform.OS == 'ios' ? true : false}
             locked={Platform.OS == 'ios' ? false : true}
-            initialPage={2}
+            initialPage={0}
             currentScreen={(screenName: any) => {
               if (screenName == 1) {
                 if (
@@ -296,13 +361,13 @@ const WriteTabs = props => {
                   props?.route?.name != 'addContent' &&
                   props?.route?.name != 'dashboard'
                 ) {
-                  if (props.createAMemory) {
-                    props.navigation.navigate('addContent', {
+                  // if (props.createAMemory) {
+                  props.navigation.navigate('addContent', {
                       beforeBack: () => {
                         setScreen();
                       },
                     });
-                  }
+                  // }
                 }
               }
               if (screenName == 2) {
@@ -317,10 +382,30 @@ const WriteTabs = props => {
             tabBarActiveTextColor={Colors.TextColor}
             tabBarUnderlineStyle={Styles.tabBarUnderlineStyle}>
             <MyMemories tabLabel={'Edit'} navigation={props.navigation} />
-            <MyMemories tabLabel={'New'} />
-            <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
-          </ScrollableTabViewForWrite>
+            <View tabLabel={'New'} /> */}
+          {/* <AddContentDetails navigation={props.navigation} tabLabel={'New'} /> */}
+          {/* <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
+          </ScrollableTabViewForWrite> */}
+          <View style={Styles.bottomContainer}>
+            <DefaultTabBar activeTab={currentIndex} goToPage={(page) => {
 
+              if (flatListRef.current) {
+                if (page === 1) {
+                  props.navigation.navigate('addContent', {
+                    beforeBack: () => {
+                      setScreen();
+                    },
+                  });
+                } else {
+                  flatListRef?.current?.scrollToIndex({
+                    animated: true,
+                    index: page,
+                  });
+                }
+
+              }
+            }} containerWidth={Dimensions.get('window').width} tabs={['Edit', 'New', 'Prompts']} />
+          </View>
           <View style={Styles.bottomBarContainer}>
             <View style={Styles.bottomBarSubContainer}>
               <TabIcon
@@ -342,7 +427,7 @@ const WriteTabs = props => {
           cancelAppTour={() => {
             setAppTourVisibility(false);
             DefaultPreference.set('hide_guide_tour', 'true').then(
-              function () {},
+              function () { },
             );
           }}
         />
@@ -375,9 +460,7 @@ const mapState = (state: any) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     showAlertCall: (payload: any) =>
-      dispatch({type: showCustomAlert, payload: payload}),
-    setCurrentTabActions: (payload: any) =>
-      dispatch({type: ACTIVE_TAB_ON_DASHBOARD, payload: payload}),
+      dispatch({ type: showCustomAlert, payload: payload }),
   };
 };
 

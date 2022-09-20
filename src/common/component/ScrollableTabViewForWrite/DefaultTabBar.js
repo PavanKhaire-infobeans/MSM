@@ -53,9 +53,6 @@ const DefaultTabBar = createReactClass({
     >
       <View style={[styles.tab, this.props.tabStyle,]}>
         {
-          name == 'Recent' && isTabActive ?
-            <Image style={{ height: 32, width: 32 }} source={name == 'Recent' ? isTabActive ? clock : ontimelineClickclock : isTabActive ? timelinecalendar : bottomcalendar} />
-            :
             name == 'Edit' && isTabActive ?
               <Image source={editOn} />
               :
@@ -83,10 +80,10 @@ const DefaultTabBar = createReactClass({
       bottom: 0,
     };
 
-    const translateX = this.props.scrollValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, containerWidth / numberOfTabs],
-    });
+    // const translateX = this.props.scrollValue.interpolate({
+    //   inputRange: [0, 1],
+    //   outputRange: [0, containerWidth / numberOfTabs],
+    // });
     return (
       <View style={[styles.tabs, this.props.style, { backgroundColor: this.props.backgroundColor, }]}>
         {this.props.tabs.map((name, page) => {
@@ -94,17 +91,17 @@ const DefaultTabBar = createReactClass({
           const renderTab = this.props.renderTab || this.renderTab;
           return renderTab(name, page, isTabActive, this.props.goToPage);
         })}
-        <Animated.View
+        {/* <Animated.View
           style={[
             tabUnderlineStyle,
             {
-              transform: [
-                { translateX },
-              ]
+              // transform: [
+              //   { translateX },
+              // ]
             },
             this.props.underlineStyle,
           ]}
-        />
+        /> */}
       </View>
     );
   },
@@ -135,4 +132,5 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = DefaultTabBar;
+export default DefaultTabBar;
+// module.exports = DefaultTabBar;

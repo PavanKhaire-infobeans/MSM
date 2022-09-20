@@ -4,6 +4,10 @@ import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
 
 const Styles = EStyleSheet.create({
 
+  bottomContainer:{
+    borderTopColor: Colors.bottomTabColor,
+    borderTopWidth: 2,
+  },
   bottomBarContainer:{ 
     height: 48, 
     backgroundColor: Colors.white, 

@@ -187,7 +187,7 @@ const WebserviceCall = (() => {
                   value.ResponseCode == 402 ||
                   value.ResponseCode == 401
                 ) {
-                  loaderHandler.hideLoader();
+                  // loaderHandler.hideLoader();
                   //TODO: Consult Web team and get unique ResponseCode of invalid session.
                   showConsoleLog(ConsoleType.LOG,"Authentication token expired another :", JSON.stringify(value), url);
                   if (
@@ -265,7 +265,7 @@ const WebserviceCall = (() => {
               resp.ResponseCode == 402 ||
               resp.ResponseCode == 401
             ) {
-              loaderHandler.hideLoader();
+              // loaderHandler.hideLoader();
               //TODO: Consult Web team and get unique ResponseCode of invalid session.
               showConsoleLog(ConsoleType.LOG,"Authentication token expired another :", JSON.stringify(resp), url);
               if (
