@@ -1808,19 +1808,19 @@ class CreateMemory extends React.Component<Props> {
           </Text> */}
             {/* <View style={styles.ViewBeforeStyle}> */}
             {this.props.route.params.editMode || this.state.showEtherPad ? (
-              <Text
-                style={styles.memoryDescriptionTextStyle}
-                numberOfLines={3}
-                ellipsizeMode={'tail'}>
-                {this.props.memoryDescription}
-              </Text>
-              // <EtherPadEditing
-              //   editMode={this.props.route.params.editMode}
-              //   title={this.state.title.trim()}
-              //   padDetails={this.state.padDetails}
-              //   updateContent={this.setEtherPadContent.bind(this)}
-              //   inviteCollaboratorFlow={this.inviteCollaboratorFlow.bind(this)}
-              // />
+              // <Text
+              //   style={styles.memoryDescriptionTextStyle}
+              //   numberOfLines={3}
+              //   ellipsizeMode={'tail'}>
+              //   {this.props.memoryDescription}
+              // </Text>
+              <EtherPadEditing
+                editMode={this.props.route.params.editMode}
+                title={this.state.title.trim()}
+                padDetails={this.state.padDetails}
+                updateContent={this.setEtherPadContent.bind(this)}
+                inviteCollaboratorFlow={this.inviteCollaboratorFlow.bind(this)}
+              />
             ) : (
               <TouchableOpacity
                 onPress={() =>
