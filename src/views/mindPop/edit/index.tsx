@@ -734,9 +734,21 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
         this.filesToUpload,
         'mindpopEditMemoryListener',
         'save',
+        resp =>{
+          if (resp.success) {
+            this.props.navigation.replace('createMemory', {
+              editMode: true,
+              draftNid: resp.id,
+              deepLinkBackClick: this.props.deepLinkBackClick,
+            });
+          } else {
+            loaderHandler.hideLoader();
+            ToastMessage(resp.message);
+          }
+        }
       );
-      Keyboard.dismiss();
-      this.props.navigation.goBack();
+      // Keyboard.dismiss();
+      // this.props.navigation.goBack();
     } else {
       ToastMessage(NO_INTERNET);
     }

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import AudioPlayer, {
   kClosed,
   kEnded,
@@ -36,14 +36,14 @@ import {
   showConsoleLog,
 } from '../../../common/constants';
 import Utility from '../../../common/utility';
-import {Like, Unlike} from '../../memoryDetails/detailsWebService';
-import {kLiked, kUnliked} from '../../myMemories/myMemoriesWebService';
+import { Like, Unlike } from '../../memoryDetails/detailsWebService';
+import { kLiked, kUnliked } from '../../myMemories/myMemoriesWebService';
 import {
   MemoryActionsList,
   onActionItemClicked,
   _onShowMemoryDetails,
 } from '../../myMemories/PublishedMemory';
-import {GET_MEMORY_LIST, ListType, REMOVE_PROMPT} from '../dashboardReducer';
+import { GET_MEMORY_LIST, ListType, REMOVE_PROMPT } from '../dashboardReducer';
 // import MemoryListItem from '../../../common/component/memoryListItem';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import EventManager from '../../../common/eventManager';
@@ -51,11 +51,11 @@ import {
   CreateUpdateMemory,
   promptIdListener,
 } from '../../createMemory/createMemoryWebService';
-import {DefaultDetailsMemory} from '../../createMemory/dataHelper';
+import { DefaultDetailsMemory } from '../../createMemory/dataHelper';
 
 import styles from './styles';
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
 
@@ -91,10 +91,10 @@ const Recent = (props: Props) => {
     memoryUpdateListener = EventManager.addListener(
       'memoryUpdateRecentListener',
       () => {
-        props.fetchMemoryList({type: ListType.Recent, isLoading: true});
+        props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
       },
     );
-    props.fetchMemoryList({type: ListType.Recent, isLoading: true});
+    props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
     return () => {
       memoryUpdateListener.removeListener();
@@ -103,7 +103,7 @@ const Recent = (props: Props) => {
   }, []);
 
   const onRefresh = () => {
-    props.fetchMemoryList({type: ListType.Recent, isLoading: true});
+    props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
     // this.props.fetchMemoryList({type: ListType.Recent, isRefresh : true, filters : this.props.filters});
   };
 
@@ -160,7 +160,7 @@ const Recent = (props: Props) => {
                 onResponderStart={() => togglePlayPause(item)}>
                 <View style={styles.playPauseContainer}>
                   {state.audioFile.fid == item.audios[0].fid &&
-                  state.audioFile.isPlaying ? (
+                    state.audioFile.isPlaying ? (
                     <View style={styles.pauseContainer}>
                       <View style={styles.column} />
                       <View style={styles.columnTransparent} />
@@ -178,8 +178,8 @@ const Recent = (props: Props) => {
                     {item.audios[0].title
                       ? item.audios[0].title
                       : item.audios[0].filename
-                      ? item.audios[0].filename
-                      : ''}
+                        ? item.audios[0].filename
+                        : ''}
                   </Text>
                   <Text style={[styles.normalText]}>
                     {item.audios[0].duration}
@@ -261,7 +261,7 @@ const Recent = (props: Props) => {
   const _onCloseAudios = (event: Event) => {
     try {
       audioPlayer.current.hidePlayer();
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const like = (item: any) => {
@@ -317,38 +317,35 @@ const Recent = (props: Props) => {
     }));
   };
 
-  const promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    setTimeout(() => {
-      loaderHandler.hideLoader();
-    }, 500);
-    if (success) {
-      props.removePrompt(selectedPrompt);
-      props.navigation.navigate('createMemory', {
-        editMode: true,
-        draftNid: draftDetails,
-        isFromPrompt: true,
-      });
-    } else {
-      loaderHandler.hideLoader();
-      ToastMessage(draftDetails);
-    }
-  };
-
-  const _onAddProptToMemoryAction = (firstIndex: any, secondIndex: any) => {
+  const _onAddProptToMemoryAction = async (firstIndex: any, secondIndex: any) => {
     if (Utility.isInternetConnected) {
       let data = props.recentList[firstIndex].active_prompts[secondIndex];
       selectedPrompt.firstIndex = firstIndex;
       selectedPrompt.secondIndex = secondIndex;
       loaderHandler.showLoader('Creating Memory...');
-      let draftDetails: any = DefaultDetailsMemory(
+      let draftDetails: any = await DefaultDetailsMemory(
         decode_utf8(data.prompt_title.trim()),
       );
       draftDetails.prompt_id = parseInt(data.prompt_id);
-      memoryFromPrompt = EventManager.addListener(
-        promptIdListener,
-        promptToMemoryCallBack,
-      );
-      CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
+      // memoryFromPrompt = EventManager.addListener(
+      //   promptIdListener,
+      //   promptToMemoryCallBack,
+      // );
+      CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
+        res => {
+          if (res.success) {
+            props.removePrompt(selectedPrompt);
+            loaderHandler.hideLoader();
+            props.navigation.navigate('createMemory', {
+              editMode: true,
+              draftNid: res.id,
+              isFromPrompt: true,
+            });
+          } else {
+            loaderHandler.hideLoader();
+            ToastMessage(draftDetails);
+          }
+        });
       Keyboard.dismiss();
     } else {
       No_Internet_Warning();
@@ -465,9 +462,9 @@ const mapState = (state: any) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     fetchMemoryList: (payload: any) =>
-      dispatch({type: GET_MEMORY_LIST, payload: payload}),
+      dispatch({ type: GET_MEMORY_LIST, payload: payload }),
     removePrompt: (payload: any) =>
-      dispatch({type: REMOVE_PROMPT, payload: payload}),
+      dispatch({ type: REMOVE_PROMPT, payload: payload }),
   };
 };
 

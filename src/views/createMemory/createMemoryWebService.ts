@@ -59,60 +59,60 @@ export const CreateUpdateMemory = async (
           if (filesToUpload.length > 0) {
             let datareturn = await uploadAttachments(id, filesToUpload, listener, true, id, padDetails, key);
 
-            if (listener == 'addContentCreateMemory') {
-              loaderHandler.hideLoader();
+            if (listener == "mindpopEditMemoryListener") {
+              CB({ status: true, id, padDetails, key, prompt_id });
+              // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
+            }
+            else if (listener == 'addContentCreateMemory') {
+
               // EventManager.callBack(listener, true, id, padDetails, key);
-              return { status: true, id, padDetails, key };
+              CB({ status: true, id, padDetails, key });
             }
             else if (listener == promptIdListener) {
-              loaderHandler.hideLoader();
-              return { status: true, id };
+
+              CB({ status: true, id });
             }
             else {
-              loaderHandler.hideLoader();
-              return response;
+
+              CB(response);
             }
 
           }
           else {
             showConsoleLog(ConsoleType.LOG, "done dT >>>>>>");
             if (listener == "mindpopEditMemoryListener") {
-              loaderHandler.hideLoader();
-              EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
+              CB({ status: true, id, padDetails, key, prompt_id });
+              // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
             }
             else if (listener == 'addContentCreateMemory') {
-              loaderHandler.hideLoader();
+
               CB({ status: true, id, padDetails, key });
 
             }
             else if (listener == promptIdListener) {
-              // loaderHandler.hideLoader();
+
               CB({ status: true, id });
             }
             else {
-              loaderHandler.hideLoader();
-              return CB(response);
+
+              CB(response);
             }
           }
         }
         else {
           if (listener == "mindpopEditMemoryListener") {
-            loaderHandler.hideLoader();
-            EventManager.callBack(listener, false, response['ResponseMessage']);
+            CB({ status: true, message: response['ResponseMessage'] });
+            // EventManager.callBack(listener, false, );
           }
           else if (listener == 'addContentCreateMemory') {
-            loaderHandler.hideLoader();
             CB({ status: false, message: response['ResponseMessage'] });
           }
           else if (listener == promptIdListener) {
-            loaderHandler.hideLoader();
             CB({ status: false, ResponseMessage: response['ResponseMessage'] });
           }
           else {
-            loaderHandler.hideLoader();
-            return CB(response);
+            CB(response);
           }
-          // loaderHandler.hideLoader();
           // showConsoleLog(ConsoleType.WARN," err daaaaa :", JSON.stringify(response));
           // EventManager.callBack(listener, false, response['ResponseMessage']);
         }
@@ -126,17 +126,17 @@ export const CreateUpdateMemory = async (
     // response = response.json();
 
   } catch (err) {
-    loaderHandler.hideLoader();
     showConsoleLog(ConsoleType.WARN, " errr daaaaa :", (err));
-    EventManager.callBack(listener, false, 'Unable to create memory!!');
+    CB({ status: false, message: 'Unable to create memory!!' });
+    // EventManager.callBack(listener, false, 'Unable to create memory!!');
   }
 };
 
-export const GetDraftsDetails = async (nid: any) => {
+export const GetDraftsDetails = async (nid: any, CB?: any) => {
   try {
     let data = await Storage.get('userData');
     let requestTime: Date = new Date()
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL
       }/api/mystory/edit_memory_values`,
       [
@@ -151,33 +151,36 @@ export const GetDraftsDetails = async (nid: any) => {
           },
         },
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-
-    if (response != undefined && response != null) {
-      if (response.ResponseCode == 200) {
-        // EventManager.callBack(kDraftDetailsFetched, true, response['Data']);
-        return { status: true, responseData: response['Data'] };
-      } else {
-        // EventManager.callBack(
-        //   kDraftDetailsFetched,
-        //   false,
-        //   response['ResponseMessage'],
-        // );
-        return { status: false, responseData: response['ResponseMessage'] };
-
+      response =>{
+        if (response != undefined && response != null) {
+          if (response.ResponseCode == 200) {
+            // EventManager.callBack(kDraftDetailsFetched, true, response['Data']);
+            CB({ status: true, responseData: response['Data'] });
+          } else {
+            // EventManager.callBack(
+            //   kDraftDetailsFetched,
+            //   false,
+            //   response['ResponseMessage'],
+            // );
+            CB({ status: false, responseData: response['ResponseMessage'] });
+    
+          }
+        }
       }
-    }
+    )
+      // .then((response: Response) => response.json())
+      // .catch((err: Error) => {
+      //   Promise.reject(err);
+      // });
+
+    
   } catch (err) {
     // EventManager.callBack(
     //   kDraftDetailsFetched,
     //   false,
     //   'Unable to process your request. Please try again later',
     // );
-    return { status: false, responseData: 'Unable to process your request. Please try again later' };
+    CB( { status: false, responseData: 'Unable to process your request. Please try again later' });
 
   }
 };
@@ -419,7 +422,7 @@ async function uploadAttachments(memoryId: number, files: TempFile[], listener: 
         resolve(resp);
         // }
         debugger
-        loaderHandler.showLoader('Loading...');
+        // loaderHandler.showLoader('Loading...');
         return resp;
         // loaderHandler.hideLoader();
         // EventManager.callBack(listener, res, id, padDetails, key);

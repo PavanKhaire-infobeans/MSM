@@ -249,18 +249,19 @@ class DashboardIndex extends React.Component<Props> {
       loaderHandler.showLoader('Creating Memory...');
       let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
       draftDetails.prompt_id = parseInt(id);
-      CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
+      CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
+      res=>{
+        this.promptToMemoryCallBack(res.status,res.id)
+      });
     } else {
       No_Internet_Warning();
     }
   }
 
   promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    setTimeout(() => {
-      loaderHandler.hideLoader();
-    }, 500);
     if (success) {
-      // this.props.navigation.navigate("createMemory", { editMode: true, draftNid: draftDetails, isFromPrompt: true })
+      loaderHandler.hideLoader();
+      this.props.navigation.navigate("createMemory", { editMode: true, draftNid: draftDetails, isFromPrompt: true })
     } else {
       loaderHandler.hideLoader();
       ToastMessage(draftDetails);

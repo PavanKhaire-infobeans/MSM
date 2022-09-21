@@ -54,20 +54,8 @@ const Splash = props => {
   const [deeplinkMemoryType, setDeeplinkMemoryType] = useState('');
   const [apiCalldoneOnce, setApiCallDoneOnce] = useState(false);
 
-  const promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    if (success) {
-    } else {
-      loaderHandler.hideLoader();
-      ToastMessage(draftDetails);
-    }
-  };
-
   useEffect(() => {
-    const memoryFromPrompt = EventManager.addListener(
-      promptIdListener,
-      promptToMemoryCallBack,
-    );
-
+  
     const getPromptListener = EventManager.addListener(
       kGetPromptByID,
       (success: boolean, fetchPrompt?: any) => {
@@ -192,7 +180,6 @@ const Splash = props => {
     }, 2500);
 
     return () => {
-      memoryFromPrompt.removeListener();
       getPromptListener.removeListener();
     };
   }, []);
@@ -237,6 +224,23 @@ const Splash = props => {
                         [],
                         promptIdListener,
                         'save',
+                        response => {
+                          if (response.success) {
+                            this.props.navigation.navigate('createMemory', {
+                              editMode: true,
+                              draftNid: response.id,
+                              isFromPrompt: true,
+                              deepLinkBackClick: true,
+                            });
+                          } else {
+                            loaderHandler.hideLoader();
+                            ToastMessage(
+                              response?.ResponseMessage
+                                ? response?.ResponseMessage
+                                : 'Error while proccessing',
+                            );
+                          }
+                        },
                       );
                     } else if (splitArray[3] && splitArray[3] === 'mindpopup') {
                       // this.props.navigation.replace("mindPop", { nid: id, fromDeeplinking: true, deepLinkBackClick: true })

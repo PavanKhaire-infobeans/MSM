@@ -172,7 +172,7 @@ export default class PromptsView extends React.Component<State, Props> {
           var array = [...this.state.items]; // make a separate copy of the array
           const filteredItems = array.filter(item => item.id !== promptId);
           this.setState({items: filteredItems}, () =>
-            loaderHandler.hideLoader(),
+            loaderHandler.hideLoader()
           );
         } else {
           loaderHandler.hideLoader();
@@ -432,16 +432,6 @@ export default class PromptsView extends React.Component<State, Props> {
   }
 
   promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    showConsoleLog(
-      ConsoleType.WARN,
-      'res s> ',
-      JSON.stringify(success),
-      draftDetails,
-    );
-
-    // setTimeout(() => {
-    //   loaderHandler.hideLoader();
-    // }, 500);
     if (success) {
       this.removeSelectedPrompt();
       this.props.navigation.navigate('createMemory', {

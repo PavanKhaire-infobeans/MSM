@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -8,13 +8,13 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import TabIcon, {
   kNotificationIndicator,
   NewTabItems,
   TabItems,
 } from '../../common/component/TabBarIcons';
-import {Colors, decode_utf8} from '../../common/constants';
+import { Colors, decode_utf8 } from '../../common/constants';
 import Utility from '../../common/utility';
 import NewNavigationBar from '../../../app/components/NewNavigationBarWrite';
 // @ts-ignore
@@ -24,17 +24,17 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import CustomAlert from '../../common/component/customeAlert';
 import DefaultTabBar from '../../common/component/ScrollableTabViewForWrite/DefaultTabBar';
 // import ScrollableTabViewForWrite from '../../common/component/ScrollableTabViewForWrite/DefaultTabBar';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 import {
   CreateUpdateMemory,
   promptIdListener,
 } from '../createMemory/createMemoryWebService';
-import {DefaultDetailsMemory} from '../createMemory/dataHelper';
-import {showCustomAlert} from '../createMemory/reducer';
-import {kMemoryActionPerformedOnDashboard} from '../myMemories/myMemoriesWebService';
-import {NotificationDataModel} from '../notificationView/notificationDataModel';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
+import { showCustomAlert } from '../createMemory/reducer';
+import { kMemoryActionPerformedOnDashboard } from '../myMemories/myMemoriesWebService';
+import { NotificationDataModel } from '../notificationView/notificationDataModel';
 import {
   GetActivities,
   kActivityListener,
@@ -81,10 +81,10 @@ const WriteTabs = props => {
       kMemoryActionPerformedOnDashboard,
       memoryActionCallBack,
     );
-    const memoryFromPrompt = EventManager.addListener(
-      promptIdListener,
-      promptToMemoryCallBack,
-    );
+    // const memoryFromPrompt = EventManager.addListener(
+    //   promptIdListener,
+    //   promptToMemoryCallBack,
+    // );
     if (props.showPublishedPopup) {
       setShowCustomAlert(true);
     }
@@ -108,7 +108,7 @@ const WriteTabs = props => {
       backgroundNotification.removeListener();
       memoryActionsListener.removeListener();
       eventListener.removeListener();
-      memoryFromPrompt.removeListener();
+      // memoryFromPrompt.removeListener();
     };
   }, []);
 
@@ -119,7 +119,7 @@ const WriteTabs = props => {
           setScreen();
         },
       });
-      flatListRef?.current?.scrollToIndex({animated: true, index: lastIndex});
+      flatListRef?.current?.scrollToIndex({ animated: true, index: lastIndex });
     } else {
       setOnOptionClick(false);
     }
@@ -181,7 +181,7 @@ const WriteTabs = props => {
         false,
       )[0];
       if (Utility.notificationObject.isBackgroundNotification) {
-        SetSeenActivity({ids: details.ids}, 0);
+        SetSeenActivity({ ids: details.ids }, 0);
         if (
           details.status == 0 &&
           (details.notificationType.indexOf('collaboration') != -1 ||
@@ -226,25 +226,20 @@ const WriteTabs = props => {
       loaderHandler.showLoader('Creating Memory...');
       let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
       draftDetails.prompt_id = parseInt(id);
-      CreateUpdateMemory(draftDetails, [], promptIdListener, 'save');
-    } else {
-      No_Internet_Warning();
-    }
-  };
-
-  const promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    setTimeout(() => {
-      loaderHandler.hideLoader();
-    }, 500);
-    if (success) {
-      props.navigation.navigate('createMemory', {
-        editMode: true,
-        draftNid: draftDetails,
-        isFromPrompt: true,
+      CreateUpdateMemory(draftDetails, [], promptIdListener, 'save', resp => {
+        if (resp.success) {
+          props.navigation.navigate('createMemory', {
+            editMode: true,
+            draftNid: resp.id,
+            isFromPrompt: true,
+          });
+        } else {
+          loaderHandler.hideLoader();
+          ToastMessage(draftDetails);
+        }
       });
     } else {
-      loaderHandler.hideLoader();
-      ToastMessage(draftDetails);
+      No_Internet_Warning();
     }
   };
 
@@ -257,7 +252,7 @@ const WriteTabs = props => {
   ) => {
     loaderHandler.hideLoader();
     if (fetched) {
-      props.sendMemoryActions({nid, type, uid});
+      props.sendMemoryActions({ nid, type, uid });
     } else {
       ToastMessage(responseMessage, Colors.ErrorColor);
     }
@@ -282,15 +277,15 @@ const WriteTabs = props => {
     }
   };
 
-  const _renderItem = ({item, index}) =>
+  const _renderItem = ({ item, index }) =>
     index === 0 ? (
-      <View style={{width: Dimensions.get('window').width}}>
+      <View style={{ width: Dimensions.get('window').width }}>
         <MyMemories tabLabel={'Edit'} navigation={props.navigation} />
       </View>
     ) : index === 1 ? (
-      <View style={{width: Dimensions.get('window').width}}></View>
+      <View style={{ width: Dimensions.get('window').width }}></View>
     ) : (
-      <View style={{width: Dimensions.get('window').width}}>
+      <View style={{ width: Dimensions.get('window').width }}>
         <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
       </View>
     );
@@ -385,7 +380,7 @@ const WriteTabs = props => {
           cancelAppTour={() => {
             setAppTourVisibility(false);
             DefaultPreference.set('hide_guide_tour', 'true').then(
-              function () {},
+              function () { },
             );
           }}
         />
@@ -418,7 +413,7 @@ const mapState = (state: any) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     showAlertCall: (payload: any) =>
-      dispatch({type: showCustomAlert, payload: payload}),
+      dispatch({ type: showCustomAlert, payload: payload }),
   };
 };
 

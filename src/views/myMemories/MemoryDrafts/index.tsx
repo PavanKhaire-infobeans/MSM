@@ -312,6 +312,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                 break;
               }
             }
+            loaderHandler.hideLoader();
+
           },
         );
       } else {
@@ -321,6 +323,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             loading: false,
           },
           () => {
+            loaderHandler.hideLoader();
             No_Internet_Warning();
           },
         );
@@ -349,17 +352,18 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     );
   };
   deleteDraftCallback = (success: any, nid: any) => {
-    loaderHandler.hideLoader();
     if (success) {
       // this.props.navigation.goBack();
       memoryDraftsArray = memoryDraftsArray.filter(
         (element: any) => element.nid != nid,
       );
       this.memoryDraftsDataModel.decreaseMemoryDraftCount();
+      loaderHandler.hideLoader();
       // this.setState({});
     }
     else {
-      ToastMessage('Unable to delete draft. Please try again later');
+    loaderHandler.hideLoader();
+    ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 

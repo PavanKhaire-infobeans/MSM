@@ -141,27 +141,11 @@ class MindPopList extends React.Component<{
       'updateSelected',
       this._updateIndex,
     );
-    this.createMemoryListener = EventManager.addListener(
-      'mindpopEditMemoryListener',
-      this.createMemoryCallBack,
-    );
+    // this.createMemoryListener = EventManager.addListener(
+    //   'mindpopEditMemoryListener',
+    //   this.createMemoryCallBack,
+    // );
   }
-
-  createMemoryCallBack = (success: boolean, draftDetails: any) => {
-    setTimeout(() => {
-      loaderHandler.hideLoader();
-    }, 500);
-    if (success) {
-      this.props.navigation.replace('createMemory', {
-        editMode: true,
-        draftNid: draftDetails,
-        deepLinkBackClick: this.props.deepLinkBackClick,
-      });
-    } else {
-      loaderHandler.hideLoader();
-      ToastMessage(draftDetails);
-    }
-  };
 
   mindPopUploadCompleted = (success?: any, mindPopID?: any) => {
     try {
@@ -485,7 +469,7 @@ class MindPopList extends React.Component<{
     this.props.updateSelectedItemCount(0);
     this.eventSubs.remove();
     DeviceEventEmitter.removeAllListeners('updateSelected');
-    this.createMemoryListener.removeListener();
+    // this.createMemoryListener.removeListener();
     // this.createMemoryListener.removeListener();
   }
 
@@ -779,6 +763,18 @@ class MindPopList extends React.Component<{
         filesToUpload,
         'mindpopEditMemoryListener',
         'save',
+        resp =>{
+          if (resp.success) {
+            this.props.navigation.replace('createMemory', {
+              editMode: true,
+              draftNid: resp.id,
+              deepLinkBackClick: this.props.deepLinkBackClick,
+            });
+          } else {
+            loaderHandler.hideLoader();
+            ToastMessage(resp.message);
+          }
+        }
       );
     } else {
       ToastMessage(NO_INTERNET);

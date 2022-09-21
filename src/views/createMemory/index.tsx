@@ -413,6 +413,7 @@ class CreateMemory extends React.Component<Props> {
           collaboratorOwner: draftDetails.collaboratorOwner,
         },
         () => {
+          loaderHandler.hideLoader();
           this.setEtherPadContent(
             'get',
             '',
@@ -425,12 +426,12 @@ class CreateMemory extends React.Component<Props> {
       // 		id : Account.selectedData().userID,
       // 		action_type: CollaboratorsAction.joinCollaboration})
       // }
+      // loaderHandler.hideLoader();
+
     } else {
+      loaderHandler.hideLoader();
       ToastMessage(draftDetails, Colors.ErrorColor);
     }
-    setTimeout(() => {
-      loaderHandler.hideLoader();
-    }, 500);
   };
 
   componentDidMount = async () => {
@@ -449,9 +450,9 @@ class CreateMemory extends React.Component<Props> {
       loaderHandler.showLoader('Loading...');
       let response: any = await GetDraftsDetails(
         this.props.route.params.draftNid,
+        resp => this.draftDetailsCallBack(resp.status, resp.responseData)
       );
 
-      this.draftDetailsCallBack(response.status, response.responseData);
     } else {
       let title = decode_utf8(this.props.route.params.textTitle);
       title = title.replace(/\n/g, ' ');
@@ -602,6 +603,7 @@ class CreateMemory extends React.Component<Props> {
         // EventManager.callBack(kReloadDraft);
       }
     } else {
+      loaderHandler.hideLoader();
       ToastMessage(id, Colors.ErrorColor);
     }
   };
@@ -2178,7 +2180,7 @@ class CreateMemory extends React.Component<Props> {
               }
               backIcon={action_close}
               saveValues={() => {
-                this.setState({showCustomAlert: true})
+                this.setState({ showCustomAlert: true })
               }
               } //this.saveDraft
             // rightIcon={this.state.isCreatedByUser}

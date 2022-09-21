@@ -20,6 +20,9 @@ let options: any = {
   cropping: false,
   compressImageQuality: 0.8,
   selectionLimit: 5,
+  quality:0.7,
+  maxWidth: 1920,
+  maxHeight: 1080,
   waitAnimationEnd: false,
   smartAlbums: ['UserLibrary', 'PhotoStream', 'Panoramas', 'Bursts'],
 };
