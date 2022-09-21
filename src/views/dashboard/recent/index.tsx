@@ -199,19 +199,7 @@ const Recent = (props: Props) => {
                 {item.audios.length - 1 + ' more'}
               </Text>
             </TouchableOpacity>
-          ) : // <View style={[{ width: 56, marginLeft: 7, elevation: 2, backgroundColor: Colors.AudioViewBg, borderColor: Colors.AudioViewBorderColor, borderWidth: 2, borderRadius: 10 }, styles.boxShadow]}>
-          //     <TouchableHighlight underlayColor={Colors.touchableunderlayColor}
-          //         style={{ flex: 1, justifyContent: "center" }}
-          //         onPress={
-          //             () => {
-          //                 _onShowMemoryDetails(item)
-          //             }
-          //         }
-          //     >
-          //         <Text style={{ color: Colors.TextColor, ...fontSize(14), textAlign: "center" }}>{"+"}{item.audios.length - 1}{"\n more"}</Text>
-          //     </TouchableHighlight>
-          // </View>
-          null}
+          ) : null}
         </View>
       );
     }
@@ -371,16 +359,8 @@ const Recent = (props: Props) => {
     <View style={styles.mainContainer}>
       <SafeAreaView style={styles.container}>
         <View style={styles.subcontainer}>
-          {/* {filterView(props.filterClick(ListType.Recent), ListType.Recent)} */}
-          {/* {
-                        !scrolling ?
-                        <View style={styles.renderSeparator} />
-                        :
-                        null
-                    } */}
           <FlatList
             data={props.recentList}
-            // ref={flatListRef}
             style={styles.flatlistStyle}
             extraData={state}
             renderItem={(item: any) => (
@@ -402,7 +382,6 @@ const Recent = (props: Props) => {
                 />
               </>
             )}
-            // maxToRenderPerBatch={50}
             indicatorStyle="white"
             removeClippedSubviews={true}
             refreshControl={

@@ -18,14 +18,11 @@ import {
   Colors,
   CommonTextStyles,
   ConsoleType,
-  fontFamily,
-  fontSize,
   showConsoleLog,
 } from '../../common/constants';
 import {GetInstances} from './reducer';
 //@ts-ignore
 import LinearGradient from 'react-native-linear-gradient';
-import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import {apple, google, loginBack, Rectangle} from '../../../app/images';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MessageDialogue from '../../common/component/messageDialogue';
