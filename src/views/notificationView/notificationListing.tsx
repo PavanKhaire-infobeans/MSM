@@ -126,6 +126,7 @@ class NotificationListing extends React.Component<Props> {
           navigation: this.props.navigation,
         });
       } else {
+        console.log('this.props.navigation : ', this.props.navigation);
         this.props.navigation.navigate('memoryDetails', {
           nid: item.nid,
           type: item.type,

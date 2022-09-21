@@ -1,26 +1,42 @@
 import React from 'react';
 import {
-  Animated, Dimensions, FlatList, Image, ImageBackground, Keyboard, Platform,
-  StatusBar, StyleSheet, Text,
-  TouchableHighlight, TouchableOpacity, View
+  Animated,
+  Dimensions,
+  FlatList,
+  Image,
+  ImageBackground,
+  Keyboard,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import {
-  Colors, fontFamily, fontSize,
-  NO_INTERNET
+  Colors,
+  fontFamily,
+  fontSize,
+  NO_INTERNET,
 } from '../../common/constants';
 import Utility from '../../common/utility';
 //@ts-ignore
 import * as Animatable from 'react-native-animatable';
 import Carousel from 'react-native-snap-carousel';
-import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import { Account } from '../../common/loginStore';
+import {Account} from '../../common/loginStore';
 import {
-  black_arrow, blue_head_icon, pdf_icon, profile_placeholder, white_arrow,
-  white_head_icon
+  black_arrow,
+  blue_head_icon,
+  pdf_icon,
+  profile_placeholder,
+  white_arrow,
+  white_head_icon,
 } from '../../images';
-import { getUserName } from '../createMemory/dataHelper';
+import {getUserName} from '../createMemory/dataHelper';
 import PublishedMemory from '../myMemories/PublishedMemory';
 export const kImage = 'image';
 export const kAudio = 'audio';
@@ -52,6 +68,7 @@ export const MemoryCollections = (props: {
   collectionList: any;
   selectedCollectionIndex: any;
   changeIndex: (index: any) => void;
+  navigation?: any;
 }) => {
   return (
     <View
@@ -105,7 +122,10 @@ export const MemoryCollections = (props: {
                       ...fontSize(18),
                       lineHeight: 20,
                       color: 'white',
-                      fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+                      fontFamily:
+                        Platform.OS === 'ios'
+                          ? fontFamily.Inter
+                          : fontFamily.InterMedium,
                       fontWeight: '500',
                       marginBottom: 2,
                     }}>
@@ -155,7 +175,7 @@ export const MemoryCollections = (props: {
           <TouchableHighlight
             underlayColor="#cccccc3e"
             onPress={() =>
-              this.props.navigation.navigate('memoryDetails', {
+              props.navigation.navigate('memoryDetails', {
                 nid: item.item.nid,
                 type: item.item.type,
               })
@@ -377,13 +397,14 @@ export const CollaboratorView = (props: {collaborators: any}) => {
 };
 
 export const UserDetails = (props: {
-  userDetails: any,
-  isExternalQueue: any,
-  shareDetails: any,
-  storyType: any,
-  onPressCallback?: any,
-  previewDraft?: any,
-  deepLinkBackClick?: boolean
+  userDetails: any;
+  isExternalQueue: any;
+  shareDetails: any;
+  storyType: any;
+  onPressCallback?: any;
+  previewDraft?: any;
+  deepLinkBackClick?: boolean;
+  navigation?: any;
 }) => {
   let showCueBackLogo =
     props.userDetails.name.toLowerCase().trim() == 'cueback' ||
@@ -407,9 +428,9 @@ export const UserDetails = (props: {
             onPress={() => {
               Keyboard.dismiss();
               if (props.deepLinkBackClick) {
-                this.props.navigation.navigate('dashBoard');
+                props.navigation.navigate('dashBoard');
               } else {
-                this.props.navigation.goBack();
+                props.navigation.goBack();
               }
             }}>
             <Image source={props.isExternalQueue ? white_arrow : black_arrow} />
@@ -590,6 +611,7 @@ export const FilesView = (props: {
   files: any;
   type: string;
   togglePlayPause?: any;
+  navigation?: any;
 }) => {
   if (props.files.length > 0)
     return (
@@ -600,14 +622,24 @@ export const FilesView = (props: {
           })}
         {props.type == kPDF &&
           props.files.map((file: any) => {
-            return <CommonPDFView file={file} files={props.files} />;
+            return (
+              <CommonPDFView
+                file={file}
+                files={props.files}
+                navigation={props.navigation}
+              />
+            );
           })}
       </View>
     );
   return null;
 };
 
-export const CommonPDFView = (props: {file: any; files: any}) => {
+export const CommonPDFView = (props: {
+  file: any;
+  files: any;
+  navigation?: any;
+}) => {
   return (
     <View
       style={[
@@ -623,7 +655,7 @@ export const CommonPDFView = (props: {file: any; files: any}) => {
       <TouchableOpacity
         onPress={() => {
           if (Utility.isInternetConnected) {
-            this.props.navigation.navigate('pdfViewer', {file: props.file});
+            props.navigation.navigate('pdfViewer', {file: props.file});
           } else {
             ToastMessage(NO_INTERNET, Colors.WarningColor);
           }
@@ -671,7 +703,11 @@ export const CommonPDFView = (props: {file: any; files: any}) => {
   );
 };
 
-export const CommonImageView = (props: {file: any; files: any}) => {
+export const CommonImageView = (props: {
+  file: any;
+  files: any;
+  navigation?: any;
+}) => {
   let currentIndex = props.files.indexOf(props.file);
   return (
     <View
@@ -687,7 +723,7 @@ export const CommonImageView = (props: {file: any; files: any}) => {
       <TouchableOpacity
         onPress={() => {
           if (Utility.isInternetConnected) {
-            this.props.navigation.navigate('imageViewer', {
+            props.navigation.navigate('imageViewer', {
               files: props.files,
               index: currentIndex,
             });
@@ -875,13 +911,17 @@ export const LikeCommentShare = (props: {
         <Animatable.View
           style={{
             flexDirection: 'row',
-            alignItems: 'center',justifyContent:'center',
-            height:40,width:40,borderRadius:20,backgroundColor:Colors.timeLinebackground,
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            backgroundColor: Colors.timeLinebackground,
             transform: [{translateX: PublishedMemory.shakeAnimation}],
           }}>
           <Image
             source={props.icon}
-            style={{padding: 1,}}
+            style={{padding: 1}}
             resizeMode="contain"
           />
           {/* <Text
@@ -895,7 +935,16 @@ export const LikeCommentShare = (props: {
           </Text> */}
         </Animatable.View>
       ) : (
-        <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'center',height:40,width:40,borderRadius:20,backgroundColor:Colors.timeLinebackground,}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            backgroundColor: Colors.timeLinebackground,
+          }}>
           <Image
             source={props.icon}
             style={{padding: 1}}

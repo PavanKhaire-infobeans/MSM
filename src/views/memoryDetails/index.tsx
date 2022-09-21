@@ -175,9 +175,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
   shakeAnimation: any = new Animated.Value(0);
   constructor(props: Props) {
     super(props);
-    if (props.nid && props.type) {
-      this.nid = props.nid;
-      this.storyType = props.type;
+    console.log('Props : ', JSON.stringify(props));
+    if (props.route.params.nid && props.route.params.type) {
+      this.nid = props.route.params.nid;
+      this.storyType = props.route.params.type;
     }
     this.memoryDataModel = new MemoryDataModel();
     if (!this.props.previewDraft) {
@@ -2087,6 +2088,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
               storyType={this.storyType}
               onPressCallback={this.openMemoryActions}
               previewDraft={this.props.previewDraft}
+              navigation={this.props.navigation}
             />
           )}
           {/* {this.state.memoryDetailAvailable && <UserDetails userDetails={this.memoryDataModel.userDetails} shareDetails={this.memoryDataModel.shareOption} isExternalQueue={this.state.isExternalQueue || this.storyType.indexOf('song') != -1 ? true : false} storyType={this.storyType}/>} */}
@@ -2166,11 +2168,13 @@ export default class MemoryDetails extends React.Component<Props, State> {
                     <FilesView
                       files={this.memoryDataModel.files.images}
                       type={kImage}
+                      navigation={this.props.navigation}
                     />
                     {this.audioView()}
                     <FilesView
                       files={this.memoryDataModel.files.pdf}
                       type={kPDF}
+                      navigation={this.props.navigation}
                     />
                   </View>
                 )}
@@ -2192,7 +2196,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
                       }
                       changeIndex={(index: any) =>
                         this.setState({selectedCollectionIndex: index})
-                      }></MemoryCollections>
+                      }
+                      navigation={this.props.navigation}></MemoryCollections>
                   )}
 
                 {/* Blank view for extended scrolling */}
