@@ -1,33 +1,31 @@
 import React from 'react';
 import {
-  Alert, Keyboard, Platform, SafeAreaView,
+  Alert,
+  Keyboard,
+  Platform,
+  SafeAreaView,
   StatusBar,
-  TextInput, View
+  TextInput,
+  View,
 } from 'react-native';
 // @ts-ignore
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
-import {
-  Colors,
-  fontSize
-} from '../../../common/constants';
+import {Colors, fontSize} from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
 import {
-  InviteCollaborators, kCollaboratorsAdded
+  InviteCollaborators,
+  kCollaboratorsAdded,
 } from '../createMemoryWebService';
-import {
-  SaveCollaboratorNotes
-} from '../reducer';
-import {
-  CollaboratorsAPI
-} from '../saga';
+import {SaveCollaboratorNotes} from '../reducer';
+import {CollaboratorsAPI} from '../saga';
 // @ts-ignore
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
-import { getCommaSeparatedArray } from '../dataHelper';
+import {getCommaSeparatedArray} from '../dataHelper';
 import Styles from './styles';
 
-type State = { [x: string]: any };
+type State = {[x: string]: any};
 type Props = {
   tid?: any;
   isRename: any;
@@ -77,11 +75,9 @@ class NotesToCollaborators extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.inviteCollaborator.removeListener()
-    Keyboard.removeAllListeners("keyboardDidShow")
-    Keyboard.removeAllListeners("keyboardDidHide")
-    Keyboard.removeAllListeners("keyboardWillShow")
-    Keyboard.removeAllListeners("keyboardWillHide")
+    this.inviteCollaborator.removeListener();
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   }
 
   componentWillMount = () => {
@@ -166,7 +162,11 @@ class NotesToCollaborators extends React.Component<Props, State> {
               saveValues={this.inviteCollaborate.bind(this)}
             />
             <StatusBar
-              barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
+              barStyle={
+                Utility.currentTheme == 'light'
+                  ? 'dark-content'
+                  : 'light-content'
+              }
               backgroundColor={Colors.ThemeColor}
             />
             <View style={Styles.textInputContainer}>
@@ -177,7 +177,7 @@ class NotesToCollaborators extends React.Component<Props, State> {
                 editable={this.props.isOwner}
                 value={this.state.content}
                 onChangeText={text => {
-                  this.setState({ content: text });
+                  this.setState({content: text});
                 }}
                 placeholder={
                   this.props.isOwner
@@ -185,7 +185,7 @@ class NotesToCollaborators extends React.Component<Props, State> {
                     : 'This memory draft do not have any notes'
                 }></TextInput>
               <View
-                style={{ width: '100%', height: this.state.supportView }}></View>
+                style={{width: '100%', height: this.state.supportView}}></View>
             </View>
           </View>
         </SafeAreaView>
@@ -194,7 +194,7 @@ class NotesToCollaborators extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: { [x: string]: any }) => {
+const mapState = (state: {[x: string]: any}) => {
   return {
     notesToCollaborators: state.MemoryInitials.notesToCollaborators,
     nid: state.MemoryInitials.nid,
@@ -204,9 +204,9 @@ const mapState = (state: { [x: string]: any }) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     SaveCollaboratorsNote: (payload: any) =>
-      dispatch({ type: SaveCollaboratorNotes, payload: payload }),
+      dispatch({type: SaveCollaboratorNotes, payload: payload}),
     fetchCollaborators: (payload: any) =>
-      dispatch({ type: CollaboratorsAPI, payload: payload }),
+      dispatch({type: CollaboratorsAPI, payload: payload}),
   };
 };
 

@@ -37,9 +37,6 @@ const EmptyView = props => {
             props.resetEdit();
             navigation.navigate('mindPopEdit', {
               updateList: props.updateList,
-              updatePrev: () => {
-                props.navigation.goBack();
-              },
               navigation,
             });
           }}

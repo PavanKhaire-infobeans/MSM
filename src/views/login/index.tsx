@@ -292,8 +292,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   componentWillUnmount() {
     this.setState({_isRemeberMe: false}, () => {
       this.showErrorMessage(false);
-      Keyboard.removeAllListeners(this.keyboardDidShowListener);
-      Keyboard.removeAllListeners(this.keyboardDidHideListener);
+      this.keyboardDidShowListener.remove();
+      this.keyboardDidHideListener.remove();
       this.appleLoginCallBack.removeListener();
       DeviceEventEmitter.removeAllListeners('AppleLoginResult');
     });

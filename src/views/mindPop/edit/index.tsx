@@ -199,11 +199,6 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
         this._onBackIfEdit,
       );
     }
-    this.props.navigation.setParams({
-      save: this._save,
-      updatePrev: this._prevUpdate,
-      cancel: this._cancel,
-    });
     // this.fileMain = `https://${Account.selectedData().instanceURL}/sites/${Account.selectedData().instanceURL}/default/files/`;
     this.fileMain = Utility.publicURL;
     if (Platform.OS == 'android') {
@@ -567,10 +562,8 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
   componentWillUnmount = () => {
     this.listener.removeListener();
     this.backListner.removeListener();
-    Keyboard.removeAllListeners('keyboardDidShow');
-    Keyboard.removeAllListeners('keyboardDidHide');
-    Keyboard.removeAllListeners('keyboardWillShow');
-    Keyboard.removeAllListeners('keyboardWillHide');
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   };
 
   saveTempFiles = (filesObjArray: Array<TempFile>) => {
@@ -613,9 +606,9 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
         <SafeAreaView style={Styles.containerStyle}>
           <View style={Styles.mainContainer}>
             <EditHeader
-              save={this.props.save}
-              updatePrev={this.props.updatePrev}
-              cancel={this.props.cancel}
+              save={this._save}
+              updatePrev={this._prevUpdate}
+              cancel={this._cancel}
             />
             <View
               style={{
@@ -734,7 +727,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
         this.filesToUpload,
         'mindpopEditMemoryListener',
         'save',
-        resp =>{
+        resp => {
           if (resp.success) {
             this.props.navigation.replace('createMemory', {
               editMode: true,
@@ -745,7 +738,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
             loaderHandler.hideLoader();
             ToastMessage(resp.message);
           }
-        }
+        },
       );
       // Keyboard.dismiss();
       // this.props.navigation.goBack();
@@ -786,17 +779,6 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
           )}
           {this.props?.route?.name == 'mindPopEdit' ? (
             <View style={Styles.buttonContainer}>
-              {/* <TouchableOpacity
-							onPress={() => {this.cameraAttachmentPress()}}
-							style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
-							<Image source={camera} resizeMode="contain" />
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={() => {this.audioAttachmentPress()}}
-							style={{ alignItems: "center", justifyContent: "center", width: 44, height: 44 }}>
-							<Image source={record} resizeMode="contain" />
-						</TouchableOpacity> */}
-
               <TouchableOpacity
                 onPress={() => {
                   Keyboard.dismiss();
@@ -1457,7 +1439,7 @@ class MindPopEdit extends React.Component<{[x: string]: any}, State> {
         {found ? (
           <View></View>
         ) : (
-          <TouchableOpacity {...props} key={item.fid} style={{padding: 13}}>
+          <TouchableOpacity key={item.fid} style={{padding: 13}}>
             <View
               style={{
                 borderWidth: 1,

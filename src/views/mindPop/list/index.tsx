@@ -703,31 +703,25 @@ class MindPopList extends React.Component<{
             ) : null}
             {DeviceInfo.isTablet() ? (
               <MindPopIPadNavigationBar
-                selectAction={this.props.selectAction}
-                selectAllAction={this.props.selectAllAction}
+                selectAction={this._select}
+                selectAllAction={this._selectAll}
                 backAction={() => this.props.navigation.navigate('writeTabs')}
-                // backAction={this.props.backAction}
-                updateList={this.props.updateList}
-                // cancelAction={this.props.cancelAction}
+                updateList={this.updateList}
                 cancelAction={() => this.props.navigation.goBack()}
-                // cancelAction={() => this.props.navigation.navigate('dashBoard()}
                 clearAllAction={this.props.clearAllAction}
                 navigation={this.props.navigation}
               />
             ) : (
               <MindPopNavigationBar
-                selectAction={this.props.selectAction}
-                selectAllAction={this.props.selectAllAction}
+                selectAction={this._select}
+                selectAllAction={this._selectAll}
                 backAction={() => this.props.navigation.navigate('dashBoard')}
                 cancelAction={() => this.props.navigation.navigate('dashBoard')}
-                // backAction={this.props.backAction}
-                updateList={this.props.updateList}
-                // cancelAction={this.props.cancelAction}
-                clearAllAction={this.props.clearAllAction}
+                updateList={this.updateList}
+                clearAllAction={this._clearAllSelection}
                 navigation={this.props.navigation}
               />
             )}
-            {/* <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}> */}
             {this.getListView()}
             {this.state.selectedItems.length > 0 ? (
               <SelectionStatusBar
@@ -763,7 +757,7 @@ class MindPopList extends React.Component<{
         filesToUpload,
         'mindpopEditMemoryListener',
         'save',
-        resp =>{
+        resp => {
           if (resp.success) {
             this.props.navigation.replace('createMemory', {
               editMode: true,
@@ -774,7 +768,7 @@ class MindPopList extends React.Component<{
             loaderHandler.hideLoader();
             ToastMessage(resp.message);
           }
-        }
+        },
       );
     } else {
       ToastMessage(NO_INTERNET);
@@ -782,9 +776,10 @@ class MindPopList extends React.Component<{
   };
 
   _renderBackHiddenCell = (data: any, rowMap: any) => {
-    let ItemInProgress =  MindPopsInProgress.indexOf(parseInt(data.item.id)) != -1 ? true : false;
+    let ItemInProgress =
+      MindPopsInProgress.indexOf(parseInt(data.item.id)) != -1 ? true : false;
     if (data.section.title === '1') {
-      return (ItemInProgress ? null : 
+      return ItemInProgress ? null : (
         <View style={styles.rowBack}>
           <TouchableOpacity
             style={[styles.backRightBtn, styles.backRightBtnLeft]}

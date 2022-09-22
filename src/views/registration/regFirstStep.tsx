@@ -136,8 +136,8 @@ export default class RegFirstStep extends Component<Props> {
   componentWillUnmount() {
     this.checkProfile.removeListener();
     this.submitReg.removeListener();
-    Keyboard.removeAllListeners('keyboardDidHide');
-    Keyboard.removeAllListeners('keyboardDidShow');
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
     this.navBar._hide();
   }
 
