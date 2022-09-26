@@ -62,6 +62,7 @@ type Props = {
   editRefresh: (data: {[x: string]: any}[]) => void;
   recordingFromAddContent?: boolean;
   hideDelete?: boolean;
+  route?: any;
 };
 
 type Upload = {uploadTask: Function};
@@ -105,11 +106,11 @@ export default class CommonAudioRecorder extends React.Component<
       changedName: '',
       error: {errMsg: '', show: false},
     };
-    if (this.props.selectedItem) {
+    if (this.props?.route?.params?.selectedItem) {
       this.state = {
         ...this.state,
         audioState: 'recorded',
-        path: this.props.selectedItem.uri || this.props.selectedItem.filePath,
+        path: this.props?.route?.params?.selectedItem.uri || this.props?.route?.params?.selectedItem.filePath,
       };
     } else {
       this.state = {...this.state, audioState: 'none', path: ''};
@@ -335,7 +336,7 @@ export default class CommonAudioRecorder extends React.Component<
           });
         });
       } else if (this.state.audioState == 'paused') {
-        if (!this.props.selectedItem) {
+        if (!this.props?.route?.params?.selectedItem) {
           this.seek();
         }
         this.player.play(() => {
@@ -460,7 +461,7 @@ export default class CommonAudioRecorder extends React.Component<
       let timeVal = this.state.totalTime / 1000;
       let minInt = parseInt(`${parseInt(`${timeVal}`) / 60}`),
         secInt = parseInt(`${timeVal}`) % 60;
-      this.props.editRefresh([
+      this.props?.route?.params?.editRefresh([
         {
           filePath: this.state.path,
           isLocal: true,
@@ -481,14 +482,14 @@ export default class CommonAudioRecorder extends React.Component<
         style={[
           Styles.container,
           {
-            backgroundColor: !this.props.selectedItem
+            backgroundColor: !this.props?.route?.params?.selectedItem
               ? Colors.white
               : Colors.SerachbarColor,
           },
         ]}>
         <View style={Styles.ViewFullContainer} />
         <StatusBar barStyle="dark-content" />
-        {DeviceInfo.isTablet() && !this.props.selectedItem ? (
+        {DeviceInfo.isTablet() && !this.props?.route?.params?.selectedItem ? (
           <TouchableOpacity
             disabled={
               this.state.audioState == 'recording' ||
@@ -504,7 +505,7 @@ export default class CommonAudioRecorder extends React.Component<
             {(this.state.audioState == 'recorded' ||
               this.state.audioState == 'playing' ||
               this.state.audioState == 'paused') &&
-            !this.props.selectedItem ? (
+            !this.props?.route?.params?.selectedItem ? (
               <Slider
                 value={this.state.sliderValue}
                 minimumTrackTintColor={Colors.ThemeColor}
@@ -559,7 +560,7 @@ export default class CommonAudioRecorder extends React.Component<
               </View>
             </TouchableHighlight>
           </View>
-          {this.props.selectedItem ? null : (
+          {this.props?.route?.params?.selectedItem ? null : (
             <View
               style={[
                 Styles.selectedItemContainer,
@@ -624,17 +625,17 @@ export default class CommonAudioRecorder extends React.Component<
             </View>
           )}
         </View>
-        {this.props.selectedItem ? (
+        {this.props?.route?.params?.selectedItem ? (
           <View
             style={[
               Styles.selectedRecordItemContainer,
               {
-                justifyContent: getValue(this.props.selectedItem, ['isLocal'])
+                justifyContent: getValue(this.props?.route?.params?.selectedItem, ['isLocal'])
                   ? 'flex-end'
                   : 'space-between',
               },
             ]}>
-            {!getValue(this.props.selectedItem, ['isLocal']) ? (
+            {!getValue(this.props?.route?.params?.selectedItem, ['isLocal']) ? (
               <TouchableOpacity
                 onPress={() => {
                   this.props.deleteItem();
@@ -741,8 +742,8 @@ export default class CommonAudioRecorder extends React.Component<
   // constructor(props: Props & Upload) {
   // 	super(props);
   // 	AppState.addEventListener("change", this.isBackground);
-  // 	if (this.props.selectedItem) {
-  // 		this.state = { ...this.state, audioState: "recorded", path: this.props.selectedItem.uri || this.props.selectedItem.url || this.props.selectedItem.filePath };
+  // 	if (this.props?.route?.params?.selectedItem) {
+  // 		this.state = { ...this.state, audioState: "recorded", path: this.props?.route?.params?.selectedItem.uri || this.props?.route?.params?.selectedItem.url || this.props?.route?.params?.selectedItem.filePath };
   // 	}
   // }
 
@@ -959,7 +960,7 @@ export default class CommonAudioRecorder extends React.Component<
   // 				});
   // 			});
   // 		} else if (this.state.audioState == "paused") {
-  // 			if (!this.props.selectedItem) {
+  // 			if (!this.props?.route?.params?.selectedItem) {
   // 				this.seek();
   // 			}
   // 			this.player.play(() => {
@@ -1120,10 +1121,10 @@ export default class CommonAudioRecorder extends React.Component<
 
   // render() {
   // 	return (
-  // 		<SafeAreaView style={{ flex: 1, backgroundColor: !this.props.selectedItem ? "white" : "#F3F3F3" }}>
+  // 		<SafeAreaView style={{ flex: 1, backgroundColor: !this.props?.route?.params?.selectedItem ? "white" : "#F3F3F3" }}>
   // 			<View style={{ position: "absolute", backgroundColor: "white", height: "100%", width: "100%" }} />
   // 			<StatusBar barStyle="dark-content" />
-  // 			{DeviceInfo.isTablet() && !this.props.selectedItem ? (
+  // 			{DeviceInfo.isTablet() && !this.props?.route?.params?.selectedItem ? (
   // 				<TouchableOpacity
   // 					disabled={this.state.audioState == "recording" || this.state.audioState == "record-pause"}
   // 					onPress={()=> this.navigateBackOrReset()}
@@ -1134,7 +1135,7 @@ export default class CommonAudioRecorder extends React.Component<
   // 			<View style={Styles.containerStyle}>
   // 				<View style={{ alignSelf: "center", marginTop: 95, marginBottom: 20, height: 60 }}>
   // 					{(this.state.audioState == "recorded" || this.state.audioState == "playing" || this.state.audioState == "paused") &&
-  // 						!this.props.selectedItem ? (
+  // 						!this.props?.route?.params?.selectedItem ? (
   // 							<Slider
   // 								value={this.state.sliderValue}
   // 								minimumTrackTintColor={Colors.ThemeColor}
@@ -1183,7 +1184,7 @@ export default class CommonAudioRecorder extends React.Component<
   // 						</View>
   // 					</TouchableHighlight>
   // 				</View>
-  // 				{this.props.selectedItem ? null : (
+  // 				{this.props?.route?.params?.selectedItem ? null : (
   // 					<View
   // 						style={{
   // 							position: "absolute",
@@ -1225,21 +1226,21 @@ export default class CommonAudioRecorder extends React.Component<
   // 					</View>
   // 				)}
   // 			</View>
-  // 			{this.props.selectedItem ? (
+  // 			{this.props?.route?.params?.selectedItem ? (
   // 				<View
   // 					style={{
   // 						width: "100%",
   // 						height: 60,
   // 						flexDirection: "row",
   // 						backgroundColor: "#F3F3F3",
-  // 						justifyContent: getValue(this.props.selectedItem, ["isLocal"]) ? "flex-end" : "space-between",
+  // 						justifyContent: getValue(this.props?.route?.params?.selectedItem, ["isLocal"]) ? "flex-end" : "space-between",
   // 						alignItems: "center",
   // 						paddingLeft: 10,
   // 						paddingRight: 10,
   // 						borderTopColor: "rgba(0.0, 0.0, 0.0, 0.25)",
   // 						borderTopWidth: 1
   // 					}}>
-  // 					{!getValue(this.props.selectedItem, ["isLocal"]) ? !this.props.hideDelete && (
+  // 					{!getValue(this.props?.route?.params?.selectedItem, ["isLocal"]) ? !this.props.hideDelete && (
   // 						<TouchableOpacity
   // 							onPress={() => {
   // 								this.props.deleteItem();

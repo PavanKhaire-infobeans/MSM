@@ -505,15 +505,28 @@ const Styles = EStyleSheet.create({
     marginTop: 15,
   },
   memoryDescriptionTextStyle: {
-    ...fontSize(16),
+    ...fontSize(19),
+    lineHeight:23.75,
+    fontWeight: '400',
     width: '100%',
     fontFamily: fontFamily.Inter,
-    color: Colors.TextColor
+    paddingHorizontal: 24,
+    color: Colors.bordercolor
   },
   editDescriptionTextStyle: {
     ...fontSize(19),
-    // paddingBottom: 10,
-    // paddingTop: 13,
+    paddingLeft: 24,
+    paddingTop: 16,
+    width: '100%',
+    fontFamily: fontFamily.Inter,
+    fontWeight: '600',
+    color: Colors.newDescTextColor,
+    textAlign: 'left'
+  },
+  buttonsTextStyle: {
+    ...fontSize(19),
+    // paddingLeft: 24,
+    // paddingTop: 16,
     width: '100%',
     fontFamily: fontFamily.Inter,
     fontWeight: '400',
@@ -564,7 +577,7 @@ const Styles = EStyleSheet.create({
     flex: 1
   },
   etherpadContainer: {
-    flex: 1,
+    flex: 9,
     height: '100%',
     width: Utility.getDeviceWidth() - 24,
     paddingLeft: 12,
@@ -885,9 +898,10 @@ const Styles = EStyleSheet.create({
     borderBottomWidth: 2,
   },
   etherpadNavHeaderCOntainerStyle: {
+    flex: 1,
     width: '100%',
-    position: 'absolute',
-    top: 0
+    // position: 'absolute',
+    // top: 0
   },
   titleTextInputStyle: {
     ...fontSize(16),

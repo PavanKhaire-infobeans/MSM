@@ -647,6 +647,7 @@ class MindPopList extends React.Component<{
       configurationTimestamp: TimeStampMilliSeconds(),
     });
   };
+
   private _empty = () => (
     <View
       style={{
@@ -758,7 +759,7 @@ class MindPopList extends React.Component<{
         'mindpopEditMemoryListener',
         'save',
         resp => {
-          if (resp.success) {
+          if (resp.status) {
             this.props.navigation.replace('createMemory', {
               editMode: true,
               draftNid: resp.id,
@@ -858,6 +859,7 @@ class MindPopList extends React.Component<{
     // CreateUpdateMemory(this.convertToMemoryObject.details, [], "mindpopListCreateMemory")
     // this.props.navigation.navigate("createMemory", {attachments : this.state., type : createNew}
   };
+
   _renderFrontCell = (data: any, item: any): JSX.Element => {
     var frontCellWidth = this.props.isSelectingItem ? '85%' : '100%';
     var selectionCellWidth = this.props.isSelectingItem ? '15%' : '0%';
@@ -1009,6 +1011,7 @@ class MindPopList extends React.Component<{
       });
     }
   };
+
   _getEditorCell = (): JSX.Element => {
     return (
       <TouchableOpacity

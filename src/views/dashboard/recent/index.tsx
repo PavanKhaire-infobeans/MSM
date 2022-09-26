@@ -333,7 +333,8 @@ const Recent = (props: Props) => {
       // );
       CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
         res => {
-          if (res.success) {
+            console.warn("sssss>>>",(res))
+            if (res.status) {
             props.removePrompt(selectedPrompt);
             loaderHandler.hideLoader();
             props.navigation.navigate('createMemory', {
@@ -343,7 +344,7 @@ const Recent = (props: Props) => {
             });
           } else {
             loaderHandler.hideLoader();
-            ToastMessage(draftDetails);
+            ToastMessage(draftDetails.ResponseMessage);
           }
         });
       Keyboard.dismiss();

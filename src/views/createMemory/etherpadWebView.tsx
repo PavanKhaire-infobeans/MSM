@@ -4,22 +4,24 @@ import {
   Image,
   Keyboard,
   Platform,
+  SafeAreaView,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {WebView} from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 import Text from '../../common/component/Text';
-import {Colors} from '../../common/constants';
-import {close_white, icon_collaborators} from '../../images';
+import { Colors } from '../../common/constants';
+import { close_white, icon_collaborators } from '../../images';
 //@ts-ignore
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import Utility from '../../common/utility';
 import Styles from './styles';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 export default class EtherPadEditing extends React.Component<Props, State> {
   state: State = {
@@ -71,12 +73,22 @@ export default class EtherPadEditing extends React.Component<Props, State> {
   }
 
   cancelAction = () => {
-    this.props.updateContent('get', '');
+    if (this.props.route.params.updateContent) {
+      this.props.route.params.updateContent('get', '');
+    }
+    else if (this.props.updateContent) {
+      this.props.updateContent('get', '');
+    }
     Keyboard.dismiss();
     this.props.navigation.goBack();
   };
   saveValue = () => {
-    this.props.updateContent('get', '');
+    if (this.props.route.params.updateContent) {
+      this.props.route.params.updateContent('get', '');
+    }
+    else if (this.props.updateContent) {
+      this.props.updateContent('get', '');
+    }
     Keyboard.dismiss();
     this.props.navigation.goBack();
   };
@@ -108,7 +120,7 @@ export default class EtherPadEditing extends React.Component<Props, State> {
                 automatically.
               </Text>
               <TouchableOpacity
-                onPress={() => this.setState({showWarningNote: false})}
+                onPress={() => this.setState({ showWarningNote: false })}
                 style={Styles.closeButtonStyle}>
                 <Image source={close_white} resizeMode="contain" />
               </TouchableOpacity>
@@ -116,7 +128,13 @@ export default class EtherPadEditing extends React.Component<Props, State> {
           )}
           <View style={Styles.collabrateContainer}>
             <TouchableOpacity
-              onPress={() => this.props.inviteCollaboratorFlow()}
+              onPress={() => {
+                if (this.props.route.params.inviteCollaboratorFlow) {
+                  this.props.route.params.inviteCollaboratorFlow()
+                } else if (this.props.inviteCollaboratorFlow) {
+                  this.props.inviteCollaboratorFlow()
+                }
+              }}
               style={Styles.collabrateButtonStyle}>
               <Text style={Styles.collaborateTextStyle}>Collaborate</Text>
               <Image
@@ -144,7 +162,7 @@ export default class EtherPadEditing extends React.Component<Props, State> {
                 automatically.
               </Text>
               <TouchableOpacity
-                onPress={() => this.setState({showWarningNote: false})}
+                onPress={() => this.setState({ showWarningNote: false })}
                 style={Styles.closeButtonStyle}>
                 <Image source={close_white} resizeMode="contain" />
               </TouchableOpacity>
@@ -152,7 +170,13 @@ export default class EtherPadEditing extends React.Component<Props, State> {
           )}
           <View style={Styles.collabrateContainer}>
             <TouchableOpacity
-              onPress={() => this.props.inviteCollaboratorFlow()}
+              onPress={() => {
+                if (this.props.route.params.inviteCollaboratorFlow) {
+                  this.props.route.params.inviteCollaboratorFlow()
+                } else if (this.props.inviteCollaboratorFlow) {
+                  this.props.inviteCollaboratorFlow()
+                }
+              }}
               style={Styles.collabrateButtonStyle}>
               <Text style={Styles.collaborateTextStyle}>Collaborate</Text>
               <Image
@@ -169,44 +193,45 @@ export default class EtherPadEditing extends React.Component<Props, State> {
   render() {
     return (
       <View style={[Styles.fullFlex]}>
-        {/* <SafeAreaView
+        <SafeAreaView
           style={Styles.emptySafeAreaStyle}
         />
-        <SafeAreaView style={Styles.SafeAreaViewContainerStyle}> */}
-        <View style={Styles.etherpadContainer}>
-          {/* <View style={{height : 54, width: "100%", backgroundColor: Colors.ThemeColor}}></View> */}
+        <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
+          <View style={Styles.etherpadNavHeaderCOntainerStyle}>
+            <NavigationHeaderSafeArea
+              hideClose={true}
+              heading={this.props.route.params.title}
+              cancelAction={() => this.cancelAction()}
+              showRightText={true}
+              rightText={'Done'}
+              saveValues={this.saveValue}
+            />
+          </View>
+          <View style={Styles.etherpadContainer}>
+            {/* <View style={{height : 54, width: "100%", backgroundColor: Colors.ThemeColor}}></View> */}
 
-          {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>  */}
-          <WebView
-            source={{uri: this.props.padDetails.padUrl}}
-            style={Styles.webViewStyle}
-            // onLoadStart={()=>loaderHandler.showLoader()}
-            // onLoadEnd={()=>loaderHandler.hideLoader()}
-            onShouldStartLoadWithRequest={() => true}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-            renderLoading={this.renderLoader}
-            startInLoadingState={true}
-            onMessage={() => {}}
-            injectedJavaScript={
-              "document.cookie = 'sessionID=" +
-              this.props.padDetails.sessionId +
-              "; path=/'"
-            }
-          />
-          {/* {this.toolbar()}
-            <View style={Styles.etherpadNavHeaderCOntainerStyle}>
-              <NavigationHeaderSafeArea
-                hideClose={true}
-                heading={this.props.title}
-                cancelAction={() => this.cancelAction()}
-                showRightText={true}
-                rightText={'Done'}
-                saveValues={this.saveValue}
-              />
-            </View> */}
-        </View>
-        {/* </SafeAreaView> */}
+            {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>  */}
+            <WebView
+              source={{ uri: this.props.route.params.padDetails.padUrl || this.props.padDetails.padUrl }}
+              style={Styles.webViewStyle}
+              // onLoadStart={()=>loaderHandler.showLoader()}
+              // onLoadEnd={()=>loaderHandler.hideLoader()}
+              onShouldStartLoadWithRequest={() => true}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              renderLoading={this.renderLoader}
+              startInLoadingState={true}
+              onMessage={() => { }}
+              injectedJavaScript={
+                "document.cookie = 'sessionID=" +
+                (this.props.route.params.padDetails.sessionId || this.props.padDetails.sessionId) +
+                "; path=/'"
+              }
+            />
+            {/* {this.toolbar()} */}
+
+          </View>
+        </SafeAreaView>
       </View>
     );
   }

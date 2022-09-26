@@ -278,17 +278,18 @@ const WriteTabs = props => {
   };
 
   const _renderItem = ({ item, index }) =>
-    index === 0 ? (
+    index === 0 && currentIndex === 0 ? (
       <View style={{ width: Dimensions.get('window').width }}>
         <MyMemories tabLabel={'Edit'} navigation={props.navigation} />
       </View>
-    ) : index === 1 ? (
+    ) : index === 1 && currentIndex === 1 ? (
       <View style={{ width: Dimensions.get('window').width }}></View>
-    ) : (
-      <View style={{ width: Dimensions.get('window').width }}>
-        <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
-      </View>
-    );
+    ) :
+      (
+        <View style={{ width: Dimensions.get('window').width }}>
+          <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
+        </View>
+      );
 
   return (
     <View style={Styles.fullFlex}>
@@ -347,6 +348,7 @@ const WriteTabs = props => {
                       },
                     });
                   } else {
+                    // setCurrentIndex(page)
                     setOnOptionClick(true);
                     flatListRef?.current?.scrollToIndex({
                       animated: true,
