@@ -60,6 +60,8 @@ type Props = {
   editableFields: any;
   basicInfo?: any;
   profilePicUri?: any;
+  route?:any;
+  navigation?: any;
 };
 type State = {
   actionSheet: {
@@ -71,6 +73,7 @@ type State = {
   error: {[x: string]: {error: boolean; message: string}};
   isDatePickerVisible: boolean;
 };
+
 export default class MutilpleValueEdit extends React.Component<Props> {
   bottomPicker: React.RefObject<BottomPicker> = React.createRef<BottomPicker>();
   profileUpdated: EventManager;
@@ -78,6 +81,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
   lastFieldName: string = '';
   _actionSheet: any | ActionSheet = null;
   isProfilePicAvailable: boolean;
+  StateData: any;
   state: State = {
     error: {},
     selectionData: {
@@ -104,8 +108,8 @@ export default class MutilpleValueEdit extends React.Component<Props> {
 
   constructor(props: Props) {
     super(props);
-    showConsoleLog(ConsoleType.LOG, 'Editable fields : ', this.props);
-    this.props.route.params.editableFields.forEach((element: any) => {
+    // showConsoleLog(ConsoleType.LOG, 'Editable fields : ', this.props);
+    this.props?.route?.params?.editableFields?.forEach((element: any) => {
       this.setState({
         [element.field_name]: element.default_value,
       });
@@ -267,10 +271,10 @@ export default class MutilpleValueEdit extends React.Component<Props> {
       let valueArray: string[] = [];
       let default_values = getValue(field, ['default_value']) || {};
       for (let key in default_values) {
-        //showConsoleLog(ConsoleType.LOG,"Values while selection ", default_values[key])
         valueArray.push(default_values[key]);
       }
       default_value = valueArray.join(', ');
+      showConsoleLog(ConsoleType.LOG,"Values while selection ", default_value)
       return default_value;
     } else if (type == 'text_textfield') {
       let val = getValue(field, ['default_value']);
@@ -337,10 +341,10 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                 ? this.state[field.field_name]
                 : field.default_value;
               for (let key in default_values) {
-                //showConsoleLog(ConsoleType.LOG,"Values while selection ", default_values[key])
                 valueArray.push(default_values[key]);
               }
               default_value = valueArray.join(', ');
+              showConsoleLog(ConsoleType.LOG,"generateSectionFields Values while selection ", default_value)
 
               // default_value = this.getValueForField(field)
               return (
@@ -384,6 +388,8 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                         ...this.state.error,
                         [field.field_name]: {error: false, message: ''},
                       },
+                    },()=>{
+                      this.StateData = this.state;
                     });
                   }}
                   {...extra}
@@ -485,7 +491,8 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     Keyboard.dismiss();
     if (Utility.isInternetConnected) {
       if (this.validateFields()) {
-        UpdateFormValues(this.state, this.props.route.params.editableFields);
+
+        UpdateFormValues(this.StateData, this.props.route.params.editableFields);
       }
     } else {
       No_Internet_Warning();
@@ -808,9 +815,12 @@ export default class MutilpleValueEdit extends React.Component<Props> {
                 ...this.state.error,
                 [fieldName]: {error: false, message: ''},
               },
+            },()=>{
+              this.StateData = this.state;
             });
             //showConsoleLog(ConsoleType.LOG,this.state)
           }}
+          multipleValuesComponent={true}
         />
       </View>
     );

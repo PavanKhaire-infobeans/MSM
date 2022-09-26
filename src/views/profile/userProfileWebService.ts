@@ -2,7 +2,8 @@ import { Platform } from 'react-native';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import { ToastMessage } from '../../common/component/Toast';
 import {
-  ERROR_MESSAGE, getValue, Storage, uploadTask
+  ConsoleType,
+  ERROR_MESSAGE, getValue, showConsoleLog, Storage, uploadTask
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
@@ -75,6 +76,8 @@ export const UserProfile = async () => {
 export const UpdateFormValues = (state: any, editableFields: any) => {
   let updatedValues = {};
   loaderHandler.showLoader('Saving...');
+  // showConsoleLog(ConsoleType.INFO,"save date: ",editableFields);
+
   for (let keys in editableFields) {
     let currentField = editableFields[keys];
     let value2: any = '';
@@ -148,14 +151,18 @@ export const UpdateFormValues = (state: any, editableFields: any) => {
       }
     }
   }
-  updateUserProfile(updatedValues);
+  showConsoleLog(ConsoleType.INFO,"after process date: ",editableFields);
+
+  setTimeout(async() => {
+    await updateUserProfile(updatedValues);
+  }, 2000);
 };
 
-const updateUserProfile = async (updatedFieldsData: Object) => {
-  let profileDetails: any = {};
+const updateUserProfile = async (dataset) => {
+  // let profileDetails: any = {};
   try {
     let data = await Storage.get('userData');
-    //showConsoleLog(ConsoleType.LOG,data);
+    showConsoleLog(ConsoleType.INFO,"update data : ",dataset);
     let response = await userProfile(
       `https://${Account.selectedData().instanceURL}/api/alumni/update`,
       [
@@ -164,7 +171,7 @@ const updateUserProfile = async (updatedFieldsData: Object) => {
           'Content-Type': 'application/json',
         },
         {
-          updateInfo: updatedFieldsData,
+          updateInfo: dataset,
           configurationTimestamp: '0',
         },
       ],

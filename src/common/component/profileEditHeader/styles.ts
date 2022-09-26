@@ -11,7 +11,7 @@ const Styles = EStyleSheet.create({
     flexDirection: 'row',
     backgroundColor: Colors.white,
     width: '100%',
-    borderRadius: 8,
+    // borderRadius: 8,
     marginTop: 20,
   },
   mainContainer: {
@@ -73,7 +73,7 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
     paddingTop: 10,
     flex: 1,
-    paddingRight: 10,
+    paddingLeft: 16,
   },
   rightContainer: {
     flex: 1.5,

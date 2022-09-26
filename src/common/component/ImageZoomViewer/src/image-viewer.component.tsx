@@ -41,24 +41,13 @@ export default class ImageViewer extends React.Component<Props, State> {
 
   public UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.index !== this.state.currentShowIndex) {
-      this.setState(
-        {
-          currentShowIndex: nextProps.index,
-        },
-        () => {
-          // 立刻预加载要看的图
-          this.loadImage(nextProps.index || 0);
-
-          this.jumpToCurrentImage();
-
-          // 显示动画
-          Animated.timing(this.fadeAnim, {
-            toValue: 1,
-            duration: 200,
-            useNativeDriver: true,
-          }).start();
-        },
-      );
+      this.loadImage(nextProps.index || 0);
+      this.jumpToCurrentImage();
+      Animated.timing(this.fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
     }
   }
 
@@ -125,6 +114,7 @@ export default class ImageViewer extends React.Component<Props, State> {
    * 加载图片，主要是获取图片长与宽
    */
   public loadImage(index: number) {
+
     if (!this!.state!.imageSizes![index]) {
       return;
     }
@@ -268,7 +258,8 @@ export default class ImageViewer extends React.Component<Props, State> {
         this.loadImage((this.state.currentShowIndex || 0) - 1);
       }
       return;
-    } else if (vxRTL < -0.7) {
+    }
+    else if (vxRTL < -0.7) {
       // 下一张
       this.goNext.call(this);
       if (this.state.currentShowIndex || 0 < this.props.imageUrls.length - 1) {

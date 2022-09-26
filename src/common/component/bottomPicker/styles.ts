@@ -6,7 +6,7 @@ import { Colors, fontSize, fontFamily } from '../../constants';
 const Styles = EStyleSheet.create({
   container: {
     position: 'absolute',
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.transparent,
     bottom: 0,
     width: '100%',
     height: '100%',
@@ -31,12 +31,12 @@ const Styles = EStyleSheet.create({
   },
   containerFull: {
     paddingTop: deviceInfoModule.hasNotch() ? 30 : 15,
-    borderBottomColor: 'rgba(0, 0, 0, 0.24)',
+    borderBottomColor: Colors.backrgba,
     borderBottomWidth: 2,
   },
   profileEditor: {
     height: 54,
-    borderBottomColor: 'rgba(0, 0, 0, 0.24)',
+    borderBottomColor: Colors.backrgba,
     borderBottomWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',

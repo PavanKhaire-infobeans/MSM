@@ -64,7 +64,7 @@ const Recent = (props: Props) => {
   const audioPlayer = useRef(null);
   const flatListRef = useRef(null);
 
-  let memoryFromPrompt: EventManager;
+  // let memoryFromPrompt: EventManager;
 
   const [state, setState] = useState({
     showNoInternetView: false,
@@ -98,7 +98,7 @@ const Recent = (props: Props) => {
 
     return () => {
       memoryUpdateListener.removeListener();
-      memoryFromPrompt.removeListener();
+      // memoryFromPrompt.removeListener();
     };
   }, []);
 

@@ -31,10 +31,10 @@ const Styles = EStyleSheet.create({
     color: Colors.black, 
     textAlign: 'left' 
   },
-  inputsContainer:{ 
-    height: Utility.getDeviceHeight() * 0.75, 
-    width: Utility.getDeviceWidth() - 48, 
-    justifyContent: 'space-between' 
+  inputsContainer: {
+    height: (Utility.getDeviceHeight() * 0.75) - 20,
+    width: Utility.getDeviceWidth() - 48,
+    justifyContent: 'space-between'
   },
   labelStyle:{ 
     marginBottom: 4, 
