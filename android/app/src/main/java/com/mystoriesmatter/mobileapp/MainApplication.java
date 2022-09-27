@@ -17,7 +17,7 @@ public class MainApplication extends Application implements ReactApplication {
       new ReactNativeHost(this) {
         @Override
         public boolean getUseDeveloperSupport() {
-          return true;//BuildConfig.DEBUG
+          return BuildConfig.DEBUG;
         }
 
         @Override

@@ -24,6 +24,7 @@ import EventManager from '../../common/eventManager';
 import {Account} from '../../common/loginStore';
 import LoginStore, {UserData} from '../../common/loginStore/database';
 import Utility from '../../common/utility';
+import WebserviceCall from '../../common/webservice/webservice';
 import {splash_bg} from '../../images';
 import {
   CreateUpdateMemory,
@@ -55,7 +56,7 @@ const Splash = props => {
   const [apiCalldoneOnce, setApiCallDoneOnce] = useState(false);
 
   useEffect(() => {
-  
+    WebserviceCall.navigation(props.navigation);
     const getPromptListener = EventManager.addListener(
       kGetPromptByID,
       (success: boolean, fetchPrompt?: any) => {
@@ -76,7 +77,7 @@ const Splash = props => {
               'save',
               response => {
                 if (response.success) {
-                  this.props.navigation.navigate('createMemory', {
+                  props.navigation.navigate('createMemory', {
                     editMode: true,
                     draftNid: response.id,
                     isFromPrompt: true,
@@ -96,7 +97,7 @@ const Splash = props => {
             No_Internet_Warning();
           }
         } else {
-          // this.props.navigation.replace('dashBoard');
+          // props.navigation.replace('dashBoard');
         }
       },
     );
@@ -122,7 +123,7 @@ const Splash = props => {
                     splitUrl[5] ? base64.decode(splitUrl[5]) : '',
                   );
                 } else {
-                  // this.props.navigation.replace('dashBoard');
+                  // props.navigation.replace('dashBoard');
                 }
               } else if (urlreDirectTo && urlreDirectTo == 'memory') {
                 let urlData = splitUrl[4] ? base64.decode(splitUrl[4]) : '';
@@ -150,7 +151,7 @@ const Splash = props => {
                 setNavigateToScreen('about');
                 setDecodedDataFromURL('');
               } else {
-                // this.props.navigation.replace('dashBoard');
+                // props.navigation.replace('dashBoard');
               }
             } else {
               No_Internet_Warning();
@@ -187,7 +188,7 @@ const Splash = props => {
   useEffect(() => {
     if (props.user.instanceID != 0 && props.user.userAuthToken != null) {
       Account.selectedData().values = props.user;
-      // this.props.navigation.reset("dashboardIndex")
+      // props.navigation.reset("dashboardIndex")
       try {
         props.fetchFiltersDataTimeline({type: ListType.Timeline});
 
@@ -226,7 +227,7 @@ const Splash = props => {
                         'save',
                         response => {
                           if (response.success) {
-                            this.props.navigation.navigate('createMemory', {
+                            props.navigation.navigate('createMemory', {
                               editMode: true,
                               draftNid: response.id,
                               isFromPrompt: true,
@@ -243,18 +244,18 @@ const Splash = props => {
                         },
                       );
                     } else if (splitArray[3] && splitArray[3] === 'mindpopup') {
-                      // this.props.navigation.replace("mindPop", { nid: id, fromDeeplinking: true, deepLinkBackClick: true })
+                      // props.navigation.replace("mindPop", { nid: id, fromDeeplinking: true, deepLinkBackClick: true })
                     } else {
-                      // this.props.navigation.replace('dashBoard');
+                      // props.navigation.replace('dashBoard');
                     }
                   } else {
-                    // this.props.navigation.replace('dashBoard');
+                    // props.navigation.replace('dashBoard');
                   }
                 } else {
                   No_Internet_Warning();
                 }
               } else {
-                // this.props.navigation.replace('dashBoard');
+                // props.navigation.replace('dashBoard');
               }
             } else {
               No_Internet_Warning();

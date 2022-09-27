@@ -29,7 +29,7 @@ export const CreateUpdateMemory = async (
   CB?: any
 ) => {
   try {
-    showConsoleLog(ConsoleType.LOG, 'params..', params);
+    // showConsoleLog(ConsoleType.LOG, 'params..', params);
     let data = await Storage.get('userData');
     let response: any = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/mystory/create_update`,

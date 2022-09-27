@@ -53,16 +53,23 @@ function logoutFlow() {
   logoutMethod()
     .then((resp: any) => {
       let list = resp.rows.raw();
+
       let accounts = list.filter((it: UserData) => it.userAuthToken != '');
+
       if (accounts.length > 0) {
         let user: UserData = accounts[accounts.length - 1];
         DeviceEventEmitter.emit('logout', { accounts, user });
       }
       else {
-        // reset({
-        //   index: 0,
-        //   routes: [{ name: 'prologue' }]
-        // })
+        try {
+          WebserviceCall.navigation().reset({
+            index: 0,
+            routes: [{ name: 'prologue' }]
+          })
+        } catch (error) {
+          
+        }
+       
         // if (currentScene !== 'login') {
         //   navigate('prologue');
         // }
@@ -83,8 +90,17 @@ const WebserviceCall = (() => {
   return {
     adminPath: '/cuebackadmin',
     path: '/cueback',
+    navProps: null,
+    navigation: (navitionProps?) => {
+      if (navitionProps === undefined) {
+        return WebserviceCall.navProps
+      }
+      else if (navitionProps) {
+        WebserviceCall.navProps = navitionProps;
+      }
+    },
     getRequest: (url: string, headers: object): Promise<Response> => {
-      showConsoleLog(ConsoleType.LOG,"URL : " + url, "\nMethod : GET\n", "Headers", JSON.stringify(headers));
+      showConsoleLog(ConsoleType.LOG, "URL : " + url, "\nMethod : GET\n", "Headers", JSON.stringify(headers));
       let requestTime = new Date()
       if (!Utility.isInternetConnected) {
         // return Promise.reject(new Error(NO_INTERNET));
@@ -99,22 +115,22 @@ const WebserviceCall = (() => {
         },
       })
         .then((resp: Response) => {
-          showConsoleLog(ConsoleType.LOG,"resp.headers :", resp.headers);
+          showConsoleLog(ConsoleType.LOG, "resp.headers :", resp.headers);
           let rsp = resp.clone();
           return rsp
             .json()
             .then((value: any): any => {
-              showConsoleLog(ConsoleType.WARN," response time :-: ", (new Date() - requestTime) / 1000)
+              showConsoleLog(ConsoleType.WARN, " response time :-: ", (new Date() - requestTime) / 1000)
               if (
                 value.ResponseCode == 405 ||
                 value.ResponseCode == 402 ||
                 value.ResponseCode == 401
               ) {
                 loaderHandler.hideLoader();
-                showConsoleLog(ConsoleType.LOG,"resp value :", JSON.stringify(value));
+                showConsoleLog(ConsoleType.LOG, "resp value :", JSON.stringify(value));
 
                 if (value.responseMessage == 'Authentication token expired.') {
-                  showConsoleLog(ConsoleType.LOG,"Authentication token expired :", JSON.stringify(value));
+                  showConsoleLog(ConsoleType.LOG, "Authentication token expired :", JSON.stringify(value));
                   logout();
                 }
                 return Promise.reject(resp);
@@ -157,7 +173,7 @@ const WebserviceCall = (() => {
       if (!Utility.isInternetConnected) {
         //return Promise.reject(new Error(NO_INTERNET));
       }
-      showConsoleLog(ConsoleType.LOG,'request : login ' + url, new Date().toTimeString());
+      showConsoleLog(ConsoleType.LOG, 'request : login ' + url, new Date().toTimeString());
       return fetch(url, {
         method: 'POST',
         headers: {
@@ -169,8 +185,8 @@ const WebserviceCall = (() => {
       })
         .then((resp: any) => {
           let rsp = resp.clone();
-          showConsoleLog(ConsoleType.LOG,JSON.stringify(resp, null, 4));
-          showConsoleLog(ConsoleType.LOG,"headers another :", JSON.stringify(headers), url);
+          showConsoleLog(ConsoleType.LOG, JSON.stringify(resp, null, 4));
+          showConsoleLog(ConsoleType.LOG, "headers another :", JSON.stringify(headers), url);
           return rsp
             .json()
             .then((value: any): any => {
@@ -180,7 +196,7 @@ const WebserviceCall = (() => {
                   new Date().toTimeString(),
                   JSON.stringify(request)
                 );
-                showConsoleLog(ConsoleType.WARN," response time :-: ", (new Date() - requestTime) / 1000)
+                showConsoleLog(ConsoleType.WARN, " response time :-: ", (new Date() - requestTime) / 1000)
                 // showConsoleLog(ConsoleType.LOG,'Response is : ', value);
                 if (
                   value.ResponseCode == 405 ||
@@ -189,7 +205,7 @@ const WebserviceCall = (() => {
                 ) {
                   // loaderHandler.hideLoader();
                   //TODO: Consult Web team and get unique ResponseCode of invalid session.
-                  showConsoleLog(ConsoleType.LOG,"Authentication token expired another :", JSON.stringify(value), url);
+                  showConsoleLog(ConsoleType.LOG, "Authentication token expired another :", JSON.stringify(value), url);
                   if (
                     value.ResponseMessage == 'Authentication token expired.' ||
                     value.ResponseMessage == 'Invalid authentication token.'
@@ -201,17 +217,17 @@ const WebserviceCall = (() => {
                 }
                 return resp;
               } catch (error) {
-                showConsoleLog(ConsoleType.ERROR,"reeee : ", error)
+                showConsoleLog(ConsoleType.ERROR, "reeee : ", error)
               }
 
             })
             .catch((err: Error) => {
-              showConsoleLog(ConsoleType.LOG,'Error is : ', err);
+              showConsoleLog(ConsoleType.LOG, 'Error is : ', err);
               return Promise.reject(err);
             });
         })
         .catch((err: Error) => {
-          showConsoleLog(ConsoleType.LOG,'Error is : ', err);
+          showConsoleLog(ConsoleType.LOG, 'Error is : ', err);
           return Promise.reject(err);
         });
     },
@@ -243,7 +259,7 @@ const WebserviceCall = (() => {
       if (!Utility.isInternetConnected) {
         //return Promise.reject(new Error(NO_INTERNET));
       }
-      showConsoleLog(ConsoleType.LOG,'request : login ' + url, new Date().toTimeString());
+      showConsoleLog(ConsoleType.LOG, 'request : login ' + url, new Date().toTimeString());
       let responseData = await fetch(url, {
         method: 'POST',
         headers: {
@@ -258,7 +274,7 @@ const WebserviceCall = (() => {
           // showConsoleLog(ConsoleType.LOG,"headers another :", JSON.stringify(headers), url);
 
           try {
-            showConsoleLog(ConsoleType.WARN," response time :-: ", (new Date() - requestTime) / 1000)
+            showConsoleLog(ConsoleType.WARN, " response time :-: ", (new Date() - requestTime) / 1000)
             // showConsoleLog(ConsoleType.LOG,'Response is : ', value);
             if (
               resp.ResponseCode == 405 ||
@@ -267,7 +283,7 @@ const WebserviceCall = (() => {
             ) {
               // loaderHandler.hideLoader();
               //TODO: Consult Web team and get unique ResponseCode of invalid session.
-              showConsoleLog(ConsoleType.LOG,"Authentication token expired another :", JSON.stringify(resp), url);
+              showConsoleLog(ConsoleType.LOG, "Authentication token expired another :", JSON.stringify(resp), url);
               if (
                 resp.ResponseMessage == 'Authentication token expired.' ||
                 resp.ResponseMessage == 'Invalid authentication token.'
@@ -275,18 +291,18 @@ const WebserviceCall = (() => {
                 ToastMessage('', '', true);
                 logout();
               } //5461
-             
+
               // return Promise.reject(Error(resp.ResponseMessage));
             }
             CB(resp)
             // return resp;
           } catch (error) {
-            showConsoleLog(ConsoleType.ERROR,"reeee : ", error)
+            showConsoleLog(ConsoleType.ERROR, "reeee : ", error)
           }
 
         })
         .catch((err: Error) => {
-          showConsoleLog(ConsoleType.LOG,'Error is : ', err);
+          showConsoleLog(ConsoleType.LOG, 'Error is : ', err);
           return Promise.reject(err);
         });
     },

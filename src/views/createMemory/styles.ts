@@ -518,7 +518,7 @@ const Styles = EStyleSheet.create({
     paddingLeft: 24,
     paddingTop: 16,
     width: '100%',
-    fontFamily: fontFamily.Inter,
+    fontFamily:  Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
     fontWeight: '600',
     color: Colors.newDescTextColor,
     textAlign: 'left'
