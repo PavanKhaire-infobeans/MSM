@@ -1,3 +1,4 @@
+import Upload from 'react-native-background-upload';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
   asyncGen,
@@ -57,25 +58,28 @@ export const CreateUpdateMemory = async (
           debugger
 
           if (filesToUpload.length > 0) {
-            let datareturn = await uploadAttachments(id, filesToUpload, listener, true, id, padDetails, key);
+            await uploadFile(id, filesToUpload,
+              datareturn => {
+                console.log("ressssss :", datareturn)
 
-            if (listener == "mindpopEditMemoryListener") {
-              CB({ status: true, id, padDetails, key, prompt_id });
-              // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
-            }
-            else if (listener == 'addContentCreateMemory') {
+                if (listener == "mindpopEditMemoryListener") {
+                  CB({ status: true, id, padDetails, key, prompt_id });
+                  // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
+                }
+                else if (listener == 'addContentCreateMemory') {
 
-              // EventManager.callBack(listener, true, id, padDetails, key);
-              CB({ status: true, id, padDetails, key });
-            }
-            else if (listener == promptIdListener) {
+                  // EventManager.callBack(listener, true, id, padDetails, key);
+                  CB({ status: true, id, padDetails, key });
+                }
+                else if (listener == promptIdListener) {
 
-              CB({ status: true, id });
-            }
-            else {
+                  CB({ status: true, id });
+                }
+                else {
+                  CB(response);
+                }
+              });
 
-              CB(response);
-            }
 
           }
           else {
@@ -151,7 +155,7 @@ export const GetDraftsDetails = async (nid: any, CB?: any) => {
           },
         },
       ],
-      response =>{
+      response => {
         if (response != undefined && response != null) {
           if (response.ResponseCode == 200) {
             // EventManager.callBack(kDraftDetailsFetched, true, response['Data']);
@@ -163,24 +167,24 @@ export const GetDraftsDetails = async (nid: any, CB?: any) => {
             //   response['ResponseMessage'],
             // );
             CB({ status: false, responseData: response['ResponseMessage'] });
-    
+
           }
         }
       }
     )
-      // .then((response: Response) => response.json())
-      // .catch((err: Error) => {
-      //   Promise.reject(err);
-      // });
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   Promise.reject(err);
+    // });
 
-    
+
   } catch (err) {
     // EventManager.callBack(
     //   kDraftDetailsFetched,
     //   false,
     //   'Unable to process your request. Please try again later',
     // );
-    CB( { status: false, responseData: 'Unable to process your request. Please try again later' });
+    CB({ status: false, responseData: 'Unable to process your request. Please try again later' });
 
   }
 };
@@ -408,95 +412,108 @@ export const CollaboratorActionAPI = async (params: any) => {
   }
 };
 
-async function uploadAttachments(memoryId: number, files: TempFile[], listener: string, res: boolean, id: any, padDetails: any, key: any) {
-  let result = await new Promise((resolve, reject) => {
-    asyncGen(function* () {
-      try {
-        var resp: any[] = [];
-        for (let fl of files) {
-          let rsp = yield uploadFile(memoryId, fl);
-          resp.push(rsp);
-        }
+async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
-        // if (files.length === resp.length) {
-        resolve(resp);
-        // }
-        debugger
-        // loaderHandler.showLoader('Loading...');
-        return resp;
-        // loaderHandler.hideLoader();
-        // EventManager.callBack(listener, res, id, padDetails, key);
-      } catch (err) {
-        //showConsoleLog(ConsoleType.LOG,"Error in uploading files: ", err)
-        reject(err);
-      }
-    });
-  })
-  return result;
-
-  // const promises = this.state.data.map(item => {
-  //   return uploadFile(memoryId, item)
-  // });
-
-  // await Promise.all(promises).then(results => {
-  //   // const videos = results.map(result => result.items[0]);
-  //   showConsoleLog(ConsoleType.LOG,"videos >>>>>>",JSON.stringify(results));
-
-  // })
-  // showConsoleLog(ConsoleType.LOG,"videos data>>>>>>",JSON.stringify(promises));
-  // return promises
-}
-
-async function uploadFile(memoryId: number, file: TempFile) {
-  var filePath = file.filePath;
-  // if (Platform.OS == "android") {
-  filePath = filePath.replace('file://', '');
-  // }
-  let options: { [x: string]: any } = {
-    url: `https://${Account.selectedData().instanceURL
-      }/api/mystory/file_upload`,
-    path: filePath,
-    method: 'POST',
-    ...(file.type == 'audios' ? { name: file.filename } : {}),
-    field: file.type == 'images' ? 'image' : file.type,
-    type: 'multipart',
-    headers: {
-      'content-type': 'multipart/form-data',
-      'X-CSRF-TOKEN': Account.selectedData().userAuthToken,
-    },
-  };
-  if (memoryId) {
-    options['parameters'] = {
-      nid: `${memoryId}`,
-      file_title: `${file.file_title}`,
-      file_description: `${file.file_description}`,
-    };
-  }
-
-  if (getValue(file, ['filename'])) {
-    options['parameters'] = {
-      ...options['parameters'],
-      title: getValue(file, ['filename']),
-    };
-  }
+  let respArray: any[] = [];
+  const loaderHandler = require('../../common/component/busyindicator/LoaderHandler').default;
   loaderHandler.showLoader('Uploading..');
 
-  return new Promise((resolve, reject) => {
-    uploadTask(
-      (data: any) => {
-        let response = JSON.parse(data.responseBody);
-        showConsoleLog(ConsoleType.LOG, "After upload", JSON.stringify(response));
+  Promise.all(
+    files.map(file => {
+      return new Promise(async (resolve) => {
 
-        if (response.ResponseCode == '200') {
-          resolve(response);
-        } else {
-          reject(response);
+        var filePath = file.filePath;
+        // if (Platform.OS == "android") {
+        filePath = filePath.replace('file://', '');
+        // }
+        let options: { [x: string]: any } = {
+          url: `https://${Account.selectedData().instanceURL
+            }/api/mystory/file_upload`,
+          path: filePath,
+          method: 'POST',
+          ...(file.type == 'audios' ? { name: file.filename } : {}),
+          field: file.type == 'images' ? 'image' : file.type,
+          type: 'multipart',
+          headers: {
+            'content-type': 'multipart/form-data',
+            'X-CSRF-TOKEN': Account.selectedData().userAuthToken,
+          },
+        };
+        if (memoryId) {
+          options['parameters'] = {
+            nid: `${memoryId}`,
+            file_title: `${file.file_title}`,
+            file_description: `${file.file_description}`,
+          };
         }
-      },
-      (err: Error) => {
-        //showConsoleLog(ConsoleType.LOG,"Upload error!", err);
-        reject(err);
-      },
-    )(options);
-  });
+
+        if (getValue(file, ['filename'])) {
+          options['parameters'] = {
+            ...options['parameters'],
+            title: getValue(file, ['filename']),
+          };
+        }
+
+        try {
+
+          try {
+            let uploadId = await Upload.startUpload(options);
+            if (typeof uploadId == 'string') {
+              Upload.addListener('error', uploadId, (data: any) => {
+                respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
+                resolve(data);
+              });
+              Upload.addListener(
+                'cancelled',
+                uploadId,
+                (...data: any[]) => {
+                  respArray.push(data)
+                  resolve({ message: 'Upload cancelled', uploadId, data });
+                },
+              );
+              Upload.addListener('completed', uploadId, (data: any) => {
+                respArray.push(data)
+                resolve(data);
+              });
+            } else {
+              respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
+              resolve(uploadId);
+            }
+
+          } catch (err) {
+            respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
+            resolve(err);
+          }
+          // });
+        } catch (error) {
+          respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
+        }
+      })
+    })
+  )
+    .then((res) => {
+      CB(res);
+    })
+  // loaderHandler.showLoader('Uploading..');
+
+
+
+  // return new Promise((resolve, reject) => {
+  // uploadTask(
+  //   (data: any) => {
+  //     let response = JSON.parse(data.responseBody);
+  //     showConsoleLog(ConsoleType.LOG, "After upload", JSON.stringify(response));
+
+  //     if (response.ResponseCode == '200') {
+  //       resolve(response);
+  //     } else {
+  //       reject(response);
+  //     }
+  //   },
+  //   (err: Error) => {
+  //     //showConsoleLog(ConsoleType.LOG,"Upload error!", err);
+  //     reject(err);
+  //   },
+  // )(options);
+  // });
 }
