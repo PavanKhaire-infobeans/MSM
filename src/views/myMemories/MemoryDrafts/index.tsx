@@ -121,19 +121,46 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   componentDidMount = async () => {
     if (Utility.isInternetConnected) {
       loaderHandler.showLoader();
-      if (this.props.decodedDataFromURL) {
+      if (this.props?.route?.params?.decodedDataFromURL) {
         this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
       }
       else {
         let response: any = await GetMemoryDrafts('all', 'all', memoryDraftsArray.length, (response) => {
+
+          loadingDataFromServer = false;
+          let memoryDraftDetails = response.data
           if (response?.status) {
-            this.memoryDraftDetails(response.status, response.data)
+            if (this.state.isRefreshing) {
+              memoryDraftsArray = [];
+            }
+            if (page == 0) {
+              this.memoryDraftsDataModel.updateMemoryDraftDetails(
+                memoryDraftDetails,
+                true,
+              );
+            } else {
+              this.memoryDraftsDataModel.updateMemoryDraftDetails(
+                memoryDraftDetails,
+                false,
+              );
+            }
+            memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
+            this.setState({ memoryDetailAvailable: true });
           } else {
-            this.memoryDraftDetails(response.status, response.ResponseMessage)
+            if (page != 0) {
+              page--;
+            }
+            if (memoryDraftsArray.length == 0) {
+              ToastMessage(response.ResponseMessage, Colors.ErrorColor);
+            }
           }
+          this.setState({
+            isRefreshing: false,
+            loading: false,
+          }, () => {
+            loaderHandler.hideLoader();
+          });
         });
-
-
       }
     } else {
       No_Internet_Warning();
@@ -141,37 +168,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   }
 
   memoryDraftDetails = (fetched: boolean, memoryDraftDetails: any) => {
-    loadingDataFromServer = false;
-    loaderHandler.hideLoader();
-    if (fetched) {
-      if (this.state.isRefreshing) {
-        memoryDraftsArray = [];
-      }
-      if (page == 0) {
-        this.memoryDraftsDataModel.updateMemoryDraftDetails(
-          memoryDraftDetails,
-          true,
-        );
-      } else {
-        this.memoryDraftsDataModel.updateMemoryDraftDetails(
-          memoryDraftDetails,
-          false,
-        );
-      }
-      memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
-      this.setState({ memoryDetailAvailable: true });
-    } else {
-      if (page != 0) {
-        page--;
-      }
-      if (memoryDraftsArray.length == 0) {
-        ToastMessage(memoryDraftDetails, Colors.ErrorColor);
-      }
-    }
-    this.setState({
-      isRefreshing: false,
-      loading: false,
-    });
+
   };
 
   deleteDraft = (nid: any, isDeleting: boolean) => {
@@ -362,8 +359,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       // this.setState({});
     }
     else {
-    loaderHandler.hideLoader();
-    ToastMessage('Unable to delete draft. Please try again later');
+      loaderHandler.hideLoader();
+      ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 

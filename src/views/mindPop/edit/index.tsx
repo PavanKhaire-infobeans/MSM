@@ -763,11 +763,11 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
             Styles.toolBarContainer,
             {
               justifyContent:
-                this.props.navigation.state.routeName == 'mindPopEdit'
+                this.props?.route?.name == 'mindPopEdit'
                   ? 'space-between'
                   : 'flex-end',
               ...(DeviceInfo.isTablet() &&
-                this.props.navigation.state.routeName == 'mindPopList'
+                this.props?.route?.name == 'mindPopList'
                 ? {
                   borderLeftColor: Colors.backrgba,
                   borderLeftWidth: 1,
@@ -1109,7 +1109,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
             Keyboard.dismiss();
             this.props.navigation.goBack();
             return;
-          } else if (this.props.navigation.state.routeName == 'mindPopEdit') {
+          } else if (this.props?.route?.name == 'mindPopEdit') {
             this.isDeleteForMemory = false;
           }
         } else {
@@ -1139,7 +1139,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       if (
         ((this.state.id == '' && getValue(nextProps, ['listItem', 'id'])) ||
           DeviceInfo.isTablet()) &&
-        this.props.navigation.state.routeName == 'mindPopList' &&
+        this.props?.route?.name == 'mindPopList' &&
         nextProps.listItem
       ) {
         let content = decode_utf8(nextProps.listItem.message || '');
@@ -1297,7 +1297,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   // 				ItemSeparatorComponent={() => (
   // 					<View
   // 						style={{
-  // 							width: 0 //!DeviceInfo.isTablet() ? 0 : this.props.navigation.state.routeName == "mindPopList" ? 5 : 35
+  // 							width: 0 //!DeviceInfo.isTablet() ? 0 : this.props?.route?.name == "mindPopList" ? 5 : 35
   // 						}}
   // 					/>
   // 				)}

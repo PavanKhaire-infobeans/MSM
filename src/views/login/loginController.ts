@@ -127,12 +127,12 @@ export class LoginController implements LoginControllerProtocol {
         userInfo.user.email,
         CueBackInsatance,
       );
+      // this.view.props.clearDashboard();
       setTimeout(() => {
         this.view.props.navigation.reset({
           index: 0,
           routes: [{ name: 'dashBoard' }]
         })
-        this.view.props.clearDashboard();
         loaderHandler.hideLoader();
       }, 100);
       this.view.props.clean();
@@ -381,6 +381,8 @@ export class LoginController implements LoginControllerProtocol {
       if (loginStatus.loginsuccess) {
         //If Response code is success
         if (loginStatus.logindata.ResponseCode == 200) {
+          // this.view.props.clearDashboard();
+          this.view.props.clean();  
           loginStatus.logindata.Response.forEach((element: any) => {
             this.proceedWithLogin(
               element,
@@ -389,6 +391,7 @@ export class LoginController implements LoginControllerProtocol {
               element.SiteDetails,
             );
           });
+          
           setTimeout(() => {
             let obj = {
               username: this.view.state.username,
@@ -409,14 +412,13 @@ export class LoginController implements LoginControllerProtocol {
                 }
               });
             }
+
             // Actions.dashBoard();
             this.view.props.navigation.reset({
               index: 0,
               routes: [{ name: 'dashBoard' }]
             })
-          }, 100);
-          this.view.props.clearDashboard();
-          this.view.props.clean();
+          }, 500);
         } else {
           let errorMessage = getValue(loginStatus, ['data', 'message'])
             ? getValue(loginStatus, ['data', 'message'])

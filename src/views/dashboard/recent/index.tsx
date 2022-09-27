@@ -108,6 +108,7 @@ const Recent = (props: Props) => {
   };
 
   const handleLoadMore = () => {
+
     if (
       props.recentList.length > 0 &&
       props.recentList.length < props.totalCount
@@ -120,7 +121,6 @@ const Recent = (props: Props) => {
           memoryDetails = props.recentList[props.recentList.length - 1];
         }
         // if(props.totalCount > 5)
-        // showConsoleLog(ConsoleType.LOG,"memoryDetails >"+memoryDetails.memoryDate)
         props.fetchMemoryList({
           type: ListType.Recent,
           isLoadMore: true,
@@ -333,7 +333,6 @@ const Recent = (props: Props) => {
       // );
       CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
         res => {
-            console.warn("sssss>>>",(res))
             if (res.status) {
             props.removePrompt(selectedPrompt);
             loaderHandler.hideLoader();

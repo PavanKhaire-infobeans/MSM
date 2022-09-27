@@ -49,7 +49,7 @@ const AccordionView = (props: Props) => {
 
   const _renderContent = (section: { [s: string]: any }) => {
     return (
-      <View style={styles.cellContainer}>
+      <View key={section.content} style={styles.cellContainer}>
         <Text numberofLines={0} style={styles.textSize16}>
           {section.content}
         </Text>
