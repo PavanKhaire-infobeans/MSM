@@ -16,7 +16,7 @@ import Text from '../../../common/component/Text';
 //@ts-ignore
 import DeviceInfo from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   Colors,
   decode_utf8,
@@ -38,7 +38,7 @@ import {
 //@ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import {SwipeListView} from 'react-native-swipe-list-view';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import AccordionView from '../../../common/component/accordionView';
 import {
   default as LoaderHandler,
@@ -47,7 +47,7 @@ import {
 import CustomAlert from '../../../common/component/customeAlert';
 import SelectionStatusBar from '../../../common/component/inputAccessoryViews/itemSelectionStatusBar';
 import SearchBar from '../../../common/component/SearchBar';
-import {ToastMessage} from '../../../common/component/Toast';
+import { ToastMessage } from '../../../common/component/Toast';
 import MindPopStore, {
   FileType,
 } from '../../../common/database/mindPopStore/mindPopStore';
@@ -61,13 +61,13 @@ import {
   thumb_audio_mindpop,
   thumb_text_mindpop,
 } from '../../../images';
-import {createNew} from '../../createMemory';
-import {CreateUpdateMemory} from '../../createMemory/createMemoryWebService';
-import {DefaultDetailsMemory} from '../../createMemory/dataHelper';
-import {showCustomAlert} from '../../createMemory/reducer';
-import {EditMode} from '../edit/reducer';
+import { createNew } from '../../createMemory';
+import { CreateUpdateMemory } from '../../createMemory/createMemoryWebService';
+import { DefaultDetailsMemory } from '../../createMemory/dataHelper';
+import { showCustomAlert } from '../../createMemory/reducer';
+import { EditMode } from '../edit/reducer';
 import MindPopIPadNavigationBar from '../iPad/NavigationBar';
-import {DeleteMindPopOperation} from './deleteMindPopReducer';
+import { DeleteMindPopOperation } from './deleteMindPopReducer';
 import EmptyView from './emptyView';
 import MindPopIntro from './mindPopIntro';
 import MindPopNavigationBar from './NavigationBar';
@@ -90,7 +90,7 @@ export type ListItem = {
   files?: [];
 };
 
-type Section = {title: string; data: Array<ListItem>};
+type Section = { title: string; data: Array<ListItem> };
 type SectionItems = Array<Section>;
 const options = {
   enableVibrateFallback: true,
@@ -112,16 +112,16 @@ class MindPopList extends React.Component<{
     mindPopInProgress: number;
     mindPopIntroVisibility: any;
   } = {
-    selectedItems: [],
-    totalItems: 0,
-    searchMode: false,
-    listSectionItems: [],
-    selectedIndex: 0,
-    lastFetchedIndex: 0,
-    webserviceBeingCalled: false,
-    mindPopInProgress: 0,
-    mindPopIntroVisibility: false,
-  };
+      selectedItems: [],
+      totalItems: 0,
+      searchMode: false,
+      listSectionItems: [],
+      selectedIndex: 0,
+      lastFetchedIndex: 0,
+      webserviceBeingCalled: false,
+      mindPopInProgress: 0,
+      mindPopIntroVisibility: false,
+    };
   searchKeyword: string = '';
   eventSubs: EmitterSubscription;
   listRef = React.createRef<SwipeListView>();
@@ -162,11 +162,11 @@ class MindPopList extends React.Component<{
       });
       // }
       // )
-    } catch (e) {}
+    } catch (e) { }
   };
 
   _updateIndex = (selectedIndex: number) => {
-    this.setState({selectedIndex}, () => {
+    this.setState({ selectedIndex }, () => {
       this.listRef.current &&
         this.listRef.current._listView.scrollToLocation &&
         this.listRef.current._listView.scrollToLocation({
@@ -245,8 +245,8 @@ class MindPopList extends React.Component<{
       updatedSectionListData.push({
         title: '0',
         data: [
-          {message: '', id: 'helpview'},
-          {message: '', id: 'editor'},
+          { message: '', id: 'helpview' },
+          { message: '', id: 'editor' },
         ],
       });
     }
@@ -257,12 +257,12 @@ class MindPopList extends React.Component<{
     reloadList(updatedSectionListData);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: {[x: string]: any}) {
+  UNSAFE_componentWillReceiveProps(nextProps: { [x: string]: any }) {
     if (this.props !== nextProps) {
       if (nextProps.list.completed) {
         LoaderHandler.hideLoader();
         if (nextProps.list.success) {
-          let {count: totalItems, fetchedItems} = getValue(nextProps, [
+          let { count: totalItems, fetchedItems } = getValue(nextProps, [
             'list',
             'data',
           ]);
@@ -282,7 +282,7 @@ class MindPopList extends React.Component<{
                   updatedSectionListData => {
                     this.props.callEnded();
                     this.setState(
-                      {listSectionItems: updatedSectionListData},
+                      { listSectionItems: updatedSectionListData },
                       () => {
                         this.props.updateListCount(this._listItems().length);
                         if (this.state.totalItems == 0) {
@@ -314,13 +314,13 @@ class MindPopList extends React.Component<{
           this.props.callEnded();
           let data =
             this.state.listSectionItems &&
-            this.state.listSectionItems.length > 0
+              this.state.listSectionItems.length > 0
               ? this.state.listSectionItems[
-                  this.state.listSectionItems.length - 1
-                ].data || []
+                this.state.listSectionItems.length - 1
+              ].data || []
               : [];
           this.setState(
-            {totalItems: data.length, webserviceBeingCalled: false},
+            { totalItems: data.length, webserviceBeingCalled: false },
             () => {
               this.props.updateListCount(0);
             },
@@ -341,7 +341,7 @@ class MindPopList extends React.Component<{
               'reqData',
               'mindPopList',
             ]) || []
-          ).map((it: {mindPopID: string}) => parseInt(it.mindPopID));
+          ).map((it: { mindPopID: string }) => parseInt(it.mindPopID));
 
           if (this.props?.route?.name == 'mindPopList') {
             this.props.deleteMindPopsCallEnd();
@@ -352,7 +352,7 @@ class MindPopList extends React.Component<{
             return obj.title === '1';
           });
           if (objects) {
-            var rowItems: Array<ListItem & {id: any}> = [...objects.data];
+            var rowItems: Array<ListItem & { id: any }> = [...objects.data];
             var updatedItems = rowItems.filter(obj => {
               return deletedIds.indexOf(obj.id) == -1;
             });
@@ -360,8 +360,8 @@ class MindPopList extends React.Component<{
               {
                 title: '0',
                 data: [
-                  {message: '', id: 'helpview'},
-                  {message: '', id: 'editor'},
+                  { message: '', id: 'helpview' },
+                  { message: '', id: 'editor' },
                 ],
               },
               {
@@ -385,7 +385,7 @@ class MindPopList extends React.Component<{
               () => {
                 this.props.updateListCount(this._listItems().length);
 
-                this.setState({selectedItems: []}, () => {
+                this.setState({ selectedItems: [] }, () => {
                   this.props.updateSelectedItemCount(
                     this.state.selectedItems.length,
                   );
@@ -424,15 +424,20 @@ class MindPopList extends React.Component<{
   }
 
   componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      this.updateList();
+      console.warn('Screen.js focused')
+    });
+
     setTimeout(() => {
       DefaultPreference.get('hide_mindpop_intro').then((value: any) => {
         if (value == 'true') {
-          this.setState({mindPopIntroVisibility: false});
+          this.setState({ mindPopIntroVisibility: false });
         } else {
           if (this.state.listSectionItems.length == 0) {
-            this.setState({mindPopIntroVisibility: false});
+            this.setState({ mindPopIntroVisibility: false });
           } else {
-            this.setState({mindPopIntroVisibility: true});
+            this.setState({ mindPopIntroVisibility: true });
           }
         }
       });
@@ -499,7 +504,7 @@ class MindPopList extends React.Component<{
     this.props.updateSelectionState(false);
     this.props.cleanEdit();
     //1. Deselect All
-    this.setState({selectedItems: []}, () => {
+    this.setState({ selectedItems: [] }, () => {
       this.props.updateSelectedItemCount(this.state.selectedItems.length);
     });
   };
@@ -509,13 +514,13 @@ class MindPopList extends React.Component<{
       return obj.id;
     });
 
-    this.setState({selectedItems: ids}, () => {
+    this.setState({ selectedItems: ids }, () => {
       this.props.updateSelectedItemCount(this.state.selectedItems.length);
     });
   };
 
   _clearAllSelection = () => {
-    this.setState({selectedItems: []}, () => {
+    this.setState({ selectedItems: [] }, () => {
       this.props.updateSelectedItemCount(this.state.selectedItems.length);
     });
   };
@@ -538,7 +543,7 @@ class MindPopList extends React.Component<{
         : this.state.lastFetchedIndex;
     var totalItems = this.state.totalItems;
     if (totalItems == 0) {
-      this.setState({totalItems: 0, webserviceBeingCalled: true}, () => {
+      this.setState({ totalItems: 0, webserviceBeingCalled: true }, () => {
         LoaderHandler.showLoader();
       });
     }
@@ -593,7 +598,7 @@ class MindPopList extends React.Component<{
       updateList: this.updateList,
     });
     if (DeviceInfo.isTablet()) {
-      this.setState({selectedIndex: data.index});
+      this.setState({ selectedIndex: data.index });
     }
   }
 
@@ -609,7 +614,7 @@ class MindPopList extends React.Component<{
       existingIDs.push(item.id);
     }
 
-    this.setState({selectedItems: existingIDs}, () => {
+    this.setState({ selectedItems: existingIDs }, () => {
       this.props.updateSelectedItemCount(this.state.selectedItems.length);
     });
   }
@@ -617,8 +622,7 @@ class MindPopList extends React.Component<{
   _deleteMindPopAction(selectedItems: string[]) {
     Alert.alert(
       `Delete attachment?`,
-      `You wish to delete ${
-        selectedItems.length > 1 ? 'selected' : 'this'
+      `You wish to delete ${selectedItems.length > 1 ? 'selected' : 'this'
       } MindPop${selectedItems.length > 1 ? 's' : ''}?`,
       [
         {
@@ -632,7 +636,7 @@ class MindPopList extends React.Component<{
         {
           text: 'Cancel',
           style: 'cancel',
-          onPress: () => {},
+          onPress: () => { },
         },
       ],
     );
@@ -640,7 +644,7 @@ class MindPopList extends React.Component<{
 
   deleteMindpop = (selectedItems: any) => {
     var requstBodyObj = selectedItems.map((id: any) => {
-      return {mindPopID: id};
+      return { mindPopID: id };
     });
     this.props.deleteMindPops({
       mindPopList: requstBodyObj,
@@ -679,11 +683,18 @@ class MindPopList extends React.Component<{
     </View>
   );
 
+  _doApiCall = ()=>{
+    console.warn("ooooooooooo")
+    this.updateList();
+  }
+
   render() {
     return (
       <View style={Styles.container}>
+        
         <SafeAreaView style={Styles.noflexContainer} />
         <SafeAreaView style={Styles.mainContainer}>
+          
           <View style={Styles.container}>
             {this.props.showAlert && this.props.showAlertData?.title ? (
               <CustomAlert
@@ -736,9 +747,9 @@ class MindPopList extends React.Component<{
         {this.state.mindPopIntroVisibility && (
           <MindPopIntro
             cancelMindPopIntro={() => {
-              this.setState({mindPopIntroVisibility: false}, () => {
+              this.setState({ mindPopIntroVisibility: false }, () => {
                 DefaultPreference.set('hide_mindpop_intro', 'true').then(
-                  function () {},
+                  function () { },
                 );
               });
             }}></MindPopIntro>
@@ -816,10 +827,10 @@ class MindPopList extends React.Component<{
   };
 
   /*_getFileURLFromPublicURL(publicPath: string): string {
-		var instancePath = `https://${Account.selectedData().instanceURL}/sites/${Account.selectedData().instanceURL}/default/files/`;
-		var actualPath = publicPath.replace("public://", instancePath);
-		return actualPath;
-	}*/
+    var instancePath = `https://${Account.selectedData().instanceURL}/sites/${Account.selectedData().instanceURL}/default/files/`;
+    var actualPath = publicPath.replace("public://", instancePath);
+    return actualPath;
+  }*/
 
   _getThumbnailImage(item: ListItem): any | string {
     var placeHolder: any = '';
@@ -868,7 +879,7 @@ class MindPopList extends React.Component<{
       this.state.selectedItems.indexOf(data.item.id) >= 0 || false;
     let placeHolder = this._getThumbnailImage(data.item);
     var isURL = typeof placeHolder == 'string';
-    var style = {height: 64, width: 64, borderRadius: 5};
+    var style = { height: 64, width: 64, borderRadius: 5 };
     let ItemInProgress =
       MindPopsInProgress.indexOf(parseInt(data.item.id)) != -1 ? true : false;
     if (data.section.title === '1') {
@@ -877,7 +888,7 @@ class MindPopList extends React.Component<{
       }
       return (
         <View key={data?.item?.id}>
-          <View style={{opacity: ItemInProgress ? 0.3 : 1.0}}>
+          <View style={{ opacity: ItemInProgress ? 0.3 : 1.0 }}>
             <TouchableWithoutFeedback
               style={Styles.container}
               disabled={ItemInProgress}
@@ -886,7 +897,7 @@ class MindPopList extends React.Component<{
                   if (this.props.isSelectingItem) {
                     this._selectRow(data.item);
                   } else {
-                    this.setState({selectedIndex: data.index}, () => {
+                    this.setState({ selectedIndex: data.index }, () => {
                       this.props.editMode(data.item);
                     });
                   }
@@ -907,7 +918,7 @@ class MindPopList extends React.Component<{
                     }}>
                     <Image
                       source={isSelected ? cell_selected : cell_unselected}
-                      style={{height: 24, width: 24}}
+                      style={{ height: 24, width: 24 }}
                     />
                   </View>
                 )}
@@ -938,7 +949,7 @@ class MindPopList extends React.Component<{
                       <Image
                         style={style}
                         resizeMode={'contain'}
-                        source={isURL ? {uri: placeHolder} : placeHolder}
+                        source={isURL ? { uri: placeHolder } : placeHolder}
                       />
                     </View>
                   </View>
@@ -970,7 +981,7 @@ class MindPopList extends React.Component<{
       );
     } else {
       if (this.props.isSelectingItem) {
-        return <View style={{height: 0, width: 0}} />;
+        return <View style={{ height: 0, width: 0 }} />;
       } else {
         if (data.item.id === 'helpview') {
           return this._getHelpCell;
@@ -1029,15 +1040,15 @@ class MindPopList extends React.Component<{
             alignItems: DeviceInfo.isTablet() ? 'center' : 'flex-start',
             height: DeviceInfo.isTablet() ? 48 : Size.byHeight(252),
             ...(DeviceInfo.isTablet()
-              ? {marginTop: 16, marginLeft: 16, marginRight: 16}
+              ? { marginTop: 16, marginLeft: 16, marginRight: 16 }
               : {
-                  margin: 16,
-                  borderColor: '#DCDCDC',
-                  borderWidth: 2,
-                  borderTopWidth: 1,
-                  marginBottom: 0,
-                  paddingTop: 10,
-                }),
+                margin: 16,
+                borderColor: '#DCDCDC',
+                borderWidth: 2,
+                borderTopWidth: 1,
+                marginBottom: 0,
+                paddingTop: 10,
+              }),
           }}>
           <Text
             multiline={true}
@@ -1061,25 +1072,25 @@ class MindPopList extends React.Component<{
   };
 
   performSearch = (searchKeyword: string): void => {
-    this.setState({searchMode: true}, () => {
+    this.setState({ searchMode: true }, () => {
       this.updateList(searchKeyword);
     });
     //set search keyword save last normal searched index
     /*this.setState({ searchKeyword: searchKeyword, listSectionItems: [], lastFetchedIndex: this._listItems().length }, () => {
-			//fetch data from database
-			MindPopStore._getMindPopFromLocalDB(this.state.searchKeyword).then((list: any[]) => {
-				this._populateListFromDB(list, updatedSectionListData => {
-					//update list with fetched data from database
-					this.setState({ listSectionItems: updatedSectionListData }, () => {
-						//update list count
-						this.props.updateListCount(this._listItems().length);
+      //fetch data from database
+      MindPopStore._getMindPopFromLocalDB(this.state.searchKeyword).then((list: any[]) => {
+        this._populateListFromDB(list, updatedSectionListData => {
+          //update list with fetched data from database
+          this.setState({ listSectionItems: updatedSectionListData }, () => {
+            //update list count
+            this.props.updateListCount(this._listItems().length);
 
-						// get updated list from server
-						this.updateList();
-					});
-				});
-			});
-		});*/
+            // get updated list from server
+            this.updateList();
+          });
+        });
+      });
+    });*/
   };
 
   clearSearch: () => void = () => {
@@ -1108,7 +1119,7 @@ class MindPopList extends React.Component<{
     return (
       <View style={styles.container}>
         {this.props.isSelectingItem ||
-        (this.state.totalItems < 1 && !this.state.searchMode) ? null : (
+          (this.state.totalItems < 1 && !this.state.searchMode) ? null : (
           <SearchBar
             style={styles.containerSearch}
             value={this.searchKeyword.trim()}
@@ -1127,46 +1138,48 @@ class MindPopList extends React.Component<{
             }}
           />
         )}
-        {this.state.listSectionItems.length == 0 ? (
-          this.state.searchMode ? (
-            this._empty()
-          ) : this.state.webserviceBeingCalled ? (
-            <View style={{height: 0, width: 0}} />
-          ) : (
-            <EmptyView
-              resetEdit={this.props.resetEdit}
-              updateList={this.updateList}
-            />
+        {
+          this.state.listSectionItems.length == 0 ? (
+            this.state.searchMode ? (
+              this._empty()
+            ) : this.state.webserviceBeingCalled ? (
+              <View style={{ height: 0, width: 0 }} />
+            ) : (
+              <EmptyView
+                resetEdit={this.props.resetEdit}
+                updateList={this.updateList}
+              />
+            )
           )
-        ) : (
-          <SwipeListView
-            ref={this.listRef}
-            onRowOpen={(rowKey, rowMap) => {
-              ReactNativeHapticFeedback.trigger('impactMedium', options);
-            }}
-            style={{backgroundColor: Colors.NewThemeColor}}
-            useSectionList
-            maxToRenderPerBatch={50}
-            removeClippedSubviews={true}
-            sections={this.state.listSectionItems}
-            renderItem={this._renderFrontCell}
-            renderHiddenItem={
-              this.props.isSelectingItem ? null : this._renderBackHiddenCell
-            }
-            disableRightSwipe={true}
-            rightOpenValue={-(buttonWidth * 1) - 8}
-            stopRightSwipe={-(buttonWidth * 1) - 8}
-            stopLeftSwipe={0}
-            closeOnRowBeginSwipe={true}
-            previewRowKey={'-1'}
-            extraData={this.state}
-            onScroll={() => {
-              Keyboard.dismiss();
-            }}
-            keyExtractor={this._keyExtractor}
-            onEndReached={this._LoadMoreData}
-          />
-        )}
+            : (
+              <SwipeListView
+                ref={this.listRef}
+                onRowOpen={(rowKey, rowMap) => {
+                  ReactNativeHapticFeedback.trigger('impactMedium', options);
+                }}
+                style={{ backgroundColor: Colors.NewThemeColor }}
+                useSectionList
+                maxToRenderPerBatch={50}
+                removeClippedSubviews={true}
+                sections={this.state.listSectionItems}
+                renderItem={this._renderFrontCell}
+                renderHiddenItem={
+                  this.props.isSelectingItem ? null : this._renderBackHiddenCell
+                }
+                disableRightSwipe={true}
+                rightOpenValue={-(buttonWidth * 1) - 8}
+                stopRightSwipe={-(buttonWidth * 1) - 8}
+                stopLeftSwipe={0}
+                closeOnRowBeginSwipe={true}
+                previewRowKey={'-1'}
+                extraData={this.state}
+                onScroll={() => {
+                  Keyboard.dismiss();
+                }}
+                keyExtractor={this._keyExtractor}
+                onEndReached={this._LoadMoreData}
+              />
+            )}
       </View>
     );
   }
@@ -1260,7 +1273,7 @@ const styles = EStyleSheet.create({
   },
 });
 
-const mapState = (state: {[x: string]: any}) => ({
+const mapState = (state: { [x: string]: any }) => ({
   list: state.getMindPop,
   deleteStatus: state.deleteMindPop,
   isSelectingItem: state.mindPopListSelectionStatus,
@@ -1271,25 +1284,25 @@ const mapState = (state: {[x: string]: any}) => ({
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    editMode: (payload: any = null) => dispatch({type: EditMode.EDIT, payload}),
+    editMode: (payload: any = null) => dispatch({ type: EditMode.EDIT, payload }),
     resetEdit: (payload: any = null) =>
-      dispatch({type: EditMode.RESET, payload}),
-    cleanEdit: () => dispatch({type: EditMode.UNSELECT}),
+      dispatch({ type: EditMode.RESET, payload }),
+    cleanEdit: () => dispatch({ type: EditMode.UNSELECT }),
     listMindPops: (payload: any) =>
-      dispatch({type: GetMindPopStatus.RequestStarted, payload}),
-    callEnded: () => dispatch({type: GetMindPopStatus.RequestEnded}),
+      dispatch({ type: GetMindPopStatus.RequestStarted, payload }),
+    callEnded: () => dispatch({ type: GetMindPopStatus.RequestEnded }),
     updateSelectionState: (payload: boolean) =>
-      dispatch({type: MindPopListSelectionState, payload}),
+      dispatch({ type: MindPopListSelectionState, payload }),
     updateListCount: (payload: number) =>
-      dispatch({type: MindPopListCount, payload}),
+      dispatch({ type: MindPopListCount, payload }),
     updateSelectedItemCount: (payload: number) =>
-      dispatch({type: MindPopSelectedItemCount, payload}),
+      dispatch({ type: MindPopSelectedItemCount, payload }),
     deleteMindPops: (payload: any) =>
-      dispatch({type: DeleteMindPopOperation.RequestStarted, payload}),
+      dispatch({ type: DeleteMindPopOperation.RequestStarted, payload }),
     showAlertCall: (payload: any) =>
-      dispatch({type: showCustomAlert, payload: payload}),
+      dispatch({ type: showCustomAlert, payload: payload }),
     deleteMindPopsCallEnd: () =>
-      dispatch({type: DeleteMindPopOperation.RequestEnded}),
+      dispatch({ type: DeleteMindPopOperation.RequestEnded }),
   };
 };
 export default connect(mapState, mapDispatch)(MindPopList);

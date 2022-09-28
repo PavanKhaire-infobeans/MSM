@@ -168,7 +168,39 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   }
 
   memoryDraftDetails = (fetched: boolean, memoryDraftDetails: any) => {
-
+    loadingDataFromServer = false;
+    // let memoryDraftDetails = response.data
+    if (fetched) {
+      if (this.state.isRefreshing) {
+        memoryDraftsArray = [];
+      }
+      if (page == 0) {
+        this.memoryDraftsDataModel.updateMemoryDraftDetails(
+          memoryDraftDetails,
+          true,
+        );
+      } else {
+        this.memoryDraftsDataModel.updateMemoryDraftDetails(
+          memoryDraftDetails,
+          false,
+        );
+      }
+      memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
+      this.setState({ memoryDetailAvailable: true });
+    } else {
+      if (page != 0) {
+        page--;
+      }
+      if (memoryDraftsArray.length == 0) {
+        ToastMessage(memoryDraftDetails, Colors.ErrorColor);
+      }
+    }
+    this.setState({
+      isRefreshing: false,
+      loading: false,
+    }, () => {
+      loaderHandler.hideLoader();
+    });
   };
 
   deleteDraft = (nid: any, isDeleting: boolean) => {
@@ -266,6 +298,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               }
               case DraftType.myCollaborationDrafts: {
                 let response: any = await GetMemoryDrafts('mine', 'my_collaborative', length, (response) => {
+                  console.lo
                   if (response?.status) {
                     this.memoryDraftDetails(response.status, response.data)
                   } else {

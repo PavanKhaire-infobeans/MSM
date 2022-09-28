@@ -113,10 +113,10 @@ const AddContentDetails = props => {
     //   Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide',
     //   _keyboardDidHide,
     // );
-    // const mindPopCallback = EventManager.addListener(
-    //   kMindPopUploadedIdentifier,
-    //   mindPopUpdated,
-    // );
+    const mindPopCallback = EventManager.addListener(
+      kMindPopUploadedIdentifier,
+      mindPopUpdated,
+    );
     // const backListner = EventManager.addListener('hardwareBackPress', _onBack);
     // const createMemoryListener = EventManager.addListener(
     //   'addContentCreateMemory',
@@ -124,7 +124,7 @@ const AddContentDetails = props => {
     // );
 
     return () => {
-      // mindPopCallback.removeListener();
+      mindPopCallback.removeListener();
       // backListner.removeListener();
       // createMemoryListener.removeListener();
       // keyboardDidShowListener.remove();
