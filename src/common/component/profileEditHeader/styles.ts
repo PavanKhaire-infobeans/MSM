@@ -70,8 +70,8 @@ const Styles = EStyleSheet.create({
   },
 
   titleContainer: {
-    justifyContent: 'center',
-    paddingTop: 10,
+    // justifyContent: 'center',
+    paddingTop: 20,
     flex: 1,
     paddingLeft: 16,
   },
@@ -183,8 +183,8 @@ const Styles = EStyleSheet.create({
   titleText: {
     color: Colors.newTextColor,
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-    ...fontSize(18),
-    lineHeight: 20,
+    ...fontSize(21),
+    lineHeight: 23.75,
     textAlign: 'left',
     fontWeight: '500',
   },

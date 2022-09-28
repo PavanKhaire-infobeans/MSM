@@ -109,10 +109,9 @@ const Recent = (props: Props) => {
 
   const handleLoadMore = () => {
 
-    if (
-      props.recentList.length > 0 &&
-      props.recentList.length < props.totalCount
-    ) {
+    let promptlength = props.recentList.filter(item => item.isPrompt).length;
+    if (props.recentList.length > 0 && (props.recentList.length - promptlength) < props.totalCount) {
+    
       if (!props.isLoadMore) {
         let memoryDetails;
         if (props.recentList[props.recentList.length - 1].active_prompts) {

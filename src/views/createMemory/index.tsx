@@ -522,11 +522,11 @@ class CreateMemory extends React.Component<Props> {
         // this.props.navigateToDashboard(true);
         // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
-        showConsoleLog(ConsoleType.INFO, 'memory published successfully');
-        this.props.navigation.reset({
-          index: 0,
-          routes: [{ name: 'dashBoard' }],
-        });
+        this.props.navigation.replace('dashBoard');
+        // this.props.navigation.reset({
+        //   index: 0,
+        //   routes: [{ name: 'dashBoard' }],
+        // });
         // Alert.alert(
         //   'Memory published! 🎉',
         //   `Nice work writing Shakespeare! Your new memory has been published!`,
