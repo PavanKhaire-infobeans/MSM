@@ -34,6 +34,7 @@ import Text from '../../../common/component/Text';
 import { ToastMessage } from '../../../common/component/Toast';
 import {
   Colors,
+  ConsoleType,
   decode_utf8,
   encode_utf8,
   ERROR_MESSAGE,
@@ -43,6 +44,7 @@ import {
   GetFileType,
   getValue,
   NO_INTERNET,
+  showConsoleLog,
   TimeStampMilliSeconds,
 } from '../../../common/constants';
 import MindPopStore, {
@@ -287,7 +289,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
               //Go Back
               Keyboard.dismiss();
               this.props.navigation.goBack();
-              this.props.updateList && this.props.updateList();
+              this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
             });
           },
         },
@@ -306,7 +308,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       }
       Keyboard.dismiss();
       this.props.navigation.goBack();
-      this.props.updateList && this.props.updateList();
+      this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
     }
   };
 
@@ -1004,17 +1006,18 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       this._inputRef && this._inputRef.focus && this._inputRef.focus();
     }, 500);
   }
+
   reloadData = (success: boolean, data: any) => {
-    loaderHandler.hideLoader();
 
     if (success) {
       //Incase user was in creation mode
       if (!this.state.id) {
         //Go Back
         Keyboard.dismiss();
-        this.props.navigation.goBack();
         DeviceEventEmitter.emit('updateSelected', 0);
-        this.props.updateList && this.props.updateList();
+        this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
+        loaderHandler.hideLoader();
+        this.props.navigation.goBack();
         return;
       }
       //remove all temporary files first
@@ -1040,7 +1043,8 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 //showConsoleLog(ConsoleType.LOG,"message", resp);
                 // this._prevUpdate();
                 DeviceEventEmitter.emit('updateSelected', 0);
-                this.props.updateList && this.props.updateList();
+                this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
+                loaderHandler.hideLoader();
                 if (DeviceInfo.isTablet()) {
                   Keyboard.dismiss();
                   this.props.navigation.goBack();
@@ -1053,8 +1057,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
               .catch((error: any) => {
                 // this._prevUpdate();
                 DeviceEventEmitter.emit('updateSelected', 0);
-                this.props.updateList && this.props.updateList();
+                this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
                 //showConsoleLog(ConsoleType.LOG,"Error", error);
+                loaderHandler.hideLoader();
                 if (DeviceInfo.isTablet()) {
                   Keyboard.dismiss();
                   this.props.navigation.goBack();
@@ -1064,7 +1069,8 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
               });
           } else {
             DeviceEventEmitter.emit('updateSelected', 0);
-            this.props.updateList && this.props.updateList();
+            this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
+            loaderHandler.hideLoader();
             if (DeviceInfo.isTablet()) {
               Keyboard.dismiss();
               this.props.navigation.goBack();
@@ -1085,6 +1091,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       //   message,
       //   message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor,
       // );
+      loaderHandler.hideLoader();
       this.messageRef._show({ message, color: message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor });
 
     }

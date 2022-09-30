@@ -5,13 +5,13 @@ function getMindPops(url: string, params: Array<any>) {
   return Webservice.postRequest(`${url}/api/mindpop/list`, headers, request);
 }
 
-function getMindPopWithId(url: string, params: Array<any>) {
+function getMindPopWithId(url: string, params: Array<any>, CB: any) {
   const [request, headers] = params;
-  return Webservice.postRequest(`${url}/api/mindpop/list`, headers, request);
+  return Webservice.newPostRequest(`${url}/api/mindpop/list`, headers, request, false, CB);
 }
 
-function addMindPops(url: string, request: any, headers: any) {
-  return Webservice.postRequest(`${url}/api/mindpop/update`, headers, request);
+function addMindPops(url: string, request: any, headers: any, CB: any) {
+  return Webservice.newPostRequest(`${url}/api/mindpop/update`, headers, request, false, CB);
 }
 
 function deleteMindPops(url: string, params: Array<any>) {
@@ -23,4 +23,4 @@ function deleteMindPops(url: string, params: Array<any>) {
   );
 }
 
-export {getMindPops, addMindPops, deleteMindPops, getMindPopWithId};
+export { getMindPops, addMindPops, deleteMindPops, getMindPopWithId };

@@ -26,78 +26,82 @@ export const addEditMindPop = async (
 ) => {
   try {
     let data = await Storage.get('userData');
-    let response = await (() => {
-      return addMindPops(
-        `https://${Account.selectedData().instanceURL}`,
-        param,
-        {
-          'X-CSRF-TOKEN': data.userAuthToken,
-          'Content-Type': 'application/json',
-        },
-      )
-        .then((response: Response) => response.json())
-        .catch((err: Error) => Promise.reject(err));
-    })();
-    let mindpopId = parseInt(getValue(response, ['MindpopId'])) || 0;
-    if (mindpopId == 0) {
-      EventManager.callBack(
-        kAddEditIdentifier,
-        false,
-        'Could not save MindPop',
-      );
-      return;
-    }
-
-    if (files.length > 0) {
-      //MindPopsInProgress.push(mindpopId);
-      await uploadAttachments(mindpopId, files);
-      loaderHandler.hideLoader();
-      EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
-    } else {
-      loaderHandler.hideLoader();
-      EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
-    }
-    loaderHandler.hideLoader();
-
-    // Get List from server
-    let listRequestParams = {
-      searchTerm: {
-        mindPopID: mindpopId,
+    let response = await addMindPops(
+      `https://${Account.selectedData().instanceURL}`,
+      param,
+      {
+        'X-CSRF-TOKEN': data.userAuthToken,
+        'Content-Type': 'application/json',
       },
-      configurationTimestamp: TimeStampMilliSeconds(),
-      lastSyncTimeStamp: '0',
-    };
-    let responseList = await (() => {
-      return getMindPopWithId(`https://${Account.selectedData().instanceURL}`, [
-        listRequestParams,
-        {
-          'X-CSRF-TOKEN': data.userAuthToken,
-          'Content-Type': 'application/json',
-        },
-      ])
-        .then((response: Response) => response.json())
-        .catch((err: Error) => Promise.reject(err));
-    })();
+      async (response) => {
+        let mindpopId = parseInt(getValue(response, ['MindpopId'])) || 0;
+        if (mindpopId == 0) {
+          EventManager.callBack(
+            kAddEditIdentifier,
+            false,
+            'Could not save MindPop',
+          );
+          return;
+        }
 
-    let value = getValue(responseList, ['Details', 'totalItems']);
-    loaderHandler.hideLoader();
-    // PARSE MINDPOP HERE
-    if (value != null && typeof value !== 'undefined') {
-      await MindPopStore.saveMindPop(responseList);
-      let item = getValue(responseList, ['Details', 'mindPopList']);
-      if (item.length > 0) {
-        let [firstItem] = item;
-        EventManager.callBack(kAddEditIdentifier, true, firstItem);
-      } else {
-        EventManager.callBack(
-          kAddEditIdentifier,
-          false,
-          'Unable to load MindPop',
-        );
+        if (files.length > 0) {
+          //MindPopsInProgress.push(mindpopId);
+          await uploadAttachments(mindpopId, files);
+          // loaderHandler.hideLoader();
+          EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
+        } else {
+          // loaderHandler.hideLoader();
+          EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
+        }
+        // loaderHandler.hideLoader();
+
+        // Get List from server
+        let listRequestParams = {
+          searchTerm: {
+            mindPopID: mindpopId,
+          },
+          configurationTimestamp: TimeStampMilliSeconds(),
+          lastSyncTimeStamp: '0',
+        };
+        let responseList = getMindPopWithId(`https://${Account.selectedData().instanceURL}`, [
+          listRequestParams,
+          {
+            'X-CSRF-TOKEN': data.userAuthToken,
+            'Content-Type': 'application/json',
+          },
+        ],
+          async (responseList) => {
+            let value = getValue(responseList, ['Details', 'totalItems']);
+            // loaderHandler.hideLoader();
+            // PARSE MINDPOP HERE
+            if (value != null && typeof value !== 'undefined') {
+              await MindPopStore.saveMindPop(responseList);
+              let item = getValue(responseList, ['Details', 'mindPopList']);
+              if (item.length > 0) {
+                let [firstItem] = item;
+                EventManager.callBack(kAddEditIdentifier, true, firstItem);
+              } else {
+                EventManager.callBack(
+                  kAddEditIdentifier,
+                  false,
+                  'Unable to load MindPop',
+                );
+              }
+            } else {
+              EventManager.callBack(kAddEditIdentifier, false, ERROR_MESSAGE);
+            }
+          }
+        )
+        //     .then((response: Response) => response.json())
+        //     .catch((err: Error) => Promise.reject(err));
+        // })();
+
       }
-    } else {
-      EventManager.callBack(kAddEditIdentifier, false, ERROR_MESSAGE);
-    }
+    )
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => Promise.reject(err));
+    // })();
+
   } catch (err) {
     loaderHandler.hideLoader();
     EventManager.callBack(
@@ -105,7 +109,7 @@ export const addEditMindPop = async (
       false,
       getValue(err, ['message']) || ERROR_MESSAGE,
     );
-    showConsoleLog(ConsoleType.LOG,"Add/Edit MindPop Service Error: ", err);
+    showConsoleLog(ConsoleType.LOG, "Add/Edit MindPop Service Error: ", err);
   }
 };
 
