@@ -6,6 +6,7 @@ import {
   Platform,
   Text,
   LogBox,
+  AppState,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -410,6 +411,11 @@ const App = _props => {
     checkPermission();
     getFontScale();
     createNotificationListeners();
+    AppState.addEventListener('change',()=>{
+      if (AppState.currentState === 'background') {
+        loaderHandler.hideLoader()
+      }
+    })
     if (Platform.OS == 'android') {
       backEvent = BackHandler.addEventListener(
         'hardwareBackPress',
