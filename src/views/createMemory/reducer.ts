@@ -1,3 +1,4 @@
+import moment from "moment";
 import { showConsoleLog, ConsoleType } from "../../common/constants";
 
 export const ResetLocation = 'resetLocation';
@@ -66,6 +67,21 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       break;
     case MemoryInitialsUpdate:
       newState.title = action.payload.title;
+
+      if ((action.payload?.memory_date?.year > new Date().getFullYear())) {
+        action.payload.memory_date = {"day": new Date().getDate().toString(), "month": new Date().getMonth()+1, "year": new Date().getFullYear()?.toString()};
+      }
+      else if ((action.payload?.memory_date?.year == new Date().getFullYear())) {
+        if ((action.payload?.memory_date?.month > (new Date().getMonth()+1))) {
+          action.payload.memory_date = {"day": new Date().getDate().toString(), "month": new Date().getMonth()+1, "year": new Date().getFullYear()?.toString()};
+        }
+      }
+      else if ((action.payload?.memory_date?.year <= new Date().getFullYear())) {
+        if ((action.payload?.memory_date?.month == (new Date().getMonth()+1))&&(action.payload?.memory_date?.day > new Date().getDate())) {
+          action.payload.memory_date = {"day": new Date().getDate().toString(), "month": new Date().getMonth()+1, "year": new Date().getFullYear()?.toString()};
+        }
+      }
+
       showConsoleLog(ConsoleType.LOG,"custom action.payload.memory_date :", action.payload.memory_date)
       newState.date = action.payload.memory_date;
       // {

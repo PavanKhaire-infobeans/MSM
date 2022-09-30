@@ -74,6 +74,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     draftOptionsVisible: false,
     isRefreshing: false,
     loading: false,
+    memoryDraftsArray: []
   };
 
   /**Menu options for actions*/
@@ -115,6 +116,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     );
     loadingDataFromServer = true;
     page = 0;
+    this.props.navigation.addListener('focus', () => {
+      this.onRefresh();
+    });
     // GetMemoryDrafts("mine","all", memoryDraftsArray.length)
   }
 
@@ -125,47 +129,52 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
       }
       else {
-        let response: any = await GetMemoryDrafts('all', 'all', memoryDraftsArray.length, (response) => {
-
-          loadingDataFromServer = false;
-          let memoryDraftDetails = response.data
-          if (response?.status) {
-            if (this.state.isRefreshing) {
-              memoryDraftsArray = [];
-            }
-            if (page == 0) {
-              this.memoryDraftsDataModel.updateMemoryDraftDetails(
-                memoryDraftDetails,
-                true,
-              );
-            } else {
-              this.memoryDraftsDataModel.updateMemoryDraftDetails(
-                memoryDraftDetails,
-                false,
-              );
-            }
-            memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
-            this.setState({ memoryDetailAvailable: true });
-          } else {
-            if (page != 0) {
-              page--;
-            }
-            if (memoryDraftsArray.length == 0) {
-              ToastMessage(response.ResponseMessage, Colors.ErrorColor);
-            }
-          }
-          this.setState({
-            isRefreshing: false,
-            loading: false,
-          }, () => {
-            loaderHandler.hideLoader();
-          });
-        });
+        this.fetchDraft();
       }
     } else {
       No_Internet_Warning();
     }
   }
+
+  fetchDraft = async()=>{
+    let response: any = await GetMemoryDrafts('all', 'all', this.state.memoryDraftsArray.length, (response) => {
+
+      loadingDataFromServer = false;
+      let memoryDraftDetails = response.data
+      if (response?.status) {
+        if (this.state.isRefreshing) {
+          memoryDraftsArray = [];
+          this.setState({ memoryDraftsArray: [] })
+        }
+        if (page == 0) {
+          this.memoryDraftsDataModel.updateMemoryDraftDetails(
+            memoryDraftDetails,
+            true,
+          );
+        } else {
+          this.memoryDraftsDataModel.updateMemoryDraftDetails(
+            memoryDraftDetails,
+            false,
+          );
+        }
+        memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
+        this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() });
+      } else {
+        if (page != 0) {
+          page--;
+        }
+        if (this.state.memoryDraftsArray.length == 0) {
+          ToastMessage(response.ResponseMessage, Colors.ErrorColor);
+        }
+      }
+      this.setState({
+        isRefreshing: false,
+        loading: false,
+      }, () => {
+        loaderHandler.hideLoader();
+      });
+    });
+  };
 
   memoryDraftDetails = (fetched: boolean, memoryDraftDetails: any) => {
     loadingDataFromServer = false;
@@ -173,6 +182,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     if (fetched) {
       if (this.state.isRefreshing) {
         memoryDraftsArray = [];
+        this.setState({ memoryDraftsArray: [] })
       }
       if (page == 0) {
         this.memoryDraftsDataModel.updateMemoryDraftDetails(
@@ -186,12 +196,12 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         );
       }
       memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
-      this.setState({ memoryDetailAvailable: true });
+      this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() });
     } else {
       if (page != 0) {
         page--;
       }
-      if (memoryDraftsArray.length == 0) {
+      if (this.state.memoryDraftsArray.length == 0) {
         ToastMessage(memoryDraftDetails, Colors.ErrorColor);
       }
     }
@@ -215,15 +225,19 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           text: 'Yes',
           style: 'default',
           onPress: () => {
-            this.hideMenu();
-            if (Utility.isInternetConnected) {
-              loaderHandler.showLoader('Deleting...');
-              DeleteDraftService(nid, DraftActions.deleteDrafts, response => {
-                this.deleteDraftCallback(response.status, nid)
-              });
-            } else {
-              No_Internet_Warning();
-            }
+            // this.hideMenu();
+            this.setState({
+              draftOptionsVisible: false,
+            },()=>{
+              if (Utility.isInternetConnected) {
+                loaderHandler.showLoader('Deleting...');
+                DeleteDraftService(nid, DraftActions.deleteDrafts, response => {
+                  this.deleteDraftCallback(response.status, nid)
+                });
+              } else {
+                No_Internet_Warning();
+              }
+            });
           },
         },
       ]);
@@ -277,10 +291,11 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           },
           async () => {
             if (showLoader) {
-              loaderHandler.showLoader();
+              // loaderHandler.showLoader();
               memoryDraftsArray = [];
+              this.setState({ memoryDraftsArray: [] })
             }
-            var length = memoryDraftsArray.length;
+            var length = this.state.memoryDraftsArray.length;
             if (isRefreshing) {
               length = 0;
             }
@@ -298,7 +313,6 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               }
               case DraftType.myCollaborationDrafts: {
                 let response: any = await GetMemoryDrafts('mine', 'my_collaborative', length, (response) => {
-                  console.lo
                   if (response?.status) {
                     this.memoryDraftDetails(response.status, response.data)
                   } else {
@@ -384,12 +398,14 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   deleteDraftCallback = (success: any, nid: any) => {
     if (success) {
       // this.props.navigation.goBack();
+
       memoryDraftsArray = memoryDraftsArray.filter(
         (element: any) => element.nid != nid,
       );
       this.memoryDraftsDataModel.decreaseMemoryDraftCount();
-      loaderHandler.hideLoader();
-      // this.setState({});
+      this.setState({ memoryDraftsArray }, () => {
+        loaderHandler.hideLoader();
+      });
     }
     else {
       loaderHandler.hideLoader();
@@ -449,7 +465,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         </View>
 
         <FlatList
-          data={memoryDraftsArray}
+          data={this.state.memoryDraftsArray}
           keyExtractor={(_, index: number) => `${index}`}
           onScroll={() => {
             Keyboard.dismiss();
@@ -477,7 +493,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           onEndReachedThreshold={0.4}
           onEndReached={this.handleLoadMore.bind(this)}
         />
-        {memoryDraftsArray.length == 0 && loadingDataFromServer == false ? (
+        {this.state.memoryDraftsArray.length == 0 && loadingDataFromServer == false ? (
           <View
             style={{
               flex: 1,
@@ -853,7 +869,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     if (!this.state.loading) return null;
     return (
       <View style={{ width: '100%', height: 50 }}>
-        <ActivityIndicator style={{ color: '#000' }} />
+        <ActivityIndicator color={Colors.newTextColor} style={{ color: '#000' }} />
       </View>
     );
   };
@@ -870,7 +886,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   };
   handleLoadMore = () => {
     let draftCount = this.memoryDraftsDataModel.getMemoryDraftsCount();
-    if (memoryDraftsArray.length < draftCount) {
+    if (this.state.memoryDraftsArray.length < draftCount) {
       if (!this.state.loading) {
         // increase page by 1
         this.setState(

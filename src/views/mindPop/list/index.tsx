@@ -426,7 +426,6 @@ class MindPopList extends React.Component<{
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
       this.updateList();
-      console.warn('Screen.js focused')
     });
 
     setTimeout(() => {

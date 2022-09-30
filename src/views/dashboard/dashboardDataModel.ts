@@ -81,7 +81,6 @@ export class DashboardDataModel {
                 parsedMemory.memoryDescription = parsedMemory['version_data']['data'][0]['content'];
             }
 
-            // showConsoleLog(ConsoleType.WARN,"parsedMemory.description > ",parsedMemory.description)
             parsedMemory.description = parsedMemory.description.replace(/<\/p><br\/><p>/ig, ' \n \n');
             parsedMemory.description = parsedMemory.description.replace(/<\/p><br><p>/ig, ' \n \n');
             parsedMemory.description = parsedMemory.description.replace(/<\/p><p>/ig, ' \n');

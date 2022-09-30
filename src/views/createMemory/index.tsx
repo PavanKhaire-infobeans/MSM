@@ -1000,6 +1000,7 @@ class CreateMemory extends React.Component<Props> {
     //     day: this.state.day.value != 'Day' ? this.state.day.value : undefined,
     //   };
     // }
+    
     this.props.onInitialUpdate(details);
   };
 
@@ -2112,7 +2113,7 @@ class CreateMemory extends React.Component<Props> {
                 selected={this.state.memory_date}
                 current={this.state.memory_date}
                 selectorEndingYear={new Date().getFullYear()}
-                selectorStartingYear={1900}
+                selectorStartingYear={1917}
                 onSelectedChange={date => {
                   this.setState({
                     showCalender: false,

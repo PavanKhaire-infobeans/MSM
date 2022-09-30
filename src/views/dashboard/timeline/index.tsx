@@ -182,6 +182,8 @@ const Timeline = (props: Props) => {
         loaderHandler.hideLoader();
       },
     );
+    loaderHandler.showLoader('Loading...');
+
     props.fetchMemoryList({
       type: ListType.Timeline,
       isLoading: true,
