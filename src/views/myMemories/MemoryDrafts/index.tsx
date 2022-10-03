@@ -117,6 +117,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     loadingDataFromServer = true;
     page = 0;
     this.props.navigation.addListener('focus', () => {
+      loaderHandler.showLoader();
       this.onRefresh();
     });
     // GetMemoryDrafts("mine","all", memoryDraftsArray.length)
