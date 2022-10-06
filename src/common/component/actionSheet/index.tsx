@@ -136,6 +136,8 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
                 onScroll={() => {
                   Keyboard.dismiss();
                 }}
+                initialNumToRender={props.actions.length}
+                removeClippedSubviews={true}
                 ListHeaderComponent={() => (
                   <View
                     style={[styles.listContainer, styles.listHeaderStyle]}>

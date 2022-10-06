@@ -63,6 +63,301 @@ type menuOption = {
   color?: any;
 };
 export const kReloadDraft = 'reloadDraftlistener';
+
+class MyListItem extends React.PureComponent {
+  render() {
+    let {item,draftType} = this.props;
+    let file: any = {};
+    file.url = getValue(item, ['item', 'image_path']);
+    let files = [file];
+    let title: any = getValue(item, ['item', 'title']);
+    let journal_name: any = getValue(item, ['item', 'journal_name']);
+    let collaborativeArray: any = getValue(item, ['item', 'collaborators']);
+    return (
+      <TouchableHighlight
+        underlayColor={'#ffffff33'}
+        onPress={
+          () =>
+            draftType != DraftType.recentryDeleteDrafts
+              ? draftType == DraftType.friendsDrafts
+                ? this.props.getDraftDetails(item)
+                : this.props.getDraftDetails(item)
+              : () => { }
+          // this.deleteDraft(item.item.nid, false)
+        }>
+        <View style={{ backgroundColor: Colors.NewThemeColor }}>
+          <View style={{ backgroundColor: 'white', marginTop: 7 }}>
+            <UserDetails item={item} />
+            <CommonImageView file={file} files={files} />
+            <Text
+              style={{
+                ...fontSize(30),
+                color: Colors.NewTitleColor,
+                fontWeight: '500',
+                fontFamily:
+                  Platform.OS === 'ios'
+                    ? fontFamily.Inter
+                    : fontFamily.InterMedium,
+                marginLeft: 16,
+                marginRight: 16,
+                textAlign: 'left',
+                marginBottom: 10,
+              }}>
+              {title}
+            </Text>
+            {journal_name && journal_name != '' ? (
+              <Text
+                style={{
+                  ...fontSize(16),
+                  fontFamily: 'Rubik',
+                  color: Colors.TextColor,
+                  marginLeft: 16,
+                  marginBottom: 10,
+                }}>
+                {'In Collection '}
+                <Text
+                  style={{
+                    color: Colors.NewTitleColor,
+                    marginLeft: 0,
+                    marginRight: 16,
+                    marginBottom: 10,
+                  }}>
+                  {journal_name}
+                </Text>
+              </Text>
+            ) : null}
+            {collaborativeArray ? (
+              collaborativeArray.length > 0 ? (
+                <View style={{ marginLeft: 16, marginBottom: 10 }}>
+                  <ImageBackground
+                    source={collaborative}
+                    style={{
+                      width: 93,
+                      height: 20,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                    resizeMode="contain">
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        ...fontSize(12),
+                        color: 'white',
+                      }}>
+                      Collaborative
+                    </Text>
+                  </ImageBackground>
+                </View>
+              ) : null
+            ) : null}
+
+            <Border />
+            {collaborativeArray != undefined && collaborativeArray != null ? (
+              collaborativeArray.length > 0 ? (
+                <View
+                  style={{
+                    marginLeft: 16,
+                    marginRight: 16,
+                    ...fontSize(17),
+                    paddingTop: 10,
+                  }}>
+                  <Text style={{ ...fontSize(17), color: Colors.TextColor }}>
+                    Last activity {item.item.activity}
+                  </Text>
+                  <Text
+                    style={{
+                      ...fontSize(17),
+                      color: Colors.TextColor,
+                      marginTop: 18,
+                    }}>
+                    {item.item.attachment_count} attachments{' '}
+                    {item.item.new_attachment_count != undefined &&
+                      item.item.new_attachment_count != null &&
+                      item.item.new_attachment_count != '' ? (
+                      <Text
+                        style={{
+                          fontFamily:
+                            Platform.OS === 'ios'
+                              ? fontFamily.Inter
+                              : fontFamily.InterMedium,
+                          fontWeight: '500',
+                          color: Colors.TextColor,
+                        }}>
+                        ({item.item.new_attachment_count} new)
+                      </Text>
+                    ) : null}
+                  </Text>
+                  <Text style={{ ...fontSize(17), marginTop: 18 }}>
+                    {item.item.my_chat_count}{' '}
+                    {item.item.my_chat_count == 1 ? 'message' : 'messages'}{' '}
+                    {item.item.unread_chat_count != undefined &&
+                      item.item.unread_chat_count != null &&
+                      item.item.unread_chat_count != '' ? (
+                      <Text
+                        style={{
+                          fontFamily:
+                            Platform.OS === 'ios'
+                              ? fontFamily.Inter
+                              : fontFamily.InterMedium,
+                          fontWeight: '500',
+                          color: Colors.TextColor,
+                        }}>
+                        ({item.item.unread_chat_count} new)
+                      </Text>
+                    ) : null}
+                  </Text>
+                  <Text
+                    style={{
+                      ...fontSize(17),
+                      marginTop: 18,
+                      marginBottom: 18,
+                      fontFamily:
+                        Platform.OS === 'ios'
+                          ? fontFamily.Inter
+                          : fontFamily.InterMedium,
+                      fontWeight: '500',
+                      color: Colors.NewYellowColor,
+                    }}>
+                    {item.item.collaborators.length}{' '}
+                    {item.item.collaborators.length == 1
+                      ? 'collaborator'
+                      : 'collaborators'}{' '}
+                    {item.item.new_collaborator_count != undefined &&
+                      item.item.new_collaborator_count != null &&
+                      item.item.new_collaborator_count != '' ? (
+                      <Text
+                        style={{
+                          fontFamily:
+                            Platform.OS === 'ios'
+                              ? fontFamily.Inter
+                              : fontFamily.InterMedium,
+                          fontWeight: '500',
+                          color: Colors.TextColor,
+                        }}>
+                        ({item.item.new_collaborator_count} new)
+                      </Text>
+                    ) : null}
+                  </Text>
+                  <Border />
+                </View>
+              ) : null
+            ) : null}
+            <View
+              style={{
+                flex: 1,
+                padding: 16,
+                paddingTop: 11,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              {draftType != DraftType.recentryDeleteDrafts ? (
+                draftType == DraftType.friendsDrafts ? (
+                  <TouchableOpacity
+                    style={{ alignSelf: 'center' }}
+                    onPress={() => this.props.getDraftDetails(item)}>
+                    <View
+                      style={{
+                        height: 32,
+                        width: 126,
+                        paddingRight: 10,
+                        paddingLeft: 10,
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: Colors.BtnBgColor,
+                        borderRadius: 32,
+                      }}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          color: '#fff',
+                          ...fontSize(16),
+                          borderRadius: 5,
+                        }}>
+                        {'Collaborate'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={{ alignSelf: 'center' }}
+                    onPress={() => this.props.getDraftDetails(item)}>
+                    <View
+                      style={{
+                        height: 32,
+                        width: 126,
+                        paddingRight: 10,
+                        paddingLeft: 10,
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: Colors.BtnBgColor,
+                        borderRadius: 32,
+                      }}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          color: '#fff',
+                          ...fontSize(16),
+                          borderRadius: 5,
+                        }}>
+                        {'Edit Draft'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+              ) : (
+                <TouchableOpacity
+                  style={{ alignSelf: 'center' }}
+                  onPress={() => this.props.deleteDraft(item.item.nid, false)}>
+                  <View
+                    style={{
+                      height: 32,
+                      width: 126,
+                      paddingRight: 10,
+                      paddingLeft: 10,
+                      alignSelf: 'center',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: Colors.BtnBgColor,
+                      borderRadius: 32,
+                    }}>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        color: '#fff',
+                        ...fontSize(16),
+                        borderRadius: 5,
+                      }}>
+                      {'Undelete'}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+              {Account.selectedData().userID == item.item.uid &&
+                draftType != DraftType.recentryDeleteDrafts ? (
+                <TouchableOpacity
+                  style={{ alignSelf: 'center', padding: 16 }}
+                  onPress={() => this.props.deleteDraft(item.item.nid, true)}>
+                  <Image
+                    style={{
+                      height: 25,
+                      width: 22,
+                      flex: 1,
+                      resizeMode: 'stretch',
+                    }}
+                    source={delete_comment}
+                  />
+                </TouchableOpacity>
+              ) : null}
+            </View>
+          </View>
+        </View>
+      </TouchableHighlight>
+    )
+  }
+}
+
 export default class MemoryDrafts extends React.Component<Props, State> {
   memoryDraftDetailsListener: EventManager;
   draftDetailsListener: EventManager;
@@ -118,7 +413,17 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     page = 0;
     this.props.navigation.addListener('focus', () => {
       loaderHandler.showLoader();
-      this.onRefresh();
+      // this.onRefresh();
+      this.setState({
+        memoryDraftsArray: []
+      },()=>{
+        if (this.props?.route?.params?.decodedDataFromURL) {
+          this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
+        }
+        else {
+          this.fetchDraft();
+        }
+      })
     });
     // GetMemoryDrafts("mine","all", memoryDraftsArray.length)
   }
@@ -137,7 +442,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     }
   }
 
-  fetchDraft = async()=>{
+  fetchDraft = async () => {
     let response: any = await GetMemoryDrafts('all', 'all', this.state.memoryDraftsArray.length, (response) => {
 
       loadingDataFromServer = false;
@@ -229,7 +534,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             // this.hideMenu();
             this.setState({
               draftOptionsVisible: false,
-            },()=>{
+            }, () => {
               if (Utility.isInternetConnected) {
                 loaderHandler.showLoader('Deleting...');
                 DeleteDraftService(nid, DraftActions.deleteDrafts, response => {
@@ -468,13 +773,14 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         <FlatList
           data={this.state.memoryDraftsArray}
           keyExtractor={(_, index: number) => `${index}`}
-          onScroll={() => {
-            Keyboard.dismiss();
-          }}
+          // onScroll={() => {
+          //   Keyboard.dismiss();
+          // }}
           style={{ width: '100%', backgroundColor: 'white' }}
-          extraData={this.state}
+          // extraData={this.state}
           renderItem={(item: any) => this.renderDraftView(item)}
-          maxToRenderPerBatch={50}
+          maxToRenderPerBatch={20}
+          initialNumToRender={10}
           removeClippedSubviews={true}
           refreshControl={
             <RefreshControl
@@ -488,7 +794,6 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               onRefresh={this.onRefresh.bind(this)}
             />
           }
-          keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={this.renderSeparator}
           ListFooterComponent={this.renderFooter.bind(this)}
           onEndReachedThreshold={0.4}
@@ -576,301 +881,22 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   };
 
   renderDraftView = (item: any) => {
-    let file: any = {};
-    file.url = getValue(item, ['item', 'image_path']);
-    let files = [file];
-    let title: any = getValue(item, ['item', 'title']);
-    let journal_name: any = getValue(item, ['item', 'journal_name']);
-    let collaborativeArray: any = getValue(item, ['item', 'collaborators']);
     return (
-      <TouchableHighlight
-        underlayColor={'#ffffff33'}
-        onPress={
-          () =>
-            this.state.draftType != DraftType.recentryDeleteDrafts
-              ? this.state.draftType == DraftType.friendsDrafts
-                ? this.getDraftDetails(item)
-                : this.getDraftDetails(item)
-              : () => { }
-          // this.deleteDraft(item.item.nid, false)
-        }>
-        <View style={{ backgroundColor: Colors.NewThemeColor }}>
-          <View style={{ backgroundColor: 'white', marginTop: 7 }}>
-            <UserDetails item={item} />
-            <CommonImageView file={file} files={files} />
-            <Text
-              style={{
-                ...fontSize(30),
-                color: Colors.NewTitleColor,
-                fontWeight: '500',
-                fontFamily:
-                  Platform.OS === 'ios'
-                    ? fontFamily.Inter
-                    : fontFamily.InterMedium,
-                marginLeft: 16,
-                marginRight: 16,
-                textAlign: 'left',
-                marginBottom: 10,
-              }}>
-              {title}
-            </Text>
-            {journal_name && journal_name != '' ? (
-              <Text
-                style={{
-                  ...fontSize(16),
-                  fontFamily: 'Rubik',
-                  color: Colors.TextColor,
-                  marginLeft: 16,
-                  marginBottom: 10,
-                }}>
-                {'In Collection '}
-                <Text
-                  style={{
-                    color: Colors.NewTitleColor,
-                    marginLeft: 0,
-                    marginRight: 16,
-                    marginBottom: 10,
-                  }}>
-                  {journal_name}
-                </Text>
-              </Text>
-            ) : null}
-            {collaborativeArray ? (
-              collaborativeArray.length > 0 ? (
-                <View style={{ marginLeft: 16, marginBottom: 10 }}>
-                  <ImageBackground
-                    source={collaborative}
-                    style={{
-                      width: 93,
-                      height: 20,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                    resizeMode="contain">
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        ...fontSize(12),
-                        color: 'white',
-                      }}>
-                      Collaborative
-                    </Text>
-                  </ImageBackground>
-                </View>
-              ) : null
-            ) : null}
-
-            <Border />
-            {collaborativeArray != undefined && collaborativeArray != null ? (
-              collaborativeArray.length > 0 ? (
-                <View
-                  style={{
-                    marginLeft: 16,
-                    marginRight: 16,
-                    ...fontSize(17),
-                    paddingTop: 10,
-                  }}>
-                  <Text style={{ ...fontSize(17), color: Colors.TextColor }}>
-                    Last activity {item.item.activity}
-                  </Text>
-                  <Text
-                    style={{
-                      ...fontSize(17),
-                      color: Colors.TextColor,
-                      marginTop: 18,
-                    }}>
-                    {item.item.attachment_count} attachments{' '}
-                    {item.item.new_attachment_count != undefined &&
-                      item.item.new_attachment_count != null &&
-                      item.item.new_attachment_count != '' ? (
-                      <Text
-                        style={{
-                          fontFamily:
-                            Platform.OS === 'ios'
-                              ? fontFamily.Inter
-                              : fontFamily.InterMedium,
-                          fontWeight: '500',
-                          color: Colors.TextColor,
-                        }}>
-                        ({item.item.new_attachment_count} new)
-                      </Text>
-                    ) : null}
-                  </Text>
-                  <Text style={{ ...fontSize(17), marginTop: 18 }}>
-                    {item.item.my_chat_count}{' '}
-                    {item.item.my_chat_count == 1 ? 'message' : 'messages'}{' '}
-                    {item.item.unread_chat_count != undefined &&
-                      item.item.unread_chat_count != null &&
-                      item.item.unread_chat_count != '' ? (
-                      <Text
-                        style={{
-                          fontFamily:
-                            Platform.OS === 'ios'
-                              ? fontFamily.Inter
-                              : fontFamily.InterMedium,
-                          fontWeight: '500',
-                          color: Colors.TextColor,
-                        }}>
-                        ({item.item.unread_chat_count} new)
-                      </Text>
-                    ) : null}
-                  </Text>
-                  <Text
-                    style={{
-                      ...fontSize(17),
-                      marginTop: 18,
-                      marginBottom: 18,
-                      fontFamily:
-                        Platform.OS === 'ios'
-                          ? fontFamily.Inter
-                          : fontFamily.InterMedium,
-                      fontWeight: '500',
-                      color: Colors.NewYellowColor,
-                    }}>
-                    {item.item.collaborators.length}{' '}
-                    {item.item.collaborators.length == 1
-                      ? 'collaborator'
-                      : 'collaborators'}{' '}
-                    {item.item.new_collaborator_count != undefined &&
-                      item.item.new_collaborator_count != null &&
-                      item.item.new_collaborator_count != '' ? (
-                      <Text
-                        style={{
-                          fontFamily:
-                            Platform.OS === 'ios'
-                              ? fontFamily.Inter
-                              : fontFamily.InterMedium,
-                          fontWeight: '500',
-                          color: Colors.TextColor,
-                        }}>
-                        ({item.item.new_collaborator_count} new)
-                      </Text>
-                    ) : null}
-                  </Text>
-                  <Border />
-                </View>
-              ) : null
-            ) : null}
-            <View
-              style={{
-                flex: 1,
-                padding: 16,
-                paddingTop: 11,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              {this.state.draftType != DraftType.recentryDeleteDrafts ? (
-                this.state.draftType == DraftType.friendsDrafts ? (
-                  <TouchableOpacity
-                    style={{ alignSelf: 'center' }}
-                    onPress={() => this.getDraftDetails(item)}>
-                    <View
-                      style={{
-                        height: 32,
-                        width: 126,
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        alignSelf: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: Colors.BtnBgColor,
-                        borderRadius: 32,
-                      }}>
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          color: '#fff',
-                          ...fontSize(16),
-                          borderRadius: 5,
-                        }}>
-                        {'Collaborate'}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={{ alignSelf: 'center' }}
-                    onPress={() => this.getDraftDetails(item)}>
-                    <View
-                      style={{
-                        height: 32,
-                        width: 126,
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        alignSelf: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: Colors.BtnBgColor,
-                        borderRadius: 32,
-                      }}>
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          color: '#fff',
-                          ...fontSize(16),
-                          borderRadius: 5,
-                        }}>
-                        {'Edit Draft'}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )
-              ) : (
-                <TouchableOpacity
-                  style={{ alignSelf: 'center' }}
-                  onPress={() => this.deleteDraft(item.item.nid, false)}>
-                  <View
-                    style={{
-                      height: 32,
-                      width: 126,
-                      paddingRight: 10,
-                      paddingLeft: 10,
-                      alignSelf: 'center',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: Colors.BtnBgColor,
-                      borderRadius: 32,
-                    }}>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        color: '#fff',
-                        ...fontSize(16),
-                        borderRadius: 5,
-                      }}>
-                      {'Undelete'}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-              {Account.selectedData().userID == item.item.uid &&
-                this.state.draftType != DraftType.recentryDeleteDrafts ? (
-                <TouchableOpacity
-                  style={{ alignSelf: 'center', padding: 16 }}
-                  onPress={() => this.deleteDraft(item.item.nid, true)}>
-                  <Image
-                    style={{
-                      height: 25,
-                      width: 22,
-                      flex: 1,
-                      resizeMode: 'stretch',
-                    }}
-                    source={delete_comment}
-                  />
-                </TouchableOpacity>
-              ) : null}
-            </View>
-          </View>
-        </View>
-      </TouchableHighlight>
+      <MyListItem
+        draftType ={this.state.draftType}
+        item={item}
+        getDraftDetails={()=>this.getDraftDetails(item)}
+        deleteDraft={(nid, deletedata)=>this.deleteDraft(nid, deletedata)}
+      />
     );
   };
+
   renderFooter = () => {
     //it will show indicator at the bottom of the list when data is loading otherwise it returns null
     if (!this.state.loading) return null;
     return (
       <View style={{ width: '100%', height: 50 }}>
-        <ActivityIndicator color={Colors.newTextColor} style={{ color: '#000' }} />
+        <ActivityIndicator color={Colors.newTextColor}/>
       </View>
     );
   };

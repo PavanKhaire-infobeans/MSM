@@ -330,6 +330,7 @@ const WriteTabs = props => {
             ref={flatListRef}
             style={Styles.fullWidth}
             initialNumToRender={3}
+            removeClippedSubviews={true}
             renderItem={_renderItem}
             horizontal={true}
             pagingEnabled={true}
@@ -361,7 +362,7 @@ const WriteTabs = props => {
               containerWidth={Dimensions.get('window').width}
               tabs={['Edit', 'New', 'Prompts']}
             />
-          </View>
+          </View> 
           <View style={Styles.bottomBarContainer}>
             <View style={Styles.bottomBarSubContainer}>
               <TabIcon

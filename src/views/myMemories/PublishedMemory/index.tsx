@@ -394,6 +394,8 @@ export default class PublishedMemory extends React.Component<Props, State> {
               data={publishedMemoriesArray}
               style={{width: '100%', backgroundColor: Colors.NewThemeColor}}
               extraData={this.state}
+              initialNumToRender={10}
+            removeClippedSubviews={true}
               keyExtractor={(_, index: number) => `${index}`}
               onScroll={() => {
                 Keyboard.dismiss();

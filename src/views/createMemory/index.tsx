@@ -939,7 +939,6 @@ class CreateMemory extends React.Component<Props> {
           'createMemoryMainListener',
           key,
           resp => {
-            showConsoleLog(ConsoleType.WARN, 'sadadadsd ::', resp);
             if (resp?.Status) {
               this.memorySaveCallback(
                 resp.Status,
@@ -1001,7 +1000,7 @@ class CreateMemory extends React.Component<Props> {
     //     day: this.state.day.value != 'Day' ? this.state.day.value : undefined,
     //   };
     // }
-    
+
     this.props.onInitialUpdate(details);
   };
 
@@ -1812,24 +1811,31 @@ class CreateMemory extends React.Component<Props> {
               <>
                 <Text
                   style={styles.memoryDescriptionTextStyle}
-                  numberOfLines={3}
+                  numberOfLines={15}
                   ellipsizeMode={'tail'}>
                   {this.props.memoryDescription}
                 </Text>
-                <TouchableOpacity
-                  onPress={() =>
-                    this.props.navigation.navigate('etherPadEditing', {
-                      title: this.state.title.trim(),
-                      padDetails: this.state.padDetails,
-                      updateContent: this.setEtherPadContent.bind(this),
-                      inviteCollaboratorFlow: this.inviteCollaboratorFlow.bind(this),
-                    })
-                  }>
-                  <Text
-                    style={styles.editDescriptionTextStyle}>
-                    Edit Description
-                  </Text>
-                </TouchableOpacity>
+
+                {
+                  this.state.padDetails?.padUrl &&
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (this.state.padDetails?.padUrl) {
+                        this.props.navigation.navigate('etherPadEditing', {
+                          title: this.state.title.trim(),
+                          padDetails: this.state.padDetails,
+                          updateContent: this.setEtherPadContent.bind(this),
+                          inviteCollaboratorFlow: this.inviteCollaboratorFlow.bind(this),
+                        })
+                      }
+                    }}>
+                    <Text
+                      style={styles.editDescriptionTextStyle}>
+                      Edit Description
+                    </Text>
+                  </TouchableOpacity>
+                }
+
               </>
 
               // <EtherPadEditing
@@ -2310,11 +2316,11 @@ class CreateMemory extends React.Component<Props> {
                   //   data={this.state.itemList}
                   //   renderItem={(item: any) => this.renderRow(item)}
                   // />
-                  this.state.itemList?.length
-                    ? this.state.itemList.map((item, index) =>
-                      this.renderRow(item, index),
-                    )
-                    : null
+                  // this.state.itemList?.length
+                  //   ? this.state.itemList.map((item, index) =>
+                  //     this.renderRow(item, index)
+                  //   )
+                  //   : null
                 }
                 {/* )} */}
               </ScrollView>

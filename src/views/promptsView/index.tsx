@@ -289,14 +289,15 @@ export default class PromptsView extends React.Component<State, Props> {
               onScroll={() => {
                 Keyboard.dismiss();
               }}
-              maxToRenderPerBatch={50}
+              // maxToRenderPerBatch={50}
+              initialNumToRender={10}
               removeClippedSubviews={true}
               ItemSeparatorComponent={() => <View style={Styles.separator} />}
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatlistStyle}
               renderItem={(item: any) => {
                 return (
-                  <>
+                  <View key={item.index}>
                     <View style={{height: item?.index == 0 ? 16 : 0}} />
                     <View style={Styles.promptContainer}>
                       {/* <View>
@@ -372,7 +373,7 @@ export default class PromptsView extends React.Component<State, Props> {
                         </View>
                       </View>
                     </View>
-                  </>
+                  </View>
                 );
               }}
               ListFooterComponent={this.renderFooter.bind(this)}

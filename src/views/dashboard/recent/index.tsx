@@ -359,6 +359,8 @@ const Recent = (props: Props) => {
             data={props.recentList}
             style={styles.flatlistStyle}
             extraData={state}
+            initialNumToRender={10}
+            removeClippedSubviews={true}
             renderItem={(item: any) => (
               <>
                 {item.index === 0 && <View style={styles.renderSeparator} />}

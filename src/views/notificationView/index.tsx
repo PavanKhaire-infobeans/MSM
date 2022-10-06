@@ -115,6 +115,8 @@ class NotificationView extends React.Component<Props> {
               data={this.props.notificationList}
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatListStyle}
+              initialNumToRender={10}
+              removeClippedSubviews={true}
               renderItem={(item: any) => {
                 return (
                   <DefaultListItem

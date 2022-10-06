@@ -585,6 +585,8 @@ const Timeline = (props: Props) => {
                       style={styles.timelineFlatlistStyle}
                       inverted={true}
                       horizontal={true}
+                      initialNumToRender={10}
+                      removeClippedSubviews={true}
                       snapToAlignment="center"
                       ref={timelineYearRef}
                       getItemLayout={(data, index) => {
@@ -793,6 +795,8 @@ const Timeline = (props: Props) => {
             style={styles.flatlistStyle}
             extraData={state}
             nestedScrollEnabled={true}
+            initialNumToRender={10}
+            removeClippedSubviews={true}
             keyExtractor={(_, index: number) => `${index}`}
             onViewableItemsChanged={onViewableItemsChanged}
             viewabilityConfig={{

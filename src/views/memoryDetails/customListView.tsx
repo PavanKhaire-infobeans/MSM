@@ -122,6 +122,8 @@ export default class CustomListView extends React.Component<Props> {
               Keyboard.dismiss();
             }}
             data={this.props.itemList}
+            initialNumToRender={10}
+            removeClippedSubviews={true}
             keyExtractor={(_, index: number) => `${index}`}
             ListEmptyComponent={() => (
               <View
