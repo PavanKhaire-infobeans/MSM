@@ -3,7 +3,6 @@ workflows:
     name: MSM Android
     environment:
       node: latest
-      ndk: '21.1.6352462'
     triggering:
       events:
         - push
