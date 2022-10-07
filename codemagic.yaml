@@ -15,12 +15,6 @@ workflows:
       - name: Install npm dependencies
         script: |
           npm install --legacy-peer-deps
-      - name: Set Android SDK location
-        script: |
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
-      - name: Install NDK
-        script: |
-          echo "ndk.dir=$ANDROID_NDK_HOME" > "/usr/local/share/android-sdk/ndk-bundle"
       - name: Build Android release
         script: |
           cd android && ./gradlew assembleRelease
