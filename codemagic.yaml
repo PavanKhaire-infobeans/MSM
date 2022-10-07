@@ -3,21 +3,22 @@ workflows:
     name: MSM Android
     environment:
       node: latest
+      ndk: '21.1.6352462'
     triggering:
       events:
         - push
       branch_patterns:
-        - pattern: 'LatestRelease'
+        - pattern: 'master'
           include: true
           source: true
       cancel_previous_builds: false
     scripts:
-      - name: Install npm dependencies
-        script: |
-          npm install --legacy-peer-deps
       - name: Set Android SDK location
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Install npm dependencies
+        script: |
+          npm install --legacy-peer-deps
       - name: Build Android release
         script: |
           cd android && ./gradlew assembleRelease
