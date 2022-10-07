@@ -18,9 +18,6 @@ workflows:
       - name: Set Android SDK location
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
-      - name: Install NDK
-        script: |
-          echo ndk;22.1.7171670
       - name: Build Android release
         script: |
           cd android && ./gradlew assembleRelease
