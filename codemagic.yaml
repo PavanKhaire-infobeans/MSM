@@ -7,7 +7,7 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: 'master'
+        - pattern: 'LatestRelease'
           include: true
           source: true
       cancel_previous_builds: false
@@ -20,7 +20,7 @@ workflows:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
       - name: Install NDK
         script: |
-          ndk_version: 22.1.7171670
+          echo ndk;22.1.7171670
       - name: Build Android release
         script: |
           cd android && ./gradlew assembleRelease
