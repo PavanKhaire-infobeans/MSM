@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -111,7 +111,7 @@ const Recent = (props: Props) => {
 
     let promptlength = props.recentList.filter(item => item.isPrompt).length;
     if (props.recentList.length > 0 && (props.recentList.length - promptlength) < props.totalCount) {
-    
+
       if (!props.isLoadMore) {
         let memoryDetails;
         if (props.recentList[props.recentList.length - 1].active_prompts) {
@@ -332,7 +332,7 @@ const Recent = (props: Props) => {
       // );
       CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
         res => {
-            if (res.status) {
+          if (res.status) {
             props.removePrompt(selectedPrompt);
             loaderHandler.hideLoader();
             props.navigation.navigate('createMemory', {
@@ -351,6 +351,28 @@ const Recent = (props: Props) => {
     }
   };
 
+  const keyExtractor = useCallback((item: any) => item?.nid?.toString(), []);
+
+  const renderList = useCallback((item: any) => (
+    <>
+      {item.index === 0 && <View style={styles.renderSeparator} />}
+      <MemoryListItem
+        item={item}
+        animate={state.animateValue}
+        previousItem={null}
+        like={like}
+        listType={ListType.Recent}
+        audioView={audioView}
+        openMemoryActions={openMemoryActions}
+        MemoryActions={MemoryActions}
+        addMemoryFromPrompt={(firstIndex: any, secondIndex: any) =>
+          _onAddProptToMemoryAction(firstIndex, secondIndex)
+        }
+        navigation={props.navigation}
+      />
+    </>
+  ), []);
+
   return (
     <View style={styles.mainContainer}>
       <SafeAreaView style={styles.container}>
@@ -361,27 +383,10 @@ const Recent = (props: Props) => {
             extraData={state}
             initialNumToRender={10}
             removeClippedSubviews={true}
-            renderItem={(item: any) => (
-              <>
-                {item.index === 0 && <View style={styles.renderSeparator} />}
-                <MemoryListItem
-                  item={item}
-                  animate={state.animateValue}
-                  previousItem={null}
-                  like={like}
-                  listType={ListType.Recent}
-                  audioView={audioView}
-                  openMemoryActions={openMemoryActions}
-                  MemoryActions={MemoryActions}
-                  addMemoryFromPrompt={(firstIndex: any, secondIndex: any) =>
-                    _onAddProptToMemoryAction(firstIndex, secondIndex)
-                  }
-                  navigation={props.navigation}
-                />
-              </>
-            )}
+            maxToRenderPerBatch={5}
+            windowSize={5}
+            renderItem={renderList}
             indicatorStyle="white"
-            removeClippedSubviews={true}
             refreshControl={
               <RefreshControl
                 colors={[
@@ -398,7 +403,7 @@ const Recent = (props: Props) => {
                 onRefresh={onRefresh}
               />
             }
-            keyExtractor={(_, index: number) => `${index}`}
+            keyExtractor={keyExtractor}
             ItemSeparatorComponent={() => (
               <View style={styles.renderSeparator} />
             )}

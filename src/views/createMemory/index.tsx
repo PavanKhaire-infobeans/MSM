@@ -2316,11 +2316,11 @@ class CreateMemory extends React.Component<Props> {
                   //   data={this.state.itemList}
                   //   renderItem={(item: any) => this.renderRow(item)}
                   // />
-                  // this.state.itemList?.length
-                  //   ? this.state.itemList.map((item, index) =>
-                  //     this.renderRow(item, index)
-                  //   )
-                  //   : null
+                  this.state.itemList?.length
+                    ? this.state.itemList.map((item, index) =>
+                      this.renderRow(item, index)
+                    )
+                    : null
                 }
                 {/* )} */}
               </ScrollView>

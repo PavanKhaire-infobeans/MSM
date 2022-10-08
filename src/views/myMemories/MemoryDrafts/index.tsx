@@ -94,10 +94,7 @@ class MyListItem extends React.PureComponent {
                 ...fontSize(30),
                 color: Colors.NewTitleColor,
                 fontWeight: '500',
-                fontFamily:
-                  Platform.OS === 'ios'
-                    ? fontFamily.Inter
-                    : fontFamily.InterMedium,
+                fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                 marginLeft: 16,
                 marginRight: 16,
                 textAlign: 'left',
@@ -109,7 +106,7 @@ class MyListItem extends React.PureComponent {
               <Text
                 style={{
                   ...fontSize(16),
-                  fontFamily: 'Rubik',
+                  fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
                   color: Colors.TextColor,
                   marginLeft: 16,
                   marginBottom: 10,
@@ -719,6 +716,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     }
   };
 
+  keyExtractor =(_, index: number) => `key ${index}`;
+
   render() {
     return (
       <SafeAreaView
@@ -772,15 +771,16 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
         <FlatList
           data={this.state.memoryDraftsArray}
-          keyExtractor={(_, index: number) => `${index}`}
+          keyExtractor={this.keyExtractor}
           // onScroll={() => {
           //   Keyboard.dismiss();
           // }}
           style={{ width: '100%', backgroundColor: 'white' }}
           // extraData={this.state}
-          renderItem={(item: any) => this.renderDraftView(item)}
-          maxToRenderPerBatch={20}
+          renderItem={this.renderDraftView}
+          maxToRenderPerBatch={5}
           initialNumToRender={10}
+          windowSize={5}
           removeClippedSubviews={true}
           refreshControl={
             <RefreshControl

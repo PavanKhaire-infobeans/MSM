@@ -289,7 +289,7 @@ export default class PromptsView extends React.Component<State, Props> {
               onScroll={() => {
                 Keyboard.dismiss();
               }}
-              // maxToRenderPerBatch={50}
+              maxToRenderPerBatch={5}
               initialNumToRender={10}
               removeClippedSubviews={true}
               ItemSeparatorComponent={() => <View style={Styles.separator} />}

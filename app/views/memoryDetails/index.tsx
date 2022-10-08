@@ -612,6 +612,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
       <FlatList
         data={lastComments}
         style={Styles.MemoryTagsFlatlistStyle}
+        initialNumToRender={10}
+        removeClippedSubviews={true}
         keyExtractor={(_, index: number) => `${index}`}
         renderItem={(item: any) => this.renderCommentView(item)}
       />

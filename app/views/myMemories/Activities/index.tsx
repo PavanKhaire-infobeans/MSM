@@ -223,8 +223,9 @@ export default class Activities extends React.Component<Props, State> {
             Keyboard.dismiss();
           }}
           renderItem={(item: any) => this.renderActivityView(item)}
-          maxToRenderPerBatch={50}
+          // maxToRenderPerBatch={50}
           removeClippedSubviews={true}
+          initialNumToRender={10}
           refreshControl={
             <RefreshControl
               colors={[

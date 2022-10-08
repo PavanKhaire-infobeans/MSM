@@ -470,6 +470,34 @@ const Timeline = (props: Props) => {
     }
   }, []);
 
+
+  const keyExtractor = useCallback((item: any) => item?.nid?.toString(), []);
+
+  const renderList = useCallback((item: any) => (
+      <MemoryListItem
+        item={item}
+        previousItem={
+          item.index == 0 ? null : props.timelineList[item.index - 1]
+        }
+        like={like}
+        onLayout={eve => {
+          // alert(eve.nativeEvent.layout.height)
+        }}
+        listType={ListType.Timeline}
+        animate={state.animateValue}
+        audioView={audioView}
+        jumpToVisibility={(memory_date: any) =>
+          setState(prevState => ({
+            ...prevState,
+            jumpToVisibility: true,
+            jumpToDate: memory_date,
+          }))
+        }
+        openMemoryActions={itm => openMemoryActions(itm)}
+        navigation={props.navigation}
+      />
+  ), []);
+
   return (
     <View style={styles.fullFlex}>
       <SafeAreaView style={styles.container}>
@@ -797,7 +825,9 @@ const Timeline = (props: Props) => {
             nestedScrollEnabled={true}
             initialNumToRender={10}
             removeClippedSubviews={true}
-            keyExtractor={(_, index: number) => `${index}`}
+            maxToRenderPerBatch={5}
+            windowSize={5}
+            keyExtractor={keyExtractor}
             onViewableItemsChanged={onViewableItemsChanged}
             viewabilityConfig={{
               itemVisiblePercentThreshold: 5,
@@ -855,33 +885,8 @@ const Timeline = (props: Props) => {
             ItemSeparatorComponent={() => (
               <View style={styles.renderSeparator} />
             )}
-            renderItem={(item: any) => (
-              <MemoryListItem
-                item={item}
-                previousItem={
-                  item.index == 0 ? null : props.timelineList[item.index - 1]
-                }
-                like={like}
-                onLayout={eve => {
-                  // alert(eve.nativeEvent.layout.height)
-                }}
-                listType={ListType.Timeline}
-                animate={state.animateValue}
-                audioView={audioView}
-                jumpToVisibility={(memory_date: any) =>
-                  setState(prevState => ({
-                    ...prevState,
-                    jumpToVisibility: true,
-                    jumpToDate: memory_date,
-                  }))
-                }
-                openMemoryActions={itm => openMemoryActions(itm)}
-                navigation={props.navigation}
-              />
-            )}
-            // maxToRenderPerBatch={50}
+            renderItem={renderList}
             indicatorStyle="white"
-            removeClippedSubviews={true}
             refreshControl={
               <RefreshControl
                 colors={[

@@ -296,7 +296,7 @@ class NotificationListing extends React.Component<Props> {
                 style={Styles.flatListStyle}
                 extraData={this.props}
                 renderItem={(item: any) => this.renderActivityView(item)}
-                maxToRenderPerBatch={50}
+                maxToRenderPerBatch={15}
                 keyExtractor={(_, index: number) => `${index}`}
                 removeClippedSubviews={true}
                 refreshControl={

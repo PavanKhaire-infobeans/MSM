@@ -410,7 +410,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                   navigation={this.props.navigation}
                 />
               )}
-              maxToRenderPerBatch={50}
+              maxToRenderPerBatch={5}
               removeClippedSubviews={true}
               refreshControl={
                 <RefreshControl

@@ -398,6 +398,8 @@ export default class PublishedMemory extends React.Component<Props, State> {
               data={publishedMemoriesArray}
               style={styles.flatlistStyle}
               extraData={this.state}
+              initialNumToRender={10}
+              removeClippedSubviews={true}
               keyExtractor={(_, index: number) => `${index}`}
               onScroll={() => {
                 Keyboard.dismiss();
@@ -411,7 +413,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                   openMemoryActions={this.openMemoryActions.bind(this)}
                 />
               )}
-              maxToRenderPerBatch={50}
+              maxToRenderPerBatch={5}
               removeClippedSubviews={true}
               refreshControl={
                 <RefreshControl
