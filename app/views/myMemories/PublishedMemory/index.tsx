@@ -389,6 +389,16 @@ export default class PublishedMemory extends React.Component<Props, State> {
     });
   };
 
+  renderItem=(item: any) => (
+    <MemoryListItem
+      item={item}
+      like={this.like}
+      listType={ListType.Published}
+      audioView={this.audioView}
+      openMemoryActions={this.openMemoryActions.bind(this)}
+    />
+  )
+
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -404,24 +414,16 @@ export default class PublishedMemory extends React.Component<Props, State> {
               onScroll={() => {
                 Keyboard.dismiss();
               }}
-              renderItem={(item: any) => (
-                <MemoryListItem
-                  item={item}
-                  like={this.like}
-                  listType={ListType.Published}
-                  audioView={this.audioView}
-                  openMemoryActions={this.openMemoryActions.bind(this)}
-                />
-              )}
+              renderItem={this.renderItem}
               maxToRenderPerBatch={5}
-              removeClippedSubviews={true}
+              windowSize={5}
               refreshControl={
                 <RefreshControl
                   colors={[
-                    Platform.OS === 'android' ? Colors.NewThemeColor : '#fff',
+                    Platform.OS === 'android' ? Colors.NewThemeColor : Colors.white,
                   ]}
                   tintColor={
-                    Platform.OS === 'android' ? Colors.NewThemeColor : '#fff'
+                    Platform.OS === 'android' ? Colors.NewThemeColor : Colors.white
                   }
                   refreshing={this.state.isRefreshing}
                   onRefresh={this.onRefresh.bind(this)}
