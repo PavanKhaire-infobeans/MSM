@@ -210,7 +210,7 @@ const MyAccount = props => {
   // Web-service call to fetch profile data
   const getUserProfileData = () => {
     if (Utility.isInternetConnected) {
-      // loaderHandler.showLoader('Loading...');
+      loaderHandler.showLoader('Loading...');
       UserProfile();
     } else {
       No_Internet_Warning();

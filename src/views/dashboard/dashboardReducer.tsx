@@ -186,6 +186,7 @@ export const dashboardReducer = (
       };
       break;
     case REMOVE_PROMPT:
+      console.log("action.payload : ",action.payload)
       newState.recentList[action.payload.firstIndex].active_prompts.splice(
         action.payload.secondIndex,
         1,

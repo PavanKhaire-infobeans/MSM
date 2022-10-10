@@ -237,7 +237,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     });
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (getValue(this.props, ['listItem'])) {
       this.setupFiles(this.props.listItem);
     }
@@ -1266,7 +1266,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         keyExtractor={(_: any, index: number) => `${index}`}
         keyboardShouldPersistTaps="always"
         horizontal={true}
-        extraData={this.props}
+        // extraData={this.props}
         scrollEnabled={true}
         data={item.data as Array<any>}
         ItemSeparatorComponent={() => (

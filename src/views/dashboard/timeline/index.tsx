@@ -498,6 +498,111 @@ const Timeline = (props: Props) => {
       />
   ), []);
 
+  const renderItem = ({ item, index }) => (
+    <TouchableHighlight
+      onPress={() => {
+        // jumpToClicked(item.year, "");
+        loaderHandler.showLoader('Loading...');
+        let currentYear = item.year;
+        let next = '',
+          prev = '',
+          currentIndex = allYears.indexOf(
+            currentYear => currentYear.year == item.year,
+          );
+        prev = allYears[currentIndex]
+          ? allYears[currentIndex + 1]
+          : null;
+        next =
+          currentIndex > 0
+            ? allYears[currentIndex - 1]
+            : null;
+        setCurrentItemYear(currentYear);
+        setPreviousItemYear(prev);
+        setNextItemYear(next);
+        let month = '';
+        if (flatListRef.current) {
+          flatListRef.current.scrollToOffset({
+            animated: true,
+            offset: 8,
+          });
+        }
+        props.fetchMemoryList({
+          type: ListType.Timeline,
+          isLoading: true,
+          jumpTo: true,
+          selectedYear: currentYear,
+          selectedMonth: month,
+        });
+      }}
+      style={
+        item.year == currentItemYear
+          ? styles.currentYearText
+          : styles.newnormalText
+      }
+      underlayColor={Colors.transparent}
+      style={styles.timelineContainer}>
+      <>
+        <Text
+          onPress={() => {
+            // jumpToClicked(item.year, "");
+            loaderHandler.showLoader('Loading...');
+            let currentYear = item.year;
+            let next = '',
+              prev = '',
+              currentIndex = allYears.indexOf(
+                currentYear => currentYear.year == item.year,
+              );
+            prev = allYears[currentIndex]
+              ? allYears[currentIndex + 1]
+              : null;
+            next =
+              currentIndex > 0
+                ? allYears[currentIndex - 1]
+                : null;
+            setCurrentItemYear(currentYear);
+            setPreviousItemYear(prev);
+            setNextItemYear(next);
+            let month = '';
+            if (flatListRef.current) {
+              flatListRef.current.scrollToOffset({
+                animated: true,
+                offset: 8,
+              });
+            }
+            props.fetchMemoryList({
+              type: ListType.Timeline,
+              isLoading: true,
+              jumpTo: true,
+              selectedYear: currentYear,
+              selectedMonth: month,
+            });
+          }}
+          style={
+            item.year == currentItemYear
+              ? styles.currentYearText
+              : styles.newnormalText
+          }>
+          {item.year}
+        </Text>
+        {
+          <View
+            style={[
+              styles.timelineYearSeparatorline,
+              {
+                backgroundColor:
+                  index == 0
+                    ? Colors.timeLinebackground
+                    : Colors.newTextColor,
+                height: index == 0 ? 0 : 1,
+              },
+            ]}
+          />
+          // : <View style={styles.timelineYearSeparatorline} />
+        }
+      </>
+    </TouchableHighlight>
+  );
+
   return (
     <View style={styles.fullFlex}>
       <SafeAreaView style={styles.container}>
@@ -613,7 +718,9 @@ const Timeline = (props: Props) => {
                       style={styles.timelineFlatlistStyle}
                       inverted={true}
                       horizontal={true}
-                      initialNumToRender={10}
+                      nestedScrollEnabled={true}
+                      maxToRenderPerBatch={5}
+                      windowSize={5}
                       removeClippedSubviews={true}
                       snapToAlignment="center"
                       ref={timelineYearRef}
@@ -625,110 +732,7 @@ const Timeline = (props: Props) => {
                       // contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                       showsHorizontalScrollIndicator={false}
                       // ItemSeparatorComponent={() => <View style={styles.timelineYearSeparatorline} />}
-                      renderItem={({ item, index }) => (
-                        <TouchableHighlight
-                          onPress={() => {
-                            // jumpToClicked(item.year, "");
-                            loaderHandler.showLoader('Loading...');
-                            let currentYear = item.year;
-                            let next = '',
-                              prev = '',
-                              currentIndex = allYears.indexOf(
-                                currentYear => currentYear.year == item.year,
-                              );
-                            prev = allYears[currentIndex]
-                              ? allYears[currentIndex + 1]
-                              : null;
-                            next =
-                              currentIndex > 0
-                                ? allYears[currentIndex - 1]
-                                : null;
-                            setCurrentItemYear(currentYear);
-                            setPreviousItemYear(prev);
-                            setNextItemYear(next);
-                            let month = '';
-                            if (flatListRef.current) {
-                              flatListRef.current.scrollToOffset({
-                                animated: true,
-                                offset: 8,
-                              });
-                            }
-                            props.fetchMemoryList({
-                              type: ListType.Timeline,
-                              isLoading: true,
-                              jumpTo: true,
-                              selectedYear: currentYear,
-                              selectedMonth: month,
-                            });
-                          }}
-                          style={
-                            item.year == currentItemYear
-                              ? styles.currentYearText
-                              : styles.newnormalText
-                          }
-                          underlayColor={Colors.transparent}
-                          style={styles.timelineContainer}>
-                          <>
-                            <Text
-                              onPress={() => {
-                                // jumpToClicked(item.year, "");
-                                loaderHandler.showLoader('Loading...');
-                                let currentYear = item.year;
-                                let next = '',
-                                  prev = '',
-                                  currentIndex = allYears.indexOf(
-                                    currentYear => currentYear.year == item.year,
-                                  );
-                                prev = allYears[currentIndex]
-                                  ? allYears[currentIndex + 1]
-                                  : null;
-                                next =
-                                  currentIndex > 0
-                                    ? allYears[currentIndex - 1]
-                                    : null;
-                                setCurrentItemYear(currentYear);
-                                setPreviousItemYear(prev);
-                                setNextItemYear(next);
-                                let month = '';
-                                if (flatListRef.current) {
-                                  flatListRef.current.scrollToOffset({
-                                    animated: true,
-                                    offset: 8,
-                                  });
-                                }
-                                props.fetchMemoryList({
-                                  type: ListType.Timeline,
-                                  isLoading: true,
-                                  jumpTo: true,
-                                  selectedYear: currentYear,
-                                  selectedMonth: month,
-                                });
-                              }}
-                              style={
-                                item.year == currentItemYear
-                                  ? styles.currentYearText
-                                  : styles.newnormalText
-                              }>
-                              {item.year}
-                            </Text>
-                            {
-                              <View
-                                style={[
-                                  styles.timelineYearSeparatorline,
-                                  {
-                                    backgroundColor:
-                                      index == 0
-                                        ? Colors.timeLinebackground
-                                        : Colors.newTextColor,
-                                    height: index == 0 ? 0 : 1,
-                                  },
-                                ]}
-                              />
-                              // : <View style={styles.timelineYearSeparatorline} />
-                            }
-                          </>
-                        </TouchableHighlight>
-                      )}
+                      renderItem={renderItem}
                       indicatorStyle="white"
                     />
 

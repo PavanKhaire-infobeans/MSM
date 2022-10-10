@@ -306,12 +306,14 @@ export default class Activities extends React.Component<Props, State> {
           data={this.state.activityList}
           style={{width: '100%', backgroundColor: '#fff'}}
           keyExtractor={(_, index: number) => `${index}`}
-          extraData={this.state}
+          // extraData={this.state}
+          nestedScrollEnabled={true}
           onScroll={() => {
             Keyboard.dismiss();
           }}
-          renderItem={(item: any) => this.renderActivityView(item)}
+          renderItem={this.renderActivityView}
           maxToRenderPerBatch={5}
+          windowSize={5}
           removeClippedSubviews={true}
           refreshControl={
             <RefreshControl
@@ -327,7 +329,6 @@ export default class Activities extends React.Component<Props, State> {
               }}
             />
           }
-          keyExtractor={(item, index) => index.toString()}
           ListFooterComponent={this.renderFooter.bind(this)}
           onEndReachedThreshold={0.5}
           onEndReached={this.handleLoadMore.bind(this)}

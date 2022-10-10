@@ -317,43 +317,47 @@ const Recent = (props: Props) => {
   };
 
   const _onAddProptToMemoryAction = async (firstIndex: any, secondIndex: any) => {
-    if (Utility.isInternetConnected) {
-      let data = props.recentList[firstIndex].active_prompts[secondIndex];
-      selectedPrompt.firstIndex = firstIndex;
-      selectedPrompt.secondIndex = secondIndex;
-      loaderHandler.showLoader('Creating Memory...');
-      let draftDetails: any = await DefaultDetailsMemory(
-        decode_utf8(data.prompt_title.trim()),
-      );
-      draftDetails.prompt_id = parseInt(data.prompt_id);
-      // memoryFromPrompt = EventManager.addListener(
-      //   promptIdListener,
-      //   promptToMemoryCallBack,
-      // );
-      CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
-        res => {
-          if (res.status) {
-            props.removePrompt(selectedPrompt);
-            loaderHandler.hideLoader();
-            props.navigation.navigate('createMemory', {
-              editMode: true,
-              draftNid: res.id,
-              isFromPrompt: true,
-            });
-          } else {
-            loaderHandler.hideLoader();
-            ToastMessage(draftDetails.ResponseMessage);
-          }
-        });
-      Keyboard.dismiss();
-    } else {
-      No_Internet_Warning();
+    try {
+      console.log("firstIndex : ",firstIndex, secondIndex)
+      if (Utility.isInternetConnected) {
+        let data = props.recentList[firstIndex].active_prompts[secondIndex];
+        selectedPrompt.firstIndex = firstIndex;
+        selectedPrompt.secondIndex = secondIndex;
+        loaderHandler.showLoader('Creating Memory...');
+        let draftDetails: any = await DefaultDetailsMemory(
+          decode_utf8(data.prompt_title.trim()),
+        );
+        draftDetails.prompt_id = parseInt(data.prompt_id);
+        // memoryFromPrompt = EventManager.addListener(
+        //   promptIdListener,
+        //   promptToMemoryCallBack,
+        // );
+        CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
+          res => {
+            if (res.status) {
+              props.removePrompt(selectedPrompt);
+              loaderHandler.hideLoader();
+              props.navigation.navigate('createMemory', {
+                editMode: true,
+                draftNid: res.id,
+                isFromPrompt: true,
+              });
+            } else {
+              loaderHandler.hideLoader();
+              ToastMessage(draftDetails.ResponseMessage);
+            }
+          });
+        Keyboard.dismiss();
+      } else {
+        No_Internet_Warning();
+      }
+    } catch (error) {
     }
   };
 
-  const keyExtractor = useCallback((item: any) => item?.nid?.toString(), []);
+  const keyExtractor = (item: any) => item?.nid?.toString();
 
-  const renderList = useCallback((item: any) => (
+  const renderList = (item: any) => (
     <>
       {item.index === 0 && <View style={styles.renderSeparator} />}
       <MemoryListItem
@@ -365,13 +369,16 @@ const Recent = (props: Props) => {
         audioView={audioView}
         openMemoryActions={openMemoryActions}
         MemoryActions={MemoryActions}
-        addMemoryFromPrompt={(firstIndex: any, secondIndex: any) =>
+        addMemoryFromPrompt={(firstIndex: any, secondIndex: any) => {
+          console.log("firstIndex :", firstIndex, secondIndex, props.recentList[firstIndex].active_prompts[secondIndex])
           _onAddProptToMemoryAction(firstIndex, secondIndex)
+
+        }
         }
         navigation={props.navigation}
       />
     </>
-  ), []);
+  );
 
   return (
     <View style={styles.mainContainer}>
@@ -380,7 +387,7 @@ const Recent = (props: Props) => {
           <FlatList
             data={props.recentList}
             style={styles.flatlistStyle}
-            extraData={state}
+            // extraData={state}
             initialNumToRender={10}
             removeClippedSubviews={true}
             maxToRenderPerBatch={5}

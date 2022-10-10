@@ -1,18 +1,18 @@
 import React from 'react';
-import {FlatList, SafeAreaView, StatusBar, View} from 'react-native';
-import {connect} from 'react-redux';
+import { FlatList, SafeAreaView, StatusBar, View } from 'react-native';
+import { connect } from 'react-redux';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import DefaultListItem from '../../common/component/defaultListItem';
-import {kNotificationIndicator} from '../../common/component/TabBarIcons';
-import {No_Internet_Warning} from '../../common/component/Toast';
-import {Colors} from '../../common/constants';
+import { kNotificationIndicator } from '../../common/component/TabBarIcons';
+import { No_Internet_Warning } from '../../common/component/Toast';
+import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import NavigationBar from '../dashboard/NavigationBar';
-import {NotificationDataModel} from './notificationDataModel';
-import {kForegroundNotificationListener} from './notificationServices';
-import {AddNewNotification, CurrentList} from './reducer';
-import {GetNotificationAPI} from './saga';
+import { NotificationDataModel } from './notificationDataModel';
+import { kForegroundNotificationListener } from './notificationServices';
+import { AddNewNotification, CurrentList } from './reducer';
+import { GetNotificationAPI } from './saga';
 import Styles from './styles';
 
 type items = {
@@ -24,8 +24,8 @@ type items = {
   key: string;
   isLast?: boolean;
 };
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 export const NotificationListener = 'noticeListerner';
 class NotificationView extends React.Component<Props> {
   notificationListener: EventManager;
@@ -50,13 +50,13 @@ class NotificationView extends React.Component<Props> {
     let group_id = new NotificationDataModel().getGroupId(
       details.notificationType,
     );
-    this.props.addNotificationItem({group_id: group_id, details: [details]});
+    this.props.addNotificationItem({ group_id: group_id, details: [details] });
     setTimeout(() => {
       EventManager.callBack(kNotificationIndicator);
     }, 2000);
   };
 
-  sendcallback = () => {};
+  sendcallback = () => { };
 
   componentWillUnmount = () => {
     this.notificationListener.removeListener();
@@ -91,6 +91,21 @@ class NotificationView extends React.Component<Props> {
     });
   };
 
+  renderItem = (item: any) => {
+    return (
+      <DefaultListItem
+        title={item.item.group_name}
+        showArrow={true}
+        count={item.item.unseen_count}
+        identifier={item.item.group_id}
+        isLast={false}
+        subTitle={item.item.group_description}
+        onPress={() =>
+          this.navigateToNotificationListing(item)
+        }></DefaultListItem>
+    );
+  };
+
   render() {
     return (
       <View style={Styles.container}>
@@ -112,25 +127,14 @@ class NotificationView extends React.Component<Props> {
               backgroundColor={Colors.NewThemeColor}
             />
             <FlatList
-              data={this.props.notificationList}
+              data={this.props.notificationList && this.props.notificationList.length ? this.props.notificationList : []}
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatListStyle}
               initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={10}
               removeClippedSubviews={true}
-              renderItem={(item: any) => {
-                return (
-                  <DefaultListItem
-                    title={item.item.group_name}
-                    showArrow={true}
-                    count={item.item.unseen_count}
-                    identifier={item.item.group_id}
-                    isLast={false}
-                    subTitle={item.item.group_description}
-                    onPress={() =>
-                      this.navigateToNotificationListing(item)
-                    }></DefaultListItem>
-                );
-              }}
+              renderItem={this.renderItem}
             />
           </View>
         </SafeAreaView>
@@ -138,17 +142,17 @@ class NotificationView extends React.Component<Props> {
     );
   }
 }
-const mapState = (state: {[x: string]: any}) => ({
+const mapState = (state: { [x: string]: any }) => ({
   notificationList: state.NotificationsRedux.notificationData,
 });
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    getNotificationTypes: () => dispatch({type: GetNotificationAPI}),
+    getNotificationTypes: () => dispatch({ type: GetNotificationAPI }),
     setCurrentList: (payload: any) =>
-      dispatch({type: CurrentList, payload: payload}),
+      dispatch({ type: CurrentList, payload: payload }),
     addNotificationItem: (payload: any) =>
-      dispatch({type: AddNewNotification, payload: payload}),
+      dispatch({ type: AddNewNotification, payload: payload }),
   };
 };
 

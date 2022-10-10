@@ -240,6 +240,22 @@ export const MemoryTags = (props: {memoryTags: any; onPressCallback?: any}) => {
 };
 
 export const CollaboratorView = (props: {collaborators: any}) => {
+
+  const renderItem = (item: any) => (
+    <View style={Styles.CollaboratorViewContainer}>
+      <ImageBackground
+        source={profile_placeholder}
+        style={Styles.CollaboratorImageBackgroundStyle}
+        imageStyle={Styles.CollaboratorImageStyle}>
+        <Image
+          source={
+            item.item.uri != '' ? {uri: item.item.uri} : profile_placeholder
+          }
+          style={Styles.CollaboratorProfileImageStyle}></Image>
+      </ImageBackground>
+      <Text style={Styles.CollaboratorNameTextStyle}>{item.item.name}</Text>
+    </View>
+  );
   return (
     <FlatList
       horizontal
@@ -247,21 +263,7 @@ export const CollaboratorView = (props: {collaborators: any}) => {
       data={props.collaborators}
       style={Styles.MemoryTagsFlatlistStyle}
       keyExtractor={(_, index: number) => `${index}`}
-      renderItem={(item: any) => (
-        <View style={Styles.CollaboratorViewContainer}>
-          <ImageBackground
-            source={profile_placeholder}
-            style={Styles.CollaboratorImageBackgroundStyle}
-            imageStyle={Styles.CollaboratorImageStyle}>
-            <Image
-              source={
-                item.item.uri != '' ? {uri: item.item.uri} : profile_placeholder
-              }
-              style={Styles.CollaboratorProfileImageStyle}></Image>
-          </ImageBackground>
-          <Text style={Styles.CollaboratorNameTextStyle}>{item.item.name}</Text>
-        </View>
-      )}
+      renderItem={renderItem}
     />
   );
 };
@@ -459,20 +461,26 @@ export const CarousalFilesView = (props: {
   togglePlayPause?: any;
   navigation?: any;
 }) => {
+  const showImage = (item: any) => (
+    <CommonImageView
+      showDesc={false}
+      file={item.item}
+      files={props.files}
+      navigation={props.navigation}
+    />
+  );
+
+  const showPDF =(item: any) => (
+    <CommonPDFView file={item.item} files={props.files} />
+  );
+
   if (props.files.length > 0)
     return (
       <View style={Styles.imageCarouselContainerStyle}>
         {props.type == kImage && props.files ? (
           <Carousel
             data={props.files}
-            renderItem={(item: any) => (
-              <CommonImageView
-                showDesc={false}
-                file={item.item}
-                files={props.files}
-                navigation={props.navigation}
-              />
-            )}
+            renderItem={showImage}
             sliderWidth={Dimensions.get('window').width}
             itemWidth={Dimensions.get('window').width}
           />
@@ -480,9 +488,7 @@ export const CarousalFilesView = (props: {
         {props.type == kPDF && props.files ? (
           <Carousel
             data={props.files}
-            renderItem={(item: any) => (
-              <CommonPDFView file={item.item} files={props.files} />
-            )}
+            renderItem={showPDF}
             sliderWidth={Dimensions.get('window').width}
             itemWidth={Dimensions.get('window').width}
           />

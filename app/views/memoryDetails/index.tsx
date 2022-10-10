@@ -613,9 +613,11 @@ export default class MemoryDetails extends React.Component<Props, State> {
         data={lastComments}
         style={Styles.MemoryTagsFlatlistStyle}
         initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={10}
         removeClippedSubviews={true}
         keyExtractor={(_, index: number) => `${index}`}
-        renderItem={(item: any) => this.renderCommentView(item)}
+        renderItem={this.renderCommentView}
       />
     );
   };
@@ -1277,7 +1279,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     );
   };
 
-  renderExternalQueueItem = (item, index) => {
+  renderExternalQueueItem = ({item, index}) => {
     let currentSelectedItem = item;
     return (
       <View style={style.externalQueueItemContainer}>
@@ -1316,6 +1318,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                     p: style.RenderHtmlStyle,
                     li: style.RenderHtmlStyle,
                     span: style.RenderHtmlStyle,
+                    body: style.RenderHtmlStyle,
                   }}
                   source={{html: currentSelectedItem.description}}
                   // ignoredDomTags={['br']}
@@ -1406,10 +1409,11 @@ export default class MemoryDetails extends React.Component<Props, State> {
             initialNumToRender={
               this.memoryDataModel.externalQueue.collection.length
             }
-            renderItem={({item, index}) =>
-              this.renderExternalQueueItem(item, index)
-            }
-            horizontal
+            renderItem={this.renderExternalQueueItem}
+            horizontal={true}
+            windowSize={10}
+            maxToRenderPerBatch={10}
+            removeClippedSubviews={true}
             pagingEnabled={true}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(_item, index) => index + ''}
@@ -1831,15 +1835,16 @@ export default class MemoryDetails extends React.Component<Props, State> {
               tagsStyles={{ p: { ...fontSize(18), marginBottom: 10, fontFamily: fontFamily.Inter, fontWeight: '400', lineHeight: 24 } }}
               html={this.memoryDataModel.memory.description}
               style={HTMLStyleSheet}></HTML> */}
+              
             <RenderHtml
               tagsStyles={{
                 p: style.RenderHtmlStyle,
                 li: style.RenderHtmlStyle,
                 span: style.RenderHtmlStyle,
+                body: style.RenderHtmlStyle,
               }} //Colors.newDescTextColor
               source={{html: this.memoryDataModel.memory.description}}
               // ignoredDomTags={['br']}
-
               contentWidth={Dimensions.get('window').width}
               enableExperimentalBRCollapsing={true}
               enableExperimentalMarginCollapsing={true}></RenderHtml>
@@ -1962,8 +1967,10 @@ export default class MemoryDetails extends React.Component<Props, State> {
               <KeyboardAwareScrollView
                 enableResetScrollToCoords={false}
                 enableAutomaticScroll={true}
+                nestedScrollEnabled={true}
                 style={
                   {
+                    width:'100%'
                     // marginBottom: Platform.OS == 'android' && this.state.bottomToolbar == 0
                     //   ? 150 : Platform.OS == 'ios' ? 150 : -300
                   }
@@ -1990,7 +1997,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 {/* <View style={{ height: 15 }} /> */}
                 {/* Render Attachments */}
                 {this.storyType.indexOf('song') != -1 ? (
-                  <ScrollView>
+                  <ScrollView nestedScrollEnabled={true}>
                     <WebView
                       useWebKit={true}
                       ref={(ref: any) => (this._webView = ref)}

@@ -80,7 +80,7 @@ class NotesToCollaborators extends React.Component<Props, State> {
     this.keyboardDidHideListener.remove();
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.friendList = this.props.friendsList;
     this.friendCircleList = this.props.friendsCircleList;
     this.nid = this.props.nid;

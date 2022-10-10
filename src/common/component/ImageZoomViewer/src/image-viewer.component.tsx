@@ -35,7 +35,7 @@ export default class ImageViewer extends React.Component<Props, State> {
 
   private imageRefs: any[] = [];
 
-  public componentWillMount() {
+  public UNSAFE_componentWillMount() {
     this.init(this.props);
   }
 

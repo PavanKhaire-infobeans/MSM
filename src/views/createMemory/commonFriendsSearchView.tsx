@@ -93,7 +93,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
     });
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.saveSearchList([]);
     this.backListner.removeListener();
     this.keyboardDidShowListener.remove();

@@ -443,7 +443,7 @@ class MindPopList extends React.Component<{
     }, 2000);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     //Fetch from server
     this.updateList();
 

@@ -71,7 +71,7 @@ class InviteCollaborators extends React.Component<Props, State> {
     );
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.setState({
       owner: this.props.owner,
       showLeave: this.props.showLeaveConversation,

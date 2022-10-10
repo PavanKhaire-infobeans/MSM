@@ -218,6 +218,88 @@ export default class PromptsView extends React.Component<State, Props> {
     );
   };
 
+  renderItem=(item: any) => {
+    return (
+      <View key={item.index}>
+        <View style={{height: item?.index == 0 ? 16 : 0}} />
+        <View style={Styles.promptContainer}>
+          {/* <View>
+          <TouchableOpacity
+            underlayColor={'transparent'}
+            onPress={() => this.hidePrompt(item.item.id)}
+            style={{
+              alignItems: 'flex-end',
+              margin: 11,
+              paddingRight: 2,
+            }}>
+            <Image source={close_big}></Image>
+          </TouchableOpacity>
+        </View> */}
+          <View style={Styles.imageContainer}>
+            <ImageBackground
+              borderTopLeftRadius={24}
+              borderTopRightRadius={24}
+              source={
+                item.item.prompt_image
+                  ? {uri: item.item.prompt_image}
+                  : sampleimage
+              }
+              resizeMode="cover"
+              style={Styles.promptImage}>
+              <LinearGradient
+                // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+                // locations={[0, 0.6]}
+                colors={[
+                  'rgba(255, 255, 255, 0)',
+                  'rgba(255, 255, 255, 1)',
+                ]}
+                style={Styles.LinearGradientStyle}></LinearGradient>
+            </ImageBackground>
+          </View>
+          <View style={Styles.propmptCategoryContainer}>
+            {item.item.prompt_category &&
+            item.item.prompt_category.length ? (
+              item.item.prompt_category.length === 1 ? (
+                <Text style={Styles.promptLable}>
+                  {item.item.prompt_category[0].label}
+                </Text>
+              ) : (
+                item.item.prompt_category.map(
+                  (category, categoryIndex) => (
+                    <Text style={Styles.promptCtegory}>
+                      {category.label}{' '}
+                      {categoryIndex + 1 !=
+                      item.item.prompt_category.length
+                        ? ','
+                        : null}
+                    </Text>
+                  ),
+                )
+              )
+            ) : null}
+
+            <TextNew numberOfLines={3} style={Styles.desc}>
+              {item.item.desc}
+            </TextNew>
+            <View>
+              <TouchableOpacity
+                onPress={() =>
+                  this.convertToMemory(item.item.id, item.item.desc)
+                }>
+                <View style={Styles.addmemoryContainer}>
+                  <Image source={plus}></Image>
+                  <TextNew style={Styles.AnsPrompt}>
+                    Answer Prompt
+                  </TextNew>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   render() {
     return (
       <View style={Styles.container}>
@@ -285,97 +367,18 @@ export default class PromptsView extends React.Component<State, Props> {
                 this.flatListRef = ref;
               }}
               data={this.state.items}
-              extraData={this.state}
+              // extraData={this.state}
               onScroll={() => {
                 Keyboard.dismiss();
               }}
               maxToRenderPerBatch={5}
+              windowSize={5}
               initialNumToRender={10}
               removeClippedSubviews={true}
               ItemSeparatorComponent={() => <View style={Styles.separator} />}
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatlistStyle}
-              renderItem={(item: any) => {
-                return (
-                  <View key={item.index}>
-                    <View style={{height: item?.index == 0 ? 16 : 0}} />
-                    <View style={Styles.promptContainer}>
-                      {/* <View>
-                      <TouchableOpacity
-                        underlayColor={'transparent'}
-                        onPress={() => this.hidePrompt(item.item.id)}
-                        style={{
-                          alignItems: 'flex-end',
-                          margin: 11,
-                          paddingRight: 2,
-                        }}>
-                        <Image source={close_big}></Image>
-                      </TouchableOpacity>
-                    </View> */}
-                      <View style={Styles.imageContainer}>
-                        <ImageBackground
-                          borderTopLeftRadius={24}
-                          borderTopRightRadius={24}
-                          source={
-                            item.item.prompt_image
-                              ? {uri: item.item.prompt_image}
-                              : sampleimage
-                          }
-                          resizeMode="cover"
-                          style={Styles.promptImage}>
-                          <LinearGradient
-                            // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
-                            // locations={[0, 0.6]}
-                            colors={[
-                              'rgba(255, 255, 255, 0)',
-                              'rgba(255, 255, 255, 1)',
-                            ]}
-                            style={Styles.LinearGradientStyle}></LinearGradient>
-                        </ImageBackground>
-                      </View>
-                      <View style={Styles.propmptCategoryContainer}>
-                        {item.item.prompt_category &&
-                        item.item.prompt_category.length ? (
-                          item.item.prompt_category.length === 1 ? (
-                            <Text style={Styles.promptLable}>
-                              {item.item.prompt_category[0].label}
-                            </Text>
-                          ) : (
-                            item.item.prompt_category.map(
-                              (category, categoryIndex) => (
-                                <Text style={Styles.promptCtegory}>
-                                  {category.label}{' '}
-                                  {categoryIndex + 1 !=
-                                  item.item.prompt_category.length
-                                    ? ','
-                                    : null}
-                                </Text>
-                              ),
-                            )
-                          )
-                        ) : null}
-
-                        <TextNew numberOfLines={3} style={Styles.desc}>
-                          {item.item.desc}
-                        </TextNew>
-                        <View>
-                          <TouchableOpacity
-                            onPress={() =>
-                              this.convertToMemory(item.item.id, item.item.desc)
-                            }>
-                            <View style={Styles.addmemoryContainer}>
-                              <Image source={plus}></Image>
-                              <TextNew style={Styles.AnsPrompt}>
-                                Answer Prompt
-                              </TextNew>
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                );
-              }}
+              renderItem={this.renderItem}
               ListFooterComponent={this.renderFooter.bind(this)}
               onEndReachedThreshold={0.4}
               onEndReached={this.loadMorePrompts.bind(this)}

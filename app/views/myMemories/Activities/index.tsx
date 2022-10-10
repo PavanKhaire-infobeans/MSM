@@ -10,7 +10,7 @@ import Text from './../../../../src/common/component/Text';
 import {
   No_Internet_Warning, ToastMessage
 } from './../../../../src/common/component/Toast';
-import {Colors} from './../../../../src/common/constants';
+import { Colors } from './../../../../src/common/constants';
 import EventManager from './../../../../src/common/eventManager';
 import Utility from './../../../../src/common/utility';
 import styles from './styles';
@@ -117,9 +117,9 @@ export default class Activities extends React.Component<Props, State> {
 
   };
 
-  renderActivityView = (item: any): any => {
-    let index = item.index;
-    item = item.item;
+  renderActivityView = ({ item, index }) => {
+    // let index = item.index;
+    // item = item.item;
     return (
       <View style={styles.activityViewStyle}>
         <View style={styles.authorContainer}>
@@ -149,8 +149,8 @@ export default class Activities extends React.Component<Props, State> {
           </Text>
           <Text style={styles.dateTextStyle}>{item.date}</Text>
           {item.isJoinInvite &&
-          item.noteToCollaborator &&
-          item.noteToCollaborator.length > 0 ? (
+            item.noteToCollaborator &&
+            item.noteToCollaborator.length > 0 ? (
             <Text style={styles.notesToCollabrationTextStyle}>
               Notes to collaborators:{' '}
               <Text style={{ fontWeight: 'normal' }}>
@@ -222,7 +222,7 @@ export default class Activities extends React.Component<Props, State> {
           onScroll={() => {
             Keyboard.dismiss();
           }}
-          renderItem={(item: any) => this.renderActivityView(item)}
+          renderItem={this.renderActivityView}
           // maxToRenderPerBatch={50}
           removeClippedSubviews={true}
           initialNumToRender={10}
