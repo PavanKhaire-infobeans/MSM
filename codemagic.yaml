@@ -2,7 +2,7 @@ workflows:
   react-native-android:
     name: MSM Android
     environment:
-      node: latest
+      node: 16.8.0
     triggering:
       events:
         - push
