@@ -443,7 +443,7 @@ class MindPopList extends React.Component<{
     }, 2000);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     //Fetch from server
     this.updateList();
 
@@ -1157,14 +1157,15 @@ class MindPopList extends React.Component<{
                   ReactNativeHapticFeedback.trigger('impactMedium', options);
                 }}
                 style={{ backgroundColor: Colors.NewThemeColor }}
-                useSectionList
-                maxToRenderPerBatch={50}
+                useSectionList={true}
+                maxToRenderPerBatch={8}
                 removeClippedSubviews={true}
                 sections={this.state.listSectionItems}
                 renderItem={this._renderFrontCell}
                 renderHiddenItem={
                   this.props.isSelectingItem ? null : this._renderBackHiddenCell
                 }
+                windowSize={8}
                 disableRightSwipe={true}
                 rightOpenValue={-(buttonWidth * 1) - 8}
                 stopRightSwipe={-(buttonWidth * 1) - 8}

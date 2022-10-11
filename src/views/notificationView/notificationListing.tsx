@@ -126,8 +126,7 @@ class NotificationListing extends React.Component<Props> {
           navigation: this.props.navigation,
         });
       } else {
-        console.log('this.props.navigation : ', this.props.navigation);
-        this.props.navigation.navigate('memoryDetails', {
+        this.props.navigation.navigate('newmemoryDetails', {
           nid: item.nid,
           type: item.type,
           navigation: this.props.navigation,
@@ -294,9 +293,10 @@ class NotificationListing extends React.Component<Props> {
                     .data
                 }
                 style={Styles.flatListStyle}
-                extraData={this.props}
-                renderItem={(item: any) => this.renderActivityView(item)}
-                maxToRenderPerBatch={50}
+                // extraData={this.props}
+                renderItem={this.renderActivityView}
+                maxToRenderPerBatch={15}
+                windowSize={15}
                 keyExtractor={(_, index: number) => `${index}`}
                 removeClippedSubviews={true}
                 refreshControl={
@@ -311,7 +311,6 @@ class NotificationListing extends React.Component<Props> {
                     onRefresh={() => this.refreshNotifications()}
                   />
                 }
-                keyExtractor={(item, index) => index.toString()}
                 ListFooterComponent={this.renderFooter.bind(this)}
                 onEndReachedThreshold={0.5}
                 onEndReached={this.handleLoadMore.bind(this)}

@@ -225,6 +225,8 @@ const JumpToScreen = (props: Props) => {
                   keyExtractor={(_, index: number) => `${index}`}
                   numColumns={2}
                   nestedScrollEnabled={true}
+                  initialNumToRender={10}
+                  removeClippedSubviews={true}
                   style={styles.fullWidth}
                   ItemSeparatorComponent={() => {
                     return <View style={styles.separatorStyle} />;
@@ -275,6 +277,8 @@ const JumpToScreen = (props: Props) => {
                   keyExtractor={(_, index: number) => `${index}`}
                   numColumns={2}
                   nestedScrollEnabled={true}
+                  initialNumToRender={10}
+                  removeClippedSubviews={true}
                   style={styles.fullWidth}
                   renderItem={(item: any) => {
                     return (

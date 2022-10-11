@@ -1,9 +1,9 @@
 import React from 'react';
-import {FlatList, SafeAreaView, StatusBar, View} from 'react-native';
+import { FlatList, SafeAreaView, StatusBar, View } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
 import DefaultListItem from '../../common/component/defaultListItem';
-import {Colors} from '../../common/constants';
-import {Account} from '../../common/loginStore';
+import { Colors } from '../../common/constants';
+import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
 import {
   block_user,
@@ -120,12 +120,30 @@ export default class MoreOptions extends React.Component<Props> {
         deepLinkBackClick: this.props.deepLinkBackClick,
       });
     } else if (isTour) {
-      DefaultPreference.set('hide_guide_tour', 'false').then(function () {});
-      this.props.navigation.navigate('dashBoard', {setTimer: 'false'});
+      DefaultPreference.set('hide_guide_tour', 'false').then(function () { });
+      this.props.navigation.navigate('dashBoard', { setTimer: 'false' });
     } else {
       this.props.navigation.navigate('blockedUsers');
     }
   }
+
+  renderItem = ({ item: data }) => (
+    <DefaultListItem
+      key={data.key}
+      title={data.title}
+      showArrow={data.showArrow}
+      icon={data.icon ? data.icon : ''}
+      count={data.count}
+      identifier={data.key}
+      isLast={data.isLast ? data.isLast : false}
+      onPress={(identifier: any) => {
+        this.segregateItemClick(
+          identifier,
+          data.isWebPage,
+          data.isTour,
+        );
+      }}></DefaultListItem>
+  )
 
   render() {
     return (
@@ -149,24 +167,7 @@ export default class MoreOptions extends React.Component<Props> {
               data={this.Items}
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatListStyle}
-              renderItem={({item: data}) => {
-                return (
-                  <DefaultListItem
-                    title={data.title}
-                    showArrow={data.showArrow}
-                    icon={data.icon ? data.icon : ''}
-                    count={data.count}
-                    identifier={data.key}
-                    isLast={data.isLast ? data.isLast : false}
-                    onPress={(identifier: any) => {
-                      this.segregateItemClick(
-                        identifier,
-                        data.isWebPage,
-                        data.isTour,
-                      );
-                    }}></DefaultListItem>
-                );
-              }}
+              renderItem={this.renderItem}
             />
           </View>
         </SafeAreaView>

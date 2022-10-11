@@ -1,5 +1,5 @@
 import Upload from 'react-native-background-upload';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+// import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
   asyncGen,
   ConsoleType,
@@ -61,6 +61,7 @@ export const CreateUpdateMemory = async (
             await uploadFile(id, filesToUpload,
               datareturn => {
 
+                console.log("file upload response : ", JSON.stringify(datareturn))
                 if (listener == "mindpopEditMemoryListener") {
                   CB({ status: true, id, padDetails, key, prompt_id });
                   // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
@@ -414,8 +415,8 @@ export const CollaboratorActionAPI = async (params: any) => {
 async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
   let respArray: any[] = [];
-  const loaderHandler = require('../../common/component/busyindicator/LoaderHandler').default;
-  loaderHandler.showLoader('Uploading..');
+  // const loaderHandler = require('../../common/component/busyindicator/LoaderHandler').default;
+  // loaderHandler.showLoader('Uploading..');
 
   Promise.all(
     files.map(file => {

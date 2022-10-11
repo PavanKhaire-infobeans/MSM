@@ -42,7 +42,7 @@ type Props = {
 
 type State = {activeIndex: any};
 
-export default class MemoryListItem extends React.Component<Props, State> {
+export default class MemoryListItem extends React.PureComponent<Props, State> {
   views = '';
   externalCueItems = [
     'songs',

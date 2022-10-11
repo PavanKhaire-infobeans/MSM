@@ -90,7 +90,6 @@ export class DashboardDataModel {
             parsedMemory.description = parsedMemory.description.replace(/<p>/ig, '');
             parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');
             parsedMemory.description = parsedMemory.description.trim();
-            // showConsoleLog(ConsoleType.WARN,"after replace > ",JSON.stringify(parsedMemory.description))
             memories.push(parsedMemory);
         });
         return memories;

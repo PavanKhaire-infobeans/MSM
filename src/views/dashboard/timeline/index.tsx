@@ -470,6 +470,139 @@ const Timeline = (props: Props) => {
     }
   }, []);
 
+
+  const keyExtractor = useCallback((item: any) => item?.nid?.toString(), []);
+
+  const renderList = useCallback((item: any) => (
+      <MemoryListItem
+        item={item}
+        previousItem={
+          item.index == 0 ? null : props.timelineList[item.index - 1]
+        }
+        like={like}
+        onLayout={eve => {
+          // alert(eve.nativeEvent.layout.height)
+        }}
+        listType={ListType.Timeline}
+        animate={state.animateValue}
+        audioView={audioView}
+        jumpToVisibility={(memory_date: any) =>
+          setState(prevState => ({
+            ...prevState,
+            jumpToVisibility: true,
+            jumpToDate: memory_date,
+          }))
+        }
+        openMemoryActions={itm => openMemoryActions(itm)}
+        navigation={props.navigation}
+      />
+  ), []);
+
+  const renderItem = ({ item, index }) => (
+    <TouchableHighlight
+      onPress={() => {
+        // jumpToClicked(item.year, "");
+        loaderHandler.showLoader('Loading...');
+        let currentYear = item.year;
+        let next = '',
+          prev = '',
+          currentIndex = allYears.indexOf(
+            currentYear => currentYear.year == item.year,
+          );
+        prev = allYears[currentIndex]
+          ? allYears[currentIndex + 1]
+          : null;
+        next =
+          currentIndex > 0
+            ? allYears[currentIndex - 1]
+            : null;
+        setCurrentItemYear(currentYear);
+        setPreviousItemYear(prev);
+        setNextItemYear(next);
+        let month = '';
+        if (flatListRef.current) {
+          flatListRef.current.scrollToOffset({
+            animated: true,
+            offset: 8,
+          });
+        }
+        props.fetchMemoryList({
+          type: ListType.Timeline,
+          isLoading: true,
+          jumpTo: true,
+          selectedYear: currentYear,
+          selectedMonth: month,
+        });
+      }}
+      style={
+        item.year == currentItemYear
+          ? styles.currentYearText
+          : styles.newnormalText
+      }
+      underlayColor={Colors.transparent}
+      style={styles.timelineContainer}>
+      <>
+        <Text
+          onPress={() => {
+            // jumpToClicked(item.year, "");
+            loaderHandler.showLoader('Loading...');
+            let currentYear = item.year;
+            let next = '',
+              prev = '',
+              currentIndex = allYears.indexOf(
+                currentYear => currentYear.year == item.year,
+              );
+            prev = allYears[currentIndex]
+              ? allYears[currentIndex + 1]
+              : null;
+            next =
+              currentIndex > 0
+                ? allYears[currentIndex - 1]
+                : null;
+            setCurrentItemYear(currentYear);
+            setPreviousItemYear(prev);
+            setNextItemYear(next);
+            let month = '';
+            if (flatListRef.current) {
+              flatListRef.current.scrollToOffset({
+                animated: true,
+                offset: 8,
+              });
+            }
+            props.fetchMemoryList({
+              type: ListType.Timeline,
+              isLoading: true,
+              jumpTo: true,
+              selectedYear: currentYear,
+              selectedMonth: month,
+            });
+          }}
+          style={
+            item.year == currentItemYear
+              ? styles.currentYearText
+              : styles.newnormalText
+          }>
+          {item.year}
+        </Text>
+        {
+          <View
+            style={[
+              styles.timelineYearSeparatorline,
+              {
+                backgroundColor:
+                  index == 0
+                    ? Colors.timeLinebackground
+                    : Colors.newTextColor,
+                height: index == 0 ? 0 : 1,
+              },
+            ]}
+          />
+          // : <View style={styles.timelineYearSeparatorline} />
+        }
+      </>
+    </TouchableHighlight>
+  );
+
   return (
     <View style={styles.fullFlex}>
       <SafeAreaView style={styles.container}>
@@ -585,6 +718,10 @@ const Timeline = (props: Props) => {
                       style={styles.timelineFlatlistStyle}
                       inverted={true}
                       horizontal={true}
+                      nestedScrollEnabled={true}
+                      maxToRenderPerBatch={5}
+                      windowSize={5}
+                      removeClippedSubviews={true}
                       snapToAlignment="center"
                       ref={timelineYearRef}
                       getItemLayout={(data, index) => {
@@ -595,110 +732,7 @@ const Timeline = (props: Props) => {
                       // contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                       showsHorizontalScrollIndicator={false}
                       // ItemSeparatorComponent={() => <View style={styles.timelineYearSeparatorline} />}
-                      renderItem={({ item, index }) => (
-                        <TouchableHighlight
-                          onPress={() => {
-                            // jumpToClicked(item.year, "");
-                            loaderHandler.showLoader('Loading...');
-                            let currentYear = item.year;
-                            let next = '',
-                              prev = '',
-                              currentIndex = allYears.indexOf(
-                                currentYear => currentYear.year == item.year,
-                              );
-                            prev = allYears[currentIndex]
-                              ? allYears[currentIndex + 1]
-                              : null;
-                            next =
-                              currentIndex > 0
-                                ? allYears[currentIndex - 1]
-                                : null;
-                            setCurrentItemYear(currentYear);
-                            setPreviousItemYear(prev);
-                            setNextItemYear(next);
-                            let month = '';
-                            if (flatListRef.current) {
-                              flatListRef.current.scrollToOffset({
-                                animated: true,
-                                offset: 8,
-                              });
-                            }
-                            props.fetchMemoryList({
-                              type: ListType.Timeline,
-                              isLoading: true,
-                              jumpTo: true,
-                              selectedYear: currentYear,
-                              selectedMonth: month,
-                            });
-                          }}
-                          style={
-                            item.year == currentItemYear
-                              ? styles.currentYearText
-                              : styles.newnormalText
-                          }
-                          underlayColor={Colors.transparent}
-                          style={styles.timelineContainer}>
-                          <>
-                            <Text
-                              onPress={() => {
-                                // jumpToClicked(item.year, "");
-                                loaderHandler.showLoader('Loading...');
-                                let currentYear = item.year;
-                                let next = '',
-                                  prev = '',
-                                  currentIndex = allYears.indexOf(
-                                    currentYear => currentYear.year == item.year,
-                                  );
-                                prev = allYears[currentIndex]
-                                  ? allYears[currentIndex + 1]
-                                  : null;
-                                next =
-                                  currentIndex > 0
-                                    ? allYears[currentIndex - 1]
-                                    : null;
-                                setCurrentItemYear(currentYear);
-                                setPreviousItemYear(prev);
-                                setNextItemYear(next);
-                                let month = '';
-                                if (flatListRef.current) {
-                                  flatListRef.current.scrollToOffset({
-                                    animated: true,
-                                    offset: 8,
-                                  });
-                                }
-                                props.fetchMemoryList({
-                                  type: ListType.Timeline,
-                                  isLoading: true,
-                                  jumpTo: true,
-                                  selectedYear: currentYear,
-                                  selectedMonth: month,
-                                });
-                              }}
-                              style={
-                                item.year == currentItemYear
-                                  ? styles.currentYearText
-                                  : styles.newnormalText
-                              }>
-                              {item.year}
-                            </Text>
-                            {
-                              <View
-                                style={[
-                                  styles.timelineYearSeparatorline,
-                                  {
-                                    backgroundColor:
-                                      index == 0
-                                        ? Colors.timeLinebackground
-                                        : Colors.newTextColor,
-                                    height: index == 0 ? 0 : 1,
-                                  },
-                                ]}
-                              />
-                              // : <View style={styles.timelineYearSeparatorline} />
-                            }
-                          </>
-                        </TouchableHighlight>
-                      )}
+                      renderItem={renderItem}
                       indicatorStyle="white"
                     />
 
@@ -793,7 +827,11 @@ const Timeline = (props: Props) => {
             style={styles.flatlistStyle}
             extraData={state}
             nestedScrollEnabled={true}
-            keyExtractor={(_, index: number) => `${index}`}
+            initialNumToRender={10}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={5}
+            windowSize={5}
+            keyExtractor={keyExtractor}
             onViewableItemsChanged={onViewableItemsChanged}
             viewabilityConfig={{
               itemVisiblePercentThreshold: 5,
@@ -851,33 +889,8 @@ const Timeline = (props: Props) => {
             ItemSeparatorComponent={() => (
               <View style={styles.renderSeparator} />
             )}
-            renderItem={(item: any) => (
-              <MemoryListItem
-                item={item}
-                previousItem={
-                  item.index == 0 ? null : props.timelineList[item.index - 1]
-                }
-                like={like}
-                onLayout={eve => {
-                  // alert(eve.nativeEvent.layout.height)
-                }}
-                listType={ListType.Timeline}
-                animate={state.animateValue}
-                audioView={audioView}
-                jumpToVisibility={(memory_date: any) =>
-                  setState(prevState => ({
-                    ...prevState,
-                    jumpToVisibility: true,
-                    jumpToDate: memory_date,
-                  }))
-                }
-                openMemoryActions={itm => openMemoryActions(itm)}
-                navigation={props.navigation}
-              />
-            )}
-            // maxToRenderPerBatch={50}
+            renderItem={renderList}
             indicatorStyle="white"
-            removeClippedSubviews={true}
             refreshControl={
               <RefreshControl
                 colors={[

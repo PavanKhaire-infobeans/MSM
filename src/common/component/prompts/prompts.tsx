@@ -97,7 +97,7 @@ export default class Prompts extends React.Component<Props, State> {
               data={this.props.data}
               initialNumToRender={this.props.data.length}
               renderItem={this.renderAppIntro}
-              horizontal
+              horizontal={true}
               pagingEnabled={true}
               showsHorizontalScrollIndicator={false}
               keyExtractor={(_item, index) => index + ''}

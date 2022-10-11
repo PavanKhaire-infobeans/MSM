@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -111,7 +111,7 @@ const Recent = (props: Props) => {
 
     let promptlength = props.recentList.filter(item => item.isPrompt).length;
     if (props.recentList.length > 0 && (props.recentList.length - promptlength) < props.totalCount) {
-    
+
       if (!props.isLoadMore) {
         let memoryDetails;
         if (props.recentList[props.recentList.length - 1].active_prompts) {
@@ -317,39 +317,68 @@ const Recent = (props: Props) => {
   };
 
   const _onAddProptToMemoryAction = async (firstIndex: any, secondIndex: any) => {
-    if (Utility.isInternetConnected) {
-      let data = props.recentList[firstIndex].active_prompts[secondIndex];
-      selectedPrompt.firstIndex = firstIndex;
-      selectedPrompt.secondIndex = secondIndex;
-      loaderHandler.showLoader('Creating Memory...');
-      let draftDetails: any = await DefaultDetailsMemory(
-        decode_utf8(data.prompt_title.trim()),
-      );
-      draftDetails.prompt_id = parseInt(data.prompt_id);
-      // memoryFromPrompt = EventManager.addListener(
-      //   promptIdListener,
-      //   promptToMemoryCallBack,
-      // );
-      CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
-        res => {
+    try {
+      console.log("firstIndex : ",firstIndex, secondIndex)
+      if (Utility.isInternetConnected) {
+        let data = props.recentList[firstIndex].active_prompts[secondIndex];
+        selectedPrompt.firstIndex = firstIndex;
+        selectedPrompt.secondIndex = secondIndex;
+        loaderHandler.showLoader('Creating Memory...');
+        let draftDetails: any = await DefaultDetailsMemory(
+          decode_utf8(data.prompt_title.trim()),
+        );
+        draftDetails.prompt_id = parseInt(data.prompt_id);
+        // memoryFromPrompt = EventManager.addListener(
+        //   promptIdListener,
+        //   promptToMemoryCallBack,
+        // );
+        CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
+          res => {
             if (res.status) {
-            props.removePrompt(selectedPrompt);
-            loaderHandler.hideLoader();
-            props.navigation.navigate('createMemory', {
-              editMode: true,
-              draftNid: res.id,
-              isFromPrompt: true,
-            });
-          } else {
-            loaderHandler.hideLoader();
-            ToastMessage(draftDetails.ResponseMessage);
-          }
-        });
-      Keyboard.dismiss();
-    } else {
-      No_Internet_Warning();
+              props.removePrompt(selectedPrompt);
+              loaderHandler.hideLoader();
+              props.navigation.navigate('createMemory', {
+                editMode: true,
+                draftNid: res.id,
+                isFromPrompt: true,
+              });
+            } else {
+              loaderHandler.hideLoader();
+              ToastMessage(draftDetails.ResponseMessage);
+            }
+          });
+        Keyboard.dismiss();
+      } else {
+        No_Internet_Warning();
+      }
+    } catch (error) {
     }
   };
+
+  const keyExtractor = (item: any) => item?.nid?.toString();
+
+  const renderList = (item: any) => (
+    <>
+      {item.index === 0 && <View style={styles.renderSeparator} />}
+      <MemoryListItem
+        item={item}
+        animate={state.animateValue}
+        previousItem={null}
+        like={like}
+        listType={ListType.Recent}
+        audioView={audioView}
+        openMemoryActions={openMemoryActions}
+        MemoryActions={MemoryActions}
+        addMemoryFromPrompt={(firstIndex: any, secondIndex: any) => {
+          console.log("firstIndex :", firstIndex, secondIndex, props.recentList[firstIndex].active_prompts[secondIndex])
+          _onAddProptToMemoryAction(firstIndex, secondIndex)
+
+        }
+        }
+        navigation={props.navigation}
+      />
+    </>
+  );
 
   return (
     <View style={styles.mainContainer}>
@@ -358,28 +387,13 @@ const Recent = (props: Props) => {
           <FlatList
             data={props.recentList}
             style={styles.flatlistStyle}
-            extraData={state}
-            renderItem={(item: any) => (
-              <>
-                {item.index === 0 && <View style={styles.renderSeparator} />}
-                <MemoryListItem
-                  item={item}
-                  animate={state.animateValue}
-                  previousItem={null}
-                  like={like}
-                  listType={ListType.Recent}
-                  audioView={audioView}
-                  openMemoryActions={openMemoryActions}
-                  MemoryActions={MemoryActions}
-                  addMemoryFromPrompt={(firstIndex: any, secondIndex: any) =>
-                    _onAddProptToMemoryAction(firstIndex, secondIndex)
-                  }
-                  navigation={props.navigation}
-                />
-              </>
-            )}
-            indicatorStyle="white"
+            // extraData={state}
+            initialNumToRender={10}
             removeClippedSubviews={true}
+            maxToRenderPerBatch={5}
+            windowSize={5}
+            renderItem={renderList}
+            indicatorStyle="white"
             refreshControl={
               <RefreshControl
                 colors={[
@@ -396,7 +410,7 @@ const Recent = (props: Props) => {
                 onRefresh={onRefresh}
               />
             }
-            keyExtractor={(_, index: number) => `${index}`}
+            keyExtractor={keyExtractor}
             ItemSeparatorComponent={() => (
               <View style={styles.renderSeparator} />
             )}

@@ -324,8 +324,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           }}
           style={styles.flatlistCOntainerSTyle}
           extraData={this.state}
-          renderItem={(item: any) => this.renderDraftView(item)}
-          maxToRenderPerBatch={50}
+          renderItem={this.renderDraftView}
+          // maxToRenderPerBatch={50}
+          initialNumToRender={10}
           removeClippedSubviews={true}
           refreshControl={
             <RefreshControl

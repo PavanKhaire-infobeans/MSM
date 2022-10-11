@@ -68,21 +68,20 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
     case MemoryInitialsUpdate:
       newState.title = action.payload.title;
 
-      if ((action.payload?.memory_date?.year > new Date().getFullYear())) {
-        action.payload.memory_date = {"day": new Date().getDate().toString(), "month": new Date().getMonth()+1, "year": new Date().getFullYear()?.toString()};
+      if ((parseInt(action.payload?.memory_date?.year) > new Date().getUTCFullYear())) {
+        action.payload.memory_date = {"day": new Date().getUTCDate().toString(), "month": new Date().getUTCMonth()+1, "year": new Date().getUTCFullYear()?.toString()};
       }
-      else if ((action.payload?.memory_date?.year == new Date().getFullYear())) {
-        if ((action.payload?.memory_date?.month > (new Date().getMonth()+1))) {
-          action.payload.memory_date = {"day": new Date().getDate().toString(), "month": new Date().getMonth()+1, "year": new Date().getFullYear()?.toString()};
+      else if ((parseInt(action.payload?.memory_date?.year) == new Date().getUTCFullYear())) {
+        if ((parseInt(action.payload?.memory_date?.month) > (new Date().getUTCMonth()+1))) {
+          action.payload.memory_date = {"day": new Date().getUTCDate().toString(), "month": new Date().getUTCMonth()+1, "year": new Date().getUTCFullYear()?.toString()};
         }
       }
-      else if ((action.payload?.memory_date?.year <= new Date().getFullYear())) {
-        if ((action.payload?.memory_date?.month == (new Date().getMonth()+1))&&(action.payload?.memory_date?.day > new Date().getDate())) {
-          action.payload.memory_date = {"day": new Date().getDate().toString(), "month": new Date().getMonth()+1, "year": new Date().getFullYear()?.toString()};
+      else if ((parseInt(action.payload?.memory_date?.year) <= new Date().getUTCFullYear())) {
+        if ((parseInt(action.payload?.memory_date?.month) == (new Date().getUTCMonth()+1))&&(parseInt(action.payload?.memory_date?.day) > new Date().getUTCDate())) {
+          action.payload.memory_date = {"day": new Date().getUTCDate().toString(), "month": new Date().getUTCMonth()+1, "year": new Date().getUTCFullYear()?.toString()};
         }
       }
 
-      showConsoleLog(ConsoleType.LOG,"custom action.payload.memory_date :", action.payload.memory_date)
       newState.date = action.payload.memory_date;
       // {
       //   year: action.payload.memory_date.year,

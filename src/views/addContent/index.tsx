@@ -279,7 +279,6 @@ const AddContentDetails = props => {
         'addContentCreateMemory',
         '',
         res => {
-          showConsoleLog(ConsoleType.WARN, 'sadadadsd ::', res);
           if (res.status) {
             // createMemoryCallBack(res.status, res.id, res.padDetails);
             if (res.status) {
@@ -518,6 +517,8 @@ const AddContentDetails = props => {
 
                   <FlatList
                     horizontal={true}
+                    initialNumToRender={files.length}
+                    removeClippedSubviews={true}
                     keyboardShouldPersistTaps={'handled'}
                     keyExtractor={(_, index: number) => `${index}`}
                     style={[

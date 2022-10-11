@@ -210,7 +210,7 @@ const MyAccount = props => {
   // Web-service call to fetch profile data
   const getUserProfileData = () => {
     if (Utility.isInternetConnected) {
-      // loaderHandler.showLoader('Loading...');
+      loaderHandler.showLoader('Loading...');
       UserProfile();
     } else {
       No_Internet_Warning();
@@ -263,10 +263,12 @@ const MyAccount = props => {
               </TouchableHighlight>
             </View>
           </View>
-          <FlatList
+          {/* <FlatList
             data={Items}
             keyExtractor={(_, index: number) => `${index}`}
             style={Styles.flatListStyle}
+            initialNumToRender={Items.length}
+            removeClippedSubviews={true}
             renderItem={({item: data}) => {
               return (
                 <DefaultListItem
@@ -281,7 +283,23 @@ const MyAccount = props => {
                   }}></DefaultListItem>
               );
             }}
-          />
+          /> */}
+
+          {
+            Items.map((data:any,index:number)=>(
+              <DefaultListItem
+                  key={`Key ${index}`}
+                  title={data.title}
+                  showArrow={data.showArrow}
+                  icon={data.icon ? data.icon : ''}
+                  count={data.count}
+                  identifier={data.key}
+                  isLast={data.isLast ? data.isLast : false}
+                  onPress={(identifier: any) => {
+                    segregateItemClick(identifier);
+                  }}></DefaultListItem>
+            ))
+          }
         </View>
       </SafeAreaView>
     </View>

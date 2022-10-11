@@ -215,7 +215,7 @@ class CreateMemory extends React.Component<Props> {
     onChange: (event, date) => {
       this.setState({
         showCalender: false,
-        memory_date: moment(date).format('DD/MM/YYYY'),
+        memory_date: moment(date).utc().format('DD/MM/YYYY'),
       });
     },
   };
@@ -240,11 +240,11 @@ class CreateMemory extends React.Component<Props> {
     },
     itemList: [],
     year: {
-      value: this.currentDate.getFullYear().toString(),
+      value: this.currentDate.getUTCFullYear().toString(),
       error: false,
     },
     month: {
-      value: MonthObj.month[this.currentDate.getMonth()],
+      value: MonthObj.month[this.currentDate.getUTCMonth()],
       error: false,
     },
     day: {
@@ -252,11 +252,11 @@ class CreateMemory extends React.Component<Props> {
     },
     memory_date:
       '' +
-      new Date().getDate() +
+      new Date().getUTCDate() +
       '/' +
-      (new Date().getMonth() + 1) +
+      (new Date().getUTCMonth() + 1) +
       '/' +
-      new Date().getFullYear(),
+      new Date().getUTCFullYear(),
     dateError: '',
     locationError: '',
     locationText: '',
@@ -382,12 +382,13 @@ class CreateMemory extends React.Component<Props> {
       // 	draftDetails.date.day = date.getDate();
       // }
       let newMemoryDate = draftDetails.memory_date
-        ? new Date(parseInt(draftDetails.memory_date) * 1000).getDate() +
+        ? new Date(parseInt(draftDetails.memory_date) * 1000).getUTCDate() +
         '/' +
-        (new Date(parseInt(draftDetails.memory_date) * 1000).getMonth() + 1) +
+        (new Date(parseInt(draftDetails.memory_date) * 1000).getUTCMonth() + 1) +
         '/' +
-        new Date(parseInt(draftDetails.memory_date) * 1000).getFullYear()
+        new Date(parseInt(draftDetails.memory_date) * 1000).getUTCFullYear()
         : '';
+
       this.setState(
         {
           title: decode_utf8(draftDetails.title),
@@ -938,7 +939,6 @@ class CreateMemory extends React.Component<Props> {
           'createMemoryMainListener',
           key,
           resp => {
-            showConsoleLog(ConsoleType.WARN, 'sadadadsd ::', resp);
             if (resp?.Status) {
               this.memorySaveCallback(
                 resp.Status,
@@ -1000,7 +1000,7 @@ class CreateMemory extends React.Component<Props> {
     //     day: this.state.day.value != 'Day' ? this.state.day.value : undefined,
     //   };
     // }
-    
+
     this.props.onInitialUpdate(details);
   };
 
@@ -1811,24 +1811,31 @@ class CreateMemory extends React.Component<Props> {
               <>
                 <Text
                   style={styles.memoryDescriptionTextStyle}
-                  numberOfLines={3}
+                  numberOfLines={15}
                   ellipsizeMode={'tail'}>
                   {this.props.memoryDescription}
                 </Text>
-                <TouchableOpacity
-                  onPress={() =>
-                    this.props.navigation.navigate('etherPadEditing', {
-                      title: this.state.title.trim(),
-                      padDetails: this.state.padDetails,
-                      updateContent: this.setEtherPadContent.bind(this),
-                      inviteCollaboratorFlow: this.inviteCollaboratorFlow.bind(this),
-                    })
-                  }>
-                  <Text
-                    style={styles.editDescriptionTextStyle}>
-                    Edit Description
-                  </Text>
-                </TouchableOpacity>
+
+                {
+                  this.state.padDetails?.padUrl &&
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (this.state.padDetails?.padUrl) {
+                        this.props.navigation.navigate('etherPadEditing', {
+                          title: this.state.title.trim(),
+                          padDetails: this.state.padDetails,
+                          updateContent: this.setEtherPadContent.bind(this),
+                          inviteCollaboratorFlow: this.inviteCollaboratorFlow.bind(this),
+                        })
+                      }
+                    }}>
+                    <Text
+                      style={styles.editDescriptionTextStyle}>
+                      Edit Description
+                    </Text>
+                  </TouchableOpacity>
+                }
+
               </>
 
               // <EtherPadEditing
@@ -2112,7 +2119,7 @@ class CreateMemory extends React.Component<Props> {
                 mode="datepicker"
                 selected={this.state.memory_date}
                 current={this.state.memory_date}
-                selectorEndingYear={new Date().getFullYear()}
+                selectorEndingYear={new Date().getUTCFullYear()}
                 selectorStartingYear={1917}
                 onSelectedChange={date => {
                   this.setState({
@@ -2311,7 +2318,7 @@ class CreateMemory extends React.Component<Props> {
                   // />
                   this.state.itemList?.length
                     ? this.state.itemList.map((item, index) =>
-                      this.renderRow(item, index),
+                      this.renderRow(item, index)
                     )
                     : null
                 }

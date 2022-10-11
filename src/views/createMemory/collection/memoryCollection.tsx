@@ -229,7 +229,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
               showsHorizontalScrollIndicator={false}
               data={this.props.collectionList}
               keyExtractor={(_, index: number) => `${index}`}
-              renderItem={(item: any) => this.renderRow(item)}
+              renderItem={this.renderRow}
             />
           </View>
         </SafeAreaView>

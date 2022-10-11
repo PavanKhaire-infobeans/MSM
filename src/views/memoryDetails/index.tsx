@@ -175,7 +175,6 @@ export default class MemoryDetails extends React.Component<Props, State> {
   shakeAnimation: any = new Animated.Value(0);
   constructor(props: Props) {
     super(props);
-    console.log('Props : ', JSON.stringify(props));
     if (props.route.params.nid && props.route.params.type) {
       this.nid = props.route.params.nid;
       this.storyType = props.route.params.type;
@@ -619,6 +618,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
       <FlatList
         data={lastComments}
         style={{paddingBottom: 10}}
+        initialNumToRender={10}
+        removeClippedSubviews={true}
         keyExtractor={(_, index: number) => `${index}`}
         renderItem={(item: any) => this.renderCommentView(item)}
       />

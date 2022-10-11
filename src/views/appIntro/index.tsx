@@ -144,6 +144,7 @@ const AppIntro = props => {
           <FlatList
             data={images}
             initialNumToRender={images.length}
+            removeClippedSubviews={true}
             renderItem={renderAppIntro}
             horizontal={true}
             pagingEnabled={true}

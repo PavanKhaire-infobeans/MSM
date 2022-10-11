@@ -176,7 +176,7 @@ class NavigationBar extends React.Component<Props> {
     }, 2000);
     // Alert.alert(""+this.state.showBadge);
   };
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     if (Utility.unreadNotification[this.key] > 0) {
       this.setState({showBadge: true});
     } else {
