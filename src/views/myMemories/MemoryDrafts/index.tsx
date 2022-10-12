@@ -55,7 +55,7 @@ type State = { [x: string]: any };
 type Props = { [x: string]: any };
 var memoryDraftsArray: any[] = [];
 var page: 0;
-var loadingDataFromServer = true;
+var loadingDataFromServer = true, firstRender = false;
 type menuOption = {
   key: number;
   title: any;
@@ -407,6 +407,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       this.onRefresh,
     );
     loadingDataFromServer = true;
+    firstRender = true
     page = 0;
     this.props.navigation.addListener('focus', () => {
       loaderHandler.showLoader();
@@ -602,6 +603,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             if (isRefreshing) {
               length = 0;
             }
+            loaderHandler.showLoader();
             switch (type) {
               case DraftType.allDrafts: {
                 let response: any = await GetMemoryDrafts('all', 'all', length, (response) => {
@@ -799,7 +801,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           onEndReachedThreshold={0.4}
           onEndReached={this.handleLoadMore.bind(this)}
         />
-        {this.state.memoryDraftsArray.length == 0 && loadingDataFromServer == false ? (
+        {this.state.memoryDraftsArray.length == 0 && loadingDataFromServer == false && firstRender == false? (
           <View
             style={{
               flex: 1,
