@@ -71,6 +71,18 @@ export default class CustomListView extends React.Component<Props> {
     );
   };
 
+  ListEmptyComponent= () => (
+    <View
+      style={styles.customlistviewMainContainerFlatlistTextContainer}>
+      {this.props.loadingCompleted && (
+        <Text
+          style={styles.customlistviewMainContainerFlatlistTextStyle}>
+          {this.props.blankText}
+        </Text>
+      )}
+    </View>
+  );
+
   render() {
     return (
       <SafeAreaView style={styles.customlistviewMainContainer}>
@@ -88,26 +100,18 @@ export default class CustomListView extends React.Component<Props> {
             barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
+
           <FlatList
             onScroll={() => {
               Keyboard.dismiss();
             }}
             data={this.props.itemList}
             keyExtractor={(_, index: number) => `${index}`}
-            ListEmptyComponent={() => (
-              <View
-                style={styles.customlistviewMainContainerFlatlistTextContainer}>
-                {this.props.loadingCompleted && (
-                  <Text
-                    style={styles.customlistviewMainContainerFlatlistTextStyle}>
-                    {this.props.blankText}
-                  </Text>
-                )}
-              </View>
-            )}
+            ListEmptyComponent={() => this.ListEmptyComponent()}
             style={styles.customlistviewMainContainerFlatlistStyle}
-            renderItem={(item: any) => this.renderCommentView(item)}
+            renderItem={this.renderCommentView}
           />
+
         </View>
       </SafeAreaView>
     );

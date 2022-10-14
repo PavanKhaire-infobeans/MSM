@@ -18,7 +18,7 @@ import {
 import ContextMenu from 'react-native-context-menu-view';
 import DeviceInfo from 'react-native-device-info';
 import {Account} from '../../../../src/common/loginStore';
-import {MemoryService} from '../../../../src/common/webservice/memoryServices';
+import {MemoryService, newMemoryService} from '../../../../src/common/webservice/memoryServices';
 import {ListType} from '../../../../src/views/dashboard/dashboardReducer';
 import MemoryActionsSheet, {
   MemoryActionsSheetItem,
@@ -426,13 +426,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     Platform.OS === 'android' ? Colors.NewThemeColor : Colors.white
                   }
                   refreshing={this.state.isRefreshing}
-                  onRefresh={this.onRefresh.bind(this)}
+                  onRefresh={()=>this.onRefresh()}
                 />
               }
               // keyExtractor={(item, index) => index.toString()}
-              ListFooterComponent={this.renderFooter.bind(this)}
+              ListFooterComponent={()=>this.renderFooter()}
               onEndReachedThreshold={0.4}
-              onEndReached={this.handleLoadMore.bind(this)}
+              onEndReached={()=>this.handleLoadMore()}
             />
             {publishedMemoriesArray.length == 0 && (
               <View style={styles.emptyContainer}>
@@ -748,7 +748,7 @@ export const onActionItemClicked = async (
       };
       let userdata = await Storage.get('userData');
 
-      let response = await MemoryService(
+      let response = await newMemoryService(
         `https://${Account.selectedData().instanceURL}/api/actions/memory`,
         [
           {
@@ -757,16 +757,19 @@ export const onActionItemClicked = async (
           },
           {configurationTimestamp: '0', details},
         ],
+        response =>{
+          if (response.ResponseCode == 200) {
+            _onEditMemory(data.nid, navigation);
+          } else {
+            loaderHandler.hideLoader();
+          }
+        }
       )
-        .then((response: Response) => response.json())
-        .catch((err: Error) => {
-          Promise.reject(err);
-        });
-      if (response.ResponseCode == 200) {
-        _onEditMemory(data.nid, navigation);
-      } else {
-        loaderHandler.hideLoader();
-      }
+        // .then((response: Response) => response.json())
+        // .catch((err: Error) => {
+        //   Promise.reject(err);
+        // });
+      
       break;
     case MemoryActionKeys.cancelActionKey:
       break;

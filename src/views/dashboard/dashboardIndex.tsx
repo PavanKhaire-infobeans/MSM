@@ -175,6 +175,13 @@ class DashboardIndex extends React.Component<Props> {
           },
         },
         kGetInvidualNotification,
+        response =>{
+          if (response.ResponseCode == 200) {
+            this.notificationCallback(true, response['Details']);
+          } else {
+            this.notificationCallback(false, response['ResponseMessage']);
+          }
+        }
       );
     } else {
       No_Internet_Warning();
@@ -195,6 +202,13 @@ class DashboardIndex extends React.Component<Props> {
             },
           },
           kGetInvidualNotification,
+          response=>{
+            if (response.ResponseCode == 200) {
+              this.notificationCallback(true, response['Details']);
+            } else {
+              this.notificationCallback(false, response['ResponseMessage']);
+            }
+          }
         );
       } else {
         No_Internet_Warning();
@@ -203,7 +217,6 @@ class DashboardIndex extends React.Component<Props> {
   }
 
   notificationCallback = (success: any, details: any) => {
-    loaderHandler.hideLoader();
     if (success && Utility.isInternetConnected) {
       details = this.notificationModel.getNotificationDetails(
         details.data,
@@ -229,7 +242,8 @@ class DashboardIndex extends React.Component<Props> {
             // this.props.navigation.navigate("memoryDetails", { "nid": details.nid, "type": details.type })
           }
         }
-      } else {
+      } 
+      else {
         //showConsoleLog(ConsoleType.LOG,"foreground",details);
         if (
           details.notificationType !== 'prompt_of_the_week_email' &&
@@ -244,6 +258,8 @@ class DashboardIndex extends React.Component<Props> {
     } else if (!Utility.isInternetConnected) {
       No_Internet_Warning();
     }
+    loaderHandler.hideLoader();
+
   };
 
   convertToMemory(id: any, title: any) {
@@ -365,7 +381,8 @@ class DashboardIndex extends React.Component<Props> {
               ref={(ref: any) => {
                 this.scrollableTabView = ref;
               }}
-              style={Styles.fullWidth}
+              nestedScrollEnabled={true} overScrollMode='always'
+              style={[Styles.fullWidth,{flex: 1,}]}
               scrollEnabled={Platform.OS == 'ios' ? true : false}
               locked={Platform.OS == 'ios' ? false : true}
               initialPage={0}

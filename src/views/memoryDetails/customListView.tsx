@@ -152,7 +152,7 @@ export default class CustomListView extends React.Component<Props> {
               marginBottom: 15,
               backgroundColor: '#fff',
             }}
-            renderItem={(item: any) => this.renderCommentView(item)}
+            renderItem={this.renderCommentView}
           />
         </View>
       </SafeAreaView>

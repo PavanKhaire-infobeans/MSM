@@ -96,7 +96,15 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
       }
       else {
-        GetMemoryDrafts('all', 'all', memoryDraftsArray.length);
+        GetMemoryDrafts('all', 'all', memoryDraftsArray.length,
+        response =>{
+          if (response.ResponseCode == 200) {
+            this.memoryDraftDetails(true, response['Data'])
+          } else {
+            this.memoryDraftDetails(false, response['ResponseMessage'])
+          }
+
+        });
       }
     } else {
       No_Internet_Warning();
@@ -112,7 +120,6 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   memoryDraftDetails = (fetched: boolean, memoryDraftDetails: any) => {
     loadingDataFromServer = false;
-    loaderHandler.hideLoader();
     if (fetched) {
       if (this.state.isRefreshing) {
         memoryDraftsArray = [];
@@ -141,7 +148,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     this.setState({
       isRefreshing: false,
       loading: false,
-    });
+    },()=>loaderHandler.hideLoader());
   };
 
   deleteDraft = (nid: any, isDeleting: boolean) => {
@@ -222,23 +229,63 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           }
           switch (type) {
             case DraftType.allDrafts: {
-              GetMemoryDrafts('all', 'all', length);
+              GetMemoryDrafts('all', 'all', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
             case DraftType.myCollaborationDrafts: {
-              GetMemoryDrafts('mine', 'my_collaborative', length);
+              GetMemoryDrafts('mine', 'my_collaborative', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
             case DraftType.myPersonalDrafts: {
-              GetMemoryDrafts('mine', 'my_personal', length);
+              GetMemoryDrafts('mine', 'my_personal', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
             case DraftType.friendsDrafts: {
-              GetMemoryDrafts('friends', 'all', length);
+              GetMemoryDrafts('friends', 'all', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
             case DraftType.recentryDeleteDrafts: {
-              GetMemoryDrafts('deleted', 'all', length);
+              GetMemoryDrafts('deleted', 'all', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
           }
@@ -337,14 +384,14 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               ]}
               tintColor={Colors.NewThemeColor}
               refreshing={this.state.isRefreshing}
-              onRefresh={this.onRefresh.bind(this)}
+              onRefresh={()=>this.onRefresh()}
             />
           }
           // keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={this.renderSeparator}
-          ListFooterComponent={this.renderFooter.bind(this)}
+          ItemSeparatorComponent={()=>this.renderSeparator()}
+          ListFooterComponent={()=>this.renderFooter()}
           onEndReachedThreshold={0.4}
-          onEndReached={this.handleLoadMore.bind(this)}
+          onEndReached={()=>this.handleLoadMore()}
         />
         {memoryDraftsArray.length == 0 && loadingDataFromServer == false ? (
           <View style={styles.memoryDraftsArrayStyle} pointerEvents="none">

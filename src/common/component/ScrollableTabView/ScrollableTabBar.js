@@ -190,8 +190,8 @@ const ScrollableTabBar = createReactClass({
           ref={scrollView => {
             this._scrollView = scrollView;
           }}
+          nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}
           horizontal={true}
-          nestedScrollEnabled={true}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           directionalLockEnabled={true}

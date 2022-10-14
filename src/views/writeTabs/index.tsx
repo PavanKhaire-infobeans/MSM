@@ -61,10 +61,10 @@ const WriteTabs = props => {
 
   useEffect(() => {
     notificationModel = new NotificationDataModel();
-    const notificationListener = EventManager.addListener(
-      kGetInvidualNotification,
-      notificationCallback,
-    );
+    // const notificationListener = EventManager.addListener(
+    //   kGetInvidualNotification,
+    //   notificationCallback,
+    // );
     const foregroundNotification = EventManager.addListener(
       kForegroundNotice,
       foregroundNotificationCallback,
@@ -103,7 +103,7 @@ const WriteTabs = props => {
     // }
     return () => {
       props.showAlertCall(false);
-      notificationListener.removeListener();
+      // notificationListener.removeListener();
       foregroundNotification.removeListener();
       backgroundNotification.removeListener();
       memoryActionsListener.removeListener();
@@ -146,6 +146,13 @@ const WriteTabs = props => {
           },
         },
         kGetInvidualNotification,
+        response=>{
+          if (response.ResponseCode == 200) {
+            notificationCallback(true, response['Details']);
+          } else {
+            notificationCallback(false, response['ResponseMessage']);
+          }
+        }
       );
     } else {
       No_Internet_Warning();
@@ -166,6 +173,13 @@ const WriteTabs = props => {
             },
           },
           kGetInvidualNotification,
+          response=>{
+            if (response.ResponseCode == 200) {
+              notificationCallback(true, response['Details']);
+            } else {
+              notificationCallback(false, response['ResponseMessage']);
+            }
+          }
         );
       } else {
         No_Internet_Warning();

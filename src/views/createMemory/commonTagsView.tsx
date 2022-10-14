@@ -252,7 +252,7 @@ class CommonListCreateMemory extends React.Component<Props, State> {
               showsHorizontalScrollIndicator={false}
               data={this.props.recentTags}
               style={style.imagebuttonStyle}
-              renderItem={(item: any) => this.renderTagsItem(item)}
+              renderItem={this.renderTagsItem}
             />
           </View>
         ) : null}

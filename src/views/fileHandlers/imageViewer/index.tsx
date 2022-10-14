@@ -182,7 +182,7 @@ export default class ImageViewer extends React.Component<Props> {
           />
           {this.state.viewDetails && (
             <View style={Styles.viewDetailsContainer}>
-              <ScrollView>
+              <ScrollView nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}>
                 <Text style={Styles.fileTitle}>
                   {this.props?.route?.params?.files[this.state.activeSlide].file_title}
                 </Text>

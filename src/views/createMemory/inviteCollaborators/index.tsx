@@ -369,7 +369,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                 )}
               </View>
             ) : (
-              <ScrollView>
+              <ScrollView nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}>
                 <View style={Styles.collabrationContainer}>
                   <Image source={team_icon} style={Styles.visiblityImageContainer} />
                   <Text

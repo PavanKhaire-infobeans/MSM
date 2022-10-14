@@ -76,6 +76,81 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
       <View style={{ height: 8, backgroundColor: 'linear-gradient(0deg, rgba(20, 20, 20, 0.15), rgba(20, 20, 20, 0.15)), rgba(255, 255, 255, 0.7)' }}></View>
     )
   }
+
+  renderItem = ({
+    item: data,
+  }: {
+    item: MemoryActionsSheetItem;
+  }) => {
+    return (
+      <>
+        {this.firstpart == false && data.isDestructive == 1
+          ? this.doSome()
+          : null}
+
+        <TouchableOpacity
+          onPress={() => {
+            this.props.memoryActions
+              ? this.props.onActionClick &&
+              this.props.onActionClick(data.index, data)
+              : this.props.onActionClick &&
+              this.props.onActionClick(data.index);
+            this.hideSheet();
+            Keyboard.dismiss();
+
+            {
+              this.props.popToAddContent &&
+                this.props.navigation.popTo('addContent');
+            }
+          }}>
+          <View
+            style={[
+              styles.flatlistContainer,
+              {
+                borderTopLeftRadius: data.index == 1 ? 10 : 0,
+                borderTopRightRadius: data.index == 1 ? 10 : 0,
+              },
+            ]}>
+            {Platform.OS == 'android' ? (
+              <View
+                style={[
+                  styles.ioSContainer,
+                  {
+                    borderTopLeftRadius:
+                      data.index == 0 ? 10 : 0,
+                    borderTopRightRadius:
+                      data.index == 0 ? 10 : 0,
+                  },
+                ]}>
+                {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
+                {/* <Image source={ data.isDestructive == 1 ? redstar : blackStar } resizeMode="contain" /> */}
+              </View>
+            ) : null}
+
+            <TextNew style={styles.textStyle}>
+              {data.text}
+            </TextNew>
+
+            {Platform.OS == 'ios' ? (
+              <View
+                style={[
+                  styles.iosTextStyle,
+                  {
+                    borderTopLeftRadius:
+                      data.index == 0 ? 10 : 0,
+                    borderTopRightRadius:
+                      data.index == 0 ? 10 : 0,
+                  },
+                ]}>
+                {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
+              </View>
+            ) : null}
+          </View>
+        </TouchableOpacity>
+      </>
+    );
+  };
+
   render() {
     if (this.state.hidden || this.props.actions.length == 0) {
       return <View style={styles.hiddenView} />;
@@ -122,79 +197,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                   // ItemSeparatorComponent={({ leadingItem }: { highlighted: boolean, leadingItem: MemoryActionsSheetItem }) => {
                   //     return (<View style={{ height: 1, backgroundColor: (leadingItem.index == (this.props.actions.length - 1)) ? 'rgba(0.35, 0.35, 0.35, 0.2)' : 'white' }} />)
                   // }}
-                  renderItem={({
-                    item: data,
-                  }: {
-                    item: MemoryActionsSheetItem;
-                  }) => {
-                    return (
-                      <>
-                        {this.firstpart == false && data.isDestructive == 1
-                          ? this.doSome()
-                          : null}
-
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.props.memoryActions
-                              ? this.props.onActionClick &&
-                              this.props.onActionClick(data.index, data)
-                              : this.props.onActionClick &&
-                              this.props.onActionClick(data.index);
-                            this.hideSheet();
-                            Keyboard.dismiss();
-
-                            {
-                              this.props.popToAddContent &&
-                                this.props.navigation.popTo('addContent');
-                            }
-                          }}>
-                          <View
-                            style={[
-                              styles.flatlistContainer,
-                              {
-                                borderTopLeftRadius: data.index == 1 ? 10 : 0,
-                                borderTopRightRadius: data.index == 1 ? 10 : 0,
-                              },
-                            ]}>
-                            {Platform.OS == 'android' ? (
-                              <View
-                                style={[
-                                  styles.ioSContainer,
-                                  {
-                                    borderTopLeftRadius:
-                                      data.index == 0 ? 10 : 0,
-                                    borderTopRightRadius:
-                                      data.index == 0 ? 10 : 0,
-                                  },
-                                ]}>
-                                {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
-                                {/* <Image source={ data.isDestructive == 1 ? redstar : blackStar } resizeMode="contain" /> */}
-                              </View>
-                            ) : null}
-
-                            <TextNew style={styles.textStyle}>
-                              {data.text}
-                            </TextNew>
-
-                            {Platform.OS == 'ios' ? (
-                              <View
-                                style={[
-                                  styles.iosTextStyle,
-                                  {
-                                    borderTopLeftRadius:
-                                      data.index == 0 ? 10 : 0,
-                                    borderTopRightRadius:
-                                      data.index == 0 ? 10 : 0,
-                                  },
-                                ]}>
-                                {/* <Image source={data.image ? data.image : data.isDestructive == 1 ? redstar : blackStar} resizeMode="contain" /> */}
-                              </View>
-                            ) : null}
-                          </View>
-                        </TouchableOpacity>
-                      </>
-                    );
-                  }}
+                  renderItem={this.renderItem}
                 />
               </View>
             </Animated.View>

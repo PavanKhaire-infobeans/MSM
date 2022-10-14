@@ -2,7 +2,7 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import { Storage } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
-import { MemoryService } from '../../common/webservice/memoryServices';
+import { MemoryService, newMemoryService } from '../../common/webservice/memoryServices';
 export const kActivities = 'activitiesFetched';
 export const kSeenData = 'seenData';
 export const kNotificationTypes = 'notificationTypes';
@@ -13,42 +13,51 @@ export const kBackgroundNotice = 'backgroundNotice';
 export const kForegroundNotificationListener = 'foregroundNotificationListener';
 export const kActivityListener = 'activityListener';
 
-export const GetActivities = async (details: any, listener: any) => {
+export const GetActivities = async (details: any, listener: any, CB: any) => {
   try {
     let data = await Storage.get('userData');
-    let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+    let response = await newMemoryService(
+      `https://${Account.selectedData().instanceURL
       }/api/activities/get_activity_data`,
       [
         {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0', details: details},
+        { configurationTimestamp: '0', details: details },
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        loaderHandler.hideLoader();
-        Promise.reject(err);
-      });
-    if (response != undefined && response != null) {
-      if (response.ResponseCode == 200) {
-        EventManager.callBack(listener, true, response['Details']);
-        // EventManager.callBack(kLoadMore, true, response["Details"]);
-      } else {
-        EventManager.callBack(listener, false, response['ResponseMessage']);
-        // EventManager.callBack(kLoadMore, false, response["ResponseMessage"]);
+      response => {
+        if (response != undefined && response != null) {
+          CB(response)
+          // if (response.ResponseCode == 200) {
+          //   EventManager.callBack(listener, true, response['Details']);
+          //   // EventManager.callBack(kLoadMore, true, response["Details"]);
+          // } else {
+          //   EventManager.callBack(listener, false, response['ResponseMessage']);
+          //   // EventManager.callBack(kLoadMore, false, response["ResponseMessage"]);
+          // }
+        }
+        else{
+          CB({ResponseCode:400,ResponseMessage:'Unable to process your request. Please try again later'})
+
+        }
       }
-    }
-  } catch (err) {
-    EventManager.callBack(
-      listener,
-      false,
-      'Unable to process your request. Please try again later',
-    );
-    loaderHandler.hideLoader();
+    )
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   loaderHandler.hideLoader();
+    //   Promise.reject(err);
+    // });
+
+  } 
+  catch (err) {
+    CB({ResponseCode:400,ResponseMessage:'Unable to process your request. Please try again later'})
+    // EventManager.callBack(
+    //   listener,
+    //   false,
+    //   'Unable to process your request. Please try again later',
+    // );
+    // loaderHandler.hideLoader();
   }
 };
 
@@ -56,15 +65,14 @@ export const SetSeenActivity = async (ids: any, index: any) => {
   try {
     let data = await Storage.get('userData');
     let response = await MemoryService(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/notifications/set_seen_data`,
       [
         {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0', details: ids},
+        { configurationTimestamp: '0', details: ids },
       ],
     )
       .then((response: Response) => response.json())

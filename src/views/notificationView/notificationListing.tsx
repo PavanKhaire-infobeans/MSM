@@ -311,9 +311,9 @@ class NotificationListing extends React.Component<Props> {
                     onRefresh={() => this.refreshNotifications()}
                   />
                 }
-                ListFooterComponent={this.renderFooter.bind(this)}
+                ListFooterComponent={()=>this.renderFooter()}
                 onEndReachedThreshold={0.5}
-                onEndReached={this.handleLoadMore.bind(this)}
+                onEndReached={()=>this.handleLoadMore()}
               />
               {this.props.notificationList[this.state.index].total_count ==
               0 ? (

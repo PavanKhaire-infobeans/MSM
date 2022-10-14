@@ -57,15 +57,62 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
       useNativeDriver: true,
     }).start(() => {
       // setTimeout(() => {
-        setState(prevState =>
-        ({
-          ...prevState,
-          hidden: true
-        }))
+      setState(prevState =>
+      ({
+        ...prevState,
+        hidden: true
+      }))
       // }, 20);
     });
   };
 
+  const listHeader = () => (
+    <View
+      style={[styles.listContainer, styles.listHeaderStyle]}>
+      {/* <Image source={data.image} resizeMode="contain" /> */}
+      <TextNew
+        style={[styles.listText, styles.actionSheetHeaderText]}>
+        {props.actions && props.actions.length && props.actions[0] && props.actions[0].text.includes('Yes,') ? `Are you done writing this memory?` : `Save for later?`}
+      </TextNew>
+    </View>
+  );
+
+  const renderItem = ({ item: data }: { item: ActionSheetItem }) => {
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          props.memoryActions ? props.onActionClick && props.onActionClick(data.index, data)
+            : props.onActionClick && props.onActionClick(data.index);
+          hideSheet();
+          Keyboard.dismiss();
+          // {
+          //   props.popToAddContent &&
+          //     Actions.popTo('addContent');
+          // }
+          // setShowModal(false)
+        }}>
+        <View
+          style={[styles.listContainer, {
+            borderRadius: data.text.toLowerCase().includes('cancel') ? 13 : 0,
+            borderBottomColor: Colors.a5a5a7,
+            borderBottomWidth: 1,
+            borderBottomLeftRadius: data.index == props.actions.length - 2 ? 13 : 0,
+            borderBottomRightRadius: data.index == props.actions.length - 2 ? 13 : 0,
+            backgroundColor: data.text.toLowerCase().includes('cancel') ? Colors.white : Colors.e0e0e0
+          }]}>
+          {/* <Image source={data.image} resizeMode="contain" /> */}
+          <TextNew
+            style={[styles.listText, {
+              color: data.text.includes('No,') ? Colors.systemRed : Colors.systemBlue,
+              fontWeight: data.index == props.actions.length - 1 ? '600' : '400',
+              textAlign: 'center'
+            }]}>
+            {data.text}
+          </TextNew>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  };
 
   useImperativeHandle(ref,
     () => ({
@@ -89,11 +136,11 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
           useNativeDriver: true,
         }).start(() => {
           // setTimeout(() => {
-            setState(prevState =>
-            ({
-              ...prevState,
-              hidden: true
-            }))
+          setState(prevState =>
+          ({
+            ...prevState,
+            hidden: true
+          }))
           // }, 20);
         });
       }
@@ -138,16 +185,7 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
                 }}
                 initialNumToRender={props.actions.length}
                 removeClippedSubviews={true}
-                ListHeaderComponent={() => (
-                  <View
-                    style={[styles.listContainer, styles.listHeaderStyle]}>
-                    {/* <Image source={data.image} resizeMode="contain" /> */}
-                    <TextNew
-                      style={[styles.listText, styles.actionSheetHeaderText]}>
-                      {props.actions && props.actions.length && props.actions[0] && props.actions[0].text.includes('Yes,') ? `Are you done writing this memory?` : `Save for later?`}
-                    </TextNew>
-                  </View>
-                )}
+                ListHeaderComponent={listHeader}
                 ItemSeparatorComponent={({
                   leadingItem,
                 }: {
@@ -163,42 +201,7 @@ const ActionSheet = forwardRef((props: Props, ref: any) => {
                     />
                   );
                 }}
-                renderItem={({ item: data }: { item: ActionSheetItem }) => {
-                  return (
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        props.memoryActions ? props.onActionClick && props.onActionClick(data.index, data)
-                          : props.onActionClick && props.onActionClick(data.index);
-                        hideSheet();
-                        Keyboard.dismiss();
-                        // {
-                        //   props.popToAddContent &&
-                        //     Actions.popTo('addContent');
-                        // }
-                        // setShowModal(false)
-                      }}>
-                      <View
-                        style={[styles.listContainer, {
-                          borderRadius: data.text.toLowerCase().includes('cancel') ? 13 : 0,
-                          borderBottomColor: Colors.a5a5a7,
-                          borderBottomWidth: 1,
-                          borderBottomLeftRadius: data.index == props.actions.length - 2 ? 13 : 0,
-                          borderBottomRightRadius: data.index == props.actions.length - 2 ? 13 : 0,
-                          backgroundColor: data.text.toLowerCase().includes('cancel') ? Colors.white : Colors.e0e0e0
-                        }]}>
-                        {/* <Image source={data.image} resizeMode="contain" /> */}
-                        <TextNew
-                          style={[styles.listText, {
-                            color: data.text.includes('No,') ? Colors.systemRed : Colors.systemBlue,
-                            fontWeight: data.index == props.actions.length - 1 ? '600' : '400',
-                            textAlign: 'center'
-                          }]}>
-                          {data.text}
-                        </TextNew>
-                      </View>
-                    </TouchableWithoutFeedback>
-                  );
-                }}
+                renderItem={renderItem}
               />
             </View>
           </Animated.View>

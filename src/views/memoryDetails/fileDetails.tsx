@@ -44,7 +44,7 @@ export default class FilesDetail extends React.Component<Props> {
             barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
-          <ScrollView>
+          <ScrollView nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}>
             <TouchableOpacity onPress={() => this.navigateToViews()}>
               <View
                 style={{

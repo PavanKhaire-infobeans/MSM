@@ -379,6 +379,17 @@ export default class PublishedMemory extends React.Component<Props, State> {
     });
   };
 
+  renderItem = (item: any) => (
+    <MemoryListItem
+      item={item}
+      like={this.like}
+      listType={ListType.Published}
+      audioView={this.audioView}
+      openMemoryActions={this.openMemoryActions.bind(this)}
+      navigation={this.props.navigation}
+    />
+  );
+
   render() {
     return (
       <View style={{flex: 1}}>
@@ -400,16 +411,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
               onScroll={() => {
                 Keyboard.dismiss();
               }}
-              renderItem={(item: any) => (
-                <MemoryListItem
-                  item={item}
-                  like={this.like}
-                  listType={ListType.Published}
-                  audioView={this.audioView}
-                  openMemoryActions={this.openMemoryActions.bind(this)}
-                  navigation={this.props.navigation}
-                />
-              )}
+              renderItem={this.renderItem}
               maxToRenderPerBatch={5}
               removeClippedSubviews={true}
               refreshControl={
@@ -421,13 +423,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     Platform.OS === 'android' ? Colors.NewThemeColor : '#fff'
                   }
                   refreshing={this.state.isRefreshing}
-                  onRefresh={this.onRefresh.bind(this)}
+                  onRefresh={()=>this.onRefresh()}
                 />
               }
               keyExtractor={(item, index) => index.toString()}
-              ListFooterComponent={this.renderFooter.bind(this)}
+              ListFooterComponent={()=>this.renderFooter()}
               onEndReachedThreshold={0.4}
-              onEndReached={this.handleLoadMore.bind(this)}
+              onEndReached={()=>this.handleLoadMore()}
             />
             {publishedMemoriesArray.length == 0 && (
               <View

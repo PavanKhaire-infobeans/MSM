@@ -235,10 +235,11 @@ export const UpdateAttachments = async (
   nid: any,
   fileDetails: any,
   key: any,
+  CB: any,
 ) => {
   try {
     let data = await Storage.get('userData');
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL
       }/api/mystory/edit_delete_file`,
       [
@@ -248,19 +249,18 @@ export const UpdateAttachments = async (
         },
         { details: { nid: nid, type: 'my_stories', file_details: fileDetails } },
       ],
+      response => {
+        CB(response)
+      }
     )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   Promise.reject(err);
+    // });
 
-    if (response.ResponseCode == 200) {
-      EventManager.callBack(kFilesUpdated, true, key);
-    } else {
-      EventManager.callBack(kFilesUpdated, false, response.ResponseMessage);
-    }
   } catch (err) {
-    EventManager.callBack(kFilesUpdated, false, 'Unable to update memory');
+    CB({ ResponseCode: 400, ResponseMessage: 'Unable to update memory' })
+    // EventManager.callBack(kFilesUpdated, false, 'Unable to update memory');
   }
 };
 

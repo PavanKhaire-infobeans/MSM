@@ -182,15 +182,22 @@ export default class MemoryDetails extends React.Component<Props, State> {
     this.memoryDataModel = new MemoryDataModel();
     if (!this.props.previewDraft) {
       loaderHandler.showLoader();
-      GetMemoryDetails(this.nid, this.storyType);
+      GetMemoryDetails(this.nid, this.storyType,
+        response => {
+          if (response.ResponseCode == 200) {
+            this.memoryDetails(true,response['Details']);
+          } else {
+            this.memoryDetails(false,response['ResponseMessage']);
+          }
+        });
     }
-    this.memoryDetailsUpdateListener = EventManager.addListener(
-      'memoryDetailsListener',
-      () => {
-        loaderHandler.showLoader();
-        GetMemoryDetails(this.nid, this.storyType);
-      },
-    );
+    // this.memoryDetailsUpdateListener = EventManager.addListener(
+    //   'memoryDetailsListener',
+    //   () => {
+    //     loaderHandler.showLoader();
+    //     GetMemoryDetails(this.nid, this.storyType);
+    //   },
+    // );
 
     this.memoryDetailsListener = EventManager.addListener(
       kMemoryDetailsFetched,
@@ -2144,7 +2151,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                   : this.InternalQueue()}
 
                 {this.storyType.indexOf('song') != -1 ? (
-                  <ScrollView>
+                  <ScrollView nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}>
                     <WebView
                       useWebKit={true}
                       ref={(ref: any) => (this._webView = ref)}

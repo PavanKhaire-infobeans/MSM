@@ -633,6 +633,7 @@ const Profile = props => {
           {Utility.isInternetConnected ? (
             <ScrollView
               contentContainerStyle={{width: deviceWidth}}
+              nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}

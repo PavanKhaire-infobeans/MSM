@@ -379,9 +379,9 @@ export default class PromptsView extends React.Component<State, Props> {
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatlistStyle}
               renderItem={this.renderItem}
-              ListFooterComponent={this.renderFooter.bind(this)}
+              ListFooterComponent={()=>this.renderFooter()}
               onEndReachedThreshold={0.4}
-              onEndReached={this.loadMorePrompts.bind(this)}
+              onEndReached={()=>this.loadMorePrompts()}
             />
             {this.state.items.length == 0 && (
               <View style={Styles.noPromptContainer}>

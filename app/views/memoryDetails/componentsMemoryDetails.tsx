@@ -58,6 +58,116 @@ export const MemoryCollections = (props: {
   selectedCollectionIndex: any;
   changeIndex: (index: any) => void;
 }) => {
+
+  const renderItem = (item: any) => (
+    <TouchableHighlight
+      underlayColor={'none'}
+      onPress={() => props.changeIndex(item.index)}>
+      <View
+        style={[
+          Styles.collectionListContainer,
+          {
+            backgroundColor:
+              item.index == props.selectedCollectionIndex
+                ? Colors.ThemeColor
+                : 'transparent',
+          },
+        ]}>
+        <View style={Styles.collectionListContainerSub}>
+          <Text style={Styles.collectionNameTextStyle}>
+            {item.item.name}
+          </Text>
+          <View style={Styles.memoryLengthContainer}>
+            <Text style={Styles.memorylengthTextStyle}>
+              {item.item.memories.length}
+            </Text>
+          </View>
+        </View>
+        <Text style={Styles.byTextStyle}>
+          {'By '}
+          {Account.selectedData().userID ==
+          props.collectionList[props.selectedCollectionIndex].user.uid
+            ? 'You'
+            : props.collectionList[props.selectedCollectionIndex].user
+                .username}
+        </Text>
+      </View>
+    </TouchableHighlight>
+  );
+
+  const carouselRenderItem= (item: any) => (
+    <TouchableHighlight
+      underlayColor="#cccccc3e"
+      onPress={() =>
+        this.props.navigation.navigate('memoryDetails', {
+          nid: item.item.nid,
+          type: item.item.type,
+        })
+      }>
+      <View style={Styles.carouselContainer}>
+        <View style={Styles.carouselContainerSub}>
+          <PlaceholderImageView
+            style={Styles.PlaceholderImageView}
+            uri={Utility.getFileURLFromPublicURL(item.item.uri)}
+            resizeMode={'contain'}
+          />
+        </View>
+
+        <Text style={Styles.titleTextStyle} numberOfLines={1}>
+          {item.item.title}
+        </Text>
+        <Text style={Styles.locationTextStyle} numberOfLines={1}>
+          {item.item.date}
+          {', '}
+          {item.item.location}
+        </Text>
+        <Border />
+        <View style={Styles.likeCommentContainer}>
+          <Text style={Styles.likeTextStyle}>
+            {item.item.likeCount > 0
+              ? item.item.likeCount > 1
+                ? item.item.likeCount + ' Likes'
+                : item.item.likeCount + ' Like'
+              : ''}
+          </Text>
+          <Text style={Styles.commentTextStyle}>
+            {item.item.commentCount > 0
+              ? item.item.commentCount > 1
+                ? item.item.commentCount + ' Comments'
+                : item.item.commentCount + ' Comment'
+              : ''}
+          </Text>
+        </View>
+
+        <Text style={Styles.whoelseTextStyle}>
+          {item.item.youWhereThere
+            ? item.item.whoElseWasThere.length > 0
+              ? 'You and '
+              : 'You '
+            : ''}
+          {item.item.whoElseWasThere.length > 0
+            ? item.item.whoElseWasThere.length
+            : ''}
+          {item.item.whoElseWasThere.length > 0
+            ? item.item.whoElseWasThere.length > 1
+              ? ' others '
+              : item.item.youWhereThere
+              ? ''
+              : ' other '
+            : ''}
+          <Text style={Styles.whoelseSubTextStyle}>
+            {item.item.whoElseWasThere.length > 0 ||
+            item.item.youWhereThere
+              ? item.item.whoElseWasThere.length > 1
+                ? 'were also there'
+                : 'was also there'
+              : ''}
+          </Text>
+        </Text>
+      </View>
+    </TouchableHighlight>
+  );
+
   return (
     <View style={[Styles.boxShadow, Styles.MemoryCollectionsContainer]}>
       <View style={Styles.MemoryCollectionsContainerSub}>
@@ -68,117 +178,13 @@ export const MemoryCollections = (props: {
         <FlatList
           data={props.collectionList}
           horizontal
-          renderItem={(item: any) => (
-            <TouchableHighlight
-              underlayColor={'none'}
-              onPress={() => props.changeIndex(item.index)}>
-              <View
-                style={[
-                  Styles.collectionListContainer,
-                  {
-                    backgroundColor:
-                      item.index == props.selectedCollectionIndex
-                        ? Colors.ThemeColor
-                        : 'transparent',
-                  },
-                ]}>
-                <View style={Styles.collectionListContainerSub}>
-                  <Text style={Styles.collectionNameTextStyle}>
-                    {item.item.name}
-                  </Text>
-                  <View style={Styles.memoryLengthContainer}>
-                    <Text style={Styles.memorylengthTextStyle}>
-                      {item.item.memories.length}
-                    </Text>
-                  </View>
-                </View>
-                <Text style={Styles.byTextStyle}>
-                  {'By '}
-                  {Account.selectedData().userID ==
-                  props.collectionList[props.selectedCollectionIndex].user.uid
-                    ? 'You'
-                    : props.collectionList[props.selectedCollectionIndex].user
-                        .username}
-                </Text>
-              </View>
-            </TouchableHighlight>
-          )}
+          nestedScrollEnabled
+          renderItem={renderItem}
         />
       </View>
       <Carousel
         data={props.collectionList[props.selectedCollectionIndex].memories}
-        renderItem={(item: any) => (
-          <TouchableHighlight
-            underlayColor="#cccccc3e"
-            onPress={() =>
-              this.props.navigation.navigate('memoryDetails', {
-                nid: item.item.nid,
-                type: item.item.type,
-              })
-            }>
-            <View style={Styles.carouselContainer}>
-              <View style={Styles.carouselContainerSub}>
-                <PlaceholderImageView
-                  style={Styles.PlaceholderImageView}
-                  uri={Utility.getFileURLFromPublicURL(item.item.uri)}
-                  resizeMode={'contain'}
-                />
-              </View>
-
-              <Text style={Styles.titleTextStyle} numberOfLines={1}>
-                {item.item.title}
-              </Text>
-              <Text style={Styles.locationTextStyle} numberOfLines={1}>
-                {item.item.date}
-                {', '}
-                {item.item.location}
-              </Text>
-              <Border />
-              <View style={Styles.likeCommentContainer}>
-                <Text style={Styles.likeTextStyle}>
-                  {item.item.likeCount > 0
-                    ? item.item.likeCount > 1
-                      ? item.item.likeCount + ' Likes'
-                      : item.item.likeCount + ' Like'
-                    : ''}
-                </Text>
-                <Text style={Styles.commentTextStyle}>
-                  {item.item.commentCount > 0
-                    ? item.item.commentCount > 1
-                      ? item.item.commentCount + ' Comments'
-                      : item.item.commentCount + ' Comment'
-                    : ''}
-                </Text>
-              </View>
-
-              <Text style={Styles.whoelseTextStyle}>
-                {item.item.youWhereThere
-                  ? item.item.whoElseWasThere.length > 0
-                    ? 'You and '
-                    : 'You '
-                  : ''}
-                {item.item.whoElseWasThere.length > 0
-                  ? item.item.whoElseWasThere.length
-                  : ''}
-                {item.item.whoElseWasThere.length > 0
-                  ? item.item.whoElseWasThere.length > 1
-                    ? ' others '
-                    : item.item.youWhereThere
-                    ? ''
-                    : ' other '
-                  : ''}
-                <Text style={Styles.whoelseSubTextStyle}>
-                  {item.item.whoElseWasThere.length > 0 ||
-                  item.item.youWhereThere
-                    ? item.item.whoElseWasThere.length > 1
-                      ? 'were also there'
-                      : 'was also there'
-                    : ''}
-                </Text>
-              </Text>
-            </View>
-          </TouchableHighlight>
-        )}
+        renderItem={carouselRenderItem}
         sliderWidth={Dimensions.get('window').width}
         itemWidth={Dimensions.get('window').width - 80}
       />
@@ -211,6 +217,24 @@ export const Border = (props: {
 };
 
 export const MemoryTags = (props: {memoryTags: any; onPressCallback?: any}) => {
+  const renderItem = (item: any) => (
+    <TouchableHighlight
+      underlayColor={'#ffffff33'}
+      onPress={() => {
+        if (
+          props.onPressCallback != undefined &&
+          props.onPressCallback != null
+        ) {
+          props.onPressCallback();
+        }
+      }}
+      style={Styles.MemoryTagsContainer}>
+      <Text style={[Styles.normalText, Styles.MemoryTagsNamestyle]}>
+        {item.item.name ? item.item.name : item.item}
+      </Text>
+    </TouchableHighlight>
+  );
+
   return (
     <FlatList
       horizontal
@@ -218,23 +242,7 @@ export const MemoryTags = (props: {memoryTags: any; onPressCallback?: any}) => {
       showsHorizontalScrollIndicator={false}
       data={props.memoryTags}
       style={Styles.MemoryTagsFlatlistStyle}
-      renderItem={(item: any) => (
-        <TouchableHighlight
-          underlayColor={'#ffffff33'}
-          onPress={() => {
-            if (
-              props.onPressCallback != undefined &&
-              props.onPressCallback != null
-            ) {
-              props.onPressCallback();
-            }
-          }}
-          style={Styles.MemoryTagsContainer}>
-          <Text style={[Styles.normalText, Styles.MemoryTagsNamestyle]}>
-            {item.item.name ? item.item.name : item.item}
-          </Text>
-        </TouchableHighlight>
-      )}
+      renderItem={renderItem}
     />
   );
 };

@@ -1,7 +1,7 @@
 import { ConsoleType, MemoryActionKeys, showConsoleLog, Storage } from './../../../src/common/constants';
 import EventManager from './../../../src/common/eventManager';
 import { Account } from './../../../src/common/loginStore';
-import { MemoryService } from './../../../src/common/webservice/memoryServices';
+import { MemoryService, newMemoryService } from './../../../src/common/webservice/memoryServices';
 export const kMemoryDraftsFetched = 'memoryDrafts';
 export const kMemoryMoveToDrafts = 'memoryMoveToDrafts';
 export const kPublishedMemoriesFetched = 'publishedMemories';
@@ -30,10 +30,11 @@ export const GetMemoryDrafts = async (
   type: any,
   mineType: any,
   offset: any,
+  CB: any,
 ) => {
   try {
     let data = await Storage.get('userData');
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/memory_draft/get`,
       [
         {
@@ -52,34 +53,21 @@ export const GetMemoryDrafts = async (
           },
         },
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-    if (response != undefined && response != null) {
-      if (response.ResponseCode == 200) {
-        EventManager.callBack(kMemoryDraftsFetched, true, response['Data']);
-      } else {
-        EventManager.callBack(
-          kMemoryDraftsFetched,
-          false,
-          response['ResponseMessage'],
-        );
+      response =>{
+        if (response != undefined && response != null) {
+          CB(response);
+        } else {
+          CB({ResponseCode : 400, ResponseMessage: 'Unable to process your request. Please try again later'});
+        }
       }
-    } else {
-      EventManager.callBack(
-        kMemoryDraftsFetched,
-        false,
-        'Unable to process your request. Please try again later',
-      );
-    }
+    )
+      // .then((response: Response) => response.json())
+      // .catch((err: Error) => {
+      //   Promise.reject(err);
+      // });
+   
   } catch (err) {
-    EventManager.callBack(
-      kMemoryDraftsFetched,
-      false,
-      'Unable to process your request. Please try again later',
-    );
+    CB({ResponseCode : 400, ResponseMessage: 'Unable to process your request. Please try again later'});  
   }
 };
 
@@ -236,6 +224,7 @@ export const MemoryAction = async (
   uid?: any,
   collections_nids?: any,
   listner?: any,
+  CB?: any,
 ) => {
   try {
     let data = await Storage.get('userData');
@@ -252,7 +241,7 @@ export const MemoryAction = async (
     if (actionType == MemoryActionKeys.addToCollection) {
       details = { ...details, collections_nids: collections_nids };
     }
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/actions/memory`,
       [
         {
@@ -261,76 +250,76 @@ export const MemoryAction = async (
         },
         { configurationTimestamp: '0', details },
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-    if (response != undefined && response != null) {
-      if (response.ResponseCode == 200) {
-        if (listner == kMemoryMoveToDrafts) {
-          showConsoleLog(
-            ConsoleType.ERROR,
-            "response lisner> ", listner)
-          return response;
-        }
-        else if (listner) {
-          EventManager.callBack(listner, true, 'Data', nid, actionType, uid);
-        }
-        else {
-          showConsoleLog(
-            ConsoleType.ERROR,
-            "response no listner> ", listner)
-          EventManager.callBack(
-            kMemoryActionPerformedPublished,
-            true,
-            'Data',
-            nid,
-            actionType,
-            uid,
-          );
-          EventManager.callBack(
-            kMemoryActionPerformedOnDashboard,
-            true,
-            'Data',
-            nid,
-            actionType,
-            uid,
-          );
-          EventManager.callBack(
-            kMemoryActionPerformedOnMemoryDetails,
-            true,
-            'Data',
-            nid,
-            actionType,
-            uid,
-          );
-        }
-      } else {
-        if (listner == kMemoryMoveToDrafts) {
-          return response;
-        }
-        else if (listner) {
-          EventManager.callBack(listner, false, response['ResponseMessage']);
-        } else {
-          EventManager.callBack(
-            kMemoryActionPerformedPublished,
-            false,
-            response['ResponseMessage'],
-          );
-          EventManager.callBack(
-            kMemoryActionPerformedOnDashboard,
-            false,
-            response['ResponseMessage'],
-          );
-          EventManager.callBack(
-            kMemoryActionPerformedOnMemoryDetails,
-            false,
-            response['ResponseMessage'],
-          );
+      response=>{
+        if (response != undefined && response != null) {
+          if (response.ResponseCode == 200) {
+            if (listner == kMemoryMoveToDrafts) {
+              return response;
+            }
+            else if (listner) {
+              EventManager.callBack(listner, true, 'Data', nid, actionType, uid);
+            }
+            else {
+              showConsoleLog(
+                ConsoleType.ERROR,
+                "response no listner> ", listner)
+              EventManager.callBack(
+                kMemoryActionPerformedPublished,
+                true,
+                'Data',
+                nid,
+                actionType,
+                uid,
+              );
+              EventManager.callBack(
+                kMemoryActionPerformedOnDashboard,
+                true,
+                'Data',
+                nid,
+                actionType,
+                uid,
+              );
+              EventManager.callBack(
+                kMemoryActionPerformedOnMemoryDetails,
+                true,
+                'Data',
+                nid,
+                actionType,
+                uid,
+              );
+            }
+          } else {
+            if (listner == kMemoryMoveToDrafts) {
+              return response;
+            }
+            else if (listner) {
+              EventManager.callBack(listner, false, response['ResponseMessage']);
+            } else {
+              EventManager.callBack(
+                kMemoryActionPerformedPublished,
+                false,
+                response['ResponseMessage'],
+              );
+              EventManager.callBack(
+                kMemoryActionPerformedOnDashboard,
+                false,
+                response['ResponseMessage'],
+              );
+              EventManager.callBack(
+                kMemoryActionPerformedOnMemoryDetails,
+                false,
+                response['ResponseMessage'],
+              );
+            }
+          }
         }
       }
-    }
+    )
+      // .then((response: Response) => response.json())
+      // .catch((err: Error) => {
+      //   Promise.reject(err);
+      // });
+    
   } catch (err) {
     if (listner) {
       EventManager.callBack(
@@ -364,10 +353,6 @@ export const GetPrompts = async (
   offsetValue: any,
 ) => {
   try {
-
-    showconsolelog(
-                    consoletype.error,
-                    "categories: categories, ", categories)
     let data = await Storage.get('userData');
     let response = await MemoryService(
       `https://${Account.selectedData().instanceURL}/api/prompts/list`,

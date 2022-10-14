@@ -781,6 +781,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           // extraData={this.state}
           renderItem={this.renderDraftView}
           maxToRenderPerBatch={5}
+          nestedScrollEnabled
           initialNumToRender={10}
           windowSize={5}
           removeClippedSubviews={true}
@@ -793,13 +794,13 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               ]}
               tintColor={Colors.NewThemeColor}
               refreshing={this.state.isRefreshing}
-              onRefresh={this.onRefresh.bind(this)}
+              onRefresh={()=>this.onRefresh()}
             />
           }
           ItemSeparatorComponent={this.renderSeparator}
-          ListFooterComponent={this.renderFooter.bind(this)}
+          ListFooterComponent={()=>this.renderFooter()}
           onEndReachedThreshold={0.4}
-          onEndReached={this.handleLoadMore.bind(this)}
+          onEndReached={()=>this.handleLoadMore()}
         />
         {this.state.memoryDraftsArray.length == 0 && loadingDataFromServer == false && firstRender == false? (
           <View

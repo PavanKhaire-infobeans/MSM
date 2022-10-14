@@ -70,6 +70,192 @@ export const MemoryCollections = (props: {
   changeIndex: (index: any) => void;
   navigation?: any;
 }) => {
+
+  const renderItem=(item: any) => (
+    <TouchableHighlight
+      underlayColor={'none'}
+      onPress={() => props.changeIndex(item.index)}>
+      <View
+        style={{
+          padding: 5,
+          paddingRight: 16,
+          paddingLeft: 16,
+          borderRadius: 5,
+          backgroundColor:
+            item.index == props.selectedCollectionIndex
+              ? Colors.ThemeColor
+              : 'transparent',
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Text
+            style={{
+              ...fontSize(18),
+              lineHeight: 20,
+              color: 'white',
+              fontFamily:
+                Platform.OS === 'ios'
+                  ? fontFamily.Inter
+                  : fontFamily.InterMedium,
+              fontWeight: '500',
+              marginBottom: 2,
+            }}>
+            {item.item.name}
+          </Text>
+          <View
+            style={{
+              padding: 1,
+              paddingLeft: 10,
+              paddingRight: 10,
+              marginLeft: 16,
+              marginBottom: 1,
+              borderRadius: 15,
+              borderColor: 'white',
+              borderWidth: 1,
+            }}>
+            <Text
+              style={{
+                ...fontSize(14),
+                color: 'white',
+                fontWeight: '500',
+              }}>
+              {item.item.memories.length}
+            </Text>
+          </View>
+        </View>
+        <Text style={{...fontSize(14), color: Colors.NewThemeColor}}>
+          {'By '}
+          {Account.selectedData().userID ==
+          props.collectionList[props.selectedCollectionIndex].user.uid
+            ? 'You'
+            : props.collectionList[props.selectedCollectionIndex].user
+                .username}
+        </Text>
+      </View>
+    </TouchableHighlight>
+  );
+
+  const carouselRenderItem =(item: any) => (
+    <TouchableHighlight
+      underlayColor="#cccccc3e"
+      onPress={() =>
+        props.navigation.navigate('memoryDetails', {
+          nid: item.item.nid,
+          type: item.item.type,
+        })
+      }>
+      <View
+        style={{width: '100%', backgroundColor: '#fff', borderRadius: 5}}>
+        <View
+          style={{
+            backgroundColor: '#F3F3F3',
+            width: '100%',
+            flex: 1,
+            borderTopLeftRadius: 5,
+            borderTopRightRadius: 5,
+          }}>
+          <PlaceholderImageView
+            style={{width: '100%', height: 150}}
+            uri={Utility.getFileURLFromPublicURL(item.item.uri)}
+            resizeMode={'contain'}
+          />
+        </View>
+
+        <Text
+          style={{
+            ...fontSize(24),
+            color: Colors.TextColor,
+            paddingRight: 15,
+            paddingLeft: 15,
+            paddingTop: 5,
+            paddingBottom: 5,
+          }}
+          numberOfLines={1}>
+          {item.item.title}
+        </Text>
+        <Text
+          style={{
+            ...fontSize(16),
+            color: Colors.TextColor,
+            padding: 15,
+            paddingTop: 5,
+            paddingBottom: 5,
+          }}
+          numberOfLines={1}>
+          {item.item.date}
+          {', '}
+          {item.item.location}
+        </Text>
+        <Border />
+        <View
+          style={{
+            padding: 15,
+            paddingTop: 5,
+            paddingBottom: 5,
+            flexDirection: 'row',
+          }}>
+          <Text
+            style={{
+              ...fontSize(16),
+              color: Colors.NewTitleColor,
+              fontWeight: '500',
+              marginRight: 20,
+            }}>
+            {item.item.likeCount > 0
+              ? item.item.likeCount > 1
+                ? item.item.likeCount + ' Likes'
+                : item.item.likeCount + ' Like'
+              : ''}
+          </Text>
+          <Text style={{...fontSize(16), color: Colors.TextColor}}>
+            {item.item.commentCount > 0
+              ? item.item.commentCount > 1
+                ? item.item.commentCount + ' Comments'
+                : item.item.commentCount + ' Comment'
+              : ''}
+          </Text>
+        </View>
+
+        <Text
+          style={{
+            ...fontSize(16),
+            color: Colors.NewTitleColor,
+            fontWeight: '500',
+            padding: 15,
+            paddingTop: 5,
+            paddingBottom: 5,
+          }}>
+          {item.item.youWhereThere
+            ? item.item.whoElseWasThere.length > 0
+              ? 'You and '
+              : 'You '
+            : ''}
+          {item.item.whoElseWasThere.length > 0
+            ? item.item.whoElseWasThere.length
+            : ''}
+          {item.item.whoElseWasThere.length > 0
+            ? item.item.whoElseWasThere.length > 1
+              ? ' others '
+              : item.item.youWhereThere
+              ? ''
+              : ' other '
+            : ''}
+          <Text style={{...fontSize(16), color: Colors.TextColor}}>
+            {item.item.whoElseWasThere.length > 0 ||
+            item.item.youWhereThere
+              ? item.item.whoElseWasThere.length > 1
+                ? 'were also there'
+                : 'was also there'
+              : ''}
+          </Text>
+        </Text>
+      </View>
+    </TouchableHighlight>
+  );
+
   return (
     <View
       style={[
@@ -97,72 +283,7 @@ export const MemoryCollections = (props: {
         <FlatList
           data={props.collectionList}
           horizontal
-          renderItem={(item: any) => (
-            <TouchableHighlight
-              underlayColor={'none'}
-              onPress={() => props.changeIndex(item.index)}>
-              <View
-                style={{
-                  padding: 5,
-                  paddingRight: 16,
-                  paddingLeft: 16,
-                  borderRadius: 5,
-                  backgroundColor:
-                    item.index == props.selectedCollectionIndex
-                      ? Colors.ThemeColor
-                      : 'transparent',
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text
-                    style={{
-                      ...fontSize(18),
-                      lineHeight: 20,
-                      color: 'white',
-                      fontFamily:
-                        Platform.OS === 'ios'
-                          ? fontFamily.Inter
-                          : fontFamily.InterMedium,
-                      fontWeight: '500',
-                      marginBottom: 2,
-                    }}>
-                    {item.item.name}
-                  </Text>
-                  <View
-                    style={{
-                      padding: 1,
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      marginLeft: 16,
-                      marginBottom: 1,
-                      borderRadius: 15,
-                      borderColor: 'white',
-                      borderWidth: 1,
-                    }}>
-                    <Text
-                      style={{
-                        ...fontSize(14),
-                        color: 'white',
-                        fontWeight: '500',
-                      }}>
-                      {item.item.memories.length}
-                    </Text>
-                  </View>
-                </View>
-                <Text style={{...fontSize(14), color: Colors.NewThemeColor}}>
-                  {'By '}
-                  {Account.selectedData().userID ==
-                  props.collectionList[props.selectedCollectionIndex].user.uid
-                    ? 'You'
-                    : props.collectionList[props.selectedCollectionIndex].user
-                        .username}
-                </Text>
-              </View>
-            </TouchableHighlight>
-          )}
+          renderItem={renderItem}
         />
         {/* : 
                         <Text style={{...fontSize(18), lineHeight: 20, color: Colors.TextColor, fontWeight: Platform.OS === "ios"? '500':'bold' , marginBottom:2}}>{props.collectionList[props.selectedCollectionIndex].name}</Text> 
@@ -171,123 +292,7 @@ export const MemoryCollections = (props: {
       </View>
       <Carousel
         data={props.collectionList[props.selectedCollectionIndex].memories}
-        renderItem={(item: any) => (
-          <TouchableHighlight
-            underlayColor="#cccccc3e"
-            onPress={() =>
-              props.navigation.navigate('memoryDetails', {
-                nid: item.item.nid,
-                type: item.item.type,
-              })
-            }>
-            <View
-              style={{width: '100%', backgroundColor: '#fff', borderRadius: 5}}>
-              <View
-                style={{
-                  backgroundColor: '#F3F3F3',
-                  width: '100%',
-                  flex: 1,
-                  borderTopLeftRadius: 5,
-                  borderTopRightRadius: 5,
-                }}>
-                <PlaceholderImageView
-                  style={{width: '100%', height: 150}}
-                  uri={Utility.getFileURLFromPublicURL(item.item.uri)}
-                  resizeMode={'contain'}
-                />
-              </View>
-
-              <Text
-                style={{
-                  ...fontSize(24),
-                  color: Colors.TextColor,
-                  paddingRight: 15,
-                  paddingLeft: 15,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                }}
-                numberOfLines={1}>
-                {item.item.title}
-              </Text>
-              <Text
-                style={{
-                  ...fontSize(16),
-                  color: Colors.TextColor,
-                  padding: 15,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                }}
-                numberOfLines={1}>
-                {item.item.date}
-                {', '}
-                {item.item.location}
-              </Text>
-              <Border />
-              <View
-                style={{
-                  padding: 15,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                  flexDirection: 'row',
-                }}>
-                <Text
-                  style={{
-                    ...fontSize(16),
-                    color: Colors.NewTitleColor,
-                    fontWeight: '500',
-                    marginRight: 20,
-                  }}>
-                  {item.item.likeCount > 0
-                    ? item.item.likeCount > 1
-                      ? item.item.likeCount + ' Likes'
-                      : item.item.likeCount + ' Like'
-                    : ''}
-                </Text>
-                <Text style={{...fontSize(16), color: Colors.TextColor}}>
-                  {item.item.commentCount > 0
-                    ? item.item.commentCount > 1
-                      ? item.item.commentCount + ' Comments'
-                      : item.item.commentCount + ' Comment'
-                    : ''}
-                </Text>
-              </View>
-
-              <Text
-                style={{
-                  ...fontSize(16),
-                  color: Colors.NewTitleColor,
-                  fontWeight: '500',
-                  padding: 15,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                }}>
-                {item.item.youWhereThere
-                  ? item.item.whoElseWasThere.length > 0
-                    ? 'You and '
-                    : 'You '
-                  : ''}
-                {item.item.whoElseWasThere.length > 0
-                  ? item.item.whoElseWasThere.length
-                  : ''}
-                {item.item.whoElseWasThere.length > 0
-                  ? item.item.whoElseWasThere.length > 1
-                    ? ' others '
-                    : item.item.youWhereThere
-                    ? ''
-                    : ' other '
-                  : ''}
-                <Text style={{...fontSize(16), color: Colors.TextColor}}>
-                  {item.item.whoElseWasThere.length > 0 ||
-                  item.item.youWhereThere
-                    ? item.item.whoElseWasThere.length > 1
-                      ? 'were also there'
-                      : 'was also there'
-                    : ''}
-                </Text>
-              </Text>
-            </View>
-          </TouchableHighlight>
-        )}
+        renderItem={carouselRenderItem}
         sliderWidth={Dimensions.get('window').width}
         itemWidth={Dimensions.get('window').width - 80}
       />

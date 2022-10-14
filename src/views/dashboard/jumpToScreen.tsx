@@ -181,6 +181,112 @@ const JumpToScreen = (props: Props) => {
     props.closeAction();
   };
 
+  const renderItem= ({item, index}) => (
+    <TouchableHighlight
+      underlayColor={'none'}
+      onPress={() => {
+        setSelectedDecade(item?.year);
+        setBackPress(false);
+        let tempYearArr = [];
+        for (let index = 0; index < 10; index++) {
+          let currentYear = new Date().getFullYear();
+          if (item?.value + index <= currentYear) {
+            tempYearArr.push(item?.value + index);
+          }
+        }
+        tempYearArr = tempYearArr.reverse();
+        tempYearArr = tempYearArr.map(item => {
+          return {name: item};
+        });
+        setyearArray(tempYearArr);
+        setyearArrayDisplay(tempYearArr);
+      }}
+      style={[
+        styles.newFilterItem,
+        item.year == selectedDecade
+          ? styles.shadowBoxStyle
+          : {},
+      ]}>
+      <>
+        <View style={styles.iconContainer}>{item.icon}</View>
+
+        <View style={styles.iconSeparator}></View>
+
+        <View style={styles.jumptoYearContainer}>
+          <Text style={[styles.filterTextJumpto]}>
+            {item.year}
+          </Text>
+        </View>
+      </>
+    </TouchableHighlight>
+  );
+
+  const renderYears = (item: any) => {
+    return (
+      <TouchableHighlight
+        underlayColor={'none'}
+        onPress={() => {
+          if (item.item.disabled == false) {
+            loaderHandler.showLoader('Loading...');
+            setSelectedYear(item?.item.name);
+            jumpToClicked(item?.item.name);
+          }
+        }}
+        disabled={
+          item.item.disabled == undefined
+            ? true
+            : item.item.disabled
+        }
+        style={[
+          styles.newFilterItem,
+          item.item.disabled == undefined
+            ? {
+                borderWidth: 0,
+                backgroundColor: Colors.white,
+                height: 76,
+                marginBottom: 16,
+              }
+            : {
+                borderColor:
+                  item.item.name == selectedYear
+                    ? Colors.decadeFilterBorder
+                    : Colors.bottomTabColor,
+                borderWidth: 2,
+                height: 76,
+                shadowColor:
+                  item.item.name == selectedYear
+                    ? '(0,0,0,0.1)'
+                    : undefined,
+                shadowOffset: {
+                  width: 0,
+                  height:
+                    item.item.name == selectedYear ? 1 : 0,
+                },
+                shadowOpacity:
+                  item.item.name == selectedYear ? 0.2 : 0,
+                shadowRadius:
+                  item.item.name == selectedYear ? 2.22 : 0,
+                elevation: 3,
+                backgroundColor: Colors.white,
+                marginBottom: 16,
+              },
+        ]}>
+        <Text
+          style={[
+            styles.filterTextJumpto,
+            {
+              color:
+                item.item.disabled == undefined
+                  ? '#858587'
+                  : Colors.bordercolor,
+            },
+          ]}>
+          {item.item.name}
+        </Text>
+      </TouchableHighlight>
+    );
+  };
+
   return (
     <View style={styles.jumptoScreenContainer}>
       <View style={Styles.jumptoCancelContainerStyle}>
@@ -196,7 +302,7 @@ const JumpToScreen = (props: Props) => {
       </View>
 
       <View style={styles.jumptoScreenSubContainer}>
-        <ScrollView nestedScrollEnabled={true}>
+        <ScrollView nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}>
           <View>
             <View style={[styles.fullWidth, styles.justifyalignCenetr]}>
               <View style={styles.separatorStyle}></View>
@@ -231,45 +337,7 @@ const JumpToScreen = (props: Props) => {
                   ItemSeparatorComponent={() => {
                     return <View style={styles.separatorStyle} />;
                   }}
-                  renderItem={({item, index, separators}) => (
-                    <TouchableHighlight
-                      underlayColor={'none'}
-                      onPress={() => {
-                        setSelectedDecade(item?.year);
-                        setBackPress(false);
-                        let tempYearArr = [];
-                        for (let index = 0; index < 10; index++) {
-                          let currentYear = new Date().getFullYear();
-                          if (item?.value + index <= currentYear) {
-                            tempYearArr.push(item?.value + index);
-                          }
-                        }
-                        tempYearArr = tempYearArr.reverse();
-                        tempYearArr = tempYearArr.map(item => {
-                          return {name: item};
-                        });
-                        setyearArray(tempYearArr);
-                        setyearArrayDisplay(tempYearArr);
-                      }}
-                      style={[
-                        styles.newFilterItem,
-                        item.year == selectedDecade
-                          ? styles.shadowBoxStyle
-                          : {},
-                      ]}>
-                      <>
-                        <View style={styles.iconContainer}>{item.icon}</View>
-
-                        <View style={styles.iconSeparator}></View>
-
-                        <View style={styles.jumptoYearContainer}>
-                          <Text style={[styles.filterTextJumpto]}>
-                            {item.year}
-                          </Text>
-                        </View>
-                      </>
-                    </TouchableHighlight>
-                  )}
+                  renderItem={renderItem}
                 />
               ) : (
                 <FlatList
@@ -280,71 +348,7 @@ const JumpToScreen = (props: Props) => {
                   initialNumToRender={10}
                   removeClippedSubviews={true}
                   style={styles.fullWidth}
-                  renderItem={(item: any) => {
-                    return (
-                      <TouchableHighlight
-                        underlayColor={'none'}
-                        onPress={() => {
-                          if (item.item.disabled == false) {
-                            loaderHandler.showLoader('Loading...');
-                            setSelectedYear(item?.item.name);
-                            jumpToClicked(item?.item.name);
-                          }
-                        }}
-                        disabled={
-                          item.item.disabled == undefined
-                            ? true
-                            : item.item.disabled
-                        }
-                        style={[
-                          styles.newFilterItem,
-                          item.item.disabled == undefined
-                            ? {
-                                borderWidth: 0,
-                                backgroundColor: Colors.white,
-                                height: 76,
-                                marginBottom: 16,
-                              }
-                            : {
-                                borderColor:
-                                  item.item.name == selectedYear
-                                    ? Colors.decadeFilterBorder
-                                    : Colors.bottomTabColor,
-                                borderWidth: 2,
-                                height: 76,
-                                shadowColor:
-                                  item.item.name == selectedYear
-                                    ? '(0,0,0,0.1)'
-                                    : undefined,
-                                shadowOffset: {
-                                  width: 0,
-                                  height:
-                                    item.item.name == selectedYear ? 1 : 0,
-                                },
-                                shadowOpacity:
-                                  item.item.name == selectedYear ? 0.2 : 0,
-                                shadowRadius:
-                                  item.item.name == selectedYear ? 2.22 : 0,
-                                elevation: 3,
-                                backgroundColor: Colors.white,
-                                marginBottom: 16,
-                              },
-                        ]}>
-                        <Text
-                          style={[
-                            styles.filterTextJumpto,
-                            {
-                              color:
-                                item.item.disabled == undefined
-                                  ? '#858587'
-                                  : Colors.bordercolor,
-                            },
-                          ]}>
-                          {item.item.name}
-                        </Text>
-                      </TouchableHighlight>
-                    );
-                  }}
+                  renderItem={renderYears}
                 />
               )}
             </View>

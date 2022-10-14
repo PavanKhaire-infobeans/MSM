@@ -109,6 +109,13 @@ export default class Activities extends React.Component<Props, State> {
         GetActivities(
           { type: 'activities', limit: 20, offset: initialOffset },
           kActivities,
+          response => {
+            if (response.ResponseCode == 200) {
+              this.populateActivities(true, response['Details']);
+            } else {
+              this.populateActivities(false, response['ResponseMessage']);
+            }
+          }
         );
       } else {
         No_Internet_Warning();
@@ -241,9 +248,9 @@ export default class Activities extends React.Component<Props, State> {
             />
           }
           // keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={this.renderFooter.bind(this)}
+          ListFooterComponent={() => this.renderFooter()}
           onEndReachedThreshold={0.5}
-          onEndReached={this.handleLoadMore.bind(this)}
+          onEndReached={() => this.handleLoadMore()}
         />
         {this.state.count == 0 && !this.state.loadingDataFromServer ? (
           <View style={styles.noActivityCOntainerStyle} pointerEvents="none">

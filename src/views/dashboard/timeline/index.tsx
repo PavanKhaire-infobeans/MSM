@@ -602,7 +602,7 @@ const Timeline = (props: Props) => {
       </>
     </TouchableHighlight>
   );
-
+  
   return (
     <View style={styles.fullFlex}>
       <SafeAreaView style={styles.container}>
@@ -891,25 +891,23 @@ const Timeline = (props: Props) => {
             )}
             renderItem={renderList}
             indicatorStyle="white"
-            refreshControl={
-              <RefreshControl
-                colors={[
-                  Platform.OS === 'android'
-                    ? Colors.NewThemeColor
-                    : Colors.newTextColor,
-                ]}
-                tintColor={
-                  Platform.OS === 'android'
-                    ? Colors.NewThemeColor
-                    : Colors.newTextColor
-                }
-                refreshing={props.refresh}
-                onRefresh={onRefresh.bind(this)}
-              />
-            }
-            ListFooterComponent={renderFooter.bind(this)}
+            refreshControl={<RefreshControl
+              colors={[
+                Platform.OS === 'android'
+                  ? Colors.NewThemeColor
+                  : Colors.newTextColor,
+              ]}
+              tintColor={
+                Platform.OS === 'android'
+                  ? Colors.NewThemeColor
+                  : Colors.newTextColor
+              }
+              refreshing={props.refresh}
+              onRefresh={onRefresh}
+            />}
+            ListFooterComponent={renderFooter}
             onEndReachedThreshold={0.4}
-            onEndReached={handleLoadMore.bind(this)}
+            onEndReached={handleLoadMore}
           // onEndReached={(props.timelineList && props.timelineList.length > 2) ? handleLoadMore.bind(this) : () => { }}
           />
           {props.timelineList.length == 0 && (

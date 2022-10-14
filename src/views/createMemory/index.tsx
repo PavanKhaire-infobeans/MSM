@@ -921,7 +921,16 @@ class CreateMemory extends React.Component<Props> {
       if (Utility.isInternetConnected) {
         // setTimeout(() => {
         if (this.filesToUpdate.length > 0) {
-          UpdateAttachments(this.props.nid, this.filesToUpdate, key);
+          UpdateAttachments(this.props.nid, this.filesToUpdate, key,
+            response =>{
+              if (response.ResponseCode == 200) {
+                this.fileUpdateCallback(true, response.ResponseMessage,key)
+              
+              } else {
+                this.fileUpdateCallback(false, response.ResponseMessage,key)
+                // EventManager.callBack(kFilesUpdated, false, response.ResponseMessage);
+              }
+            });
         }
         // else {
         let memoryDetails = await DefaultCreateMemoryObj(
@@ -2293,7 +2302,8 @@ class CreateMemory extends React.Component<Props> {
                 contentContainerStyle={
                   Styles.viewBeforListContentContainerStyle
                 }
-                style={styles.fullWidth}
+                nestedScrollEnabled={true} overScrollMode='always'
+                style={[styles.fullWidth,{flex:1}]}
                 scrollEnabled={this.state.itemList.length ? true : false}>
                 {/* {this.state.itemList.length == 0 ? ( */}
                 {this.viewBeforList()}
@@ -2316,11 +2326,11 @@ class CreateMemory extends React.Component<Props> {
                   //   data={this.state.itemList}
                   //   renderItem={(item: any) => this.renderRow(item)}
                   // />
-                  this.state.itemList?.length
-                    ? this.state.itemList.map((item, index) =>
-                      this.renderRow(item, index)
-                    )
-                    : null
+                  // this.state.itemList?.length
+                  //   ? this.state.itemList.map((item, index) =>
+                  //     this.renderRow(item, index)
+                  //   )
+                  //   : null
                 }
                 {/* )} */}
               </ScrollView>
