@@ -133,10 +133,10 @@ export default class TabIcon extends React.Component<{ [x: string]: any }> {
         }]}
         onPress={() => {
           if (this.props.title == 'Read') {
-            this.props.navigation.navigate('dashBoard')
+            this.props.navigation.replace('dashBoard')
           }
           else if (this.props.title == 'Write') {
-            this.props.navigation.navigate('writeTabs')
+            this.props.navigation.replace('writeTabs')
           }
         }}
       >

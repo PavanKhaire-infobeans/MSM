@@ -87,7 +87,7 @@ class NotificationView extends React.Component<Props> {
     this.props.navigation.navigate('notificationListing', {
       heading: item.item.group_name,
       index: item.index,
-      navigation: this.props.navigation,
+      // navigation: this.props.navigation,
     });
   };
 

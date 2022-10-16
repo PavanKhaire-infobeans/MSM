@@ -66,11 +66,11 @@ export const Convert = (value: MindPopAttachment) => {
 
 const MindPopStore = (() => {
   function errorCB(err: Error) {
-    showConsoleLog(ConsoleType.LOG,'SQL Error: ' + err);
+    // showConsoleLog(ConsoleType.LOG,'SQL Error: ' + err);
   }
 
   function openCB() {
-    showConsoleLog(ConsoleType.LOG,'Database OPENED');
+    // showConsoleLog(ConsoleType.LOG,'Database OPENED');
   }
 
   function checkDB(db: any) {
@@ -103,24 +103,18 @@ const MindPopStore = (() => {
                                 ${Table.MindPop.userId} INTEGER NOT NULL,
                                 PRIMARY KEY (${Table.MindPopAttachment.instanceID}, 
                                     ${Table.MindPopAttachment.mindPopID}, ${Table.MindPopAttachment.id}, ${Table.MindPop.userId}));`;
-        showConsoleLog(ConsoleType.LOG,'Query to create MindPop Table:', queryCreateMindPop);
-        showConsoleLog(ConsoleType.LOG,
-          'Query to create MindPop Attachment Table:',
-          queryCreateMindPopAttachment,
-        );
+        // showConsoleLog(ConsoleType.LOG,'Query to create MindPop Table:', queryCreateMindPop);
+        // showConsoleLog(ConsoleType.LOG,'Query to create MindPop Attachment Table:',queryCreateMindPopAttachment);
 
         tx.executeSql(queryCreateMindPop, [], (_: any, results: any) => {
-          showConsoleLog(ConsoleType.LOG,'Mindpop create table Query completed', results);
+          // showConsoleLog(ConsoleType.LOG,'Mindpop create table Query completed', results);
           if (results) {
             //create mind pop attachment tables
             tx.executeSql(
               queryCreateMindPopAttachment,
               [],
               (_: any, results: any) => {
-                showConsoleLog(ConsoleType.LOG,
-                  'Mindpop attachment create table Query completed',
-                  results,
-                );
+                // showConsoleLog(ConsoleType.LOG,'Mindpop attachment create table Query completed',results);
                 if (results) {
                   resolve(results);
                 } else {
@@ -257,7 +251,7 @@ const MindPopStore = (() => {
 
     statementString =
       arrayOfAttachmentValue.length > 0 ? arrayOfAttachmentValue.join(',') : '';
-    showConsoleLog(ConsoleType.LOG,'Attachment Statement', statementString);
+    // showConsoleLog(ConsoleType.LOG,'Attachment Statement', statementString);
     // return statementString
     return arrayOfAttachmentValue;
   }
@@ -271,13 +265,13 @@ const MindPopStore = (() => {
               var query =
                 `REPLACE INTO ${Table.Names.MindPopAttachments} VALUES` + ' ';
               query = query + statement;
-              showConsoleLog(ConsoleType.LOG,'Insert Attachment Query: ', query);
+              // showConsoleLog(ConsoleType.LOG,'Insert Attachment Query: ', query);
               tx.executeSql(query, [], (_: any, results: any) => {
-                showConsoleLog(ConsoleType.LOG,'Query completed', results);
+                // showConsoleLog(ConsoleType.LOG,'Query completed', results);
                 if (results) {
                   resolve(results);
                 } else {
-                  showConsoleLog(ConsoleType.LOG,'Unable to save attachment', results);
+                  // showConsoleLog(ConsoleType.LOG,'Unable to save attachment', results);
                   resolve(false);
                 }
               });
@@ -315,11 +309,11 @@ const MindPopStore = (() => {
     let promise = new Promise((resolve: Function, reject: Function) => {
       openDB((db: any) => {
         if (db) {
-          showConsoleLog(ConsoleType.LOG,'Query to delete mindpop attachemnt', query);
+          // showConsoleLog(ConsoleType.LOG,'Query to delete mindpop attachemnt', query);
           db.transaction((tx: any) => {
             if (tx) {
               tx.executeSql(query, [], (_: any, results: any) => {
-                showConsoleLog(ConsoleType.LOG,'Query completed', results);
+                // showConsoleLog(ConsoleType.LOG,'Query completed', results);
                 if (results) {
                   resolve(results);
                 } else {
@@ -346,7 +340,7 @@ const MindPopStore = (() => {
       let mindPopDBEntities: MindPop[] = _createDBEntities(dataObj);
 
       let promise = new Promise((resolve: Function, reject: Function) => {
-        showConsoleLog(ConsoleType.LOG,'total mindpops: ', mindPopDBEntities.length);
+        // showConsoleLog(ConsoleType.LOG,'total mindpops: ', mindPopDBEntities.length);
         if (mindPopDBEntities.length > 0) {
           openDB((db: any) => {
             if (db) {
@@ -375,12 +369,12 @@ const MindPopStore = (() => {
 
                   let valueString = arrayOfValues.join(',');
                   query = query + valueString;
-                  showConsoleLog(ConsoleType.LOG,'Insert Query: ', query);
+                  // showConsoleLog(ConsoleType.LOG,'Insert Query: ', query);
 
                   queryAttachment = arrayOfAttachmentValue.join(',');
 
                   tx.executeSql(query, [], (_: any, results: any) => {
-                    showConsoleLog(ConsoleType.LOG,'Query completed', results);
+                    // showConsoleLog(ConsoleType.LOG,'Query completed', results);
                     if (results) {
                       if (queryAttachment.trim().length != 0) {
                         saveMindPopAttachments(queryAttachment).then(
@@ -388,7 +382,7 @@ const MindPopStore = (() => {
                             resolve(result);
                           },
                           error => {
-                            showConsoleLog(ConsoleType.LOG,'Query completed', error);
+                            // showConsoleLog(ConsoleType.LOG,'Query completed', error);
                             resolve(false);
                           },
                         );
@@ -432,7 +426,7 @@ const MindPopStore = (() => {
       }
       let valueString = arrayOfValues.join(',');
       query = query + valueString;
-      showConsoleLog(ConsoleType.LOG,'Insert Query: ', query);
+      // showConsoleLog(ConsoleType.LOG,'Insert Query: ', query);
       return new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
           if (db) {
@@ -473,7 +467,7 @@ const MindPopStore = (() => {
       }
       let valueString = arrayOfValues.join(',');
       query = query + valueString;
-      showConsoleLog(ConsoleType.LOG,'Insert Query: ', query);
+      // showConsoleLog(ConsoleType.LOG,'Insert Query: ', query);
       return new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
           if (db) {
@@ -507,9 +501,9 @@ const MindPopStore = (() => {
                   } mpa on mp.id = mpa.mindPopID WHERE mp.message  like '%${searchKeyword}%' and mp.instanceID = ${Account.selectedData().instanceID
                   }  and mp.userId = ${Account.selectedData().userID
                   } ORDER BY mp.id DESC, mpa.id DESC`;
-                showConsoleLog(ConsoleType.LOG,'Query to search mindpop', query);
+                // showConsoleLog(ConsoleType.LOG,'Query to search mindpop', query);
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  showConsoleLog(ConsoleType.LOG,'Query completed', results);
+                  // showConsoleLog(ConsoleType.LOG,'Query completed', results);
                   if (results) {
                     resolve(results);
                   } else {
@@ -547,7 +541,7 @@ const MindPopStore = (() => {
             db.transaction((tx: any) => {
               if (tx) {
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  showConsoleLog(ConsoleType.LOG,'Query completed', results);
+                  // showConsoleLog(ConsoleType.LOG,'Query completed', results);
                   if (results) {
                     resolve(results);
                   } else {
@@ -568,12 +562,12 @@ const MindPopStore = (() => {
       return promise.then(
         () => {
           return _deleteMindPopAttachment(null, ids).then((result: any) => {
-            showConsoleLog(ConsoleType.LOG,`delete mind pop ${result}`);
+            // showConsoleLog(ConsoleType.LOG,`delete mind pop ${result}`);
             return Promise.resolve(result);
           });
         },
         failedResult => {
-          showConsoleLog(ConsoleType.LOG,`failed to delete mind pop ${failedResult}`);
+          // showConsoleLog(ConsoleType.LOG,`failed to delete mind pop ${failedResult}`);
           return Promise.reject(failedResult);
         },
       );
@@ -589,11 +583,11 @@ const MindPopStore = (() => {
       let promise = new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
           if (db) {
-            showConsoleLog(ConsoleType.LOG,'Get Mindpop attachments', query);
+            // showConsoleLog(ConsoleType.LOG,'Get Mindpop attachments', query);
             db.transaction((tx: any) => {
               if (tx) {
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  showConsoleLog(ConsoleType.LOG,'Query completed', results);
+                  // showConsoleLog(ConsoleType.LOG,'Query completed', results);
                   if (results) {
                     resolve(results);
                   } else {
@@ -621,11 +615,11 @@ const MindPopStore = (() => {
       let promise = new Promise((resolve: Function, reject: Function) => {
         openDB((db: any) => {
           if (db) {
-            showConsoleLog(ConsoleType.LOG,'Query to delete mindpop attachemnt', query);
+            // showConsoleLog(ConsoleType.LOG,'Query to delete mindpop attachemnt', query);
             db.transaction((tx: any) => {
               if (tx) {
                 tx.executeSql(query, [], (_: any, results: any) => {
-                  showConsoleLog(ConsoleType.LOG,'Query completed', results);
+                  // showConsoleLog(ConsoleType.LOG,'Query completed', results);
                   if (results) {
                     resolve(results);
                   } else {

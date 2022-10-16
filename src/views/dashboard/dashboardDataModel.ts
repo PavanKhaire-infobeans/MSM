@@ -97,7 +97,7 @@ export class DashboardDataModel {
 
     static getUserObj = (memoryDetails: any) => {
         let userDetails: any = {}
-        if (Account.selectedData().userID != memoryDetails.user_details.uid) {
+        if (Account.selectedData().userID != memoryDetails?.user_details?.uid) {
             let first_name = getDetails(memoryDetails, ["user_details", "field_first_name_value"]);
             let last_name = getDetails(memoryDetails, ["user_details", "field_last_name_value"]);
             userDetails.name = first_name + " " + last_name;

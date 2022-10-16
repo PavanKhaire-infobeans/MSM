@@ -569,7 +569,11 @@ class CreateMemory extends React.Component<Props> {
         // EventManager.callBack('memoryUpdateTimelineListener');
         // EventManager.callBack('memoryUpdatePublishedListener');
         // EventManager.callBack('memoryDetailsListener');
-        this.props.navigation.replace('writeTabs');
+        // this.props.navigation.replace('writeTabs');
+        this.props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'writeTabs' }]
+        })
         // this.props.navigation.writeTabs();
         // loaderHandler.showLoader();
       } else {
@@ -583,6 +587,16 @@ class CreateMemory extends React.Component<Props> {
           title: 'New draft saved!',
           desc: `You can see your new draft added with the rest of your in-progress work now.`,
         });
+        // this.props.navigation.reset({
+        //   index: 0,
+        //   routes: [{
+        //     name: 'writeTabs', params: {
+        //       showPublishedPopup: true,
+        //       title: 'New draft saved!',
+        //       desc: `You can see your new draft added with the rest of your in-progress work now.`,
+        //     }
+        //   }]
+        // })
         // Alert.alert(
         //   'New draft saved!',
         //   `You can see your new draft added with the rest of your in-progress work now.`,
@@ -922,12 +936,12 @@ class CreateMemory extends React.Component<Props> {
         // setTimeout(() => {
         if (this.filesToUpdate.length > 0) {
           UpdateAttachments(this.props.nid, this.filesToUpdate, key,
-            response =>{
+            response => {
               if (response.ResponseCode == 200) {
-                this.fileUpdateCallback(true, response.ResponseMessage,key)
-              
+                this.fileUpdateCallback(true, response.ResponseMessage, key)
+
               } else {
-                this.fileUpdateCallback(false, response.ResponseMessage,key)
+                this.fileUpdateCallback(false, response.ResponseMessage, key)
                 // EventManager.callBack(kFilesUpdated, false, response.ResponseMessage);
               }
             });
@@ -2303,7 +2317,7 @@ class CreateMemory extends React.Component<Props> {
                   Styles.viewBeforListContentContainerStyle
                 }
                 nestedScrollEnabled={true} overScrollMode='always'
-                style={[styles.fullWidth,{flex:1}]}
+                style={[styles.fullWidth, { flex: 1 }]}
                 scrollEnabled={this.state.itemList.length ? true : false}>
                 {/* {this.state.itemList.length == 0 ? ( */}
                 {this.viewBeforList()}

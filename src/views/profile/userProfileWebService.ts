@@ -200,7 +200,7 @@ const updateUserProfile = async (dataset) => {
         loaderHandler.hideLoader();
       });
   } catch (err) {
-    EventManager.callBack(kGetUserProfileData, false, err.message);
+    EventManager.callBack(kSetUserProfileData, false, err.message);
     loaderHandler.hideLoader();
   }
 };

@@ -67,15 +67,15 @@ class NotificationListing extends React.Component<Props> {
     this.notificationReceivedForeground.removeListener();
   };
 
-  UNSAFE_componentWillReceiveProps(props: Props) {
-    //componentDidUpdate(props: Props){
-    if (this.props !== props) {
-      this.setState({isRefreshing: false});
-    }
-  }
+  // UNSAFE_componentWillReceiveProps(props: Props) {
+  //   //componentDidUpdate(props: Props){
+  //   if (this.props !== props) {
+  //     this.setState({isRefreshing: false});
+  //   }
+  // }
 
   cancelAction = () => {
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
     this.props.navigation.goBack();
     setTimeout(() => {
       EventManager.callBack(kNotificationIndicator);
@@ -252,7 +252,7 @@ class NotificationListing extends React.Component<Props> {
           <View style={Styles.container}>
             <NavigationHeaderSafeArea
               heading={this.props.heading}
-              showCommunity={true}
+              showCommunity={false}
               cancelAction={this.cancelAction}
               showRightText={false}
             />
