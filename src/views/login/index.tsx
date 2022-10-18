@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Text from '../../common/component/Text';
 import TextField from '../../common/component/textField';
 import {
@@ -20,10 +20,10 @@ import {
   ConsoleType,
   showConsoleLog,
 } from '../../common/constants';
-import {Account, LoginStore} from '../../common/loginStore';
-import {UserData} from '../../common/loginStore/database';
-import {UserAccount} from '../menu/reducer';
-import {styles} from './designs';
+import { Account, LoginStore } from '../../common/loginStore';
+import { UserData } from '../../common/loginStore/database';
+import { UserAccount } from '../menu/reducer';
+import { styles } from './designs';
 import {
   LoginController,
   LoginControllerProtocol,
@@ -37,19 +37,22 @@ import {
 } from './loginReducer';
 //@ts-ignore
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import {ToastMessage} from '../../common/component/Toast';
+import { ToastMessage } from '../../common/component/Toast';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore
-import {arrowRightCircle} from '../../../app/images';
+import { arrowRightCircle } from '../../../app/images';
 import MessageDialogue from '../../common/component/messageDialogue';
 import EventManager from '../../common/eventManager';
 import {
   RESET_ON_LOGIN,
   SET_KEYBOARD_HEIGHT,
+  SHOW_LOADER_READ,
+  SHOW_LOADER_TEXT,
 } from '../dashboard/dashboardReducer';
 import Styles from './styles';
 import Utility from '../../common/utility';
+import BusyIndicator from '../../common/component/busyindicator';
 export const kRegSignUp = 'Registration SignUp';
 export enum loginType {
   googleLogin = 'Google',
@@ -151,7 +154,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   }
 
   loginToSelected = (selectedCommunity: any) => {
-    const {username, password} = this.state;
+    const { username, password } = this.state;
     DefaultPreference.get('firebaseToken').then(
       (value: any) => {
         this.props.loginServiceCall({
@@ -245,7 +248,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 
   _keyboardDidShow = e => {
     try {
-      const {height, screenX, screenY, width} = e.endCoordinates;
+      const { height, screenX, screenY, width } = e.endCoordinates;
       // showConsoleLog(ConsoleType.LOG,height)
 
       if (height) {
@@ -278,7 +281,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     let height = 0;
     if (show) {
       // height = 70;
-      this.messageRef._show({message, color: Colors.ErrorColor});
+      this.messageRef._show({ message, color: Colors.ErrorColor });
       setTimeout(() => {
         this.messageRef && this.messageRef._hide();
       }, 4000);
@@ -286,11 +289,11 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     } else {
       this.messageRef._hide();
     }
-    this.updateState({errorViewHeight: height});
+    this.updateState({ errorViewHeight: height });
   };
 
   componentWillUnmount() {
-    this.setState({_isRemeberMe: false}, () => {
+    this.setState({ _isRemeberMe: false }, () => {
       this.showErrorMessage(false);
       this.keyboardDidShowListener.remove();
       this.keyboardDidHideListener.remove();
@@ -332,7 +335,13 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
           }
           backgroundColor="#ffffff"
         />
-        <SafeAreaView style={{width: '100%'}}>
+        {
+          this.props.showLoaderValue ?
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
+        <SafeAreaView style={{ width: '100%' }}>
           <MessageDialogue ref={(ref: any) => (this.messageRef = ref)} />
         </SafeAreaView>
         <SafeAreaView style={Styles.flexContainer}>
@@ -511,9 +520,11 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
  * Redux Map State
  * @param state
  */
-const mapState = (state: {loginStatus: LoginState; dashboardReducer}) => ({
+const mapState = (state: { loginStatus: LoginState; dashboardReducer }) => ({
   loginStatus: state.loginStatus,
   keyboardHeight: state.dashboardReducer.keyBoardHeight,
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
 });
 
 /**
@@ -522,14 +533,18 @@ const mapState = (state: {loginStatus: LoginState; dashboardReducer}) => ({
  */
 const mapDispatch = (dispatch: Function) => ({
   loginServiceCall: (params: object) =>
-    dispatch({type: LoginServiceStatus.RequestStarted, payload: params}),
+    dispatch({ type: LoginServiceStatus.RequestStarted, payload: params }),
   fetchLoginAccounts: (params: object) =>
-    dispatch({type: LoginInstanceStatus.RequestStarted, payload: params}),
-  setUser: (payload: UserData) => dispatch({type: UserAccount.Store, payload}),
-  clean: () => dispatch({type: LoginServiceStatus.Ended}),
-  clearDashboard: () => dispatch({type: RESET_ON_LOGIN}),
+    dispatch({ type: LoginInstanceStatus.RequestStarted, payload: params }),
+  setUser: (payload: UserData) => dispatch({ type: UserAccount.Store, payload }),
+  clean: () => dispatch({ type: LoginServiceStatus.Ended }),
+  clearDashboard: () => dispatch({ type: RESET_ON_LOGIN }),
   updateKeyboardHeight: (params: number) =>
-    dispatch({type: SET_KEYBOARD_HEIGHT, payload: params}),
+    dispatch({ type: SET_KEYBOARD_HEIGHT, payload: params }),
+  showLoader: (payload: any) =>
+    dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+  loaderText: (payload: any) =>
+    dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
 });
 
 export default connect(mapState, mapDispatch)(Login);

@@ -40,6 +40,8 @@ import {
   GET_TIMELINE_LIST,
   JUMP_TO_VIEW_SHOW,
   ListType,
+  SHOW_LOADER_READ,
+  SHOW_LOADER_TEXT,
 } from '../dashboardReducer';
 import MemoryActionsSheet from './../../../../app/components/memoryActionsSheet';
 import styles from './styles';
@@ -179,10 +181,15 @@ const Timeline = (props: Props) => {
           isRefresh: false,
           filters: props.filters,
         });
-        loaderHandler.hideLoader();
+        // //loaderHandler.hideLoader();
+        props.showLoader(false)
+        props.loaderText('Loading...');
+
       },
     );
-    loaderHandler.showLoader('Loading...');
+    // //loaderHandler.showLoader('Loading...');
+    props.showLoader(true)
+    props.loaderText('Loading...');
 
     props.fetchMemoryList({
       type: ListType.Timeline,
@@ -434,7 +441,9 @@ const Timeline = (props: Props) => {
   };
 
   const jumpToClicked = (selectedYear: any, selectedMonth: any) => {
-    loaderHandler.showLoader('Loading...');
+    // //loaderHandler.showLoader('Loading...');
+    props.loaderText('Loading...');
+    props.showLoader(true)
     setCurrentItemYear(selectedYear);
     let next = '',
       prev = '',
@@ -474,35 +483,37 @@ const Timeline = (props: Props) => {
   const keyExtractor = useCallback((item: any) => item?.nid?.toString(), []);
 
   const renderList = useCallback((item: any) => (
-      <MemoryListItem
-        item={item}
-        previousItem={
-          item.index == 0 ? null : props.timelineList[item.index - 1]
-        }
-        like={like}
-        onLayout={eve => {
-          // alert(eve.nativeEvent.layout.height)
-        }}
-        listType={ListType.Timeline}
-        animate={state.animateValue}
-        audioView={audioView}
-        jumpToVisibility={(memory_date: any) =>
-          setState(prevState => ({
-            ...prevState,
-            jumpToVisibility: true,
-            jumpToDate: memory_date,
-          }))
-        }
-        openMemoryActions={itm => openMemoryActions(itm)}
-        navigation={props.navigation}
-      />
+    <MemoryListItem
+      item={item}
+      previousItem={
+        item.index == 0 ? null : props.timelineList[item.index - 1]
+      }
+      like={like}
+      onLayout={eve => {
+        // alert(eve.nativeEvent.layout.height)
+      }}
+      listType={ListType.Timeline}
+      animate={state.animateValue}
+      audioView={audioView}
+      jumpToVisibility={(memory_date: any) =>
+        setState(prevState => ({
+          ...prevState,
+          jumpToVisibility: true,
+          jumpToDate: memory_date,
+        }))
+      }
+      openMemoryActions={itm => openMemoryActions(itm)}
+      navigation={props.navigation}
+    />
   ), []);
 
   const renderItem = ({ item, index }) => (
     <TouchableHighlight
       onPress={() => {
         // jumpToClicked(item.year, "");
-        loaderHandler.showLoader('Loading...');
+        props.showLoader(true)
+        props.loaderText('Loading...');
+        // //loaderHandler.showLoader('Loading...');
         let currentYear = item.year;
         let next = '',
           prev = '',
@@ -545,7 +556,9 @@ const Timeline = (props: Props) => {
         <Text
           onPress={() => {
             // jumpToClicked(item.year, "");
-            loaderHandler.showLoader('Loading...');
+            props.showLoader(true)
+            props.loaderText('Loading...');
+            // //loaderHandler.showLoader('Loading...');
             let currentYear = item.year;
             let next = '',
               prev = '',
@@ -602,7 +615,7 @@ const Timeline = (props: Props) => {
       </>
     </TouchableHighlight>
   );
-  
+
   return (
     <View style={styles.fullFlex}>
       <SafeAreaView style={styles.container}>
@@ -942,10 +955,10 @@ const Timeline = (props: Props) => {
         memoryActions={true}
         onActionClick={onActionItemClicked}
       />
-      {!props.loading &&
+      {/* {!props.loading &&
         !props.loadmore &&
         !props.refresh &&
-        loaderHandler.hideLoader()}
+        //loaderHandler.hideLoader()} */}
     </View>
   );
 };
@@ -972,6 +985,10 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: GET_TIMELINE_LIST, payload: payload }),
     showJumpto: (payload: any) =>
       dispatch({ type: JUMP_TO_VIEW_SHOW, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
   };
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, SafeAreaView, StatusBar, View } from 'react-native';
 import { connect } from 'react-redux';
+import BusyIndicator from '../../common/component/busyindicator';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import DefaultListItem from '../../common/component/defaultListItem';
 import { kNotificationIndicator } from '../../common/component/TabBarIcons';
@@ -8,6 +9,7 @@ import { No_Internet_Warning } from '../../common/component/Toast';
 import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
 import NavigationBar from '../dashboard/NavigationBar';
 import { NotificationDataModel } from './notificationDataModel';
 import { kForegroundNotificationListener } from './notificationServices';
@@ -69,17 +71,12 @@ class NotificationView extends React.Component<Props> {
 
   componentDidMount() {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
       this.props.getNotificationTypes();
     } else {
       No_Internet_Warning();
-    }
-  }
-
-  UNSAFE_componentWillReceiveProps(props: Props) {
-    // this.setState({});
-    if (this.props !== props) {
-      loaderHandler.hideLoader();
     }
   }
 
@@ -109,6 +106,12 @@ class NotificationView extends React.Component<Props> {
   render() {
     return (
       <View style={Styles.container}>
+        {
+          this.props.showLoaderValue ?
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <SafeAreaView style={Styles.noViewStyle} />
         <SafeAreaView style={Styles.safeAreaContextStyle}>
           <View style={Styles.container}>
@@ -144,6 +147,8 @@ class NotificationView extends React.Component<Props> {
 }
 const mapState = (state: { [x: string]: any }) => ({
   notificationList: state.NotificationsRedux.notificationData,
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
 });
 
 const mapDispatch = (dispatch: Function) => {
@@ -153,6 +158,10 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: CurrentList, payload: payload }),
     addNotificationItem: (payload: any) =>
       dispatch({ type: AddNewNotification, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
   };
 };
 

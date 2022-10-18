@@ -674,31 +674,31 @@ export default class MutilpleValueEdit extends React.Component<Props> {
   };
 
   uploadImage = (imageFile: TempFile) => {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     UploadProfilePic(imageFile)
       .then((response: any) => {
         ToastMessage('Profile photo updated successfully');
         UserProfile();
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
         this.isProfilePicAvailable = true;
         this.setState({hasLoaded: true}, () => {
-          loaderHandler.hideLoader();
+          //loaderHandler.hideLoader();
         });
       })
       .catch((error: any) => {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
         this.isProfilePicAvailable = false;
         this.setState({hasLoaded: true}, () => {
-          loaderHandler.hideLoader();
+          //loaderHandler.hideLoader();
         });
       });
   };
 
   removeImage = () => {
-    loaderHandler.showLoader('Removing...');
+    //loaderHandler.showLoader('Removing...');
     RemoveProfilePic()
       .then((response: any) => {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
         ToastMessage('Profile photo removed successfully');
         UserProfile();
         this.isProfilePicAvailable = false;
@@ -711,7 +711,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
       })
       .catch((error: any) => {
         ToastMessage(error.message, Colors.ErrorColor);
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
       });
   };
 

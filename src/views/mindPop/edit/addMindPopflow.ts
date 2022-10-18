@@ -47,13 +47,13 @@ export const addEditMindPop = async (
         if (files.length > 0) {
           //MindPopsInProgress.push(mindpopId);
           await uploadAttachments(mindpopId, files);
-          // loaderHandler.hideLoader();
+          // //loaderHandler.hideLoader();
           EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
         } else {
-          // loaderHandler.hideLoader();
+          // //loaderHandler.hideLoader();
           EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
         }
-        // loaderHandler.hideLoader();
+        // //loaderHandler.hideLoader();
 
         // Get List from server
         let listRequestParams = {
@@ -72,7 +72,7 @@ export const addEditMindPop = async (
         ],
           async (responseList) => {
             let value = getValue(responseList, ['Details', 'totalItems']);
-            // loaderHandler.hideLoader();
+            // //loaderHandler.hideLoader();
             // PARSE MINDPOP HERE
             if (value != null && typeof value !== 'undefined') {
               await MindPopStore.saveMindPop(responseList);
@@ -103,7 +103,7 @@ export const addEditMindPop = async (
     // })();
 
   } catch (err) {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     EventManager.callBack(
       kAddEditIdentifier,
       false,
@@ -156,7 +156,7 @@ async function uploadFile(mindpopID: number, file: TempFile) {
   if (name) {
     options['parameters'] = { ...options['parameters'], title: name };
   }
-  loaderHandler.showLoader('Uploading..');
+  //loaderHandler.showLoader('Uploading..');
 
   return new Promise((resolve, reject) => {
     uploadTask(

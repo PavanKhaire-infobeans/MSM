@@ -49,7 +49,7 @@ export default class MyMemoriesContainer extends React.Component<Props> {
   }
 
   _onBack = () => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
   };
 
   render() {

@@ -36,7 +36,7 @@ export default class GetFormData {
           instanceURL: CueBackInsatance.InstanceURL,
         };
       } else {
-        loaderHandler.showLoader('Loading...');
+        //loaderHandler.showLoader('Loading...');
       }
       registrationForm();
     } else {

@@ -23,7 +23,7 @@ export default class BlockedUsers extends React.Component<Props> {
 
   constructor(props: Props) {
     super(props);
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     GetBlockedUsersAndMemory(kBlockedUsers);
     this.blockedMemoryListiner = EventManager.addListener(
       kBlockedUsersFetched,
@@ -55,17 +55,17 @@ export default class BlockedUsers extends React.Component<Props> {
         },
         () => {
           this.props.navigation.navigate('dashBoard');
-          loaderHandler.showLoader();
+          //loaderHandler.showLoader();
         },
       );
     } else {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       ToastMessage(responseMessage);
     }
   };
 
   responseReceived = (success: any, data: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (success) {
       data = data.data;
       this.setState({
@@ -81,7 +81,7 @@ export default class BlockedUsers extends React.Component<Props> {
 
   onUnblockClicked = (uid: any) => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
       MemoryAction(
         'user',
         0,

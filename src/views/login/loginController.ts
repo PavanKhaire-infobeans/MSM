@@ -72,7 +72,9 @@ export class LoginController implements LoginControllerProtocol {
     this.appleSubscriber.remove();
     let user = { id: params.id };
     if (params.id != null && params.id.trim() != '') {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      this.view.props.showLoader(true);
+      this.view.props.loaderText('Loading...');
       if (params.email != null && params.email.trim() != '') {
         user = {
           ...user,
@@ -133,11 +135,17 @@ export class LoginController implements LoginControllerProtocol {
           index: 0,
           routes: [{ name: 'dashBoard' }]
         })
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        this.view.props.showLoader(false);
+      this.view.props.loaderText('Loading...');
+
       }, 100);
       this.view.props.clean();
     } else {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.view.props.showLoader(false);
+      this.view.props.loaderText('Loading...');
+
       this.view.showErrorMessage(true, response);
     }
   }
@@ -150,7 +158,10 @@ export class LoginController implements LoginControllerProtocol {
       await GoogleSignin.hasPlayServices();
       userInfo = await GoogleSignin.signIn();
       let params = {};
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      this.view.props.showLoader(true);
+      this.view.props.loaderText('Loading...');
+
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
           params = {
@@ -227,7 +238,10 @@ export class LoginController implements LoginControllerProtocol {
         }
       }
       setTimeout(Keyboard.dismiss);
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      this.view.props.showLoader(true);
+      this.view.props.loaderText('Loading...');
+
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
           this.view.props.fetchLoginAccounts({
@@ -304,7 +318,10 @@ export class LoginController implements LoginControllerProtocol {
   };
 
   loginUserAccounts = (portal_ids?: any) => {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
+    this.view.props.showLoader(true);
+    this.view.props.loaderText('Loading...');
+
     const { username, password } = this.view.state;
     let loginObj: any = { emailId: username, password: password, fcm_token: '' };
     if (portal_ids) {
@@ -376,7 +393,10 @@ export class LoginController implements LoginControllerProtocol {
     // showConsoleLog(ConsoleType.LOG, "show data :", loginStatus);
 
     if (loginStatus.logincompleted) {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.view.props.showLoader(false);
+      this.view.props.loaderText('Loading...');
+
       //If Login is success full
       if (loginStatus.loginsuccess) {
         //If Response code is success
@@ -437,7 +457,10 @@ export class LoginController implements LoginControllerProtocol {
         this.view.showErrorMessage(true, message);
       }
     } else if (loginStatus.instanceCompleted && !loginStatus.loginStarted) {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.view.props.showLoader(false);
+      this.view.props.loaderText('Loading...');
+
       if (loginStatus.instanceSuccess && loginStatus.callLogin) {
         if (Utility.isInternetConnected) {
           let isDisabledAccount = false;
@@ -463,8 +486,10 @@ export class LoginController implements LoginControllerProtocol {
                 loginStatus.instanceData.Response.length > 1 ||
                 isDisabledAccount
               ) {
-                loaderHandler.hideLoader();
-                showConsoleLog(ConsoleType.LOG, loginStatus.instanceData.Response);
+                //loaderHandler.hideLoader();
+                this.view.props.showLoader(false);
+                this.view.props.loaderText('Loading...');
+                // showConsoleLog(ConsoleType.LOG, loginStatus.instanceData.Response);
                 this.view.updateState({
                   ...this.view.state,
                   isVisible: true,

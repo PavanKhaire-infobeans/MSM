@@ -59,7 +59,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     this.props.collectionAPI();
     GetPublishedMemoryCollections(this.props.nid);
     this.checkForScroll = true;
@@ -74,10 +74,10 @@ class MemoryCollectionList extends React.Component<Props, State> {
     publishedMemoryCollectionsData?: any,
   ) => {
     if (fetched) {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       this.setState({collections: publishedMemoryCollectionsData});
     } else {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       // ToastMessage(getAllLikes, Colors.ErrorColor);
     }
   };
@@ -93,7 +93,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
       collections_nids.push(element.nid ? element.nid : element.tid);
     });
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       MemoryAction(
         'my_stories',
         this.props.nid,

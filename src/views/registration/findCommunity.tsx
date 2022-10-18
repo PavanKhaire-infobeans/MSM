@@ -141,7 +141,7 @@ class FindCommunity extends Component<FindProps, State> {
             '',
           ), //'192.168.2.6'
         };
-        loaderHandler.showLoader('Loading...');
+        //loaderHandler.showLoader('Loading...');
         new GetFormData().callService('push', this.props.openLoginDrawer);
       } else {
         No_Internet_Warning();

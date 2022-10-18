@@ -10,29 +10,23 @@ const BusyIndicator = (props) => {
 
   const [state, setState] = useState({
     isVisible: props.startVisible,
+    // isVisible: props.startVisible,
   });
-  
-
-  useEffect(() => {
-
-    return () => {
-      // emitter.remove();
-    }
-  }, [])
+  // console.log("ssyusydgahsdjdkjjks")
 
   const changeLoadingEffect = (state) => {
     if (state) {
-      setState(prev => ({
-        ...prev,
-        isVisible: state?.isVisible,
-        text: state.title ? state.title : props.text,
-      }));
+      // setState(prev => ({
+      //   ...prev,
+      //   isVisible: state?.isVisible,
+      //   text: state.title ? state.title : props.text,
+      // }));
     }
   }
-  let emitter = DeviceEventEmitter.addListener(
-    'changeLoadingEffect',
-    changeLoadingEffect,
-  );
+  // let emitter = DeviceEventEmitter.addListener(
+  //   'changeLoadingEffect',
+  //   changeLoadingEffect,
+  // );
 
   const customStyles = StyleSheet.create({
     overlay: {
@@ -48,10 +42,12 @@ const BusyIndicator = (props) => {
   });
 
   return (
-    !state.isVisible ?
+    !props.startVisible ?
+    // !state.isVisible ?
       null
       :
       <View style={styles.container}>
+        {/* , customStyles.overlay */}
         <View style={[styles.overlay, customStyles.overlay]}>
           <ActivityIndicator
             color={props.color}
@@ -62,7 +58,7 @@ const BusyIndicator = (props) => {
           <Text
             numberOfLines={props.textNumberOfLines}
             style={[styles.text, customStyles.text]}>
-            {state.text}
+            {props.text}
           </Text>
         </View>
       </View>
@@ -96,4 +92,4 @@ BusyIndicator.defaultProps = {
   textNumberOfLines: 2,
 };
 
-module.exports = BusyIndicator;
+export default BusyIndicator;

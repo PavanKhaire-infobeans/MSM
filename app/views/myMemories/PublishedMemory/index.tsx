@@ -145,7 +145,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
 
   componentDidMount() {
     if (Utility.isInternetConnected) {
-      // loaderHandler.showLoader();
+      // //loaderHandler.showLoader();
       // GetMemoryDrafts("all","all", memoryDraftsArray.length)
       publishedMemoriesArray = [];
       // this.setState({});
@@ -163,7 +163,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
           },
           () => {
             GetPublishedMemories('');
-            loaderHandler.hideLoader();
+            // //loaderHandler.hideLoader();
           },
         );
       },
@@ -265,7 +265,9 @@ export default class PublishedMemory extends React.Component<Props, State> {
         isRefreshing: false,
         loading: false,
       },
-      () => loaderHandler.hideLoader(),
+      () =>{ 
+        // //loaderHandler.hideLoader()
+      },
     );
   };
 
@@ -292,11 +294,11 @@ export default class PublishedMemory extends React.Component<Props, State> {
   getAllLikes = (memoryDetails: any) => {
     if (memoryDetails.noOfLikes > 0) {
       GetAllLikes(memoryDetails.nid, memoryDetails.type, kAllLikes);
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
     }
   };
   allLikesFetched = (fetched?: boolean, getAllLikes?: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (fetched) {
       this.showList(getAllLikes);
       // this.setState({});
@@ -331,7 +333,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     uid?: any,
   ) => {
     showConsoleLog(ConsoleType.ERROR, 'response no listner next> ', nid);
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (fetched) {
       if (type == MemoryActionKeys.removeMeFromThisPostKey) {
         publishedMemoriesArray.forEach((element: any, index: any) => {
@@ -691,7 +693,7 @@ const _addToCollection = (nid: any, navigation: any) => {
 
 const _onEditMemory = (nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     navigation.navigate('createMemory', {
       editMode: true,
       draftNid: nid,
@@ -739,7 +741,7 @@ export const onActionItemClicked = async (
       _addToCollection(data.nid, navigation);
       break;
     case MemoryActionKeys.editMemoryKey:
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
 
       let details: any = {
         action_type: MemoryActionKeys.moveToDraftKey,
@@ -761,7 +763,7 @@ export const onActionItemClicked = async (
           if (response.ResponseCode == 200) {
             _onEditMemory(data.nid, navigation);
           } else {
-            loaderHandler.hideLoader();
+            //loaderHandler.hideLoader();
           }
         }
       )
@@ -791,7 +793,7 @@ export const onActionItemClicked = async (
               style: 'default',
               onPress: () => {
                 if (Utility.isInternetConnected) {
-                  loaderHandler.showLoader();
+                  //loaderHandler.showLoader();
                   MemoryAction(
                     data.memoryType,
                     data.nid,

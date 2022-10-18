@@ -17,7 +17,7 @@ const MyMemoriesContainer = props => {
   }, []);
 
   const _onBack = () => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
   };
 
   const showMemoryActionAlert = (title, message) => {

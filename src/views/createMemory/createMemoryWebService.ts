@@ -55,12 +55,11 @@ export const CreateUpdateMemory = async (
             EventManager.callBack(listener, false, 'Could not save MindPop');
             return;
           }
-          debugger
+
 
           if (filesToUpload.length > 0) {
             await uploadFile(id, filesToUpload,
               datareturn => {
-
                 console.log("file upload response : ", JSON.stringify(datareturn))
                 if (listener == "mindpopEditMemoryListener") {
                   CB({ status: true, id, padDetails, key, prompt_id });
@@ -83,7 +82,7 @@ export const CreateUpdateMemory = async (
 
           }
           else {
-            showConsoleLog(ConsoleType.LOG, "done dT >>>>>>");
+            
             if (listener == "mindpopEditMemoryListener") {
               CB({ status: true, id, padDetails, key, prompt_id });
               // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
@@ -117,7 +116,6 @@ export const CreateUpdateMemory = async (
           else {
             CB(response);
           }
-          // showConsoleLog(ConsoleType.WARN," err daaaaa :", JSON.stringify(response));
           // EventManager.callBack(listener, false, response['ResponseMessage']);
         }
 
@@ -416,7 +414,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
   let respArray: any[] = [];
   // const loaderHandler = require('../../common/component/busyindicator/LoaderHandler').default;
-  // loaderHandler.showLoader('Uploading..');
+  // //loaderHandler.showLoader('Uploading..');
 
   Promise.all(
     files.map(file => {
@@ -494,7 +492,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
     .then((res) => {
       CB(res);
     })
-  // loaderHandler.showLoader('Uploading..');
+  // //loaderHandler.showLoader('Uploading..');
 
 
 

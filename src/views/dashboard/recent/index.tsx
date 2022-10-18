@@ -43,7 +43,7 @@ import {
   onActionItemClicked,
   _onShowMemoryDetails,
 } from '../../myMemories/PublishedMemory';
-import { GET_MEMORY_LIST, ListType, REMOVE_PROMPT } from '../dashboardReducer';
+import { GET_MEMORY_LIST, ListType, REMOVE_PROMPT, SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboardReducer';
 // import MemoryListItem from '../../../common/component/memoryListItem';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import EventManager from '../../../common/eventManager';
@@ -52,6 +52,7 @@ import {
   promptIdListener,
 } from '../../createMemory/createMemoryWebService';
 import { DefaultDetailsMemory } from '../../createMemory/dataHelper';
+import Busyindicator from './../../../common/component/busyindicator';
 
 import styles from './styles';
 type State = { [x: string]: any };
@@ -82,18 +83,20 @@ const Recent = (props: Props) => {
     animateType: null,
   });
 
-  const [scrolling, setScrolling] = useState(false);
-
   let selectedPrompt: any = {};
   let memoryUpdateListener: EventManager;
 
   useEffect(() => {
+
     memoryUpdateListener = EventManager.addListener(
       'memoryUpdateRecentListener',
       () => {
         props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
       },
     );
+    props.showLoader(true)
+    props.loaderText('Loading...');
+    
     props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
     return () => {
@@ -318,12 +321,16 @@ const Recent = (props: Props) => {
 
   const _onAddProptToMemoryAction = async (firstIndex: any, secondIndex: any) => {
     try {
-      console.log("firstIndex : ",firstIndex, secondIndex)
+      console.log("firstIndex : ", firstIndex, secondIndex)
       if (Utility.isInternetConnected) {
         let data = props.recentList[firstIndex].active_prompts[secondIndex];
         selectedPrompt.firstIndex = firstIndex;
         selectedPrompt.secondIndex = secondIndex;
-        loaderHandler.showLoader('Creating Memory...');
+        // //loaderHandler.showLoader('Creating Memory...');
+        props.showLoader(true);
+        props.loaderText('Creating Memory...');
+
+        // setShowLoader(true);
         let draftDetails: any = await DefaultDetailsMemory(
           decode_utf8(data.prompt_title.trim()),
         );
@@ -334,18 +341,21 @@ const Recent = (props: Props) => {
         // );
         CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
           res => {
+            
             if (res.status) {
               props.removePrompt(selectedPrompt);
-              loaderHandler.hideLoader();
+              // //loaderHandler.hideLoader();
               props.navigation.navigate('createMemory', {
                 editMode: true,
                 draftNid: res.id,
                 isFromPrompt: true,
               });
             } else {
-              loaderHandler.hideLoader();
+              // //loaderHandler.hideLoader();
               ToastMessage(draftDetails.ResponseMessage);
             }
+            props.showLoader(false);
+            props.loaderText('Loading...');
           });
         Keyboard.dismiss();
       } else {
@@ -382,6 +392,7 @@ const Recent = (props: Props) => {
 
   return (
     <View style={styles.mainContainer}>
+   
       <SafeAreaView style={styles.container}>
         <View style={styles.subcontainer}>
           <FlatList
@@ -410,7 +421,8 @@ const Recent = (props: Props) => {
                 onRefresh={onRefresh}
               />
             }
-            keyExtractor={keyExtractor}
+            keyExtractor={(_, index: number) => `${index}`}
+            // keyExtractor={keyExtractor}
             ItemSeparatorComponent={() => (
               <View style={styles.renderSeparator} />
             )}
@@ -452,10 +464,12 @@ const Recent = (props: Props) => {
         onActionClick={onActionItemClicked}
       />
 
-      {!props.loading &&
+      {/* {!props.loading &&
         !props.loadmore &&
         !props.refresh &&
-        loaderHandler.hideLoader()}
+        // setShowLoader(false)
+        // //loaderHandler.hideLoader()
+      } */}
     </View>
   );
 };
@@ -478,6 +492,11 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: GET_MEMORY_LIST, payload: payload }),
     removePrompt: (payload: any) =>
       dispatch({ type: REMOVE_PROMPT, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
+      
   };
 };
 

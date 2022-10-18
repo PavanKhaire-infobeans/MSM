@@ -37,34 +37,34 @@ export const GetActivities = async (details: any, listener: any, CB: any) => {
           //   // EventManager.callBack(kLoadMore, false, response["ResponseMessage"]);
           // }
         }
-        else{
-          CB({ResponseCode:400,ResponseMessage:'Unable to process your request. Please try again later'})
+        else {
+          CB({ ResponseCode: 400, ResponseMessage: 'Unable to process your request. Please try again later' })
 
         }
       }
     )
     // .then((response: Response) => response.json())
     // .catch((err: Error) => {
-    //   loaderHandler.hideLoader();
+    //   //loaderHandler.hideLoader();
     //   Promise.reject(err);
     // });
 
-  } 
+  }
   catch (err) {
-    CB({ResponseCode:400,ResponseMessage:'Unable to process your request. Please try again later'})
+    CB({ ResponseCode: 400, ResponseMessage: 'Unable to process your request. Please try again later' })
     // EventManager.callBack(
     //   listener,
     //   false,
     //   'Unable to process your request. Please try again later',
     // );
-    // loaderHandler.hideLoader();
+    // //loaderHandler.hideLoader();
   }
 };
 
-export const SetSeenActivity = async (ids: any, index: any) => {
+export const SetSeenActivity = async (ids: any, index: any, CB: any) => {
   try {
     let data = await Storage.get('userData');
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL
       }/api/notifications/set_seen_data`,
       [
@@ -74,23 +74,28 @@ export const SetSeenActivity = async (ids: any, index: any) => {
         },
         { configurationTimestamp: '0', details: ids },
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-    if (response != undefined && response != null) {
-      if (response.ResponseCode == 200) {
-        EventManager.callBack(kSeenData, true, index);
-      } else {
-        EventManager.callBack(
-          kSeenData,
-          false,
-          index,
-          response['ResponseMessage'],
-        );
+      response => {
+        if (response != undefined && response != null) {
+          if (response.ResponseCode == 200) {
+            CB(index)
+            EventManager.callBack(kSeenData, true, index);
+          } else {
+            CB(index)
+            EventManager.callBack(
+              kSeenData,
+              false,
+              index,
+              response['ResponseMessage'],
+            );
+          }
+        }
       }
-    }
+    )
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   Promise.reject(err);
+    // });
+
   } catch (err) {
     //showConsoleLog(ConsoleType.LOG,"Error is : ", err)
     EventManager.callBack(

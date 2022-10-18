@@ -94,7 +94,7 @@ export default class Activities extends React.Component<Props, State> {
       ToastMessage(activities, Colors.ErrorColor);
     }
     setTimeout(() => {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
     }, 500);
   };
 
@@ -102,10 +102,10 @@ export default class Activities extends React.Component<Props, State> {
     this.setState({ isRefreshing: isReferesh, isLoadMore: isLoadMore }, () => {
       let initialOffset = this.state.activityList.length;
       if (Utility.isInternetConnected) {
-        if (!isReferesh && !isLoadMore) loaderHandler.showLoader();
-        else if (isReferesh) {
-          initialOffset = 0;
-        }
+        // if (!isReferesh && !isLoadMore) //loaderHandler.showLoader();
+        // else if (isReferesh) {
+        //   initialOffset = 0;
+        // }
         GetActivities(
           { type: 'activities', limit: 20, offset: initialOffset },
           kActivities,

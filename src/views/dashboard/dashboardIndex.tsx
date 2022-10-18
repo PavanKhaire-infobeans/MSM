@@ -1,4 +1,4 @@
-import React, {createRef} from 'react';
+import React, { createRef } from 'react';
 import {
   DeviceEventEmitter,
   Image,
@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import NewNavigationBar from '../../../app/components/NewNavigationBar';
 import TabIcon, {
   kNotificationIndicator,
@@ -25,7 +25,7 @@ import {
   Storage,
 } from '../../common/constants';
 import Utility from '../../common/utility';
-import {configurations} from '../../common/webservice/loginServices';
+import { configurations } from '../../common/webservice/loginServices';
 import {
   ACTIVE_TAB_ON_DASHBOARD,
   CreateAMemory,
@@ -34,6 +34,7 @@ import {
   GET_MEMORY_LIST,
   ListType,
   MEMORY_ACTIONS_DASHBOARD,
+  SHOW_LOADER_TEXT,
 } from './dashboardReducer';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
@@ -43,19 +44,19 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import CustomAlert from '../../common/component/customeAlert';
 import ScrollableTabView from '../../common/component/ScrollableTabView';
 import TextNew from '../../common/component/Text';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
-import {filter_icon} from '../../images';
-import {MonthObj, months} from '../createMemory';
+import { Account } from '../../common/loginStore';
+import { filter_icon } from '../../images';
+import { MonthObj, months } from '../createMemory';
 import {
   CreateUpdateMemory,
   promptIdListener,
 } from '../createMemory/createMemoryWebService';
-import {DefaultDetailsMemory} from '../createMemory/dataHelper';
-import {showCustomAlert} from '../createMemory/reducer';
-import {kMemoryActionPerformedOnDashboard} from '../myMemories/myMemoriesWebService';
-import {NotificationDataModel} from '../notificationView/notificationDataModel';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
+import { showCustomAlert } from '../createMemory/reducer';
+import { kMemoryActionPerformedOnDashboard } from '../myMemories/myMemoriesWebService';
+import { NotificationDataModel } from '../notificationView/notificationDataModel';
 import {
   GetActivities,
   kActivityListener,
@@ -65,18 +66,19 @@ import {
   kGetInvidualNotification,
   SetSeenActivity,
 } from '../notificationView/notificationServices';
-import {kProfilePicUpdated} from '../profile/profileDataModel';
+import { kProfilePicUpdated } from '../profile/profileDataModel';
 import AppGuidedTour from './appGuidedTour';
 import Recent from './recent';
 import Styles from './styles';
 import Timeline from './timeline';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import BusyIndicator from '../../common/component/busyindicator';
 
 const options = {
   enableVibrateFallback: true,
   ignoreAndroidSystemSettings: false,
 };
-type Props = {[x: string]: any};
+type Props = { [x: string]: any };
 
 class DashboardIndex extends React.Component<Props> {
   notificationListener: EventManager;
@@ -136,8 +138,9 @@ class DashboardIndex extends React.Component<Props> {
   };
 
   componentDidMount = () => {
-    loaderHandler.showLoader();
+    // //loaderHandler.showLoader();
 
+    
     this.props.setCreateMemory(false);
     if (this.props.setTimer == 'false') {
       this.state.appTourVisibility = true;
@@ -152,6 +155,7 @@ class DashboardIndex extends React.Component<Props> {
         });
       }, 2000);
     }
+
   };
 
   changeNotification = () => {
@@ -175,7 +179,7 @@ class DashboardIndex extends React.Component<Props> {
           },
         },
         kGetInvidualNotification,
-        response =>{
+        response => {
           if (response.ResponseCode == 200) {
             this.notificationCallback(true, response['Details']);
           } else {
@@ -193,23 +197,25 @@ class DashboardIndex extends React.Component<Props> {
       if (Utility.isInternetConnected) {
         Utility.notificationObject.hasNotification = false;
         Utility.notificationObject.isBackgroundNotification = true;
-        loaderHandler.showLoader();
-        GetActivities(
-          {
-            notification_params: {
-              nid: Utility.notificationObject.data.nid,
-              notification_id: Utility.notificationObject.data.notification_id,
+        // //loaderHandler.showLoader();
+        
+          GetActivities(
+            {
+              notification_params: {
+                nid: Utility.notificationObject.data.nid,
+                notification_id: Utility.notificationObject.data.notification_id,
+              },
             },
-          },
-          kGetInvidualNotification,
-          response=>{
-            if (response.ResponseCode == 200) {
-              this.notificationCallback(true, response['Details']);
-            } else {
-              this.notificationCallback(false, response['ResponseMessage']);
+            kGetInvidualNotification,
+            response => {
+              if (response.ResponseCode == 200) {
+                this.notificationCallback(true, response['Details']);
+              } else {
+                this.notificationCallback(false, response['ResponseMessage']);
+              }
             }
-          }
-        );
+          );
+        
       } else {
         No_Internet_Warning();
       }
@@ -224,7 +230,7 @@ class DashboardIndex extends React.Component<Props> {
       )[0];
       // showConsoleLog(ConsoleType.LOG,"Final data:",details);
       if (Utility.notificationObject.isBackgroundNotification) {
-        SetSeenActivity({ids: details.ids}, 0);
+        SetSeenActivity({ ids: details.ids }, 0);
         if (
           details.status == 0 &&
           (details.notificationType.indexOf('collaboration') != -1 ||
@@ -242,7 +248,7 @@ class DashboardIndex extends React.Component<Props> {
             // this.props.navigation.navigate("memoryDetails", { "nid": details.nid, "type": details.type })
           }
         }
-      } 
+      }
       else {
         //showConsoleLog(ConsoleType.LOG,"foreground",details);
         if (
@@ -258,19 +264,23 @@ class DashboardIndex extends React.Component<Props> {
     } else if (!Utility.isInternetConnected) {
       No_Internet_Warning();
     }
-    loaderHandler.hideLoader();
+    
+    // //loaderHandler.hideLoader();
 
   };
 
   convertToMemory(id: any, title: any) {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Creating Memory...');
+      // //loaderHandler.showLoader('Creating Memory...');
+      this.props.loaderText('Creating Memory...');
+     
       let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
       draftDetails.prompt_id = parseInt(id);
       CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
-      res=>{
-        this.promptToMemoryCallBack(res.status,res.id)
-      });
+        res => {
+          this.promptToMemoryCallBack(res.status, res.id)
+        });
+    
     } else {
       No_Internet_Warning();
     }
@@ -278,11 +288,15 @@ class DashboardIndex extends React.Component<Props> {
 
   promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
     if (success) {
-      loaderHandler.hideLoader();
+      // //loaderHandler.hideLoader();
+     
       this.props.navigation.navigate("createMemory", { editMode: true, draftNid: draftDetails, isFromPrompt: true })
+     
     } else {
-      loaderHandler.hideLoader();
+      // //loaderHandler.hideLoader();
+     
       ToastMessage(draftDetails);
+     
     }
   };
 
@@ -304,7 +318,7 @@ class DashboardIndex extends React.Component<Props> {
     type?: any,
     uid?: any,
   ) => {
-    loaderHandler.hideLoader();
+   
     if (fetched) {
       // if (type == MemoryActionKeys.removeMeFromThisPostKey){
       //     publishedMemoriesArray.forEach((element: any, index: any) => {
@@ -320,15 +334,16 @@ class DashboardIndex extends React.Component<Props> {
       //     publishedMemoriesArray = publishedMemoriesArray.filter((element: any) => element.nid != nid)
       // }
       // this.publishedMemoryDataModel.updatePublishedMemories(publishedMemoriesArray)
-      this.props.sendMemoryActions({nid, type, uid});
+      this.props.sendMemoryActions({ nid, type, uid });
       // this.setState({});
     } else {
       ToastMessage(responseMessage, Colors.ErrorColor);
     }
+
   };
 
   onFilterClick = () => {
-    this.setState({currentScreen: this.screen}, () => {
+    this.setState({ currentScreen: this.screen }, () => {
       // this.props.navigation.navigate("filtersScreen", { currentScreen: this.screen });
     });
   };
@@ -336,6 +351,12 @@ class DashboardIndex extends React.Component<Props> {
   render() {
     return (
       <View style={Styles.fullFlex}>
+        {
+          this.props.showLoaderValue ?
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue !=''? this.props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <SafeAreaView style={Styles.emptySafeAreaStyle} />
         <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
           <View style={Styles.fullFlex}>
@@ -377,12 +398,13 @@ class DashboardIndex extends React.Component<Props> {
               }
               backgroundColor="#ffffff"
             />
+
             <ScrollableTabView
               ref={(ref: any) => {
                 this.scrollableTabView = ref;
               }}
               nestedScrollEnabled={true} overScrollMode='always'
-              style={[Styles.fullWidth,{flex: 1,}]}
+              style={[Styles.fullWidth, { flex: 1, }]}
               scrollEnabled={Platform.OS == 'ios' ? true : false}
               locked={Platform.OS == 'ios' ? false : true}
               initialPage={0}
@@ -401,7 +423,7 @@ class DashboardIndex extends React.Component<Props> {
               }}
               tabBarActiveTextColor={Colors.TextColor}
               // tabBarInactiveTextColor = "rgba(0.216, 0.22, 0.322, 0.75)"
-              tabBarUnderlineStyle={{backgroundColor: Colors.white, height: 0}}>
+              tabBarUnderlineStyle={{ backgroundColor: Colors.white, height: 0 }}>
               <Recent
                 tabLabel={'Recent'}
                 filterClick={() => this.onFilterClick.bind(this)}
@@ -414,6 +436,7 @@ class DashboardIndex extends React.Component<Props> {
                 navigation={this.props.navigation}
               />
             </ScrollableTabView>
+
             {/* {this.state.filterScreenVisibility && <FilterScreen currentScreen={this.state.currentScreen} onCancel={()=> this.setState({filterScreenVisibility : false})}/>} */}
           </View>
 
@@ -423,13 +446,14 @@ class DashboardIndex extends React.Component<Props> {
               <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Write} />
             </View>
           </View>
+
         </SafeAreaView>
         {this.state.appTourVisibility && (
           <AppGuidedTour
             cancelAppTour={() => {
-              this.setState({appTourVisibility: false}, () =>
+              this.setState({ appTourVisibility: false }, () =>
                 DefaultPreference.set('hide_guide_tour', 'true').then(
-                  function () {},
+                  function () { },
                 ),
               );
             }}
@@ -539,7 +563,7 @@ class DashboardIndex extends React.Component<Props> {
       }
     } else {
       setTimeout(() => {
-        this.setState({showNoInternetView: true});
+        this.setState({ showNoInternetView: true });
       }, 500);
     }
   };
@@ -562,6 +586,8 @@ export const filterView = (onClick: any, screen: any) => {
 const mapState = (state: any) => {
   return {
     filterDataTimeLine: state.dashboardReducer.filterDataTimeline,
+    showLoaderValue: state.dashboardReducer.showLoader,
+    loaderTextValue: state.dashboardReducer.loaderText,
     filterDataRecent: state.dashboardReducer.filterDataRecent,
     loadingRecent: state.dashboardReducer.loadingRecent,
     showAlert: state.MemoryInitials.showAlert,
@@ -573,19 +599,21 @@ const mapState = (state: any) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     setCreateMemory: (payload: any) =>
-      dispatch({type: CreateAMemory, payload: payload}),
+      dispatch({ type: CreateAMemory, payload: payload }),
     fetchFiltersData: (payload: any) =>
-      dispatch({type: GET_FILTERS_DATA, payload: payload}),
+      dispatch({ type: GET_FILTERS_DATA, payload: payload }),
     fetchFiltersDataTimeline: (payload: any) =>
-      dispatch({type: GET_FILTERS_DATA_TIMELINE, payload: payload}),
+      dispatch({ type: GET_FILTERS_DATA_TIMELINE, payload: payload }),
     fetchMemoryList: (payload: any) =>
-      dispatch({type: GET_MEMORY_LIST, payload: payload}),
+      dispatch({ type: GET_MEMORY_LIST, payload: payload }),
     showAlertCall: (payload: any) =>
-      dispatch({type: showCustomAlert, payload: payload}),
+      dispatch({ type: showCustomAlert, payload: payload }),
     sendMemoryActions: (payload: any) =>
-      dispatch({type: MEMORY_ACTIONS_DASHBOARD, payload: payload}),
+      dispatch({ type: MEMORY_ACTIONS_DASHBOARD, payload: payload }),
     setCurrentTabActions: (payload: any) =>
-      dispatch({type: ACTIVE_TAB_ON_DASHBOARD, payload: payload}),
+      dispatch({ type: ACTIVE_TAB_ON_DASHBOARD, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
   };
 };
 

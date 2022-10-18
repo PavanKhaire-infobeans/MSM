@@ -181,7 +181,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     }
     this.memoryDataModel = new MemoryDataModel();
     if (!this.props.previewDraft) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       GetMemoryDetails(this.nid, this.storyType,
         response => {
           if (response.ResponseCode == 200) {
@@ -194,7 +194,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     // this.memoryDetailsUpdateListener = EventManager.addListener(
     //   'memoryDetailsListener',
     //   () => {
-    //     loaderHandler.showLoader();
+    //     //loaderHandler.showLoader();
     //     GetMemoryDetails(this.nid, this.storyType);
     //   },
     // );
@@ -262,7 +262,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   }
 
   _onBack = () => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (this.state.bottomToolbar > 0) {
       Keyboard.dismiss();
     } else {
@@ -280,7 +280,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     response: any,
     latestComment?: boolean,
   ) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (fetched) {
       if (latestComment) {
         this.memoryDataModel.likesComments.noOfComments--;
@@ -351,7 +351,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           );
         this.memoryDataModel.likesComments.noOfComments--;
         // this.setState({});
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
         this.forwardDataToNative();
       } else {
         this.memoryDataModel.likesComments.commentsList =
@@ -363,7 +363,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     }
   };
   editCommentCallback = (fetched: boolean, responseMessage: any, cid?: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (cid != '') {
       if (this.state.viewAllComments) {
         let filteredComment = this.state.allCommentsList.filter(
@@ -502,7 +502,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         attr_id ? attr_id : null,
         nodetype ? nodetype : null,
       );
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
     }
     // }
   };
@@ -513,7 +513,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     } else {
       this.setState({viewAllComments: true}, () => {
         if (this.memoryDataModel.likesComments.noOfComments > 0) {
-          loaderHandler.showLoader('Loading...');
+          //loaderHandler.showLoader('Loading...');
           GetAllComments(
             this.memoryDataModel.nid,
             this.storyType,
@@ -529,7 +529,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   hideAllComments = () => {};
 
   allLikesFetched = (fetched?: boolean, getAllLikes?: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (fetched) {
       this.showList(this.keyLiked, getAllLikes);
       // this.setState({});
@@ -563,7 +563,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       ToastMessage(memoryDetails, Colors.ErrorColor);
       this.setState({memoryDetailAvailable: true});
     }
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
   };
 
   componentWillUnmount() {
@@ -945,7 +945,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
         text: 'Yes',
         style: 'default',
         onPress: () => {
-          loaderHandler.showLoader('Deleting...');
+          //loaderHandler.showLoader('Deleting...');
           DeleteComment(item.cid, this.memoryDataModel.nid, this.storyType);
         },
       },
@@ -1009,7 +1009,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
           );
         } else {
           commentText = encode_utf8(commentText);
-          loaderHandler.showLoader('Editing...');
+          //loaderHandler.showLoader('Editing...');
           EditComment(
             commentId,
             this.memoryDataModel.nid,
@@ -1778,7 +1778,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 style: 'default',
                 onPress: () => {
                   if (Utility.isInternetConnected) {
-                    loaderHandler.showLoader();
+                    //loaderHandler.showLoader();
                     MemoryAction(
                       data.memoryType,
                       data.nid,
@@ -1812,7 +1812,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     event = event.nativeEvent;
     // this.getDraftDetails(event)
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       if (nid) {
         this.props.navigation.navigate('createMemory', {
           editMode: true,
@@ -1839,7 +1839,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     uid?: any,
   ) => {
     if (this.props?.route?.name == 'memoryDetails') {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       if (fetched) {
         if (type == MemoryActionKeys.removeMeFromThisPostKey) {
           delete this.memoryDataModel.actions_on_memory

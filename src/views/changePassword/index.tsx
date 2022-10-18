@@ -50,11 +50,11 @@ const ChangePassword = props => {
   const changePasswordResponse = (success: boolean, response: any) => {
     if (success) {
       Keyboard.dismiss();
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       ToastMessage(response, Colors.ThemeColor);
       props.navigation.goBack();
     } else {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       ToastMessage(response, Colors.ErrorColor);
     }
   };
@@ -169,7 +169,7 @@ const ChangePassword = props => {
       }
       setTimeout(Keyboard.dismiss);
       if (!hasError) {
-        loaderHandler.showLoader();
+        //loaderHandler.showLoader();
         ChangePasswordService(currentPassword, confirmPassword,
           response => {
             changePasswordResponse(response.success, response.message)

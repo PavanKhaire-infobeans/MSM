@@ -77,6 +77,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import Styles from './styles';
 import MessageDialogue from '../../../common/component/messageDialogue';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../../dashboard/dashboardReducer';
+import BusyIndicator from '../../../common/component/busyindicator';
 const ScreenWidth = Dimensions.get('window').width;
 
 type MainItem = { [y: string]: string | Array<{ [x: string]: any }> };
@@ -396,7 +398,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       message = 'Updating...';
     }
     this.moment = moment;
-    loaderHandler.showLoader(message);
+    //loaderHandler.showLoader(message);
+    this.props.showLoader(true);
+    this.props.loaderText(message);
     this.props.setValue(true);
     addEditMindPop(req, filesToUpload);
   };
@@ -606,6 +610,12 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   render() {
     return (
       <View style={Styles.mainContainer}>
+        {
+          this.props.showLoaderValue ?
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <SafeAreaView style={Styles.invisibleView} />
         <SafeAreaView style={Styles.containerStyle}>
           <View style={Styles.mainContainer}>
@@ -684,7 +694,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         this._actionSheet && this._actionSheet.showSheet();
       },
     );
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    this.props.showLoader(false);
+    this.props.loaderText('Loading...');
   };
   // cameraAttachmentPress = () =>{
   // 	Keyboard.dismiss();
@@ -701,7 +713,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   // 	// 		this._actionSheet && this._actionSheet.showSheet();
   // 	// 	}
   // 	// );
-  // 	// loaderHandler.hideLoader();
+  // 	// //loaderHandler.hideLoader();
   // }
 
   audioAttachmentPress = () => {
@@ -716,12 +728,16 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         this.props.setValue(false);
       },
     });
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    this.props.showLoader(false);
+    this.props.loaderText('Loading...');
   };
 
   convertToMemory = (id: any) => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
       this.draftDetails = DefaultDetailsMemory(
         decode_utf8(this.state.content.trim()),
       );
@@ -740,7 +756,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
               deepLinkBackClick: this.props.deepLinkBackClick,
             });
           } else {
-            loaderHandler.hideLoader();
+            //loaderHandler.hideLoader();
+            this.props.showLoader(false);
+            this.props.loaderText('Loading...');
             this.messageRef._show({ message: resp.message });
             // ToastMessage(resp.message);
           }
@@ -833,7 +851,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                             text: 'Yes',
                             style: 'destructive',
                             onPress: () => {
-                              //loaderHandler.showLoader("Deleting...");
+                              ////loaderHandler.showLoader("Deleting...");
+                              this.props.showLoader(true);
+                              this.props.loaderText('Deleting...');
                               this.props.deleteMindPops({
                                 mindPopList: [{ mindPopID: this.state.id }],
                                 configurationTimestamp: TimeStampMilliSeconds(),
@@ -950,7 +970,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                             text: 'Yes',
                             style: 'destructive',
                             onPress: () => {
-                              //loaderHandler.showLoader("Deleting...");
+                              ////loaderHandler.showLoader("Deleting...");
+                              this.props.showLoader(true);
+                              this.props.loaderText('Deleting...');
                               this.props.deleteMindPops({
                                 mindPopList: [{ mindPopID: this.state.id }],
                                 configurationTimestamp: TimeStampMilliSeconds(),
@@ -1016,7 +1038,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         Keyboard.dismiss();
         DeviceEventEmitter.emit('updateSelected', 0);
         this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        this.props.showLoader(false);
+        this.props.loaderText('Loading...');
         this.props.navigation.goBack();
         return;
       }
@@ -1044,7 +1068,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 // this._prevUpdate();
                 DeviceEventEmitter.emit('updateSelected', 0);
                 this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
-                loaderHandler.hideLoader();
+                //loaderHandler.hideLoader();
+                this.props.showLoader(false);
+                this.props.loaderText('Loading...');
                 if (DeviceInfo.isTablet()) {
                   Keyboard.dismiss();
                   this.props.navigation.goBack();
@@ -1059,7 +1085,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 DeviceEventEmitter.emit('updateSelected', 0);
                 this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
                 //showConsoleLog(ConsoleType.LOG,"Error", error);
-                loaderHandler.hideLoader();
+                //loaderHandler.hideLoader();
+                this.props.showLoader(false);
+                this.props.loaderText('Loading...');
                 if (DeviceInfo.isTablet()) {
                   Keyboard.dismiss();
                   this.props.navigation.goBack();
@@ -1070,7 +1098,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           } else {
             DeviceEventEmitter.emit('updateSelected', 0);
             this.props?.route?.params?.updateList && this.props?.route?.params?.updateList();
-            loaderHandler.hideLoader();
+            //loaderHandler.hideLoader();
+            this.props.showLoader(false);
+            this.props.loaderText('Loading...');
             if (DeviceInfo.isTablet()) {
               Keyboard.dismiss();
               this.props.navigation.goBack();
@@ -1091,7 +1121,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       //   message,
       //   message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor,
       // );
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.props.showLoader(false);
+      this.props.loaderText('Loading...');
       this.messageRef._show({ message, color: message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor });
 
     }
@@ -1101,7 +1133,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     //Delete MindPop Operation resolver
     if (this.props !== nextProps) {
       if (nextProps.deleteStatus && nextProps.deleteStatus.completed) {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        this.props.showLoader(false);
+        this.props.loaderText('Loading...');
         if (
           nextProps.deleteStatus.success &&
           this.props?.route?.name == 'mindPopEdit'
@@ -1530,6 +1564,8 @@ const mapState = (state: { [x: string]: any }) => ({
   deleteStatus: state.deleteMindPop,
   ...(DeviceInfo.isTablet() ? {} : { isEdit: state.mindPopEditMode.mode }),
   listItem: state.mindPopEditMode.selectedMindPop,
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
 });
 
 const mapDispatch = (dispatch: Function) => {
@@ -1543,12 +1579,13 @@ const mapDispatch = (dispatch: Function) => {
     edit: () => dispatch({ type: EditMode.RESET }),
     // callEnded: () => dispatch({ type: GetMindPopStatus.RequestEnded }),
     setValue: (mode: boolean, value: any) =>
-      dispatch({
-        type: mode ? EditMode.EDIT : EditMode.RESET,
-        payload: value,
-      }),
+      dispatch({ type: mode ? EditMode.EDIT : EditMode.RESET, payload: value }),
     listMindPops: (payload: any) =>
       dispatch({ type: GetMindPopStatus.RequestStarted, payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
   };
 };
 

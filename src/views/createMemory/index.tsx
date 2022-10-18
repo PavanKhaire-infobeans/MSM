@@ -107,9 +107,12 @@ import {
   CreateAMemory,
   GET_MEMORY_LIST,
   ListType,
+  SHOW_LOADER_READ,
+  SHOW_LOADER_TEXT,
 } from '../dashboard/dashboardReducer';
 import DatePicker from './../../common/component/datePicker';
 import Styles from './styles';
+import BusyIndicator from '../../common/component/busyindicator';
 
 export const createNew = 'Create New';
 export const editDraft = 'Edit Draft';
@@ -352,9 +355,11 @@ class CreateMemory extends React.Component<Props> {
   }
 
   deleteDraftCallback = (success: any) => {
-    loaderHandler.hideLoader();
+
     if (success) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
       this.props.navigation.navigate('dashBoard');
     } else {
       ToastMessage('Unable to delete draft. Please try again later');
@@ -414,7 +419,9 @@ class CreateMemory extends React.Component<Props> {
           collaboratorOwner: draftDetails.collaboratorOwner,
         },
         () => {
-          loaderHandler.hideLoader();
+          //loaderHandler.hideLoader();
+          this.props.showLoader(false);
+          this.props.loaderText('Loading...');
           this.setEtherPadContent(
             'get',
             '',
@@ -427,9 +434,11 @@ class CreateMemory extends React.Component<Props> {
       // 		id : Account.selectedData().userID,
       // 		action_type: CollaboratorsAction.joinCollaboration})
       // }
-      // loaderHandler.hideLoader();
+      // //loaderHandler.hideLoader();
     } else {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.props.showLoader(false);
+      this.props.loaderText('Loading...');
       ToastMessage(draftDetails, Colors.ErrorColor);
     }
   };
@@ -447,7 +456,9 @@ class CreateMemory extends React.Component<Props> {
     this.props.resetAll();
     let recentTag = { searchType: kRecentTags, searchTerm: '' };
     if (this.props.route.params.editMode) {
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
       let response: any = await GetDraftsDetails(
         this.props.route.params.draftNid,
         resp => this.draftDetailsCallBack(resp.status, resp.responseData),
@@ -484,7 +495,9 @@ class CreateMemory extends React.Component<Props> {
         },
         () => {
           this.props.setNid(this.props.route.params.id);
-          loaderHandler.hideLoader();
+          //loaderHandler.hideLoader();
+          this.props.showLoader(false);
+          this.props.loaderText('Loading...');
           this.setEtherPadContent(
             'get',
             '',
@@ -509,8 +522,9 @@ class CreateMemory extends React.Component<Props> {
   }
 
   memorySaveCallback = (success: any, id?: any, padId?: any, key?: any) => {
-    // loaderHandler.hideLoader();
-
+    // //loaderHandler.hideLoader();
+    this.props.showLoader(false);
+    this.props.loaderText('Loading...');
     // showConsoleLog(ConsoleType.LOG,'dataaaaa : ', JSON.stringify(success), id, key);
     if (success) {
       // EventManager.callBack('showConfetti');
@@ -575,7 +589,9 @@ class CreateMemory extends React.Component<Props> {
           routes: [{ name: 'writeTabs' }]
         })
         // this.props.navigation.writeTabs();
-        // loaderHandler.showLoader();
+        // //loaderHandler.showLoader();
+        this.props.showLoader(true);
+        this.props.loaderText('Loading...');
       } else {
         this.props.showAlertCall(true);
         this.props.showAlertCallData({
@@ -616,7 +632,9 @@ class CreateMemory extends React.Component<Props> {
         // EventManager.callBack(kReloadDraft);
       }
     } else {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.props.showLoader(false);
+      this.props.loaderText('Loading...');
       ToastMessage(id, Colors.ErrorColor);
     }
   };
@@ -645,11 +663,15 @@ class CreateMemory extends React.Component<Props> {
   };
 
   preview = () => {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
+    this.props.showLoader(true);
+    this.props.loaderText('Loading...');
     this.saveIntitals();
     this.hideMenu();
     setTimeout(() => {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.props.showLoader(false);
+      this.props.loaderText('Loading...');
       this.props.navigation.navigate('memoryDetails', {
         previewDraft: true,
         memoryDetails: this.getDetailsForPreview(),
@@ -792,7 +814,9 @@ class CreateMemory extends React.Component<Props> {
         onPress: () => {
           this.hideMenu();
           if (Utility.isInternetConnected) {
-            loaderHandler.showLoader('Deleting...');
+            //loaderHandler.showLoader('Deleting...');
+            this.props.showLoader(true);
+            this.props.loaderText('Deleting...');
             DeleteDraftService(
               this.props.nid,
               DraftActions.deleteDrafts,
@@ -923,14 +947,17 @@ class CreateMemory extends React.Component<Props> {
       this.saveORPublish(key);
     } else {
       ToastMessage(message, Colors.ErrorColor);
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.props.showLoader(false);
+      this.props.loaderText('Loading...');
     }
   };
 
   saveORPublish = (key: any) => {
     this.saveIntitals();
-    loaderHandler.showLoader('Saving');
-
+    //loaderHandler.showLoader('Saving');
+    this.props.showLoader(true);
+    this.props.loaderText('Saving...');
     setTimeout(async () => {
       if (Utility.isInternetConnected) {
         // setTimeout(() => {
@@ -976,7 +1003,9 @@ class CreateMemory extends React.Component<Props> {
         // }
         // }, 500);
       } else {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        this.props.showLoader(false);
+        this.props.loaderText('Loading...');
         No_Internet_Warning();
       }
     }, 1000);
@@ -1449,7 +1478,9 @@ class CreateMemory extends React.Component<Props> {
         this.deleteDraft();
         break;
       case 1:
-        loaderHandler.showLoader('Saving...');
+        //loaderHandler.showLoader('Saving...');
+        this.props.showLoader(true);
+        this.props.loaderText('Saving...');
         // if (this.state.padDetails?.padId) {
         //   this.setEtherPadContent('get', '', this.state.padDetails.padId);
         // }
@@ -1463,7 +1494,9 @@ class CreateMemory extends React.Component<Props> {
           this._actionSheet.current.hideSheet();
         break;
       case 3:
-        loaderHandler.showLoader('Publishing...');
+        this.props.showLoader(true);
+        this.props.loaderText('Publishing...');
+        //loaderHandler.showLoader('Publishing...');
         // setTimeout(() => {
         this.saveORPublish(kPublish);
         // }, 2500);
@@ -2124,6 +2157,12 @@ class CreateMemory extends React.Component<Props> {
   render() {
     return (
       <View style={styles.fullFlex}>
+        {
+          this.props.showLoaderValue ?
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <SafeAreaView style={styles.emptySafeAreaStyle} />
         <SafeAreaView style={styles.SafeAreaViewContainerStyle}>
           {Platform.OS === 'ios' && this.state.showCalender && (
@@ -2197,7 +2236,9 @@ class CreateMemory extends React.Component<Props> {
                       type: ListType.Timeline,
                       isLoading: true,
                     });
-                    loaderHandler.showLoader();
+                    //loaderHandler.showLoader();
+                    this.props.showLoader(true);
+                    this.props.loaderText('Loading...');
                     this.props.navigation.goBack();
                   });
                   // ReactNativeHapticFeedback.trigger('impactMedium', options);
@@ -2434,6 +2475,8 @@ const mapState = (state: { [x: string]: any }) => {
     memoryDescription: state.MemoryInitials.description,
     memoryObject: state.MemoryInitials,
     goToDashboard: state.MemoryInitials.goToDashboard,
+    showLoaderValue: state.dashboardReducer.showLoader,
+    loaderTextValue: state.dashboardReducer.loaderText,
   };
 };
 
@@ -2469,6 +2512,10 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: EtherPadContentAPI, payload: payload }),
     setEditContent: (payload: any) =>
       dispatch({ type: EditContent, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
   };
 };
 

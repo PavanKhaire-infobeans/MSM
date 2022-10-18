@@ -67,7 +67,7 @@ class ForgotPassword extends React.Component<Props> {
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (this.props !== nextProps && nextProps.forgotPasswordStatus.completed) {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       this.props.clean();
 
       if (nextProps.forgotPasswordStatus.success) {
@@ -83,13 +83,13 @@ class ForgotPassword extends React.Component<Props> {
         ]);
 
         if (code == 200) {
-          loaderHandler.hideLoader();
+          //loaderHandler.hideLoader();
           if (message && message.trim().length != 0) {
             ToastMessage(message, 'black');
           }
           this.setState({isRequestSubmitted: true});
         } else {
-          loaderHandler.hideLoader();
+          //loaderHandler.hideLoader();
           if (message && message.trim().length != 0) {
             ToastMessage(message, Colors.ErrorColor);
           }
@@ -224,7 +224,7 @@ class ForgotPassword extends React.Component<Props> {
         return;
       }
 
-      // loaderHandler.showLoader();
+      // //loaderHandler.showLoader();
       // this.props.forgotPasswordServiceCall({ emailAddress: this.state.email });
       this.FetchLoginInstance([
         {payload: {emailId: this.state.email, details: {type: 'public'}}},
@@ -236,7 +236,7 @@ class ForgotPassword extends React.Component<Props> {
   }
 
   callForgetPasswordService = (instances: any) => {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     this.props.forgotPasswordServiceCall({
       emailId: this.state.email,
       instances: instances,
@@ -245,7 +245,7 @@ class ForgotPassword extends React.Component<Props> {
 
   FetchLoginInstance = async (params: any) => {
     try {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       let response = await loginInstanceRequest(`${kAdmin}`, params)
         .then((response: Response) => response.json())
         .catch((err: any) => showConsoleLog(ConsoleType.LOG, err));
@@ -264,19 +264,19 @@ class ForgotPassword extends React.Component<Props> {
             email: this.state.email.trim(),
             onClick: this.callForgetPasswordService,
           });
-          loaderHandler.hideLoader();
+          //loaderHandler.hideLoader();
         } else {
           this.callForgetPasswordService([response.Response[0].id]);
         }
         // return
         // EventManager.callBack(callBackIdentifier, true, response["ResponseMessage"], nid);
       } else {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
         ToastMessage(response.ResponseMessage, Colors.ErrorColor);
         // EventManager.callBack(callBackIdentifier, false, response["ResponseMessage"], nid);
       }
     } catch (err) {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       ToastMessage('Server error', Colors.ErrorColor);
       // EventManager.callBack(callBackIdentifier, false, "Unable to process at this moment, please try again later");
     }

@@ -79,7 +79,7 @@ export const UserProfile = async () => {
 
 export const UpdateFormValues = (state: any, editableFields: any) => {
   let updatedValues = {};
-  loaderHandler.showLoader('Saving...');
+  //loaderHandler.showLoader('Saving...');
   // showConsoleLog(ConsoleType.INFO,"save date: ",editableFields);
 
   for (let keys in editableFields) {
@@ -186,22 +186,22 @@ const updateUserProfile = async (dataset) => {
           EventManager.callBack(kSetUserProfileData, true);
           if (Utility.isInternetConnected) {
             UserProfile();
-            loaderHandler.showLoader('Refreshing...');
+            //loaderHandler.showLoader('Refreshing...');
           } else {
             ToastMessage('No Internet Connected');
           }
         } else {
           ToastMessage('Unable to save data');
-          loaderHandler.hideLoader();
+          //loaderHandler.hideLoader();
         }
       })
       .catch((err: Error) => {
         Promise.reject(err);
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
       });
   } catch (err) {
     EventManager.callBack(kSetUserProfileData, false, err.message);
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
   }
 };
 
@@ -243,7 +243,7 @@ export const UploadProfilePic = async function uploadProfilePicture(
   if (type == PhotoType.cover) {
     options['parameters'] = {type: 'cover'};
   }
-  loaderHandler.showLoader('Uploading..');
+  //loaderHandler.showLoader('Uploading..');
 
   return new Promise((resolve, reject) => {
     uploadTask(

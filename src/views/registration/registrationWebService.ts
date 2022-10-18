@@ -45,7 +45,7 @@ export const registrationForm = async () => {
         ResponseMessage: string;
         Details: { form1: object };
       } = await (async () => response.json())();
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       if (resp.ResponseCode == 200) {
         let formData = toForm(resp.Details.form1);
         EventManager.callBack(kGetFormData, true, formData);
@@ -56,7 +56,7 @@ export const registrationForm = async () => {
       No_Internet_Warning();
     }
   } catch (err) {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     EventManager.callBack(kGetFormData, false, err.message);
   }
 };
@@ -64,7 +64,7 @@ export const registrationForm = async () => {
 export const checkUserRegistration = async (submitData: any) => {
   try {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Requesting...');
+      //loaderHandler.showLoader('Requesting...');
       let chkResponse: Response = await checkPreRegistered(
         `https://${Account.tempData().instanceURL}`,
         submitData,
@@ -75,7 +75,7 @@ export const checkUserRegistration = async (submitData: any) => {
         isRegistered: number;
         personalInfo?: any;
       } = await (async () => chkResponse.json())();
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
 
       showConsoleLog(ConsoleType.LOG,"reg resp : ", JSON.stringify(chkResponse))
       showConsoleLog(ConsoleType.LOG," resp : ", JSON.stringify(resp))
@@ -89,14 +89,14 @@ export const checkUserRegistration = async (submitData: any) => {
       No_Internet_Warning();
     }
   } catch (err) {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     EventManager.callBack(kCheckUserProfile, false, err.message);
   }
 };
 export const submitRegistration = async (registrationData: any) => {
   try {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Requesting...');
+      //loaderHandler.showLoader('Requesting...');
       showConsoleLog(ConsoleType.LOG,"registrationData : " + JSON.stringify(registrationData));
       let resp: {
         ResponseCode: number;
@@ -111,7 +111,7 @@ export const submitRegistration = async (registrationData: any) => {
       //debugger
       showConsoleLog(ConsoleType.LOG,'registration response:', resp);
       // let resp: { ResponseCode: number; ResponseMessage: string; userId: number } = await (async () => response.json())();
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       if (resp.ResponseCode == 200) {
         EventManager.callBack(
           kSubmitFormItem,
@@ -137,7 +137,7 @@ export const submitRegistration = async (registrationData: any) => {
       No_Internet_Warning();
     }
   } catch (err) {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     EventManager.callBack(kSubmitFormItem, false, err.message);
   }
 };

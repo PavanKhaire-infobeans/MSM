@@ -91,7 +91,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   componentDidMount() {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       if (this.props.decodedDataFromURL) {
         this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
       }
@@ -148,7 +148,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     this.setState({
       isRefreshing: false,
       loading: false,
-    },()=>loaderHandler.hideLoader());
+    },()=>{
+      // //loaderHandler.hideLoader()
+    });
   };
 
   deleteDraft = (nid: any, isDeleting: boolean) => {
@@ -165,7 +167,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           onPress: () => {
             this.hideMenu();
             if (Utility.isInternetConnected) {
-              loaderHandler.showLoader('Deleting...');
+              //loaderHandler.showLoader('Deleting...');
               DeleteDraftService(nid, DraftActions.deleteDrafts, kDeleteDraft);
             } else {
               No_Internet_Warning();
@@ -189,7 +191,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             onPress: () => {
               this.hideMenu();
               if (Utility.isInternetConnected) {
-                loaderHandler.showLoader('Undeleting...');
+                //loaderHandler.showLoader('Undeleting...');
                 DeleteDraftService(
                   nid,
                   DraftActions.undeleteDrafts,
@@ -219,7 +221,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           draftType: type,
         }, () => {
           if (showLoader) {
-            loaderHandler.showLoader();
+            //loaderHandler.showLoader();
             memoryDraftsArray = [];
             // this.setState({});
           }
@@ -324,7 +326,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   };
 
   deleteDraftCallback = (success: any, response: any, nid: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (success) {
       // this.props.navigation.goBack();
       memoryDraftsArray = memoryDraftsArray.filter(
@@ -437,7 +439,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   getDraftDetails = (item: any) => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       this.props.navigation.navigate('createMemory', { editMode: true, draftNid: item.item.nid });
     } else {
       No_Internet_Warning();

@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {
   ImageBackground,
   Linking,
@@ -10,10 +10,11 @@ import {
 import base64 from 'react-native-base64';
 import DefaultPreference from 'react-native-default-preference';
 import DeviceInfo from 'react-native-device-info';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import BusyIndicator from '../../common/component/busyindicator';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import Text from '../../common/component/Text';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
   ConsoleType,
   decode_utf8,
@@ -21,21 +22,23 @@ import {
   showConsoleLog,
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
-import LoginStore, {UserData} from '../../common/loginStore/database';
+import { Account } from '../../common/loginStore';
+import LoginStore, { UserData } from '../../common/loginStore/database';
 import Utility from '../../common/utility';
 import WebserviceCall from '../../common/webservice/webservice';
-import {splash_bg} from '../../images';
+import { splash_bg } from '../../images';
 import {
   CreateUpdateMemory,
   promptIdListener,
 } from '../createMemory/createMemoryWebService';
-import {DefaultDetailsMemory} from '../createMemory/dataHelper';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
 import {
   GET_FILTERS_DATA_TIMELINE,
   ListType,
+  SHOW_LOADER_READ,
+  SHOW_LOADER_TEXT,
 } from '../dashboard/dashboardReducer';
-import {UserAccount} from '../menu/reducer';
+import { UserAccount } from '../menu/reducer';
 import {
   GetPromptBYPromptId,
   kGetPromptByID,
@@ -45,7 +48,7 @@ export const eventEmitter = new NativeEventEmitter(NativeModules.EventHandling);
 
 type Props = {
   getUser: Function;
-  user: UserData & {notLoggedIn: boolean};
+  user: UserData & { notLoggedIn: boolean };
   fetchFiltersDataTimeline: Function;
 };
 const Splash = props => {
@@ -66,7 +69,9 @@ const Splash = props => {
           fetchPrompt.status == '1'
         ) {
           if (Utility.isInternetConnected) {
-            loaderHandler.showLoader('Creating Memory...');
+            //loaderHandler.showLoader('Creating Memory...');
+            props.showLoader(true);
+            props.loaderText('Creating Memory...');
             let draftDetails: any = DefaultDetailsMemory(fetchPrompt.title);
             draftDetails.prompt_id = parseInt(decodedDataFromURL);
 
@@ -84,7 +89,9 @@ const Splash = props => {
                     deepLinkBackClick: true,
                   });
                 } else {
-                  loaderHandler.hideLoader();
+                  //loaderHandler.hideLoader();
+                  props.showLoader(false);
+                  props.loaderText('Loading...');
                   ToastMessage(
                     response?.ResponseMessage
                       ? response?.ResponseMessage
@@ -167,9 +174,9 @@ const Splash = props => {
       let list = resp.rows.raw() as Array<UserData>;
       let obj = {};
       list.forEach((element: any) => {
-        obj = {...obj, [`${element.instanceID}_${element.userID}`]: 0};
+        obj = { ...obj, [`${element.instanceID}_${element.userID}`]: 0 };
       });
-      Utility.unreadNotification = {...obj};
+      Utility.unreadNotification = { ...obj };
       showConsoleLog(
         ConsoleType.LOG,
         'Notification object has : ',
@@ -190,7 +197,7 @@ const Splash = props => {
       Account.selectedData().values = props.user;
       // props.navigation.reset("dashboardIndex")
       try {
-        props.fetchFiltersDataTimeline({type: ListType.Timeline});
+        props.fetchFiltersDataTimeline({ type: ListType.Timeline });
 
         if (fromDeeplinking) {
           if (!apiCalldoneOnce) {
@@ -214,7 +221,9 @@ const Splash = props => {
                 if (Utility.isInternetConnected) {
                   if (props.user.userID == splitArray[1]) {
                     if (splitArray[3] && splitArray[3] === 'writeprompt') {
-                      loaderHandler.showLoader('Creating Memory...');
+                      //loaderHandler.showLoader('Creating Memory...');
+                      props.showLoader(true);
+                      props.loaderText('Creating Memory...');
                       let draftDetails: any = DefaultDetailsMemory(
                         decode_utf8(title.trim()),
                       );
@@ -234,7 +243,9 @@ const Splash = props => {
                               deepLinkBackClick: true,
                             });
                           } else {
-                            loaderHandler.hideLoader();
+                            //loaderHandler.hideLoader();
+                            props.showLoader(false);
+                            props.loaderText('Loading...');
                             ToastMessage(
                               response?.ResponseMessage
                                 ? response?.ResponseMessage
@@ -261,14 +272,14 @@ const Splash = props => {
               No_Internet_Warning();
               props.navigation.reset({
                 index: 0,
-                routes: [{name: 'prologue'}],
+                routes: [{ name: 'prologue' }],
               });
             }
           }
         } else {
           props.navigation.reset({
             index: 0,
-            routes: [{name: 'dashBoard'}],
+            routes: [{ name: 'dashBoard' }],
           });
         }
       } catch (error) {
@@ -286,7 +297,7 @@ const Splash = props => {
             // Actions.prologue();
             props.navigation.reset({
               index: 0,
-              routes: [{name: 'prologue'}],
+              routes: [{ name: 'prologue' }],
             });
           } catch (error) {
             showConsoleLog(ConsoleType.LOG, error);
@@ -295,7 +306,7 @@ const Splash = props => {
           // Actions.appIntro();
           props.navigation.reset({
             index: 0,
-            routes: [{name: 'appIntro'}],
+            routes: [{ name: 'appIntro' }],
           });
         }
       });
@@ -312,6 +323,12 @@ const Splash = props => {
         backgroundColor="transparent"
       />
       <ImageBackground source={splash_bg} style={Styles.imageBackGroundStyle}>
+        {
+          props.showLoaderValue ?
+            <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue != '' ? props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <View style={Styles.versionContainer}>
           <Text
             style={
@@ -323,13 +340,19 @@ const Splash = props => {
   );
 };
 
-const mapState = (state: {[x: string]: any}): {user: UserData} => ({
+const mapState = (state: { [x: string]: any }) => ({
   user: state.account,
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
 });
 const mapDispatch = (dispatch: Function) => ({
-  getUser: () => dispatch({type: UserAccount.Get}),
+  getUser: () => dispatch({ type: UserAccount.Get }),
   fetchFiltersDataTimeline: (payload: any) =>
-    dispatch({type: GET_FILTERS_DATA_TIMELINE, payload: payload}),
+    dispatch({ type: GET_FILTERS_DATA_TIMELINE, payload: payload }),
+  showLoader: (payload: any) =>
+    dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+  loaderText: (payload: any) =>
+    dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
 });
 
 export default connect(mapState, mapDispatch)(Splash);

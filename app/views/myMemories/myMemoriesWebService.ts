@@ -351,54 +351,65 @@ export const GetPrompts = async (
   categories: any,
   loadMore: any,
   offsetValue: any,
-) => {
-  try {
-    let data = await Storage.get('userData');
-    let response = await MemoryService(
-      `https://${Account.selectedData().instanceURL}/api/prompts/list`,
-      [
-        {
-          'X-CSRF-TOKEN': data.userAuthToken,
-          'Content-Type': 'application/json',
-        },
-        {
-          configurationTimestamp: '0',
-          searchTerm: {
-            categories: categories,
-            prompt_offset: offsetValue,
+  CB: any,
+  ) => {
+    try {
+
+      showConsoleLog(ConsoleType.LOG, "categories: categories, ", categories)
+      let data = await Storage.get('userData');
+      let response = await newMemoryService(
+        `https://${Account.selectedData().instanceURL}/api/prompts/list`,
+        [
+          {
+            'X-CSRF-TOKEN': data.userAuthToken,
+            'Content-Type': 'application/json',
           },
-        },
-      ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-    if (response != undefined && response != null) {
-      if (response.ResponseCode == 200) {
-        EventManager.callBack(
-          kPromptsList,
-          true,
-          loadMore,
-          response['Details'],
-        );
-      } else {
-        EventManager.callBack(
-          kPromptsList,
-          false,
-          loadMore,
-          response['ResponseMessage'],
-        );
-      }
+          {
+            configurationTimestamp: '0',
+            searchTerm: {
+              categories: categories,
+              prompt_offset: offsetValue,
+            },
+          },
+        ],
+        response => {
+          if (response != undefined && response != null) {
+            if (response.ResponseCode == 200) {
+              showConsoleLog(ConsoleType.LOG, "kPromptsList :", JSON.stringify(response.ResponseMessage))
+              // EventManager.callBack(
+              //   kPromptsList,
+              //   true,
+              //   loadMore,
+              //   response['Details'],
+              // );
+  
+              CB({ fetched: true, ifLoadMore: loadMore, fetchPromptsList: response['Details'] })
+            } else {
+              // EventManager.callBack(
+              //   kPromptsList,
+              //   false,
+              //   loadMore,
+              //   response['ResponseMessage'],
+              // );
+              CB({ fetched: false, ifLoadMore: loadMore, fetchPromptsList: response['ResponseMessage'] })
+            }
+          }
+        }
+      )
+      // .then((response: Response) => response.json())
+      // .catch((err: Error) => {
+      //   Promise.reject(err);
+      // });
+  
+    } catch (err) {
+      // EventManager.callBack(
+      //   kPromptsList,
+      //   false,
+      //   loadMore,
+      //   'Unable to process your request. Please try again later',
+      // );
+      CB({ fetched: false, ifLoadMore: loadMore, fetchPromptsList: 'Unable to process your request. Please try again later' })
     }
-  } catch (err) {
-    EventManager.callBack(
-      kPromptsList,
-      false,
-      loadMore,
-      'Unable to process your request. Please try again later',
-    );
-  }
 };
 
 export const GetPromptBYPromptId = async (

@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { connect } from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 // import { styles } from '../../../common/component/multipleDropDownView/styles';
 import Text from '../../../common/component/Text';
@@ -45,6 +46,7 @@ import {
   DeleteDraftService,
   kDeleteDraft,
 } from '../../createMemory/createMemoryWebService';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../../dashboard/dashboardReducer';
 import { Border } from '../../memoryDetails/componentsMemoryDetails';
 import { GetMemoryDrafts, kMemoryDraftsFetched } from '../myMemoriesWebService';
 import { MemoryDraftsDataModel } from './memoryDraftsDataModel';
@@ -66,7 +68,7 @@ export const kReloadDraft = 'reloadDraftlistener';
 
 class MyListItem extends React.PureComponent {
   render() {
-    let {item,draftType} = this.props;
+    let { item, draftType } = this.props;
     let file: any = {};
     file.url = getValue(item, ['item', 'image_path']);
     let files = [file];
@@ -355,7 +357,7 @@ class MyListItem extends React.PureComponent {
   }
 }
 
-export default class MemoryDrafts extends React.Component<Props, State> {
+class MemoryDrafts extends React.Component<Props, State> {
   memoryDraftDetailsListener: EventManager;
   draftDetailsListener: EventManager;
   deleteDraftListener: EventManager;
@@ -410,25 +412,34 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     firstRender = true
     page = 0;
     this.props.navigation.addListener('focus', () => {
-      loaderHandler.showLoader();
-      // this.onRefresh();
-      this.setState({
-        memoryDraftsArray: []
-      },()=>{
-        if (this.props?.route?.params?.decodedDataFromURL) {
-          this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
-        }
-        else {
-          this.fetchDraft();
-        }
-      })
+      if (Utility.isInternetConnected) {
+        //loaderHandler.showLoader();
+        this.props.showLoader(true);
+        this.props.loaderText('Loading...');
+        // this.onRefresh();
+        this.setState({
+          memoryDraftsArray: []
+        }, () => {
+          if (this.props?.route?.params?.decodedDataFromURL) {
+            this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
+          }
+          else {
+            this.fetchDraft();
+          }
+
+        })
+      } else {
+        No_Internet_Warning();
+      }
     });
     // GetMemoryDrafts("mine","all", memoryDraftsArray.length)
   }
 
   componentDidMount = async () => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
       if (this.props?.route?.params?.decodedDataFromURL) {
         this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
       }
@@ -475,7 +486,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         isRefreshing: false,
         loading: false,
       }, () => {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        this.props.showLoader(false);
+        this.props.loaderText('Loading...');
       });
     });
   };
@@ -513,7 +526,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       isRefreshing: false,
       loading: false,
     }, () => {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.props.showLoader(false);
+      this.props.loaderText('Loading...');
     });
   };
 
@@ -534,7 +549,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               draftOptionsVisible: false,
             }, () => {
               if (Utility.isInternetConnected) {
-                loaderHandler.showLoader('Deleting...');
+                //loaderHandler.showLoader('Deleting...');
+                this.props.showLoader(true);
+                this.props.loaderText('Deleting...');
                 DeleteDraftService(nid, DraftActions.deleteDrafts, response => {
                   this.deleteDraftCallback(response.status, nid)
                 });
@@ -561,7 +578,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             onPress: () => {
               this.hideMenu();
               if (Utility.isInternetConnected) {
-                loaderHandler.showLoader('Undeleting...');
+                //loaderHandler.showLoader('Undeleting...');
+                this.props.showLoader(true);
+                this.props.loaderText('Undeleting...');
                 DeleteDraftService(
                   nid,
                   DraftActions.undeleteDrafts,
@@ -595,7 +614,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           },
           async () => {
             if (showLoader) {
-              // loaderHandler.showLoader();
+              // //loaderHandler.showLoader();
+              this.props.showLoader(true);
+              this.props.loaderText('Loading...');
               memoryDraftsArray = [];
               this.setState({ memoryDraftsArray: [] })
             }
@@ -603,7 +624,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             if (isRefreshing) {
               length = 0;
             }
-            loaderHandler.showLoader();
+            //loaderHandler.showLoader();
+            this.props.showLoader(true);
+            this.props.loaderText('Loading...');
             switch (type) {
               case DraftType.allDrafts: {
                 let response: any = await GetMemoryDrafts('all', 'all', length, (response) => {
@@ -661,8 +684,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
                 break;
               }
             }
-            loaderHandler.hideLoader();
-
+            //loaderHandler.hideLoader();
+            this.props.showLoader(false);
+            this.props.loaderText('Loading...');
           },
         );
       } else {
@@ -672,7 +696,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             loading: false,
           },
           () => {
-            loaderHandler.hideLoader();
+            //loaderHandler.hideLoader();
+            this.props.showLoader(false);
+            this.props.loaderText('Loading...');
             No_Internet_Warning();
           },
         );
@@ -709,16 +735,20 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       );
       this.memoryDraftsDataModel.decreaseMemoryDraftCount();
       this.setState({ memoryDraftsArray }, () => {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        this.props.showLoader(false);
+        this.props.loaderText('Loading...');
       });
     }
     else {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.props.showLoader(false);
+      this.props.loaderText('Loading...');
       ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 
-  keyExtractor =(_, index: number) => `key ${index}`;
+  keyExtractor = (_, index: number) => `key ${index}`;
 
   render() {
     return (
@@ -794,15 +824,15 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               ]}
               tintColor={Colors.NewThemeColor}
               refreshing={this.state.isRefreshing}
-              onRefresh={()=>this.onRefresh()}
+              onRefresh={() => this.onRefresh()}
             />
           }
           ItemSeparatorComponent={this.renderSeparator}
-          ListFooterComponent={()=>this.renderFooter()}
+          ListFooterComponent={() => this.renderFooter()}
           onEndReachedThreshold={0.4}
-          onEndReached={()=>this.handleLoadMore()}
+          onEndReached={() => this.handleLoadMore()}
         />
-        {this.state.memoryDraftsArray.length == 0 && loadingDataFromServer == false && firstRender == false? (
+        {this.state.memoryDraftsArray.length == 0 && loadingDataFromServer == false && firstRender == false ? (
           <View
             style={{
               flex: 1,
@@ -873,7 +903,9 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   getDraftDetails = (item: any) => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
       this.props.navigation?.navigate('createMemory', {
         editMode: true,
         draftNid: item.item.nid,
@@ -886,10 +918,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   renderDraftView = (item: any) => {
     return (
       <MyListItem
-        draftType ={this.state.draftType}
+        draftType={this.state.draftType}
         item={item}
-        getDraftDetails={()=>this.getDraftDetails(item)}
-        deleteDraft={(nid, deletedata)=>this.deleteDraft(nid, deletedata)}
+        getDraftDetails={() => this.getDraftDetails(item)}
+        deleteDraft={(nid, deletedata) => this.deleteDraft(nid, deletedata)}
       />
     );
   };
@@ -899,7 +931,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     if (!this.state.loading) return null;
     return (
       <View style={{ width: '100%', height: 50 }}>
-        <ActivityIndicator color={Colors.newTextColor}/>
+        <ActivityIndicator color={Colors.newTextColor} />
       </View>
     );
   };
@@ -932,6 +964,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     }
   };
 }
+
 const UserDetails = (item: any) => {
   let createdOn: any = getValue(item, ['item', 'item', 'created']);
   // createdOn = Utility.timeDuration(createdOn, "M d, Y");
@@ -1012,6 +1045,7 @@ const UserDetails = (item: any) => {
     </View>
   );
 };
+
 const CommonImageView = (props: { file: any; files: any }) => {
   let currentIndex = props.files.indexOf(props.file);
   return (
@@ -1082,3 +1116,21 @@ const style = StyleSheet.create({
     alignContent: 'center',
   },
 });
+
+const mapState = (state: any) => {
+  return {
+    showLoaderValue: state.dashboardReducer.showLoader,
+    loaderTextValue: state.dashboardReducer.loaderText,
+  };
+};
+
+const mapDispatch = (dispatch: Function) => {
+  return {
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
+  };
+};
+
+export default connect(mapState, mapDispatch)(MemoryDrafts)

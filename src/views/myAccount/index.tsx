@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -9,15 +9,17 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
+import { connect } from 'react-redux';
+import BusyIndicator from '../../common/component/busyindicator';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import DefaultListItem from '../../common/component/defaultListItem';
 import TextNew from '../../common/component/Text';
-import {No_Internet_Warning} from '../../common/component/Toast';
-import {Colors, Storage} from '../../common/constants';
+import { No_Internet_Warning } from '../../common/component/Toast';
+import { Colors, Storage } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account, LoginStore, UserData} from '../../common/loginStore';
+import { Account, LoginStore, UserData } from '../../common/loginStore';
 import Utility from '../../common/utility';
-import {logoutMethod} from '../../common/webservice/webservice';
+import { logoutMethod } from '../../common/webservice/webservice';
 import {
   icon_drafts,
   icon_idea,
@@ -25,12 +27,14 @@ import {
   icon_password,
   profile_placeholder,
 } from '../../images';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
 import NavigationBar from '../dashboard/NavigationBar';
 import useProfileData from '../profile/profileDataModel';
 import {
   kGetUserProfileData,
   UserProfile,
 } from '../profile/userProfileWebService';
+import { GetUserData } from './reducer';
 import Styles from './styles';
 
 const MyMessages = 'Messages';
@@ -46,7 +50,7 @@ const MyAccount = props => {
   const [userImage, setUserImage] = useState(null);
 
   const [userProfileDetails, setUserProfileDetails] = useState({});
-  const {basicInfo} = useProfileData(userProfileDetails);
+  const { basicInfo } = useProfileData(userProfileDetails);
 
   useEffect(() => {
     initiazeItems();
@@ -54,7 +58,12 @@ const MyAccount = props => {
       kGetUserProfileData,
       getUserProfileDataCallBack,
     );
-    getUserProfileData();
+    if (props.userData.group_basic_info) {
+      setUserProfileDetails(props.userData);
+    }
+    else {
+      getUserProfileData();
+    }
 
     return () => {
       checkProfile.removeListener();
@@ -69,7 +78,11 @@ const MyAccount = props => {
         props.navigation.navigate('mindPop');
         break;
       case Drafts:
-        props.navigation.navigate('writeTabs', {
+        // props.navigation.reset({
+        //   index: 0,
+        //   routes: [{ name: 'writeTabs' }]
+        // })
+        props.navigation.replace('writeTabs', {
           navigation: props.navigation,
         });
         break;
@@ -97,7 +110,7 @@ const MyAccount = props => {
           {
             text: 'No',
             style: 'cancel',
-            onPress: () => {},
+            onPress: () => { },
           },
           {
             text: 'Yes',
@@ -107,14 +120,14 @@ const MyAccount = props => {
                 .then(() => {
                   props.navigation.reset({
                     index: 0,
-                    routes: [{name: 'prologue'}],
+                    routes: [{ name: 'prologue' }],
                   });
                   // }
                 })
                 .catch(() => {
                   props.navigation.reset({
                     index: 0,
-                    routes: [{name: 'prologue'}],
+                    routes: [{ name: 'prologue' }],
                   });
                 });
             },
@@ -203,14 +216,19 @@ const MyAccount = props => {
     //stop refresh control
     if (success) {
       setUserProfileDetails(profileDetails);
-      loaderHandler.hideLoader();
+      props.getUserData(profileDetails);
     }
+    //loaderHandler.hideLoader();
+    props.showLoader(false);
+    props.loaderText('Loading...');
   };
 
   // Web-service call to fetch profile data
   const getUserProfileData = () => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
+      props.showLoader(true);
+      props.loaderText('Loading...');
       UserProfile();
     } else {
       No_Internet_Warning();
@@ -223,6 +241,12 @@ const MyAccount = props => {
 
   return (
     <View style={Styles.container}>
+      {
+        props.showLoaderValue ?
+          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue !=''? props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+          :
+          null
+      }
       <SafeAreaView style={Styles.noViewStyle} />
       <SafeAreaView style={Styles.safeAreaContextStyle}>
         <View style={Styles.container}>
@@ -245,7 +269,7 @@ const MyAccount = props => {
               <Image
                 source={
                   Account.selectedData().profileImage != ''
-                    ? {uri: Account.selectedData().profileImage}
+                    ? { uri: Account.selectedData().profileImage }
                     : profile_placeholder
                 }
                 style={Styles.imageStyle}
@@ -286,18 +310,18 @@ const MyAccount = props => {
           /> */}
 
           {
-            Items.map((data:any,index:number)=>(
+            Items.map((data: any, index: number) => (
               <DefaultListItem
-                  key={`Key ${index}`}
-                  title={data.title}
-                  showArrow={data.showArrow}
-                  icon={data.icon ? data.icon : ''}
-                  count={data.count}
-                  identifier={data.key}
-                  isLast={data.isLast ? data.isLast : false}
-                  onPress={(identifier: any) => {
-                    segregateItemClick(identifier);
-                  }}></DefaultListItem>
+                key={`Key ${index}`}
+                title={data.title}
+                showArrow={data.showArrow}
+                icon={data.icon ? data.icon : ''}
+                count={data.count}
+                identifier={data.key}
+                isLast={data.isLast ? data.isLast : false}
+                onPress={(identifier: any) => {
+                  segregateItemClick(identifier);
+                }}></DefaultListItem>
             ))
           }
         </View>
@@ -306,4 +330,21 @@ const MyAccount = props => {
   );
 };
 
-export default MyAccount;
+const mapState = (state: { [x: string]: any }) => ({
+  userData: state.UserProfileRedux.userData,
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
+});
+
+const mapDispatch = (dispatch: Function) => {
+  return {
+    getUserData: (payload: any) =>
+      dispatch({ type: GetUserData, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
+  };
+};
+
+export default connect(mapState, mapDispatch)(MyAccount);

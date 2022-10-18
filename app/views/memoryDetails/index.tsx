@@ -24,8 +24,11 @@ import RenderHtml, { defaultSystemFonts } from 'react-native-render-html';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import WebView from 'react-native-webview';
+import { connect } from 'react-redux';
+import BusyIndicator from '../../../src/common/component/busyindicator';
 import NavigationHeaderSafeArea from '../../../src/common/component/profileEditHeader/navigationHeaderSafeArea';
 import { MemoryService, newMemoryService } from '../../../src/common/webservice/memoryServices';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../../../src/views/dashboard/dashboardReducer';
 import {
   kMemoryActionPerformedOnMemoryDetails,
   MemoryAction,
@@ -120,7 +123,7 @@ var MemoryActions: Array<MemoryActionsSheetItem> = [];
 type State = { [x: string]: any };
 type Props = { [x: string]: any };
 
-export default class MemoryDetails extends React.Component<Props, State> {
+class MemoryDetails extends React.Component<Props, State> {
   _actionSheet: any | MemoryActionsSheet = null;
   memoryDetailsListener: EventManager;
   getAllLikesListener: EventManager;
@@ -181,7 +184,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
     }
     this.memoryDataModel = new MemoryDataModel();
     if (!this.props.previewDraft) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
       GetMemoryDetails(this.nid, this.storyType,
         response => {
           if (response.ResponseCode == 200) {
@@ -194,7 +199,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
     // this.memoryDetailsUpdateListener = EventManager.addListener(
     //   'memoryDetailsListener',
     //   () => {
-    //     loaderHandler.showLoader();
+    //     //loaderHandler.showLoader();
     //     GetMemoryDetails(this.nid, this.storyType,
     //       response => {
     //         if (response.ResponseCode == 200) {
@@ -265,7 +270,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
   }
 
   _onBack = () => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    this.props.showLoader(false);
+    this.props.loaderText('Loading...');
     if (this.state.bottomToolbar > 0) {
       Keyboard.dismiss();
     } else {
@@ -283,7 +290,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
     response: any,
     latestComment?: boolean,
   ) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    this.props.showLoader(false);
+    this.props.loaderText('Loading...');
     if (fetched) {
       if (latestComment) {
         this.memoryDataModel.likesComments.noOfComments--;
@@ -355,7 +364,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
           );
         this.memoryDataModel.likesComments.noOfComments--;
         // this.setState({});
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        this.props.showLoader(false);
+        this.props.loaderText('Loading...');
         this.forwardDataToNative();
       } else {
         this.memoryDataModel.likesComments.commentsList =
@@ -368,7 +379,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   editCommentCallback = (fetched: boolean, responseMessage: any, cid?: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    this.props.showLoader(false);
+    this.props.loaderText('Loading...');
     if (cid != '') {
       if (this.state.viewAllComments) {
         let filteredComment = this.state.allCommentsList.filter(
@@ -495,7 +508,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
         attr_id ? attr_id : null,
         nodetype ? nodetype : null,
       );
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
     }
     // }
   };
@@ -506,7 +521,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
     } else {
       this.setState({ viewAllComments: true }, () => {
         if (this.memoryDataModel.likesComments.noOfComments > 0) {
-          loaderHandler.showLoader('Loading...');
+          //loaderHandler.showLoader('Loading...');
+          this.props.showLoader(true);
+          this.props.loaderText('Loading...');
           GetAllComments(
             this.memoryDataModel.nid,
             this.storyType,
@@ -522,7 +539,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   allLikesFetched = (fetched?: boolean, getAllLikes?: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    this.props.showLoader(false);
+    this.props.loaderText('Loading...');
     if (fetched) {
       this.showList(this.keyLiked, getAllLikes);
       // this.setState({});
@@ -532,7 +551,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   memoryDetails = (fetched: boolean, memoryDetails: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    this.props.showLoader(false);
+    this.props.loaderText('Loading...');
     if (fetched) {
       // "internal_cues" ||
       let isExternalCue =
@@ -889,7 +910,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
         text: 'Yes',
         style: 'default',
         onPress: () => {
-          loaderHandler.showLoader('Deleting...');
+          //loaderHandler.showLoader('Deleting...');
+          this.props.showLoader(true);
+          this.props.loaderText('Deleting...');
           DeleteComment(item.cid, this.memoryDataModel.nid, this.storyType);
         },
       },
@@ -954,7 +977,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
           );
         } else {
           commentText = encode_utf8(commentText);
-          loaderHandler.showLoader('Editing...');
+          //loaderHandler.showLoader('Editing...');
+          this.props.showLoader(true);
+          this.props.loaderText('Editing...');
           EditComment(
             commentId,
             this.memoryDataModel.nid,
@@ -1578,7 +1603,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
         this._addToCollection(data.nid);
         break;
       case MemoryActionKeys.editMemoryKey:
-        loaderHandler.showLoader('Loading');
+        //loaderHandler.showLoader('Loading');
+        this.props.showLoader(true);
+      this.props.loaderText('Loading...');
         let details: any = {
           action_type: MemoryActionKeys.moveToDraftKey,
           type: this.storyType,
@@ -1599,7 +1626,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
             if (response.ResponseCode == 200) {
               this._onEditMemory(data.nid);
             } else {
-              loaderHandler.hideLoader();
+              //loaderHandler.hideLoader();
+              this.props.showLoader(false);
+              this.props.loaderText('Loading...');
             } // _onEditMemory(data, data.nid);
           }
         )
@@ -1626,7 +1655,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
                 style: 'default',
                 onPress: () => {
                   if (Utility.isInternetConnected) {
-                    loaderHandler.showLoader();
+                    //loaderHandler.showLoader();
+                    this.props.showLoader(true);
+                    this.props.loaderText('Loading...');
                     MemoryAction(
                       data.memoryType,
                       data.nid,
@@ -1662,7 +1693,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
     // event = event.nativeEvent;
     // this.getDraftDetails(event)
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
       if (nid) {
         this.props.navigation.navigate('createMemory', {
           editMode: true,
@@ -1689,7 +1722,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
     type?: any,
   ) => {
     if (this.props?.route?.name == 'memoryDetails') {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      this.props.showLoader(false);
+      this.props.loaderText('Loading...');
       if (fetched) {
         if (type == MemoryActionKeys.removeMeFromThisPostKey) {
           delete this.memoryDataModel.actions_on_memory
@@ -1916,6 +1951,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
   render() {
     return (
       <SafeAreaView style={style.container}>
+        {
+          this.props.showLoaderValue ?
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue !=''? this.props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <>
           {this.state.memoryDetailAvailable && (
             <NavigationHeaderSafeArea
@@ -2150,3 +2191,18 @@ export default class MemoryDetails extends React.Component<Props, State> {
     );
   }
 }
+
+const mapState = (state: { [x: string]: any }) => ({
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
+});
+
+const mapDispatch = (dispatch: Function) => {
+  return {
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
+  };
+};
+export default connect(mapState, mapDispatch)(MemoryDetails);

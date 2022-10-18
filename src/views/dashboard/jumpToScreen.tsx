@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
@@ -7,7 +8,6 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {Colors} from '../../common/constants';
 import {
   chevronleft,
@@ -114,11 +114,17 @@ const JumpToScreen = (props: Props) => {
     selectedYear: 2020,
     selectedMonth: '',
   });
+  
   const [selectedDecade, setSelectedDecade] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [yearArray, setyearArray] = useState(Array());
   const [yearArrayDisplay, setyearArrayDisplay] = useState(Array());
   const [backPress, setBackPress] = useState(true);
+  const isFocused = useIsFocused()
+
+  useEffect(() => {
+    setBackPress(true)
+  },[isFocused]);
 
   useEffect(() => {
     // var parts = props.memoryDate.split(' ');
@@ -227,7 +233,6 @@ const JumpToScreen = (props: Props) => {
         underlayColor={'none'}
         onPress={() => {
           if (item.item.disabled == false) {
-            loaderHandler.showLoader('Loading...');
             setSelectedYear(item?.item.name);
             jumpToClicked(item?.item.name);
           }
@@ -303,7 +308,7 @@ const JumpToScreen = (props: Props) => {
 
       <View style={styles.jumptoScreenSubContainer}>
         <ScrollView nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}>
-          <View>
+          <>
             <View style={[styles.fullWidth, styles.justifyalignCenetr]}>
               <View style={styles.separatorStyle}></View>
               <View style={styles.commonPaddingContainer}>
@@ -331,8 +336,8 @@ const JumpToScreen = (props: Props) => {
                   keyExtractor={(_, index: number) => `${index}`}
                   numColumns={2}
                   nestedScrollEnabled={true}
-                  initialNumToRender={10}
-                  removeClippedSubviews={true}
+                  initialNumToRender={years.length}
+                  // removeClippedSubviews={true}
                   style={styles.fullWidth}
                   ItemSeparatorComponent={() => {
                     return <View style={styles.separatorStyle} />;
@@ -352,7 +357,7 @@ const JumpToScreen = (props: Props) => {
                 />
               )}
             </View>
-          </View>
+          </>
           <View style={Styles.ScrollToendView} />
         </ScrollView>
       </View>

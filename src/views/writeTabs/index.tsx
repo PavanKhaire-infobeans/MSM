@@ -48,6 +48,8 @@ import AppGuidedTour from './../dashboard/appGuidedTour';
 import MyMemories from './../myMemories';
 import Prompts from './../promptsView';
 import Styles from './styles';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
+import BusyIndicator from '../../common/component/busyindicator';
 
 const WriteTabs = props => {
   let notificationModel: NotificationDataModel;
@@ -146,7 +148,7 @@ const WriteTabs = props => {
           },
         },
         kGetInvidualNotification,
-        response=>{
+        response => {
           if (response.ResponseCode == 200) {
             notificationCallback(true, response['Details']);
           } else {
@@ -164,7 +166,9 @@ const WriteTabs = props => {
       if (Utility.isInternetConnected) {
         Utility.notificationObject.hasNotification = false;
         Utility.notificationObject.isBackgroundNotification = true;
-        loaderHandler.showLoader();
+        //loaderHandler.showLoader();
+        props.showLoader(false);
+        props.loaderText('Loading...');
         GetActivities(
           {
             notification_params: {
@@ -173,7 +177,7 @@ const WriteTabs = props => {
             },
           },
           kGetInvidualNotification,
-          response=>{
+          response => {
             if (response.ResponseCode == 200) {
               notificationCallback(true, response['Details']);
             } else {
@@ -188,7 +192,9 @@ const WriteTabs = props => {
   };
 
   const notificationCallback = (success: any, details: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    props.showLoader(false);
+    props.loaderText('Loading...');
     if (success && Utility.isInternetConnected) {
       details = notificationModel.getNotificationDetails(
         details.data,
@@ -237,7 +243,9 @@ const WriteTabs = props => {
 
   const convertToMemory = (id: any, title: any) => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Creating Memory...');
+      //loaderHandler.showLoader('Creating Memory...');
+      props.showLoader(true);
+      props.loaderText('Creating Memory...');
       let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
       draftDetails.prompt_id = parseInt(id);
       CreateUpdateMemory(draftDetails, [], promptIdListener, 'save', resp => {
@@ -248,7 +256,9 @@ const WriteTabs = props => {
             isFromPrompt: true,
           });
         } else {
-          loaderHandler.hideLoader();
+          props.showLoader(false);
+          props.loaderText('Loading...');
+          //loaderHandler.hideLoader();
           ToastMessage(draftDetails);
         }
       });
@@ -264,7 +274,9 @@ const WriteTabs = props => {
     type?: any,
     uid?: any,
   ) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    props.showLoader(false);
+    props.loaderText('Loading...');
     if (fetched) {
       props.sendMemoryActions({ nid, type, uid });
     } else {
@@ -291,23 +303,32 @@ const WriteTabs = props => {
     }
   };
 
-  const _renderItem = ({ item, index }) =>(
-    index === 0 && currentIndex === 0 ? (
-      <View style={{ width: Dimensions.get('window').width }}>
-        <MyMemories tabLabel={'Edit'} navigation={props.navigation} />
-      </View>
-    ) : index === 1 && currentIndex === 1 ? (
-      <View style={{ width: Dimensions.get('window').width }}></View>
-    ) :
-      index === 2 && currentIndex === 2 ? (
+  const _renderItem = ({ item, index }) => {
+    return (
+      index === 0 && currentIndex === 0 ? (
         <View style={{ width: Dimensions.get('window').width }}>
-          <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
+          <MyMemories tabLabel={'Edit'} navigation={props.navigation} />
         </View>
+      ) : index === 1 && currentIndex === 1 ? (
+        <View style={{ width: Dimensions.get('window').width }}></View>
       ) :
-        null);
+        index === 2 && currentIndex === 2 ? (
+          <View style={{ width: Dimensions.get('window').width }}>
+            <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
+          </View>
+        ) :
+          null
+    )
+  };
 
   return (
     <View style={Styles.fullFlex}>
+      {
+        props.showLoaderValue ?
+          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue !=''? props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+          :
+          null
+      }
       <SafeAreaView style={Styles.emptySafeAreaStyle} />
       <SafeAreaView style={Styles.SafeAreaViewContainerStyle}>
         <View style={Styles.fullFlex}>
@@ -336,7 +357,7 @@ const WriteTabs = props => {
             barStyle={
               Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
             }
-            backgroundColor="#ffffff"
+            backgroundColor={Colors.NewThemeColor}
           />
 
           <FlatList
@@ -376,7 +397,7 @@ const WriteTabs = props => {
               containerWidth={Dimensions.get('window').width}
               tabs={['Edit', 'New', 'Prompts']}
             />
-          </View> 
+          </View>
           <View style={Styles.bottomBarContainer}>
             <View style={Styles.bottomBarSubContainer}>
               <TabIcon
@@ -425,6 +446,8 @@ const mapState = (state: any) => {
     showAlertData: state.MemoryInitials.showAlertData,
     filterName: state.dashboardReducer.filterName,
     createAMemory: state.dashboardReducer.createAMemory,
+    showLoaderValue: state.dashboardReducer.showLoader,
+    loaderTextValue: state.dashboardReducer.loaderText,
   };
 };
 
@@ -432,6 +455,10 @@ const mapDispatch = (dispatch: Function) => {
   return {
     showAlertCall: (payload: any) =>
       dispatch({ type: showCustomAlert, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
   };
 };
 
