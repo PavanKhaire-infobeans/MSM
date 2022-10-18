@@ -94,6 +94,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     instanceData: [],
     isDisabledAccount: false,
     keyboardHeight: 0,
+    showLoaderValue: false,
+    loaderTextValue: 'Loading...'
   };
 
   moveOnYAxis = new Animated.Value(0);
@@ -117,7 +119,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   messageRef: any;
   keyboardDidShowListener: any;
   keyboardDidHideListener: any;
-
+  showListener: any;
   navBar: NavigationHeaderSafeArea = null;
 
   constructor(props: Props) {
@@ -176,18 +178,23 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     );
   };
 
-  // _show = (message: any, color: any) => {
-  //   this.messageRef && this.messageRef._show({ message: message, color: color })
-  //   setTimeout(() => {
-  //     this.messageRef && this.messageRef._hide();
-  //   }, 4000);
-  // }
+  _show = (message: any, color: any) => {
+    //   this.messageRef && this.messageRef._show({ message: message, color: color })
+    //   setTimeout(() => {
+    //     this.messageRef && this.messageRef._hide();
+    //   }, 4000);
+  }
 
   // _hide = () => {
   //   this.messageRef && this.messageRef._hide();
   // }
 
   componentDidMount() {
+    this.showListener = DeviceEventEmitter.addListener(
+      'showMessage',
+      this._show,
+    );
+
     LoginStore.listAllAccounts()
       .then((resp: any) => {
         let list = resp.rows.raw() as Array<UserData>;
@@ -287,13 +294,14 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       }, 4000);
       // Alert.alert(message)
     } else {
-      this.messageRef._hide();
+      // this.messageRef._hide();
     }
-    this.updateState({ errorViewHeight: height });
+    this.updateState({ errorViewHeight: height, showLoaderValue: false,
+      loaderTextValue: 'Loading...' });
   };
 
   componentWillUnmount() {
-    this.setState({ _isRemeberMe: false }, () => {
+    this.setState({ _isRemeberMe: false, showLoaderValue: false }, () => {
       this.showErrorMessage(false);
       this.keyboardDidShowListener.remove();
       this.keyboardDidHideListener.remove();
@@ -336,13 +344,15 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
           backgroundColor="#ffffff"
         />
         {
-          this.props.showLoaderValue ?
-            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+          this.state.showLoaderValue ?
+            <BusyIndicator startVisible={this.state.showLoaderValue} text={this.state.loaderTextValue != '' ? this.state.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
             :
             null
         }
         <SafeAreaView style={{ width: '100%' }}>
-          <MessageDialogue ref={(ref: any) => (this.messageRef = ref)} />
+          <MessageDialogue
+            ref={(ref: any) => (this.messageRef = ref)}
+          />
         </SafeAreaView>
         <SafeAreaView style={Styles.flexContainer}>
           <View style={Styles.LoginHeader}>
@@ -414,7 +424,14 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             <Animated.View style={[Styles.buttonContainer, animStyle]}>
               <TouchableWithoutFeedback
                 // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
-                onPress={this.controller.onClick.bind(this.controller)}>
+                onPress={() => {
+                  this.setState({
+                    showLoaderValue: true,
+                    loaderTextValue: 'Loging In...'
+                  },()=>{
+                    this.controller.onClick()
+                  })
+                }}>
                 <View
                   style={[
                     Styles.loginSSOButtonStyle,

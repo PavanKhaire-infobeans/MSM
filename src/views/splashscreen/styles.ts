@@ -7,7 +7,7 @@ const Styles = EStyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: 'white',
   },
   imageBackGroundStyle:{
     flex: 1, 
@@ -24,7 +24,7 @@ const Styles = EStyleSheet.create({
   },
   Version:{
     ...fontSize(16), 
-    color: Colors.white, 
+    color: 'white', 
     textAlign: 'center'
   },
   
