@@ -259,7 +259,7 @@ const WriteTabs = props => {
           props.showLoader(false);
           props.loaderText('Loading...');
           //loaderHandler.hideLoader();
-          ToastMessage(draftDetails);
+         //ToastMessage(draftDetails);
         }
       });
     } else {
@@ -280,7 +280,7 @@ const WriteTabs = props => {
     if (fetched) {
       props.sendMemoryActions({ nid, type, uid });
     } else {
-      ToastMessage(responseMessage, Colors.ErrorColor);
+     //ToastMessage(responseMessage, Colors.ErrorColor);
     }
   };
 

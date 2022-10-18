@@ -86,7 +86,7 @@ class InviteCollaborators extends React.Component<Props, State> {
       } else this.props.getCollaborators(this.props.nid);
     } else {
       //loaderHandler.hideLoader();
-      ToastMessage('Cannot perform the action now');
+      //ToastMessage('Cannot perform the action now');
     }
   }
 

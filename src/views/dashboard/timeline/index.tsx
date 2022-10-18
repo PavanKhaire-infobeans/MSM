@@ -534,7 +534,7 @@ const Timeline = (props: Props) => {
         if (flatListRef.current) {
           flatListRef.current.scrollToOffset({
             animated: true,
-            offset: 8,
+            offset: 10,
           });
         }
         props.fetchMemoryList({
@@ -579,7 +579,7 @@ const Timeline = (props: Props) => {
             if (flatListRef.current) {
               flatListRef.current.scrollToOffset({
                 animated: true,
-                offset: 8,
+                offset: 10,
               });
             }
             props.fetchMemoryList({
@@ -708,7 +708,7 @@ const Timeline = (props: Props) => {
                         if (flatListRef.current) {
                           flatListRef.current.scrollToOffset({
                             animated: true,
-                            offset: 8,
+                            offset: 10,
                           });
                         }
                         // setPreviousItemYear(null)
@@ -807,7 +807,7 @@ const Timeline = (props: Props) => {
                         if (flatListRef.current) {
                           flatListRef.current.scrollToOffset({
                             animated: true,
-                            offset: 8,
+                            offset: 10,
                           });
                         }
                         setTimelineBarNextPrevClick(true);

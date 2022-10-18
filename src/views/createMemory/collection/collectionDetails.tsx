@@ -85,7 +85,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
   collectionUpdate = (success: any) => {
     //loaderHandler.hideLoader();
     if (!success) {
-      ToastMessage('Unable to update memory');
+      //ToastMessage('Unable to update memory');
     }
     Keyboard.dismiss();
     this.props.navigation.goBack();

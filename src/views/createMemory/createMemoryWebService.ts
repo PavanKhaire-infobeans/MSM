@@ -60,7 +60,7 @@ export const CreateUpdateMemory = async (
           if (filesToUpload.length > 0) {
             await uploadFile(id, filesToUpload,
               datareturn => {
-                console.log("file upload response : ", JSON.stringify(datareturn))
+                // console.log("file upload response : ", JSON.stringify(datareturn))
                 if (listener == "mindpopEditMemoryListener") {
                   CB({ status: true, id, padDetails, key, prompt_id });
                   // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);

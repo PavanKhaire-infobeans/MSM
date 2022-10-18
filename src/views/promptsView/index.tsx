@@ -663,7 +663,7 @@ class PromptsView extends React.Component<State, Props> {
       //loaderHandler.hideLoader();
       this.props.showLoader(false);
       this.props.loaderText('Loading...');
-      ToastMessage(draftDetails);
+     //ToastMessage(draftDetails);
     }
   };
 

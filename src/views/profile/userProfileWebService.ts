@@ -188,10 +188,10 @@ const updateUserProfile = async (dataset) => {
             UserProfile();
             //loaderHandler.showLoader('Refreshing...');
           } else {
-            ToastMessage('No Internet Connected');
+           //ToastMessage('No Internet Connected');
           }
         } else {
-          ToastMessage('Unable to save data');
+         //ToastMessage('Unable to save data');
           //loaderHandler.hideLoader();
         }
       })

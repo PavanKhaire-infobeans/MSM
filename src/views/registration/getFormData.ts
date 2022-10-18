@@ -92,10 +92,7 @@ export default class GetFormData {
         this.props.navigation.replace('registrationPre', {formList});
       }
     } else {
-      ToastMessage(
-        typeof data == 'string' ? data : ERROR_MESSAGE,
-        Colors.ErrorColor,
-      );
+     //ToastMessage(typeof data == 'string' ? data : ERROR_MESSAGE,Colors.ErrorColor,);
     }
   };
 

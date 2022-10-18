@@ -479,7 +479,7 @@ class MemoryDrafts extends React.Component<Props, State> {
           page--;
         }
         if (this.state.memoryDraftsArray.length == 0) {
-          ToastMessage(response.ResponseMessage, Colors.ErrorColor);
+         //ToastMessage(response.ResponseMessage, Colors.ErrorColor);
         }
       }
       this.setState({
@@ -519,7 +519,7 @@ class MemoryDrafts extends React.Component<Props, State> {
         page--;
       }
       if (this.state.memoryDraftsArray.length == 0) {
-        ToastMessage(memoryDraftDetails, Colors.ErrorColor);
+       //ToastMessage(memoryDraftDetails, Colors.ErrorColor);
       }
     }
     this.setState({
@@ -744,7 +744,7 @@ class MemoryDrafts extends React.Component<Props, State> {
       //loaderHandler.hideLoader();
       this.props.showLoader(false);
       this.props.loaderText('Loading...');
-      ToastMessage('Unable to delete draft. Please try again later');
+     //ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 

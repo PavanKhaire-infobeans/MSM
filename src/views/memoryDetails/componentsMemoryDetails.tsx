@@ -662,7 +662,7 @@ export const CommonPDFView = (props: {
           if (Utility.isInternetConnected) {
             props.navigation.navigate('pdfViewer', {file: props.file});
           } else {
-            ToastMessage(NO_INTERNET, Colors.WarningColor);
+           //ToastMessage(NO_INTERNET, Colors.WarningColor);
           }
         }}>
         <View>

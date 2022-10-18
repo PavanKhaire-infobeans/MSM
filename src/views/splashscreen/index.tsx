@@ -92,11 +92,7 @@ const Splash = props => {
                   //loaderHandler.hideLoader();
                   props.showLoader(false);
                   props.loaderText('Loading...');
-                  ToastMessage(
-                    response?.ResponseMessage
-                      ? response?.ResponseMessage
-                      : 'Error while proccessing',
-                  );
+                 //ToastMessage(response?.ResponseMessage? response?.ResponseMessage: 'Error while proccessing',);
                 }
               },
             );
@@ -246,11 +242,7 @@ const Splash = props => {
                             //loaderHandler.hideLoader();
                             props.showLoader(false);
                             props.loaderText('Loading...');
-                            ToastMessage(
-                              response?.ResponseMessage
-                                ? response?.ResponseMessage
-                                : 'Error while proccessing',
-                            );
+                           //ToastMessage(response?.ResponseMessage? response?.ResponseMessage: 'Error while proccessing');
                           }
                         },
                       );

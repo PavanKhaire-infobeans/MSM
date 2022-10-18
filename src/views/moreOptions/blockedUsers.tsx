@@ -60,7 +60,7 @@ export default class BlockedUsers extends React.Component<Props> {
       );
     } else {
       //loaderHandler.hideLoader();
-      ToastMessage(responseMessage);
+     //ToastMessage(responseMessage);
     }
   };
 

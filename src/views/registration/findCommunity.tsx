@@ -147,12 +147,7 @@ class FindCommunity extends Component<FindProps, State> {
         No_Internet_Warning();
       }
     } else {
-      ToastMessage(
-        'Sorry, that community is not activated',
-        Colors.ErrorColor,
-        false,
-        true,
-      );
+     //ToastMessage('Sorry, that community is not activated',Colors.ErrorColor,false,true);
     }
   };
   render() {

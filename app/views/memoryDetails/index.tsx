@@ -305,7 +305,7 @@ class MemoryDetails extends React.Component<Props, State> {
         this.setState({ allCommentsList: response['comments'].reverse() });
       }
     } else {
-      ToastMessage(response, Colors.ErrorColor);
+     //ToastMessage(response, Colors.ErrorColor);
       this.setState({ viewAllComments: false });
     }
     // this.setState({});
@@ -329,7 +329,7 @@ class MemoryDetails extends React.Component<Props, State> {
       this.memoryDataModel.likesComments.noOfLikes =
         this.memoryDataModel.likesComments.noOfLikes - 1;
       this.memoryDataModel.likesComments.isLikedByUser = 0;
-      ToastMessage(responseMessage, Colors.ErrorColor);
+     //ToastMessage(responseMessage, Colors.ErrorColor);
     } else {
       this.forwardDataToNative();
     }
@@ -340,7 +340,7 @@ class MemoryDetails extends React.Component<Props, State> {
       this.memoryDataModel.likesComments.noOfLikes =
         this.memoryDataModel.likesComments.noOfLikes + 1;
       this.memoryDataModel.likesComments.isLikedByUser = 1;
-      ToastMessage(responseMessage, Colors.ErrorColor);
+     //ToastMessage(responseMessage, Colors.ErrorColor);
     } else {
       this.forwardDataToNative();
     }
@@ -439,7 +439,7 @@ class MemoryDetails extends React.Component<Props, State> {
       this.memoryDataModel.likesComments.isLikedByUser =
         !this.memoryDataModel.likesComments.isLikedByUser;
       this.memoryDataModel.likesComments.noOfComments--;
-      ToastMessage(responseMessage, Colors.ErrorColor);
+     //ToastMessage(responseMessage, Colors.ErrorColor);
     } else {
       if (cid && tempCommentId) {
         if (this.state.viewAllComments) {
@@ -546,7 +546,7 @@ class MemoryDetails extends React.Component<Props, State> {
       this.showList(this.keyLiked, getAllLikes);
       // this.setState({});
     } else {
-      ToastMessage(getAllLikes, Colors.ErrorColor);
+     //ToastMessage(getAllLikes, Colors.ErrorColor);
     }
   };
 
@@ -576,7 +576,7 @@ class MemoryDetails extends React.Component<Props, State> {
       );
     } 
     else {
-      ToastMessage(memoryDetails, Colors.ErrorColor);
+     //ToastMessage(memoryDetails, Colors.ErrorColor);
       this.setState({ memoryDetailAvailable: true });
     }
   };
@@ -1733,7 +1733,7 @@ class MemoryDetails extends React.Component<Props, State> {
           this._onBack();
         }
       } else {
-        ToastMessage(responseMessage, Colors.ErrorColor);
+       //ToastMessage(responseMessage, Colors.ErrorColor);
       }
     }
   };

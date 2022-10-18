@@ -662,11 +662,11 @@ export default class MutilpleValueEdit extends React.Component<Props> {
       }
     }
     if (Object.keys(error).length > 0) {
-      ToastMessage('Please check the highlighted fields', Colors.ErrorColor);
+     //ToastMessage('Please check the highlighted fields', Colors.ErrorColor);
       this.setState({error});
       return false;
     } else if (hasChangedAnyValue == false) {
-      ToastMessage('No changes found', Colors.ThemeColor);
+     //ToastMessage('No changes found', Colors.ThemeColor);
       Keyboard.dismiss();
       this.props.navigation.navigate('profile');
     }
@@ -677,7 +677,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     //loaderHandler.showLoader();
     UploadProfilePic(imageFile)
       .then((response: any) => {
-        ToastMessage('Profile photo updated successfully');
+       //ToastMessage('Profile photo updated successfully');
         UserProfile();
         //loaderHandler.hideLoader();
         this.isProfilePicAvailable = true;
@@ -699,7 +699,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
     RemoveProfilePic()
       .then((response: any) => {
         //loaderHandler.hideLoader();
-        ToastMessage('Profile photo removed successfully');
+       //ToastMessage('Profile photo removed successfully');
         UserProfile();
         this.isProfilePicAvailable = false;
         this.setState({
@@ -710,7 +710,7 @@ export default class MutilpleValueEdit extends React.Component<Props> {
         });
       })
       .catch((error: any) => {
-        ToastMessage(error.message, Colors.ErrorColor);
+       //ToastMessage(error.message, Colors.ErrorColor);
         //loaderHandler.hideLoader();
       });
   };

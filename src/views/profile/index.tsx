@@ -155,7 +155,7 @@ const Profile = props => {
         });
       }
     } else {
-      ToastMessage('Information not available', Colors.ErrorColor);
+     //ToastMessage('Information not available', Colors.ErrorColor);
     }
   };
 
@@ -533,7 +533,7 @@ const Profile = props => {
               .catch((error: any) => {
                 props.showLoader(false);
                 props.loaderText('Loading...');
-                ToastMessage(error.message, Colors.ErrorColor);
+               //ToastMessage(error.message, Colors.ErrorColor);
                 //loaderHandler.hideLoader();
               });
           },

@@ -262,7 +262,7 @@ export class LoginController implements LoginControllerProtocol {
               type: 'public',
             },
           });
-          ToastMessage(err.toString(), Colors.ErrorColor);
+         //ToastMessage(err.toString(), Colors.ErrorColor);
         },
       );
     } else {
@@ -333,7 +333,7 @@ export class LoginController implements LoginControllerProtocol {
       },
       (err: any) => {
         this.view.props.loginServiceCall(loginObj);
-        ToastMessage(err.toString(), Colors.ErrorColor);
+       //ToastMessage(err.toString(), Colors.ErrorColor);
       },
     );
   };

@@ -474,7 +474,6 @@ export const GetPrompts = async (
     //   loadMore,
     //   'Unable to process your request. Please try again later',
     // );
-    console.log("sssssss",err)
     CB({ fetched: false, ifLoadMore: loadMore, fetchPromptsList: 'Unable to process your request. Please try again later' })
   }
 };

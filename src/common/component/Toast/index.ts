@@ -32,5 +32,5 @@ export const ToastMessage = (
 
 export const No_Internet_Warning = (errorMsg?: string) => {
   let msg = errorMsg ? errorMsg : NO_INTERNET;
-  ToastMessage(msg, Colors.WarningColor);
+ //ToastMessage(msg, Colors.WarningColor);
 };

@@ -257,7 +257,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       //     page--;
       // }
       if (publishedMemoriesArray.length == 0) {
-        ToastMessage(publishedMemories, Colors.ErrorColor);
+       //ToastMessage(publishedMemories, Colors.ErrorColor);
       }
     }
     this.setState(
@@ -303,7 +303,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       this.showList(getAllLikes);
       // this.setState({});
     } else {
-      ToastMessage(getAllLikes, Colors.ErrorColor);
+     //ToastMessage(getAllLikes, Colors.ErrorColor);
     }
   };
   likeCallback = (fetched: boolean, responseMessage: any, nid?: any) => {
@@ -319,7 +319,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     if (!fetched) {
       // this.memoryDataModel.likesComments.noOfLikes = this.memoryDataModel.likesComments.noOfLikes + 1;
       // this.memoryDataModel.likesComments.isLikedByUser = 1;
-      // ToastMessage(responseMessage, Colors.ErrorColor)
+      ////ToastMessage(responseMessage, Colors.ErrorColor)
     } else {
       // this.forwardDataToNative();
     }
@@ -362,7 +362,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       );
       // this.setState({});
     } else {
-      ToastMessage(responseMessage, Colors.ErrorColor);
+     //ToastMessage(responseMessage, Colors.ErrorColor);
     }
   };
 

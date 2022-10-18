@@ -321,7 +321,6 @@ const Recent = (props: Props) => {
 
   const _onAddProptToMemoryAction = async (firstIndex: any, secondIndex: any) => {
     try {
-      console.log("firstIndex : ", firstIndex, secondIndex)
       if (Utility.isInternetConnected) {
         let data = props.recentList[firstIndex].active_prompts[secondIndex];
         selectedPrompt.firstIndex = firstIndex;
@@ -352,7 +351,7 @@ const Recent = (props: Props) => {
               });
             } else {
               // //loaderHandler.hideLoader();
-              ToastMessage(draftDetails.ResponseMessage);
+             // ToastMessage(draftDetails.ResponseMessage);
             }
             props.showLoader(false);
             props.loaderText('Loading...');
@@ -380,9 +379,7 @@ const Recent = (props: Props) => {
         openMemoryActions={openMemoryActions}
         MemoryActions={MemoryActions}
         addMemoryFromPrompt={(firstIndex: any, secondIndex: any) => {
-          console.log("firstIndex :", firstIndex, secondIndex, props.recentList[firstIndex].active_prompts[secondIndex])
           _onAddProptToMemoryAction(firstIndex, secondIndex)
-
         }
         }
         navigation={props.navigation}

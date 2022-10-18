@@ -85,13 +85,13 @@ class ForgotPassword extends React.Component<Props> {
         if (code == 200) {
           //loaderHandler.hideLoader();
           if (message && message.trim().length != 0) {
-            ToastMessage(message, 'black');
+           //ToastMessage(message, 'black');
           }
           this.setState({isRequestSubmitted: true});
         } else {
           //loaderHandler.hideLoader();
           if (message && message.trim().length != 0) {
-            ToastMessage(message, Colors.ErrorColor);
+           //ToastMessage(message, Colors.ErrorColor);
           }
           this.setState({isRequestSubmitted: false});
         }
@@ -272,12 +272,12 @@ class ForgotPassword extends React.Component<Props> {
         // EventManager.callBack(callBackIdentifier, true, response["ResponseMessage"], nid);
       } else {
         //loaderHandler.hideLoader();
-        ToastMessage(response.ResponseMessage, Colors.ErrorColor);
+       //ToastMessage(response.ResponseMessage, Colors.ErrorColor);
         // EventManager.callBack(callBackIdentifier, false, response["ResponseMessage"], nid);
       }
     } catch (err) {
       //loaderHandler.hideLoader();
-      ToastMessage('Server error', Colors.ErrorColor);
+     //ToastMessage('Server error', Colors.ErrorColor);
       // EventManager.callBack(callBackIdentifier, false, "Unable to process at this moment, please try again later");
     }
   };

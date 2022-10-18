@@ -51,11 +51,11 @@ const ChangePassword = props => {
     if (success) {
       Keyboard.dismiss();
       //loaderHandler.hideLoader();
-      ToastMessage(response, Colors.ThemeColor);
+     //ToastMessage(response, Colors.ThemeColor);
       props.navigation.goBack();
     } else {
       //loaderHandler.hideLoader();
-      ToastMessage(response, Colors.ErrorColor);
+     //ToastMessage(response, Colors.ErrorColor);
     }
   };
 

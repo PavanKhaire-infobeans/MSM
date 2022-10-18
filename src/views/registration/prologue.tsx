@@ -261,7 +261,7 @@ class Prologue extends Component<Props> {
   onRegFinalCallBack = (msg: any) => {
     this.setState({ isRegistrationOpen: false }, () => {
       loginDrawerRef.refDrawer.expand();
-      ToastMessage(msg, Colors.ThemeColor, false, true);
+     //ToastMessage(msg, Colors.ThemeColor, false, true);
     });
   };
 

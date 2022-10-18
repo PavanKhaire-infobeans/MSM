@@ -295,7 +295,7 @@ class DashboardIndex extends React.Component<Props> {
     } else {
       // //loaderHandler.hideLoader();
      
-      ToastMessage(draftDetails);
+      //ToastMessage(draftDetails);
      
     }
   };
@@ -337,7 +337,7 @@ class DashboardIndex extends React.Component<Props> {
       this.props.sendMemoryActions({ nid, type, uid });
       // this.setState({});
     } else {
-      ToastMessage(responseMessage, Colors.ErrorColor);
+      //ToastMessage(responseMessage, Colors.ErrorColor);
     }
 
   };

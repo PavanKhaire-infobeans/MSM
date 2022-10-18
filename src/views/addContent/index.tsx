@@ -159,7 +159,7 @@ const AddContentDetails = props => {
                 ReactNativeHapticFeedback.trigger('impactMedium', options);
                 saveMindPop();
               } else {
-                ToastMessage('Title is mandatory');
+               //ToastMessage('Title is mandatory');
                 setTitleError('Title is mandatory');
               }
             },
@@ -200,7 +200,7 @@ const AddContentDetails = props => {
         type: createNew,
       });
     } else {
-      ToastMessage('Unable to create memory');
+     //ToastMessage('Unable to create memory');
     }
   };
 
@@ -301,7 +301,7 @@ const AddContentDetails = props => {
                 type: createNew,
               });
             } else {
-              ToastMessage('Unable to create memory');
+             //ToastMessage('Unable to create memory');
             }
           }
         },
@@ -373,7 +373,7 @@ const AddContentDetails = props => {
         if (file.filesize != 0) {
           audioAttachmentPress(file);
         } else {
-          ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+         //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
         }
         break;
       case 'files':

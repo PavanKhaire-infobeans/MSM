@@ -362,7 +362,7 @@ class CreateMemory extends React.Component<Props> {
       this.props.loaderText('Loading...');
       this.props.navigation.navigate('dashBoard');
     } else {
-      ToastMessage('Unable to delete draft. Please try again later');
+     //ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 
@@ -439,7 +439,7 @@ class CreateMemory extends React.Component<Props> {
       //loaderHandler.hideLoader();
       this.props.showLoader(false);
       this.props.loaderText('Loading...');
-      ToastMessage(draftDetails, Colors.ErrorColor);
+     //ToastMessage(draftDetails, Colors.ErrorColor);
     }
   };
 
@@ -635,7 +635,7 @@ class CreateMemory extends React.Component<Props> {
       //loaderHandler.hideLoader();
       this.props.showLoader(false);
       this.props.loaderText('Loading...');
-      ToastMessage(id, Colors.ErrorColor);
+     //ToastMessage(id, Colors.ErrorColor);
     }
   };
 
@@ -946,7 +946,7 @@ class CreateMemory extends React.Component<Props> {
       this.filesToUpdate = [];
       this.saveORPublish(key);
     } else {
-      ToastMessage(message, Colors.ErrorColor);
+     //ToastMessage(message, Colors.ErrorColor);
       //loaderHandler.hideLoader();
       this.props.showLoader(false);
       this.props.loaderText('Loading...');
@@ -1102,7 +1102,7 @@ class CreateMemory extends React.Component<Props> {
         selectedItem.filesize == undefined ||
         selectedItem.filesize == '0')
     ) {
-      ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+     //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
     } else {
       this.props.navigation.navigate('commonAudioRecorder', {
         mindPopID: 0,
@@ -1996,7 +1996,7 @@ class CreateMemory extends React.Component<Props> {
                 this.state.description != '' &&
                 this.state.memory_date == ''
               ) {
-                ToastMessage('Please select Date first', Colors.ErrorColor);
+               //ToastMessage('Please select Date first', Colors.ErrorColor);
               }
 
               if (
@@ -2381,11 +2381,11 @@ class CreateMemory extends React.Component<Props> {
                   //   data={this.state.itemList}
                   //   renderItem={(item: any) => this.renderRow(item)}
                   // />
-                  // this.state.itemList?.length
-                  //   ? this.state.itemList.map((item, index) =>
-                  //     this.renderRow(item, index)
-                  //   )
-                  //   : null
+                  this.state.itemList?.length
+                    ? this.state.itemList.map((item, index) =>
+                      this.renderRow(item, index)
+                    )
+                    : null
                 }
                 {/* )} */}
               </ScrollView>

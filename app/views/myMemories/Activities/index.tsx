@@ -91,7 +91,7 @@ export default class Activities extends React.Component<Props, State> {
         loadingDataFromServer: false,
       });
     } else {
-      ToastMessage(activities, Colors.ErrorColor);
+     //ToastMessage(activities, Colors.ErrorColor);
     }
     setTimeout(() => {
       //loaderHandler.hideLoader();

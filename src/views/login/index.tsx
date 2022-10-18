@@ -173,7 +173,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
           fcm_token: '',
           portal_ids: selectedCommunity,
         });
-        ToastMessage(err.toString(), Colors.ErrorColor);
+       //ToastMessage(err.toString(), Colors.ErrorColor);
       },
     );
   };

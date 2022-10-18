@@ -420,10 +420,7 @@ class MindPopList extends React.Component<{
             'message',
           ]);
           let message: string = errorMsg || ERROR_MESSAGE;
-          ToastMessage(
-            message,
-            message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor,
-          );
+         //ToastMessage(message,message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor);
         }
       }
     }
@@ -693,7 +690,6 @@ class MindPopList extends React.Component<{
   );
 
   _doApiCall = ()=>{
-    console.warn("ooooooooooo")
     this.updateList();
   }
 
@@ -796,12 +792,12 @@ class MindPopList extends React.Component<{
             //loaderHandler.hideLoader();
             this.props.showLoader(false);
             this.props.loaderText('Loading...');
-            ToastMessage(resp.message);
+           //ToastMessage(resp.message);
           }
         },
       );
     } else {
-      ToastMessage(NO_INTERNET);
+     //ToastMessage(NO_INTERNET);
     }
   };
 

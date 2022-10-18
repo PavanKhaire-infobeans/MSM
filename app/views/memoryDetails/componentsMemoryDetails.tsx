@@ -516,7 +516,7 @@ export const CommonPDFView = (props: {file: any; files: any}) => {
           if (Utility.isInternetConnected) {
             navigation.navigate('pdfViewer', {file: props.file});
           } else {
-            ToastMessage(NO_INTERNET, Colors.WarningColor);
+           //ToastMessage(NO_INTERNET, Colors.WarningColor);
           }
         }}>
         <View>

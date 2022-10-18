@@ -12,7 +12,6 @@ const BusyIndicator = (props) => {
     isVisible: props.startVisible,
     // isVisible: props.startVisible,
   });
-  // console.log("ssyusydgahsdjdkjjks")
 
   const changeLoadingEffect = (state) => {
     if (state) {

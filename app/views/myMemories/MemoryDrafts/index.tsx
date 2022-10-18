@@ -142,7 +142,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         page--;
       }
       if (memoryDraftsArray.length == 0) {
-        ToastMessage(memoryDraftDetails, Colors.ErrorColor);
+       //ToastMessage(memoryDraftDetails, Colors.ErrorColor);
       }
     }
     this.setState({
@@ -335,7 +335,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       this.memoryDraftsDataModel.decreaseMemoryDraftCount();
       // this.setState({});
     } else {
-      ToastMessage('Unable to delete draft. Please try again later');
+     //ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 

@@ -93,7 +93,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
       if (Utility.isInternetConnected) {
         try {
           if (props.files[index].url == null || props.files[index].url == '') {
-            ToastMessage('Audio file is corrupted', Colors.ErrorColor);
+           //ToastMessage('Audio file is corrupted', Colors.ErrorColor);
             tooglePlayPause();
             return;
           }
@@ -176,7 +176,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
             );
             totalDuration = setInterval(setTotalTime, 500);
           } else {
-            ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+           //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
             setTimeout(() => {
               hidePlayer();
             }, 1000);
@@ -227,7 +227,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
     if (Utility.isInternetConnected) {
       try {
         if (props.files[index].url == null || props.files[index].url == '') {
-          ToastMessage('Audio file is corrupted', Colors.ErrorColor);
+         //ToastMessage('Audio file is corrupted', Colors.ErrorColor);
           tooglePlayPause();
           return;
         }
@@ -300,7 +300,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
 
           totalDuration = setInterval(setTotalTime, 500);
         } else {
-          ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+         //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
           setTimeout(() => {
             hidePlayer();
           }, 1000);

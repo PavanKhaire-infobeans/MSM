@@ -210,7 +210,7 @@ const WebserviceCall = (() => {
                     value.ResponseMessage == 'Authentication token expired.' ||
                     value.ResponseMessage == 'Invalid authentication token.'
                   ) {
-                    ToastMessage('', '', true);
+                   //ToastMessage('', '', true);
                     logout();
                   } //5461
                   return Promise.reject(Error(value.ResponseMessage));
@@ -288,7 +288,7 @@ const WebserviceCall = (() => {
                 resp.ResponseMessage == 'Authentication token expired.' ||
                 resp.ResponseMessage == 'Invalid authentication token.'
               ) {
-                ToastMessage('', '', true);
+               //ToastMessage('', '', true);
                 logout();
               } //5461
 
