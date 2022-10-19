@@ -85,8 +85,8 @@ export class PublishedMemoryDataModel {
         publishedMemory.audios = getDetails(element, ['audios'], keyArray);
         publishedMemory.season = getDetails(element, ['season'], keyString);
         if (
-          element.like_comment_data.like_count != undefined &&
-          element.like_comment_data.like_count != null
+          element?.like_comment_data?.like_count != undefined &&
+          element?.like_comment_data?.like_count != null
         ) {
           publishedMemory.showLikeCount = true;
         } else {

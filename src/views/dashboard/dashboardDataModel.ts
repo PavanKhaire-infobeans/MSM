@@ -56,7 +56,7 @@ export class DashboardDataModel {
             parsedMemory.pdf = getDetails(element, ['pdf'], keyArray);
             parsedMemory.audios = getDetails(element, ['audios'], keyArray);
             parsedMemory.season = getDetails(element, ['season'], keyString);
-            if (element.like_comment_data.like_count != undefined && element.like_comment_data.like_count != null) {
+            if (element?.like_comment_data?.like_count != undefined && element?.like_comment_data?.like_count != null) {
                 parsedMemory.showLikeCount = true;
             } else {
                 parsedMemory.showLikeCount = false;
@@ -90,7 +90,9 @@ export class DashboardDataModel {
             parsedMemory.description = parsedMemory.description.replace(/<p>/ig, '');
             parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');
             parsedMemory.description = parsedMemory.description.trim();
-            memories.push(parsedMemory);
+            if (parsedMemory.memoryDateDisplay !== 'Invalid date') {
+                memories.push(parsedMemory);
+            }
         });
         return memories;
     }
