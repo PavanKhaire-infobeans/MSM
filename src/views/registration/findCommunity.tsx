@@ -141,18 +141,13 @@ class FindCommunity extends Component<FindProps, State> {
             '',
           ), //'192.168.2.6'
         };
-        loaderHandler.showLoader('Loading...');
+        //loaderHandler.showLoader('Loading...');
         new GetFormData().callService('push', this.props.openLoginDrawer);
       } else {
         No_Internet_Warning();
       }
     } else {
-      ToastMessage(
-        'Sorry, that community is not activated',
-        Colors.ErrorColor,
-        false,
-        true,
-      );
+     //ToastMessage('Sorry, that community is not activated',Colors.ErrorColor,false,true);
     }
   };
   render() {

@@ -68,11 +68,13 @@ export class LoginController implements LoginControllerProtocol {
     );
   }
 
-  appleLoginCallBack(params: any) {
+  appleLoginCallBack =(params: any)=> {
     this.appleSubscriber.remove();
     let user = { id: params.id };
     if (params.id != null && params.id.trim() != '') {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      ////this.view.props.showLoader(true);
+      //this.view.props.loaderText('Loading...');
       if (params.email != null && params.email.trim() != '') {
         user = {
           ...user,
@@ -111,7 +113,7 @@ export class LoginController implements LoginControllerProtocol {
     showConsoleLog(ConsoleType.LOG, user);
   }
 
-  onClickAppleSignIn() {
+  onClickAppleSignIn =()=> {
     this.appleSubscriber = this.eventEmitter.addListener(
       'ShowMemoryDetails',
       this.appleLoginCallBack.bind(this),
@@ -119,7 +121,7 @@ export class LoginController implements LoginControllerProtocol {
     NativeModules.AppleSignIn.SSOLogin();
   }
 
-  SSOLogin(success: any, response: any) {
+  SSOLogin =(success: any, response: any)=> {
     if (success) {
       this.proceedWithLogin(
         response,
@@ -133,11 +135,17 @@ export class LoginController implements LoginControllerProtocol {
           index: 0,
           routes: [{ name: 'dashBoard' }]
         })
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        //this.view.props.showLoader(false);
+      //this.view.props.loaderText('Loading...');
+
       }, 100);
       this.view.props.clean();
     } else {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      //this.view.props.showLoader(false);
+      //this.view.props.loaderText('Loading...');
+
       this.view.showErrorMessage(true, response);
     }
   }
@@ -150,7 +158,10 @@ export class LoginController implements LoginControllerProtocol {
       await GoogleSignin.hasPlayServices();
       userInfo = await GoogleSignin.signIn();
       let params = {};
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      ////this.view.props.showLoader(true);
+      //this.view.props.loaderText('Loading...');
+
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
           params = {
@@ -190,7 +201,7 @@ export class LoginController implements LoginControllerProtocol {
     }
   };
 
-  onClick() {
+  onClick =()=> {
     if (Utility.isInternetConnected) {
       const { username, password } = this.view.state;
       if (username.length == 0 || password.length == 0) {
@@ -227,7 +238,10 @@ export class LoginController implements LoginControllerProtocol {
         }
       }
       setTimeout(Keyboard.dismiss);
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
+      ////this.view.props.showLoader(true);
+      //this.view.props.loaderText('Loading...');
+
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
           this.view.props.fetchLoginAccounts({
@@ -248,7 +262,7 @@ export class LoginController implements LoginControllerProtocol {
               type: 'public',
             },
           });
-          ToastMessage(err.toString(), Colors.ErrorColor);
+         //ToastMessage(err.toString(), Colors.ErrorColor);
         },
       );
     } else {
@@ -261,7 +275,7 @@ export class LoginController implements LoginControllerProtocol {
    * @param key
    * @param value
    */
-  onTextChange(key: string, value: string) {
+  onTextChange = (key: string, value: string)=> {
     var state: { [x: string]: any } = { [key]: value };
     if (
       key == 'username' &&
@@ -304,7 +318,10 @@ export class LoginController implements LoginControllerProtocol {
   };
 
   loginUserAccounts = (portal_ids?: any) => {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
+    ////this.view.props.showLoader(true);
+    //this.view.props.loaderText('Loading...');
+
     const { username, password } = this.view.state;
     let loginObj: any = { emailId: username, password: password, fcm_token: '' };
     if (portal_ids) {
@@ -316,7 +333,7 @@ export class LoginController implements LoginControllerProtocol {
       },
       (err: any) => {
         this.view.props.loginServiceCall(loginObj);
-        ToastMessage(err.toString(), Colors.ErrorColor);
+       //ToastMessage(err.toString(), Colors.ErrorColor);
       },
     );
   };
@@ -376,7 +393,10 @@ export class LoginController implements LoginControllerProtocol {
     // showConsoleLog(ConsoleType.LOG, "show data :", loginStatus);
 
     if (loginStatus.logincompleted) {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      // //this.view.props.showLoader(false);
+      //this.view.props.loaderText('Loading...');
+
       //If Login is success full
       if (loginStatus.loginsuccess) {
         //If Response code is success
@@ -433,11 +453,14 @@ export class LoginController implements LoginControllerProtocol {
           ['logindata'],
         );
         var message = msg?.message || msg?.ResponseMessage || ERROR_MESSAGE;
-        showConsoleLog(ConsoleType.LOG, message);
+        showConsoleLog(ConsoleType.LOG,"errr on login :", message);
         this.view.showErrorMessage(true, message);
       }
     } else if (loginStatus.instanceCompleted && !loginStatus.loginStarted) {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      // this.view.props.showLoader(false);
+      // this.view.props.loaderText('Loading...');
+
       if (loginStatus.instanceSuccess && loginStatus.callLogin) {
         if (Utility.isInternetConnected) {
           let isDisabledAccount = false;
@@ -463,8 +486,10 @@ export class LoginController implements LoginControllerProtocol {
                 loginStatus.instanceData.Response.length > 1 ||
                 isDisabledAccount
               ) {
-                loaderHandler.hideLoader();
-                showConsoleLog(ConsoleType.LOG, loginStatus.instanceData.Response);
+                //loaderHandler.hideLoader();
+                //this.view.props.showLoader(false);
+                //this.view.props.loaderText('Loading...');
+                // showConsoleLog(ConsoleType.LOG, loginStatus.instanceData.Response);
                 this.view.updateState({
                   ...this.view.state,
                   isVisible: true,

@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {NotificationListener} from '.';
+import BusyIndicator from '../../common/component/busyindicator';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import {kNotificationIndicator} from '../../common/component/TabBarIcons';
@@ -23,6 +24,7 @@ import {Colors, fontFamily, fontSize} from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import {memory_read, memory_read_all, memory_unread} from '../../images';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
 import {NotificationDataModel} from './notificationDataModel';
 import {kForegroundNotificationListener} from './notificationServices';
 import {AddNewNotification, MarkAllRead, SeenFlag} from './reducer';
@@ -67,15 +69,15 @@ class NotificationListing extends React.Component<Props> {
     this.notificationReceivedForeground.removeListener();
   };
 
-  UNSAFE_componentWillReceiveProps(props: Props) {
-    //componentDidUpdate(props: Props){
-    if (this.props !== props) {
-      this.setState({isRefreshing: false});
-    }
-  }
+  // UNSAFE_componentWillReceiveProps(props: Props) {
+  //   //componentDidUpdate(props: Props){
+  //   if (this.props !== props) {
+  //     this.setState({isRefreshing: false});
+  //   }
+  // }
 
   cancelAction = () => {
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
     this.props.navigation.goBack();
     setTimeout(() => {
       EventManager.callBack(kNotificationIndicator);
@@ -247,12 +249,18 @@ class NotificationListing extends React.Component<Props> {
   render() {
     return (
       <View style={Styles.container}>
+        {
+          this.props.showLoaderValue ?
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <SafeAreaView style={Styles.noViewStyle} />
         <SafeAreaView style={Styles.safeAreaContextStyle}>
           <View style={Styles.container}>
             <NavigationHeaderSafeArea
               heading={this.props.heading}
-              showCommunity={true}
+              showCommunity={false}
               cancelAction={this.cancelAction}
               showRightText={false}
             />
@@ -311,9 +319,9 @@ class NotificationListing extends React.Component<Props> {
                     onRefresh={() => this.refreshNotifications()}
                   />
                 }
-                ListFooterComponent={this.renderFooter.bind(this)}
+                ListFooterComponent={()=>this.renderFooter()}
                 onEndReachedThreshold={0.5}
-                onEndReached={this.handleLoadMore.bind(this)}
+                onEndReached={()=>this.handleLoadMore()}
               />
               {this.props.notificationList[this.state.index].total_count ==
               0 ? (
@@ -332,6 +340,8 @@ class NotificationListing extends React.Component<Props> {
 }
 const mapState = (state: {[x: string]: any}) => ({
   notificationList: state.NotificationsRedux.notificationData.slice(0),
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
 });
 
 const mapDispatch = (dispatch: Function) => {
@@ -347,6 +357,10 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({type: LoadMoreNotifications, payload: payload}),
     addNotificationItem: (payload: any) =>
       dispatch({type: AddNewNotification, payload: payload}),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
   };
 };
 

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Dimensions,
   Image,
@@ -12,7 +12,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Text from '../../common/component/Text';
 import {
   Colors,
@@ -20,23 +20,25 @@ import {
   ConsoleType,
   showConsoleLog,
 } from '../../common/constants';
-import {GetInstances} from './reducer';
+import { GetInstances } from './reducer';
 //@ts-ignore
 import LinearGradient from 'react-native-linear-gradient';
-import {apple, google, loginBack, Rectangle} from '../../../app/images';
+import { apple, google, loginBack, Rectangle } from '../../../app/images';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MessageDialogue from '../../common/component/messageDialogue';
 import BottomDrawer from '../../common/component/rn-bottom-drawer';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {kRegSignUp, loginType} from '../login';
+import { kRegSignUp, loginType } from '../login';
 import GetFormData, {
   kCueBackFormData,
   kCueBackRegistration,
 } from './getFormData';
 import RegFirstStep from './regFirstStep';
 import Styles from './styles';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
+import BusyIndicator from '../../common/component/busyindicator';
 
 export enum Direction {
   upDirection = 'upward',
@@ -48,9 +50,12 @@ export var loginDrawerRef: BottomDrawer;
 type Props = {
   showHeader: boolean;
   getAllInstances: Function;
-  navigation: {[key: string]: any};
+  navigation: { [key: string]: any };
   end: Function;
-  request: {completed: boolean; success: boolean};
+  request: { completed: boolean; success: boolean };
+  showLoaderValue: boolean;
+  loaderTextValue: string;
+
 };
 class Prologue extends Component<Props> {
   _panel: any = null;
@@ -77,7 +82,7 @@ class Prologue extends Component<Props> {
   };
 
   componentWillUnmount = () => {
-    this.setState({isBottomPickerVisible: false}, () => {
+    this.setState({ isBottomPickerVisible: false }, () => {
       this.registrationData.removeListener();
     });
   };
@@ -92,7 +97,7 @@ class Prologue extends Component<Props> {
     // 	showConsoleLog(ConsoleType.LOG,result)
     // 	// { safeAreaInsets: { top: 44, left: 0, bottom: 34, right: 0 } }
     // })
-    this.setState({isBottomPickerVisible: false}, () => {
+    this.setState({ isBottomPickerVisible: false }, () => {
       this.registrationData = EventManager.addListener(
         kCueBackFormData,
         this.cueBackRegistrationForm,
@@ -104,10 +109,12 @@ class Prologue extends Component<Props> {
 
   cueBackRegistrationForm = (success: any, formList: any) => {
     if (success) {
-      this.setState({registrationFormData: formList}, () => {
+      this.setState({ registrationFormData: formList }, () => {
         if (this.state.wasLoading) {
-          loaderHandler.hideLoader();
-          this.setState({isRegistrationOpen: true, wasLoading: false});
+          //loaderHandler.hideLoader();
+          this.props.showLoader(false);
+          this.props.loaderText('Loading...');
+          this.setState({ isRegistrationOpen: true, wasLoading: false });
         }
       });
     }
@@ -128,20 +135,20 @@ class Prologue extends Component<Props> {
 
   onDrawerExpand = (identifier: any) => {
     if (identifier == this.loginIdentifier) {
-      this.setState({isLoginDrawerOpen: true, isLoginUp: true});
+      this.setState({ isLoginDrawerOpen: true, isLoginUp: true });
       // this.searchDrawerRef.refDrawer.expand()
     }
     if (identifier == this.searchIdentifier) {
-      this.setState({isSearchDrawerOpen: true});
+      this.setState({ isSearchDrawerOpen: true });
     }
   };
 
   onDrawerCollapse = (identifier: any) => {
     if (identifier == this.loginIdentifier) {
-      this.setState({isLoginDrawerOpen: false, isLoginUp: false});
+      this.setState({ isLoginDrawerOpen: false, isLoginUp: false });
     }
     if (identifier == this.searchIdentifier) {
-      this.setState({isSearchDrawerOpen: false}, () =>
+      this.setState({ isSearchDrawerOpen: false }, () =>
         loginDrawerRef.refDrawer.collapse(),
       );
     }
@@ -168,7 +175,7 @@ class Prologue extends Component<Props> {
             !this.state.isSearchDrawerOpen
           ) {
             if (!this.state.isLoginUp) {
-              this.setState({isLoginUp: true});
+              this.setState({ isLoginUp: true });
             }
             // if(isRelease)
             // 	this.searchDrawerRef.refDrawer.expand();
@@ -183,7 +190,7 @@ class Prologue extends Component<Props> {
             this.state.isLoginDrawerOpen
           ) {
             if (this.state.isLoginUp) {
-              this.setState({isLoginUp: false});
+              this.setState({ isLoginUp: false });
             }
             if (isRelease) loginDrawerRef.refDrawer.collapse();
             else loginDrawerRef.refDrawer._handlePanResponderMove(e, guesture);
@@ -219,11 +226,13 @@ class Prologue extends Component<Props> {
   joinPressed = () => {
     if (Utility.isInternetConnected) {
       if (this.state.registrationFormData != null) {
-        this.setState({isRegistrationOpen: true});
+        this.setState({ isRegistrationOpen: true });
       } else {
-        this.setState({wasLoading: true}, () =>
-          loaderHandler.showLoader('Loading...'),
-        );
+        this.setState({ wasLoading: true }, () => {
+          //loaderHandler.showLoader('Loading...'),
+          this.props.showLoader(true);
+          this.props.loaderText('Loading...');
+        });
       }
     } else {
       No_Internet_Warning();
@@ -236,7 +245,7 @@ class Prologue extends Component<Props> {
       !this.state.isLoginDrawerOpen &&
       !this.state.isSearchDrawerOpen
     ) {
-      this.setState({isRegistrationOpen: false}, () =>
+      this.setState({ isRegistrationOpen: false }, () =>
         loginDrawerRef.refDrawer.collapse(),
       );
       // this.searchDrawerRef.refDrawer.collapse();
@@ -250,9 +259,9 @@ class Prologue extends Component<Props> {
   };
 
   onRegFinalCallBack = (msg: any) => {
-    this.setState({isRegistrationOpen: false}, () => {
+    this.setState({ isRegistrationOpen: false }, () => {
       loginDrawerRef.refDrawer.expand();
-      ToastMessage(msg, Colors.ThemeColor, false, true);
+     //ToastMessage(msg, Colors.ThemeColor, false, true);
     });
   };
 
@@ -280,7 +289,7 @@ class Prologue extends Component<Props> {
   };
 
   bottomPicker = (isVisible: boolean) => {
-    this.setState({isBottomPickerVisible: isVisible});
+    this.setState({ isBottomPickerVisible: isVisible });
   };
 
   openLoginDrawer = () => {
@@ -289,11 +298,11 @@ class Prologue extends Component<Props> {
 
   _showWithOutClose = (message: any, color: any) => {
     this.messageRef &&
-      this.messageRef._showWithOutClose({message: message, color: color});
+      this.messageRef._showWithOutClose({ message: message, color: color });
   };
 
   _show = (message: any, color: any) => {
-    this.messageRef && this.messageRef._show({message: message, color: color});
+    this.messageRef && this.messageRef._show({ message: message, color: color });
   };
 
   _hide = () => {
@@ -302,7 +311,7 @@ class Prologue extends Component<Props> {
 
   render() {
     let heightScreenHeight = Dimensions.get('window').height;
-    const {navigate} = this.props.navigation;
+    const { navigate } = this.props.navigation;
     // showConsoleLog(ConsoleType.LOG,"Device interensic height is : ", StaticSafeAreaInsets.safeAreaInsetsBottom);
     return (
       <View style={Styles.flexContainer}>
@@ -312,7 +321,7 @@ class Prologue extends Component<Props> {
           }
           backgroundColor={Colors.AudioViewBg}
         />
-        <View style={{flex: 1, backgroundColor: Colors.NewThemeColor}}>
+        <View style={{ flex: 1, backgroundColor: Colors.NewThemeColor }}>
           {/* <ImageBackground source={background_msm} style={{flex: 1, justifyContent: "center"}}>	 */}
           <ImageBackground
             source={Rectangle}
@@ -322,6 +331,12 @@ class Prologue extends Component<Props> {
               width: Utility.getDeviceWidth() * 1,
               justifyContent: 'center',
             }}>
+            {
+              this.props.showLoaderValue ?
+                <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+                :
+                null
+            }
             <LinearGradient
               // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
               // locations={[0, 0.6]}
@@ -338,7 +353,7 @@ class Prologue extends Component<Props> {
                       <View style={Styles.prologHeaderContainer}>
                         <TouchableOpacity
                           onPress={() =>
-                            this.setState({isRegistrationOpen: false})
+                            this.setState({ isRegistrationOpen: false })
                           }>
                           <Image source={loginBack} />
                         </TouchableOpacity>
@@ -437,14 +452,14 @@ class Prologue extends Component<Props> {
                           <View
                             style={[
                               Styles.loginSSOButtonStyle,
-                              {backgroundColor: Colors.decadeFilterBorder},
+                              { backgroundColor: Colors.decadeFilterBorder },
                             ]}>
                             {/* <Image source={icon_mail} style={{ height: 14, width: 20, resizeMode: "cover", tintColor: "#5c5c5c" }} /> */}
                             <Text
                               style={[
                                 CommonTextStyles.fontWeight400Size19Inter,
                                 Styles.ssoTextStyle,
-                                {color: Colors.white},
+                                { color: Colors.white },
                               ]}>
                               Create an account
                             </Text>
@@ -553,13 +568,19 @@ class Prologue extends Component<Props> {
     );
   }
 }
-const mapState = (state: {[x: string]: any}) => ({
+const mapState = (state: { [x: string]: any }) => ({
   request: state.requestInstances,
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
 });
 
 const mapDispatch = (dispatch: Function) => ({
-  getAllInstances: () => dispatch({type: GetInstances.GetCall}),
-  end: () => dispatch({type: GetInstances.GetEnd}),
+  getAllInstances: () => dispatch({ type: GetInstances.GetCall }),
+  end: () => dispatch({ type: GetInstances.GetEnd }),
+  showLoader: (payload: any) =>
+    dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+  loaderText: (payload: any) =>
+    dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
 });
 
 export default connect(mapState, mapDispatch)(Prologue);

@@ -48,7 +48,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    loaderHandler.showLoader('Loading...');
+    //loaderHandler.showLoader('Loading...');
     this.collectionFetch = EventManager.addListener(
       kCollectionMemories,
       this.collectionFetched,
@@ -68,7 +68,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
   };
 
   collectionFetched = (success: any, responseList: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (success) {
       let initialSequence: any = [];
       responseList.forEach((element: any, index: any) => {
@@ -83,9 +83,9 @@ export default class CollectionDetails extends React.Component<Props, State> {
   };
 
   collectionUpdate = (success: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (!success) {
-      ToastMessage('Unable to update memory');
+      //ToastMessage('Unable to update memory');
     }
     Keyboard.dismiss();
     this.props.navigation.goBack();
@@ -108,7 +108,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
       }
     });
     if (sequenceUpdated) {
-      loaderHandler.showLoader('Saving...');
+      //loaderHandler.showLoader('Saving...');
       let commaSeparatedValue = this.state.finalSequence.join(',');
       UpdateMemoryCollection(
         {

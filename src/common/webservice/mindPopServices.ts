@@ -1,8 +1,8 @@
 import Webservice from './webservice';
 
-function getMindPops(url: string, params: Array<any>) {
+function getMindPops(url: string, params: Array<any>, CB: any) {
   const [request, headers] = params;
-  return Webservice.postRequest(`${url}/api/mindpop/list`, headers, request);
+  return Webservice.newPostRequest(`${url}/api/mindpop/list`, headers, request, false, CB);
 }
 
 function getMindPopWithId(url: string, params: Array<any>, CB: any) {

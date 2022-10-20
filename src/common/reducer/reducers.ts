@@ -12,6 +12,7 @@ import {
 import { intanceList, requestInstances } from '../../views/registration/reducer';
 //@ts-ignore
 import { MemoryInitials } from '../../views/createMemory/reducer';
+import { UserProfileRedux } from '../../views/myAccount/reducer';
 import { dashboardReducer } from '../../views/dashboard/dashboardReducer';
 import { NotificationsRedux } from '../../views/notificationView/reducer';
 import root from './sagas';
@@ -32,6 +33,7 @@ const reducers = combineReducers({
   MemoryInitials,
   NotificationsRedux,
   dashboardReducer,
+  UserProfileRedux
 });
 
 const sagaMiddleware = createSagaMiddleware();

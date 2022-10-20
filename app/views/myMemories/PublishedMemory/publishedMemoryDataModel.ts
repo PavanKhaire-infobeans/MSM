@@ -85,8 +85,8 @@ export class PublishedMemoryDataModel {
         publishedMemory.audios = getDetails(element, ['audios'], keyArray);
         publishedMemory.season = getDetails(element, ['season'], keyString);
         if (
-          element.like_comment_data.like_count != undefined &&
-          element.like_comment_data.like_count != null
+          element?.like_comment_data?.like_count != undefined &&
+          element?.like_comment_data?.like_count != null
         ) {
           publishedMemory.showLikeCount = true;
         } else {
@@ -134,7 +134,7 @@ export class PublishedMemoryDataModel {
 
   static getUserObj = (memoryDetails: any) => {
     let userDetails: any = {};
-    if (Account.selectedData().userID != memoryDetails.user_details.uid) {
+    if (Account.selectedData().userID != memoryDetails?.user_details?.uid) {
       let first_name = getDetails(memoryDetails, [
         'user_details',
         'field_first_name_value',

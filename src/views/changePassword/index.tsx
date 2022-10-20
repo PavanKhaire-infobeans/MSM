@@ -1,19 +1,19 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Keyboard, SafeAreaView, StatusBar, View} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Keyboard, SafeAreaView, StatusBar, View } from 'react-native';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
-import {SubmitButton} from '../../common/component/button';
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import { SubmitButton } from '../../common/component/button';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextField from '../../common/component/textField';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
-import {Colors} from '../../common/constants';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
+import { Colors } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
 import {
   ChangePasswordService,
   kChangePassword,
 } from '../changePassword/changePasswordWebService';
-import {styles} from './styles';
+import { styles } from './styles';
 
 const ChangePassword = props => {
   const _newPasswordField = useRef();
@@ -37,24 +37,25 @@ const ChangePassword = props => {
   });
 
   useEffect(() => {
-    const changePasswordListener = EventManager.addListener(
-      kChangePassword,
-      changePasswordResponse,
-    );
+    // const changePasswordListener = EventManager.addListener(
+    //   kChangePassword,
+    //   changePasswordResponse,
+    // );
 
-    return () => {
-      changePasswordListener.removeListener();
-    };
+    // return () => {
+    //   changePasswordListener.removeListener();
+    // };
   }, []);
 
   const changePasswordResponse = (success: boolean, response: any) => {
-    loaderHandler.hideLoader();
     if (success) {
-      ToastMessage(response, Colors.ThemeColor);
       Keyboard.dismiss();
+      //loaderHandler.hideLoader();
+     //ToastMessage(response, Colors.ThemeColor);
       props.navigation.goBack();
     } else {
-      ToastMessage(response, Colors.ErrorColor);
+      //loaderHandler.hideLoader();
+     //ToastMessage(response, Colors.ErrorColor);
     }
   };
 
@@ -168,8 +169,11 @@ const ChangePassword = props => {
       }
       setTimeout(Keyboard.dismiss);
       if (!hasError) {
-        loaderHandler.showLoader();
-        ChangePasswordService(currentPassword, confirmPassword);
+        //loaderHandler.showLoader();
+        ChangePasswordService(currentPassword, confirmPassword,
+          response => {
+            changePasswordResponse(response.success, response.message)
+          });
       }
     } else {
       No_Internet_Warning();

@@ -49,7 +49,7 @@ export default class MyMemoriesContainer extends React.Component<Props> {
   }
 
   _onBack = () => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
   };
 
   render() {
@@ -64,10 +64,11 @@ export default class MyMemoriesContainer extends React.Component<Props> {
               backgroundColor={Colors.NewThemeColor}
             />
             <ScrollableTabView
+              nestedScrollEnabled={true} overScrollMode='always'
               ref={(ref: any) => {
                 this.scrollableTabView = ref;
               }}
-              style={{width: '100%'}}
+              style={{width: '100%', flex: 1,}}
               locked={Platform.OS == 'ios' ? false : true}
               tabBarBackgroundColor={Colors.NewThemeColor}
               tabBarTextStyle={{...fontSize(16), fontFamily: fontFamily.Inter}}

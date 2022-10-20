@@ -79,7 +79,7 @@ export class MemoryDataModel {
         this.nid = getDetails(memoryDetails, ["nid"], keyInt);
         this.updateUserObj(memoryDetails);
         {
-            memoryDetails["type"].indexOf("collection") != -1 ?
+            memoryDetails["type"]?.indexOf("collection") != -1 ?
             this.updateExternalQueue(memoryDetails)
             :
 
@@ -88,7 +88,7 @@ export class MemoryDataModel {
             this.updateShareObj(memoryDetails)
         }
         this.updateLikesAndComments(memoryDetails);
-        if (memoryDetails["type"].indexOf("song") != -1) {
+        if (memoryDetails["type"]?.indexOf("song") != -1) {
             this.spotify_url = getDetails(memoryDetails, ["api_url"]);
         }
     }
@@ -169,7 +169,7 @@ export class MemoryDataModel {
         return "None"
     }
     updateUserObj(memoryDetails: any) {
-        if (Account.selectedData().userID != memoryDetails.user_details.uid) {
+        if (Account.selectedData().userID != memoryDetails?.user_details?.uid) {
             let first_name = getDetails(memoryDetails, ["user_details", "field_first_name_value"]);
             let last_name = getDetails(memoryDetails, ["user_details", "field_last_name_value"]);
             this.userDetails.name = first_name + " " + last_name;
@@ -268,9 +268,9 @@ export class MemoryDataModel {
     }
 
     updateLikesAndComments(memoryDetails: any) {
-        if (memoryDetails["type"].indexOf("collection") != -1) {
-            this.nid = this.externalQueue.collection[0].nid;
-            this.likesComments = this.externalQueue.collection[0].likesComments;
+        if (memoryDetails["type"]?.indexOf("collection") != -1) {
+            this.nid = this.externalQueue?.collection[0]?.nid;
+            this.likesComments = this.externalQueue?.collection[0]?.likesComments;
         }
         else {
             this.likesComments.noOfComments = getDetails(memoryDetails, ["comments_count"], keyInt);

@@ -47,7 +47,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
   }
 
   collectionUpdate = (success: any, response: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (success) {
       let newCollection = getValue(response, ['CollectionStatus', 'data']);
       if (this.props.isRename) {
@@ -74,7 +74,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
 
   saveValue = () => {
     if (this.state.content.trim().length > 0) {
-      loaderHandler.showLoader('Saving...');
+      //loaderHandler.showLoader('Saving...');
       if (this.props.isRename) {
         UpdateMemoryCollection(
           {

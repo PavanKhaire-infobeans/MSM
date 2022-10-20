@@ -70,7 +70,7 @@ export default class TopicsFilter extends React.Component<State, Props> {
 
   applyFilters() {
     if (filterAdded) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       GetPrompts(this.state.filteredTopics, false, 0);
       // this.setState({});
       EventManager.callBack('scrollFlatlist');
@@ -97,7 +97,7 @@ export default class TopicsFilter extends React.Component<State, Props> {
             barStyle={ Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
             backgroundColor={Colors.NewThemeColor}
           />
-          <ScrollView style={Styles.filterSubScroll}>
+          <ScrollView nestedScrollEnabled={true} overScrollMode='always'style={[Styles.filterSubScroll,{flex:1}]}>
             <View>
               <View style={Styles.topicContainer}>
                 {this.state.topicsArray.length > 0 &&

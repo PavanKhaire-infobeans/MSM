@@ -55,13 +55,12 @@ export const CreateUpdateMemory = async (
             EventManager.callBack(listener, false, 'Could not save MindPop');
             return;
           }
-          debugger
+
 
           if (filesToUpload.length > 0) {
             await uploadFile(id, filesToUpload,
               datareturn => {
-
-                console.log("file upload response : ", JSON.stringify(datareturn))
+                // console.log("file upload response : ", JSON.stringify(datareturn))
                 if (listener == "mindpopEditMemoryListener") {
                   CB({ status: true, id, padDetails, key, prompt_id });
                   // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
@@ -83,7 +82,7 @@ export const CreateUpdateMemory = async (
 
           }
           else {
-            showConsoleLog(ConsoleType.LOG, "done dT >>>>>>");
+            
             if (listener == "mindpopEditMemoryListener") {
               CB({ status: true, id, padDetails, key, prompt_id });
               // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
@@ -117,7 +116,6 @@ export const CreateUpdateMemory = async (
           else {
             CB(response);
           }
-          // showConsoleLog(ConsoleType.WARN," err daaaaa :", JSON.stringify(response));
           // EventManager.callBack(listener, false, response['ResponseMessage']);
         }
 
@@ -235,10 +233,11 @@ export const UpdateAttachments = async (
   nid: any,
   fileDetails: any,
   key: any,
+  CB: any,
 ) => {
   try {
     let data = await Storage.get('userData');
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL
       }/api/mystory/edit_delete_file`,
       [
@@ -248,19 +247,18 @@ export const UpdateAttachments = async (
         },
         { details: { nid: nid, type: 'my_stories', file_details: fileDetails } },
       ],
+      response => {
+        CB(response)
+      }
     )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   Promise.reject(err);
+    // });
 
-    if (response.ResponseCode == 200) {
-      EventManager.callBack(kFilesUpdated, true, key);
-    } else {
-      EventManager.callBack(kFilesUpdated, false, response.ResponseMessage);
-    }
   } catch (err) {
-    EventManager.callBack(kFilesUpdated, false, 'Unable to update memory');
+    CB({ ResponseCode: 400, ResponseMessage: 'Unable to update memory' })
+    // EventManager.callBack(kFilesUpdated, false, 'Unable to update memory');
   }
 };
 
@@ -416,7 +414,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
   let respArray: any[] = [];
   // const loaderHandler = require('../../common/component/busyindicator/LoaderHandler').default;
-  // loaderHandler.showLoader('Uploading..');
+  // //loaderHandler.showLoader('Uploading..');
 
   Promise.all(
     files.map(file => {
@@ -494,7 +492,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
     .then((res) => {
       CB(res);
     })
-  // loaderHandler.showLoader('Uploading..');
+  // //loaderHandler.showLoader('Uploading..');
 
 
 

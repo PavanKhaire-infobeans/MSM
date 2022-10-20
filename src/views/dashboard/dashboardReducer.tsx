@@ -12,6 +12,8 @@ import { MemoryService, newMemoryService } from '../../common/webservice/memoryS
 import { DashboardDataModel } from './dashboardDataModel';
 
 export const SET_FILTERS_NAME = 'SET_FILTERS_NAME';
+export const SHOW_LOADER_READ = 'SHOW_LOADER_READ';
+export const SHOW_LOADER_TEXT = 'SHOW_LOADER_TEXT';
 export const SET_TIMELINE_FILTERS = 'SET_TIMELINE_FILTERS';
 export const SET_RECENT_FILTERS = 'SET_RECENT_FILTERS';
 export const SET_TIMELINE_LIST = 'SET_TIMELINE_LIST';
@@ -62,6 +64,8 @@ type StateType = {
   fromDate: string;
   toDate: string;
   keyBoardHeight: number;
+  showLoader: boolean;
+  loaderText: string;
 };
 
 export type DashboardState = object | StateType;
@@ -106,6 +110,12 @@ export const dashboardReducer = (
     case CreateAMemory:
       newState = {...newState, createAMemory: action.payload};
       break;
+    case SHOW_LOADER_READ:
+      newState = {...newState, showLoader: action.payload};
+      break;
+    case SHOW_LOADER_TEXT:
+      newState = {...newState, loaderText: action.payload};
+      break;
     case SET_RECENT_LIST:
       if (!action.payload.isLoadMore) {
         newState.recentList = [];
@@ -119,6 +129,8 @@ export const dashboardReducer = (
         loadMoreRecent: false,
         refreshRecent: false,
         loadingRecent: false,
+        showLoader:false,
+        loaderText:'Loading...'
       };
       break;
     case SET_TIMELINE_LIST:
@@ -146,6 +158,8 @@ export const dashboardReducer = (
         loadMoreTimeline: false,
         refreshTimeline: false,
         loadingTimeline: false,
+        showLoader:false,
+        loaderText:'Loading...'
       };
       break;
     case SET_LOADING_TIMELINE:
@@ -186,7 +200,6 @@ export const dashboardReducer = (
       };
       break;
     case REMOVE_PROMPT:
-      console.log("action.payload : ",action.payload)
       newState.recentList[action.payload.firstIndex].active_prompts.splice(
         action.payload.secondIndex,
         1,
@@ -232,14 +245,15 @@ function* fetchFilters(params: any, CB: any) {
     // .catch((err: Error) => Promise.reject(err));
 }
 
-function* fetchMemoryList(params: any) {
+function* fetchMemoryList(params: any,CB:any) {
   showConsoleLog(ConsoleType.LOG, 'input request..', JSON.stringify(params));
-  return MemoryService(
+  return newMemoryService(
     `https://${Account.selectedData().instanceURL}/api/timeline/list`,
     params,
+    resp => CB(resp)
   )
-    .then((response: Response) => response.json())
-    .catch((err: Error) => Promise.reject(err));
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => Promise.reject(err));
 }
 
 /**
@@ -299,6 +313,7 @@ function* getFiltersRecent(action: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
+    let dataSet:any = {}
     let request = yield call(fetchFilters, [
       {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
       {
@@ -307,14 +322,19 @@ function* getFiltersRecent(action: any) {
         },
         configurationTimestamp: '0',
       },
-    ]);
+    ],
+    responseBody =>{
+      if (responseBody.ResponseCode == 200) {
+        responseBody.Details.allSelected = {name: 'All', id: 'all', value: 1};
+        dataSet = responseBody.Details.allSelected;
+      }
+    });
     const responseBody = yield call(async function () {
       return await request;
     });
-    if (responseBody.ResponseCode == 200) {
-      responseBody.Details.allSelected = {name: 'All', id: 'all', value: 1};
-      yield put({type: SET_RECENT_FILTERS, payload: responseBody.Details});
-    }
+
+    yield put({type: SET_RECENT_FILTERS, payload: yield dataSet});
+   
   } catch (err) {
     showConsoleLog(ConsoleType.LOG, err);
   }
@@ -334,35 +354,42 @@ function* getMemoryList(action: any) {
         isLoadMore: action.payload.isLoadMore,
       },
     });
+
     let data = yield call(async function () {
       return Storage.get('userData');
     });
+    let dataSet = {}
     let request = yield call(fetchMemoryList, [
       {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
-      obj,
-    ]);
+      obj
+    ],
+    async(responseBody) =>{
+      if (responseBody.ResponseCode == 200) {
+        // showConsoleLog(ConsoleType.LOG,"recent data : ",JSON.stringify(responseBody.Details.data))
+        responseBody.Details.data = DashboardDataModel.getConvertedData(
+          responseBody.Details.data,
+        );
+        responseBody.Details.isLoadMore = action.payload.isLoadMore;
+        if (
+          responseBody.Details.api_random_prompt_data &&
+          responseBody.Details.api_random_prompt_data.length &&
+          responseBody.Details.api_random_prompt_data.length > 0
+        ) {
+          responseBody.Details.data.push({
+            isPrompt: true,
+            active_prompts: responseBody.Details.api_random_prompt_data,
+          });
+        }
+        dataSet = await responseBody.Details;
+        EventManager.callBack('loadingDone');
+      }
+    });
     const responseBody = yield call(async function () {
       return await request;
     });
-    if (responseBody.ResponseCode == 200) {
-      // showConsoleLog(ConsoleType.LOG,"recent data : ",JSON.stringify(responseBody.Details.data))
-      responseBody.Details.data = DashboardDataModel.getConvertedData(
-        responseBody.Details.data,
-      );
-      responseBody.Details.isLoadMore = action.payload.isLoadMore;
-      if (
-        responseBody.Details.api_random_prompt_data &&
-        responseBody.Details.api_random_prompt_data.length &&
-        responseBody.Details.api_random_prompt_data.length > 0
-      ) {
-        responseBody.Details.data.push({
-          isPrompt: true,
-          active_prompts: responseBody.Details.api_random_prompt_data,
-        });
-      }
-      yield put({type: SET_RECENT_LIST, payload: responseBody.Details});
-      EventManager.callBack('loadingDone');
-    }
+    
+    yield put({type: SET_RECENT_LIST, payload:  yield dataSet});
+
   } catch (err) {
     showConsoleLog(ConsoleType.LOG, err);
   }
@@ -385,13 +412,37 @@ function* getTimelineList(action: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
+    let dataSet ={};
+
     let request = yield call(fetchMemoryList, [
       {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
       obj,
-    ]);
+    ],
+    async(responseBody) =>{
+      if (responseBody.ResponseCode == 200) {
+        // showConsoleLog(ConsoleType.LOG,"Time line data : ",JSON.stringify(responseBody))
+        responseBody.Details.data = DashboardDataModel.getConvertedData(
+          responseBody.Details.data,
+        );
+        // showConsoleLog(ConsoleType.LOG,"responseBody ,", JSON.stringify(responseBody.Details.data));
+        responseBody.Details.isLoadMore = action.payload.isLoadMore;
+        responseBody.Details.isLoading = action.payload.isLoading;
+        responseBody.Details.isRefresh = action.payload.isRefresh;
+        debugger;
+        responseBody.Details.sorted_unique_years = makeMultiDimArray(
+          responseBody.Details.sorted_unique_years,
+          4,
+        );
+        dataSet = await responseBody.Details;
+        // showConsoleLog(ConsoleType.LOG,"res 1...",responseBody.Details.data);
+        EventManager.callBack('loadingDone');
+      }
+    });
     const responseBody = yield call(async function () {
       return await request;
     });
+   
+    yield put({type: SET_TIMELINE_LIST, payload: dataSet});
     // {
     //     "type": "timeline",
     //     "configurationTimestamp": "0",
@@ -407,24 +458,7 @@ function* getTimelineList(action: any) {
     //   }
     // showConsoleLog(ConsoleType.LOG,"responseBody ,", JSON.stringify(responseBody));
 
-    if (responseBody.ResponseCode == 200) {
-      // showConsoleLog(ConsoleType.LOG,"Time line data : ",JSON.stringify(responseBody))
-      responseBody.Details.data = DashboardDataModel.getConvertedData(
-        responseBody.Details.data,
-      );
-      // showConsoleLog(ConsoleType.LOG,"responseBody ,", JSON.stringify(responseBody.Details.data));
-      responseBody.Details.isLoadMore = action.payload.isLoadMore;
-      responseBody.Details.isLoading = action.payload.isLoading;
-      responseBody.Details.isRefresh = action.payload.isRefresh;
-      debugger;
-      responseBody.Details.sorted_unique_years = makeMultiDimArray(
-        responseBody.Details.sorted_unique_years,
-        4,
-      );
-      // showConsoleLog(ConsoleType.LOG,"res 1...",responseBody.Details.data);
-      yield put({type: SET_TIMELINE_LIST, payload: responseBody.Details});
-      EventManager.callBack('loadingDone');
-    }
+    
   } catch (err) {
     showConsoleLog(ConsoleType.LOG, err);
   }
@@ -514,6 +548,7 @@ const objectToArray = (obj: any) => {
   showConsoleLog(ConsoleType.LOG, result);
   return result;
 };
+
 const makeMultiDimArray = (obj: any, length: any) => {
   debugger;
   let convertedArray = [];

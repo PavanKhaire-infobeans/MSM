@@ -85,8 +85,8 @@ class InviteCollaborators extends React.Component<Props, State> {
         this.props.navigation.jump('memoriesDrafts');
       } else this.props.getCollaborators(this.props.nid);
     } else {
-      loaderHandler.hideLoader();
-      ToastMessage('Cannot perform the action now');
+      //loaderHandler.hideLoader();
+      //ToastMessage('Cannot perform the action now');
     }
   }
 
@@ -120,7 +120,7 @@ class InviteCollaborators extends React.Component<Props, State> {
   };
 
   UNSAFE_componentWillReceiveProps = () => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
   };
 
   getTextForActions = (item: any) => {
@@ -216,7 +216,7 @@ class InviteCollaborators extends React.Component<Props, State> {
 
   memoryAction = (action: any, item: any) => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       CollaboratorActionAPI({
         nid: this.props.nid,
         id: item.type == 0 ? item.uid : item.id,
@@ -276,7 +276,7 @@ class InviteCollaborators extends React.Component<Props, State> {
 
   leaveConversation = () => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       CollaboratorActionAPI({
         nid: this.props.nid,
         id: Account.selectedData().userID,
@@ -369,7 +369,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                 )}
               </View>
             ) : (
-              <ScrollView>
+              <ScrollView nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}>
                 <View style={Styles.collabrationContainer}>
                   <Image source={team_icon} style={Styles.visiblityImageContainer} />
                   <Text

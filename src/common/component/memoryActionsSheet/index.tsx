@@ -67,6 +67,47 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
     });
   };
 
+  renderItem=({
+    item: data,
+  }: {
+    item: MemoryActionsSheetItem;
+  }) => {
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          this.props.memoryActions
+            ? this.props.onActionClick &&
+              this.props.onActionClick(data.index, data)
+            : this.props.onActionClick &&
+              this.props.onActionClick(data.index);
+          this.hideSheet();
+          Keyboard.dismiss();
+          {
+            this.props.popToAddContent &&
+              this.props.navigation.popTo('addContent');
+          }
+        }}>
+        <View style={styles.subView}>
+          <View style={styles.imageStyle}>
+            <Image source={data.image} resizeMode="contain" />
+          </View>
+          <TextNew
+            style={[
+              styles.textStyle,
+              {
+                color:
+                  data.isDestructive == 1
+                    ? Colors.NewRadColor
+                    : Colors.black,
+              },
+            ]}>
+            {data.text}
+          </TextNew>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  };
+
   render() {
     if (this.state.hidden || this.props.actions.length == 0) {
       return <View style={styles.hiddenView} />;
@@ -102,46 +143,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                   // ItemSeparatorComponent={({ leadingItem }: { highlighted: boolean, leadingItem: MemoryActionsSheetItem }) => {
                   //     return (<View style={{ height: 1, backgroundColor: (leadingItem.index == (this.props.actions.length - 1)) ? 'rgba(0.35, 0.35, 0.35, 0.2)' : 'white' }} />)
                   // }}
-                  renderItem={({
-                    item: data,
-                  }: {
-                    item: MemoryActionsSheetItem;
-                  }) => {
-                    return (
-                      <TouchableWithoutFeedback
-                        onPress={() => {
-                          this.props.memoryActions
-                            ? this.props.onActionClick &&
-                              this.props.onActionClick(data.index, data)
-                            : this.props.onActionClick &&
-                              this.props.onActionClick(data.index);
-                          this.hideSheet();
-                          Keyboard.dismiss();
-                          {
-                            this.props.popToAddContent &&
-                              this.props.navigation.popTo('addContent');
-                          }
-                        }}>
-                        <View style={styles.subView}>
-                          <View style={styles.imageStyle}>
-                            <Image source={data.image} resizeMode="contain" />
-                          </View>
-                          <TextNew
-                            style={[
-                              styles.textStyle,
-                              {
-                                color:
-                                  data.isDestructive == 1
-                                    ? Colors.NewRadColor
-                                    : Colors.black,
-                              },
-                            ]}>
-                            {data.text}
-                          </TextNew>
-                        </View>
-                      </TouchableWithoutFeedback>
-                    );
-                  }}
+                  renderItem={this.renderItem}
                 />
               </View>
             </Animated.View>

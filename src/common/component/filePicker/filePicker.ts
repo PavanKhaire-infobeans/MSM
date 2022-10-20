@@ -410,7 +410,7 @@ export const PickImage = async (callback: any) => {
             );
             if (tempfiles.length > 5) {
               tempfiles.splice(5, tempfiles.length - 1);
-              ToastMessage('Maximum 5 photos can be selected', Colors.ErrorColor);
+              //ToastMessage('Maximum 5 photos can be selected', Colors.ErrorColor);
             }
             callback(tempfiles);
             return tempfiles;

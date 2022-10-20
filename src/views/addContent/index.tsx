@@ -63,6 +63,8 @@ import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/n
 import CreateMemoryIntro from '../createMemory/createMemoryIntro';
 import { showCustomAlert, showCustomAlertData } from '../createMemory/reducer';
 import style from './styles';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
+import BusyIndicator from '../../common/component/busyindicator';
 
 const ImageActions: Array<ActionSheetItem> = [
   { index: 0, text: 'Image', image: action_camera },
@@ -157,7 +159,7 @@ const AddContentDetails = props => {
                 ReactNativeHapticFeedback.trigger('impactMedium', options);
                 saveMindPop();
               } else {
-                ToastMessage('Title is mandatory');
+               //ToastMessage('Title is mandatory');
                 setTitleError('Title is mandatory');
               }
             },
@@ -183,7 +185,9 @@ const AddContentDetails = props => {
     padDetails: any,
   ) => {
     showConsoleLog(ConsoleType.WARN, 'in call back ::', success);
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    props.showLoader(false);
+    props.loaderText('Loading...');
     if (success) {
       props.navigation.replace('createMemory', {
         attachments: files,
@@ -196,7 +200,7 @@ const AddContentDetails = props => {
         type: createNew,
       });
     } else {
-      ToastMessage('Unable to create memory');
+     //ToastMessage('Unable to create memory');
     }
   };
 
@@ -239,7 +243,9 @@ const AddContentDetails = props => {
       });
       props.navigation.replace('mindPop');
     } else {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
+      props.showLoader(false);
+      props.loaderText('Loading...');
     }
   };
 
@@ -272,7 +278,9 @@ const AddContentDetails = props => {
       if (content.trim() !== '') {
         draftDetails = DefaultDetailsWithoutTitleMemory(content);
       }
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
+      props.showLoader(true);
+      props.loaderText('Loading...');
       CreateUpdateMemory(
         draftDetails,
         [],
@@ -293,7 +301,7 @@ const AddContentDetails = props => {
                 type: createNew,
               });
             } else {
-              ToastMessage('Unable to create memory');
+             //ToastMessage('Unable to create memory');
             }
           }
         },
@@ -324,7 +332,9 @@ const AddContentDetails = props => {
         },
         configurationTimestamp: moment,
       };
-      loaderHandler.showLoader('Saving...');
+      //loaderHandler.showLoader('Saving...');
+      props.showLoader(true);
+      props.loaderText('Saving...');
       addEditMindPop(req, files, true);
     } else {
       No_Internet_Warning();
@@ -363,7 +373,7 @@ const AddContentDetails = props => {
         if (file.filesize != 0) {
           audioAttachmentPress(file);
         } else {
-          ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+         //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
         }
         break;
       case 'files':
@@ -463,6 +473,12 @@ const AddContentDetails = props => {
         }
         backgroundColor={Colors.NewThemeColor}
       />
+      {
+        props.showLoaderValue ?
+          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue != '' ? props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+          :
+          null
+      }
 
       <TouchableWithoutFeedback
         onPress={() => {
@@ -575,6 +591,8 @@ const AddContentDetails = props => {
 
 const mapState = (state: { [x: string]: any }) => ({
   showAlert: state.MemoryInitials.showAlert,
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
 });
 
 const mapDispatch = (dispatch: Function) => {
@@ -583,6 +601,10 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: showCustomAlert, payload: payload }),
     showAlertCallData: (payload: any) =>
       dispatch({ type: showCustomAlertData, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
   };
 };
 export default connect(mapState, mapDispatch)(AddContentDetails);

@@ -72,6 +72,8 @@ import EmptyView from './emptyView';
 import MindPopIntro from './mindPopIntro';
 import MindPopNavigationBar from './NavigationBar';
 import Styles from './styles';
+import BusyIndicator from '../../../common/component/busyindicator';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../../dashboard/dashboardReducer';
 
 export type ListItem = {
   id: string;
@@ -260,7 +262,9 @@ class MindPopList extends React.Component<{
   UNSAFE_componentWillReceiveProps(nextProps: { [x: string]: any }) {
     if (this.props !== nextProps) {
       if (nextProps.list.completed) {
-        LoaderHandler.hideLoader();
+        // LoaderHandler.hideLoader();
+        this.props.showLoader(false);
+        this.props.loaderText('Loading...');
         if (nextProps.list.success) {
           let { count: totalItems, fetchedItems } = getValue(nextProps, [
             'list',
@@ -328,7 +332,9 @@ class MindPopList extends React.Component<{
           // No_Internet_Warning();
         }
       } else if (nextProps.deleteStatus.completed) {
-        LoaderHandler.hideLoader();
+        // LoaderHandler.hideLoader();
+        this.props.showLoader(false);
+        this.props.loaderText('Loading...');
         if (nextProps.deleteStatus.success) {
           // var deletedIds: string[] = (getValue(nextProps, ["deleteStatus", "data", "reqData", "mindPopList"]) || []).map(
           // 	(it: { mindPopID: string }) => it.mindPopID
@@ -414,10 +420,7 @@ class MindPopList extends React.Component<{
             'message',
           ]);
           let message: string = errorMsg || ERROR_MESSAGE;
-          ToastMessage(
-            message,
-            message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor,
-          );
+         //ToastMessage(message,message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor);
         }
       }
     }
@@ -543,7 +546,9 @@ class MindPopList extends React.Component<{
     var totalItems = this.state.totalItems;
     if (totalItems == 0) {
       this.setState({ totalItems: 0, webserviceBeingCalled: true }, () => {
-        LoaderHandler.showLoader();
+        // LoaderHandler.showLoader();
+        this.props.showLoader(true);
+        this.props.loaderText('Loading...');
       });
     }
     this.props.resetEdit();
@@ -628,7 +633,9 @@ class MindPopList extends React.Component<{
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            LoaderHandler.showLoader('Deleting...');
+            // LoaderHandler.showLoader('Deleting...');
+            this.props.showLoader(true);
+            this.props.loaderText('Deleting...');
             this.deleteMindpop(selectedItems);
           },
         },
@@ -683,14 +690,18 @@ class MindPopList extends React.Component<{
   );
 
   _doApiCall = ()=>{
-    console.warn("ooooooooooo")
     this.updateList();
   }
 
   render() {
     return (
       <View style={Styles.container}>
-        
+         {
+          this.props.showLoaderValue ?
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <SafeAreaView style={Styles.noflexContainer} />
         <SafeAreaView style={Styles.mainContainer}>
           
@@ -759,7 +770,9 @@ class MindPopList extends React.Component<{
 
   convertToMemory = (id: any, content: any, filesToUpload: []) => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
+      this.props.showLoader(true);
+      this.props.loaderText('Creating Memory...');
       let draftDetails: any = DefaultDetailsMemory(content);
       draftDetails.mindpop_id = id;
       MindPopStore._deleteMindPops([parseInt(id)]);
@@ -776,13 +789,15 @@ class MindPopList extends React.Component<{
               deepLinkBackClick: this.props.deepLinkBackClick,
             });
           } else {
-            loaderHandler.hideLoader();
-            ToastMessage(resp.message);
+            //loaderHandler.hideLoader();
+            this.props.showLoader(false);
+            this.props.loaderText('Loading...');
+           //ToastMessage(resp.message);
           }
         },
       );
     } else {
-      ToastMessage(NO_INTERNET);
+     //ToastMessage(NO_INTERNET);
     }
   };
 
@@ -856,7 +871,7 @@ class MindPopList extends React.Component<{
   }
 
   fetchAndPushMindPop = async (data: any) => {
-    // loaderHandler.showLoader("Loading...")
+    // //loaderHandler.showLoader("Loading...")
     // let value : any = await MindPopStore._getMindPopAttachments(data.id);
     // let medias: MindPopAttachment[] = value.rows.raw();
     // let attachments : any = []
@@ -1008,7 +1023,9 @@ class MindPopList extends React.Component<{
     this.createNew = true;
     this.props.cleanEdit();
     if (fromNavBar) {
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
+      this.props.showLoader(true);
+      this.props.loaderText('Loading...');
       this.props.navigation.navigate('mindPopEdit', {
         updateList: this.updateList,
         actionImageUpload: this.props.actionImageUpload,
@@ -1280,6 +1297,8 @@ const mapState = (state: { [x: string]: any }) => ({
   showAlert: state.MemoryInitials.showAlert,
   showAlertData: state.MemoryInitials.showAlertData,
   listItem: state.mindPopEditMode.selectedMindPop,
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
 });
 
 const mapDispatch = (dispatch: Function) => {
@@ -1303,6 +1322,10 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: showCustomAlert, payload: payload }),
     deleteMindPopsCallEnd: () =>
       dispatch({ type: DeleteMindPopOperation.RequestEnded }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
   };
 };
 export default connect(mapState, mapDispatch)(MindPopList);

@@ -214,8 +214,6 @@ export default class EtherPadEditing extends React.Component<Props, State> {
             <WebView
               source={{ uri: this.props.route.params.padDetails.padUrl || this.props.padDetails.padUrl }}
               style={Styles.webViewStyle}
-              // onLoadStart={()=>loaderHandler.showLoader()}
-              // onLoadEnd={()=>loaderHandler.hideLoader()}
               onShouldStartLoadWithRequest={() => true}
               javaScriptEnabled={true}
               domStorageEnabled={true}

@@ -395,11 +395,11 @@ export default class UserProfileEdit extends React.Component<Props> {
       }
     }
     if (Object.keys(error).length > 0) {
-      ToastMessage('Please check the highlighted fields', Colors.ErrorColor);
+     //ToastMessage('Please check the highlighted fields', Colors.ErrorColor);
       this.setState({error});
       return false;
     } else if (hasChangedAnyValue == false) {
-      ToastMessage('No changes found', Colors.NewTitleColor);
+     //ToastMessage('No changes found', Colors.NewTitleColor);
       Keyboard.dismiss();
       this.props.navigation.popTo('profile');
     }
@@ -695,19 +695,23 @@ export default class UserProfileEdit extends React.Component<Props> {
   };
 
   uploadImage = (imageFile: TempFile) => {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     UploadProfilePic(imageFile)
       .then((response: any) => {
-        ToastMessage('Profile photo updated successfully');
+       //ToastMessage('Profile photo updated successfully');
         UserProfile();
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
         this.isProfilePicAvailable = true;
-        this.setState({hasLoaded: true}, () => loaderHandler.hideLoader());
+        this.setState({hasLoaded: true}, () => {
+          //loaderHandler.hideLoader()
+        });
       })
       .catch((error: any) => {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
         this.isProfilePicAvailable = false;
-        this.setState({hasLoaded: true}, () => loaderHandler.hideLoader());
+        this.setState({hasLoaded: true}, () =>{
+           //loaderHandler.hideLoader()
+        });
       });
   };
 
@@ -725,11 +729,11 @@ export default class UserProfileEdit extends React.Component<Props> {
           text: 'Yes',
           style: 'default',
           onPress: () => {
-            loaderHandler.showLoader('Removing...');
+            //loaderHandler.showLoader('Removing...');
             RemoveProfilePic()
               .then((response: any) => {
-                loaderHandler.hideLoader();
-                ToastMessage('Profile photo removed successfully');
+                //loaderHandler.hideLoader();
+               //ToastMessage('Profile photo removed successfully');
                 UserProfile();
                 this.isProfilePicAvailable = false;
                 this.setState({
@@ -740,8 +744,8 @@ export default class UserProfileEdit extends React.Component<Props> {
                 });
               })
               .catch((error: any) => {
-                ToastMessage(error.message, Colors.ErrorColor);
-                loaderHandler.hideLoader();
+               //ToastMessage(error.message, Colors.ErrorColor);
+                //loaderHandler.hideLoader();
               });
           },
         },

@@ -173,7 +173,7 @@ const FilterScreen = (props: Props) => {
     }));
 
     eventLoader = EventManager.addListener('loadingDone', () => {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
       navigation.goBack();
     });
     return () => eventLoader.removeListener();
@@ -188,7 +188,7 @@ const FilterScreen = (props: Props) => {
         : SET_TIMELINE_FILTERS,
       filters,
     );
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     // setTimeout(() => {
     props.fetchMemoryList(
       props.currentScreen == ListType.Recent
@@ -241,7 +241,7 @@ const FilterScreen = (props: Props) => {
           }
           backgroundColor={Colors.NewThemeColor}
         />
-        <ScrollView style={styles.scrollViewStyle}>
+        <ScrollView nestedScrollEnabled={true} overScrollMode='always' style={[styles.scrollViewStyle,{flex:1}]}>
           <View style={styles.justifyContentSpaceBetween}>
             <View>
               {props.currentScreen == ListType.Timeline && (

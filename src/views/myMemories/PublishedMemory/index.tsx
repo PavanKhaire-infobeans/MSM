@@ -145,7 +145,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
 
   componentDidMount() {
     if (Utility.isInternetConnected) {
-      // loaderHandler.showLoader();
+      // //loaderHandler.showLoader();
       // GetMemoryDrafts("all","all", memoryDraftsArray.length)
       publishedMemoriesArray = [];
       // this.setState({});
@@ -163,7 +163,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
           },
           () => {
             GetPublishedMemories('');
-            loaderHandler.hideLoader();
+            //loaderHandler.hideLoader();
           },
         );
       },
@@ -250,7 +250,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       //     page--;
       // }
       if (publishedMemoriesArray.length == 0) {
-        ToastMessage(publishedMemories, Colors.ErrorColor);
+       //ToastMessage(publishedMemories, Colors.ErrorColor);
       }
     }
     this.setState(
@@ -258,7 +258,9 @@ export default class PublishedMemory extends React.Component<Props, State> {
         isRefreshing: false,
         loading: false,
       },
-      () => loaderHandler.hideLoader(),
+      () => {
+        // //loaderHandler.hideLoader(),
+      }
     );
   };
 
@@ -285,23 +287,23 @@ export default class PublishedMemory extends React.Component<Props, State> {
   getAllLikes = (memoryDetails: any) => {
     if (memoryDetails.noOfLikes > 0) {
       GetAllLikes(memoryDetails.nid, memoryDetails.type, kAllLikes);
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
     }
   };
   allLikesFetched = (fetched?: boolean, getAllLikes?: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (fetched) {
       this.showList(getAllLikes);
       // this.setState({});
     } else {
-      ToastMessage(getAllLikes, Colors.ErrorColor);
+     //ToastMessage(getAllLikes, Colors.ErrorColor);
     }
   };
   likeCallback = (fetched: boolean, responseMessage: any, nid?: any) => {
     if (!fetched) {
       // this.memoryDataModel.likesComments.noOfLikes = this.memoryDataModel.likesComments.noOfLikes - 1;
       // this.memoryDataModel.likesComments.isLikedByUser = 0;
-      // ToastMessage(responseMessage, Colors.ErrorColor)
+      ////ToastMessage(responseMessage, Colors.ErrorColor)
     } else {
       // this.forwardDataToNative();
     }
@@ -310,7 +312,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     if (!fetched) {
       // this.memoryDataModel.likesComments.noOfLikes = this.memoryDataModel.likesComments.noOfLikes + 1;
       // this.memoryDataModel.likesComments.isLikedByUser = 1;
-      // ToastMessage(responseMessage, Colors.ErrorColor)
+      ////ToastMessage(responseMessage, Colors.ErrorColor)
     } else {
       // this.forwardDataToNative();
     }
@@ -323,7 +325,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     type?: any,
     uid?: any,
   ) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (fetched) {
       if (type == MemoryActionKeys.removeMeFromThisPostKey) {
         publishedMemoriesArray.forEach((element: any, index: any) => {
@@ -350,7 +352,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       );
       // this.setState({});
     } else {
-      ToastMessage(responseMessage, Colors.ErrorColor);
+     //ToastMessage(responseMessage, Colors.ErrorColor);
     }
   };
 
@@ -379,6 +381,17 @@ export default class PublishedMemory extends React.Component<Props, State> {
     });
   };
 
+  renderItem = (item: any) => (
+    <MemoryListItem
+      item={item}
+      like={this.like}
+      listType={ListType.Published}
+      audioView={this.audioView}
+      openMemoryActions={this.openMemoryActions.bind(this)}
+      navigation={this.props.navigation}
+    />
+  );
+
   render() {
     return (
       <View style={{flex: 1}}>
@@ -400,16 +413,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
               onScroll={() => {
                 Keyboard.dismiss();
               }}
-              renderItem={(item: any) => (
-                <MemoryListItem
-                  item={item}
-                  like={this.like}
-                  listType={ListType.Published}
-                  audioView={this.audioView}
-                  openMemoryActions={this.openMemoryActions.bind(this)}
-                  navigation={this.props.navigation}
-                />
-              )}
+              renderItem={this.renderItem}
               maxToRenderPerBatch={5}
               removeClippedSubviews={true}
               refreshControl={
@@ -421,13 +425,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     Platform.OS === 'android' ? Colors.NewThemeColor : '#fff'
                   }
                   refreshing={this.state.isRefreshing}
-                  onRefresh={this.onRefresh.bind(this)}
+                  onRefresh={()=>this.onRefresh()}
                 />
               }
               keyExtractor={(item, index) => index.toString()}
-              ListFooterComponent={this.renderFooter.bind(this)}
+              ListFooterComponent={()=>this.renderFooter()}
               onEndReachedThreshold={0.4}
-              onEndReached={this.handleLoadMore.bind(this)}
+              onEndReached={()=>this.handleLoadMore()}
             />
             {publishedMemoriesArray.length == 0 && (
               <View
@@ -766,7 +770,7 @@ const _addToCollection = (nid: any) => {
 };
 const _onEditMemory = (nid: any) => {
   if (Utility.isInternetConnected) {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     this.props.navigation.navigate('createMemory', {
       editMode: true,
       draftNid: nid,
@@ -803,7 +807,7 @@ export const onActionItemClicked = (index: number, data: any): void => {
               style: 'default',
               onPress: () => {
                 if (Utility.isInternetConnected) {
-                  loaderHandler.showLoader();
+                  //loaderHandler.showLoader();
                   MemoryAction(
                     data.memoryType,
                     data.nid,

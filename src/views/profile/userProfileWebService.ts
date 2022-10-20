@@ -9,6 +9,7 @@ import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
 import {
+  newUserProfile,
   removeProfilePicture, userProfile
 } from '../../common/webservice/userProfile';
 import { TempFile } from '../mindPop/edit';
@@ -37,7 +38,7 @@ export const UserProfile = async () => {
   let profileDetails: any = {};
   try {
     let data = await Storage.get('userData');
-    let response = await userProfile(
+    let response = await newUserProfile(
       `https://${
         Account.selectedData().instanceURL
       }/api/alumni/profile_page_details`,
@@ -48,26 +49,29 @@ export const UserProfile = async () => {
         },
         {configurationTimestamp: '0'},
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => Promise.reject(err));
-
-    let profileData = getValue(response, ['Details']);
-    if (profileData != null) {
-      for (let keys in profileData) {
-        let objectInfo: any = profileData[keys];
-        for (let itemKey in objectInfo) {
-          profileDetails = {
-            ...profileDetails,
-            [itemKey]: objectInfo[itemKey],
-          };
+      response =>{
+        let profileData = getValue(response, ['Details']);
+        if (profileData != null) {
+          for (let keys in profileData) {
+            let objectInfo: any = profileData[keys];
+            for (let itemKey in objectInfo) {
+              profileDetails = {
+                ...profileDetails,
+                [itemKey]: objectInfo[itemKey],
+              };
+            }
+          }
+        }
+    
+        if (response.ResponseCode == 200) {
+          EventManager.callBack(kGetUserProfileData, true, profileDetails);
         }
       }
-    }
+    )
+      // .then((response: Response) => response.json())
+      // .catch((err: Error) => Promise.reject(err));
 
-    if (response.ResponseCode == 200) {
-      EventManager.callBack(kGetUserProfileData, true, profileDetails);
-    }
+   
   } catch (err) {
     EventManager.callBack(kGetUserProfileData, false, err.message);
   }
@@ -75,7 +79,7 @@ export const UserProfile = async () => {
 
 export const UpdateFormValues = (state: any, editableFields: any) => {
   let updatedValues = {};
-  loaderHandler.showLoader('Saving...');
+  //loaderHandler.showLoader('Saving...');
   // showConsoleLog(ConsoleType.INFO,"save date: ",editableFields);
 
   for (let keys in editableFields) {
@@ -182,22 +186,22 @@ const updateUserProfile = async (dataset) => {
           EventManager.callBack(kSetUserProfileData, true);
           if (Utility.isInternetConnected) {
             UserProfile();
-            loaderHandler.showLoader('Refreshing...');
+            //loaderHandler.showLoader('Refreshing...');
           } else {
-            ToastMessage('No Internet Connected');
+           //ToastMessage('No Internet Connected');
           }
         } else {
-          ToastMessage('Unable to save data');
-          loaderHandler.hideLoader();
+         //ToastMessage('Unable to save data');
+          //loaderHandler.hideLoader();
         }
       })
       .catch((err: Error) => {
         Promise.reject(err);
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
       });
   } catch (err) {
-    EventManager.callBack(kGetUserProfileData, false, err.message);
-    loaderHandler.hideLoader();
+    EventManager.callBack(kSetUserProfileData, false, err.message);
+    //loaderHandler.hideLoader();
   }
 };
 
@@ -239,7 +243,7 @@ export const UploadProfilePic = async function uploadProfilePicture(
   if (type == PhotoType.cover) {
     options['parameters'] = {type: 'cover'};
   }
-  loaderHandler.showLoader('Uploading..');
+  //loaderHandler.showLoader('Uploading..');
 
   return new Promise((resolve, reject) => {
     uploadTask(

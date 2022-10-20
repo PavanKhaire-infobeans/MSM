@@ -328,7 +328,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
               barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
-            <ScrollView style={Styles.imagebuttonStyle}>
+            <ScrollView nestedScrollEnabled={true} overScrollMode='always' style={[Styles.imagebuttonStyle,{flex:1}]}>
               {this.commonListComponent(
                 shareWith,
                 this.props.shareOption,

@@ -19,10 +19,12 @@ import ImageCropPicker, {
   Image as PickerImage,
   Options,
 } from 'react-native-image-crop-picker';
+import { connect } from 'react-redux';
 import ActionSheet, {
   ActionSheetItem as ImageSelectionSheetItem,
 } from '../../common/component/actionSheet';
 import ActivityIndicatorView from '../../common/component/ActivityIndicatorView';
+import BusyIndicator from '../../common/component/busyindicator';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import NoInternetView from '../../common/component/NoInternetView';
 import Text from '../../common/component/Text';
@@ -48,7 +50,9 @@ import {
   profile_placeholder,
   rubbish,
 } from '../../images';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
 import NavigationBar from '../dashboard/NavigationBar';
+import { GetUserData } from '../myAccount/reducer';
 import useUserProfileData from './profileDataModel';
 import Styles from './styles';
 import {
@@ -99,9 +103,7 @@ const Profile = props => {
       kGetUserProfileData,
       getUserProfileDataCallBack,
     );
-    if (props?.route?.name == 'myAccount' || props?.route?.name == 'profile') {
       getUserProfileData();
-    }
 
     return () => {
       checkProfile.removeListener();
@@ -112,7 +114,9 @@ const Profile = props => {
   const getUserProfileData = () => {
     setAllFormSections([]);
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
+      props.showLoader(true);
+      props.loaderText('Loading...');
       UserProfile();
     } else {
       No_Internet_Warning();
@@ -129,7 +133,9 @@ const Profile = props => {
       setUserProfileDetails(profileDetails);
       setRefreshing(false);
     }
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
+    props.showLoader(false);
+    props.loaderText('Loading...');
     setRefreshing(false);
   };
 
@@ -149,7 +155,7 @@ const Profile = props => {
         });
       }
     } else {
-      ToastMessage('Information not available', Colors.ErrorColor);
+     //ToastMessage('Information not available', Colors.ErrorColor);
     }
   };
 
@@ -465,10 +471,14 @@ const Profile = props => {
 
   //Upload Image
   const uploadImage = (imageFile: TempFile) => {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
+    props.showLoader(true);
+    props.loaderText('Loading...');
     UploadProfilePic(imageFile, PhotoType.cover)
       .then((response: any) => {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        props.showLoader(false);
+        props.loaderText('Loading...');
         getUserProfileData();
         setHasCoverPicLoaded(true);
         // setBasicInfo({
@@ -477,7 +487,9 @@ const Profile = props => {
         // });
       })
       .catch((error: any) => {
-        loaderHandler.hideLoader();
+        //loaderHandler.hideLoader();
+        props.showLoader(false);
+        props.loaderText('Loading...');
         setHasCoverPicLoaded(true);
         // setBasicInfo({
         //   ...basicInfo,
@@ -501,10 +513,14 @@ const Profile = props => {
           text: 'Yes',
           style: 'default',
           onPress: () => {
-            loaderHandler.showLoader('Removing...');
+            //loaderHandler.showLoader('Removing...');
+            props.showLoader(true);
+            props.loaderText('Removing...');
             RemoveProfilePic(PhotoType.cover)
               .then((response: any) => {
-                loaderHandler.hideLoader();
+                //loaderHandler.hideLoader();
+                props.showLoader(false);
+                props.loaderText('Loading...');
                 //reload UI
                 // setBasicInfo({
                 //   ...basicInfo,
@@ -515,8 +531,10 @@ const Profile = props => {
                 // setState({});
               })
               .catch((error: any) => {
-                ToastMessage(error.message, Colors.ErrorColor);
-                loaderHandler.hideLoader();
+                props.showLoader(false);
+                props.loaderText('Loading...');
+               //ToastMessage(error.message, Colors.ErrorColor);
+                //loaderHandler.hideLoader();
               });
           },
         },
@@ -616,6 +634,12 @@ const Profile = props => {
 
   return (
     <View style={Styles.container}>
+      {
+        props.showLoaderValue ?
+          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue !=''? props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+          :
+          null
+      }
       <SafeAreaView style={Styles.noViewStyle} />
       <SafeAreaView style={Styles.safeAreaContextStyle}>
         <View style={Styles.safeAreaSubContextStyle}>
@@ -633,6 +657,7 @@ const Profile = props => {
           {Utility.isInternetConnected ? (
             <ScrollView
               contentContainerStyle={{width: deviceWidth}}
+              nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
@@ -664,7 +689,24 @@ const Profile = props => {
   );
 };
 
-export default Profile;
+const mapState = (state: { [x: string]: any }) => ({
+  userData: state.UserProfileRedux.userData,
+  showLoaderValue: state.dashboardReducer.showLoader,
+  loaderTextValue: state.dashboardReducer.loaderText,
+});
+
+const mapDispatch = (dispatch: Function) => {
+  return {
+    getUserData: (payload: any) =>
+      dispatch({ type: GetUserData, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
+  };
+};
+
+export default connect(mapState, mapDispatch)(Profile);
 
 const cardStyles = StyleSheet.create({
   container: {
@@ -684,6 +726,8 @@ const cardStyles = StyleSheet.create({
   },
   buttonStyle: {borderRadius: 20, backgroundColor: '#fff', padding: 10},
 });
+
+
 
 export type TempFile = {
   fid: string;

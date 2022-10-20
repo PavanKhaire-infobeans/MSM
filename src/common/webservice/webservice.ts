@@ -34,7 +34,7 @@ export const logoutMultiple = (selectedAccounts: any) => {
 };
 
 export async function logout() {
-  loaderHandler.hideLoader();
+  //loaderHandler.hideLoader();
   if (await getshowLogoutPopUp() === false) {
     Alert.alert('', 'Your session is timed out\nPlease login again', [
       {
@@ -126,7 +126,7 @@ const WebserviceCall = (() => {
                 value.ResponseCode == 402 ||
                 value.ResponseCode == 401
               ) {
-                loaderHandler.hideLoader();
+                //loaderHandler.hideLoader();
                 showConsoleLog(ConsoleType.LOG, "resp value :", JSON.stringify(value));
 
                 if (value.responseMessage == 'Authentication token expired.') {
@@ -196,21 +196,21 @@ const WebserviceCall = (() => {
                   new Date().toTimeString(),
                   JSON.stringify(request)
                 );
-                showConsoleLog(ConsoleType.WARN, " response time :-: ", (new Date() - requestTime) / 1000)
+                showConsoleLog(ConsoleType.ERROR, "post response time :-: "+url, (new Date() - requestTime) / 1000)
                 // showConsoleLog(ConsoleType.LOG,'Response is : ', value);
                 if (
                   value.ResponseCode == 405 ||
                   value.ResponseCode == 402 ||
                   value.ResponseCode == 401
                 ) {
-                  // loaderHandler.hideLoader();
+                  // //loaderHandler.hideLoader();
                   //TODO: Consult Web team and get unique ResponseCode of invalid session.
                   showConsoleLog(ConsoleType.LOG, "Authentication token expired another :", JSON.stringify(value), url);
                   if (
                     value.ResponseMessage == 'Authentication token expired.' ||
                     value.ResponseMessage == 'Invalid authentication token.'
                   ) {
-                    ToastMessage('', '', true);
+                   //ToastMessage('', '', true);
                     logout();
                   } //5461
                   return Promise.reject(Error(value.ResponseMessage));
@@ -281,14 +281,14 @@ const WebserviceCall = (() => {
               resp.ResponseCode == 402 ||
               resp.ResponseCode == 401
             ) {
-              // loaderHandler.hideLoader();
+              // //loaderHandler.hideLoader();
               //TODO: Consult Web team and get unique ResponseCode of invalid session.
               showConsoleLog(ConsoleType.LOG, "Authentication token expired another :", JSON.stringify(resp), url);
               if (
                 resp.ResponseMessage == 'Authentication token expired.' ||
                 resp.ResponseMessage == 'Invalid authentication token.'
               ) {
-                ToastMessage('', '', true);
+               //ToastMessage('', '', true);
                 logout();
               } //5461
 

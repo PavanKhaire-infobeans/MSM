@@ -5,10 +5,11 @@ import { Account } from '../../../common/loginStore';
 import { getMindPops } from '../../../common/webservice/mindPopServices';
 import { GetMindPopStatus } from './reducer';
 
-function* getListCall(params: any) {
-  return getMindPops(`https://${Account.selectedData().instanceURL}`, params)
-    .then((response: Response) => response.json())
-    .catch((err: Error) => Promise.reject(err));
+function* getListCall(params: any,CB: any) {
+  return getMindPops(`https://${Account.selectedData().instanceURL}`, params,
+    resp =>CB(resp))
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => Promise.reject(err));
 }
 
 function* getListFlow(requestData: any) {
@@ -17,23 +18,30 @@ function* getListFlow(requestData: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
+    let dataSet = {}
     let request = yield call(getListCall, [
       rData,
       {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
-    ]);
+    ],
+    async(responseBody) =>{
+      // PARSE MINDPOP HERE
+      responseBody.Details.mindPopList.forEach((_element: any, index: any) => {
+        responseBody.Details.mindPopList[index].message = encode_utf8(
+          responseBody.Details.mindPopList[index].message,
+        );
+      });
+      dataSet = await responseBody;
+    }
+    );
     const responseBody = yield call(async function () {
       return await request;
     });
-    let value = getValue(responseBody, ['Details', 'totalItems']);
-    // PARSE MINDPOP HERE
-    responseBody.Details.mindPopList.forEach((_element: any, index: any) => {
-      responseBody.Details.mindPopList[index].message = encode_utf8(
-        responseBody.Details.mindPopList[index].message,
-      );
-    });
+  
+    let value = getValue(dataSet, ['Details', 'totalItems']);
+    
     if (value != null && typeof value !== 'undefined') {
       yield call(async function () {
-        return await MindPopStore.saveMindPop(responseBody);
+        return await MindPopStore.saveMindPop(dataSet);
       });
     }
     let searchTerm = getValue(rData, ['searchTerm', 'SearchString']);

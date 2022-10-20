@@ -6,7 +6,6 @@ import {
   profile_placeholder,
   pdf_icon,
 } from '../../../images';
-
 type State = { [x: string]: any };
 type Props = {
   uri: any;
@@ -52,6 +51,10 @@ export default class PlaceholderImageView extends Component<Props> {
 
   render() {
     return (
+      // <CustomFastImage
+      //   style={this.props.style}
+      //   url={this.getImageToLoad()}
+      // />
       <Image
         style={this.props.style}
         source={this.getImageToLoad()}

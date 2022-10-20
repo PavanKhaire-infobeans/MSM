@@ -93,7 +93,7 @@ class NotesToCollaborators extends React.Component<Props, State> {
   };
 
   collaboratorCallBack = (success: boolean, nid: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     this.props.fetchCollaborators(this.props.nid);
     Keyboard.dismiss();
     this.props.navigation.popTo('createMemory');
@@ -137,7 +137,7 @@ class NotesToCollaborators extends React.Component<Props, State> {
   };
 
   inviteCollaborate = () => {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     this.props.SaveCollaboratorsNote(this.state.content);
     InviteCollaborators(
       this.props.nid,

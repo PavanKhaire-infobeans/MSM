@@ -91,12 +91,20 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   componentDidMount() {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       if (this.props.decodedDataFromURL) {
         this.draftOptionSelected(DraftType.myCollaborationDrafts, true, false);
       }
       else {
-        GetMemoryDrafts('all', 'all', memoryDraftsArray.length);
+        GetMemoryDrafts('all', 'all', memoryDraftsArray.length,
+        response =>{
+          if (response.ResponseCode == 200) {
+            this.memoryDraftDetails(true, response['Data'])
+          } else {
+            this.memoryDraftDetails(false, response['ResponseMessage'])
+          }
+
+        });
       }
     } else {
       No_Internet_Warning();
@@ -112,7 +120,6 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   memoryDraftDetails = (fetched: boolean, memoryDraftDetails: any) => {
     loadingDataFromServer = false;
-    loaderHandler.hideLoader();
     if (fetched) {
       if (this.state.isRefreshing) {
         memoryDraftsArray = [];
@@ -135,12 +142,14 @@ export default class MemoryDrafts extends React.Component<Props, State> {
         page--;
       }
       if (memoryDraftsArray.length == 0) {
-        ToastMessage(memoryDraftDetails, Colors.ErrorColor);
+       //ToastMessage(memoryDraftDetails, Colors.ErrorColor);
       }
     }
     this.setState({
       isRefreshing: false,
       loading: false,
+    },()=>{
+      // //loaderHandler.hideLoader()
     });
   };
 
@@ -158,7 +167,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           onPress: () => {
             this.hideMenu();
             if (Utility.isInternetConnected) {
-              loaderHandler.showLoader('Deleting...');
+              //loaderHandler.showLoader('Deleting...');
               DeleteDraftService(nid, DraftActions.deleteDrafts, kDeleteDraft);
             } else {
               No_Internet_Warning();
@@ -182,7 +191,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
             onPress: () => {
               this.hideMenu();
               if (Utility.isInternetConnected) {
-                loaderHandler.showLoader('Undeleting...');
+                //loaderHandler.showLoader('Undeleting...');
                 DeleteDraftService(
                   nid,
                   DraftActions.undeleteDrafts,
@@ -212,7 +221,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           draftType: type,
         }, () => {
           if (showLoader) {
-            loaderHandler.showLoader();
+            //loaderHandler.showLoader();
             memoryDraftsArray = [];
             // this.setState({});
           }
@@ -222,23 +231,63 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           }
           switch (type) {
             case DraftType.allDrafts: {
-              GetMemoryDrafts('all', 'all', length);
+              GetMemoryDrafts('all', 'all', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
             case DraftType.myCollaborationDrafts: {
-              GetMemoryDrafts('mine', 'my_collaborative', length);
+              GetMemoryDrafts('mine', 'my_collaborative', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
             case DraftType.myPersonalDrafts: {
-              GetMemoryDrafts('mine', 'my_personal', length);
+              GetMemoryDrafts('mine', 'my_personal', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
             case DraftType.friendsDrafts: {
-              GetMemoryDrafts('friends', 'all', length);
+              GetMemoryDrafts('friends', 'all', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
             case DraftType.recentryDeleteDrafts: {
-              GetMemoryDrafts('deleted', 'all', length);
+              GetMemoryDrafts('deleted', 'all', length,
+              response =>{
+                if (response.ResponseCode == 200) {
+                  this.memoryDraftDetails(true, response['Data'])
+                } else {
+                  this.memoryDraftDetails(false, response['ResponseMessage'])
+                }
+      
+              });
               break;
             }
           }
@@ -277,7 +326,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
   };
 
   deleteDraftCallback = (success: any, response: any, nid: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (success) {
       // this.props.navigation.goBack();
       memoryDraftsArray = memoryDraftsArray.filter(
@@ -286,7 +335,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
       this.memoryDraftsDataModel.decreaseMemoryDraftCount();
       // this.setState({});
     } else {
-      ToastMessage('Unable to delete draft. Please try again later');
+     //ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 
@@ -337,14 +386,14 @@ export default class MemoryDrafts extends React.Component<Props, State> {
               ]}
               tintColor={Colors.NewThemeColor}
               refreshing={this.state.isRefreshing}
-              onRefresh={this.onRefresh.bind(this)}
+              onRefresh={()=>this.onRefresh()}
             />
           }
           // keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={this.renderSeparator}
-          ListFooterComponent={this.renderFooter.bind(this)}
+          ItemSeparatorComponent={()=>this.renderSeparator()}
+          ListFooterComponent={()=>this.renderFooter()}
           onEndReachedThreshold={0.4}
-          onEndReached={this.handleLoadMore.bind(this)}
+          onEndReached={()=>this.handleLoadMore()}
         />
         {memoryDraftsArray.length == 0 && loadingDataFromServer == false ? (
           <View style={styles.memoryDraftsArrayStyle} pointerEvents="none">
@@ -390,7 +439,7 @@ export default class MemoryDrafts extends React.Component<Props, State> {
 
   getDraftDetails = (item: any) => {
     if (Utility.isInternetConnected) {
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
       this.props.navigation.navigate('createMemory', { editMode: true, draftNid: item.item.nid });
     } else {
       No_Internet_Warning();

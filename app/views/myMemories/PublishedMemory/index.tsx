@@ -18,7 +18,7 @@ import {
 import ContextMenu from 'react-native-context-menu-view';
 import DeviceInfo from 'react-native-device-info';
 import {Account} from '../../../../src/common/loginStore';
-import {MemoryService} from '../../../../src/common/webservice/memoryServices';
+import {MemoryService, newMemoryService} from '../../../../src/common/webservice/memoryServices';
 import {ListType} from '../../../../src/views/dashboard/dashboardReducer';
 import MemoryActionsSheet, {
   MemoryActionsSheetItem,
@@ -145,7 +145,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
 
   componentDidMount() {
     if (Utility.isInternetConnected) {
-      // loaderHandler.showLoader();
+      // //loaderHandler.showLoader();
       // GetMemoryDrafts("all","all", memoryDraftsArray.length)
       publishedMemoriesArray = [];
       // this.setState({});
@@ -163,7 +163,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
           },
           () => {
             GetPublishedMemories('');
-            loaderHandler.hideLoader();
+            // //loaderHandler.hideLoader();
           },
         );
       },
@@ -257,7 +257,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       //     page--;
       // }
       if (publishedMemoriesArray.length == 0) {
-        ToastMessage(publishedMemories, Colors.ErrorColor);
+       //ToastMessage(publishedMemories, Colors.ErrorColor);
       }
     }
     this.setState(
@@ -265,7 +265,9 @@ export default class PublishedMemory extends React.Component<Props, State> {
         isRefreshing: false,
         loading: false,
       },
-      () => loaderHandler.hideLoader(),
+      () =>{ 
+        // //loaderHandler.hideLoader()
+      },
     );
   };
 
@@ -292,16 +294,16 @@ export default class PublishedMemory extends React.Component<Props, State> {
   getAllLikes = (memoryDetails: any) => {
     if (memoryDetails.noOfLikes > 0) {
       GetAllLikes(memoryDetails.nid, memoryDetails.type, kAllLikes);
-      loaderHandler.showLoader('Loading...');
+      //loaderHandler.showLoader('Loading...');
     }
   };
   allLikesFetched = (fetched?: boolean, getAllLikes?: any) => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (fetched) {
       this.showList(getAllLikes);
       // this.setState({});
     } else {
-      ToastMessage(getAllLikes, Colors.ErrorColor);
+     //ToastMessage(getAllLikes, Colors.ErrorColor);
     }
   };
   likeCallback = (fetched: boolean, responseMessage: any, nid?: any) => {
@@ -317,7 +319,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     if (!fetched) {
       // this.memoryDataModel.likesComments.noOfLikes = this.memoryDataModel.likesComments.noOfLikes + 1;
       // this.memoryDataModel.likesComments.isLikedByUser = 1;
-      // ToastMessage(responseMessage, Colors.ErrorColor)
+      ////ToastMessage(responseMessage, Colors.ErrorColor)
     } else {
       // this.forwardDataToNative();
     }
@@ -331,7 +333,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     uid?: any,
   ) => {
     showConsoleLog(ConsoleType.ERROR, 'response no listner next> ', nid);
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     if (fetched) {
       if (type == MemoryActionKeys.removeMeFromThisPostKey) {
         publishedMemoriesArray.forEach((element: any, index: any) => {
@@ -360,7 +362,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       );
       // this.setState({});
     } else {
-      ToastMessage(responseMessage, Colors.ErrorColor);
+     //ToastMessage(responseMessage, Colors.ErrorColor);
     }
   };
 
@@ -426,13 +428,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     Platform.OS === 'android' ? Colors.NewThemeColor : Colors.white
                   }
                   refreshing={this.state.isRefreshing}
-                  onRefresh={this.onRefresh.bind(this)}
+                  onRefresh={()=>this.onRefresh()}
                 />
               }
               // keyExtractor={(item, index) => index.toString()}
-              ListFooterComponent={this.renderFooter.bind(this)}
+              ListFooterComponent={()=>this.renderFooter()}
               onEndReachedThreshold={0.4}
-              onEndReached={this.handleLoadMore.bind(this)}
+              onEndReached={()=>this.handleLoadMore()}
             />
             {publishedMemoriesArray.length == 0 && (
               <View style={styles.emptyContainer}>
@@ -691,7 +693,7 @@ const _addToCollection = (nid: any, navigation: any) => {
 
 const _onEditMemory = (nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
-    loaderHandler.showLoader();
+    //loaderHandler.showLoader();
     navigation.navigate('createMemory', {
       editMode: true,
       draftNid: nid,
@@ -739,7 +741,7 @@ export const onActionItemClicked = async (
       _addToCollection(data.nid, navigation);
       break;
     case MemoryActionKeys.editMemoryKey:
-      loaderHandler.showLoader();
+      //loaderHandler.showLoader();
 
       let details: any = {
         action_type: MemoryActionKeys.moveToDraftKey,
@@ -748,7 +750,7 @@ export const onActionItemClicked = async (
       };
       let userdata = await Storage.get('userData');
 
-      let response = await MemoryService(
+      let response = await newMemoryService(
         `https://${Account.selectedData().instanceURL}/api/actions/memory`,
         [
           {
@@ -757,16 +759,19 @@ export const onActionItemClicked = async (
           },
           {configurationTimestamp: '0', details},
         ],
+        response =>{
+          if (response.ResponseCode == 200) {
+            _onEditMemory(data.nid, navigation);
+          } else {
+            //loaderHandler.hideLoader();
+          }
+        }
       )
-        .then((response: Response) => response.json())
-        .catch((err: Error) => {
-          Promise.reject(err);
-        });
-      if (response.ResponseCode == 200) {
-        _onEditMemory(data.nid, navigation);
-      } else {
-        loaderHandler.hideLoader();
-      }
+        // .then((response: Response) => response.json())
+        // .catch((err: Error) => {
+        //   Promise.reject(err);
+        // });
+      
       break;
     case MemoryActionKeys.cancelActionKey:
       break;
@@ -788,7 +793,7 @@ export const onActionItemClicked = async (
               style: 'default',
               onPress: () => {
                 if (Utility.isInternetConnected) {
-                  loaderHandler.showLoader();
+                  //loaderHandler.showLoader();
                   MemoryAction(
                     data.memoryType,
                     data.nid,

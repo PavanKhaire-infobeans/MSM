@@ -62,7 +62,7 @@ export default class PDFViewer extends React.Component<Props> {
           onError={error => {
             //showConsoleLog(ConsoleType.LOG,error);
             // setTimeout(() => this.cancelAction(), 3000);
-            ToastMessage('This pdf file is corrupted', Colors.ErrorColor);
+            //ToastMessage('This pdf file is corrupted', Colors.ErrorColor);
           }}
           style={Styles.pdfStyle}
         />

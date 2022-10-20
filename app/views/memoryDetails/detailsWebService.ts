@@ -1,7 +1,7 @@
 import { Storage } from './../../../src/common/constants';
 import EventManager from './../../../src/common/eventManager';
 import { Account } from './../../../src/common/loginStore';
-import { MemoryService } from './../../../src/common/webservice/memoryServices';
+import { MemoryService, newMemoryService } from './../../../src/common/webservice/memoryServices';
 
 export const kMemoryDetailsFetched = 'memoryDetails';
 export const kAllLikes = 'allLikesData';
@@ -361,10 +361,10 @@ export const GetAllComments = async (
   }
 };
 
-export const GetMemoryDetails = async (nid: any, type: string) => {
+export const GetMemoryDetails = async (nid: any, type: string,CB: any) => {
   try {
     let data = await Storage.get('userData');
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/timeline/get_memory`,
       [
         {
@@ -379,26 +379,29 @@ export const GetMemoryDetails = async (nid: any, type: string) => {
           },
         },
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-      
-    if (response.ResponseCode == 200) {
-      EventManager.callBack(kMemoryDetailsFetched, true, response['Details']);
-    } else {
-      EventManager.callBack(
-        kMemoryDetailsFetched,
-        false,
-        response['ResponseMessage'],
-      );
-    }
-  } catch (err) {
-    EventManager.callBack(
-      kMemoryDetailsFetched,
-      false,
-      'Unable to process your request. Please try again later',
-    );
+      response => {
+        CB(response);
+        // if (response.ResponseCode == 200) {
+        //   EventManager.callBack(kMemoryDetailsFetched, true, response['Details']);
+        // } else {
+        //   EventManager.callBack(
+        //     kMemoryDetailsFetched,
+        //     false,
+        //     response['ResponseMessage'],
+        //   );
+        // }
+      })
+      // .then((response: Response) => response.json())
+      // .catch((err: Error) => {
+      //   Promise.reject(err);
+      // });
+  } 
+  catch (err) {
+    CB({ResponseCode:400,ResponseMessage:'Unable to process your request. Please try again later'})
+    // EventManager.callBack(
+    //   kMemoryDetailsFetched,
+    //   false,
+    //   'Unable to process your request. Please try again later',
+    // );
   }
 };

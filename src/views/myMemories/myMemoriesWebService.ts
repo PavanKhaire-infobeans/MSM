@@ -204,7 +204,7 @@ export const GetBlockedUsersAndMemory = async (type: any) => {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0', details: {type: type}},
+        { configurationTimestamp: '0', details: { type: type } },
       ],
     )
       .then((response: Response) => response.json())
@@ -311,78 +311,81 @@ export const MemoryAction = async (
     };
 
     if (actionType == MemoryActionKeys.blockAndReportKey) {
-      details = {...details, memory_id: nid};
+      details = { ...details, memory_id: nid };
     }
 
     if (actionType == MemoryActionKeys.addToCollection) {
-      details = {...details, collections_nids: collections_nids};
+      details = { ...details, collections_nids: collections_nids };
     }
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/actions/memory`,
       [
         {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0', details},
+        { configurationTimestamp: '0', details },
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-    if (response != undefined && response != null) {
-      if (response.ResponseCode == 200) {
-        if (listner) {
-          EventManager.callBack(listner, true, 'Data', nid, actionType, uid);
-        } else {
-          EventManager.callBack(
-            kMemoryActionPerformedPublished,
-            true,
-            'Data',
-            nid,
-            actionType,
-            uid,
-          );
-          EventManager.callBack(
-            kMemoryActionPerformedOnDashboard,
-            true,
-            'Data',
-            nid,
-            actionType,
-            uid,
-          );
-          EventManager.callBack(
-            kMemoryActionPerformedOnMemoryDetails,
-            true,
-            'Data',
-            nid,
-            actionType,
-            uid,
-          );
-        }
-      } else {
-        if (listner) {
-          EventManager.callBack(listner, false, response['ResponseMessage']);
-        } else {
-          EventManager.callBack(
-            kMemoryActionPerformedPublished,
-            false,
-            response['ResponseMessage'],
-          );
-          EventManager.callBack(
-            kMemoryActionPerformedOnDashboard,
-            false,
-            response['ResponseMessage'],
-          );
-          EventManager.callBack(
-            kMemoryActionPerformedOnMemoryDetails,
-            false,
-            response['ResponseMessage'],
-          );
+      response => {
+        if (response != undefined && response != null) {
+          if (response.ResponseCode == 200) {
+            if (listner) {
+              EventManager.callBack(listner, true, 'Data', nid, actionType, uid);
+            } else {
+              EventManager.callBack(
+                kMemoryActionPerformedPublished,
+                true,
+                'Data',
+                nid,
+                actionType,
+                uid,
+              );
+              EventManager.callBack(
+                kMemoryActionPerformedOnDashboard,
+                true,
+                'Data',
+                nid,
+                actionType,
+                uid,
+              );
+              EventManager.callBack(
+                kMemoryActionPerformedOnMemoryDetails,
+                true,
+                'Data',
+                nid,
+                actionType,
+                uid,
+              );
+            }
+          } else {
+            if (listner) {
+              EventManager.callBack(listner, false, response['ResponseMessage']);
+            } else {
+              EventManager.callBack(
+                kMemoryActionPerformedPublished,
+                false,
+                response['ResponseMessage'],
+              );
+              EventManager.callBack(
+                kMemoryActionPerformedOnDashboard,
+                false,
+                response['ResponseMessage'],
+              );
+              EventManager.callBack(
+                kMemoryActionPerformedOnMemoryDetails,
+                false,
+                response['ResponseMessage'],
+              );
+            }
+          }
         }
       }
-    }
+    )
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   Promise.reject(err);
+    // });
+
   } catch (err) {
     if (listner) {
       EventManager.callBack(
@@ -414,12 +417,13 @@ export const GetPrompts = async (
   categories: any,
   loadMore: any,
   offsetValue: any,
+  CB: any,
 ) => {
   try {
 
-    showConsoleLog(ConsoleType.LOG,"categories: categories, ",categories)
+    showConsoleLog(ConsoleType.LOG, "categories: categories, ", categories)
     let data = await Storage.get('userData');
-    let response = await MemoryService(
+    let response = await newMemoryService(
       `https://${Account.selectedData().instanceURL}/api/prompts/list`,
       [
         {
@@ -434,36 +438,43 @@ export const GetPrompts = async (
           },
         },
       ],
-    )
-      .then((response: Response) => response.json())
-      .catch((err: Error) => {
-        Promise.reject(err);
-      });
-    if (response != undefined && response != null) {
-      if (response.ResponseCode == 200) {
-        showConsoleLog(ConsoleType.LOG,"kPromptsList :",JSON.stringify(response.ResponseMessage))
-        EventManager.callBack(
-          kPromptsList,
-          true,
-          loadMore,
-          response['Details'],
-        );
-      } else {
-        EventManager.callBack(
-          kPromptsList,
-          false,
-          loadMore,
-          response['ResponseMessage'],
-        );
+      response => {
+        if (response != undefined && response != null) {
+          if (response.ResponseCode == 200) {
+            showConsoleLog(ConsoleType.LOG, "kPromptsList :", JSON.stringify(response.ResponseMessage))
+            // EventManager.callBack(
+            //   kPromptsList,
+            //   true,
+            //   loadMore,
+            //   response['Details'],
+            // );
+
+            CB({ fetched: true, ifLoadMore: loadMore, fetchPromptsList: response['Details'] })
+          } else {
+            // EventManager.callBack(
+            //   kPromptsList,
+            //   false,
+            //   loadMore,
+            //   response['ResponseMessage'],
+            // );
+            CB({ fetched: false, ifLoadMore: loadMore, fetchPromptsList: response['ResponseMessage'] })
+          }
+        }
       }
-    }
+    )
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => {
+    //   Promise.reject(err);
+    // });
+
   } catch (err) {
-    EventManager.callBack(
-      kPromptsList,
-      false,
-      loadMore,
-      'Unable to process your request. Please try again later',
-    );
+    // EventManager.callBack(
+    //   kPromptsList,
+    //   false,
+    //   loadMore,
+    //   'Unable to process your request. Please try again later',
+    // );
+    CB({ fetched: false, ifLoadMore: loadMore, fetchPromptsList: 'Unable to process your request. Please try again later' })
   }
 };
 
@@ -481,10 +492,10 @@ export const GetPromptBYPromptId = async (
           'Content-Type': 'application/json',
         },
         {
-          "details" : {
-              "nid": nid    //"2042"
-          }                       
-      },
+          "details": {
+            "nid": nid    //"2042"
+          }
+        },
       ],
     )
       .then((response: Response) => response.json())
@@ -492,7 +503,7 @@ export const GetPromptBYPromptId = async (
         Promise.reject(err);
       });
     if (response != undefined && response != null) {
-      showConsoleLog(ConsoleType.LOG,"ResponseMessage > ",JSON.stringify(response))
+      showConsoleLog(ConsoleType.LOG, "ResponseMessage > ", JSON.stringify(response))
       if (response.ResponseCode == 200) {
         EventManager.callBack(
           kGetPromptByID,
@@ -526,7 +537,7 @@ export const HidePrompt = async (promptId: any) => {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0', prompt_nid: promptId},
+        { configurationTimestamp: '0', prompt_nid: promptId },
       ],
     )
       .then((response: Response) => response.json())

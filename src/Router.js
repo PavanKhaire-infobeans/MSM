@@ -413,7 +413,7 @@ const App = _props => {
     createNotificationListeners();
     AppState.addEventListener('change',()=>{
       if (AppState.currentState === 'background') {
-        loaderHandler.hideLoader()
+        //loaderHandler.hideLoader()
       }
     })
     if (Platform.OS == 'android') {
@@ -530,7 +530,7 @@ const App = _props => {
 
   //Back event handler
   const _backPressAnd = () => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
     // if (this.props?.route?.name == 'mindPopEdit') {
     //   EventManager.callBack('hardwareBackPress', true);
     //   return true;
@@ -571,7 +571,7 @@ const App = _props => {
     <Provider store={store}>
       {/* <View style={{flex: 1}}> */}
       <AppNavigationRouter />
-      <Busyindicator overlayColor={Colors.ThemeColor} />
+      {/* <Busyindicator overlayColor={Colors.ThemeColor} /> */}
       {/* </View> */}
     </Provider>
   );

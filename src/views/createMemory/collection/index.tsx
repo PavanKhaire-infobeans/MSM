@@ -83,7 +83,7 @@ class CollectionList extends React.Component<Props, State> {
     // })
     // if(this.props.isFromMemoryAction){
     //     if(Utility.isInternetConnected){
-    //         loaderHandler.showLoader();
+    //         //loaderHandler.showLoader();
     //         MemoryAction("my_stories", this.props.nid, "add_to_collection",'', collections_nids);
     //         Keyboard.dismiss();
     //         this.props.navigation.goBack();

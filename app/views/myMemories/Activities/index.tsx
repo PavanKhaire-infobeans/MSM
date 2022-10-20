@@ -91,10 +91,10 @@ export default class Activities extends React.Component<Props, State> {
         loadingDataFromServer: false,
       });
     } else {
-      ToastMessage(activities, Colors.ErrorColor);
+     //ToastMessage(activities, Colors.ErrorColor);
     }
     setTimeout(() => {
-      loaderHandler.hideLoader();
+      //loaderHandler.hideLoader();
     }, 500);
   };
 
@@ -102,13 +102,20 @@ export default class Activities extends React.Component<Props, State> {
     this.setState({ isRefreshing: isReferesh, isLoadMore: isLoadMore }, () => {
       let initialOffset = this.state.activityList.length;
       if (Utility.isInternetConnected) {
-        if (!isReferesh && !isLoadMore) loaderHandler.showLoader();
-        else if (isReferesh) {
-          initialOffset = 0;
-        }
+        // if (!isReferesh && !isLoadMore) //loaderHandler.showLoader();
+        // else if (isReferesh) {
+        //   initialOffset = 0;
+        // }
         GetActivities(
           { type: 'activities', limit: 20, offset: initialOffset },
           kActivities,
+          response => {
+            if (response.ResponseCode == 200) {
+              this.populateActivities(true, response['Details']);
+            } else {
+              this.populateActivities(false, response['ResponseMessage']);
+            }
+          }
         );
       } else {
         No_Internet_Warning();
@@ -241,9 +248,9 @@ export default class Activities extends React.Component<Props, State> {
             />
           }
           // keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={this.renderFooter.bind(this)}
+          ListFooterComponent={() => this.renderFooter()}
           onEndReachedThreshold={0.5}
-          onEndReached={this.handleLoadMore.bind(this)}
+          onEndReached={() => this.handleLoadMore()}
         />
         {this.state.count == 0 && !this.state.loadingDataFromServer ? (
           <View style={styles.noActivityCOntainerStyle} pointerEvents="none">

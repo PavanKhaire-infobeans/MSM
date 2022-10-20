@@ -275,7 +275,7 @@ export function uploadTask(
       asyncGen(function* () {
 
         // showConsoleLog(ConsoleType.LOG,"File Upload payload:",JSON.stringify(options));
-        loaderHandler.showLoader('Uploading..');
+        //loaderHandler.showLoader('Uploading..');
         try {
           let uploadId = yield Upload.startUpload(options);
           if (typeof uploadId == 'string') {
@@ -336,7 +336,7 @@ export function uploadTask(
 
 function hideLoaderWithTimeOut() {
   setTimeout(() => {
-    loaderHandler.hideLoader();
+    //loaderHandler.hideLoader();
   }, 1000);
 }
 export const asyncGen = (

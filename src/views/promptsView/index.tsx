@@ -14,6 +14,7 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { connect } from 'react-redux';
 import {plus, sampleimage} from '../../../app/images';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import TextNew from '../../common/component/Text';
@@ -33,6 +34,7 @@ import {
   promptIdListener,
 } from '../createMemory/createMemoryWebService';
 import {DefaultDetailsMemory} from '../createMemory/dataHelper';
+import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
 import {
   GetPrompts,
   HidePrompt,
@@ -46,7 +48,7 @@ var promptList: any[] = [];
 var promptCategoriesArray: any[] = [];
 
 var selectedIndex = '';
-export default class PromptsView extends React.Component<State, Props> {
+class PromptsView extends React.Component<State, Props> {
   state: State = {
     offsetVal: 0,
     categoriesArray: {},
@@ -158,9 +160,17 @@ export default class PromptsView extends React.Component<State, Props> {
               prompt_count: fetchPromptsList.prompt_count,
             });
           }
-          this.setState({loading: false}, () => loaderHandler.hideLoader());
+          this.setState({loading: false}, () => {
+            //loaderHandler.hideLoader()
+            this.props.showLoader(false);
+            this.props.loaderText('Loading...');
+          });
         } else {
-          this.setState({loading: false}, () => loaderHandler.hideLoader());
+          this.setState({loading: false}, () => {
+            //loaderHandler.hideLoader()
+            this.props.showLoader(false);
+            this.props.loaderText('Loading...');
+          });
         }
       },
     );
@@ -171,11 +181,16 @@ export default class PromptsView extends React.Component<State, Props> {
         if (fetched) {
           var array = [...this.state.items]; // make a separate copy of the array
           const filteredItems = array.filter(item => item.id !== promptId);
-          this.setState({items: filteredItems}, () =>
-            loaderHandler.hideLoader()
+          this.setState({items: filteredItems}, () =>{
+            //loaderHandler.hideLoader()
+            this.props.showLoader(false);
+            this.props.loaderText('Loading...');
+          }
           );
         } else {
-          loaderHandler.hideLoader();
+          //loaderHandler.hideLoader();
+          this.props.showLoader(false);
+          this.props.loaderText('Loading...');
         }
       },
     );
@@ -186,7 +201,106 @@ export default class PromptsView extends React.Component<State, Props> {
       this.convertToMemory(this.props.nid, this.props.title);
     } else {
       this.setState({loading: true}, () =>
-        GetPrompts(this.state.categoriesArray, false, this.state.offsetVal),
+        GetPrompts(this.state.categoriesArray, false, this.state.offsetVal,
+          response =>{
+            let fetched = response.fetched, ifLoadMore = response.ifLoadMore, fetchPromptsList = response.fetchPromptsList;
+              if (fetched) {
+      
+                let values: {
+                  id: string;
+                  desc: any;
+                  prompt_category?: any;
+                  prompt_image?: any;
+                }[] = [];
+                // this.setState({
+                //   loadMore: fetchPromptsList.load_more,
+                //   categoriesArray: fetchPromptsList.prompt_categories
+                // });
+                if (
+                  fetchPromptsList.prompt_categories &&
+                  Object.keys(fetchPromptsList.prompt_categories).length
+                ) {
+                  promptCategoriesArray = Object.values(
+                    fetchPromptsList.prompt_categories,
+                  );
+                }
+      
+                promptList = fetchPromptsList.memory_prompt_data;
+                // this.setState({ offsetVal: fetchPromptsList.prompt_offset, prompt_count: fetchPromptsList.prompt_count });
+                let promptWithCategory: any[] =
+                    fetchPromptsList.memory_prompt_data_detail,
+                  promptWithCategoryValues: any = [];
+      
+                if (promptWithCategory && promptWithCategory.length) {
+                  // promptWithCategoryValues = Object.values(fetchPromptsList.memory_prompt_data_detail);
+      
+                  promptWithCategory.forEach((element, index) => {
+                    let categoriesArray: any = [];
+      
+                    for (var key in element) {
+                      if (
+                        element[key]['prompt_category'] &&
+                        element[key]['prompt_category'].length
+                      ) {
+                        element[key]['prompt_category'].forEach(promptCategory => {
+                          let selectedCategory = promptCategoriesArray.filter(
+                            item => item.value == promptCategory,
+                          );
+                          if (selectedCategory.length) {
+                            categoriesArray = [
+                              ...categoriesArray,
+                              ...selectedCategory,
+                            ];
+                          }
+                        });
+                      }
+                      values.push({
+                        id: key,
+                        desc: element[key]['title'],
+                        prompt_category: categoriesArray,
+                        prompt_image: element[key]['prompt_image'],
+                      });
+                    }
+                  });
+                }
+                // showConsoleLog(ConsoleType.LOG,"data >> ", JSON.stringify(values));
+      
+                // promptList.forEach(element => {
+                //   for (var key in element) {
+                //     values.push({ id: key, desc: element[key] });
+                //   }
+                // });
+      
+                if (ifLoadMore) {
+                  this.setState({
+                    items: this.state.items.concat(values),
+                    loadMore: fetchPromptsList.load_more,
+                    categoriesArray: fetchPromptsList.prompt_categories,
+                    offsetVal: fetchPromptsList.prompt_offset,
+                    prompt_count: fetchPromptsList.prompt_count,
+                  });
+                } else {
+                  this.setState({
+                    items: values,
+                    loadMore: fetchPromptsList.load_more,
+                    categoriesArray: fetchPromptsList.prompt_categories,
+                    offsetVal: fetchPromptsList.prompt_offset,
+                    prompt_count: fetchPromptsList.prompt_count,
+                  });
+                }
+                this.setState({loading: false}, () => {
+                  //loaderHandler.hideLoader()
+                  this.props.showLoader(false);
+                  this.props.loaderText('Loading...');
+                });
+              } else {
+                this.setState({loading: false}, () => {
+                  //loaderHandler.hideLoader()
+                  this.props.showLoader(false);
+                  this.props.loaderText('Loading...');
+                });
+              }
+          }),
       );
     }
   }
@@ -201,7 +315,106 @@ export default class PromptsView extends React.Component<State, Props> {
   loadMorePrompts() {
     if (this.state.loadMore == 1) {
       if (Utility.isInternetConnected) {
-        GetPrompts(this.state.categoriesArray, true, this.state.offsetVal);
+        GetPrompts(this.state.categoriesArray, true, this.state.offsetVal,
+          response =>{
+            let fetched = response.fetched, ifLoadMore = response.ifLoadMore, fetchPromptsList = response.fetchPromptsList;
+              if (fetched) {
+      
+                let values: {
+                  id: string;
+                  desc: any;
+                  prompt_category?: any;
+                  prompt_image?: any;
+                }[] = [];
+                // this.setState({
+                //   loadMore: fetchPromptsList.load_more,
+                //   categoriesArray: fetchPromptsList.prompt_categories
+                // });
+                if (
+                  fetchPromptsList.prompt_categories &&
+                  Object.keys(fetchPromptsList.prompt_categories).length
+                ) {
+                  promptCategoriesArray = Object.values(
+                    fetchPromptsList.prompt_categories,
+                  );
+                }
+      
+                promptList = fetchPromptsList.memory_prompt_data;
+                // this.setState({ offsetVal: fetchPromptsList.prompt_offset, prompt_count: fetchPromptsList.prompt_count });
+                let promptWithCategory: any[] =
+                    fetchPromptsList.memory_prompt_data_detail,
+                  promptWithCategoryValues: any = [];
+      
+                if (promptWithCategory && promptWithCategory.length) {
+                  // promptWithCategoryValues = Object.values(fetchPromptsList.memory_prompt_data_detail);
+      
+                  promptWithCategory.forEach((element, index) => {
+                    let categoriesArray: any = [];
+      
+                    for (var key in element) {
+                      if (
+                        element[key]['prompt_category'] &&
+                        element[key]['prompt_category'].length
+                      ) {
+                        element[key]['prompt_category'].forEach(promptCategory => {
+                          let selectedCategory = promptCategoriesArray.filter(
+                            item => item.value == promptCategory,
+                          );
+                          if (selectedCategory.length) {
+                            categoriesArray = [
+                              ...categoriesArray,
+                              ...selectedCategory,
+                            ];
+                          }
+                        });
+                      }
+                      values.push({
+                        id: key,
+                        desc: element[key]['title'],
+                        prompt_category: categoriesArray,
+                        prompt_image: element[key]['prompt_image'],
+                      });
+                    }
+                  });
+                }
+                // showConsoleLog(ConsoleType.LOG,"data >> ", JSON.stringify(values));
+      
+                // promptList.forEach(element => {
+                //   for (var key in element) {
+                //     values.push({ id: key, desc: element[key] });
+                //   }
+                // });
+      
+                if (ifLoadMore) {
+                  this.setState({
+                    items: this.state.items.concat(values),
+                    loadMore: fetchPromptsList.load_more,
+                    categoriesArray: fetchPromptsList.prompt_categories,
+                    offsetVal: fetchPromptsList.prompt_offset,
+                    prompt_count: fetchPromptsList.prompt_count,
+                  });
+                } else {
+                  this.setState({
+                    items: values,
+                    loadMore: fetchPromptsList.load_more,
+                    categoriesArray: fetchPromptsList.prompt_categories,
+                    offsetVal: fetchPromptsList.prompt_offset,
+                    prompt_count: fetchPromptsList.prompt_count,
+                  });
+                }
+                this.setState({loading: false}, () => {
+                  //loaderHandler.hideLoader()
+                  this.props.showLoader(false);
+                  this.props.loaderText('Loading...');
+                });
+              } else {
+                this.setState({loading: false}, () => {
+                  //loaderHandler.hideLoader()
+                  this.props.showLoader(false);
+                  this.props.loaderText('Loading...');
+                });
+              }
+          });
       } else {
         No_Internet_Warning();
       }
@@ -379,9 +592,9 @@ export default class PromptsView extends React.Component<State, Props> {
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatlistStyle}
               renderItem={this.renderItem}
-              ListFooterComponent={this.renderFooter.bind(this)}
+              ListFooterComponent={()=>this.renderFooter()}
               onEndReachedThreshold={0.4}
-              onEndReached={this.loadMorePrompts.bind(this)}
+              onEndReached={()=>this.loadMorePrompts()}
             />
             {this.state.items.length == 0 && (
               <View style={Styles.noPromptContainer}>
@@ -403,11 +616,14 @@ export default class PromptsView extends React.Component<State, Props> {
       </View>
     );
   }
+
   convertToMemory(id: any, title: any) {
     if (Utility.isInternetConnected) {
       this.setState({selectedPrompt: parseInt(id)}, async () => {
         selectedIndex = id;
-        loaderHandler.showLoader('Creating Memory...');
+        //loaderHandler.showLoader('Creating Memory...');
+        this.props.showLoader(true);
+        this.props.loaderText('Creating Memory...');
         let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
         draftDetails.prompt_id = parseInt(id);
         // this.memoryFromPrompt = EventManager.addListener(
@@ -444,8 +660,10 @@ export default class PromptsView extends React.Component<State, Props> {
         isFromPrompt: true,
       });
     } else {
-      loaderHandler.hideLoader();
-      ToastMessage(draftDetails);
+      //loaderHandler.hideLoader();
+      this.props.showLoader(false);
+      this.props.loaderText('Loading...');
+     //ToastMessage(draftDetails);
     }
   };
 
@@ -462,7 +680,10 @@ export default class PromptsView extends React.Component<State, Props> {
         style: 'destructive',
         onPress: () => {
           if (Utility.isInternetConnected) {
-            loaderHandler.showLoader();
+            //loaderHandler.showLoader();
+
+            this.props.showLoader(true);
+            this.props.loaderText('Loading...');
             HidePrompt(promptId);
           } else {
             No_Internet_Warning();
@@ -477,3 +698,21 @@ export default class PromptsView extends React.Component<State, Props> {
     ]);
   }
 }
+
+const mapState = (state: any) => {
+  return {
+    showLoaderValue: state.dashboardReducer.showLoader,
+    loaderTextValue: state.dashboardReducer.loaderText,
+  };
+};
+
+const mapDispatch = (dispatch: Function) => {
+  return {
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
+    loaderText: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
+  };
+};
+
+export default connect(mapState, mapDispatch)(PromptsView)
