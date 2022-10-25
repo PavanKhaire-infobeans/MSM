@@ -232,6 +232,14 @@ class Prologue extends Component<Props> {
           //loaderHandler.showLoader('Loading...'),
           this.props.showLoader(true);
           this.props.loaderText('Loading...');
+          this.setState({ isBottomPickerVisible: false }, () => {
+            this.registrationData = EventManager.addListener(
+              kCueBackFormData,
+              this.cueBackRegistrationForm,
+            );
+            new GetFormData().callService(kCueBackRegistration, false, true);
+            this.props.getAllInstances();
+          });
         });
       }
     } else {
@@ -374,6 +382,14 @@ class Prologue extends Component<Props> {
                         bottomPicker={(isVisible: any) =>
                           this.bottomPicker(isVisible)
                         }
+                        showLoader={()=>{
+                          this.props.showLoader(true);
+                          this.props.loaderText('Loading...');
+                        }}
+                        hideLoader={()=>{
+                          this.props.showLoader(false);
+                          this.props.loaderText('Loading...');
+                        }}
                       />
                     </View>
                   ) : (

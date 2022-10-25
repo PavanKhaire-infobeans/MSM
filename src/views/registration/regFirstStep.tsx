@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Alert,
   Animated,
@@ -16,11 +16,11 @@ import {
 } from 'react-native';
 //@ts-ignore
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
-import {arrowRightCircle} from '../../../app/images';
+import { arrowRightCircle } from '../../../app/images';
 import BottomPicker, {
   ActionSheetItem,
 } from '../../common/component/bottomPicker';
-import {SubmitButton} from '../../common/component/button';
+import { SubmitButton } from '../../common/component/button';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Text from '../../common/component/Text';
 import TextField from '../../common/component/textField';
@@ -40,7 +40,7 @@ import {
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {registration_vector} from '../../images';
+import { registration_vector } from '../../images';
 import {
   checkUserRegistration,
   FormStruct,
@@ -52,15 +52,15 @@ import Styles from './styles';
 
 type State = {
   [key: string]: any | string;
-  error: {[x: string]: {error: boolean; message: string}};
+  error: { [x: string]: { error: boolean; message: string } };
 };
-type Props = {formList: FormStruct[]} & any;
+type Props = { formList: FormStruct[] } & any;
 
 export default class RegFirstStep extends Component<Props> {
   checkProfile: EventManager;
   submitReg: EventManager;
   form: FormStruct[] = [];
-  textFieldArray: {[key: string]: TextInput} = {};
+  textFieldArray: { [key: string]: TextInput } = {};
   submitForm: any;
   bottomPicker: React.RefObject<BottomPicker> = React.createRef<BottomPicker>();
   navBar: any;
@@ -143,7 +143,7 @@ export default class RegFirstStep extends Component<Props> {
 
   _keyboardDidShow = e => {
     try {
-      const {height, screenX, screenY, width} = e.endCoordinates;
+      const { height, screenX, screenY, width } = e.endCoordinates;
       // showConsoleLog(ConsoleType.LOG,height)
 
       if (height) {
@@ -174,7 +174,7 @@ export default class RegFirstStep extends Component<Props> {
     isRegistered: any,
     personalInfo?: any,
   ) => {
-    debugger;
+    this.props.hideLoader()
     if (success) {
       let role = getValue(personalInfo, ['role']);
       if (isRegistered && role == 'Alumni') {
@@ -240,10 +240,10 @@ export default class RegFirstStep extends Component<Props> {
       var error = {};
       for (let key in formError) {
         let strKey = key.replace(/].*$/, '');
-        error = {...error, [strKey]: {error: true, message: formError[key]}};
+        error = { ...error, [strKey]: { error: true, message: formError[key] } };
       }
       if (Object.keys(error).length > 0) {
-        this.setState({error});
+        this.setState({ error });
       }
       this.showErrorMessage(
         true,
@@ -304,20 +304,19 @@ export default class RegFirstStep extends Component<Props> {
     //If form element
     let valueKey =
       form.module == 'date' ||
-      form.module == 'options' ||
-      form.type == 'options_select'
+        form.module == 'options' ||
+        form.type == 'options_select'
         ? 'selectedValue'
         : 'value';
-    var extra: {[x: string]: any} = {
+    var extra: { [x: string]: any } = {
       [valueKey]:
         this.state[
-          `${form.field_name}${
-            form.module == 'date' ||
-            form.module == 'options' ||
-            form.type == 'options_select'
-              ? '_text'
-              : ''
-          }`
+        `${form.field_name}${form.module == 'date' ||
+          form.module == 'options' ||
+          form.type == 'options_select'
+          ? '_text'
+          : ''
+        }`
         ] || '',
     };
     if (form.isPassword) {
@@ -338,7 +337,7 @@ export default class RegFirstStep extends Component<Props> {
       extra = {
         ...extra,
         keyboardType: 'number-pad',
-        style: {width: parentType == 'sub-single' ? '100%' : '100%'}, //"48%"
+        style: { width: parentType == 'sub-single' ? '100%' : '100%' }, //"48%"
       };
     }
 
@@ -395,7 +394,7 @@ export default class RegFirstStep extends Component<Props> {
               [form.field_name]: text,
               error: {
                 ...this.state.error,
-                [form.field_name]: {error: false, message: ''},
+                [form.field_name]: { error: false, message: '' },
               },
             });
           }}
@@ -442,11 +441,11 @@ export default class RegFirstStep extends Component<Props> {
         }
       }
       for (var i = most; i > least; i--) {
-        actions.push({key: i, text: `${i}`});
+        actions.push({ key: i, text: `${i}` });
       }
     } else {
       for (let key in form.values) {
-        actions.push({key, text: form.values[key]});
+        actions.push({ key, text: form.values[key] });
       }
     }
 
@@ -480,7 +479,7 @@ export default class RegFirstStep extends Component<Props> {
     setTimeout(() => {
       this.navBar._hide();
     }, 5000);
-    this.setState({errorHeight: height});
+    this.setState({ errorHeight: height });
   };
 
   renderCueBackRegistertaion = () => {
@@ -527,9 +526,9 @@ export default class RegFirstStep extends Component<Props> {
           // keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={true}
           ref={ref => (this.regScroll = ref)}
-          // style={{ width: "100%", paddingHorizontal: 24 }}
-          // contentContainerStyle={{ width: "100%" }}
-          // bounces={false}
+        // style={{ width: "100%", paddingHorizontal: 24 }}
+        // contentContainerStyle={{ width: "100%" }}
+        // bounces={false}
         >
           {/* {sortedForm.map((form: FormStruct, index: number) => {
 							return this.getFormEntity(form, { fieldID: `${index}`, isLast: formLength - 1 == index });
@@ -538,17 +537,17 @@ export default class RegFirstStep extends Component<Props> {
           <View style={Styles.formContainer}>
             {this.state.regFirstStep
               ? stepOne.map((form: FormStruct, index: number) => {
-                  return this.getFormEntity(form, {
-                    fieldID: `${index}`,
-                    isLast: formLength - 1 == index,
-                  });
-                })
+                return this.getFormEntity(form, {
+                  fieldID: `${index}`,
+                  isLast: formLength - 1 == index,
+                });
+              })
               : stepTwo.map((form: FormStruct, index: number) => {
-                  return this.getFormEntity(form, {
-                    fieldID: `${index}`,
-                    isLast: formLength - 1 == index,
-                  });
-                })}
+                return this.getFormEntity(form, {
+                  fieldID: `${index}`,
+                  isLast: formLength - 1 == index,
+                });
+              })}
           </View>
 
           {/* {this.props.placeholderText == "Year" &&  */}
@@ -652,7 +651,7 @@ export default class RegFirstStep extends Component<Props> {
                         if (sKey == 'emailAddress') {
                           message = 'Please enter your Email';
                         }
-                        error = {...error, [sKey]: {error: true, message}};
+                        error = { ...error, [sKey]: { error: true, message } };
                       } else {
                         if (sKey == 'emailAddress') {
                           let email = sbForm[sKey];
@@ -683,11 +682,10 @@ export default class RegFirstStep extends Component<Props> {
                               ...error,
                               [fitm.field_name]: {
                                 error: true,
-                                message: `Please select ${fitm.label}${
-                                  fitm.module == 'date' && fitm.label != 'Year'
+                                message: `Please select ${fitm.label}${fitm.module == 'date' && fitm.label != 'Year'
                                     ? ' year'
                                     : ''
-                                }`,
+                                  }`,
                               },
                             };
                           } else {
@@ -700,9 +698,8 @@ export default class RegFirstStep extends Component<Props> {
                                 ...error,
                                 [fitm.field_name]: {
                                   error: true,
-                                  message: `Please enter ${fitm.label}${
-                                    fitm.module == 'date' ? ' year' : ''
-                                  }`,
+                                  message: `Please enter ${fitm.label}${fitm.module == 'date' ? ' year' : ''
+                                    }`,
                                 },
                               };
                             } else if (validBirthYear(sbForm[sKey][keyVal])) {
@@ -710,9 +707,8 @@ export default class RegFirstStep extends Component<Props> {
                                 ...error,
                                 [fitm.field_name]: {
                                   error: true,
-                                  message: `Please enter valid ${fitm.label}${
-                                    fitm.module == 'date' ? ' year' : ''
-                                  }`,
+                                  message: `Please enter valid ${fitm.label}${fitm.module == 'date' ? ' year' : ''
+                                    }`,
                                 },
                               };
                             }
@@ -764,7 +760,7 @@ export default class RegFirstStep extends Component<Props> {
                     'Please check the highlighted fields',
                   );
                   // ToastMessage();
-                  this.setState({error});
+                  this.setState({ error });
                   return;
                 } else
                   this.setState({
@@ -774,7 +770,7 @@ export default class RegFirstStep extends Component<Props> {
               } else {
                 this.onSubmit();
               }
-              this.regScroll.scrollTo({x: 0, y: 0, animated: true});
+              this.regScroll.scrollTo({ x: 0, y: 0, animated: true });
             }}
             disabled={
               this.state.regFirstStep
@@ -785,8 +781,8 @@ export default class RegFirstStep extends Component<Props> {
                   ? false
                   : true
                 : this.state['password'] && this.state['repeat_password']
-                ? false
-                : true
+                  ? false
+                  : true
             }>
             <View
               style={[
@@ -801,8 +797,8 @@ export default class RegFirstStep extends Component<Props> {
                       ? Colors.decadeFilterBorder
                       : Colors.newTextColor
                     : this.state['password'] && this.state['repeat_password']
-                    ? Colors.decadeFilterBorder
-                    : Colors.newTextColor,
+                      ? Colors.decadeFilterBorder
+                      : Colors.newTextColor,
                   // opacity: this.state.regFirstStep ? (this.state["field_first_name"] && (this.state["field_last_name"]) && (this.state["emailAddress"]) && (this.state["default_value"])) ? 1: 0.5 : (this.state["password"] && (this.state["repeat_password"])) ? 1: 0.5,
                   flexDirection: 'row',
                 },
@@ -810,7 +806,7 @@ export default class RegFirstStep extends Component<Props> {
               <Text
                 style={[
                   CommonTextStyles.fontWeight400Size19Inter,
-                  {color: Colors.white, marginRight: 9.67},
+                  { color: Colors.white, marginRight: 9.67 },
                 ]}>
                 {this.state.regFirstStep ? 'Next' : 'Sign up'}
               </Text>
@@ -872,7 +868,7 @@ export default class RegFirstStep extends Component<Props> {
       ],
     };
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         {this.props.isCuebackRegistration ? (
           this.renderCueBackRegistertaion()
         ) : (
@@ -891,11 +887,11 @@ export default class RegFirstStep extends Component<Props> {
                 backgroundColor={Colors.NewThemeColor}
               />
               <View
-                style={{height: this.state.errorHeight, width: '100%'}}></View>
+                style={{ height: this.state.errorHeight, width: '100%' }}></View>
               <ScrollView
                 keyboardShouldPersistTaps="always"
                 style={Styles.ScrollViewStyle}
-                contentContainerStyle={{alignItems: 'center'}}
+                contentContainerStyle={{ alignItems: 'center' }}
                 bounces={false}>
                 <View style={Styles.registrationStyles}>
                   <View style={Styles.registrationSubStyles}>
@@ -1048,14 +1044,14 @@ export default class RegFirstStep extends Component<Props> {
             if (sKey == 'emailAddress') {
               message = 'Please enter your Email';
             }
-            error = {...error, [sKey]: {error: true, message}};
+            error = { ...error, [sKey]: { error: true, message } };
           } else {
             if (sKey == 'emailAddress') {
               let email = sbForm[sKey];
               if (!testEmail(email)) {
                 error = {
                   ...error,
-                  [sKey]: {error: true, message: 'Please enter a valid Email'},
+                  [sKey]: { error: true, message: 'Please enter a valid Email' },
                 };
               }
             }
@@ -1101,11 +1097,10 @@ export default class RegFirstStep extends Component<Props> {
                   ...error,
                   [fitm.field_name]: {
                     error: true,
-                    message: `Please select ${fitm.label}${
-                      fitm.module == 'date' && fitm.label != 'Year'
+                    message: `Please select ${fitm.label}${fitm.module == 'date' && fitm.label != 'Year'
                         ? ' year'
                         : ''
-                    }`,
+                      }`,
                   },
                 };
               } else {
@@ -1115,9 +1110,8 @@ export default class RegFirstStep extends Component<Props> {
                     ...error,
                     [fitm.field_name]: {
                       error: true,
-                      message: `Please enter ${fitm.label}${
-                        fitm.module == 'date' ? ' year' : ''
-                      }`,
+                      message: `Please enter ${fitm.label}${fitm.module == 'date' ? ' year' : ''
+                        }`,
                     },
                   };
                 } else if (validBirthYear(sbForm[sKey][keyVal])) {
@@ -1125,9 +1119,8 @@ export default class RegFirstStep extends Component<Props> {
                     ...error,
                     [fitm.field_name]: {
                       error: true,
-                      message: `Please enter valid ${fitm.label}${
-                        fitm.module == 'date' ? ' year' : ''
-                      }`,
+                      message: `Please enter valid ${fitm.label}${fitm.module == 'date' ? ' year' : ''
+                        }`,
                     },
                   };
                 }
@@ -1140,14 +1133,14 @@ export default class RegFirstStep extends Component<Props> {
           ) {
             error = {
               ...error,
-              [sKey]: {error: true, message: `Please enter ${frmItem.label}`},
+              [sKey]: { error: true, message: `Please enter ${frmItem.label}` },
             };
             if (sKey == 'emailAddress') {
               let email = sbForm[sKey];
               if (!testEmail(email)) {
                 error = {
                   ...error,
-                  [sKey]: {error: true, message: 'Please enter Email'},
+                  [sKey]: { error: true, message: 'Please enter Email' },
                 };
               }
             }
@@ -1156,7 +1149,7 @@ export default class RegFirstStep extends Component<Props> {
               if (password.length < 6) {
                 error = {
                   ...error,
-                  [sKey]: {error: true, message: 'Please enter a Password'},
+                  [sKey]: { error: true, message: 'Please enter a Password' },
                 };
               }
             }
@@ -1180,7 +1173,7 @@ export default class RegFirstStep extends Component<Props> {
               if (!onlyChars.test(text)) {
                 error = {
                   ...error,
-                  [sKey]: {error: true, message: 'Only characters are allowed'},
+                  [sKey]: { error: true, message: 'Only characters are allowed' },
                 };
               }
             }
@@ -1192,7 +1185,7 @@ export default class RegFirstStep extends Component<Props> {
     if (Object.keys(error).length > 0) {
       this.showErrorMessage(true, 'Please check the highlighted fields');
       // ToastMessage();
-      this.setState({error});
+      this.setState({ error });
       return;
     }
     //showConsoleLog(ConsoleType.LOG,submitForm);
@@ -1214,6 +1207,7 @@ export default class RegFirstStep extends Component<Props> {
       emailId: email,
     };
 
+    this.props.showLoader();
     checkUserRegistration({
       ...obj,
       configurationTimestamp: submitForm['configurationTimestamp'],
