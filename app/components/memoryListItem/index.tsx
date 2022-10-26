@@ -238,7 +238,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                       underlayColor={Colors.touchableunderlayColor}
                       style={styles.authorContainer}
                       onPress={() => {
-                        _onShowMemoryDetails(this.props.item.item, 'Recent');
+                        _onShowMemoryDetails(this.props.item.item, 'Recent',this.props.navigation,);
                       }}>
                       <TextNew style={styles.titleText}>
                         {this.props.item.item.title}
@@ -286,6 +286,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                             _onShowMemoryDetails(
                               this.props.item.item,
                               'Recent',
+                              this.props.navigation,
                             );
                           }}>
                           <View
