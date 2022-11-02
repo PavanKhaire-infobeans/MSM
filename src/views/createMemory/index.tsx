@@ -2164,7 +2164,7 @@ class CreateMemory extends React.Component<Props> {
             null
         }
         <SafeAreaView style={styles.emptySafeAreaStyle} />
-        <SafeAreaView style={styles.SafeAreaViewContainerStyle}>
+        {/* <SafeAreaView style={styles.SafeAreaViewContainerStyle}> */}
           {Platform.OS === 'ios' && this.state.showCalender && (
             <View style={Styles.calendarViewStyle}>
               <DatePicker
@@ -2456,7 +2456,7 @@ class CreateMemory extends React.Component<Props> {
                 );
               }}></MemoryDraftIntro>
           )} */}
-        </SafeAreaView>
+        {/* </SafeAreaView> */}
       </View>
     );
   }

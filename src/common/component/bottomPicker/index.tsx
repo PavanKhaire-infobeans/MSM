@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -104,23 +104,38 @@ const BottomPicker = forwardRef((props: Props, ref: any) => {
             _keyboardDidHide,
           );
         }
-        setState(
-          {
-            availableHeight: height,
-            filteredList: props.actions,
-            hidden: false,
-            showError: false,
-            isMultiSelect: props.selectionType ? true : false,
-          });
+        setState(prev => ({
+          ...prev,
+          availableHeight: height,
+          filteredList: props.actions,
+          hidden: false,
+          showError: false,
+          isMultiSelect: props.selectionType ? true : false
+        }));
+        // setState(
+        //   {
+        //     availableHeight: height,
+        //     filteredList: props.actions,
+        //     hidden: false,
+        //     showError: false,
+        //     isMultiSelect: props.selectionType ? true : false,
+        //   });
         Animated.timing(animatedValue, {
           toValue: 0,
           duration: 200,
           useNativeDriver: true
         }).start();
-
-
       }
     }));
+
+  useEffect(() => {
+    setState(prev => ({
+      ...prev,
+      filteredList: props.actions,
+      isMultiSelect: props.selectionType ? true : false
+    }));
+
+  }, [props.selectionType, props.actions]);
 
   const hidePicker = () => {
     Animated.timing(animatedValue, {
@@ -159,6 +174,7 @@ const BottomPicker = forwardRef((props: Props, ref: any) => {
     }
     setStateForSelectedIndex(selectionValues, selectedValueObject);
   };
+
   const saveSelectedValues = () => {
     hidePicker();
     props.saveSelectedValues(state.selectedValueObjects);

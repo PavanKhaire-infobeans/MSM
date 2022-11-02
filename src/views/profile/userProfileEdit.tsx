@@ -314,13 +314,17 @@ export default class UserProfileEdit extends React.Component<Props> {
 
     for (let keys in editablefields) {
       let currentField = editablefields[keys];
-      let isRequired: boolean = currentField.required;
-      let type = currentField.type;
+      let isRequired: boolean = currentField?.required;
+      let type = currentField?.type;
       //check if given field has existing or value is updated
       let isUpdated = false;
-      let updatedValue: any = this.state[currentField.field_name];
-      if (updatedValue != null && updatedValue != 'undefined') {
-        isUpdated = true;
+      
+      let updatedValue: any = this.state[currentField?.field_name];
+      if (this.state[currentField] != null && this.state[currentField?.field_name] != null) {
+        console.warn("key <",currentField,currentField?.field_name,this.state[currentField?.field_name])
+        if (updatedValue != null && updatedValue != 'undefined') {
+          isUpdated = true;
+        }   
       }
       hasChangedAnyValue = hasChangedAnyValue || isUpdated;
 
@@ -330,7 +334,7 @@ export default class UserProfileEdit extends React.Component<Props> {
         existingValue != '' &&
         typeof existingValue != 'undefined';
 
-      if (currentField.type == 'date_select') {
+      if (currentField?.type == 'date_select') {
         if (getValue(currentField, ['granularity', 'todate']) == 'required') {
           let valueObj = this.getValueForField(currentField);
           let default_value_from: string = valueObj['value'];
@@ -341,11 +345,11 @@ export default class UserProfileEdit extends React.Component<Props> {
       }
 
       //check for email
-      if (currentField.field_name.indexOf('email') != -1 && isUpdated) {
+      if (currentField?.field_name.indexOf('email') != -1 && isUpdated) {
         if (!testEmail(updatedValue)) {
           error = {
             ...error,
-            [currentField.field_name]: {
+            [currentField?.field_name]: {
               error: true,
               message: 'Please enter valid email address',
             },
@@ -353,11 +357,11 @@ export default class UserProfileEdit extends React.Component<Props> {
         }
       }
       //check for valid phone no
-      if (currentField.field_name.indexOf('phone') != -1 && isUpdated) {
+      if (currentField?.field_name.indexOf('phone') != -1 && isUpdated) {
         if (!testPhone(updatedValue)) {
           error = {
             ...error,
-            [currentField.field_name]: {
+            [currentField?.field_name]: {
               error: true,
               message: 'Please enter valid phone number ',
             },
@@ -366,7 +370,7 @@ export default class UserProfileEdit extends React.Component<Props> {
       }
 
       //showConsoleLog(ConsoleType.LOG,"existing value to update:", existingValue)
-      //showConsoleLog(ConsoleType.LOG,"updated value:", this.state[currentField.field_name])
+      //showConsoleLog(ConsoleType.LOG,"updated value:", this.state[currentField?.field_name])
       //if the field is requird and has existing value or the value is changed
       //then only web service will be called else error will be shown
       if (!(hasExistingValue || isUpdated) && isRequired) {
@@ -378,17 +382,17 @@ export default class UserProfileEdit extends React.Component<Props> {
         ) {
           error = {
             ...error,
-            [currentField.field_name]: {
+            [currentField?.field_name]: {
               error: true,
-              message: `Please select ${currentField.label}`,
+              message: `Please select ${currentField?.label}`,
             },
           };
         } else {
           error = {
             ...error,
-            [currentField.field_name]: {
+            [currentField?.field_name]: {
               error: true,
-              message: `Please enter ${currentField.label}`,
+              message: `Please enter ${currentField?.label}`,
             },
           };
         }

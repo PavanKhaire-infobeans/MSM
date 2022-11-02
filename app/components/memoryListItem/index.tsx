@@ -212,14 +212,14 @@ export default class MemoryListItem extends React.Component<Props, State> {
   };
 
   render() {
-    let userDetails = !this.props.item.item.isPrompt
+    let userDetails = !this.props?.item?.item?.isPrompt
       ? PublishedMemoryDataModel.getUserObj(this.props.item.item)
       : {};
     let memoryActions = this.MemoryActionsListArray(this.props.item.item);
 
     return (
       <>
-        {!this.props.item.item.isPrompt ? (
+        {!this.props?.item?.item?.isPrompt ? (
           <View onLayout={this.props.onLayout} style={styles.promptContainer}>
             {this.externalCueItems.includes(this.props.item.item.type) ? (
               this.props.item.item.type == 'songs' ? (

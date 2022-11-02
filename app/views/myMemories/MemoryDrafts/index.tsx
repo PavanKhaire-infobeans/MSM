@@ -103,7 +103,6 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           } else {
             this.memoryDraftDetails(false, response['ResponseMessage'])
           }
-
         });
       }
     } else {

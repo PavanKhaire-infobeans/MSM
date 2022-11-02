@@ -167,7 +167,13 @@ const Profile = props => {
 
   const prepareFormSections = () => {
     let allSections = [...allFormSections];
-    return allSections.map(prepareCard);
+
+    let filteredList = [...new Set(allSections.map(JSON.stringify))].map(
+      JSON.parse,
+    );
+
+    // console.warn("ddsahdsagd >",JSON.stringify(filteredList))
+    return filteredList.map(prepareCard);
   };
 
   const prepareCard = (
