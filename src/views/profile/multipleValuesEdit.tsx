@@ -140,7 +140,8 @@ const MutilpleValueEdit = (props: Props) => {
       // } = useUserProfileData({});
       // setAllFormSections([]);
 
-      props.navigation.replace('profile');
+        props.navigation.goBack();
+        // props.navigation.replace('profile');
     });
 
     if (props.basicInfo) {
@@ -160,7 +161,8 @@ const MutilpleValueEdit = (props: Props) => {
             loaderTextValue: 'Loading...'
           }));
           Keyboard.dismiss();
-          props.navigation.replace('profile');
+          props.navigation.goBack();
+          // props.navigation.replace('profile');
 
         });
       isProfilePicAvailable =
@@ -256,7 +258,7 @@ const MutilpleValueEdit = (props: Props) => {
         fieldNameOfMultipleDropDown: '',
       }
     }));
-    console.log("actionsss ?",JSON.stringify(actions),field.multipleSelection)
+    // console.log("actionsss ?",JSON.stringify(actions),field.multipleSelection)
 
       bottomPicker.current &&
       bottomPicker.current.showPicker &&
@@ -404,7 +406,7 @@ const MutilpleValueEdit = (props: Props) => {
                 valueArray.push(default_values[key]);
               }
               default_value = valueArray.join(', ');
-              showConsoleLog(ConsoleType.LOG, "state val ", JSON.stringify(default_value), field.field_name,type)
+              showConsoleLog(ConsoleType.LOG, "state val ", JSON.stringify(default_value), field.field_name,type,JSON.stringify(field.default_value))
               // showConsoleLog(ConsoleType.LOG, "generateSectionFields Values while selection ", default_value)
 
               // default_value = getValueForField(field)
@@ -418,6 +420,7 @@ const MutilpleValueEdit = (props: Props) => {
                   onOptionSelected={() => onOptionSelection(field)}
                 />
               );
+              
             } else if (type == 'text_textfield') {
               let val = getValue(field, ['default_value']);
               if (val) {
@@ -779,7 +782,8 @@ const MutilpleValueEdit = (props: Props) => {
         messageRef._show({ message: 'No changes found', color: Colors.ErrorColor });
         setTimeout(() => {
           messageRef && messageRef._hide();
-          props.navigation.replace('profile');
+          // props.navigation.replace('profile');
+          props.navigation.goBack();
         }, 4000);
         //ToastMessage('No changes found', Colors.ThemeColor);
         Keyboard.dismiss();

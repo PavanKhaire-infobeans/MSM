@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Alert,
@@ -87,6 +88,8 @@ const Profile = props => {
 
   const [userProfileDetails, setUserProfileDetails] = useState({});
 
+  const isFocused = useIsFocused();
+
   const {
     basicInfo,
     basicInfoSection,
@@ -108,7 +111,7 @@ const Profile = props => {
     return () => {
       checkProfile.removeListener();
     };
-  }, []);
+  }, [isFocused]);
 
   // Web-service call to fetch profile data
   const getUserProfileData = () => {

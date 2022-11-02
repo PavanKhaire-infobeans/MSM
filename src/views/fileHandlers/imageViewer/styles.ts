@@ -59,12 +59,13 @@ const Styles = EStyleSheet.create({
     backgroundColor: '#595959',
     height: 40,
     width: 40,
-    top: 20,
+    top: 40,
     borderRadius: 20,
     position: 'absolute',
-    marginLeft: 20,
+    left: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex:99
   },
   closeImageStyle:{
     padding: 15,

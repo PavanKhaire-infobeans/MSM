@@ -217,7 +217,7 @@ class NavigationBar extends React.Component<Props> {
 
   _closeAction = () => {
     Keyboard.dismiss();
-    showConsoleLog(ConsoleType.LOG, 'Props : ', this.props);
+    // showConsoleLog(ConsoleType.LOG, 'Props : ', this.props);
     this.props.navigation.goBack();
   };
 
