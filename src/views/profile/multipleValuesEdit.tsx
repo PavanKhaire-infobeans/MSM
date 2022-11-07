@@ -196,7 +196,6 @@ const MutilpleValueEdit = (props: Props) => {
     if (field.type == 'date' || field.type == 'date_select') {
       if (getValue(field, ['granularity', 'todate']) != 'required') {
 
-        console.log(state[field.field_name].value)
         let field_date: any = state[field.field_name]?.value
           ? state[field.field_name].value
           :
@@ -316,7 +315,6 @@ const MutilpleValueEdit = (props: Props) => {
       }
     }));
 
-    console.log("actions ?",JSON.stringify(actions))
     bottomPicker.current &&
       bottomPicker.current.showPicker &&
       bottomPicker.current.showPicker();
@@ -336,7 +334,7 @@ const MutilpleValueEdit = (props: Props) => {
         valueArray.push(default_values[key]);
       }
       default_value = valueArray.join(', ');
-      showConsoleLog(ConsoleType.LOG, "Values while selection ", default_value)
+      // showConsoleLog(ConsoleType.LOG, "Values while selection ", default_value)
       return default_value;
     } else if (type == 'text_textfield') {
       let val = getValue(field, ['default_value']);
@@ -406,7 +404,7 @@ const MutilpleValueEdit = (props: Props) => {
                 valueArray.push(default_values[key]);
               }
               default_value = valueArray.join(', ');
-              showConsoleLog(ConsoleType.LOG, "state val ", JSON.stringify(default_value), field.field_name,type,JSON.stringify(field.default_value))
+              // showConsoleLog(ConsoleType.LOG, "state val ", JSON.stringify(default_value), field.field_name,type,JSON.stringify(field.default_value))
               // showConsoleLog(ConsoleType.LOG, "generateSectionFields Values while selection ", default_value)
 
               // default_value = getValueForField(field)

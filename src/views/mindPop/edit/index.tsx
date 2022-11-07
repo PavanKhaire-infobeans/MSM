@@ -737,7 +737,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     if (Utility.isInternetConnected) {
       //loaderHandler.showLoader('Loading...');
       this.props.showLoader(true);
-      this.props.loaderText('Loading...');
+      this.props.loaderText('Creating Memory...');
       this.draftDetails = DefaultDetailsMemory(
         decode_utf8(this.state.content.trim()),
       );

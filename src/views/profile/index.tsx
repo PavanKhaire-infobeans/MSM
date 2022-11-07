@@ -109,6 +109,7 @@ const Profile = props => {
       getUserProfileData();
 
     return () => {
+      props.showLoader(false);
       checkProfile.removeListener();
     };
   }, [isFocused]);

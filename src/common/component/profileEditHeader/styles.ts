@@ -12,13 +12,14 @@ const Styles = EStyleSheet.create({
     backgroundColor: Colors.white,
     width: '100%',
     // borderRadius: 8,
-    marginTop: 20,
+    // marginTop: 20,
   },
   mainContainer: {
     flexDirection: 'row',
     width: '100%',
     height: 68,
-    // justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderBottomColor: Colors.bottomTabColor,
     backgroundColor: Colors.white,
   },
@@ -71,7 +72,7 @@ const Styles = EStyleSheet.create({
 
   titleContainer: {
     // justifyContent: 'center',
-    paddingTop: 20,
+    // paddingTop: 20,
     flex: 1,
     paddingLeft: 16,
   },
@@ -84,7 +85,7 @@ const Styles = EStyleSheet.create({
     marginRight: 8
   },
   rightButtonsContainer: {
-    marginTop: 12,
+    // marginTop: 12,
     // paddingRight: 0,
     height: 40,
     borderRadius: 1000,
@@ -192,7 +193,7 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
     height: '100%',
     // padding: 15,
-    marginTop: 5,
+    // marginTop: 5,
   },
 
   leftButtonContainer: {

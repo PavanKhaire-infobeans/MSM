@@ -241,7 +241,7 @@ const Recent = (props: Props) => {
         memoryTitle: item.title,
         by: item.name,
         fid: item.audios[0].fid,
-        nid: item.nid,
+        nid: item?.nid,
       };
       setState(prevState => ({
         ...prevState,
@@ -273,11 +273,11 @@ const Recent = (props: Props) => {
     }));
     if (Utility.isInternetConnected) {
       if (item.item.isLikedByUser) {
-        Unlike(item.item.nid, item.item.type, kUnliked);
+        Unlike(item.item?.nid, item.item.type, kUnliked);
         item.item.isLikedByUser = 0;
         item.item.noOfLikes = item.item.noOfLikes - 1;
       } else {
-        Like(item.item.nid, item.item.type, kLiked);
+        Like(item.item?.nid, item.item.type, kLiked);
         item.item.isLikedByUser = 1;
         item.item.noOfLikes = item.item.noOfLikes + 1;
       }

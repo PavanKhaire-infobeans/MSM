@@ -379,7 +379,7 @@ const WriteTabs = props => {
               goToPage={page => {
                 if (flatListRef.current) {
                   if (page === 1) {
-                    props.navigation.replace('addContent', {
+                    props.navigation.navigate('addContent', {
                       beforeBack: () => {
                         setScreen();
                       },

@@ -817,13 +817,13 @@ export const onActionItemClicked = async (
 export const MemoryActionsList = (item: any) => {
   var i = 0;
   let memoryActions = [];
-  for (var value in item.actions_on_memory) {
+  for (var value in item?.actions_on_memory) {
     i += 1;
     switch (value) {
       case MemoryActionKeys.addToCollection:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: add_icon_small,
           nid: item.nid,
           memoryType: item.type,
@@ -834,7 +834,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.editMemoryKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: edit_memory,
           nid: item.nid,
           memoryType: item.type,
@@ -844,7 +844,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.deleteMemoryKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: delete_memory,
           nid: item.nid,
           memoryType: item.type,
@@ -854,7 +854,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.moveToDraftKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: move_to_draft,
           nid: item.nid,
           memoryType: item.type,
@@ -864,7 +864,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.removeMeFromThisPostKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: remove_me_from_this_post,
           nid: item.nid,
           memoryType: item.type,
@@ -874,7 +874,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.blockMemoryKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: block_memory,
           nid: item.nid,
           memoryType: item.type,
@@ -884,7 +884,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.blockUserKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: block_user,
           nid: item.nid,
           memoryType: item.type,
@@ -896,7 +896,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.reportMemoryKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: report_user,
           nid: item.nid,
           memoryType: item.type,
@@ -907,7 +907,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.blockAndReportKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: block_and_report,
           nid: item.nid,
           memoryType: item.type,
@@ -1148,16 +1148,16 @@ const MemoryActionsListArray = (item: any) => {
   var i = 0;
   let memoryActions: any = [];
 
-  for (var value in item.actions_on_memory) {
+  for (var value in item?.actions_on_memory) {
     i += 1;
     switch (value) {
       case MemoryActionKeys.addToCollection:
-        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(item?.actions_on_memory[value])
         // memoryActions.push(
         //   {
         //     index: i,
-        //     text: item.actions_on_memory[value],
-        //     title: item.actions_on_memory[value],
+        //     text: item?.actions_on_memory[value],
+        //     title: item?.actions_on_memory[value],
         //     // image: add_icon_small,
         //     nid: item.nid,
         //     memoryType: item.type,
@@ -1167,11 +1167,11 @@ const MemoryActionsListArray = (item: any) => {
         // );
         break;
       case MemoryActionKeys.blockUserKey:
-        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(item?.actions_on_memory[value])
         // memoryActions.push({
         //   index: i,
-        //   text: item.actions_on_memory[value],
-        //   title: item.actions_on_memory[value],
+        //   text: item?.actions_on_memory[value],
+        //   title: item?.actions_on_memory[value],
         //   // image: Platform.OS == 'ios' ? personxmark :block,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1181,11 +1181,11 @@ const MemoryActionsListArray = (item: any) => {
         // });
         break;
       case MemoryActionKeys.reportMemoryKey:
-        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(item?.actions_on_memory[value])
         // memoryActions.push({
         //   index: i,
-        //   text: item.actions_on_memory[value],
-        //   title: item.actions_on_memory[value],
+        //   text: item?.actions_on_memory[value],
+        //   title: item?.actions_on_memory[value],
         //   // image: Platform.OS == 'ios' ? flagandroid : flag,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1194,11 +1194,11 @@ const MemoryActionsListArray = (item: any) => {
         // });
         break;
       case MemoryActionKeys.blockAndReportKey:
-        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(item?.actions_on_memory[value])
         // memoryActions.push({
         //   index: i,
-        //   text: item.actions_on_memory[value],
-        //   title: item.actions_on_memory[value],
+        //   text: item?.actions_on_memory[value],
+        //   title: item?.actions_on_memory[value],
         //   // image: Platform.OS == 'ios' ? redstar : report,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1208,11 +1208,11 @@ const MemoryActionsListArray = (item: any) => {
         // });
         break;
       case MemoryActionKeys.editMemoryKey:
-        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(item?.actions_on_memory[value])
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
-          title: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
+          title: item?.actions_on_memory[value],
           // image: edit_memory,
           nid: item.nid,
           memoryType: item.type,
@@ -1220,11 +1220,11 @@ const MemoryActionsListArray = (item: any) => {
         });
         break;
       case MemoryActionKeys.deleteMemoryKey:
-        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(item?.actions_on_memory[value])
         // memoryActions.push({
         //   index: i,
-        //   text: item.actions_on_memory[value],
-        //   title: item.actions_on_memory[value],
+        //   text: item?.actions_on_memory[value],
+        //   title: item?.actions_on_memory[value],
         //   // image: delete_memory,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1232,11 +1232,11 @@ const MemoryActionsListArray = (item: any) => {
         // });
         break;
       case MemoryActionKeys.moveToDraftKey:
-        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(item?.actions_on_memory[value])
         // memoryActions.push({
         //   index: i,
-        //   text: item.actions_on_memory[value],
-        //   title: item.actions_on_memory[value],
+        //   text: item?.actions_on_memory[value],
+        //   title: item?.actions_on_memory[value],
         //   // image: move_to_draft,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1244,11 +1244,11 @@ const MemoryActionsListArray = (item: any) => {
         // });
         break;
       case MemoryActionKeys.removeMeFromThisPostKey:
-        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(item?.actions_on_memory[value])
         // memoryActions.push({
         //   index: i,
-        //   text: item.actions_on_memory[value],
-        //   title: item.actions_on_memory[value],
+        //   text: item?.actions_on_memory[value],
+        //   title: item?.actions_on_memory[value],
         //   // image: remove_me_from_this_post,
         //   nid: item.nid,
         //   memoryType: item.type,
@@ -1256,11 +1256,11 @@ const MemoryActionsListArray = (item: any) => {
         // });
         break;
       case MemoryActionKeys.blockMemoryKey:
-        // memoryActions.push(item.actions_on_memory[value])
+        // memoryActions.push(item?.actions_on_memory[value])
         // memoryActions.push({
         //   index: i,
-        //   text: item.actions_on_memory[value],
-        //   title: item.actions_on_memory[value],
+        //   text: item?.actions_on_memory[value],
+        //   title: item?.actions_on_memory[value],
         //   // image: block_memory,
         //   nid: item.nid,
         //   memoryType: item.type,
