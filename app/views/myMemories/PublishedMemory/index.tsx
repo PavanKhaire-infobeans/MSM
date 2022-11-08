@@ -816,7 +816,7 @@ export const onActionItemClicked = async (
 
 export const MemoryActionsList = (item: any) => {
   var i = 0;
-  let memoryActions = [];
+  let memoryActions: any = [];
   for (var value in item?.actions_on_memory) {
     i += 1;
     switch (value) {
