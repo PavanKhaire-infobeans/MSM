@@ -71,7 +71,7 @@ const Styles = EStyleSheet.create({
   },
 
   titleContainer: {
-    // justifyContent: 'center',
+    justifyContent: 'center',
     // paddingTop: 20,
     flex: 1,
     paddingLeft: 16,
