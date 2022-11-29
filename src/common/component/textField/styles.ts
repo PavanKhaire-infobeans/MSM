@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     // marginBottom: 5,
-    height:72,
+    height:56,
   },
   subContainer: {
     flex: 1,

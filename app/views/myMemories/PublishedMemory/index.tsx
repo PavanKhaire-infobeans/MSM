@@ -17,14 +17,14 @@ import {
 } from 'react-native';
 import ContextMenu from 'react-native-context-menu-view';
 import DeviceInfo from 'react-native-device-info';
-import {Account} from '../../../../src/common/loginStore';
-import {MemoryService, newMemoryService} from '../../../../src/common/webservice/memoryServices';
-import {ListType} from '../../../../src/views/dashboard/dashboardReducer';
+import { Account } from '../../../../src/common/loginStore';
+import { MemoryService, newMemoryService } from '../../../../src/common/webservice/memoryServices';
+import { ListType } from '../../../../src/views/dashboard/dashboardReducer';
 import MemoryActionsSheet, {
   MemoryActionsSheetItem,
 } from '../../../components/memoryActionsSheet';
-import {LikeCommentShare} from '../../memoryDetails/componentsMemoryDetails';
-import {GetAllLikes, Like, Unlike} from '../../memoryDetails/detailsWebService';
+import { LikeCommentShare } from '../../memoryDetails/componentsMemoryDetails';
+import { GetAllLikes, Like, Unlike } from '../../memoryDetails/detailsWebService';
 import {
   GetPublishedMemories,
   kAllLikes,
@@ -74,15 +74,15 @@ import {
   report_user,
 } from './../../../../src/images';
 import MemoryListItem from './../../../components/memoryListItem';
-import {heart, liked, moreoptions} from './../../../images';
-import {PublishedMemoryDataModel} from './publishedMemoryDataModel';
+import { heart, liked, moreoptions } from './../../../images';
+import { PublishedMemoryDataModel } from './publishedMemoryDataModel';
 import styles from './styles';
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
 ];
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 var publishedMemoriesArray: any[] = [];
 var page: 0;
 var loadingDataFromServer = true;
@@ -257,7 +257,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       //     page--;
       // }
       if (publishedMemoriesArray.length == 0) {
-       //ToastMessage(publishedMemories, Colors.ErrorColor);
+        //ToastMessage(publishedMemories, Colors.ErrorColor);
       }
     }
     this.setState(
@@ -265,7 +265,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
         isRefreshing: false,
         loading: false,
       },
-      () =>{ 
+      () => {
         // //loaderHandler.hideLoader()
       },
     );
@@ -303,7 +303,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       this.showList(getAllLikes);
       // this.setState({});
     } else {
-     //ToastMessage(getAllLikes, Colors.ErrorColor);
+      //ToastMessage(getAllLikes, Colors.ErrorColor);
     }
   };
   likeCallback = (fetched: boolean, responseMessage: any, nid?: any) => {
@@ -362,7 +362,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       );
       // this.setState({});
     } else {
-     //ToastMessage(responseMessage, Colors.ErrorColor);
+      //ToastMessage(responseMessage, Colors.ErrorColor);
     }
   };
 
@@ -391,7 +391,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
     });
   };
 
-  renderItem=(item: any) => (
+  renderItem = (item: any) => (
     <MemoryListItem
       item={item}
       like={this.like}
@@ -428,13 +428,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     Platform.OS === 'android' ? Colors.NewThemeColor : Colors.white
                   }
                   refreshing={this.state.isRefreshing}
-                  onRefresh={()=>this.onRefresh()}
+                  onRefresh={() => this.onRefresh()}
                 />
               }
               // keyExtractor={(item, index) => index.toString()}
-              ListFooterComponent={()=>this.renderFooter()}
+              ListFooterComponent={() => this.renderFooter()}
               onEndReachedThreshold={0.4}
-              onEndReached={()=>this.handleLoadMore()}
+              onEndReached={() => this.handleLoadMore()}
             />
             {publishedMemoriesArray.length == 0 && (
               <View style={styles.emptyContainer}>
@@ -442,7 +442,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                   <ActivityIndicator
                     color={Colors.ThemeColor}
                     size="large"
-                    // style={{ flex: 1, justifyContent: 'center' }}
+                  // style={{ flex: 1, justifyContent: 'center' }}
                   />
                 ) : (
                   <Text style={styles.noMemoriedTextStyle}>
@@ -507,7 +507,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       actionType: MemoryActionKeys.cancelActionKey,
     });
     this._actionSheet && this._actionSheet.showSheet();
-    this.setState({showMemoryActions: true});
+    this.setState({ showMemoryActions: true });
   };
 
   audioView = (item: any) => {
@@ -522,7 +522,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                 onResponderStart={() => this.togglePlayPause(item)}>
                 <View style={styles.playButtonContainer}>
                   {this.state.audioFile.fid == item.audios[0].fid &&
-                  this.state.audioFile.isPlaying ? (
+                    this.state.audioFile.isPlaying ? (
                     <View style={styles.playButtonMainContainer}>
                       <View style={styles.playButtonStyle} />
                       <View style={styles.playbuttonTransparentView} />
@@ -544,21 +544,21 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     />
                   )}
                 </View>
-                <View style={{marginLeft: 10}}>
+                <View style={{ marginLeft: 10 }}>
                   <Text
                     style={[
                       styles.normalText,
-                      {color: '#000', marginBottom: 5, paddingRight: 80},
+                      { color: '#000', marginBottom: 5, paddingRight: 80 },
                     ]}
                     numberOfLines={1}
                     ellipsizeMode="tail">
                     {item.audios[0].title
                       ? item.audios[0].title
                       : item.audios[0].filename
-                      ? item.audios[0].filename
-                      : ''}
+                        ? item.audios[0].filename
+                        : ''}
                   </Text>
-                  <Text style={[styles.normalText, {color: '#000'}]}>
+                  <Text style={[styles.normalText, { color: '#000' }]}>
                     {item.audios[0].duration}
                   </Text>
                 </View>
@@ -581,7 +581,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
               ]}>
               <TouchableHighlight
                 underlayColor={Colors.touchableunderlayColor}
-                style={{flex: 1, justifyContent: 'center'}}
+                style={{ flex: 1, justifyContent: 'center' }}
                 onPress={() => {
                   _onShowMemoryDetails(item);
                 }}>
@@ -628,7 +628,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
         audioFile.index = audioFile.index - 1;
         break;
     }
-    this.setState({audioFile: audioFile});
+    this.setState({ audioFile: audioFile });
   };
 
   togglePlayPause = (item: any) => {
@@ -676,7 +676,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
   _onCloseAudios(event: Event) {
     try {
       this.audioPlayer.current.hidePlayer();
-    } catch (error) {}
+    } catch (error) { }
   }
 }
 
@@ -757,9 +757,9 @@ export const onActionItemClicked = async (
             'X-CSRF-TOKEN': userdata.userAuthToken,
             'Content-Type': 'application/json',
           },
-          {configurationTimestamp: '0', details},
+          { configurationTimestamp: '0', details },
         ],
-        response =>{
+        response => {
           if (response.ResponseCode == 200) {
             _onEditMemory(data.nid, navigation);
           } else {
@@ -767,11 +767,7 @@ export const onActionItemClicked = async (
           }
         }
       )
-        // .then((response: Response) => response.json())
-        // .catch((err: Error) => {
-        //   Promise.reject(err);
-        // });
-      
+
       break;
     case MemoryActionKeys.cancelActionKey:
       break;
@@ -786,7 +782,7 @@ export const onActionItemClicked = async (
             {
               text: 'No',
               style: 'cancel',
-              onPress: () => {},
+              onPress: () => { },
             },
             {
               text: 'Yes',
@@ -983,7 +979,7 @@ export const CommentBox = (item: any) => {
         </Text>
 
         <TouchableWithoutFeedback>
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Image source={icon_send} />
             <Text
               style={{
@@ -1022,7 +1018,7 @@ export const RenderLikeAndCommentSection = (
     }
   }
   return (
-    <View style={{marginRight: 24}} key={item.index}>
+    <View style={{ marginRight: 24 }} key={item.index}>
       {/* {(memoryDetail.noOfComments > 0 || memoryDetail.showLikeCount) && (
         <Border />
       )} */}
@@ -1098,7 +1094,7 @@ export const _onShowMemoryDetails = (
 export const _onOpenPdfs = (pdfUrl: any, navigation?: any) => {
   if (Utility.isInternetConnected) {
     navigation?.navigate('pdfViewer', {
-      file: {url: encode_utf8(pdfUrl)},
+      file: { url: encode_utf8(pdfUrl) },
     });
   } else {
     No_Internet_Warning();
@@ -1148,67 +1144,34 @@ const MemoryActionsListArray = (item: any) => {
   var i = 0;
   let memoryActions: any = [];
 
+  memoryActions.push({
+    text: 'Share memory',
+    title: 'Share memory',
+    // image: add_icon_small,
+    nid: item.nid,
+    memory_url: item.memory_url,
+    memoryType: item.type,
+    actionType: MemoryActionKeys.shareActionKey,
+    uid: item.user_details.uid,
+  });
   for (var value in item?.actions_on_memory) {
     i += 1;
     switch (value) {
       case MemoryActionKeys.addToCollection:
-        // memoryActions.push(item?.actions_on_memory[value])
-        // memoryActions.push(
-        //   {
-        //     index: i,
-        //     text: item?.actions_on_memory[value],
-        //     title: item?.actions_on_memory[value],
-        //     // image: add_icon_small,
-        //     nid: item.nid,
-        //     memoryType: item.type,
-        //     actionType: MemoryActionKeys.addToCollection,
-        //     uid: item.user_details.uid,
-        //   }
-        // );
-        break;
-      case MemoryActionKeys.blockUserKey:
-        // memoryActions.push(item?.actions_on_memory[value])
-        // memoryActions.push({
-        //   index: i,
-        //   text: item?.actions_on_memory[value],
-        //   title: item?.actions_on_memory[value],
-        //   // image: Platform.OS == 'ios' ? personxmark :block,
-        //   nid: item.nid,
-        //   memoryType: item.type,
-        //   actionType: MemoryActionKeys.blockUserKey,
-        //   uid: item.user_details.uid,
-        //   isDestructive: 1,
-        // });
-        break;
-      case MemoryActionKeys.reportMemoryKey:
-        // memoryActions.push(item?.actions_on_memory[value])
-        // memoryActions.push({
-        //   index: i,
-        //   text: item?.actions_on_memory[value],
-        //   title: item?.actions_on_memory[value],
-        //   // image: Platform.OS == 'ios' ? flagandroid : flag,
-        //   nid: item.nid,
-        //   memoryType: item.type,
-        //   actionType: MemoryActionKeys.reportMemoryKey,
-        //   isDestructive: 1,
-        // });
-        break;
-      case MemoryActionKeys.blockAndReportKey:
-        // memoryActions.push(item?.actions_on_memory[value])
-        // memoryActions.push({
-        //   index: i,
-        //   text: item?.actions_on_memory[value],
-        //   title: item?.actions_on_memory[value],
-        //   // image: Platform.OS == 'ios' ? redstar : report,
-        //   nid: item.nid,
-        //   memoryType: item.type,
-        //   actionType: MemoryActionKeys.blockAndReportKey,
-        //   uid: item.user_details.uid,
-        //   isDestructive: 1,
-        // });
+        memoryActions.push(
+          {
+            index: i,
+            text: item?.actions_on_memory[value],
+            title: item?.actions_on_memory[value],
+            // image: add_icon_small,
+            nid: item.nid,
+            memoryType: item.type,
+            actionType: MemoryActionKeys.addToCollection,
+            uid: item.user_details.uid,
+          }
+        );
         break;
       case MemoryActionKeys.editMemoryKey:
-        // memoryActions.push(item?.actions_on_memory[value])
         memoryActions.push({
           index: i,
           text: item?.actions_on_memory[value],
@@ -1220,65 +1183,90 @@ const MemoryActionsListArray = (item: any) => {
         });
         break;
       case MemoryActionKeys.deleteMemoryKey:
-        // memoryActions.push(item?.actions_on_memory[value])
-        // memoryActions.push({
-        //   index: i,
-        //   text: item?.actions_on_memory[value],
-        //   title: item?.actions_on_memory[value],
-        //   // image: delete_memory,
-        //   nid: item.nid,
-        //   memoryType: item.type,
-        //   actionType: MemoryActionKeys.deleteMemoryKey,
-        // });
+        memoryActions.push({
+          index: i,
+          text: item?.actions_on_memory[value],
+          title: item?.actions_on_memory[value],
+          // image: delete_memory,
+          nid: item.nid,
+          memoryType: item.type,
+          actionType: MemoryActionKeys.deleteMemoryKey,
+        });
         break;
       case MemoryActionKeys.moveToDraftKey:
-        // memoryActions.push(item?.actions_on_memory[value])
-        // memoryActions.push({
-        //   index: i,
-        //   text: item?.actions_on_memory[value],
-        //   title: item?.actions_on_memory[value],
-        //   // image: move_to_draft,
-        //   nid: item.nid,
-        //   memoryType: item.type,
-        //   actionType: MemoryActionKeys.moveToDraftKey,
-        // });
+        memoryActions.push({
+          index: i,
+          text: item?.actions_on_memory[value],
+          title: item?.actions_on_memory[value],
+          // image: move_to_draft,
+          nid: item.nid,
+          memoryType: item.type,
+          actionType: MemoryActionKeys.moveToDraftKey,
+        });
         break;
       case MemoryActionKeys.removeMeFromThisPostKey:
-        // memoryActions.push(item?.actions_on_memory[value])
-        // memoryActions.push({
-        //   index: i,
-        //   text: item?.actions_on_memory[value],
-        //   title: item?.actions_on_memory[value],
-        //   // image: remove_me_from_this_post,
-        //   nid: item.nid,
-        //   memoryType: item.type,
-        //   actionType: MemoryActionKeys.removeMeFromThisPostKey,
-        // });
+        memoryActions.push({
+          index: i,
+          text: item?.actions_on_memory[value],
+          title: item?.actions_on_memory[value],
+          // image: remove_me_from_this_post,
+          nid: item.nid,
+          memoryType: item.type,
+          actionType: MemoryActionKeys.removeMeFromThisPostKey,
+        });
         break;
       case MemoryActionKeys.blockMemoryKey:
-        // memoryActions.push(item?.actions_on_memory[value])
-        // memoryActions.push({
-        //   index: i,
-        //   text: item?.actions_on_memory[value],
-        //   title: item?.actions_on_memory[value],
-        //   // image: block_memory,
-        //   nid: item.nid,
-        //   memoryType: item.type,
-        //   actionType: MemoryActionKeys.blockMemoryKey,
-        // });
+        memoryActions.push({
+          index: i,
+          text: item?.actions_on_memory[value],
+          title: item?.actions_on_memory[value],
+          // image: block_memory,
+          nid: item.nid,
+          memoryType: item.type,
+          actionType: MemoryActionKeys.blockMemoryKey,
+        });
+        break;
+      case MemoryActionKeys.blockUserKey:
+        memoryActions.push({
+          index: i,
+          text: item?.actions_on_memory[value],
+          title: item?.actions_on_memory[value],
+          // image: Platform.OS == 'ios' ? personxmark :block,
+          nid: item.nid,
+          memoryType: item.type,
+          actionType: MemoryActionKeys.blockUserKey,
+          uid: item.user_details.uid,
+          destructive: true
+        });
+        break;
+      case MemoryActionKeys.reportMemoryKey:
+        memoryActions.push({
+          index: i,
+          text: item?.actions_on_memory[value],
+          title: item?.actions_on_memory[value],
+          // image: Platform.OS == 'ios' ? flagandroid : flag,
+          nid: item.nid,
+          memoryType: item.type,
+          actionType: MemoryActionKeys.reportMemoryKey,
+          destructive: true
+        });
+        break;
+      case MemoryActionKeys.blockAndReportKey:
+        memoryActions.push({
+          index: i,
+          text: item?.actions_on_memory[value],
+          title: item?.actions_on_memory[value],
+          // image: Platform.OS == 'ios' ? redstar : report,
+          nid: item.nid,
+          memoryType: item.type,
+          actionType: MemoryActionKeys.blockAndReportKey,
+          uid: item.user_details.uid,
+          destructive: true
+        });
         break;
     }
   }
-  memoryActions.push({
-    text: 'Share memory',
-    title: 'Share memory',
-    // image: add_icon_small,
-    nid: item.nid,
-    memory_url: item.memory_url,
-    memoryType: item.type,
-    actionType: MemoryActionKeys.shareActionKey,
-    uid: item.user_details.uid,
-  });
+
   return memoryActions;
 };
 
@@ -1307,7 +1295,7 @@ export const MemoryBasicDetails = (
               }
             }}>
             <View
-              style={[styles.flexRow, {width: Utility.getDeviceWidth() - 112}]}>
+              style={[styles.flexRow, { width: Utility.getDeviceWidth() - 112 }]}>
               <ImageBackground
                 style={styles.userImageStyle}
                 imageStyle={styles.userImageStyle}
@@ -1316,8 +1304,8 @@ export const MemoryBasicDetails = (
                   style={styles.userImageStyle}
                   source={
                     userDetails.userProfilePic &&
-                    userDetails.userProfilePic != ''
-                      ? {uri: userDetails.userProfilePic}
+                      userDetails.userProfilePic != ''
+                      ? { uri: userDetails.userProfilePic }
                       : profile_placeholder
                   }></Image>
               </ImageBackground>
@@ -1402,7 +1390,7 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
           </TouchableHighlight> */}
 
           {memoryDetail.images.length > 0 && (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <TouchableHighlight
                 underlayColor={Colors.touchableunderlayColor}
                 style={styles.fullFlex}
@@ -1422,7 +1410,7 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
                       ),
                     }}
                   />
-                  <View style={[styles.fullFlex, {position: 'relative'}]}>
+                  <View style={[styles.fullFlex, { position: 'relative' }]}>
                     <PlaceholderImageView
                       style={styles.placeholderImageContainer}
                       uri={Utility.getFileURLFromPublicURL(
@@ -1435,10 +1423,10 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
                         onPress={() => {
                           memoryDetail.images.length > 1
                             ? _onShowMemoryDetails(
-                                memoryDetail,
-                                null,
-                                navigation,
-                              )
+                              memoryDetail,
+                              null,
+                              navigation,
+                            )
                             : _onOpenImages(memoryDetail.images, 0, navigation);
                         }}>
                         <View style={styles.moreImagesContainer}>
@@ -1465,7 +1453,7 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
       {memoryDetail.pdf && memoryDetail.pdf.length > 0 ? (
         <View style={styles.imageContainer}>
           {memoryDetail.pdf.length > 0 && (
-            <View style={{flex: 1, backgroundColor: Colors.timeLinebackground}}>
+            <View style={{ flex: 1, backgroundColor: Colors.timeLinebackground }}>
               <TouchableHighlight
                 underlayColor={Colors.touchableunderlayColor}
                 style={styles.fullFlex}

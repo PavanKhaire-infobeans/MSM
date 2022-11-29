@@ -139,7 +139,9 @@ export const Colors = {
   SerachbarColor: '#F3F3F3',
   moreViewBg: 'rgba(11, 12, 15, 0.6)',
   blackOpacity60: 'rgba(0, 0, 0, 0.6)',
-  transparent: 'transparent'
+  transparent: 'transparent',
+  loginTextColor:'#0A4D8F',
+  authBackgroundColor:'#1E1E1E'
 };
 export const MyMemoriesTapBarOptions = {
   published: 'Published',
@@ -509,6 +511,12 @@ export const CommonTextStyles = {
     ...fontSize(14),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     lineHeight: 17.5
+  },
+  fontWeight500Size15Inter: {
+    fontWeight: '500',
+    ...fontSize(15),
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    lineHeight: 18.75
   },
 };
 /*export const requestPermission = async (type: string): Promise<boolean> => {

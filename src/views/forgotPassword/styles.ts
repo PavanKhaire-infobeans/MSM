@@ -1,5 +1,6 @@
 import { Platform, StyleSheet } from 'react-native';
 import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
+import Utility from '../../common/utility';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -8,13 +9,45 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
-
+  labelStyle:{ 
+    marginBottom: 4, 
+    marginLeft: 8, 
+    color: Colors.newTextColor 
+  },
+  loginSSOButtonStyle: {
+    width: '100%',
+    height: 48,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: 'center',
+    flexDirection: "row",
+    paddingHorizontal: 24,
+    borderRadius: 1000,
+    backgroundColor: Colors.white
+  },
+  ssoTextStyle: {
+    marginHorizontal: 12,
+    color: Colors.newTextColor
+  },
+  hederText:{ 
+    fontWeight: '500', 
+    ...fontSize(36), 
+    lineHeight: 45, 
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium, 
+    color: Colors.black, 
+    textAlign: 'left' 
+  },
   innerContainer: {
     width: '100%',
     height: '100%',
     flexDirection: 'column',
   },
-
+  LoginHeader:{ 
+    width: Utility.getDeviceWidth() - 48, 
+    alignSelf:'center',
+    flexDirection: 'row', 
+    marginTop: 24
+  },
   titleText: {
     ...fontSize(Size.byWidth(24)),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,
@@ -22,16 +55,19 @@ export const styles = StyleSheet.create({
   },
 
   loginContainer: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: Size.byHeight(40),
+    height: '100%',
+    marginTop: Size.byHeight(12),
   },
 
   communityBanner: {
-    width: Size.byWidth(310),
-    justifyContent: 'flex-start',
+    width: Utility.getDeviceWidth()-48,
+    alignSelf:'center',
+    height: '100%',
+    justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
   subcommunityBanner: { width: '100%' },
@@ -39,16 +75,18 @@ export const styles = StyleSheet.create({
   textFieldStyle:{width: '100%', height: 75},
   enterEmailText: {
     paddingBottom: 15,
-    textAlign: 'center',
-    fontWeight: '300',
-    ...fontSize(Size.byWidth(18)),
-    color: Colors.TextColor,
+    textAlign: 'left',
+    fontWeight: '400',
+    ...fontSize(Size.byWidth(19)),
+    color: Colors.newDescTextColor,
   },
   keyboardAvoiding: {
     width: '100%',
-    height: Size.byHeight(180),
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+    flex:1,
+    height:Utility.getDeviceHeight()*0.6, 
+    // height: '100%',//Size.byHeight(180),
+    justifyContent: 'space-between',
+    // alignItems: 'center', 
   },
 
   forgotPasswordContainer: {
@@ -66,7 +104,9 @@ export const styles = StyleSheet.create({
   },
   scrollViewStyles: {
     width: '100%',
-    height: '100%'
+    flex:1,
+    // height: '83%',
+    height:Utility.getDeviceHeight()*0.7, 
   },
   resendContainer:{width: '100%', alignItems: 'center'},
   resendSubContainer:{paddingBottom: 40},

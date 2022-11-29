@@ -76,128 +76,6 @@ export default class MemoryListItem extends React.Component<Props, State> {
   MemoryActionsListArray = (item: any) => {
     var i = 0;
     let memoryActions: any = [];
-
-    for (var value in item?.actions_on_memory) {
-      i += 1;
-      switch (value) {
-        case MemoryActionKeys.addToCollection:
-          // memoryActions.push(item?.actions_on_memory[value])
-          // memoryActions.push(
-          //   {
-          //     index: i,
-          //     text: item?.actions_on_memory[value],
-          //     title: item?.actions_on_memory[value],
-          //     // image: add_icon_small,
-          //     nid: item.nid,
-          //     memoryType: item.type,
-          //     actionType: MemoryActionKeys.addToCollection,
-          //     uid: item.user_details.uid,
-          //   }
-          // );
-          break;
-        case MemoryActionKeys.blockUserKey:
-          // memoryActions.push(item?.actions_on_memory[value])
-          // memoryActions.push({
-          //   index: i,
-          //   text: item?.actions_on_memory[value],
-          //   title: item?.actions_on_memory[value],
-          //   // image: Platform.OS == 'ios' ? personxmark :block,
-          //   nid: item.nid,
-          //   memoryType: item.type,
-          //   actionType: MemoryActionKeys.blockUserKey,
-          //   uid: item.user_details.uid,
-          //   isDestructive: 1,
-          // });
-          break;
-        case MemoryActionKeys.reportMemoryKey:
-          // memoryActions.push(item?.actions_on_memory[value])
-          // memoryActions.push({
-          //   index: i,
-          //   text: item?.actions_on_memory[value],
-          //   title: item?.actions_on_memory[value],
-          //   // image: Platform.OS == 'ios' ? flagandroid : flag,
-          //   nid: item.nid,
-          //   memoryType: item.type,
-          //   actionType: MemoryActionKeys.reportMemoryKey,
-          //   isDestructive: 1,
-          // });
-          break;
-        case MemoryActionKeys.blockAndReportKey:
-          // memoryActions.push(item?.actions_on_memory[value])
-          // memoryActions.push({
-          //   index: i,
-          //   text: item?.actions_on_memory[value],
-          //   title: item?.actions_on_memory[value],
-          //   // image: Platform.OS == 'ios' ? redstar : report,
-          //   nid: item.nid,
-          //   memoryType: item.type,
-          //   actionType: MemoryActionKeys.blockAndReportKey,
-          //   uid: item.user_details.uid,
-          //   isDestructive: 1,
-          // });
-          break;
-        case MemoryActionKeys.editMemoryKey:
-          // memoryActions.push(item?.actions_on_memory[value])
-          memoryActions.push({
-            index: i,
-            text: item?.actions_on_memory[value],
-            title: item?.actions_on_memory[value],
-            // image: edit_memory,
-            nid: item?.nid,
-            memoryType: item?.type,
-            actionType: MemoryActionKeys.editMemoryKey,
-          });
-          break;
-        case MemoryActionKeys.deleteMemoryKey:
-          // memoryActions.push(item?.actions_on_memory[value])
-          // memoryActions.push({
-          //   index: i,
-          //   text: item?.actions_on_memory[value],
-          //   title: item?.actions_on_memory[value],
-          //   // image: delete_memory,
-          //   nid: item.nid,
-          //   memoryType: item.type,
-          //   actionType: MemoryActionKeys.deleteMemoryKey,
-          // });
-          break;
-        case MemoryActionKeys.moveToDraftKey:
-          // memoryActions.push(item?.actions_on_memory[value])
-          // memoryActions.push({
-          //   index: i,
-          //   text: item?.actions_on_memory[value],
-          //   title: item?.actions_on_memory[value],
-          //   // image: move_to_draft,
-          //   nid: item.nid,
-          //   memoryType: item.type,
-          //   actionType: MemoryActionKeys.moveToDraftKey,
-          // });
-          break;
-        case MemoryActionKeys.removeMeFromThisPostKey:
-          // memoryActions.push(item?.actions_on_memory[value])
-          // memoryActions.push({
-          //   index: i,
-          //   text: item?.actions_on_memory[value],
-          //   title: item?.actions_on_memory[value],
-          //   // image: remove_me_from_this_post,
-          //   nid: item.nid,
-          //   memoryType: item.type,
-          //   actionType: MemoryActionKeys.removeMeFromThisPostKey,
-          // });
-          break;
-        case MemoryActionKeys.blockMemoryKey:
-          // memoryActions.push(item?.actions_on_memory[value])
-          // memoryActions.push({
-          //   index: i,
-          //   text: item?.actions_on_memory[value],
-          //   title: item?.actions_on_memory[value],
-          //   // image: block_memory,
-          //   nid: item.nid,
-          //   memoryType: item.type,
-          //   actionType: MemoryActionKeys.blockMemoryKey,
-          // });
-          break;
-      }
-    }
     memoryActions.push({
       text: 'Share memory',
       title: 'Share memory',
@@ -208,6 +86,121 @@ export default class MemoryListItem extends React.Component<Props, State> {
       actionType: MemoryActionKeys.shareActionKey,
       uid: item?.user_details?.uid,
     });
+    
+    for (var value in item?.actions_on_memory) {
+      i += 1;
+      switch (value) {
+        case MemoryActionKeys.addToCollection:
+          memoryActions.push(
+            {
+              // index: i,
+              text: item?.actions_on_memory[value],
+              title: item?.actions_on_memory[value],
+              // image: add_icon_small,
+              nid: item?.nid,
+              memoryType: item?.type,
+              actionType: MemoryActionKeys.addToCollection,
+              uid: item?.user_details.uid,
+            }
+          );
+          break;
+        case MemoryActionKeys.blockUserKey:
+          memoryActions.push({
+            // index: i,
+            text: item?.actions_on_memory[value],
+            title: item?.actions_on_memory[value],
+            // image: Platform.OS == 'ios' ? personxmark :block,
+            nid: item?.nid,
+            memoryType: item?.type,
+            actionType: MemoryActionKeys.blockUserKey,
+            uid: item?.user_details.uid,
+            destructive:true
+          });
+          break;
+        case MemoryActionKeys.reportMemoryKey:
+          memoryActions.push({
+            // index: i,
+            text: item?.actions_on_memory[value],
+            title: item?.actions_on_memory[value],
+            // image: Platform.OS == 'ios' ? flagandroid : flag,
+            nid: item?.nid,
+            memoryType: item?.type,
+            actionType: MemoryActionKeys.reportMemoryKey,
+            destructive:true
+          });
+          break;
+        case MemoryActionKeys.blockAndReportKey:
+          memoryActions.push({
+            // index: i,
+            text: item?.actions_on_memory[value],
+            title: item?.actions_on_memory[value],
+            // image: Platform.OS == 'ios' ? redstar : report,
+            nid: item?.nid,
+            memoryType: item?.type,
+            actionType: MemoryActionKeys.blockAndReportKey,
+            uid: item?.user_details.uid,
+            destructive:true
+          });
+          break;
+        case MemoryActionKeys.editMemoryKey:
+          memoryActions.push({
+            // index: i,
+            text: item?.actions_on_memory[value],
+            title: item?.actions_on_memory[value],
+            // image: edit_memory,
+            nid: item?.nid,
+            memoryType: item?.type,
+            actionType: MemoryActionKeys.editMemoryKey,
+          });
+          break;
+        case MemoryActionKeys.deleteMemoryKey:
+          memoryActions.push({
+            // index: i,
+            text: item?.actions_on_memory[value],
+            title: item?.actions_on_memory[value],
+            // image: delete_memory,
+            nid: item?.nid,
+            memoryType: item?.type,
+            actionType: MemoryActionKeys.deleteMemoryKey,
+          });
+          break;
+        case MemoryActionKeys.moveToDraftKey:
+          memoryActions.push({
+            // index: i,
+            text: item?.actions_on_memory[value],
+            title: item?.actions_on_memory[value],
+            // image: move_to_draft,
+            nid: item?.nid,
+            memoryType: item?.type,
+            actionType: MemoryActionKeys.moveToDraftKey,
+          });
+          break;
+        case MemoryActionKeys.removeMeFromThisPostKey:
+          memoryActions.push({
+            // index: i,
+            text: item?.actions_on_memory[value],
+            title: item?.actions_on_memory[value],
+            // image: remove_me_from_this_post,
+            nid: item?.nid,
+            memoryType: item?.type,
+            actionType: MemoryActionKeys.removeMeFromThisPostKey,
+          });
+          break;
+        case MemoryActionKeys.blockMemoryKey:
+          memoryActions.push({
+            // index: i,
+            text: item?.actions_on_memory[value],
+            title: item?.actions_on_memory[value],
+            // image: block_memory,
+            nid: item?.nid,
+            memoryType: item?.type,
+            actionType: MemoryActionKeys.blockMemoryKey,
+            destructive:true
+          });
+          break;
+      }
+    }
+   
     return memoryActions;
   };
 

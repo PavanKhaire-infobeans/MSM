@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   StatusBar,
   TextInput,
+  TouchableHighlight,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -41,7 +42,7 @@ import { ToastMessage } from '../../common/component/Toast';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore
-import { arrowRightCircle } from '../../../app/images';
+import { arrowRightCircle, checkbox, checkbox_tick } from '../../../app/images';
 import MessageDialogue from '../../common/component/messageDialogue';
 import EventManager from '../../common/eventManager';
 import {
@@ -173,7 +174,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
           fcm_token: '',
           portal_ids: selectedCommunity,
         });
-       //ToastMessage(err.toString(), Colors.ErrorColor);
+        //ToastMessage(err.toString(), Colors.ErrorColor);
       },
     );
   };
@@ -296,8 +297,10 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     } else {
       // this.messageRef._hide();
     }
-    this.updateState({ errorViewHeight: height, showLoaderValue: false,
-      loaderTextValue: 'Loading...' });
+    this.updateState({
+      errorViewHeight: height, showLoaderValue: false,
+      loaderTextValue: 'Loading...'
+    });
   };
 
   componentWillUnmount() {
@@ -380,14 +383,14 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                   this._passwordField && this._passwordField.focus();
                 }}
                 value={this.state.username}
-                placeholder="Email..."
+                placeholder="Enter email..."
                 keyboardType="email-address"
                 returnKeyType="next"
                 onChange={(text: any) =>
                   this.controller.onTextChange('username', text)
                 }
               />
-              {/* <View style={Styles.separatorHeightStyle16} /> */}
+              <View style={Styles.separatorHeightStyle24} />
               <Text
                 style={[
                   CommonTextStyles.fontWeight500Size13Inter,
@@ -402,7 +405,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                 showError={this.state.passwordError.error}
                 reference={ref => (this._passwordField = ref)}
                 value={this.state.password}
-                placeholder="Password..."
+                placeholder="Enter password..."
                 secureTextEntry={true}
                 onSubmitEditing={this.controller.onClick.bind(this.controller)}
                 returnKeyType="go"
@@ -411,6 +414,20 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                 }
               />
               {/* <View style={{ height: 10 }} /> */}
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                onPress={() => {
+                  this.showErrorMessage(false);
+                  this.props.navigation.navigate('forgotPassword');
+                }}>
+                <View style={styles.forgotPassword}>
+                  <Text
+                    style={Styles.forwardTextStyle}>
+                    Forgot Password?
+                  </Text>
+
+                </View>
+              </TouchableHighlight>
             </View>
 
             {/* <View
@@ -422,13 +439,39 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                     height: 380 - this.state.keyboardHeight
                   }}> */}
             <Animated.View style={[Styles.buttonContainer, animStyle]}>
+              <TouchableHighlight
+                underlayColor={'#ffffffff'}
+                style={styles.forgotPassword}
+                onPress={() =>
+                  this.setState({ _isRemeberMe: !this.state._isRemeberMe })
+                }>
+                <View
+                  style={[
+                    styles.forgotPasswordContainer,
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: 32
+                    },
+                  ]}>
+                  <Image source={this.state._isRemeberMe ? checkbox_tick : checkbox} />
+                 <View style={{width:8}}/>
+                  <Text
+                    style={styles.forgotPasswordText}>
+                    Remember Me
+                  </Text>
+
+                </View>
+              </TouchableHighlight>
+
               <TouchableWithoutFeedback
                 // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
                 onPress={() => {
                   this.setState({
                     showLoaderValue: true,
                     loaderTextValue: 'Loging In...'
-                  },()=>{
+                  }, () => {
                     this.controller.onClick()
                   })
                 }}>

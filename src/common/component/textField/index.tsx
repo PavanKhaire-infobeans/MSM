@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {eye, eyeoff} from '../../../../app/images';
-import {Colors} from '../../constants';
+import { eye, eyeoff } from '../../../../app/images';
+import { Colors } from '../../constants';
 import Text from '../Text';
-import {styles} from './styles';
-import {Props, State} from './types';
+import { styles } from './styles';
+import { Props, State } from './types';
 
 const kTop = 19,
   kTopAnimated = 5;
@@ -46,7 +46,7 @@ export default class TextField extends React.Component<Props, State> {
     autoFocus: false,
     passwordToggle: false,
     isRequired: false,
-    onSubmitEditing: () => {},
+    onSubmitEditing: () => { },
     isCuebackRegistration: false,
     showStrength: false,
     inputFocused: false,
@@ -151,9 +151,9 @@ export default class TextField extends React.Component<Props, State> {
       text.trim().length > 0 &&
       !this.state.showPasswordStrength
     ) {
-      this.setState({showPasswordStrength: true});
+      this.setState({ showPasswordStrength: true });
     } else if (this.props.showStrength && text.trim().length == 0) {
-      this.setState({showPasswordStrength: false});
+      this.setState({ showPasswordStrength: false });
     }
 
     if (this.props.showStrength) {
@@ -162,7 +162,7 @@ export default class TextField extends React.Component<Props, State> {
       rgularExp.containsSmallLetters.test(text.trim()) ? count++ : count;
       rgularExp.containsCapitalLetters.test(text.trim()) ? count++ : count;
       // rgularExp.containsSpecialCharacters.test(text.trim()) ?  count++ : count;
-      this.setState({passwordStrength: count});
+      this.setState({ passwordStrength: count });
     }
 
     this.setState(
@@ -174,7 +174,7 @@ export default class TextField extends React.Component<Props, State> {
   };
 
   render() {
-    let {value} = this.state;
+    let { value } = this.state;
     if (this.state.showPassword) {
       value = value; //.replace(/./g, "*");
     }
@@ -183,24 +183,25 @@ export default class TextField extends React.Component<Props, State> {
       value = this.props.value; //.replace(/./g, "*")
     }
     return (
-      <View style={[this.props.style, styles.container]}>
-        <View style={[styles.subContainer]}>
-          {/* <Animated.View
+      <>
+        <View style={[this.props.style, styles.container]}>
+          <View style={[styles.subContainer]}>
+            {/* <Animated.View
             style={[{
               height: this.state.height,
               backgroundColor: this.props.isCuebackRegistration ? Colors.white : Colors.NewLightCommentHeader,
               borderColor: this.props.showError ? 'red' : this.props.isCuebackRegistration ? Colors.TextColor : 'transparent',
             }, styles.animatedView]}> */}
 
-          <View
-            style={[
-              this.props.inputViewStyle,
-              this.state.inputFocused
-                ? styles.onFocusStyle
-                : // this.props.secureTextEntry ? { width: '90%' } :
+            <View
+              style={[
+                this.props.inputViewStyle,
+                this.state.inputFocused
+                  ? styles.onFocusStyle
+                  : // this.props.secureTextEntry ? { width: '90%' } :
                   {},
-            ]}>
-            {/* <Animated.Text
+              ]}>
+              {/* <Animated.Text
                 style={[{
                   color: this.props.isCuebackRegistration ? Colors.TextColor : !this.isBlurred || this.props.value.length > 0
                     ? Colors.NewTitleColor : this.props.placeholderTextColor,
@@ -215,120 +216,120 @@ export default class TextField extends React.Component<Props, State> {
                   </Animated.Text>
                 ) : null}
               </Animated.Text> */}
-            {
-              // this.state.showPassword && this.props.secureTextEntry ?
-              <View
-                style={[
-                  this.props.inputTextStyle,
-                  styles.textInputStyle,
-                  styles.textwrapStyle,
-                  {
-                    left: this.state.leftTextInput,
-                  },
-                ]}>
-                <TextInput
-                  returnKeyType={this.props.returnKeyType}
-                  keyboardType={
-                    this.props.keyboardType == 'numeric'
-                      ? 'numeric'
-                      : this.props.keyboardType == 'number-pad'
-                      ? 'number-pad'
-                      : this.props.keyboardType == 'email-address'
-                      ? 'email-address'
-                      : this.props.keyboardType == 'phone-pad'
-                      ? 'phone-pad'
-                      : 'ascii-capable'
-                  }
-                  placeholderTextColor={Colors.newTextColor}
-                  autoCapitalize={'none'}
-                  autoCorrect={false}
-                  placeholder={this.props.placeholder}
-                  onSubmitEditing={this.props.onSubmitEditing}
-                  blurOnSubmit={this.props.blurOnSubmit}
-                  maxLength={this.props.maxLength}
-                  secureTextEntry={
-                    this.state.showPassword ? this.props.secureTextEntry : false
-                  }
-                  // onChangeText={text => {
-                  //   const lastDigit = text[text.length - 1];
-                  //   this.setState({
-                  //     nameInput: this.state.nameInput.concat( '*'),
-                  //   });
-                  // }}
-                  //   onKeyPress={({ nativeEvent }) => {
-                  //     alert(nativeEvent.key)
-                  //     // nativeEvent.key in KeyCodes ? this.setState({ nameInput: KeyCodes.q }) : null
-                  // }}
-                  onChangeText={(text: any) => this.onTextChange(text)}
+              {
+                // this.state.showPassword && this.props.secureTextEntry ?
+                <View
                   style={[
                     this.props.inputTextStyle,
+                    styles.textInputStyle,
+                    styles.textwrapStyle,
                     {
                       left: this.state.leftTextInput,
                     },
-                    styles.textInputStyle,
-                  ]}
-                  numberOfLines={1}
-                  onFocus={this.onFocus}
-                  multiline={false}
-                  value={this.state.nameInput}
-                  defaultValue={defaultValue}
-                  clearButtonMode={this.props.clearButtonMode}
-                  selectionColor={Colors.darkGray}
-                  spellCheck={false}
-                  onEndEditing={this.props.onEndEditing}
-                  underlineColorAndroid={Colors.transparent}
-                  onBlur={this.onBlur}
-                  ref={this.props.reference}
-                  autoFocus={this.props.autoFocus}
-                />
-                {/* <Animated.Text style={{ color: Colors.black, ...fontSize(19) }}>
+                  ]}>
+                  <TextInput
+                    returnKeyType={this.props.returnKeyType}
+                    keyboardType={
+                      this.props.keyboardType == 'numeric'
+                        ? 'numeric'
+                        : this.props.keyboardType == 'number-pad'
+                          ? 'number-pad'
+                          : this.props.keyboardType == 'email-address'
+                            ? 'email-address'
+                            : this.props.keyboardType == 'phone-pad'
+                              ? 'phone-pad'
+                              : 'ascii-capable'
+                    }
+                    placeholderTextColor={Colors.newTextColor}
+                    autoCapitalize={'none'}
+                    autoCorrect={false}
+                    placeholder={this.props.placeholder}
+                    onSubmitEditing={this.props.onSubmitEditing}
+                    blurOnSubmit={this.props.blurOnSubmit}
+                    maxLength={this.props.maxLength}
+                    secureTextEntry={
+                      this.state.showPassword ? this.props.secureTextEntry : false
+                    }
+                    // onChangeText={text => {
+                    //   const lastDigit = text[text.length - 1];
+                    //   this.setState({
+                    //     nameInput: this.state.nameInput.concat( '*'),
+                    //   });
+                    // }}
+                    //   onKeyPress={({ nativeEvent }) => {
+                    //     alert(nativeEvent.key)
+                    //     // nativeEvent.key in KeyCodes ? this.setState({ nameInput: KeyCodes.q }) : null
+                    // }}
+                    onChangeText={(text: any) => this.onTextChange(text)}
+                    style={[
+                      this.props.inputTextStyle,
+                      {
+                        left: this.state.leftTextInput,
+                      },
+                      styles.textInputStyle,
+                    ]}
+                    numberOfLines={1}
+                    onFocus={this.onFocus}
+                    multiline={false}
+                    value={this.state.nameInput}
+                    defaultValue={defaultValue}
+                    clearButtonMode={this.props.clearButtonMode}
+                    selectionColor={Colors.darkGray}
+                    spellCheck={false}
+                    onEndEditing={this.props.onEndEditing}
+                    underlineColorAndroid={Colors.transparent}
+                    onBlur={this.onBlur}
+                    ref={this.props.reference}
+                    autoFocus={this.props.autoFocus}
+                  />
+                  {/* <Animated.Text style={{ color: Colors.black, ...fontSize(19) }}>
                     {value.replace(/./g, "*")}
                   </Animated.Text> */}
-              </View>
-              // :
-            }
-          </View>
+                </View>
+                // :
+              }
+            </View>
 
-          {this.props.secureTextEntry ? (
-            this.props.passwordToggle ? (
-              <View
-                style={[
-                  styles.passwordToggleContainer,
-                  this.props.secureTextEntry
-                    ? {width: '10%', position: 'absolute', right: 5, top: 5}
-                    : {width: 0},
-                ]}>
+            {this.props.secureTextEntry ? (
+              this.props.passwordToggle ? (
+                <View
+                  style={[
+                    styles.passwordToggleContainer,
+                    this.props.secureTextEntry
+                      ? { width: '10%', position: 'absolute', right: 5, top: 5 }
+                      : { width: 0 },
+                  ]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ showPassword: !this.state.showPassword });
+                    }}
+                    style={styles.visiblalityButtonContainer}>
+                    <Image
+                      // style={styles.imageStyle}
+                      source={this.state.showPassword ? eyeoff : eye}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ) : this.state.showClearImage ? (
                 <TouchableOpacity
-                  onPress={() => {
-                    this.setState({showPassword: !this.state.showPassword});
-                  }}
-                  style={styles.visiblalityButtonContainer}>
+                  onPress={this.props.onPressClear}
+                  style={[
+                    styles.crossContainer,
+                    this.props.secureTextEntry
+                      ? styles.secureTextView
+                      : styles.width0,
+                  ]}>
                   <Image
-                    // style={styles.imageStyle}
-                    source={this.state.showPassword ? eyeoff : eye}
+                    source={require('../../../images/cross/cross_icon.png')}
+                    style={styles.crossImageStyle}
                   />
                 </TouchableOpacity>
-              </View>
-            ) : this.state.showClearImage ? (
-              <TouchableOpacity
-                onPress={this.props.onPressClear}
-                style={[
-                  styles.crossContainer,
-                  this.props.secureTextEntry
-                    ? styles.secureTextView
-                    : styles.width0,
-                ]}>
-                <Image
-                  source={require('../../../images/cross/cross_icon.png')}
-                  style={styles.crossImageStyle}
-                />
-              </TouchableOpacity>
-            ) : null
-          ) : null}
-          {/* </Animated.View> */}
-        </View>
+              ) : null
+            ) : null}
+            {/* </Animated.View> */}
+          </View>
 
-        {/* {this.state.showPasswordStrength && (
+          {/* {this.state.showPasswordStrength && (
           <View style={styles.marginLeftImg}>
             <View style={styles.passwordStrengthContainer}>
               {Array(this.state.passwordStrength)
@@ -361,21 +362,28 @@ export default class TextField extends React.Component<Props, State> {
           </View>
         )} */}
 
-        <Animated.View
-          style={[
-            styles.animatedViewStyle,
-            {
-              height: this.props.animatedViewHeight,
-              opacity: this.state.opacity,
-            },
-          ]}>
-          <View style={styles.minWidth}>
-            <Text style={styles.errorTextStyle}>
-              {`*${this.props.errorMessage}`}
-            </Text>
-          </View>
-        </Animated.View>
-      </View>
+        </View>
+        {
+          this.props.errorMessage ?
+            <Animated.View
+              style={[
+                styles.animatedViewStyle,
+                {
+                  height: this.props.animatedViewHeight,
+                  opacity: this.state.opacity,
+                },
+              ]}>
+              <View style={styles.minWidth}>
+                <Text style={styles.errorTextStyle}>
+                  {`*${this.props.errorMessage}`}
+                </Text>
+              </View>
+            </Animated.View>
+            :
+            null
+        }
+
+      </>
     );
   }
 }

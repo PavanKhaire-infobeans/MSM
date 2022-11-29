@@ -23,7 +23,7 @@ import {
 import { GetInstances } from './reducer';
 //@ts-ignore
 import LinearGradient from 'react-native-linear-gradient';
-import { apple, google, loginBack, Rectangle } from '../../../app/images';
+import { apple, arrowRightCircle, google, loginBack, Rectangle } from '../../../app/images';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MessageDialogue from '../../common/component/messageDialogue';
 import BottomDrawer from '../../common/component/rn-bottom-drawer';
@@ -269,7 +269,7 @@ class Prologue extends Component<Props> {
   onRegFinalCallBack = (msg: any) => {
     this.setState({ isRegistrationOpen: false }, () => {
       loginDrawerRef.refDrawer.expand();
-     //ToastMessage(msg, Colors.ThemeColor, false, true);
+      //ToastMessage(msg, Colors.ThemeColor, false, true);
     });
   };
 
@@ -382,11 +382,11 @@ class Prologue extends Component<Props> {
                         bottomPicker={(isVisible: any) =>
                           this.bottomPicker(isVisible)
                         }
-                        showLoader={()=>{
+                        showLoader={() => {
                           this.props.showLoader(true);
                           this.props.loaderText('Loading...');
                         }}
-                        hideLoader={()=>{
+                        hideLoader={() => {
                           this.props.showLoader(false);
                           this.props.loaderText('Loading...');
                         }}
@@ -402,7 +402,8 @@ class Prologue extends Component<Props> {
                           Ready to start reminiscing?
                         </Text>
                       </View>
-                      <View style={Styles.separatorHeightStyle16} />
+                      <View style={Styles.separatorHeightStyle24} />
+                      <View style={Styles.separatorHeightStyle24} />
 
                       <View style={Styles.prologSubContainerStyle}>
                         {Platform.OS == 'ios' &&
@@ -428,7 +429,7 @@ class Prologue extends Component<Props> {
                               </View>
                             </TouchableHighlight>
                           )}
-                        <View style={Styles.separatorHeightStyle32} />
+                        <View style={Styles.separatorHeightStyle24} />
 
                         <TouchableHighlight
                           underlayColor={'#ffffff00'}
@@ -450,17 +451,21 @@ class Prologue extends Component<Props> {
                           </View>
                         </TouchableHighlight>
 
-                        <View style={Styles.separatorHeightStyle32} />
+                        <View style={Styles.separatorHeightStyle24} />
                         <View style={Styles.orContainer}>
+                          <View style={Styles.orLineStyle} />
+
                           <Text
                             style={[
                               CommonTextStyles.fontWeight400Size19Inter,
                               Styles.ssoTextStyle,
+                              { color: Colors.bordercolor }
                             ]}>
                             or
                           </Text>
+                          <View style={Styles.orLineStyle} />
                         </View>
-                        <View style={Styles.separatorHeightStyle32} />
+                        <View style={Styles.separatorHeightStyle24} />
 
                         <TouchableHighlight
                           underlayColor={'#ffffff00'}
@@ -468,7 +473,7 @@ class Prologue extends Component<Props> {
                           <View
                             style={[
                               Styles.loginSSOButtonStyle,
-                              { backgroundColor: Colors.decadeFilterBorder },
+                              { backgroundColor: Colors.bordercolor },
                             ]}>
                             {/* <Image source={icon_mail} style={{ height: 14, width: 20, resizeMode: "cover", tintColor: "#5c5c5c" }} /> */}
                             <Text
@@ -477,15 +482,16 @@ class Prologue extends Component<Props> {
                                 Styles.ssoTextStyle,
                                 { color: Colors.white },
                               ]}>
-                              Create an account
+                              Sign up
                             </Text>
+                            <Image source={arrowRightCircle} />
                           </View>
                         </TouchableHighlight>
 
                         {/* <TouchableHighlight underlayColor={"#ffffff00"} style={{ padding: 16, justifyContent: "center", alignItems: "center" }} onPress={() => { Actions.push("commonWebView", { url: "https://mystoriesmatter.com/content/end-user-license-agreement?no_header=1", title: "Terms and Conditions" }) }}>
 													<Text style={{ marginLeft: 10, textAlign: "center", color: Colors.TextColor, fontWeight: Platform.OS === "ios" ? '600' : 'bold', ...fontSize(14) }}>By Signing up,  I agree to the <Text style={{ fontWeight: '500', textDecorationLine: 'underline' }}>Terms and Conditions</Text> </Text>
 												</TouchableHighlight> */}
-                        <View style={Styles.separatorHeightStyle32} />
+                        <View style={Styles.separatorHeightStyle24} />
 
                         <TouchableWithoutFeedback
                           onPress={() => {
@@ -496,34 +502,40 @@ class Prologue extends Component<Props> {
                           }}>
                           <View
                             style={[
-                              Styles.loginSSOButtonStyle,
+                              // Styles.loginSSOButtonStyle,
                               Styles.loginContainer,
                             ]}>
                             <Text
                               style={[
-                                CommonTextStyles.fontWeight400Size19Inter,
+                                CommonTextStyles.fontWeight500Size15Inter,
                                 Styles.ssoTextStyle,
                               ]}>
-                              Login
+                              Already have an account?
+                              <Text
+                                style={[
+                                  CommonTextStyles.fontWeight500Size15Inter,
+                                  Styles.ssoTextStyle,
+                                  { color: Colors.loginTextColor },
+                                ]}>
+                                {`  `}
+                              </Text>
+                              <Text
+                                style={[
+                                  CommonTextStyles.fontWeight500Size15Inter,
+                                  Styles.ssoTextStyle,
+                                  { color: Colors.loginTextColor , textDecorationLine:'underline'},
+                                ]}>
+                                {`Login`}
+                              </Text>
                             </Text>
+
                           </View>
                         </TouchableWithoutFeedback>
                       </View>
-                      {/* <TouchableHighlight underlayColor={"#ffffff00"} style={{flex: 1, padding: 16}} onPress={()=> this.joinPressed()}>							
-							<View style={{flex : 1, backgroundColor : "#fff", borderRadius: 8, alignItems: "center", justifyContent: "center"}}> 
-								<Text style={{padding: 16, fontWeight: 'bold', ...fontSize(22), color: Colors.ThemeLight}}>Sign up for free</Text>
-							</View>
-						</TouchableHighlight>
-						<TouchableHighlight underlayColor={"#ffffff00"} style={{flex: 1, padding: 16}} onPress={()=>loginDrawerRef.refDrawer.expand()}>							 */}
-                      {/* <TouchableHighlight underlayColor={"#ffffff00"} style={{flex: 1, padding: 16}} onPress={()=>{EventManager.callBack(kRegSignUp, loginType.googleLogin)}}>							 */}
-                      {/* <View style={{flex : 1, backgroundColor : "#fff", borderRadius: 8, alignItems: "center", justifyContent: "center"}}> 
-								<Text style={{padding: 16, fontWeight: 'bold', ...fontSize(22), color: Colors.ThemeLight}}>Login</Text>
-							</View>
-						</TouchableHighlight> */}
-
-                      {/* <TouchableHighlight underlayColor={"#ffffff00"} style={{width: "100%", marginTop: -10, padding: 16, justifyContent: "center", alignItems: "center"}} onPress={()=>loginDrawerRef.refDrawer.expand()}>														
-								<Text style={{padding: 16, fontWeight: 'bold', ...fontSize(16), color: "#ffffff", textDecorationLine: 'underline'}}>Already a member, continue to Login</Text>							
-						</TouchableHighlight> */}
+                     
+                      <View style={Styles.lastContainer}>
+                        
+                      </View>
                     </View>
                   )}
                 </View>

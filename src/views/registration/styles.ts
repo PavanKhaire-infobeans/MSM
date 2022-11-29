@@ -20,7 +20,14 @@ const Styles = EStyleSheet.create({
   },
   orContainer: {
     width: '100%',
-    alignItems: 'center'
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  orLineStyle:{ 
+    height: 1, 
+    width: '42%', 
+    backgroundColor: '#4C5367' 
   },
   getFormEntityStyle: {
     flexDirection: "column",
@@ -48,9 +55,14 @@ const Styles = EStyleSheet.create({
     flex: 1,
   },
   loginContainer: {
-    borderColor: Colors.bordercolor,
-    borderWidth: 1,
-    backgroundColor: Colors.transparent
+    // borderColor: Colors.bordercolor,
+    // borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.transparent,
+    width: '100%',
+    paddingHorizontal: 24,
+    flexDirection: 'row',
   },
   name: {
     fontStyle: 'normal',
@@ -298,12 +310,12 @@ const Styles = EStyleSheet.create({
   },
   loginSSOButtonStyle: {
     width: '100%',
-    height: 56,
+    height: 48,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: 'center',
     flexDirection: "row",
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     borderRadius: 1000,
     backgroundColor: Colors.white
   },
@@ -333,16 +345,23 @@ const Styles = EStyleSheet.create({
     height: 400
   },
   ReadyContainer: {
-    height: Utility.getDeviceHeight() * 0.36,
+    height: Utility.getDeviceHeight() * 0.26,
     width: Utility.getDeviceWidth() - 48,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     marginLeft: 24,
     marginTop: 68
   },
+  lastContainer: {
+    height: Utility.getDeviceHeight() * 0.1,
+    width: Utility.getDeviceWidth() - 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 24,
+  },
   readyText: {
     fontWeight: '500',
-    ...fontSize(31),
+    ...fontSize(36),
     lineHeight: 45,
     fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium,
     color: Colors.bordercolor,
@@ -353,14 +372,17 @@ const Styles = EStyleSheet.create({
     marginLeft: 24
   },
   ssoTextStyle: {
-    marginLeft: 8,
-    color: Colors.newDescTextColor
+    marginHorizontal: 12,
+    color: Colors.newTextColor
   },
   separatorHeightStyle16: {
     height: 16,
   },
   separatorHeightStyle32: {
     height: 32,
+  },
+  separatorHeightStyle24: {
+    height: 24,
   }
 
 });

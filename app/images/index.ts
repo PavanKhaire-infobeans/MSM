@@ -64,3 +64,6 @@ export const backArrow = require('./write/backArrow.png');
 export const penEdit = require('./write/pen.png');
 export const eye = require('./auth/eye.png');
 export const eyeoff = require('./auth/eyeoff.png');
+export const checkbox_tick = require('./auth/checkbox_tick.png');
+export const checkbox = require('./auth/checkbox.png');
+export const send = require('./auth/send.png');
