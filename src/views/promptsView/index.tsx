@@ -75,8 +75,7 @@ class PromptsView extends React.Component<State, Props> {
       kPromptsList,
       (fetched?: boolean, ifLoadMore?: boolean, fetchPromptsList?: any) => {
         if (fetched) {
-          // showConsoleLog(ConsoleType.LOG,"data: ",JSON.stringify(fetchPromptsList))
-
+         
           debugger;
           let values: {
             id: string;

@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    backgroundColor: Colors.timeLinebackground,
+    backgroundColor: Colors.white,
   },
   mainContainer:{ flex: 1 },
   innerContainer: {

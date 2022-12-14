@@ -51,6 +51,7 @@ export default class TextField extends React.Component<Props, State> {
     showStrength: false,
     inputFocused: false,
     nameInput: '',
+    onFocus:()=>{}
   };
   constructor(props: Props) {
     super(props);
@@ -142,6 +143,10 @@ export default class TextField extends React.Component<Props, State> {
     this.setState({
       inputFocused: true,
       showClearImage: this.props.value.length != 0,
+    },()=>{
+      if (this.props.onFocus) {
+        this.props.onFocus()
+      }
     });
   };
 

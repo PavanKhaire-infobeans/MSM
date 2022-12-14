@@ -259,7 +259,7 @@ const WriteTabs = props => {
           props.showLoader(false);
           props.loaderText('Loading...');
           //loaderHandler.hideLoader();
-         //ToastMessage(draftDetails);
+          //ToastMessage(draftDetails);
         }
       });
     } else {
@@ -280,7 +280,7 @@ const WriteTabs = props => {
     if (fetched) {
       props.sendMemoryActions({ nid, type, uid });
     } else {
-     //ToastMessage(responseMessage, Colors.ErrorColor);
+      //ToastMessage(responseMessage, Colors.ErrorColor);
     }
   };
 
@@ -325,7 +325,7 @@ const WriteTabs = props => {
     <View style={Styles.fullFlex}>
       {
         props.showLoaderValue ?
-          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue !=''? props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue != '' ? props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
           :
           null
       }
@@ -350,7 +350,13 @@ const WriteTabs = props => {
           <NewNavigationBar
             isWhite={true}
             title={props.filterName ? props.filterName : TabItems.AllMemories}
-            showRight={false}
+            showRight={currentIndex === 2 ? true : false}
+            showRightText={'Topics'}
+            showJumpto={()=>{
+              props.navigation.navigate('topicsFilter', {
+                // categories: state.categoriesArray,
+              })
+            }}
           />
 
           <StatusBar

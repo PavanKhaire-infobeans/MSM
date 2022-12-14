@@ -68,10 +68,109 @@ export default class TopicsFilter extends React.Component<State, Props> {
     filterAdded = false;
   }
 
-  applyFilters() {
+  applyFilters = ()=> {
     if (filterAdded) {
       //loaderHandler.showLoader();
-      GetPrompts(this.state.filteredTopics, false, 0);
+      GetPrompts(this.state.filteredTopics, false, 0,
+        response =>{
+          let fetched = response.fetched, ifLoadMore = response.ifLoadMore, fetchPromptsList = response.fetchPromptsList;
+            // if (fetched) {
+    
+            //   let values: {
+            //     id: string;
+            //     desc: any;
+            //     prompt_category?: any;
+            //     prompt_image?: any;
+            //   }[] = [];
+            //   // this.setState({
+            //   //   loadMore: fetchPromptsList.load_more,
+            //   //   categoriesArray: fetchPromptsList.prompt_categories
+            //   // });
+            //   if (
+            //     fetchPromptsList.prompt_categories &&
+            //     Object.keys(fetchPromptsList.prompt_categories).length
+            //   ) {
+            //     promptCategoriesArray = Object.values(
+            //       fetchPromptsList.prompt_categories,
+            //     );
+            //   }
+    
+            //   promptList = fetchPromptsList.memory_prompt_data;
+            //   // this.setState({ offsetVal: fetchPromptsList.prompt_offset, prompt_count: fetchPromptsList.prompt_count });
+            //   let promptWithCategory: any[] =
+            //       fetchPromptsList.memory_prompt_data_detail,
+            //     promptWithCategoryValues: any = [];
+    
+            //   if (promptWithCategory && promptWithCategory.length) {
+            //     // promptWithCategoryValues = Object.values(fetchPromptsList.memory_prompt_data_detail);
+    
+            //     promptWithCategory.forEach((element, index) => {
+            //       let categoriesArray: any = [];
+    
+            //       for (var key in element) {
+            //         if (
+            //           element[key]['prompt_category'] &&
+            //           element[key]['prompt_category'].length
+            //         ) {
+            //           element[key]['prompt_category'].forEach(promptCategory => {
+            //             let selectedCategory = promptCategoriesArray.filter(
+            //               item => item.value == promptCategory,
+            //             );
+            //             if (selectedCategory.length) {
+            //               categoriesArray = [
+            //                 ...categoriesArray,
+            //                 ...selectedCategory,
+            //               ];
+            //             }
+            //           });
+            //         }
+            //         values.push({
+            //           id: key,
+            //           desc: element[key]['title'],
+            //           prompt_category: categoriesArray,
+            //           prompt_image: element[key]['prompt_image'],
+            //         });
+            //       }
+            //     });
+            //   }
+            //   // showConsoleLog(ConsoleType.LOG,"data >> ", JSON.stringify(values));
+    
+            //   // promptList.forEach(element => {
+            //   //   for (var key in element) {
+            //   //     values.push({ id: key, desc: element[key] });
+            //   //   }
+            //   // });
+    
+            //   if (ifLoadMore) {
+            //     this.setState({
+            //       items: this.state.items.concat(values),
+            //       loadMore: fetchPromptsList.load_more,
+            //       categoriesArray: fetchPromptsList.prompt_categories,
+            //       offsetVal: fetchPromptsList.prompt_offset,
+            //       prompt_count: fetchPromptsList.prompt_count,
+            //     });
+            //   } else {
+            //     this.setState({
+            //       items: values,
+            //       loadMore: fetchPromptsList.load_more,
+            //       categoriesArray: fetchPromptsList.prompt_categories,
+            //       offsetVal: fetchPromptsList.prompt_offset,
+            //       prompt_count: fetchPromptsList.prompt_count,
+            //     });
+            //   }
+            //   this.setState({loading: false}, () => {
+            //     //loaderHandler.hideLoader()
+            //     this.props.showLoader(false);
+            //     this.props.loaderText('Loading...');
+            //   });
+            // } else {
+            //   this.setState({loading: false}, () => {
+            //     //loaderHandler.hideLoader()
+            //     this.props.showLoader(false);
+            //     this.props.loaderText('Loading...');
+            //   });
+            // }
+        });
       // this.setState({});
       EventManager.callBack('scrollFlatlist');
       this.props.navigation.goBack();

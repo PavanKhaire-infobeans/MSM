@@ -33,6 +33,7 @@ export type Props = {
   isCuebackRegistration?: boolean;
   showStrength?: boolean;
   keyBoardHeight?: (e: number) => void;
+  onFocus?: () => void;
 };
 
 export type State = {

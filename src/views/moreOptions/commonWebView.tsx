@@ -15,12 +15,10 @@ export default class CommonWebView extends React.Component<Props> {
     super(props);
   }
 
-  componentDidMount() {}
-
   renderLoader = () => {
     return (
       <ActivityIndicator
-        color={Colors.NewThemeColor}
+        color={Colors.newTextColor}
         size="large"
         style={Styles.activityIndicatorStyle}
       />
@@ -41,7 +39,7 @@ export default class CommonWebView extends React.Component<Props> {
             <WebView
               useWebKit={true}
               ref={ref => (this._webView = ref)}
-              source={{uri: this.props.url}}
+              source={{uri: this.props.route?.params?.url || this.props.url}}
               javaScriptEnabled={true}
               domStorageEnabled={true}
               renderLoading={this.renderLoader}
@@ -56,10 +54,11 @@ export default class CommonWebView extends React.Component<Props> {
               <NavigationHeaderSafeArea
                 backgroundColor={Colors.NewThemeColor}
                 hideClose={false}
-                heading={this.props.title}
+                rightIcon={false}
+                heading={this.props.route.params.title || this.props.title}
                 cancelAction={() => {
                   Keyboard.dismiss();
-                  if (this.props.deepLinkBackClick) {
+                  if (this.props.route.params.deepLinkBackClick || this.props.deepLinkBackClick) {
                     this.props.navigation.navigate('dashBoard');
                   } else {
                     this.props.navigation.goBack();

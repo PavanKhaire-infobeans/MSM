@@ -26,7 +26,7 @@ const options = {
 class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
   messageRef: any | MessageDialogue = null;
   static defaultProps = {
-    showRightText: true,
+    showRightText: false,
   };
   _renderLeft() {
     return (
@@ -195,8 +195,10 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
                 {this._renderLeft()}
                 {this._renderMiddle()}
               </View>
-              {(this.props.showRightText || this.props.rightIcon) &&
-                this._renderRight()}
+              {(this.props.showRightText || this.props.rightIcon) ?
+                this._renderRight()
+              :
+              null}
             </View>
           )}
         <MessageDialogue ref={ref => (this.messageRef = ref)} />

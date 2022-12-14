@@ -20,10 +20,10 @@ const Styles = EStyleSheet.create({
     },
     cancleText: {
         color: Colors.newDescTextColor,
-        fontSize: 16,
+        ...fontSize(16),
         width: '100%',
         textAlign: 'center',
-        fontWeight: '500',
+        fontWeight: '400',
         fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
         lineHeight: 16
     },

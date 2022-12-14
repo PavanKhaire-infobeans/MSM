@@ -18,6 +18,50 @@ const Styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  LoginHeader:{ 
+    width: Utility.getDeviceWidth() - 48, 
+    flexDirection: 'row', 
+    alignSelf: 'center',
+    marginTop: 24
+  },
+  termHeader:{ 
+    width: Utility.getDeviceWidth() - 48, 
+    flexDirection: 'row', 
+    alignSelf: 'center',
+    marginTop: 12
+  },
+  hederText:{ 
+    fontWeight: '500', 
+    ...fontSize(36), 
+    lineHeight: 45, 
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium, 
+    color: Colors.black, 
+    textAlign: 'left' 
+  },
+  whoTextStyle:{ 
+    fontWeight: '600', 
+    ...fontSize(22), 
+    lineHeight: 27.5, 
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraSemiBold, 
+    color: Colors.bordercolor, 
+    textAlign: 'left' 
+  },
+  whoTextDescStyle:{ 
+    fontWeight: '400', 
+    ...fontSize(19), 
+    lineHeight: 23.75, 
+    fontFamily: fontFamily.Inter, 
+    color: Colors.newDescTextColor, 
+    textAlign: 'left' ,
+  },
+  termStyle:{ 
+    fontWeight: '500', 
+    ...fontSize(13), 
+    lineHeight: 17.5, 
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium, 
+    color: Colors.newTextColor, 
+    textAlign: 'center' 
+  },
   orContainer: {
     width: '100%',
     flexDirection: 'row',
@@ -46,6 +90,10 @@ const Styles = EStyleSheet.create({
   inputLableStyle: {
     marginLeft: 8,
     marginBottom: 4,
+    color: Colors.newTextColor
+  },
+  whyinputLableStyle: {
+    textAlign:'right',
     color: Colors.newTextColor
   },
   innerContainer: {

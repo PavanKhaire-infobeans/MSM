@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import Text from '../../../src/common/component/Text';
 import {close_white} from '../../../src/images';
 
-import { jumptocalendar, user } from '../../images';
+import { jumptocalendar, user, grid } from '../../images';
 //@ts-ignore
 import {connect} from 'react-redux';
 import {kNotificationIndicator} from '../../../src/common/component/TabBarIcons';
@@ -120,7 +120,7 @@ const NavigationBar = (props: Props) => {
               testID={testID.rightButtons.mindpop}>
               <View style={styles.rightButtonsTouchable}>
                 <Image
-                  source={jumptocalendar}
+                  source={grid}
                   resizeMode="contain"
                 />
                 <View style={styles.height4} />
@@ -149,6 +149,7 @@ const NavigationBar = (props: Props) => {
     ? props.showClose
     : false;
   let isPublicInstance: any = Account.selectedData().is_public_site;
+
   return (
     <View
       style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
@@ -200,7 +201,7 @@ const mapState = (state: { [x: string]: any }) => ({
 const mapDispatch = (dispatch: Function) => {
   return {
     addNotificationItem: (payload: any) => dispatch({ type: AddNewNotification, payload: payload }),
-    showJumpto: (payload: any) => dispatch({ type: JUMP_TO_VIEW_SHOW, payload: payload }),
+    // showJumpto: (payload: any) => dispatch({ type: JUMP_TO_VIEW_SHOW, payload: payload }),
   };
 };
 

@@ -10,6 +10,7 @@ import {
   ScrollView,
   StatusBar,
   TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -81,11 +82,7 @@ export default class RegFirstStep extends Component<Props> {
       this.navBar = this.props.navBar;
     }
     this.form = this.props.formList;
-    showConsoleLog(
-      ConsoleType.LOG,
-      'registrationFormData this.props.: ',
-      JSON.stringify(this.props.formList),
-    );
+
   }
 
   keyboardDidShowListener;
@@ -283,6 +280,8 @@ export default class RegFirstStep extends Component<Props> {
                   marginTop: form.label.toLowerCase().includes('year')
                     ? 0
                     : -10,
+                  flexDirection: (form?.label?.toLowerCase() == 'first name' || form?.label?.toLowerCase() == 'last name') ? 'row' : 'column'
+
                 },
               ]}>
               {form.form.map((form: FormStruct, index: number) => {
@@ -293,6 +292,7 @@ export default class RegFirstStep extends Component<Props> {
                   parentType,
                 });
               })}
+
             </View>
           </View>
         );
@@ -374,7 +374,7 @@ export default class RegFirstStep extends Component<Props> {
     // 	return <DropDown isCuebackRegistration={this.props.isCuebackRegistration} key={form.field_name} placeholderText={form.label} {...extra} onOptionSelected={this.onOptionSelection(form)} />
     // }
     var txtF = (
-      <View>
+      <View style={{ width: form.label.toLowerCase() == 'first name' ? '95%' : '100%' }}>
         <Text style={Styles.inputLableStyle}>{form.text.toUpperCase()}</Text>
         <TextField
           key={form.field_name}
@@ -386,8 +386,17 @@ export default class RegFirstStep extends Component<Props> {
             };
           }}
           showStrength={form.field_name == 'password'}
-          placeholder={form?.text ? form?.text + '...' : form?.label + '...'}
+          placeholder={form.label.toLowerCase() == 'first name' ? 'William' : form.label.toLowerCase() == 'last name' ? 'Shakespeare' : form?.text?.toLowerCase() == 'email address' ? 'bill.shakespeare@exmaple.com' : form.label == 'Year' ? '1564' : form?.text ? form?.text + '...' : form?.label + '...'}
           {...extra}
+          onFocus={() => {
+            if (form.text == 'Birth year') {
+              this.regScroll.scrollTo({
+                x: 0,
+                y: 200,
+                animated: true,
+              });
+            }
+          }}
           returnKeyType={isLast ? 'done' : 'next'}
           onChange={(text: string) => {
             this.setState({
@@ -419,8 +428,21 @@ export default class RegFirstStep extends Component<Props> {
             );
           }}
         />
+        <View style={Styles.separatorHeightStyle24} >
+          {
+            form.label == 'Year' ?
+              <TouchableHighlight underlayColor={Colors.white} onPress={() => {
+                this.props.whyDoAskView(true);
+              }}>
+                <Text style={Styles.whyinputLableStyle}>{`Why do we ask this?`}</Text>
+              </TouchableHighlight>
+              :
+              null
+          }
+        </View>
       </View>
     );
+
     return txtF;
   }
 
@@ -466,6 +488,7 @@ export default class RegFirstStep extends Component<Props> {
           this.bottomPicker.current.showPicker();
       },
     );
+
   };
 
   showErrorMessage = (show: boolean, message?: string) => {
@@ -481,6 +504,250 @@ export default class RegFirstStep extends Component<Props> {
     }, 5000);
     this.setState({ errorHeight: height });
   };
+
+  validateFields = () => {
+    Keyboard.dismiss();
+    if (this.state.regFirstStep) {
+      var submitForm: any = {};
+      for (let frm of this.form) {
+        let parentKey = 'personalInfo';
+        var frmEnt: any = {};
+
+        if (frm.field_name == 'emailAddress') {
+          parentKey = 'authorizationInfo';
+          submitForm = {
+            ...submitForm,
+            [parentKey]: {
+              ...(submitForm[parentKey] || {}),
+              [frm.field_name]: this.state[frm.field_name],
+            },
+          };
+        } else {
+          if (frm.type.indexOf('sub') !== -1) {
+            let main = frm.form[0];
+            if (
+              frm.type == 'sub-single' &&
+              this.state[main.field_name]
+            ) {
+              frmEnt = {
+                ...frmEnt,
+                value: this.state[main.field_name],
+                value2: parseInt(this.state[main.field_name]) + 4,
+              };
+            } else {
+              for (let fiTm of frm.form) {
+                if (this.state[fiTm.field_name]) {
+                  frmEnt = {
+                    ...frmEnt,
+                    [fiTm.field_name.replace('default_', '')]:
+                      this.state[fiTm.field_name],
+                  };
+                }
+              }
+            }
+            if (Object.keys(frmEnt).length > 0) {
+              frmEnt = {
+                ...frmEnt,
+                module: main.module,
+                type: main.type,
+              };
+            }
+          } else {
+            let value = this.state[frm.field_name];
+            if (frm.type == 'options_select') {
+              value = {
+                [value]: frm.values[value],
+              };
+            }
+            if (this.state[frm.field_name]) {
+              frmEnt = {
+                ...frmEnt,
+                module: frm.module,
+                type: frm.type,
+                value,
+              };
+            }
+          }
+          submitForm = {
+            ...submitForm,
+            [parentKey]: {
+              ...(submitForm[parentKey] || {}),
+              [frm.field_name]: frmEnt,
+            },
+          };
+        }
+      }
+
+      var error = {};
+      for (let key in submitForm) {
+        if (key == 'authorizationInfo') {
+          let sbForm = submitForm[key];
+          for (let sKey in sbForm) {
+            if (
+              typeof sbForm[sKey] == 'undefined' ||
+              (typeof sbForm[sKey] == 'string' &&
+                sbForm[sKey].length == 0)
+            ) {
+              var message = `Please enter text`;
+              if (sKey == 'emailAddress') {
+                message = 'Please enter your Email';
+              }
+              error = { ...error, [sKey]: { error: true, message } };
+            } else {
+              if (sKey == 'emailAddress') {
+                let email = sbForm[sKey];
+                if (!testEmail(email)) {
+                  error = {
+                    ...error,
+                    [sKey]: {
+                      error: true,
+                      message: 'Please enter a valid Email',
+                    },
+                  };
+                }
+              }
+            }
+          }
+        }
+        else {
+          let sbForm = submitForm[key];
+          for (let sKey in sbForm) {
+            let frmItem = this.form.find(it => it.field_name == sKey);
+            if (frmItem.type.indexOf('sub') == 0) {
+              for (let fitm of frmItem.form) {
+                if (
+                  typeof sbForm[sKey] == 'undefined' ||
+                  (typeof sbForm[sKey] == 'object' &&
+                    Object.keys(sbForm[sKey]).length == 0)
+                ) {
+                  error = {
+                    ...error,
+                    [fitm.field_name]: {
+                      error: true,
+                      message: `Please select ${fitm.label}${fitm.module == 'date' && fitm.label != 'Year'
+                        ? ' year'
+                        : ''
+                        }`,
+                    },
+                  };
+                } else {
+                  let keyVal = fitm.field_name.replace(
+                    'default_',
+                    '',
+                  );
+                  if (!getValue(sbForm, [sKey, keyVal])) {
+                    error = {
+                      ...error,
+                      [fitm.field_name]: {
+                        error: true,
+                        message: `Please enter ${fitm.label}${fitm.module == 'date' ? ' year' : ''
+                          }`,
+                      },
+                    };
+                  } else if (validBirthYear(sbForm[sKey][keyVal])) {
+                    error = {
+                      ...error,
+                      [fitm.field_name]: {
+                        error: true,
+                        message: `Please enter valid ${fitm.label}${fitm.module == 'date' ? ' year' : ''
+                          }`,
+                      },
+                    };
+                  }
+                }
+              }
+            } else if (
+              typeof sbForm[sKey] == 'undefined' ||
+              (typeof sbForm[sKey] == 'object' &&
+                Object.keys(sbForm[sKey]).length == 0)
+            ) {
+              // error = { ...error, [sKey]: { error: true, message: `Please enter ${frmItem.label}` } };
+
+              if (sKey == 'emailAddress') {
+                let email = sbForm[sKey];
+                if (!testEmail(email)) {
+                  error = {
+                    ...error,
+                    [sKey]: {
+                      error: true,
+                      message: 'Please enter Email',
+                    },
+                  };
+                }
+              }
+              else if (
+                sKey == 'field_first_name' ||
+                sKey == 'field_last_name'
+              ) {
+                let text = getValue(sbForm, [sKey, 'value']);
+                let label = getValue(sbForm, [sKey, 'label']);
+                let onlyChars = /^[a-z|A-Z]*$/;
+                if (text == '' || text == undefined) {
+                  error = {
+                    ...error,
+                    [sKey]: {
+                      error: true,
+                      message: `Please enter ${frmItem['label']}`,
+                    },
+                  };
+                } else if (!onlyChars.test(text)) {
+                  error = {
+                    ...error,
+                    [sKey]: {
+                      error: true,
+                      message: 'Only characters are allowed',
+                    },
+                  };
+                }
+              }
+            } else {
+              if (
+                sKey == 'field_first_name' ||
+                sKey == 'field_last_name'
+              ) {
+                let text = getValue(sbForm, [sKey, 'value']);
+                let onlyChars = /^[a-z|A-Z]*$/;
+                if (text == '') {
+                  error = {
+                    ...error,
+                    [sKey]: {
+                      error: true,
+                      message: `Please enter ${sbForm[sKey]['label']}`,
+                    },
+                  };
+                } else if (!onlyChars.test(text)) {
+                  error = {
+                    ...error,
+                    [sKey]: {
+                      error: true,
+                      message: 'Only characters are allowed',
+                    },
+                  };
+                }
+              }
+            }
+          }
+        }
+      }
+
+      if (Object.keys(error).length > 0) {
+        this.showErrorMessage(
+          true,
+          'Please check the highlighted fields',
+        );
+        // ToastMessage();
+        this.setState({ error });
+        return;
+      } else
+        this.setState({
+          regFirstStep: false,
+          keyboardHeight: 0,
+        });
+    } else {
+      this.onSubmit();
+    }
+    this.regScroll.scrollTo({ x: 0, y: 0, animated: true });
+  }
 
   renderCueBackRegistertaion = () => {
     let formLength = this.form.length;
@@ -498,7 +765,7 @@ export default class RegFirstStep extends Component<Props> {
           sortedForm[1] = element;
           stepOne[1] = element;
         } else if (element.field_name == 'emailAddress') {
-          element.text = 'Email';
+          element.text = 'Email Address';
           sortedForm[2] = element;
           stepOne[2] = element;
         } else if (element.field_name == 'field_registration_date') {
@@ -524,7 +791,7 @@ export default class RegFirstStep extends Component<Props> {
       <View style={Styles.regFirstStepSubContainer}>
         <ScrollView
           // keyboardShouldPersistTaps="always"
-          showsVerticalScrollIndicator={true}
+          showsVerticalScrollIndicator={false}
           ref={ref => (this.regScroll = ref)}
         // style={{ width: "100%", paddingHorizontal: 24 }}
         // contentContainerStyle={{ width: "100%" }}
@@ -537,10 +804,21 @@ export default class RegFirstStep extends Component<Props> {
           <View style={Styles.formContainer}>
             {this.state.regFirstStep
               ? stepOne.map((form: FormStruct, index: number) => {
-                return this.getFormEntity(form, {
-                  fieldID: `${index}`,
-                  isLast: formLength - 1 == index,
-                });
+
+                // if (form.label.toLowerCase() == 'first name' || form.label.toLowerCase() == 'last name') {
+
+                // } else {
+
+                // }
+                return (
+                  <View style={{ flexDirection: (form.label.toLowerCase() == 'first name' || form.label.toLowerCase() == 'last name') ? 'row' : 'column', width: (form.label.toLowerCase() == 'first name' || form.label.toLowerCase() == 'last name') ? '50%' : '100%', position: (form.label.toLowerCase() == 'last name') ? 'absolute' : undefined, top: (form.label.toLowerCase() == 'last name') ? 0 : undefined, right: (form.label.toLowerCase() == 'last name') ? 0 : undefined }}>
+                    {
+                      this.getFormEntity(form, {
+                        fieldID: `${index}`,
+                        isLast: formLength - 1 == index,
+                      })
+                    }
+                  </View>);
               })
               : stepTwo.map((form: FormStruct, index: number) => {
                 return this.getFormEntity(form, {
@@ -560,230 +838,23 @@ export default class RegFirstStep extends Component<Props> {
             style={{
               height: this.state.regFirstStep
                 ? 130 - this.state.keyboardHeight
-                : 300 - this.state.keyboardHeight,
+                : 280 - this.state.keyboardHeight,
             }}
           />
           <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss();
-              if (this.state.regFirstStep) {
-                var submitForm: any = {};
-                for (let frm of this.form) {
-                  let parentKey = 'personalInfo';
-                  var frmEnt: any = {};
-
-                  if (frm.field_name == 'emailAddress') {
-                    parentKey = 'authorizationInfo';
-                    submitForm = {
-                      ...submitForm,
-                      [parentKey]: {
-                        ...(submitForm[parentKey] || {}),
-                        [frm.field_name]: this.state[frm.field_name],
-                      },
-                    };
-                  } else {
-                    if (frm.type.indexOf('sub') !== -1) {
-                      let main = frm.form[0];
-                      if (
-                        frm.type == 'sub-single' &&
-                        this.state[main.field_name]
-                      ) {
-                        frmEnt = {
-                          ...frmEnt,
-                          value: this.state[main.field_name],
-                          value2: parseInt(this.state[main.field_name]) + 4,
-                        };
-                      } else {
-                        for (let fiTm of frm.form) {
-                          if (this.state[fiTm.field_name]) {
-                            frmEnt = {
-                              ...frmEnt,
-                              [fiTm.field_name.replace('default_', '')]:
-                                this.state[fiTm.field_name],
-                            };
-                          }
-                        }
-                      }
-                      if (Object.keys(frmEnt).length > 0) {
-                        frmEnt = {
-                          ...frmEnt,
-                          module: main.module,
-                          type: main.type,
-                        };
-                      }
-                    } else {
-                      let value = this.state[frm.field_name];
-                      if (frm.type == 'options_select') {
-                        value = {
-                          [value]: frm.values[value],
-                        };
-                      }
-                      if (this.state[frm.field_name]) {
-                        frmEnt = {
-                          ...frmEnt,
-                          module: frm.module,
-                          type: frm.type,
-                          value,
-                        };
-                      }
-                    }
-                    submitForm = {
-                      ...submitForm,
-                      [parentKey]: {
-                        ...(submitForm[parentKey] || {}),
-                        [frm.field_name]: frmEnt,
-                      },
-                    };
-                  }
-                }
-
-                var error = {};
-                for (let key in submitForm) {
-                  if (key == 'authorizationInfo') {
-                    let sbForm = submitForm[key];
-                    for (let sKey in sbForm) {
-                      if (
-                        typeof sbForm[sKey] == 'undefined' ||
-                        (typeof sbForm[sKey] == 'string' &&
-                          sbForm[sKey].length == 0)
-                      ) {
-                        var message = `Please enter text`;
-                        if (sKey == 'emailAddress') {
-                          message = 'Please enter your Email';
-                        }
-                        error = { ...error, [sKey]: { error: true, message } };
-                      } else {
-                        if (sKey == 'emailAddress') {
-                          let email = sbForm[sKey];
-                          if (!testEmail(email)) {
-                            error = {
-                              ...error,
-                              [sKey]: {
-                                error: true,
-                                message: 'Please enter a valid Email',
-                              },
-                            };
-                          }
-                        }
-                      }
-                    }
-                  } else {
-                    let sbForm = submitForm[key];
-                    for (let sKey in sbForm) {
-                      let frmItem = this.form.find(it => it.field_name == sKey);
-                      if (frmItem.type.indexOf('sub') == 0) {
-                        for (let fitm of frmItem.form) {
-                          if (
-                            typeof sbForm[sKey] == 'undefined' ||
-                            (typeof sbForm[sKey] == 'object' &&
-                              Object.keys(sbForm[sKey]).length == 0)
-                          ) {
-                            error = {
-                              ...error,
-                              [fitm.field_name]: {
-                                error: true,
-                                message: `Please select ${fitm.label}${fitm.module == 'date' && fitm.label != 'Year'
-                                    ? ' year'
-                                    : ''
-                                  }`,
-                              },
-                            };
-                          } else {
-                            let keyVal = fitm.field_name.replace(
-                              'default_',
-                              '',
-                            );
-                            if (!getValue(sbForm, [sKey, keyVal])) {
-                              error = {
-                                ...error,
-                                [fitm.field_name]: {
-                                  error: true,
-                                  message: `Please enter ${fitm.label}${fitm.module == 'date' ? ' year' : ''
-                                    }`,
-                                },
-                              };
-                            } else if (validBirthYear(sbForm[sKey][keyVal])) {
-                              error = {
-                                ...error,
-                                [fitm.field_name]: {
-                                  error: true,
-                                  message: `Please enter valid ${fitm.label}${fitm.module == 'date' ? ' year' : ''
-                                    }`,
-                                },
-                              };
-                            }
-                          }
-                        }
-                      } else if (
-                        typeof sbForm[sKey] == 'undefined' ||
-                        (typeof sbForm[sKey] == 'object' &&
-                          Object.keys(sbForm[sKey]).length == 0)
-                      ) {
-                        // error = { ...error, [sKey]: { error: true, message: `Please enter ${frmItem.label}` } };
-                        if (sKey == 'emailAddress') {
-                          let email = sbForm[sKey];
-                          if (!testEmail(email)) {
-                            error = {
-                              ...error,
-                              [sKey]: {
-                                error: true,
-                                message: 'Please enter Email',
-                              },
-                            };
-                          }
-                        }
-                      } else {
-                        if (
-                          sKey == 'field_first_name' ||
-                          sKey == 'field_last_name'
-                        ) {
-                          let text = getValue(sbForm, [sKey, 'value']);
-                          let onlyChars = /^[a-z|A-Z]*$/;
-                          if (!onlyChars.test(text)) {
-                            error = {
-                              ...error,
-                              [sKey]: {
-                                error: true,
-                                message: 'Only characters are allowed',
-                              },
-                            };
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-
-                if (Object.keys(error).length > 0) {
-                  this.showErrorMessage(
-                    true,
-                    'Please check the highlighted fields',
-                  );
-                  // ToastMessage();
-                  this.setState({ error });
-                  return;
-                } else
-                  this.setState({
-                    regFirstStep: false,
-                    keyboardHeight: 0,
-                  });
-              } else {
-                this.onSubmit();
-              }
-              this.regScroll.scrollTo({ x: 0, y: 0, animated: true });
-            }}
-            disabled={
-              this.state.regFirstStep
-                ? this.state['field_first_name'] &&
-                  this.state['field_last_name'] &&
-                  this.state['emailAddress'] &&
-                  this.state['default_value']
-                  ? false
-                  : true
-                : this.state['password'] && this.state['repeat_password']
-                  ? false
-                  : true
-            }>
+            onPress={this.validateFields}
+          // disabled={
+          //   this.state.regFirstStep
+          //     ? this.state['field_first_name'] &&
+          //       this.state['field_last_name'] &&
+          //       this.state['emailAddress'] &&
+          //       this.state['default_value']
+          //       ? false
+          //       : true
+          //     : this.state['password'] && this.state['repeat_password']
+          //       ? false
+          //       : true}
+          >
             <View
               style={[
                 Styles.loginSSOButtonStyle,
@@ -794,12 +865,13 @@ export default class RegFirstStep extends Component<Props> {
                       this.state['field_last_name'] &&
                       this.state['emailAddress'] &&
                       this.state['default_value']
-                      ? Colors.decadeFilterBorder
-                      : Colors.newTextColor
+                      ? Colors.bordercolor
+                      : Colors.bordercolor
                     : this.state['password'] && this.state['repeat_password']
-                      ? Colors.decadeFilterBorder
-                      : Colors.newTextColor,
+                      ? Colors.bordercolor
+                      : Colors.bordercolor,
                   // opacity: this.state.regFirstStep ? (this.state["field_first_name"] && (this.state["field_last_name"]) && (this.state["emailAddress"]) && (this.state["default_value"])) ? 1: 0.5 : (this.state["password"] && (this.state["repeat_password"])) ? 1: 0.5,
+                  opacity: this.state.regFirstStep ? 1 : (this.state["password"] && (this.state["repeat_password"])) ? 1 : 0.5,
                   flexDirection: 'row',
                 },
               ]}>
@@ -813,6 +885,22 @@ export default class RegFirstStep extends Component<Props> {
               <Image source={arrowRightCircle} />
             </View>
           </TouchableWithoutFeedback>
+          {this.state.regFirstStep ?
+            null
+            :
+            <TouchableHighlight
+              underlayColor={"#ffffff00"}
+              onPress={() => { this.props.showTerms()}}
+            >
+              <View style={[Styles.termHeader, { margin: 0, justifyContent: 'center' }]} >
+                <Text style={Styles.termStyle}>
+                  By signing up, I agree to the <Text style={{ textDecorationLine: 'underline' }}>
+                    Terms and Conditions
+                  </Text>
+                </Text>
+              </View>
+            </TouchableHighlight>
+          }
 
           <View style={Styles.ScrollViewBottomView}></View>
           {/* <SubmitButton style={{backgroundColor: "#fff"}} text="Join" onPress={this.onSubmit} />									 */}
@@ -860,13 +948,6 @@ export default class RegFirstStep extends Component<Props> {
       ],
     });
 
-    const animStyle = {
-      transform: [
-        {
-          translateY: yVal,
-        },
-      ],
-    };
     return (
       <View style={{ flex: 1 }}>
         {this.props.isCuebackRegistration ? (
@@ -888,7 +969,7 @@ export default class RegFirstStep extends Component<Props> {
               />
               <View
                 style={{ height: this.state.errorHeight, width: '100%' }}></View>
-              <ScrollView
+              <View
                 keyboardShouldPersistTaps="always"
                 style={Styles.ScrollViewStyle}
                 contentContainerStyle={{ alignItems: 'center' }}
@@ -899,6 +980,7 @@ export default class RegFirstStep extends Component<Props> {
                     <Text style={Styles.RegistrationText}>Registration</Text>
                   </View>
                   {this.form.map((form: FormStruct, index: number) => {
+
                     return this.getFormEntity(form, {
                       fieldID: `${index}`,
                       isLast: formLength - 1 == index,
@@ -930,7 +1012,7 @@ export default class RegFirstStep extends Component<Props> {
                     </TouchableOpacity>
                   </View>
                 </View>
-              </ScrollView>
+              </View>
               {/* <BottomPicker
 								ref={this.bottomPicker}
 								onItemSelect={(selectedItem: ActionSheetItem) => {
@@ -1098,8 +1180,8 @@ export default class RegFirstStep extends Component<Props> {
                   [fitm.field_name]: {
                     error: true,
                     message: `Please select ${fitm.label}${fitm.module == 'date' && fitm.label != 'Year'
-                        ? ' year'
-                        : ''
+                      ? ' year'
+                      : ''
                       }`,
                   },
                 };
