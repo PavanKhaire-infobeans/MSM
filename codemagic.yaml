@@ -31,9 +31,9 @@ workflows:
           success: true # To not receive a notification when a build succeeds
           failure: false # To not receive a notification when a build fails
       firebase:
-        firebase_token: 1//0g-Pj2MPQ5L3DCgYIARAAGBASNwF-L9IrCX0STjGB7ZCuzOqG9zdSIu5K11uiD9DgV587tQel4n_RWshXggbyM3J_WQIr3fLPSFw
+        firebase_token: $FIREBASE_TOKEN
         android:
-          app_id: 1:1011028359687:android:7725ed6d40d77d76e2c8a2
+          app_id: $APP_ID
           groups:
             - android-testers
   react-native-ios:
