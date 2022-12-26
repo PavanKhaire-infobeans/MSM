@@ -154,32 +154,32 @@ export default class Utility {
 
   static dateObjectToDefaultFormat(completeDate: Date) {
     let formattedDate =
-      completeDate.getUTCFullYear() +
+      completeDate.getFullYear() +
       '-' +
-      (completeDate.getUTCMonth() + 1 > 9
-        ? completeDate.getUTCMonth() + 1
-        : '0' + (completeDate.getUTCMonth() + 1)) +
+      (completeDate.getMonth() + 1 > 9
+        ? completeDate.getMonth() + 1
+        : '0' + (completeDate.getMonth() + 1)) +
       '-' +
-      (completeDate.getUTCDate() > 9
-        ? completeDate.getUTCDate()
-        : '0' + completeDate.getUTCDate()) +
+      (completeDate.getDate() > 9
+        ? completeDate.getDate()
+        : '0' + completeDate.getDate()) +
       ' ' +
-      (completeDate.getUTCHours() > 9
-        ? completeDate.getUTCHours()
-        : '0' + completeDate.getUTCHours()) +
+      (completeDate.getHours() > 9
+        ? completeDate.getHours()
+        : '0' + completeDate.getHours()) +
       ':' +
-      (completeDate.getUTCMinutes() > 9
-        ? completeDate.getUTCMinutes()
-        : '0' + completeDate.getUTCMinutes()) +
+      (completeDate.getMinutes() > 9
+        ? completeDate.getMinutes()
+        : '0' + completeDate.getMinutes()) +
       ':' +
-      (completeDate.getUTCSeconds() > 9
-        ? completeDate.getUTCSeconds()
-        : '0' + completeDate.getUTCSeconds());
+      (completeDate.getSeconds() > 9
+        ? completeDate.getSeconds()
+        : '0' + completeDate.getSeconds());
     return formattedDate;
   }
   static dateObjectToDateAndTimeFormat(completeDate: Date) {
-    let hours = completeDate.getUTCHours();
-    let minutes = completeDate.getUTCMinutes();
+    let hours = completeDate.getHours();
+    let minutes = completeDate.getMinutes();
     var timeType = '';
     // Checking if the Hour is less than equals to 11 then Set the Time format as AM.
     if (hours <= 11) {
@@ -198,21 +198,21 @@ export default class Utility {
       hours = 12;
     }
     let formattedDate =
-      completeDate.getUTCFullYear() +
+      completeDate.getFullYear() +
       '-' +
-      (completeDate.getUTCMonth() + 1 > 9
-        ? completeDate.getUTCMonth() + 1
-        : '0' + (completeDate.getUTCMonth() + 1)) +
+      (completeDate.getMonth() + 1 > 9
+        ? completeDate.getMonth() + 1
+        : '0' + (completeDate.getMonth() + 1)) +
       '-' +
-      (completeDate.getUTCDate() > 9
-        ? completeDate.getUTCDate()
-        : '0' + completeDate.getUTCDate()) +
+      (completeDate.getDate() > 9
+        ? completeDate.getDate()
+        : '0' + completeDate.getDate()) +
       '  ' +
       (hours > 9 ? hours : '0' + hours) +
       ':' +
-      (completeDate.getUTCMinutes() > 9
-        ? completeDate.getUTCMinutes()
-        : '0' + completeDate.getUTCMinutes()) +
+      (completeDate.getMinutes() > 9
+        ? completeDate.getMinutes()
+        : '0' + completeDate.getMinutes()) +
       ' ' +
       timeType;
     return formattedDate;

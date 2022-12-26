@@ -473,7 +473,11 @@ class MemoryDrafts extends React.Component<Props, State> {
           );
         }
         memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
-        this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() });
+        this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() },()=>{
+        if(this.state.memoryDraftsArray.length === 0){
+          firstRender =false
+        }
+        });
       } else {
         if (page != 0) {
           page--;
@@ -497,6 +501,7 @@ class MemoryDrafts extends React.Component<Props, State> {
     loadingDataFromServer = false;
     // let memoryDraftDetails = response.data
     if (fetched) {
+      console.log("memoryDraftDetails >",JSON.stringify(memoryDraftDetails))
       if (this.state.isRefreshing) {
         memoryDraftsArray = [];
         this.setState({ memoryDraftsArray: [] })
@@ -513,13 +518,18 @@ class MemoryDrafts extends React.Component<Props, State> {
         );
       }
       memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
-      this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() });
+      this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() },()=>{
+        if (this.state.memoryDraftsArray.length === 0) {
+            firstRender = false;
+        }
+      });
     } else {
       if (page != 0) {
         page--;
       }
       if (this.state.memoryDraftsArray.length == 0) {
-       //ToastMessage(memoryDraftDetails, Colors.ErrorColor);
+        firstRender = false;
+        //ToastMessage(memoryDraftDetails, Colors.ErrorColor);
       }
     }
     this.setState({
@@ -613,6 +623,7 @@ class MemoryDrafts extends React.Component<Props, State> {
             draftType: type,
           },
           async () => {
+            firstRender = false
             if (showLoader) {
               // //loaderHandler.showLoader();
               this.props.showLoader(true);

@@ -10,7 +10,7 @@ const Styles = EStyleSheet.create({
     height: '100%',
     alignItems: 'center',
     top: 0,
-    borderRadius:13,
+    // borderRadius:13,
     paddingHorizontal:18
   },
 
@@ -19,7 +19,7 @@ const Styles = EStyleSheet.create({
     maxWidth: 768,
     position: 'absolute',
     paddingBottom: 25,
-    borderRadius: 13 
+    // borderRadius: 13 
   },
   borderRadius13:{ 
     borderRadius: 13 

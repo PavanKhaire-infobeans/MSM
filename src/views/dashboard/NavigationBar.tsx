@@ -72,8 +72,9 @@ const styles = EStyleSheet.create({
     width: '100%',
     height: 54,
     justifyContent: 'space-between',
+    alignItems:'center'
   },
-  titleContainer: {justifyContent: 'center', paddingTop: 10},
+  titleContainer: {justifyContent: 'center'},
 
   leftButtonTouchableContainer: {
     justifyContent: 'center',
@@ -114,13 +115,14 @@ const styles = EStyleSheet.create({
 
   rightButtonsContainer: {
     flex: 1,
-    paddingTop: 10,
+    // paddingTop: 10,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    height:'100%'
   },
 
-  rightButtonsTouchable: {padding: 5, paddingRight: 10},
+  rightButtonsTouchable: { marginRight: 10, },
 
   avatar: {height: 30, width: 30, borderRadius: 15, alignContent: 'center'},
 
@@ -217,7 +219,7 @@ class NavigationBar extends React.Component<Props> {
 
   _closeAction = () => {
     Keyboard.dismiss();
-    showConsoleLog(ConsoleType.LOG, 'Props : ', this.props);
+    // showConsoleLog(ConsoleType.LOG, 'Props : ', this.props);
     this.props.navigation.goBack();
   };
 

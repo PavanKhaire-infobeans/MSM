@@ -138,7 +138,8 @@ const useProfileData = (userProfileDetails) => {
                   break;
                 default:
               }
-            } else {
+            } 
+            else {
               formSections.push(formSection);
               setAllFormSections(formSections);
             }

@@ -19,11 +19,11 @@ export const kSetUserProfileData = 'SetUserProfileData';
 export interface FormStruct {
   label: string;
   type:
-    | 'sub'
-    | 'sub-single'
-    | 'date_select'
-    | 'options_select'
-    | 'text_textfield';
+  | 'sub'
+  | 'sub-single'
+  | 'date_select'
+  | 'options_select'
+  | 'text_textfield';
   form?: FormStruct[];
   default_value?: object;
   module?: 'date' | 'options' | 'text';
@@ -39,17 +39,16 @@ export const UserProfile = async () => {
   try {
     let data = await Storage.get('userData');
     let response = await newUserProfile(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/alumni/profile_page_details`,
       [
         {
           'X-CSRF-TOKEN': data.userAuthToken,
           'Content-Type': 'application/json',
         },
-        {configurationTimestamp: '0'},
+        { configurationTimestamp: '0' },
       ],
-      response =>{
+      response => {
         let profileData = getValue(response, ['Details']);
         if (profileData != null) {
           for (let keys in profileData) {
@@ -62,41 +61,46 @@ export const UserProfile = async () => {
             }
           }
         }
-    
+
         if (response.ResponseCode == 200) {
           EventManager.callBack(kGetUserProfileData, true, profileDetails);
         }
       }
     )
-      // .then((response: Response) => response.json())
-      // .catch((err: Error) => Promise.reject(err));
+    // .then((response: Response) => response.json())
+    // .catch((err: Error) => Promise.reject(err));
 
-   
+
   } catch (err) {
     EventManager.callBack(kGetUserProfileData, false, err.message);
   }
 };
 
-export const UpdateFormValues = (state: any, editableFields: any) => {
+export const UpdateFormValues = async (state: any, editableFields: any, CB: any) => {
   let updatedValues = {};
   //loaderHandler.showLoader('Saving...');
-  // showConsoleLog(ConsoleType.INFO,"save date: ",editableFields);
+  showConsoleLog(ConsoleType.INFO, "save date: ", JSON.stringify(state));
 
   for (let keys in editableFields) {
     let currentField = editableFields[keys];
     let value2: any = '';
     let value1: any = '';
+
     if (
-      state[currentField.field_name] != null &&
-      state[currentField.field_name] != undefined &&
-      currentField.default_value != state[currentField.field_name]
+      state[currentField?.field_name] != null &&
+      state[currentField?.field_name] != undefined &&
+      currentField?.default_value != state[currentField?.field_name]
     ) {
-      let value = state[currentField.field_name];
-      switch (currentField.type) {
+      let value = state[currentField?.field_name];
+      console.warn("key <", currentField?.field_name, value, currentField?.type)
+      switch (currentField?.type) {
         case 'options_select':
-          for (let keys in state[currentField.field_name]) {
+          for (let keys in state[currentField?.field_name]) {
+            console.warn("key <", keys)
             value[keys] = keys;
           }
+          console.warn("value <", value)
+
           break;
         case 'date_select':
           if (value.value2) {
@@ -105,37 +109,40 @@ export const UpdateFormValues = (state: any, editableFields: any) => {
 
           if (value.value) {
             value1 = value.value;
-          } else {
+          }
+          else {
             value1 = value1 ? value1 : currentField['default_value'].value;
           }
 
-          let startValue = value1
-            ? value1
-            : currentField['default_value'].value;
-          let startD = startValue.split('-');
-          startD = startD[0];
+          console.log(value1, value2, value, typeof value1, typeof value2, typeof value)
+          // let startValue = value1
+          //   ? value1
+          //   : currentField['default_value'].value;
+          // let startD = startValue.split('-');
+          // startD = startD[0];
 
-          let startE = value2.split('-');
-          startE = startE[0];
+          // let startE = value2.split('-');
+          // startE = startE[0];
           // Account.selectedData().start_year = startD;
           // Account.selectedData().end_year = startE;
           break;
         case 'options_buttons':
           let keys = Object.keys(value);
           if (keys.length > 0) {
-            value = value[keys[0]];
+            value1 = value[keys[0]];
           }
           //showConsoleLog(ConsoleType.LOG,"value is : ", value)
           break;
         case 'text_textfield':
+          value1 = value
           break;
       }
       if (value2 && value2.trim().length > 0) {
         updatedValues = {
           ...updatedValues,
-          [currentField.field_name]: {
-            type: currentField.type,
-            module: currentField.module,
+          [currentField?.field_name]: {
+            type: currentField?.type,
+            module: currentField?.module,
             value:
               value1 && value1.trim().length > 0
                 ? value1
@@ -146,27 +153,91 @@ export const UpdateFormValues = (state: any, editableFields: any) => {
       } else if (value1 && value1.trim().length > 0) {
         updatedValues = {
           ...updatedValues,
-          [currentField.field_name]: {
-            type: currentField.type,
-            module: currentField.module,
+          [currentField?.field_name]: {
+            type: currentField?.type,
+            module: currentField?.module,
             value: value1,
+          },
+        };
+      }
+      else{
+        updatedValues = {
+          ...updatedValues,
+          [currentField?.field_name]: {
+            type: currentField?.type,
+            module: currentField?.module,
+            value
           },
         };
       }
     }
   }
-  showConsoleLog(ConsoleType.INFO,"after process date: ",editableFields);
 
-  setTimeout(async() => {
-    await updateUserProfile(updatedValues);
-  }, 2000);
+  showConsoleLog(ConsoleType.INFO, "after process date: ", updatedValues);
+
+  let data = await Storage.get('userData');
+
+  let response = newUserProfile(
+    `https://${Account.selectedData().instanceURL}/api/alumni/update`,
+    [
+      {
+        'X-CSRF-TOKEN': data.userAuthToken,
+        'Content-Type': 'application/json',
+      },
+      {
+        updateInfo: updatedValues,
+        configurationTimestamp: '0',
+      },
+    ],
+    response => {
+      showConsoleLog(ConsoleType.INFO, "Profile response: ", response);
+
+      if (response.ResponseCode == 200) {
+        EventManager.callBack(kSetUserProfileData, true);
+        if (Utility.isInternetConnected) {
+          // CB(response)
+
+          UserProfile();
+          //loaderHandler.showLoader('Refreshing...');
+        } else {
+          //ToastMessage('No Internet Connected');
+        }
+      } else {
+        //ToastMessage('Unable to save data');
+        //loaderHandler.hideLoader();
+      }
+    }
+  )
+  // .then((response: Response) => {
+  //   // response.json();
+  //   if (response.status == 200) {
+  //     EventManager.callBack(kSetUserProfileData, true);
+  //     if (Utility.isInternetConnected) {
+  //       UserProfile();
+  //       //loaderHandler.showLoader('Refreshing...');
+  //     } else {
+  //      //ToastMessage('No Internet Connected');
+  //     }
+  //   } else {
+  //    //ToastMessage('Unable to save data');
+  //     //loaderHandler.hideLoader();
+  //   }
+  // })
+  // .catch((err: Error) => {
+  //   Promise.reject(err);
+  //   //loaderHandler.hideLoader();
+  // });
+  // setTimeout(async() => {
+  //   await updateUserProfile(updatedValues);
+  // }, 2000);
 };
 
 const updateUserProfile = async (dataset) => {
   // let profileDetails: any = {};
+
   try {
     let data = await Storage.get('userData');
-    showConsoleLog(ConsoleType.INFO,"update data : ",dataset);
+    showConsoleLog(ConsoleType.INFO, "update data : ", dataset);
     let response = await userProfile(
       `https://${Account.selectedData().instanceURL}/api/alumni/update`,
       [
@@ -188,10 +259,10 @@ const updateUserProfile = async (dataset) => {
             UserProfile();
             //loaderHandler.showLoader('Refreshing...');
           } else {
-           //ToastMessage('No Internet Connected');
+            //ToastMessage('No Internet Connected');
           }
         } else {
-         //ToastMessage('Unable to save data');
+          //ToastMessage('Unable to save data');
           //loaderHandler.hideLoader();
         }
       })
@@ -220,13 +291,12 @@ export const UploadProfilePic = async function uploadProfilePicture(
     filePath = filePath.replace('file://', '');
   }
 
-  let options: {[x: string]: any} = {
-    url: `https://${
-      Account.selectedData().instanceURL
-    }/api/alumni/profile_picture_upload`,
+  let options: { [x: string]: any } = {
+    url: `https://${Account.selectedData().instanceURL
+      }/api/alumni/profile_picture_upload`,
     path: filePath,
     method: 'POST',
-    ...(file.type == 'audios' ? {name: file.filename} : {}),
+    ...(file.type == 'audios' ? { name: file.filename } : {}),
     field: file.type == 'audios' ? file.time : 'image',
     type: 'multipart',
     headers: {
@@ -241,7 +311,7 @@ export const UploadProfilePic = async function uploadProfilePicture(
   }
 
   if (type == PhotoType.cover) {
-    options['parameters'] = {type: 'cover'};
+    options['parameters'] = { type: 'cover' };
   }
   //loaderHandler.showLoader('Uploading..');
 
@@ -270,12 +340,11 @@ export const RemoveProfilePic = async function RemoveProfilePicture(
   return new Promise((resolve, reject) => {
     let authToken = Account.selectedData().userAuthToken;
     let options = [
-      {'X-CSRF-TOKEN': authToken, 'Content-Type': 'application/json'},
-      {type: type == PhotoType.cover ? 'cover' : ''},
+      { 'X-CSRF-TOKEN': authToken, 'Content-Type': 'application/json' },
+      { type: type == PhotoType.cover ? 'cover' : '' },
     ];
     removeProfilePicture(
-      `https://${
-        Account.selectedData().instanceURL
+      `https://${Account.selectedData().instanceURL
       }/api/alumni/profile_picture_upload`,
       options,
     )

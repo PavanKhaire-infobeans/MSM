@@ -145,61 +145,66 @@ export const submitRegistration = async (registrationData: any) => {
 //Generate form Entities for Registration Page
 function toForm(items: { [x: string]: any }): FormStruct[] {
   let form: FormStruct[] = [];
-  for (let key in items) {
-    let currentObject = items[key];
-    let settings = currentObject.settings as any;
-    let wSettings = currentObject.widget.settings as object;
-    if (
-      typeof wSettings == 'object' &&
-      !Array.isArray(wSettings) &&
-      Object.keys(wSettings).length > 1
-    ) {
-      let keys = [];
-      for (let ky in settings) {
-        if (
-          ky.indexOf('default_value') == 0 &&
-          ky.indexOf('default_value_') == -1 &&
-          settings[ky] == 'blank'
-        ) {
-          keys.push(ky);
+  try {
+    for (let key in items) {
+      let currentObject = items[key];
+      let settings = currentObject.settings as any;
+      let wSettings = currentObject.widget.settings as object;
+      if (
+        typeof wSettings == 'object' &&
+        !Array.isArray(wSettings) &&
+        Object.keys(wSettings).length > 1
+      ) {
+        let keys = [];
+        for (let ky in settings) {
+          if (
+            ky.indexOf('default_value') == 0 &&
+            ky.indexOf('default_value_') == -1 &&
+            settings[ky] == 'blank'
+          ) {
+            keys.push(ky);
+          }
         }
+        let keyLength = keys.length;
+        form.push({
+          label: currentObject.label,
+          type: keys.length > 1 ? 'sub' : 'sub-single',
+          field_name: currentObject.field_name,
+          required: currentObject.required ? true : false,
+          form:
+            currentObject.widget.module == 'date'
+              ? keys.map((ky: string, index: number) => ({
+                label: keyLength == 1 ? 'Year' : index == 0 ? 'From' : 'To',
+                type: currentObject.settings.field.type,
+                module: currentObject.settings.field.module,
+                ...(typeof currentObject['#multiple'] == 'undefined'
+                  ? { multiple: currentObject['#multiple'] }
+                  : {}),
+                required: currentObject.required ? true : false,
+                default_value: currentObject.default_value,
+                field_name: ky,
+                values: currentObject.values,
+              }))
+              : [],
+        });
+      } else {
+        form.push({
+          label: currentObject.label,
+          type: currentObject.settings.field.type,
+          module: currentObject.settings.field.module,
+          ...(typeof currentObject['#multiple'] == 'undefined'
+            ? { multiple: currentObject['#multiple'] }
+            : {}),
+          required: currentObject.required ? true : false,
+          default_value: currentObject.default_value,
+          field_name: currentObject.field_name,
+          values: currentObject.values,
+        });
       }
-      let keyLength = keys.length;
-      form.push({
-        label: currentObject.label,
-        type: keys.length > 1 ? 'sub' : 'sub-single',
-        field_name: currentObject.field_name,
-        required: currentObject.required ? true : false,
-        form:
-          currentObject.widget.module == 'date'
-            ? keys.map((ky: string, index: number) => ({
-              label: keyLength == 1 ? 'Year' : index == 0 ? 'From' : 'To',
-              type: currentObject.settings.field.type,
-              module: currentObject.settings.field.module,
-              ...(typeof currentObject['#multiple'] == 'undefined'
-                ? { multiple: currentObject['#multiple'] }
-                : {}),
-              required: currentObject.required ? true : false,
-              default_value: currentObject.default_value,
-              field_name: ky,
-              values: currentObject.values,
-            }))
-            : [],
-      });
-    } else {
-      form.push({
-        label: currentObject.label,
-        type: currentObject.settings.field.type,
-        module: currentObject.settings.field.module,
-        ...(typeof currentObject['#multiple'] == 'undefined'
-          ? { multiple: currentObject['#multiple'] }
-          : {}),
-        required: currentObject.required ? true : false,
-        default_value: currentObject.default_value,
-        field_name: currentObject.field_name,
-        values: currentObject.values,
-      });
     }
+    return form;
+      
+  } catch (error) {
+    console.log("form errr :",error)
   }
-  return form;
 }

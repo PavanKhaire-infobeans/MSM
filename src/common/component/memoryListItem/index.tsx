@@ -58,12 +58,12 @@ export default class MemoryListItem extends React.PureComponent<Props, State> {
     (this.props.previousItem == null ||
       this.props.item.item.memory_date != this.props.previousItem.memory_date);
   render() {
-    let userDetails = !this.props.item.item.isPrompt
+    let userDetails = !this.props?.item?.item?.isPrompt
       ? PublishedMemoryDataModel.getUserObj(this.props.item.item)
       : {};
     return (
       <View>
-        {!this.props.item.item.isPrompt ? (
+        {!this.props?.item?.item?.isPrompt ? (
           <View
             style={{
               backgroundColor: 'white',

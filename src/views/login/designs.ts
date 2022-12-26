@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    backgroundColor: Colors.timeLinebackground,
+    backgroundColor: Colors.white,
   },
   mainContainer:{ flex: 1 },
   innerContainer: {
@@ -106,14 +106,22 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
+    marginLeft: 8
   },
 
   forgotPassword: {
-    width: 'auto',
-    height: Size.byWidth(40),
+    // width: 'auto',
+    // height: Size.byWidth(40),
     alignItems: 'flex-end',
     justifyContent: 'center',
     backgroundColor: 'transparent',
+    marginTop:4
+  },
+  forgotPasswordText:{
+    fontWeight:'400' ,
+    color: Colors.newDescTextColor,
+    ...fontSize((18)),
+    lineHeight:18.9
   },
   loaderContainer:{
     position: 'absolute',

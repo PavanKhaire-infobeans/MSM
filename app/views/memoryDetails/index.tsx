@@ -190,9 +190,9 @@ class MemoryDetails extends React.Component<Props, State> {
       GetMemoryDetails(this.nid, this.storyType,
         response => {
           if (response.ResponseCode == 200) {
-            this.memoryDetails(true,response['Details']);
+            this.memoryDetails(true, response['Details']);
           } else {
-            this.memoryDetails(false,response['ResponseMessage']);
+            this.memoryDetails(false, response['ResponseMessage']);
           }
         });
     }
@@ -305,7 +305,7 @@ class MemoryDetails extends React.Component<Props, State> {
         this.setState({ allCommentsList: response['comments'].reverse() });
       }
     } else {
-     //ToastMessage(response, Colors.ErrorColor);
+      //ToastMessage(response, Colors.ErrorColor);
       this.setState({ viewAllComments: false });
     }
     // this.setState({});
@@ -329,7 +329,7 @@ class MemoryDetails extends React.Component<Props, State> {
       this.memoryDataModel.likesComments.noOfLikes =
         this.memoryDataModel.likesComments.noOfLikes - 1;
       this.memoryDataModel.likesComments.isLikedByUser = 0;
-     //ToastMessage(responseMessage, Colors.ErrorColor);
+      //ToastMessage(responseMessage, Colors.ErrorColor);
     } else {
       this.forwardDataToNative();
     }
@@ -340,7 +340,7 @@ class MemoryDetails extends React.Component<Props, State> {
       this.memoryDataModel.likesComments.noOfLikes =
         this.memoryDataModel.likesComments.noOfLikes + 1;
       this.memoryDataModel.likesComments.isLikedByUser = 1;
-     //ToastMessage(responseMessage, Colors.ErrorColor);
+      //ToastMessage(responseMessage, Colors.ErrorColor);
     } else {
       this.forwardDataToNative();
     }
@@ -439,7 +439,7 @@ class MemoryDetails extends React.Component<Props, State> {
       this.memoryDataModel.likesComments.isLikedByUser =
         !this.memoryDataModel.likesComments.isLikedByUser;
       this.memoryDataModel.likesComments.noOfComments--;
-     //ToastMessage(responseMessage, Colors.ErrorColor);
+      //ToastMessage(responseMessage, Colors.ErrorColor);
     } else {
       if (cid && tempCommentId) {
         if (this.state.viewAllComments) {
@@ -546,7 +546,7 @@ class MemoryDetails extends React.Component<Props, State> {
       this.showList(this.keyLiked, getAllLikes);
       // this.setState({});
     } else {
-     //ToastMessage(getAllLikes, Colors.ErrorColor);
+      //ToastMessage(getAllLikes, Colors.ErrorColor);
     }
   };
 
@@ -574,9 +574,9 @@ class MemoryDetails extends React.Component<Props, State> {
           }
         },
       );
-    } 
+    }
     else {
-     //ToastMessage(memoryDetails, Colors.ErrorColor);
+      //ToastMessage(memoryDetails, Colors.ErrorColor);
       this.setState({ memoryDetailAvailable: true });
     }
   };
@@ -1605,7 +1605,7 @@ class MemoryDetails extends React.Component<Props, State> {
       case MemoryActionKeys.editMemoryKey:
         //loaderHandler.showLoader('Loading');
         this.props.showLoader(true);
-      this.props.loaderText('Loading...');
+        this.props.loaderText('Loading...');
         let details: any = {
           action_type: MemoryActionKeys.moveToDraftKey,
           type: this.storyType,
@@ -1733,7 +1733,7 @@ class MemoryDetails extends React.Component<Props, State> {
           this._onBack();
         }
       } else {
-       //ToastMessage(responseMessage, Colors.ErrorColor);
+        //ToastMessage(responseMessage, Colors.ErrorColor);
       }
     }
   };
@@ -1953,7 +1953,7 @@ class MemoryDetails extends React.Component<Props, State> {
       <SafeAreaView style={style.container}>
         {
           this.props.showLoaderValue ?
-            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue !=''? this.props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
             :
             null
         }
@@ -2018,10 +2018,6 @@ class MemoryDetails extends React.Component<Props, State> {
           {/* <StatusBar barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'} /> */}
           {this.state.memoryDetailAvailable && (
             <View style={style.memoryDetailAvailable}>
-              {this.state.isExternalQueue &&
-                this.memoryDataModel.externalQueue.collection.length > 1 && (
-                  <View style={style.externalQueue}>{this.pagination}</View>
-                )}
 
               <KeyboardAwareScrollView
                 enableResetScrollToCoords={false}
@@ -2053,6 +2049,11 @@ class MemoryDetails extends React.Component<Props, State> {
                   previewDraft={this.props.previewDraft}
                 />
 
+                {this.state.isExternalQueue &&
+                  this.memoryDataModel.externalQueue.collection.length > 1 && (
+                    <View style={style.externalQueue}>{this.pagination}</View>
+                  )
+                }
                 {/* <View style={{ height: 15 }} /> */}
                 {/* Render Attachments */}
                 {this.storyType.indexOf('song') != -1 ? (

@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, fontFamily, fontSize } from '../../common/constants';
+import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
 import Utility from '../../common/utility';
 
 const Styles = EStyleSheet.create({
@@ -17,6 +17,13 @@ const Styles = EStyleSheet.create({
     paddingHorizontal:16, 
     borderRadius: 1000, 
     backgroundColor: Colors.white
+  },
+  forwardTextStyle:{
+    fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium, 
+    color: Colors.newTextColor,
+    ...fontSize(Size.byWidth(13)),
+    lineHeight:16.25
   },
   LoginHeader:{ 
     width: Utility.getDeviceWidth() - 48, 
@@ -58,6 +65,9 @@ const Styles = EStyleSheet.create({
   },
   separatorHeightStyle32:{
     height: 32, 
+  },
+  separatorHeightStyle24:{
+    height: 24, 
   }
 
 });

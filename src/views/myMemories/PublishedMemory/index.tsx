@@ -831,13 +831,13 @@ export const onActionItemClicked = (index: number, data: any): void => {
 export const MemoryActionsList = (item: any) => {
   var i = 0;
   let memoryActions = [];
-  for (var value in item.actions_on_memory) {
+  for (var value in item?.actions_on_memory) {
     i += 1;
     switch (value) {
       case MemoryActionKeys.addToCollection:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: add_icon_small,
           nid: item.nid,
           memoryType: item.type,
@@ -848,7 +848,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.blockUserKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: Platform.OS == 'ios' ? personxmark : block,
           nid: item.nid,
           memoryType: item.type,
@@ -860,7 +860,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.reportMemoryKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: Platform.OS == 'ios' ? flagandroid : flag,
           nid: item.nid,
           memoryType: item.type,
@@ -871,7 +871,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.blockAndReportKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: Platform.OS == 'ios' ? redstar : report,
           nid: item.nid,
           memoryType: item.type,
@@ -883,7 +883,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.editMemoryKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: edit_memory,
           nid: item.nid,
           memoryType: item.type,
@@ -893,7 +893,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.deleteMemoryKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: delete_memory,
           nid: item.nid,
           memoryType: item.type,
@@ -903,7 +903,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.moveToDraftKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: move_to_draft,
           nid: item.nid,
           memoryType: item.type,
@@ -913,7 +913,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.removeMeFromThisPostKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: remove_me_from_this_post,
           nid: item.nid,
           memoryType: item.type,
@@ -923,7 +923,7 @@ export const MemoryActionsList = (item: any) => {
       case MemoryActionKeys.blockMemoryKey:
         memoryActions.push({
           index: i,
-          text: item.actions_on_memory[value],
+          text: item?.actions_on_memory[value],
           image: block_memory,
           nid: item.nid,
           memoryType: item.type,

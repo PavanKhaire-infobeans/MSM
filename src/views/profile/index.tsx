@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Alert,
@@ -87,6 +88,8 @@ const Profile = props => {
 
   const [userProfileDetails, setUserProfileDetails] = useState({});
 
+  const isFocused = useIsFocused();
+
   const {
     basicInfo,
     basicInfoSection,
@@ -106,9 +109,10 @@ const Profile = props => {
       getUserProfileData();
 
     return () => {
+      props.showLoader(false);
       checkProfile.removeListener();
     };
-  }, []);
+  }, [isFocused]);
 
   // Web-service call to fetch profile data
   const getUserProfileData = () => {
@@ -167,7 +171,13 @@ const Profile = props => {
 
   const prepareFormSections = () => {
     let allSections = [...allFormSections];
-    return allSections.map(prepareCard);
+
+    let filteredList = [...new Set(allSections.map(JSON.stringify))].map(
+      JSON.parse,
+    );
+
+    // console.warn("ddsahdsagd >",JSON.stringify(filteredList))
+    return filteredList.map(prepareCard);
   };
 
   const prepareCard = (

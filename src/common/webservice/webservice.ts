@@ -120,7 +120,7 @@ const WebserviceCall = (() => {
           return rsp
             .json()
             .then((value: any): any => {
-              showConsoleLog(ConsoleType.WARN, " response time :-: ", (new Date() - requestTime) / 1000)
+              showConsoleLog(ConsoleType.WARN, "getRequest response time :-: ", (new Date() - requestTime) / 1000)
               if (
                 value.ResponseCode == 405 ||
                 value.ResponseCode == 402 ||
@@ -196,7 +196,7 @@ const WebserviceCall = (() => {
                   new Date().toTimeString(),
                   JSON.stringify(request)
                 );
-                showConsoleLog(ConsoleType.ERROR, "post response time :-: "+url, (new Date() - requestTime) / 1000)
+                showConsoleLog(ConsoleType.ERROR, "postRequest response time :-: "+url, (new Date() - requestTime) / 1000)
                 // showConsoleLog(ConsoleType.LOG,'Response is : ', value);
                 if (
                   value.ResponseCode == 405 ||
@@ -274,7 +274,7 @@ const WebserviceCall = (() => {
           // showConsoleLog(ConsoleType.LOG,"headers another :", JSON.stringify(headers), url);
 
           try {
-            showConsoleLog(ConsoleType.WARN, " response time :-: ", (new Date() - requestTime) / 1000)
+            showConsoleLog(ConsoleType.WARN, "newPostRequest response time :-: "+url, (new Date() - requestTime) / 1000)
             // showConsoleLog(ConsoleType.LOG,'Response is : ', value);
             if (
               resp.ResponseCode == 405 ||
@@ -294,7 +294,9 @@ const WebserviceCall = (() => {
 
               // return Promise.reject(Error(resp.ResponseMessage));
             }
-            CB(resp)
+            else{
+              CB(resp)
+            }
             // return resp;
           } catch (error) {
             showConsoleLog(ConsoleType.ERROR, "reeee : ", error)

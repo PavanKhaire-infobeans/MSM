@@ -9,13 +9,13 @@ import {
 //@ts-ignore
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
-import {penEdit} from '../../../../app/images';
-import {black_arrow, close_white} from '../../../images';
-import {Colors} from '../../constants';
-import {Account} from '../../loginStore';
+import { penEdit } from '../../../../app/images';
+import { black_arrow, close_white } from '../../../images';
+import { Colors } from '../../constants';
+import { Account } from '../../loginStore';
 import Utility from '../../utility';
 import MessageDialogue from '../messageDialogue';
-import {default as Text, default as TextNew} from '../Text';
+import { default as Text, default as TextNew } from '../Text';
 import styles from './styles';
 
 const options = {
@@ -23,10 +23,10 @@ const options = {
   ignoreAndroidSystemSettings: false,
 };
 
-class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
+class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
   messageRef: any | MessageDialogue = null;
   static defaultProps = {
-    showRightText: true,
+    showRightText: false,
   };
   _renderLeft() {
     return (
@@ -45,8 +45,8 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
                   this.props.backIcon
                     ? this.props.backIcon
                     : this.props.isWhite
-                    ? black_arrow
-                    : close_white
+                      ? black_arrow
+                      : close_white
                 }
               />
               {this.props.backIcon ? (
@@ -74,7 +74,7 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
         <Text
           style={[
             styles.titleText,
-            {color: this.props.isWhite ? Colors.black : Colors.TextColor},
+            { color: this.props.isWhite ? Colors.black : Colors.TextColor },
           ]}
           numberOfLines={1}
           ellipsizeMode="tail">
@@ -140,65 +140,67 @@ class NavigationHeaderSafeArea extends React.Component<{[x: string]: any}> {
 
   _showWithOutClose = (message: any, color: any) => {
     this.messageRef &&
-      this.messageRef._showWithOutClose({message: message, color: color});
+      this.messageRef._showWithOutClose({ message: message, color: color });
   };
 
   _show = (message: any, color: any) => {
-    this.messageRef && this.messageRef._show({message: message, color: color});
+    this.messageRef && this.messageRef._show({ message: message, color: color });
   };
 
   _hide = () => {
     this.messageRef && this.messageRef._hide();
   };
   render() {
+
     let accData = Account.tempData();
-    let url =
-      accData.instanceURL == '192.168.2.6'
-        ? 'calpoly.cueback.com'
-        : accData.instanceURL;
+    let url = accData.instanceURL == '192.168.2.6' ? 'calpoly.cueback.com' : accData.instanceURL;
+
     return (
       <View>
-        {this.props.isRegisteration ? (
-          <View style={styles.registrationContainerStyle}>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                Keyboard.dismiss();
-                this.props.navigation.goBack();
-              }}>
-              <View style={styles.backArrowContainerSTyle}>
-                <Image source={black_arrow} />
+        {
+          this.props.isRegisteration ? (
+            <View style={styles.registrationContainerStyle}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  Keyboard.dismiss();
+                  this.props.navigation.goBack();
+                }}>
+                <View style={styles.backArrowContainerSTyle}>
+                  <Image source={black_arrow} />
+                </View>
+              </TouchableWithoutFeedback>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: accData.instanceImage }}
+                  style={styles.image}
+                />
               </View>
-            </TouchableWithoutFeedback>
-            <View style={styles.imageContainer}>
-              <Image
-                source={{uri: accData.instanceImage}}
-                style={styles.image}
-              />
-            </View>
-            <View style={styles.innerContainer}>
-              <TextNew style={styles.communityName}>{accData.name}</TextNew>
+              <View style={styles.innerContainer}>
+                <TextNew style={styles.communityName}>{accData.name}</TextNew>
 
-              <TextNew style={styles.url}>{url}</TextNew>
+                <TextNew style={styles.url}>{url}</TextNew>
+              </View>
             </View>
-          </View>
-        ) : (
-          <View
-            style={[
-              styles.mainContainer,
-              {
-                borderBottomWidth: this.props.isWhite ? 2 : 0,
-                borderTopLeftRadius: 12,
-                borderTopRightRadius: 12,
-              },
-            ]}>
-            <View style={styles.subContainer}>
-              {this._renderLeft()}
-              {this._renderMiddle()}
+          ) : (
+            <View
+              style={[
+                styles.mainContainer,
+                {
+                  borderBottomWidth: this.props.isWhite ? 2 : 0,
+                  // borderTopLeftRadius: 12,
+                  // borderTopRightRadius: 12,
+                },
+              ]}>
+              <View style={styles.subContainer}>
+                {this._renderLeft()}
+                {this._renderMiddle()}
+              </View>
+              {(this.props.showRightText || this.props.rightIcon) ?
+                this._renderRight()
+              :
+              null}
             </View>
-            {(this.props.showRightText || this.props.rightIcon) &&
-              this._renderRight()}
-          </View>
-        )}
+          )}
         <MessageDialogue ref={ref => (this.messageRef = ref)} />
         {this.props.isWhite && (
           <StatusBar

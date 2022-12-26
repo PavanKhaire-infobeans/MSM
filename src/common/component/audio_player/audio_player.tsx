@@ -285,16 +285,8 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
                     newplayer.volume = 0.5;
                     currentDuration = setInterval(setCurrentTime, 500);
                   }, 2000);
-                },
-                () => {
-                  //showConsoleLog(ConsoleType.LOG,err)
-                },
-              );
-            },
-            () => {
-              //showConsoleLog(ConsoleType.LOG,err)
-            },
-          );
+                });
+            });
           setPlayer(newplayer);
           playershow = newplayer;
 
@@ -330,11 +322,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
       playershow?.currentTime > 0 &&
       (state.playing || state.slidingInProgess)
     ) {
-      showConsoleLog(
-        ConsoleType.LOG,
-        'player?._state :',
-        playershow?.currentTime,
-      );
+      // showConsoleLog(  ConsoleType.LOG, 'player?._state :', playershow?.currentTime);
       setState(prev => ({
         ...prev,
         currentDuration: setPlayTime(playershow?.currentTime / 1000),
@@ -402,7 +390,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
       playerShowing: false,
     }));
 
-    showConsoleLog(ConsoleType.LOG, 'stop Player', player);
+    // showConsoleLog(ConsoleType.LOG, 'stop Player', player);
     if (player) {
       player?.stop();
     }

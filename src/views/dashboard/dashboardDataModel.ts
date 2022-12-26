@@ -81,15 +81,30 @@ export class DashboardDataModel {
                 parsedMemory.memoryDescription = parsedMemory['version_data']['data'][0]['content'];
             }
 
-            parsedMemory.description = parsedMemory.description.replace(/<\/p><br\/><p>/ig, ' \n \n');
-            parsedMemory.description = parsedMemory.description.replace(/<\/p><br><p>/ig, ' \n \n');
-            parsedMemory.description = parsedMemory.description.replace(/<\/p><p>/ig, ' \n');
-            parsedMemory.description = parsedMemory.description.trim().replace(/<br>/ig, ' \n');
-            parsedMemory.description = parsedMemory.description.replace(/<br \/>/ig, ' \n');
-            parsedMemory.description = parsedMemory.description.replace(/<br\/>/ig, ' \n');
-            parsedMemory.description = parsedMemory.description.replace(/<p>/ig, '');
-            parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');
-            parsedMemory.description = parsedMemory.description.trim();
+            if (parsedMemory.description.includes('\n')||parsedMemory.description.includes('\r')) {
+                // console.log("desc > ",JSON.stringify(parsedMemory.description))
+                parsedMemory.description = parsedMemory.description.replace(/<\/p><br\/><p>/ig, '');
+                parsedMemory.description = parsedMemory.description.replace(/<\/p><br><p>/ig, '');
+                parsedMemory.description = parsedMemory.description.replace(/<\/p><p>/ig, '');
+                parsedMemory.description = parsedMemory.description.trim().replace(/<br>/ig, '');
+                parsedMemory.description = parsedMemory.description.replace(/<br \/>/ig, '');
+                parsedMemory.description = parsedMemory.description.replace(/<br\/>/ig, '');
+                parsedMemory.description = parsedMemory.description.replace(/<p>/ig, '');
+                parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');
+                parsedMemory.description = parsedMemory.description.trim();
+                // console.log("desc after > ",JSON.stringify(parsedMemory.description))
+            } 
+            else {
+                parsedMemory.description = parsedMemory.description.replace(/<\/p><br\/><p>/ig, ' \n \n');
+                parsedMemory.description = parsedMemory.description.replace(/<\/p><br><p>/ig, ' \n \n');
+                parsedMemory.description = parsedMemory.description.replace(/<\/p><p>/ig, ' \n');
+                parsedMemory.description = parsedMemory.description.trim().replace(/<br>/ig, ' \n');
+                parsedMemory.description = parsedMemory.description.replace(/<br \/>/ig, ' \n');
+                parsedMemory.description = parsedMemory.description.replace(/<br\/>/ig, ' \n');
+                parsedMemory.description = parsedMemory.description.replace(/<p>/ig, '');
+                parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');    
+            }
+            
             if (parsedMemory.memoryDateDisplay !== 'Invalid date') {
                 memories.push(parsedMemory);
             }

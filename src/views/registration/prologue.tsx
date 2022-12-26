@@ -23,7 +23,7 @@ import {
 import { GetInstances } from './reducer';
 //@ts-ignore
 import LinearGradient from 'react-native-linear-gradient';
-import { apple, google, loginBack, Rectangle } from '../../../app/images';
+import { apple, arrowRightCircle, google, loginBack, Rectangle, xClose } from '../../../app/images';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MessageDialogue from '../../common/component/messageDialogue';
 import BottomDrawer from '../../common/component/rn-bottom-drawer';
@@ -76,6 +76,7 @@ class Prologue extends Component<Props> {
     registrationFormData: null,
     isBottomPickerVisible: false,
     wasLoading: false,
+    whyDoAskView: false
   };
   static defaultProps = {
     showHeader: false,
@@ -232,6 +233,14 @@ class Prologue extends Component<Props> {
           //loaderHandler.showLoader('Loading...'),
           this.props.showLoader(true);
           this.props.loaderText('Loading...');
+          this.setState({ isBottomPickerVisible: false }, () => {
+            this.registrationData = EventManager.addListener(
+              kCueBackFormData,
+              this.cueBackRegistrationForm,
+            );
+            new GetFormData().callService(kCueBackRegistration, false, true);
+            this.props.getAllInstances();
+          });
         });
       }
     } else {
@@ -261,7 +270,7 @@ class Prologue extends Component<Props> {
   onRegFinalCallBack = (msg: any) => {
     this.setState({ isRegistrationOpen: false }, () => {
       loginDrawerRef.refDrawer.expand();
-     //ToastMessage(msg, Colors.ThemeColor, false, true);
+      //ToastMessage(msg, Colors.ThemeColor, false, true);
     });
   };
 
@@ -323,9 +332,9 @@ class Prologue extends Component<Props> {
         />
         <View style={{ flex: 1, backgroundColor: Colors.NewThemeColor }}>
           {/* <ImageBackground source={background_msm} style={{flex: 1, justifyContent: "center"}}>	 */}
-          <ImageBackground
-            source={Rectangle}
-            resizeMode="stretch"
+          <View
+            // source={Rectangle}
+            // resizeMode="stretch"
             style={{
               height: Utility.getDeviceHeight() * 1,
               width: Utility.getDeviceWidth() * 1,
@@ -338,9 +347,9 @@ class Prologue extends Component<Props> {
                 null
             }
             <LinearGradient
-              // start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
-              // locations={[0, 0.6]}
-              colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.6)']}
+              start={{ x: 0.0, y: 0 }} end={{ x: 1, y: 0 }}
+              locations={[0, 0.2]}
+              colors={this.state.isRegistrationOpen ? ["#ffffff", "#ffffff"] : ['#EDD0ED', '#F2E5E7', '#D1E6FE']}
               style={Styles.findCommunityContainer}>
               <SafeAreaView style={Styles.flexContainer}>
                 {/*<RegistrationBackground/>*/}
@@ -350,7 +359,7 @@ class Prologue extends Component<Props> {
                 <View style={Styles.prologSubContainer}>
                   {this.state.isRegistrationOpen ? (
                     <View>
-                      <View style={Styles.prologHeaderContainer}>
+                      {/* <View style={Styles.prologHeaderContainer}>
                         <TouchableOpacity
                           onPress={() =>
                             this.setState({ isRegistrationOpen: false })
@@ -359,157 +368,213 @@ class Prologue extends Component<Props> {
                         </TouchableOpacity>
                         <Text style={Styles.signUp}>Sign up</Text>
                         <View style={Styles.prologHeaderContainerEmpty} />
-                      </View>
-
-                      <View style={Styles.separatorHeightStyle16} />
-
-                      <View style={Styles.prologHeaderEmptyView} />
-                      <RegFirstStep
-                        ref={(ref: any) => {
-                          this.regStep = ref;
-                        }}
-                        formList={this.state.registrationFormData}
-                        isCuebackRegistration={true}
-                        navBar={this}
-                        bottomPicker={(isVisible: any) =>
-                          this.bottomPicker(isVisible)
+                      </View> */}
+                      <View style={Styles.LoginHeader}>
+                        {
+                          this.state.whyDoAskView ?
+                            <View style={{ flexDirection: 'row' }}>
+                              <Text style={Styles.whoTextStyle}>Why do we ask for your birth year?</Text>
+                              <TouchableHighlight
+                                underlayColor={'#ffffff00'}
+                                onPress={() => {
+                                  this.setState({
+                                    whyDoAskView: false
+                                  })
+                                }}>
+                                <Image source={xClose} />
+                              </TouchableHighlight>
+                            </View>
+                            :
+                            <Text style={Styles.hederText}>Sign up</Text>
                         }
-                      />
-                    </View>
-                  ) : (
-                    <View>
-                      {/* <Image style={{ margin: 16, marginBottom: 0 }} source={recordRegistration}></Image> */}
-
-                      {/* <Text style={{ padding: 16, paddingBottom: 10, fontWeight: '500', ...fontSize(24), color: Colors.TextColor }}>'New to{"\n"}My Stories Matter?'</Text> */}
-                      <View style={Styles.ReadyContainer}>
-                        <Text style={Styles.readyText}>
-                          Ready to start reminiscing?
-                        </Text>
                       </View>
-                      <View style={Styles.separatorHeightStyle16} />
-
-                      <View style={Styles.prologSubContainerStyle}>
-                        {Platform.OS == 'ios' &&
-                          (Platform.Version >= 13 ||
-                            Platform.Version >= '13') && (
-                            <TouchableHighlight
-                              underlayColor={'#ffffff00'}
-                              onPress={() => {
-                                EventManager.callBack(
-                                  kRegSignUp,
-                                  loginType.appleLogin,
-                                );
-                              }}>
-                              <View style={Styles.loginSSOButtonStyle}>
-                                <Image source={apple} />
-                                <Text
-                                  style={[
-                                    CommonTextStyles.fontWeight400Size19Inter,
-                                    Styles.ssoTextStyle,
-                                  ]}>
-                                  Continue with Apple
-                                </Text>
-                              </View>
-                            </TouchableHighlight>
-                          )}
-                        <View style={Styles.separatorHeightStyle32} />
-
-                        <TouchableHighlight
-                          underlayColor={'#ffffff00'}
-                          onPress={() => {
-                            EventManager.callBack(
-                              kRegSignUp,
-                              loginType.googleLogin,
-                            );
-                          }}>
-                          <View style={Styles.loginSSOButtonStyle}>
-                            <Image source={google} />
-                            <Text
-                              style={[
-                                CommonTextStyles.fontWeight400Size19Inter,
-                                Styles.ssoTextStyle,
-                              ]}>
-                              Continue with Google
+                      {
+                        this.state.whyDoAskView ?
+                          <View style={[Styles.LoginHeader, { margin: 0 }]} >
+                            <Text style={Styles.whoTextDescStyle}>
+                              Not only do we want to abide by <Text style={{ textDecorationLine: 'underline', color: Colors.loginTextColor }}>COPPA</Text> {`(Children’s Online Privacy Protection Act) to protect children’s online privacy, but we also want to help personalize your My Stories Matter experience from the get-go based on your age-demographic.\n\nWe do not share and will not share this information for any purpose.`}
                             </Text>
                           </View>
-                        </TouchableHighlight>
+                          :
+                          <>
+                            <View style={Styles.separatorHeightStyle32} />
+                            <View style={Styles.prologHeaderEmptyView} />
+                            <RegFirstStep
+                              showTerms={() => navigate("commonWebView", { url: "https://mystoriesmatter.com/content/end-user-license-agreement?no_header=1", title: "Terms and Conditions" })}
+                              ref={(ref: any) => {
+                                this.regStep = ref;
+                              }}
+                              formList={this.state.registrationFormData}
+                              isCuebackRegistration={true}
+                              navBar={this}
+                              bottomPicker={(isVisible: any) =>
+                                this.bottomPicker(isVisible)
+                              }
+                              whyDoAskView={() => {
+                                this.setState({
+                                  whyDoAskView: true
+                                })
+                              }}
+                              showLoader={() => {
+                                this.props.showLoader(true);
+                                this.props.loaderText('Loading...');
+                              }}
+                              hideLoader={() => {
+                                this.props.showLoader(false);
+                                this.props.loaderText('Loading...');
+                              }}
+                            />
+                          </>
+                      }
+                    </View>
+                  ) :
 
-                        <View style={Styles.separatorHeightStyle32} />
-                        <View style={Styles.orContainer}>
-                          <Text
-                            style={[
-                              CommonTextStyles.fontWeight400Size19Inter,
-                              Styles.ssoTextStyle,
-                            ]}>
-                            or
+                    (
+                      <View>
+                        {/* <Image style={{ margin: 16, marginBottom: 0 }} source={recordRegistration}></Image> */}
+
+                        {/* <Text style={{ padding: 16, paddingBottom: 10, fontWeight: '500', ...fontSize(24), color: Colors.TextColor }}>'New to{"\n"}My Stories Matter?'</Text> */}
+                        <View style={Styles.ReadyContainer}>
+                          <Text style={Styles.readyText}>
+                            Ready to start reminiscing?
                           </Text>
                         </View>
-                        <View style={Styles.separatorHeightStyle32} />
+                        <View style={Styles.separatorHeightStyle24} />
+                        <View style={Styles.separatorHeightStyle24} />
 
-                        <TouchableHighlight
-                          underlayColor={'#ffffff00'}
-                          onPress={() => this.joinPressed()}>
-                          <View
-                            style={[
-                              Styles.loginSSOButtonStyle,
-                              { backgroundColor: Colors.decadeFilterBorder },
-                            ]}>
-                            {/* <Image source={icon_mail} style={{ height: 14, width: 20, resizeMode: "cover", tintColor: "#5c5c5c" }} /> */}
+                        <View style={Styles.prologSubContainerStyle}>
+                          {Platform.OS == 'ios' &&
+                            (Platform.Version >= 13 ||
+                              Platform.Version >= '13') && (
+                              <TouchableHighlight
+                                underlayColor={'#ffffff00'}
+                                onPress={() => {
+                                  EventManager.callBack(
+                                    kRegSignUp,
+                                    loginType.appleLogin,
+                                  );
+                                }}>
+                                <View style={Styles.loginSSOButtonStyle}>
+                                  <Image source={apple} />
+                                  <Text
+                                    style={[
+                                      CommonTextStyles.fontWeight400Size19Inter,
+                                      Styles.ssoTextStyle,
+                                    ]}>
+                                    Continue with Apple
+                                  </Text>
+                                </View>
+                              </TouchableHighlight>
+                            )}
+                          <View style={Styles.separatorHeightStyle24} />
+
+                          <TouchableHighlight
+                            underlayColor={'#ffffff00'}
+                            onPress={() => {
+                              EventManager.callBack(
+                                kRegSignUp,
+                                loginType.googleLogin,
+                              );
+                            }}>
+                            <View style={Styles.loginSSOButtonStyle}>
+                              <Image source={google} />
+                              <Text
+                                style={[
+                                  CommonTextStyles.fontWeight400Size19Inter,
+                                  Styles.ssoTextStyle,
+                                ]}>
+                                Continue with Google
+                              </Text>
+                            </View>
+                          </TouchableHighlight>
+
+                          <View style={Styles.separatorHeightStyle24} />
+                          <View style={Styles.orContainer}>
+                            <View style={Styles.orLineStyle} />
+
                             <Text
                               style={[
                                 CommonTextStyles.fontWeight400Size19Inter,
                                 Styles.ssoTextStyle,
-                                { color: Colors.white },
+                                { color: Colors.bordercolor }
                               ]}>
-                              Create an account
+                              or
                             </Text>
+                            <View style={Styles.orLineStyle} />
                           </View>
-                        </TouchableHighlight>
+                          <View style={Styles.separatorHeightStyle24} />
 
-                        {/* <TouchableHighlight underlayColor={"#ffffff00"} style={{ padding: 16, justifyContent: "center", alignItems: "center" }} onPress={() => { Actions.push("commonWebView", { url: "https://mystoriesmatter.com/content/end-user-license-agreement?no_header=1", title: "Terms and Conditions" }) }}>
+                          <TouchableHighlight
+                            underlayColor={'#ffffff00'}
+                            onPress={() => this.joinPressed()}>
+                            <View
+                              style={[
+                                Styles.loginSSOButtonStyle,
+                                { backgroundColor: Colors.bordercolor },
+                              ]}>
+                              {/* <Image source={icon_mail} style={{ height: 14, width: 20, resizeMode: "cover", tintColor: "#5c5c5c" }} /> */}
+                              <Text
+                                style={[
+                                  CommonTextStyles.fontWeight400Size19Inter,
+                                  Styles.ssoTextStyle,
+                                  { color: Colors.white },
+                                ]}>
+                                Sign up
+                              </Text>
+                              <Image source={arrowRightCircle} />
+                            </View>
+                          </TouchableHighlight>
+
+                          {/* <TouchableHighlight underlayColor={"#ffffff00"} style={{ padding: 16, justifyContent: "center", alignItems: "center" }} onPress={() => { Actions.push("commonWebView", { url: "https://mystoriesmatter.com/content/end-user-license-agreement?no_header=1", title: "Terms and Conditions" }) }}>
 													<Text style={{ marginLeft: 10, textAlign: "center", color: Colors.TextColor, fontWeight: Platform.OS === "ios" ? '600' : 'bold', ...fontSize(14) }}>By Signing up,  I agree to the <Text style={{ fontWeight: '500', textDecorationLine: 'underline' }}>Terms and Conditions</Text> </Text>
 												</TouchableHighlight> */}
-                        <View style={Styles.separatorHeightStyle32} />
+                          <View style={Styles.separatorHeightStyle24} />
 
-                        <TouchableWithoutFeedback
-                          onPress={() => {
-                            // loginDrawerRef.refDrawer.expand()
-                            // Actions.login()
-                            navigate('login');
-                            // Actions.push("login")
-                          }}>
-                          <View
-                            style={[
-                              Styles.loginSSOButtonStyle,
-                              Styles.loginContainer,
-                            ]}>
-                            <Text
+                          <TouchableWithoutFeedback
+                            onPress={() => {
+                              // loginDrawerRef.refDrawer.expand()
+                              // Actions.login()
+                              navigate('login');
+                              // Actions.push("login")
+                            }}>
+                            <View
                               style={[
-                                CommonTextStyles.fontWeight400Size19Inter,
-                                Styles.ssoTextStyle,
+                                // Styles.loginSSOButtonStyle,
+                                Styles.loginContainer,
                               ]}>
-                              Login
-                            </Text>
-                          </View>
-                        </TouchableWithoutFeedback>
-                      </View>
-                      {/* <TouchableHighlight underlayColor={"#ffffff00"} style={{flex: 1, padding: 16}} onPress={()=> this.joinPressed()}>							
-							<View style={{flex : 1, backgroundColor : "#fff", borderRadius: 8, alignItems: "center", justifyContent: "center"}}> 
-								<Text style={{padding: 16, fontWeight: 'bold', ...fontSize(22), color: Colors.ThemeLight}}>Sign up for free</Text>
-							</View>
-						</TouchableHighlight>
-						<TouchableHighlight underlayColor={"#ffffff00"} style={{flex: 1, padding: 16}} onPress={()=>loginDrawerRef.refDrawer.expand()}>							 */}
-                      {/* <TouchableHighlight underlayColor={"#ffffff00"} style={{flex: 1, padding: 16}} onPress={()=>{EventManager.callBack(kRegSignUp, loginType.googleLogin)}}>							 */}
-                      {/* <View style={{flex : 1, backgroundColor : "#fff", borderRadius: 8, alignItems: "center", justifyContent: "center"}}> 
-								<Text style={{padding: 16, fontWeight: 'bold', ...fontSize(22), color: Colors.ThemeLight}}>Login</Text>
-							</View>
-						</TouchableHighlight> */}
+                              <Text
+                                style={[
+                                  CommonTextStyles.fontWeight500Size15Inter,
+                                  Styles.ssoTextStyle,
+                                ]}>
+                                Already have an account?
+                                <Text
+                                  style={[
+                                    CommonTextStyles.fontWeight500Size15Inter,
+                                    Styles.ssoTextStyle,
+                                    { color: Colors.loginTextColor },
+                                  ]}>
+                                  {`  `}
+                                </Text>
+                                <Text
+                                  style={[
+                                    CommonTextStyles.fontWeight500Size15Inter,
+                                    Styles.ssoTextStyle,
+                                    { color: Colors.loginTextColor, textDecorationLine: 'underline' },
+                                  ]}>
+                                  {`Login`}
+                                </Text>
+                              </Text>
 
-                      {/* <TouchableHighlight underlayColor={"#ffffff00"} style={{width: "100%", marginTop: -10, padding: 16, justifyContent: "center", alignItems: "center"}} onPress={()=>loginDrawerRef.refDrawer.expand()}>														
-								<Text style={{padding: 16, fontWeight: 'bold', ...fontSize(16), color: "#ffffff", textDecorationLine: 'underline'}}>Already a member, continue to Login</Text>							
-						</TouchableHighlight> */}
-                    </View>
-                  )}
+                            </View>
+                          </TouchableWithoutFeedback>
+                        </View>
+
+                        <View style={Styles.lastContainer}>
+
+                        </View>
+                      </View>
+                    )}
                 </View>
                 {/* {!this.state.isBottomPickerVisible && <BottomDrawer
 					ref={(ref: any) => {this.searchDrawerRef = ref}}
@@ -562,7 +627,7 @@ class Prologue extends Component<Props> {
                 <MessageDialogue ref={(ref: any) => (this.messageRef = ref)} />
               </SafeAreaView>
             </LinearGradient>
-          </ImageBackground>
+          </View>
         </View>
       </View>
     );

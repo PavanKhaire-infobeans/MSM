@@ -221,11 +221,9 @@ export default class ImageViewer extends React.Component<Props> {
             </View>
           )}
 
-          <View style={Styles.closeContainer}>
-            <TouchableOpacity onPress={() => this.cancelAction()}>
+          <TouchableOpacity onPress={() => this.cancelAction()} style={Styles.closeContainer}>
               <Image source={close_white_} style={Styles.closeImageStyle} />
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
 
           {/* </Modal> */}
         </SafeAreaView>

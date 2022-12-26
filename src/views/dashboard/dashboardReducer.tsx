@@ -1,5 +1,5 @@
 import DefaultPreference from 'react-native-default-preference';
-import {all, call, put, takeLatest} from 'redux-saga/effects';
+import { all, call, put, takeLatest } from 'redux-saga/effects';
 import {
   ConsoleType,
   MemoryActionKeys,
@@ -79,42 +79,42 @@ export const dashboardReducer = (
   state: DashboardState = {},
   action: PayLoad,
 ): DashboardState => {
-  let newState: any = {...state};
+  let newState: any = { ...state };
   newState.recentList = newState.recentList ? newState.recentList : [];
   newState.timelineList = newState.timelineList ? newState.timelineList : [];
   switch (action.type) {
     case SET_TIMELINE_FILTERS:
-      newState = {...newState, filterDataTimeline: action.payload};
+      newState = { ...newState, filterDataTimeline: action.payload };
       break;
     case SET_RECENT_FILTERS:
-      newState = {...newState, filterDataRecent: action.payload};
+      newState = { ...newState, filterDataRecent: action.payload };
       break;
     case SET_FILTERS_NAME:
-      newState = {...newState, filterName: action.payload};
+      newState = { ...newState, filterName: action.payload };
       break;
     case SET_KEYBOARD_HEIGHT:
-      newState = {...newState, keyBoardHeight: action.payload};
+      newState = { ...newState, keyBoardHeight: action.payload };
       break;
     case ACTIVE_TAB_ON_DASHBOARD:
-      newState = {...newState, currentTabName: action.payload};
+      newState = { ...newState, currentTabName: action.payload };
       break;
     case JUMP_TO_VIEW_SHOW:
-      newState = {...newState, isJumptoShow: action.payload};
+      newState = { ...newState, isJumptoShow: action.payload };
       break;
     case JUMP_TO_FROM_DATE:
-      newState = {...newState, fromDate: action.payload};
+      newState = { ...newState, fromDate: action.payload };
       break;
     case JUMP_TO_TO_DATE:
-      newState = {...newState, toDate: action.payload};
+      newState = { ...newState, toDate: action.payload };
       break;
     case CreateAMemory:
-      newState = {...newState, createAMemory: action.payload};
+      newState = { ...newState, createAMemory: action.payload };
       break;
     case SHOW_LOADER_READ:
-      newState = {...newState, showLoader: action.payload};
+      newState = { ...newState, showLoader: action.payload };
       break;
     case SHOW_LOADER_TEXT:
-      newState = {...newState, loaderText: action.payload};
+      newState = { ...newState, loaderText: action.payload };
       break;
     case SET_RECENT_LIST:
       if (!action.payload.isLoadMore) {
@@ -129,8 +129,8 @@ export const dashboardReducer = (
         loadMoreRecent: false,
         refreshRecent: false,
         loadingRecent: false,
-        showLoader:false,
-        loaderText:'Loading...'
+        showLoader: false,
+        loaderText: 'Loading...'
       };
       break;
     case SET_TIMELINE_LIST:
@@ -158,8 +158,8 @@ export const dashboardReducer = (
         loadMoreTimeline: false,
         refreshTimeline: false,
         loadingTimeline: false,
-        showLoader:false,
-        loaderText:'Loading...'
+        showLoader: false,
+        loaderText: 'Loading...'
       };
       break;
     case SET_LOADING_TIMELINE:
@@ -239,21 +239,21 @@ const filteredList = (payload: any, list: any) => {
 };
 
 function* fetchFilters(params: any, CB: any) {
-    return newMemoryService(`https://${Account.selectedData().instanceURL}/api/timeline/filters`, params,
-        res => CB(res))
-    // .then((response: Response) => response.json())
-    // .catch((err: Error) => Promise.reject(err));
+  return newMemoryService(`https://${Account.selectedData().instanceURL}/api/timeline/filters`, params,
+    res => CB(res))
+  // .then((response: Response) => response.json())
+  // .catch((err: Error) => Promise.reject(err));
 }
 
-function* fetchMemoryList(params: any,CB:any) {
+function* fetchMemoryList(params: any, CB: any) {
   showConsoleLog(ConsoleType.LOG, 'input request..', JSON.stringify(params));
   return newMemoryService(
     `https://${Account.selectedData().instanceURL}/api/timeline/list`,
     params,
     resp => CB(resp)
   )
-    // .then((response: Response) => response.json())
-    // .catch((err: Error) => Promise.reject(err));
+  // .then((response: Response) => response.json())
+  // .catch((err: Error) => Promise.reject(err));
 }
 
 /**
@@ -265,43 +265,43 @@ function* getFiltersTimeLine(action: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
-        let dataset = {};
-        let request = yield call(fetchFilters,
-            [{ "X-CSRF-TOKEN": data.userAuthToken, "Content-Type": "application/json" },
-            {
-                "details": {
-                    "type": action.payload.type
-                },
-                "configurationTimestamp": "0"
-            }
-            ],
-            responseBody => {
-                if (responseBody.ResponseCode == 200) {
-                    responseBody.Details.allSelected = { name: 'All', id: 'all', value: 1 }
-                    responseBody.Details.cueSelected = { name: 'My Stories Matter', id: 'msm', value: 1 };
+    let dataset = {};
+    let request = yield call(fetchFilters,
+      [{ "X-CSRF-TOKEN": data.userAuthToken, "Content-Type": "application/json" },
+      {
+        "details": {
+          "type": action.payload.type
+        },
+        "configurationTimestamp": "0"
+      }
+      ],
+      responseBody => {
+        if (responseBody.ResponseCode == 200) {
+          responseBody.Details.allSelected = { name: 'All', id: 'all', value: 1 }
+          responseBody.Details.cueSelected = { name: 'My Stories Matter', id: 'msm', value: 1 };
 
-                    if (responseBody.Details && responseBody.Details.timeline_years) {
+          if (responseBody.Details && responseBody.Details.timeline_years) {
 
-                        DefaultPreference.set('timeline_years', JSON.stringify(responseBody.Details.timeline_years)).then(function () {
-                        });
-                        Account.selectedData().start_year = responseBody.Details.timeline_years.start_year;
-                        Account.selectedData().end_year = responseBody.Details.timeline_years.end_year;
-                    }
+            DefaultPreference.set('timeline_years', JSON.stringify(responseBody.Details.timeline_years)).then(function () {
+            });
+            Account.selectedData().start_year = responseBody.Details.timeline_years.start_year;
+            Account.selectedData().end_year = responseBody.Details.timeline_years.end_year;
+          }
 
-                    dataset = responseBody.Details
-                }
-            }
-        );
+          dataset = responseBody.Details
+        }
+      }
+    );
 
-        const responseBody = yield call(async function () {
-            return await request;
-        });
+    const responseBody = yield call(async function () {
+      return await request;
+    });
 
-        yield put({ type: SET_TIMELINE_FILTERS, payload: yield dataset })
+    yield put({ type: SET_TIMELINE_FILTERS, payload: yield dataset })
 
-    } catch (err) {
-        showConsoleLog(ConsoleType.LOG, err);
-    }
+  } catch (err) {
+    showConsoleLog(ConsoleType.LOG, err);
+  }
 }
 
 /**
@@ -313,9 +313,9 @@ function* getFiltersRecent(action: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
-    let dataSet:any = {}
+    let dataSet: any = {}
     let request = yield call(fetchFilters, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
+      { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       {
         details: {
           type: action.payload.type,
@@ -323,18 +323,18 @@ function* getFiltersRecent(action: any) {
         configurationTimestamp: '0',
       },
     ],
-    responseBody =>{
-      if (responseBody.ResponseCode == 200) {
-        responseBody.Details.allSelected = {name: 'All', id: 'all', value: 1};
-        dataSet = responseBody.Details.allSelected;
-      }
-    });
+      responseBody => {
+        if (responseBody.ResponseCode == 200) {
+          responseBody.Details.allSelected = { name: 'All', id: 'all', value: 1 };
+          dataSet = responseBody.Details.allSelected;
+        }
+      });
     const responseBody = yield call(async function () {
       return await request;
     });
 
-    yield put({type: SET_RECENT_FILTERS, payload: yield dataSet});
-   
+    yield put({ type: SET_RECENT_FILTERS, payload: yield dataSet });
+
   } catch (err) {
     showConsoleLog(ConsoleType.LOG, err);
   }
@@ -358,37 +358,41 @@ function* getMemoryList(action: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
-    let dataSet = {}
+    let dataSet = []
     let request = yield call(fetchMemoryList, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
+      { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       obj
     ],
-    async(responseBody) =>{
-      if (responseBody.ResponseCode == 200) {
-        // showConsoleLog(ConsoleType.LOG,"recent data : ",JSON.stringify(responseBody.Details.data))
-        responseBody.Details.data = DashboardDataModel.getConvertedData(
-          responseBody.Details.data,
-        );
-        responseBody.Details.isLoadMore = action.payload.isLoadMore;
-        if (
-          responseBody.Details.api_random_prompt_data &&
-          responseBody.Details.api_random_prompt_data.length &&
-          responseBody.Details.api_random_prompt_data.length > 0
-        ) {
-          responseBody.Details.data.push({
-            isPrompt: true,
-            active_prompts: responseBody.Details.api_random_prompt_data,
-          });
+      async (responseBody) => {
+        if (responseBody.ResponseCode == 200) {
+          // showConsoleLog(ConsoleType.LOG,"recent data : ",JSON.stringify(responseBody.Details.data))
+          responseBody.Details.data = DashboardDataModel.getConvertedData(
+            responseBody.Details.data,
+          );
+          responseBody.Details.isLoadMore = action.payload.isLoadMore;
+          if (
+            responseBody.Details.api_random_prompt_data &&
+            responseBody.Details.api_random_prompt_data.length &&
+            responseBody.Details.api_random_prompt_data.length > 0
+          ) {
+            responseBody.Details.data.push({
+              isPrompt: true,
+              active_prompts: responseBody.Details.api_random_prompt_data,
+            });
+          }
+          dataSet = await responseBody.Details;
+          EventManager.callBack('loadingDone');
         }
-        dataSet = await responseBody.Details;
-        EventManager.callBack('loadingDone');
-      }
-    });
+      });
     const responseBody = yield call(async function () {
       return await request;
     });
-    
-    yield put({type: SET_RECENT_LIST, payload:  yield dataSet});
+    if (dataSet.length !== 0) {
+      yield put({ type: SET_RECENT_LIST, payload: yield dataSet });
+    }
+    else {
+      yield put({ type: SHOW_LOADER_READ, payload: false });
+    }
 
   } catch (err) {
     showConsoleLog(ConsoleType.LOG, err);
@@ -412,37 +416,37 @@ function* getTimelineList(action: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
-    let dataSet ={};
+    let dataSet = {};
 
     let request = yield call(fetchMemoryList, [
-      {'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json'},
+      { 'X-CSRF-TOKEN': data.userAuthToken, 'Content-Type': 'application/json' },
       obj,
     ],
-    async(responseBody) =>{
-      if (responseBody.ResponseCode == 200) {
-        // showConsoleLog(ConsoleType.LOG,"Time line data : ",JSON.stringify(responseBody))
-        responseBody.Details.data = DashboardDataModel.getConvertedData(
-          responseBody.Details.data,
-        );
-        // showConsoleLog(ConsoleType.LOG,"responseBody ,", JSON.stringify(responseBody.Details.data));
-        responseBody.Details.isLoadMore = action.payload.isLoadMore;
-        responseBody.Details.isLoading = action.payload.isLoading;
-        responseBody.Details.isRefresh = action.payload.isRefresh;
-        debugger;
-        responseBody.Details.sorted_unique_years = makeMultiDimArray(
-          responseBody.Details.sorted_unique_years,
-          4,
-        );
-        dataSet = await responseBody.Details;
-        // showConsoleLog(ConsoleType.LOG,"res 1...",responseBody.Details.data);
-        EventManager.callBack('loadingDone');
-      }
-    });
+      async (responseBody) => {
+        if (responseBody.ResponseCode == 200) {
+          // showConsoleLog(ConsoleType.LOG,"Time line data : ",JSON.stringify(responseBody))
+          responseBody.Details.data = DashboardDataModel.getConvertedData(
+            responseBody.Details.data,
+          );
+          // showConsoleLog(ConsoleType.LOG,"responseBody ,", JSON.stringify(responseBody.Details.data));
+          responseBody.Details.isLoadMore = action.payload.isLoadMore;
+          responseBody.Details.isLoading = action.payload.isLoading;
+          responseBody.Details.isRefresh = action.payload.isRefresh;
+          debugger;
+          responseBody.Details.sorted_unique_years = makeMultiDimArray(
+            responseBody.Details.sorted_unique_years,
+            4,
+          );
+          dataSet = await responseBody.Details;
+          // showConsoleLog(ConsoleType.LOG,"res 1...",responseBody.Details.data);
+          EventManager.callBack('loadingDone');
+        }
+      });
     const responseBody = yield call(async function () {
       return await request;
     });
-   
-    yield put({type: SET_TIMELINE_LIST, payload: dataSet});
+
+    yield put({ type: SET_TIMELINE_LIST, payload: dataSet });
     // {
     //     "type": "timeline",
     //     "configurationTimestamp": "0",
@@ -458,7 +462,7 @@ function* getTimelineList(action: any) {
     //   }
     // showConsoleLog(ConsoleType.LOG,"responseBody ,", JSON.stringify(responseBody));
 
-    
+
   } catch (err) {
     showConsoleLog(ConsoleType.LOG, err);
   }
@@ -514,7 +518,7 @@ const getCallerObject = (action: any) => {
   }
 
   if (action.payload.filters != null) {
-    obj = {...obj, filter: convertFilterObject(action.payload.filters)};
+    obj = { ...obj, filter: convertFilterObject(action.payload.filters) };
   }
 
   if (action.payload.isLoadMore) {
@@ -542,7 +546,7 @@ const objectToArray = (obj: any) => {
   for (let key in obj) {
     obj[key].pattern = obj[key].pattern ? obj[key].pattern : '';
     if (obj[key].pattern.length == 0) {
-      result.push({id: `${key}`, value: obj[key]});
+      result.push({ id: `${key}`, value: obj[key] });
     }
   }
   showConsoleLog(ConsoleType.LOG, result);
