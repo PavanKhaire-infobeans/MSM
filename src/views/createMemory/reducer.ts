@@ -5,6 +5,7 @@ export const ResetLocation = 'resetLocation';
 export const LocationListUpdated = 'locationListUpdated';
 export const MemoryInitialsUpdate = 'memoryInitialsUpdate';
 export const RecentTags = 'recentTags';
+export const SelectedLocation = 'selectedLocation';
 export const ResetALL = 'resetAll';
 export const SaveMemoryTagsList = 'saveList';
 export const SaveWhoElseWhereThere = 'saveWhoElseWhereThere';
@@ -93,6 +94,8 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       break;
     case RecentTags:
       newState.recentTags = action.payload;
+    case SelectedLocation:
+      newState.location = action.payload;
       break;
     case SaveSearchList:
       newState.searchList = action.payload;

@@ -69,6 +69,7 @@ export const Colors = {
   blue: '#0077B2',
   // darkGray:'#595959',
   lightSkyBlue: '#C0E7EA',
+  flatlistSeparatorColor:'#C1C3CA',
   green: '#50B660',
   blacknew: '#222222',
   blacknewrgb: 'rgba(34,34,34,0.7)',
@@ -109,6 +110,7 @@ export const Colors = {
   iosShadowColor: 'rgba(46, 49, 62, 0.05)',
   colorBlackOpacity5: 'rgba(0,0,0,0.5)',
   backrgba: 'rgba(0, 0, 0, 0.25)',
+  selecedBorderColor:'#C1C3CA',
   backColorWith75OPacity: "rgba(0.216, 0.22, 0.322, 0.75)",
   selectedFilter: '#BCDDE0',
   white: '#ffffff',
@@ -141,7 +143,8 @@ export const Colors = {
   blackOpacity60: 'rgba(0, 0, 0, 0.6)',
   transparent: 'transparent',
   loginTextColor:'#0A4D8F',
-  authBackgroundColor:'#1E1E1E'
+  authBackgroundColor:'#1E1E1E',
+  newErrorColor:'#99192E'
 };
 export const MyMemoriesTapBarOptions = {
   published: 'Published',

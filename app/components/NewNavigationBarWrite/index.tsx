@@ -113,7 +113,7 @@ const NavigationBar = (props: Props) => {
           props.showRight ?
             <TouchableWithoutFeedback
               onPress={() => {
-                props.showJumpto(true);
+                props.showJumpto();
                 // _mindPopAction();
               }}
 

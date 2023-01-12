@@ -1,6 +1,7 @@
 import { Platform, StyleSheet } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize, Size } from '../../../common/constants';
+import Utility from '../../../common/utility';
 
 const Styles = EStyleSheet.create({
   visiblityImageContainer: { padding: 15 },
@@ -10,7 +11,7 @@ const Styles = EStyleSheet.create({
   invisibleContainer: {
     width: '100%',
     flex: 0,
-    backgroundColor: Colors.ThemeColor
+    backgroundColor: Colors.NewThemeColor
   },
   safeAreaContainer: {
     width: '100%',
@@ -19,9 +20,16 @@ const Styles = EStyleSheet.create({
   },
   whoElsetextStyle: {
     width: '100%',
-    padding: 15,
-    color: Colors.newTextColor,
-    ...fontSize(18),
+    padding: 24,
+    color: Colors.bordercolor,
+    fontFamily: fontFamily.Inter,
+    ...fontSize(19),
+    lineHeight:23
+  },
+  borderStyle: {
+    height: 1,
+    width: '100%',
+    backgroundColor: Colors.bottomTabColor
   },
   ShareOptionsItemStyle: {
     padding: 15,
@@ -32,27 +40,37 @@ const Styles = EStyleSheet.create({
     width: 25
   },
   shareOptionsStyle: {
-    ...fontSize(18),
-    marginLeft: 5
+    marginLeft:8,
+    ...fontSize(19),
+    lineHeight:23,
+    color:Colors.newDescTextColor,
+    fontFamily: fontFamily.Inter
   },
   shareOptionContainerStyle: {
-    flex: 1,
-    borderBottomWidth: 1,
-    paddingTop: 20,
+    // flex: 1,
+    height:56,
+    width:Utility.getDeviceWidth()-48,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: Colors.bottomTabColor,
+    justifyContent: 'center',
+    borderRadius: 8,
+    // paddingTop: 20,
   },
   shareOptionSubContainerStyle: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 5,
+    paddingHorizontal: 24,
+    // paddingV: 24,
   },
   optionsTextStyle: {
     flex: 1,
-    color: Colors.ThemeColor,
-    fontWeight: '500',
-    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-    ...fontSize(16),
+    color: Colors.bordercolor,
+    fontFamily: fontFamily.Inter,
+    ...fontSize(19),
+    lineHeight:23
   },
   showErrorStyle: {
     ...fontSize(14),

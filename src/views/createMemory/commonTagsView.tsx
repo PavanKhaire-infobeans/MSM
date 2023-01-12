@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -8,18 +8,20 @@ import {
   StatusBar,
   Text,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 // @ts-ignore
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import { create_plus, plus_circle, tagx } from '../../../app/images';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import SearchBar from '../../common/component/SearchBar';
-import {Colors, fontSize} from '../../common/constants';
+import { Colors, CommonTextStyles, fontSize } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {action_close} from '../../images';
-import {kTags} from './publish';
+import { action_close } from '../../images';
+import { kTags } from './publish';
 import {
   SaveMemoryTagsList,
   SaveSearchList,
@@ -35,7 +37,7 @@ import {
 import Styles from './styles';
 import style from './styles';
 
-type State = {[x: string]: any};
+type State = { [x: string]: any };
 type Props = {
   tag: string;
   title: string;
@@ -45,169 +47,198 @@ type Props = {
   placeholder: any;
 };
 
-class CommonListCreateMemory extends React.Component<Props, State> {
-  backListner: any;
-  searchBar: React.RefObject<SearchBar> = React.createRef<SearchBar>();
-  keyboardDidShowListener: any;
-  keyboardDidHideListener: any;
+const CommonListCreateMemory = (props: Props) => {
+  let backListner: any;
+  let searchBar: React.RefObject<SearchBar> = React.createRef<SearchBar>();
+  let keyboardDidShowListener: any;
+  let keyboardDidHideListener: any;
 
-  state: any = {
+  const [state, setState] = useState({
     isMemoryTags: false,
     referenceList: [],
     errorView: false,
     content: '',
     showSearchList: false,
     bottomView: 0,
-  };
-  constructor(props: Props) {
-    super(props);
-    this.backListner = EventManager.addListener(
+  });
+
+  useEffect(() => {
+    props.saveSearchList([]);
+    backListner = EventManager.addListener(
       'hardwareBackPress',
-      this.cancelAction,
+      cancelAction,
     );
     if (Platform.OS == 'android') {
-      this.keyboardDidShowListener = Keyboard.addListener(
+      keyboardDidShowListener = Keyboard.addListener(
         'keyboardDidShow',
-        this._keyboardDidShow,
+        _keyboardDidShow,
       );
-      this.keyboardDidHideListener = Keyboard.addListener(
+      keyboardDidHideListener = Keyboard.addListener(
         'keyboardDidHide',
-        this._keyboardDidHide,
+        _keyboardDidHide,
       );
     } else {
-      this.keyboardDidShowListener = Keyboard.addListener(
+      keyboardDidShowListener = Keyboard.addListener(
         'keyboardWillShow',
-        this._keyboardDidShow,
+        _keyboardDidShow,
       );
-      this.keyboardDidHideListener = Keyboard.addListener(
+      keyboardDidHideListener = Keyboard.addListener(
         'keyboardWillHide',
-        this._keyboardDidHide,
+        _keyboardDidHide,
       );
     }
-  }
 
-  _keyboardDidShow = (e: any) => {
-    // this.setState({
+    let refList: any = props.route.params.referenceList?.slice(0);
+    console.log("refList >", refList)
+    setState(prev => ({
+      ...prev,
+      isMemoryTags: props.route.params.tag == kTags,
+      referenceList: refList,
+    }));
+
+    return () => {
+      backListner.removeListener();
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    }
+  }, []);
+
+
+  const _keyboardDidShow = (e: any) => {
+    // setState({
     //         bottomView : e.endCoordinates.height - (Platform.OS == "ios" ? (DeviceInfo.hasNotch() ? 40 : 100) : 100)
     // })
   };
 
-  _keyboardDidHide = (e: any) => {
-    this.setState({
+  const _keyboardDidHide = (e: any) => {
+    setState(prev => ({
+      ...prev,
       bottomView: 0,
-    });
+    }));
   };
 
-  UNSAFE_componentWillMount() {
-    this.props.saveSearchList([]);
-  }
-
-  componentWillUnmount() {
-    this.backListner.removeListener();
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
-  }
-
-  componentDidMount() {
-    let refList: any = this.props.referenceList.slice(0);
-    this.setState({
-      isMemoryTags: this.props.tag == kTags,
-      referenceList: refList,
-    });
-  }
-
-  cancelAction = () => {
-    this.props.saveSearchList([]);
+  const cancelAction = () => {
+    props.saveSearchList([]);
     Keyboard.dismiss();
-    this.props.navigation.goBack();
+    props.navigation.goBack();
   };
 
-  publishMemory = () => {
-    if (this.state.isMemoryTags) {
-      this.props.setMemoryTags(this.state.referenceList);
-      this.props.recentTagsSearch();
+  const publishMemory = () => {
+    if (state.isMemoryTags) {
+      props.setMemoryTags(state.referenceList);
+      props.recentTagsSearch();
     } else {
-      this.props.setWhoElseWhereThere(this.state.referenceList);
+      props.setWhoElseWhereThere(state.referenceList);
     }
     Keyboard.dismiss();
-    this.props.navigation.goBack();
+    props.navigation.goBack();
   };
 
-  addToList = (item: any) => {
-    let refList = this.state.referenceList;
+  const addToList = (item: any) => {
+    let refList = state.referenceList;
     let found = false;
-    this.setState({errorView: false}, () => {
-      if (this.state.isMemoryTags)
-        found = refList.some(
-          (element: any) =>
-            element.tid === item.tid || element.name == item.name,
-        );
-      else found = refList.some((element: any) => element.uid === item.uid);
+    setState(prev => ({
+      ...prev,
+      errorView: false
+    }));
+    if (state.isMemoryTags)
+      found = refList.some(
+        (element: any) =>
+          element.tid === item.tid || element.name == item.name,
+      );
+    else found = refList.some((element: any) => element.uid === item.uid);
 
-      if (!found) {
-        refList.push(item);
-        this.setState({referenceList: refList});
-      }
+    if (!found) {
+      refList.push(item);
+      setState(prev => ({
+        ...prev,
+        referenceList: refList
+      }));
+    }
 
-      let searchList = this.props.searchList;
-      if (this.state.isMemoryTags)
-        searchList = searchList.filter(
-          (element: any) => element.tid != item.tid,
-        );
-      else
-        searchList = searchList.filter(
-          (element: any) => element.uid != item.uid,
-        );
-      this.props.saveSearchList(searchList);
-      this.searchBar.current &&
-        this.searchBar.current.clearField &&
-        this.searchBar.current.clearField();
-    });
+    let searchList = props.searchList;
+    if (state.isMemoryTags)
+      searchList = searchList.filter(
+        (element: any) => element.tid != item.tid,
+      );
+    else
+      searchList = searchList.filter(
+        (element: any) => element.uid != item.uid,
+      );
+    props.saveSearchList(searchList);
+    searchBar.current &&
+      searchBar.current.clearField &&
+      searchBar.current.clearField();
   };
 
-  removeFromList = (item: any) => {
-    let refList = this.state.referenceList;
-    if (this.state.isMemoryTags)
+  const removeFromList = (item: any) => {
+    let refList = state.referenceList;
+    if (state.isMemoryTags)
       refList = refList.filter((element: any) => element.tid != item.tid);
     else refList = refList.filter((element: any) => element.uid != item.uid);
-    this.setState({
-      referenceList: refList,
-    });
+
+    setState(prev => ({
+      ...prev,
+      referenceList: refList
+    }));
   };
 
-  renderRow = (item: any, searchList: boolean) => {
+  const renderRow = (item: any, searchList: boolean) => {
     return (
       <View style={Styles.searchListItemStyle}>
-        <View style={Styles.searchListItemContainerStyle}>
-          {this.state.isMemoryTags ? (
-            <Text style={Styles.itemName}>{item.item.name}</Text>
-          ) : (
-            this.userList(item.item)
-          )}
-          {searchList ? (
-            <View>
-              {item.item.uid != -1 && (
-                <TouchableHighlight
-                  underlayColor={'#ffffff22'}
-                  onPress={() => this.addToList(item.item)}>
-                  <Text style={Styles.addButtonStyle}>Add</Text>
-                </TouchableHighlight>
-              )}
-            </View>
-          ) : (
-            <TouchableHighlight
-              style={Styles.imagebuttonStyle}
-              underlayColor={'#ffffff22'}
-              onPress={() => this.removeFromList(item.item)}>
-              <Image source={action_close}></Image>
-            </TouchableHighlight>
-          )}
-        </View>
+        {/* <View style={Styles.searchListItemContainerStyle}> */}
+        {state.isMemoryTags ? (
+          <Text style={Styles.itemName}>{item.name}</Text>
+        ) : (
+          userList(item)
+        )}
+        {searchList ? (
+          <View>
+            {item.uid != -1 && (
+              <TouchableHighlight
+                underlayColor={'#ffffff22'}
+                onPress={() => addToList(item)}>
+                <Image source={create_plus}></Image>
+                {/* <Text style={Styles.addButtonStyle}>Add</Text> */}
+              </TouchableHighlight>
+            )}
+          </View>
+        ) : (
+          <TouchableHighlight
+            // style={Styles.imagebuttonStyle}
+            underlayColor={'#ffffff22'}
+            onPress={() => removeFromList(item)}>
+            <Image source={tagx}></Image>
+          </TouchableHighlight>
+        )}
+        {/* </View> */}
       </View>
     );
   };
 
-  userList = (item: any) => {
+  const renderSelectedItems = (item: any, searchList: boolean) => {
+    return (
+      <View style={Styles.selectedListItemStyle}>
+        {/* <View style={Styles.searchListItemContainerStyle}> */}
+        {state.isMemoryTags ? (
+          <Text style={Styles.itemName}>{item.name}</Text>
+        ) : (
+          userList(item)
+        )}
+
+        <TouchableHighlight
+          // style={Styles.imagebuttonStyle}
+          underlayColor={'#ffffffff'}
+          onPress={() => removeFromList(item)}>
+          <Image source={tagx}></Image>
+        </TouchableHighlight>
+
+        {/* </View> */}
+      </View>
+    );
+  };
+
+  const userList = (item: any) => {
     return (
       <View style={style.searchContainer}>
         {item.uid != -1 && (
@@ -215,44 +246,48 @@ class CommonListCreateMemory extends React.Component<Props, State> {
             <PlaceholderImageView
               uri={Utility.getFileURLFromPublicURL(item.uri)}
               style={[
-                style.placeholderImageStyleMargin,
-                {alignContent: 'center'},
+                style.placeholderImageViewStyle,
+                { alignContent: 'center' },
               ]}
               resizeMode={'contain'}
               profilePic={true}
             />
           </View>
         )}
-        <Text style={style.normalText}>
+        <Text style={style.userTextStyle}>
           {item.field_first_name_value + ' ' + item.field_last_name_value}
         </Text>
       </View>
     );
   };
 
-  renderTagsItem = (item: any) => {
+  const renderTagsItem = ({ item, index }) => {
     return (
       <TouchableHighlight
         underlayColor={Colors.underlay33OpacityColor}
-        onPress={() => this.addToList(item.item)}
-        style={style.tagContainerStyle}>
-        <Text style={style.tagName}>{item.item.name}</Text>
+        onPress={() => addToList(item)}
+      >
+        <View style={style.tagContainerStyle}>
+          <Text style={style.tagName}>{item.name}</Text>
+          <Image style={{ marginLeft: 12, }} source={tagx}></Image>
+        </View>
       </TouchableHighlight>
     );
   };
 
-  memoryTags = () => {
+  const memoryTags = () => {
     return (
-      <View>
-        {this.props.recentTags.length > 0 ? (
+      <View >
+        {props.recentTags.length > 0 ? (
           <View style={style.memoryTagContainer}>
             <FlatList
               horizontal
               keyExtractor={(_, index: number) => `${index}`}
               showsHorizontalScrollIndicator={false}
-              data={this.props.recentTags}
-              style={style.imagebuttonStyle}
-              renderItem={this.renderTagsItem}
+              data={props.recentTags}
+              ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
+              // style={style.imagebuttonStyle}
+              renderItem={renderTagsItem}
             />
           </View>
         ) : null}
@@ -260,114 +295,168 @@ class CommonListCreateMemory extends React.Component<Props, State> {
     );
   };
 
-  onChangeText = (text: any) => {
+  const onChangeText = (text: any) => {
     if (text.trim().length > 0) {
-      this.setState({showSearchList: true});
-    } else {
-      this.setState({showSearchList: false});
+      setState(prev => ({
+        ...prev,
+        showSearchList: true
+      }));
+
     }
-    if (this.state.isMemoryTags) {
-      this.props.memoryTagsSearch({searchType: kSearchTags, searchTerm: text});
+    else {
+      setState(prev => ({
+        ...prev,
+        showSearchList: false
+      }));
+    }
+    if (state.isMemoryTags) {
+      props.memoryTagsSearch({ searchType: kSearchTags, searchTerm: text });
     } else {
-      this.props.userSearch({searchType: kUsers, searchTerm: text});
+      props.userSearch({ searchType: kUsers, searchTerm: text });
     }
   };
 
-  render() {
-    return (
-      <View style={style.fullFlex}>
-        <SafeAreaView style={style.emptySafeAreaStyle} />
-        <SafeAreaView style={style.SafeAreaViewContainerStyle}>
-          <View style={style.fullFlex} onStartShouldSetResponder={() => false}>
-            <NavigationHeaderSafeArea
-              heading={this.props.title}
-              showCommunity={false}
-              cancelAction={() => this.cancelAction()}
-              showRightText={true}
-              rightText={'Done'}
-              saveValues={this.publishMemory}
-            />
-            {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
-            <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
+  return (
+    <View style={style.fullFlex}>
+      <SafeAreaView style={style.emptySafeAreaStyle} />
+      <SafeAreaView style={style.SafeAreaViewContainerStyle}>
+        <View style={style.fullFlex} onStartShouldSetResponder={() => false}>
+          {/* <NavigationHeaderSafeArea
+            heading={props.title}
+            showCommunity={false}
+            cancelAction={() => cancelAction()}
+            showRightText={true}
+            rightText={'Done'}
+            saveValues={publishMemory}
+          /> */}
+          <NavigationHeaderSafeArea
+            // heading={'Memory Draft'}
+            showCommunity={false}
+            cancelAction={() => cancelAction()} //this.setState({ showCustomAlert: true }) //this.cancelAction}
+            showRightText={false}
+            backIcon={action_close}
+            saveValues={() => { }} //saveDraft  publishMemory
+          />
+          <View style={Styles.borderStyle}></View>
+
+          {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
+          <StatusBar
+            barStyle={
+              Utility.currentTheme == 'light'
+                ? 'dark-content'
+                : 'light-content'
+            }
+            backgroundColor={Colors.NewThemeColor}
+          />
+
+          <View style={{ padding: 24 }}>
+            <Text style={Styles.filterTextJumpto}>
+              {
+                state.isMemoryTags ?
+                  `Add tags to help you categorize your memories and find them later.`
+                  :
+                  `Mention your friends or loved ones who were a part of this special year with you! To add someone, they will need to have an account with My Stories Matter and you will need to be friends.`
               }
-              backgroundColor={Colors.NewThemeColor}
-            />
-            <SearchBar
-              ref={this.searchBar}
-              style={[
-                style.commonFriendSerachStyle,
-                {
-                  backgroundColor: Colors.SerachbarColor,
-                  borderBottomColor: this.state.errorView
-                    ? Colors.ErrorColor
-                    : Colors.TextColor,
-                },
-              ]}
-              placeholder={this.props.placeholder}
-              onSearchButtonPress={(text: string) => {
-                this.onChangeText(text);
-              }}
-              onClearField={() => {
-                this.props.saveSearchList([]);
-              }}
-              onChangeText={(text: any) => {
-                this.onChangeText(text);
-              }}
-              showCancelClearButton={false}
-            />
-            {this.props.searchList.length == 0 &&
-              this.props.showRecent &&
-              this.memoryTags()}
-            {this.state.errorView && (
-              <Text style={style.selectFriendTextStyle}>
-                *Please select some friends
-              </Text>
-            )}
-            {this.props.searchList.length == 0 && (
-              <FlatList
-                extraData={this.state}
-                style={style.fullWidth}
-                keyExtractor={(_, index: number) => `${index}`}
-                onScroll={() => {
-                  Keyboard.dismiss();
-                }}
-                keyboardShouldPersistTaps={'handled'}
-                showsHorizontalScrollIndicator={true}
-                data={this.state.referenceList}
-                renderItem={(item: any) => this.renderRow(item, false)}
-              />
-            )}
 
-            {this.state.showSearchList && this.props.searchList.length > 0 && (
-              <FlatList
-                extraData={this.state}
-                keyExtractor={(_, index: number) => `${index}`}
-                style={style.SafeAreaViewContainerStyle}
-                keyboardShouldPersistTaps={'handled'}
-                onScroll={() => {
-                  Keyboard.dismiss();
-                }}
-                showsHorizontalScrollIndicator={true}
-                data={this.props.searchList}
-                renderItem={(item: any) => this.renderRow(item, true)}
-              />
-            )}
-
-            <View
-              style={[style.fullWidth, {height: this.state.bottomView}]}></View>
-            <View style={style.smallSeparator}></View>
+            </Text>
           </View>
-        </SafeAreaView>
-      </View>
-    );
-  }
+
+
+          <SearchBar
+            ref={searchBar}
+            style={[
+              style.commonFriendSerachStyle,
+              {
+                backgroundColor: Colors.SerachbarColor,
+                borderBottomColor: state.errorView
+                  ? Colors.ErrorColor
+                  : Colors.TextColor,
+              },
+            ]}
+            placeholder={props.route.params.placeholder}
+            onSearchButtonPress={(text: string) => {
+              onChangeText(text);
+            }}
+            onClearField={() => {
+              props.saveSearchList([]);
+            }}
+            onChangeText={(text: any) => {
+              onChangeText(text);
+            }}
+            showCancelClearButton={false}
+          />
+
+          {props.searchList.length == 0 &&
+            props.route.params.showRecent &&
+            memoryTags()
+          }
+
+          {state.errorView && (
+            <Text style={style.selectFriendTextStyle}>
+              *Please select some friends
+            </Text>
+          )}
+
+          {props.searchList.length == 0 && (
+            <FlatList
+              extraData={state}
+              style={style.memoryTagContainer}
+              keyExtractor={(_, index: number) => `${index}`}
+              onScroll={() => {
+                Keyboard.dismiss();
+              }}
+              horizontal={true}
+              keyboardShouldPersistTaps={'handled'}
+              showsHorizontalScrollIndicator={false}
+              data={state.referenceList}
+              ItemSeparatorComponent={()=><View style={{width:12}}/>}
+              renderItem={({ item, index }) => renderSelectedItems(item, false)}
+            />
+          )}
+
+          {state.showSearchList && props.searchList.length > 0 && (
+            <FlatList
+              extraData={state}
+              keyExtractor={(_, index: number) => `${index}`}
+              style={style.SafeAreaViewContainerStyle}
+              keyboardShouldPersistTaps={'handled'}
+              onScroll={() => {
+                Keyboard.dismiss();
+              }}
+              showsHorizontalScrollIndicator={true}
+              data={props.searchList}
+              renderItem={({ item, index }) => renderRow(item, true)}
+            />
+          )}
+
+          <TouchableWithoutFeedback
+            // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+            onPress={() => {
+              publishMemory();
+            }}>
+            <View
+              style={Styles.loginSSOButtonStyle}>
+              <Text
+                style={[
+                  CommonTextStyles.fontWeight500Size17Inter,
+                  Styles.loginTextStyle,
+                ]}>
+                Done
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+
+          <View
+            style={[style.fullWidth, { height: state.bottomView }]}></View>
+          <View style={style.smallSeparator}></View>
+        </View>
+      </SafeAreaView>
+    </View>
+  );
+
 }
 
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     recentTags: state.MemoryInitials.recentTags,
     searchList: state.MemoryInitials.searchList,
@@ -379,18 +468,18 @@ const mapDispatch = (dispatch: Function) => {
     recentTagsSearch: () =>
       dispatch({
         type: MemoryTagsAPI,
-        payload: {searchType: kRecentTags, searchTerm: ''},
+        payload: { searchType: kRecentTags, searchTerm: '' },
       }),
     memoryTagsSearch: (payload: any) =>
-      dispatch({type: MemoryTagsAPI, payload: payload}),
+      dispatch({ type: MemoryTagsAPI, payload: payload }),
     userSearch: (payload: any) =>
-      dispatch({type: UserSearchAPI, payload: payload}),
+      dispatch({ type: UserSearchAPI, payload: payload }),
     setMemoryTags: (payload: any) =>
-      dispatch({type: SaveMemoryTagsList, payload: payload}),
+      dispatch({ type: SaveMemoryTagsList, payload: payload }),
     setWhoElseWhereThere: (payload: any) =>
-      dispatch({type: SaveWhoElseWhereThere, payload: payload}),
+      dispatch({ type: SaveWhoElseWhereThere, payload: payload }),
     saveSearchList: (payload: any) =>
-      dispatch({type: SaveSearchList, payload: payload}),
+      dispatch({ type: SaveSearchList, payload: payload }),
   };
 };
 

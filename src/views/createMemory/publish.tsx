@@ -1,18 +1,20 @@
 import React from 'react';
 import {
   Alert, Animated,
-  Dimensions, Image, Keyboard, Modal, SafeAreaView, ScrollView, StatusBar, Text, TouchableHighlight, TouchableOpacity, View
+  Dimensions, Image, Keyboard, Modal, SafeAreaView, ScrollView, StatusBar, Text, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View
 } from 'react-native';
 // @ts-ignore
 import Confetti from 'react-native-confetti';
 import DefaultPreference from 'react-native-default-preference';
 import { connect } from 'react-redux';
 import { kPublish } from '.';
+import { create_arrowright } from '../../../app/images';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import TextNew from '../../common/component/Text';
 import { No_Internet_Warning } from '../../common/component/Toast';
 import {
   Colors,
+  CommonTextStyles,
   getValue,
   ShareOptions
 } from '../../common/constants';
@@ -90,22 +92,24 @@ class PublishMemoryDraft extends React.Component<Props, State> {
         onPress={() => onPressCallback()}
         underlayColor={Colors.underlay33OpacityColor}>
         <View>
-          <TextNew style={Styles.textStyle18Weight500}>{title}</TextNew>
+          <TextNew style={[Styles.textStyle18Weight500, { paddingLeft: 8, }]}>{title?.toUpperCase()}</TextNew>
           <View style={Styles.commonListComponentContainer}>
             <View style={Styles.placeholderContainer}>
               <TextNew
+                numberOfLines={1}
                 style={[
                   Styles.placeholderTextStyle,
                   {
-                    color: value.length > 0 ? Colors.black : Colors.redgray,
+                    color: value?.length > 0 ? Colors.newTextColor : Colors.newTextColor,
                   },
                 ]}>
-                {value.length > 0 ? this.getText(title, value) : placeholder}
+                {value?.length > 0 ? this.getText(title, value) : placeholder}
               </TextNew>
               <Image
                 style={Styles.leftButtonLogo}
                 resizeMode={'contain'}
-                source={value.length > 0 ? edit_icon : add_icon_small}></Image>
+                source={create_arrowright}></Image>
+              {/* source={value.length > 0 ? edit_icon : add_icon_small}></Image> */}
             </View>
             {this.showViewAll(title, value) && (
               <Text style={Styles.viewAllTextStyle}>View all</Text>
@@ -208,7 +212,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
         textToReturn = collectionNames.join(', ');
         break;
       default:
-        value;
+        textToReturn = value;
     }
     return textToReturn;
   };
@@ -231,7 +235,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
   };
 
   whoELseWhereThere = () => {
-    this.setState({ showMenu: false },()=>{
+    this.setState({ showMenu: false }, () => {
       if (Utility.isInternetConnected) {
         this.props.navigation.navigate('commonListCreateMemory', {
           tag: kWhoElseWhereThere,
@@ -244,29 +248,30 @@ class PublishMemoryDraft extends React.Component<Props, State> {
         No_Internet_Warning();
       }
     });
-    
+
   };
 
   collection = () => {
-    this.setState({ showMenu: false },()=>{
+    this.setState({ showMenu: false }, () => {
       if (Utility.isInternetConnected) {
         this.props.navigation.navigate('collectionList');
       } else {
         No_Internet_Warning();
       }
     });
-    
+
   };
 
   whoCanSee = () => {
-    this.setState({ showMenu: false },()=>{
+    this.setState({ showMenu: false }, () => {
+      console.log(this.props.navigation)
       if (Utility.isInternetConnected) {
         this.props.navigation.navigate('whoCanSee');
       } else {
         No_Internet_Warning();
       }
     });
-    
+
   };
 
   showHideMenu = () => {
@@ -294,6 +299,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
   };
 
   render() {
+
     return (
       <View style={Styles.fullFlex}>
         <SafeAreaView style={Styles.emptySafeAreaStyle} />
@@ -314,21 +320,39 @@ class PublishMemoryDraft extends React.Component<Props, State> {
             onStartShouldSetResponder={() => true}
             onResponderStart={() => this.setState({ showMenu: false })}>
             <NavigationHeaderSafeArea
-              heading={'Memory Draft'}
-              showCommunity={true}
+              heading={''}
+              showCommunity={false}
               cancelAction={() => this.cancelAction()}
               showRightText={true}
-              rightText={'Publish'}
-              saveValues={this.publishMemory}
+              publishScreen={true}
+              rightText={'Delete\nDraft'}
+              cancleText={'Back'}
+              saveValues={() => {
+                this.props.delete();
+              }}
               rightIcon={true}
               showHideMenu={() => this.showHideMenu()}
             />
+            <View style={Styles.borderStyle}></View>
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
               barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
-            <ScrollView nestedScrollEnabled={true} overScrollMode='always' style={[Styles.imagebuttonStyle,{flex:1}]}>
+            <View style={{ height: 24 }} />
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true} overScrollMode='always' style={[Styles.imagebuttonStyle, { flex: 1 }]}>
+              {this.commonListComponent(
+                'Date',
+                `${this.props.date?.day} ${this.props.date?.month} ${this.props.date?.year}`,
+                'Add Date',
+                () => this.props.navigation.goBack(),
+              )}
+              {this.commonListComponent(
+                'Location',
+                this.props.location?.description,
+                'Add location...',
+                () => this.props.navigation.goBack(),
+              )}
               {this.commonListComponent(
                 shareWith,
                 this.props.shareOption,
@@ -341,7 +365,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
               {this.commonListComponent(
                 tags,
                 this.props.tagsList,
-                'Add Tags',
+                'Add tags',
                 this.tags,
               )}
               {this.commonListComponent(
@@ -358,13 +382,29 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                 'Select collection',
                 this.collection,
               )}
+
+              {/* */}
+              <TouchableWithoutFeedback
+                // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                onPress={this.publishMemory}>
+                <View
+                  style={Styles.loginSSOButtonStyle}>
+                  <Text
+                    style={[
+                      CommonTextStyles.fontWeight500Size17Inter,
+                      Styles.loginTextStyle,
+                    ]}>
+                    Publish
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
             </ScrollView>
             {this.state.showMenu && (
               <View
                 style={[Styles.renderLoaderStyle, { top: 0 }]}
                 onStartShouldSetResponder={() => true}
                 onResponderStart={() => this.setState({ showMenu: false })}>
-                <View style={Styles.sideMenu}>
+                {/* <View style={Styles.sideMenu}>
                   <TouchableOpacity
                     style={Styles.titleContainer}
                     onPress={() => this.props.preview()}>
@@ -376,7 +416,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                     onPress={() => this.props.delete()}>
                     <Text style={Styles.deleteTextStyle}>Delete Draft...</Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
               </View>
             )}
           </View>
@@ -386,7 +426,7 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                 <Animated.View
                   style={[
                     Styles.animatedContainer,
-                    {opacity: this.state.fadeIn},
+                    { opacity: this.state.fadeIn },
                   ]}>
                   <View style={[Styles.fullFlex, Styles.fullWidth]}>
                     <View
@@ -410,10 +450,10 @@ class PublishMemoryDraft extends React.Component<Props, State> {
                           underlayColor={Colors.transparent}
                           style={Styles.memoryDraftIntroButnStyle}
                           onPress={() => {
-                            this.setState({ showGuideOverlay: false },()=>{
+                            this.setState({ showGuideOverlay: false }, () => {
                               DefaultPreference.set('hide_tour', 'true').then(
                                 function () { },
-                              );  
+                              );
                             });
                           }}>
                           <View style={Styles.doneBtnContainer}>
@@ -438,6 +478,8 @@ class PublishMemoryDraft extends React.Component<Props, State> {
 const mapState = (state: { [x: string]: any }) => {
   return {
     shareOption: state.MemoryInitials.shareOption,
+    date: state.MemoryInitials.date,
+    location: state.MemoryInitials.location,
     tagsList: state.MemoryInitials.tags,
     whoElseWhereThereList: state.MemoryInitials.whoElseWhereThere,
     collections: state.MemoryInitials.collections,

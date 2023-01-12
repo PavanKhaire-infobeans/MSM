@@ -106,7 +106,7 @@ export class MemoryDraftsDataModel {
     const regex = /(<([^>]+)>)/gi;
     let description = getDetails(draftDetails, ['description']);
     description = description.replace(regex, '');
-    let date: any = { year: 'Year*', month: 'Month*', day: 'Day' }; // memory_date, season
+    let date: any = { year: '', month: '', day: '' }; // memory_date, season
     let season = getDetails(draftDetails, ['season']).trim();
     let memoryDate = new Date(
       parseInt(getDetails(draftDetails, ['memory_date'])) * 1000,

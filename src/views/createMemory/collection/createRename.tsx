@@ -3,12 +3,12 @@ import {
   Keyboard, SafeAreaView,
   StatusBar,
   Text,
-  TextInput, View
+  TextInput, TouchableWithoutFeedback, View
 } from 'react-native';
 import { connect } from 'react-redux';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import {
-  Colors, decode_utf8, fontSize, getValue
+  Colors, CommonTextStyles, decode_utf8, fontSize, getValue
 } from '../../../common/constants';
 import EventManager from '../../../common/eventManager';
 import {
@@ -19,6 +19,8 @@ import { CollectinAPI } from '../saga';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Utility from '../../../common/utility';
 import styles from './styles';
+import TextField from '../../../common/component/textField';
+import { action_close } from '../../../images';
 
 type State = { [x: string]: any };
 type Props = {
@@ -107,37 +109,44 @@ class CreateRenameCollection extends React.Component<Props, State> {
         />
         <SafeAreaView style={styles.safeAreaContainer}>
           <View style={styles.container}>
+            
             <NavigationHeaderSafeArea
-              heading={
-                this.props.isRename
-                  ? 'Rename Collection '
-                  : 'Create New Collection'
-              }
+              heading={''}
+              //   this.props.isRename
+              //     ? 'Rename Collection '
+              //     : 'Create New Collection'
+              // }
               cancelAction={() => this.cancelAction()}
-              showRightText={true}
+              showRightText={false}
               rightText={'Done'}
+              backIcon={action_close}
               saveValues={this.saveValue}
             />
+            <View style={styles.borderStyle}></View>
+
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
               barStyle={Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'}
               backgroundColor={Colors.NewThemeColor}
             />
+            <Text style={styles.collectionTextStyle}>
+              Create a new collection
+            </Text>
             <View
               style={styles.collectionTextinputContainer}>
-              <TextInput
-                placeholder="Enter collection name"
+              <TextField
+                placeholder="Enter collection name..."
                 autoFocus={true}
-                onChangeText={text => {
+                onChange={text => {
                   this.setState({ content: text, showError: false });
                 }}
                 value={this.state.content}
-                multiline={false}
+                // multiline={false}
                 maxLength={30}
-                style={[styles.CollectionInputStyle,{
-                  borderBottomColor: this.state.showError
-                    ? Colors.ErrorColor : 'rgba(0,0,0,0.4)',
-                }]}
+                style={styles.CollectionInputStyle}
+              //   borderBottomColor: this.state.showError
+              //     ? Colors.ErrorColor : 'rgba(0,0,0,0.4)',
+              // }]}
               />
               {this.state.showError && (
                 <Text style={styles.errorMessageStyle}>
@@ -145,6 +154,22 @@ class CreateRenameCollection extends React.Component<Props, State> {
                 </Text>
               )}
             </View>
+
+            <TouchableWithoutFeedback
+                // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                onPress={this.saveValue}
+                >
+                <View
+                  style={[styles.loginSSOButtonStyle,{position:'absolute',bottom:24}]}>
+                  <Text
+                    style={[
+                      CommonTextStyles.fontWeight500Size17Inter,
+                      styles.loginTextStyle,
+                    ]}>
+                    Done
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
           </View>
         </SafeAreaView>
       </View>

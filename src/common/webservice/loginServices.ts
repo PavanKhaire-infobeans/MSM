@@ -71,6 +71,7 @@ function SSOLoginFetch(url: string, param: any) {
 
 export const SSOLogin = async (params: any) => {
   try {
+    
     let response = await SSOLoginFetch(
       `https://${CueBackInsatance.InstanceURL}/api/alumni/ssologin`,
       params,

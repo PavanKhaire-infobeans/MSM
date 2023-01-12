@@ -22,7 +22,6 @@ import {
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import WebView from 'react-native-webview';
 // import { calendar } from './../../../src/images';
-// import SelectDropdown from 'react-native-select-dropdown'
 import Prompts from './../../../src/common/component/prompts/prompts';
 import {calendarsmall, globesmall, moreoptions} from './../../images';
 import styles from './styles';

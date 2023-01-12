@@ -1,6 +1,7 @@
 import { Platform, StyleSheet } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize, Size } from '../../../common/constants';
+import Utility from '../../../common/utility';
 
 const Styles = EStyleSheet.create({
   renderRowContainer: {
@@ -20,17 +21,52 @@ const Styles = EStyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row'
   },
+  loginTextStyle:{ 
+    color: Colors.white, 
+    marginRight: 12
+  },
+  collectionListStyle:{    
+    width: Utility.getDeviceWidth()-48, 
+    alignSelf:'center'
+  },
+  loginSSOButtonStyle:{
+    width: Utility.getDeviceWidth()-48, 
+    height: 44,
+    alignSelf: "center", 
+    alignItems: "center", 
+    justifyContent: "center", 
+    flexDirection: "row",
+    borderRadius: 1000, 
+    backgroundColor: Colors.bordercolor,
+    marginBottom:16
+  },
+  borderStyle: {
+    height: 1,
+    width: '100%',
+    backgroundColor: Colors.bottomTabColor
+  },
+  collectionTextStyle:{ 
+    margin: 24,
+    ...fontSize(19),
+    lineHeight:23,
+    fontFamily: fontFamily.Inter,
+    fontWeight: '400',
+  },
   moveImage: {
     height: 25,
     width: 25,
     marginRight: 10
   },
-  titleContainer: { paddingRight: 30 },
+  titleContainer: { 
+    alignItems:'center',
+    justifyContent: 'center', 
+  },
   titleText: {
-    ...fontSize(16),
-    fontWeight: '500',
-    color: Colors.TextColor,
-    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    ...fontSize(18),
+    lineHeight:18.9,
+    fontWeight: '400',
+    color: Colors.newDescTextColor,
+    fontFamily: fontFamily.Inter ,
   },
   collectionContainer: {
     borderBottomWidth: 1,
@@ -62,7 +98,7 @@ const Styles = EStyleSheet.create({
   invisibleContainer: {
     width: '100%',
     flex: 0,
-    backgroundColor: Colors.ThemeColor
+    backgroundColor: Colors.NewThemeColor
   },
   safeAreaContainer: {
     width: '100%',
@@ -81,38 +117,41 @@ const Styles = EStyleSheet.create({
     flex: 1
   },
   collectionTextinputContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    padding: 15,
+    width:'100%'
+    // justifyContent: 'flex-start',
+    // alignItems: 'flex-start',
+    // padding: 15,
   },
   errorMessageStyle: {
     ...fontSize(12),
-    color: Colors.ErrorColor
+    fontFamily: fontFamily.Inter,
+    color: Colors.ErrorColor,
+    paddingLeft: 32,
   },
   CollectionInputStyle: {
-    width: '100%',
-    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-    ...fontSize(18),
-    textAlignVertical: 'center',
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingRight: 10,
-    paddingLeft: 10,
-    textAlign: 'left',
-    color: Colors.TextColor,
-    backgroundColor: Colors.SerachbarColor,
-    borderBottomWidth: 1,
+    width: Utility.getDeviceWidth()-48,
+    // fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    // ...fontSize(18),
+    alignSelf: 'center',
+    // paddingTop: 15,
+    // paddingBottom: 15,
+    // paddingRight: 10,
+    // paddingLeft: 10,
+    // textAlign: 'left',
+    // color: Colors.TextColor,
+    // backgroundColor: Colors.SerachbarColor,
+    // borderBottomWidth: 1,
   },
   collectionListContainer:{ 
-    minHeight: 80, 
+    // minHeight: 24, 
     flex: 1 
   },
   collectionListButtonStyle:{
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     flex: 1,
-    padding: 15,
-    paddingRight: 0,
-    borderBottomColor: 'rgba(0, 0, 0, 0.2)',
+    // padding: 15,
+    // paddingRight: 0,
+    // borderBottomColor: 'rgba(0, 0, 0, 0.2)',
     flexDirection: 'row',
     alignItems: 'center',
   },

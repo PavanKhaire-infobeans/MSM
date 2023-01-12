@@ -25,6 +25,18 @@ const Styles = EStyleSheet.create({
     justifyContent: 'space-between',
     alignContent: 'space-between'
   },
+  linearGardStyle:{ 
+    height: 50, 
+    width: '100%', 
+    position: 'absolute', 
+    bottom: 18 
+  },
+  linearGardBottomStyle:{ 
+    height: 20, 
+    width: '100%', 
+    position: 'absolute', 
+    bottom: 0 
+  },
   separator:{ height: 16 },
   flatlistStyle:{ 
     width: '100%', 

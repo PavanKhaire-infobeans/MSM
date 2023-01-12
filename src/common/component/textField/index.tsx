@@ -42,7 +42,7 @@ export default class TextField extends React.Component<Props, State> {
     inputTextStyle: styles.inputTextStyle,
     inputViewStyle: styles.inputViewStyle,
     inputFieldForPayment: false,
-    returnKeyType: 'return',
+    returnKeyType: 'done',
     autoFocus: false,
     passwordToggle: false,
     isRequired: false,
@@ -51,7 +51,7 @@ export default class TextField extends React.Component<Props, State> {
     showStrength: false,
     inputFocused: false,
     nameInput: '',
-    onFocus:()=>{}
+    onFocus: () => { }
   };
   constructor(props: Props) {
     super(props);
@@ -143,7 +143,7 @@ export default class TextField extends React.Component<Props, State> {
     this.setState({
       inputFocused: true,
       showClearImage: this.props.value.length != 0,
-    },()=>{
+    }, () => {
       if (this.props.onFocus) {
         this.props.onFocus()
       }
@@ -276,15 +276,15 @@ export default class TextField extends React.Component<Props, State> {
                     numberOfLines={1}
                     onFocus={this.onFocus}
                     multiline={false}
-                    value={this.state.nameInput}
+                    // value={this.state.nameInput}
                     defaultValue={defaultValue}
                     clearButtonMode={this.props.clearButtonMode}
                     selectionColor={Colors.darkGray}
                     spellCheck={false}
                     onEndEditing={this.props.onEndEditing}
                     underlineColorAndroid={Colors.transparent}
-                    onBlur={this.onBlur}
-                    ref={this.props.reference}
+                    onBlur={this.onBlur ?this.onBlur:undefined}
+                    ref={this.props.reference ? this.props.reference : undefined}
                     autoFocus={this.props.autoFocus}
                   />
                   {/* <Animated.Text style={{ color: Colors.black, ...fontSize(19) }}>

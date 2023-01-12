@@ -278,9 +278,9 @@ const selectPDF = async callback => {
 };
 
 export const PickPDF = async (callback: any) => {
-  requestPermission('storage').then(success => {
-    selectPDF(callback);
-  });
+    requestPermission('storage').then(success => {
+      selectPDF(callback);
+  }).catch(err=>console.log("err",err));
 };
 
 export const PickImage = async (callback: any) => {

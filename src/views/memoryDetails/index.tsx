@@ -180,7 +180,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
       this.storyType = props.route.params.type;
     }
     this.memoryDataModel = new MemoryDataModel();
-    if (!this.props.previewDraft) {
+    if (!this.props.route.params.previewDraft) {
       //loaderHandler.showLoader();
       GetMemoryDetails(this.nid, this.storyType,
         response => {
@@ -255,7 +255,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    if (this.props.previewDraft) {
+    if (this.props.route.params.previewDraft) {
       this.memoryDataModel = this.props.memoryDetails;
       this.setState({memoryDetailAvailable: true, isExternalQueue: false});
     }
@@ -2095,7 +2095,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
               deepLinkBackClick={this.props.deepLinkBackClick}
               storyType={this.storyType}
               onPressCallback={this.openMemoryActions}
-              previewDraft={this.props.previewDraft}
+              previewDraft={this.props.route.params.previewDraft}
               navigation={this.props.navigation}
             />
           )}
@@ -2193,9 +2193,9 @@ export default class MemoryDetails extends React.Component<Props, State> {
                   )}
                 </View>
                 {/* Includes memory tags and like comment share section */}
-                {!this.props.previewDraft && this.CommonBottomSection()}
+                {!this.props.route.params.previewDraft && this.CommonBottomSection()}
                 {/* If memory is associated with any collection */}
-                {!this.props.previewDraft &&
+                {!this.props.route.params.previewDraft &&
                   this.memoryDataModel.collection_list.length > 0 && (
                     <MemoryCollections
                       collectionList={this.memoryDataModel.collection_list}
@@ -2227,7 +2227,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
             </View>
           )}
           {/* Common comment box for all sections */}
-          {!this.props.previewDraft &&
+          {!this.props.route.params.previewDraft &&
             this.state.memoryDetailAvailable &&
             this.CommentBox()}
           <View

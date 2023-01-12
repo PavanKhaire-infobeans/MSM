@@ -59,6 +59,7 @@ const WriteTabs = props => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
   const [onOptionClick, setOnOptionClick] = useState(false);
+  const [showTopicFilters, setShowTopicFilters] = useState(false);
   let flatListRef = useRef(null);
 
   useEffect(() => {
@@ -314,7 +315,7 @@ const WriteTabs = props => {
       ) :
         index === 2 && currentIndex === 2 ? (
           <View style={{ width: Dimensions.get('window').width }}>
-            <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
+            <Prompts tabLabel={'Prompts'} showTopicFilters={showTopicFilters} hideFilters={() => setShowTopicFilters(false)} navigation={props.navigation} />
           </View>
         ) :
           null
@@ -352,10 +353,12 @@ const WriteTabs = props => {
             title={props.filterName ? props.filterName : TabItems.AllMemories}
             showRight={currentIndex === 2 ? true : false}
             showRightText={'Topics'}
-            showJumpto={()=>{
-              props.navigation.navigate('topicsFilter', {
-                // categories: state.categoriesArray,
-              })
+            showJumpto={() => {
+              setShowTopicFilters(true)
+
+              // props.navigation.navigate('topicsFilter', {
+              //   // categories: state.categoriesArray,
+              // })
             }}
           />
 

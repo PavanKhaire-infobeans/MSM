@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import { Colors, fontFamily, fontSize } from '../../common/constants';
@@ -18,6 +18,86 @@ const Styles = EStyleSheet.create({
     fontWeight: '600',
     lineHeight: 22
   },
+  imageStyles:{
+    height:24,
+    width:24
+  },
+  onFocusStyle:{
+    borderColor: Colors.bordercolor,
+    borderWidth: 2,
+    shadowColor: Colors.black,
+    shadowOffset: { width: 2, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3.22,
+    elevation: 3,
+  },
+  collectionTextStyle:{ 
+    margin: 24,
+    ...fontSize(19),
+    lineHeight:23,
+    fontFamily: fontFamily.Inter,
+    fontWeight: '400',
+  },
+  loginTextStyle:{ 
+    color: Colors.white, 
+    marginRight: 12
+  },
+  jumptoYearContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 52
+  },
+  filterTextJumpto: {
+    ...fontSize(19),
+    fontFamily: fontFamily.Inter,
+    fontWeight: '400',
+    lineHeight: 23,
+    color: Colors.bordercolor
+  },
+  newFilterItem: {
+    width: (Dimensions.get('window').width - 64) / 3,
+    height: 119,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 16,
+    backgroundColor: Colors.timeLinebackground,
+    borderWidth: 2,
+    borderColor: Colors.bottomTabColor,
+  },
+  loginSSOButtonStyle:{
+    width: Utility.getDeviceWidth()-32, 
+    height: 44,
+    alignSelf: "center", 
+    alignItems: "center", 
+    justifyContent: "center", 
+    flexDirection: "row",
+    borderRadius: 1000, 
+    backgroundColor: Colors.bordercolor,
+    marginBottom:16
+  },
+  textInputContainer:{ paddingHorizontal: 16 ,paddingBottom: 16 },
+  jumptoCancelSubContainerStyle: {
+    height: 64,
+    width: 64,
+    marginTop: 16,
+    marginLeft: 16,
+    justifyContent: 'space-between'
+  },
+  cancelImageStyle: {
+    height: 24,
+    width: 24,
+    alignSelf: 'center'
+  },
+  cancelTextStyle: {
+    textAlign: 'center',
+    ...fontSize(15),
+    lineHeight: 18.75,
+    color:Colors.newDescTextColor,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    fontWeight: '500',
+    height:32
+  },
   alertmessageStyle: {
     color: Colors.black,
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
@@ -36,6 +116,21 @@ const Styles = EStyleSheet.create({
   viewBeforListContainerStyle: {
     justifyContent: 'space-between',
     height: Utility.getDeviceHeight() - (80 + (Platform.OS == "ios" ? (StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0) + (StaticSafeAreaInsets.safeAreaInsetsTop ? StaticSafeAreaInsets.safeAreaInsetsTop : 0) : (StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0)))
+  },
+  actionSheetContainer:{ 
+    // height: Utility.getDeviceHeight()*0.8,
+     backgroundColor: 'white', 
+     marginBottom:16+(StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0), 
+     width: '100%', 
+     borderTopLeftRadius: 12, 
+     borderTopRightRadius: 12 
+    },
+  actionSheetHeaderContainer:{ 
+    height: 88, 
+    borderTopLeftRadius: 12, 
+    borderTopRightRadius: 12, 
+    borderBottomWidth: 2, 
+    borderBottomColor: Colors.bottomTabColor 
   },
   etherPadStyle: { height: Utility.getDeviceHeight() * 0.6 },
   deleteTextStyle: {
@@ -256,6 +351,15 @@ const Styles = EStyleSheet.create({
     color: Colors.TextColor,
     fontFamily: fontFamily.Inter
   },
+  labelStyle: {
+    fontSize: 14,
+    color: Colors.TextColor,
+    fontFamily: fontFamily.Inter,
+    fontWeight: '400',
+    lineHeight: 17.5,
+    marginBottom:4,
+    paddingHorizontal: 8,
+  },
   addDetailsTextStyle: {
     fontWeight: '500',
     lineHeight: 20,
@@ -386,9 +490,9 @@ const Styles = EStyleSheet.create({
     borderRightWidth: 5,
   },
   locationContainer: {
-    height: 40,
+    height: 56,
     justifyContent: 'center',
-    padding: 10
+    paddingHorizontal: 16
   },
   locationDescTextStyle: {
     ...fontSize(16),
@@ -396,18 +500,34 @@ const Styles = EStyleSheet.create({
     fontFamily: fontFamily.Inter
   },
   imagebuttonStyle: {
-    padding: 15
+    width: Utility.getDeviceWidth()-48,
+    alignSelf: 'center',
   },
   searchListItemStyle: {
-    paddingTop: 10,
-    width: '100%',
-    paddingBottom: 10,
-    height: 60,
-    borderBottomColor: Colors.colorBlack,
+    // paddingTop: 10,
+    width: Utility.getDeviceWidth(),
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingHorizontal: 24,
+    height: 72,
+    alignItems: 'center',
+    borderBottomColor: Colors.flatlistSeparatorColor,
     borderBottomWidth: 1,
   },
+  selectedListItemStyle: {
+    // paddingTop: 10,
+    // width: Utility.getDeviceWidth(),
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    padding: 8,
+    height: 40,
+    alignItems: 'center',
+    borderColor: Colors.flatlistSeparatorColor,
+    borderWidth: 1,
+    borderRadius: 1000
+  },
   searchListItemContainerStyle: {
-    paddingLeft: 15,
+    // paddingLeft: 15,
     width: '100%',
     flex: 1,
     justifyContent: 'space-between',
@@ -460,15 +580,32 @@ const Styles = EStyleSheet.create({
     borderBottomRightRadius: 5,
     width: '100%',
   },
+  locationFlatListStyle: {
+    backgroundColor: Colors.white,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    width: '90%',
+    borderWidth:1,
+    borderColor:Colors.bottomTabColor,
+    alignSelf:'center',
+    marginTop:8
+  },
   separator: {
     height: 1,
     backgroundColor: Colors.TextColor,
     opacity: 0.5,
   },
+  locationListSeparator: {
+    height: 1,
+    backgroundColor: Colors.bottomTabColor,
+    opacity: 0.5,
+  },
   locationErrorTextStyle: {
     color: Colors.ErrorColor,
     fontFamily: fontFamily.Inter,
-    fontSize: 14
+    fontSize: 14,
+    paddingLeft: 24,
+    marginBottom: 24,
   },
   textInputStyle: {
     ...fontSize(18),
@@ -524,7 +661,8 @@ const Styles = EStyleSheet.create({
     textAlign: 'left'
   },
   buttonsTextStyle: {
-    ...fontSize(19),
+    ...fontSize(17),
+    lineHeight:23.75,
     // paddingLeft: 24,
     // paddingTop: 16,
     width: '100%',
@@ -619,28 +757,38 @@ const Styles = EStyleSheet.create({
     position: 'absolute'
   },
   colabratiesTextStyle: {
-    width: 200,
-    padding: 10,
-    fontSize: 16,
+    lineHeight: 23,
+    ...fontSize(19),
     fontFamily: fontFamily.Inter,
-    color: Colors.white,
+    fontWeight:'400',
+    color: Colors.newDescTextColor,
+    padding: 16,
   },
   tagName: {
-    ...fontSize(14),
-    fontWeight: 'normal',
-    color: Colors.darkGray,
-    marginBottom: 5
+    ...fontSize(17),
+    color: Colors.bordercolor,
+    fontFamily: fontFamily.Inter,
+    fontWeight:'400',
   },
   normalText: {
-    ...fontSize(16),
+    ...fontSize(17),
     fontWeight: 'normal',
-    color: Colors.darkGray,
+    color: Colors.bordercolor,
+    fontFamily: fontFamily.Inter,
     marginBottom: 10,
   },
+  userTextStyle: {
+    ...fontSize(19),
+    lineHeight:23.75,
+    fontWeight: '400',
+    color: Colors.newDescTextColor,
+    fontFamily: fontFamily.Inter,
+  },
   itemName: {
-    ...fontSize(16),
+    ...fontSize(17),
     fontWeight: 'normal',
-    color: Colors.newTextColor
+    fontFamily: fontFamily.Inter,
+    color: Colors.bordercolor
   },
   addButtonStyle: {
     color: Colors.NewTitleColor,
@@ -682,36 +830,52 @@ const Styles = EStyleSheet.create({
     paddingTop: 10,
     width: '100%',
     paddingBottom: 10,
-    height: 70,
-    borderBottomColor: Colors.backrgba,
+    backgroundColor: Colors.white,
+    height: 72,
+    borderBottomColor: Colors.selecedBorderColor,
     borderBottomWidth: 1,
   },
+  selectedRowmainContainerStyle: {
+    padding: 8,
+    width: Utility.getDeviceWidth()-48,
+    alignSelf: 'center',
+    backgroundColor: Colors.white,
+    // paddingBottom: 10,
+    height: 40,
+    borderRadius:20,
+    borderColor: Colors.selecedBorderColor,
+    borderWidth: 1,
+    marginTop: 24,
+  },
   rowContainerStyle: {
-    paddingLeft: 15,
-    width: '100%',
+    paddingHorizontal: 24,
+    // width: '100%',
     flex: 1,
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
   },
   placeholderImageViewStyle: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    marginRight: 20,
+    height: 24,
+    width: 24,
+    marginRight: 4,
+    borderRadius: Platform.OS === 'android' ? 40 : 20,
     overflow: 'hidden',
   },
   placeholderImageStyleMargin: {
-    height: 40,
-    width: 40,
-    marginRight: 20,
+    height: 24,
+    width: 24,
+    marginRight: 4,
     borderRadius: Platform.OS === 'android' ? 40 : 20,
   },
   infoIconContainerStyle: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 10,
+    // paddingRight: 10,
+  },
+  iconSeparator: {
+    height: 8
   },
   infoIconStyle: {
     height: 25,
@@ -719,15 +883,30 @@ const Styles = EStyleSheet.create({
   },
   searchContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    // alignItems: 'center',
   },
   commonFriendSerachStyle: {
-    height: 50,
-    padding: 10,
+    height: 56,
+    paddingHorizontal: 24,
     alignItems: 'center',
-    borderBottomWidth: 1,
+    borderWidth: 1,
     backgroundColor: Colors.white,
     width: '100%',
+    // retainFocus: true,
+  },
+  textInputBoxStyle: {
+    borderWidth: 1,
+    borderColor: Colors.bottomTabColor,
+    borderRadius: 8,
+    justifyContent: 'center',
+    paddingLeft: 24,
+    color: Colors.bordercolor,
+    ...fontSize(19),
+    height:56,
+    fontWeight:'400',
+    lineHeight:23.75,
+    fontFamily: fontFamily.Inter,
+    backgroundColor: Colors.transparent,
     // retainFocus: true,
   },
   errortextStyle: {
@@ -740,8 +919,8 @@ const Styles = EStyleSheet.create({
     marginHorizontal: 16,
     height: 104,
     paddingVertical: 16,
-    borderTopColor: Colors.white,
-    borderTopWidth: 2,
+    // borderTopColor: Colors.white,
+    // borderTopWidth: 2,
   },
   buttonsStyle: {
     flex: 1,
@@ -754,26 +933,29 @@ const Styles = EStyleSheet.create({
     alignItems: 'center'
   },
   tagContainerStyle: {
-    paddingRight: 10,
-    paddingLeft: 10,
-    paddingBottom: 0,
+    paddingHorizontal: 12,
+    // paddingBottom: 0,
+    flexDirection: 'row',
     borderWidth: 1,
-    borderRadius: 20,
-    paddingTop: 5,
-    marginRight: 10,
+    borderRadius: 4,
+    paddingVertical: 8,
     justifyContent: 'center',
-    marginBottom: 0,
     alignItems: 'center',
-    borderColor: Colors.darkGray,
+    backgroundColor: Colors.timeLinebackground,
+    borderColor: Colors.timeLinebackground,
   },
   memoryTagContainer: {
-    height: 50,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.backrgba,
+    marginTop:24,
+    width:Utility.getDeviceWidth()-48,
+    alignSelf:'center'
+    // height: 50,
+    // borderBottomWidth: 1,
+    // borderBottomColor: Colors.backrgba,
   },
   selectFriendTextStyle: {
     ...fontSize(12),
-    paddingLeft: 10,
+    // paddingLeft: 10,
+    fontFamily:fontFamily.Inter,
     color: Colors.ErrorColor,
   },
   smallSeparator: {
@@ -798,10 +980,12 @@ const Styles = EStyleSheet.create({
     textAlign: 'center'
   },
   textStyle18Weight500: {
-    ...fontSize(18),
+    ...fontSize(14),
+    lineHeight:17.5,
     fontWeight: '500',
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-    textAlign: 'center'
+    textAlign: 'left',
+    color:Colors.newTextColor
   },
   introImgStyle: {
     margin: 20
@@ -1102,25 +1286,33 @@ const Styles = EStyleSheet.create({
     overflow: 'hidden'
   },
   placeholderTextStyle: {
-    flex: 1,
+    // flex: 1,
     fontFamily: fontFamily.Inter,
     ...fontSize(18),
+    lineHeight:23.75,
+    fontWeight: '400',
+    color:Colors.newTextColor
   },
   commonListComponentContainer: {
-    borderBottomColor: Colors.backrgba,
-    paddingTop: 10,
-    paddingBottom: 7,
-    borderBottomWidth: 0.5,
+    // borderBottomColor: Colors.backrgba,
+    paddingTop: 4,
+    // paddingBottom: 7,
+    // borderBottomWidth: 0.5,
     alignItems: 'center',
   },
   commonListComponentButtonContainer: {
-    marginBottom: 30
+    marginBottom: 24,
   },
   placeholderContainer: {
     width: '100%',
+    height:56,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderColor: Colors.bottomTabColor,
+    borderRadius:8,
+    borderWidth: 1,
+    paddingHorizontal: 24,
   },
   viewAllTextStyle: {
     width: '100%',
@@ -1140,10 +1332,12 @@ const Styles = EStyleSheet.create({
     color: Colors.black
   },
   additionalTextStyle: {
-    ...fontSize(18),
-    fontWeight: '500',
-    fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
-    marginBottom: 30,
+    ...fontSize(19),
+    lineHeight:23,
+    fontWeight: '400',
+    fontFamily: fontFamily.Inter,
+    marginBottom: 24,
+    color: Colors.bordercolor
   },
   drawerContainer: {
     borderRadius: 1500,

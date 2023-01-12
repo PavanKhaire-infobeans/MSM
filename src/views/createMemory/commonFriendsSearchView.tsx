@@ -9,14 +9,15 @@ import {
   Text,
   TouchableHighlight,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 // @ts-ignore
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import SearchBar from '../../common/component/SearchBar';
-import {Colors, fontSize} from '../../common/constants';
-import {action_close, icon_info} from '../../images';
-import {kCollaborators, kTags} from './publish';
+import { Colors, CommonTextStyles, fontSize } from '../../common/constants';
+import { action_close, icon_info } from '../../images';
+import { kCollaborators, kTags } from './publish';
 import style from './styles';
 
 import GroupPicHolder from '../../common/component/group_pic_holder/group_pic_holder';
@@ -24,12 +25,13 @@ import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {kSaveInvite} from './inviteCollaborators/noteToCollaborators';
-import {SaveSearchList, SaveWhoCanSeeIds} from './reducer';
-import {kUserCircles, kUsers, UserSearchAPI} from './saga';
-import {kWhoCanSeeThisMemory} from './whoCanSee';
+import { kSaveInvite } from './inviteCollaborators/noteToCollaborators';
+import { SaveSearchList, SaveWhoCanSeeIds } from './reducer';
+import { kUserCircles, kUsers, UserSearchAPI } from './saga';
+import { kWhoCanSeeThisMemory } from './whoCanSee';
+import { create_plus, tagx } from '../../../app/images';
 
-type State = {[x: string]: any};
+type State = { [x: string]: any };
 type Props = {
   tag: string;
   title: string;
@@ -52,6 +54,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
     errorView: false,
     showSearchList: false,
     bottomView: 0,
+    inputFocused: false
   };
 
   constructor(props: Props) {
@@ -101,11 +104,11 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    let refListFriends = this.props.refListFriends.slice(0);
-    let refListFriendCircles = this.props.refListFriendCircles.slice(0);
+    let refListFriends = this.props.route.params.refListFriends.slice(0);
+    let refListFriendCircles = this.props.route.params.refListFriendCircles.slice(0);
     this.setState({
-      isMemoryTags: this.props.tag == kTags,
-      isCollaborator: this.props.tag == kCollaborators,
+      isMemoryTags: this.props.route.params.tag == kTags,
+      isCollaborator: this.props.route.params.tag == kCollaborators,
       referenceListFriends: refListFriends,
       referenceListFriendCircles: refListFriendCircles,
     });
@@ -123,14 +126,14 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
       refList = this.state.referenceListFriends;
     }
     let found = false;
-    this.setState({errorView: false}, () => {
+    this.setState({ errorView: false }, () => {
       if (this.state.userTabSelected)
         found = refList.some((element: any) => element.uid === item.uid);
       else found = refList.some((element: any) => element.id === item.id);
 
       if (!found) {
         refList.push(item);
-        this.setState({referenceList: refList});
+        this.setState({ referenceList: refList });
       }
 
       let searchList = this.props.searchList;
@@ -159,9 +162,9 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
 
     let refObj = {};
     if (this.state.userTabSelected) {
-      refObj = {referenceListFriends: refList};
+      refObj = { referenceListFriends: refList };
     } else {
-      refObj = {referenceListFriendCircles: refList};
+      refObj = { referenceListFriendCircles: refList };
     }
 
     this.setState(refObj);
@@ -169,14 +172,14 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
 
   onChangeText = (text: any) => {
     if (text.trim().length > 0) {
-      this.setState({showSearchList: true});
+      this.setState({ showSearchList: true });
     } else {
-      this.setState({showSearchList: false});
+      this.setState({ showSearchList: false });
     }
     if (this.state.userTabSelected) {
-      this.props.userSearch({searchType: kUsers, searchTerm: text});
+      this.props.userSearch({ searchType: kUsers, searchTerm: text });
     } else {
-      this.props.userSearch({searchType: kUserCircles, searchTerm: text});
+      this.props.userSearch({ searchType: kUserCircles, searchTerm: text });
     }
   };
 
@@ -194,9 +197,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
       <View
         style={[
           style.rowmainContainerStyle,
-          {
-            backgroundColor: searchList ? Colors.lightGreen : Colors.white,
-          },
+
         ]}>
         <View style={style.rowContainerStyle}>
           <View style={style.searchContainer}>
@@ -223,8 +224,8 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 ]}>
                 {this.state.userTabSelected
                   ? item.field_first_name_value +
-                    ' ' +
-                    item.field_last_name_value
+                  ' ' +
+                  item.field_last_name_value
                   : item.name}
               </Text>
               {!this.state.userTabSelected && item.uid != -1 && (
@@ -252,7 +253,9 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                   <TouchableHighlight
                     underlayColor={Colors.overlayOpacityColor}
                     onPress={() => this.addToList(item)}>
-                    <Text style={style.collaborateTextStyle}>Add</Text>
+
+                    <Image source={create_plus}></Image>
+                    {/* <Text style={style.collaborateTextStyle}>Add</Text> */}
                   </TouchableHighlight>
                 )}
               </View>
@@ -270,15 +273,82 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
     );
   };
 
+  renderSelectedItems = (item: any, searchList: boolean) => {
+    item = item.item;
+    return (
+
+      <View >
+        <View style={style.rowContainerStyle}>
+          <View style={[style.searchContainer, style.selectedRowmainContainerStyle]}>
+            {item.uid != -1 && this.state.userTabSelected && (
+              <View style={style.placeholderImageViewStyle}>
+                <PlaceholderImageView
+                  uri={Utility.getFileURLFromPublicURL(item.uri)}
+                  borderRadius={20}
+                  style={style.placeholderImageStyleMargin}
+                  profilePic={true}
+                />
+              </View>
+            )}
+            {item.uid != -1 && !this.state.userTabSelected && (
+              <GroupPicHolder items={item.users ? item.users : []} />
+            )}
+            <Text
+              style={[
+                style.normalText,
+                {
+                  marginBottom: 0,
+                },
+              ]}>
+              {this.state.userTabSelected
+                ? item.field_first_name_value +
+                ' ' +
+                item.field_last_name_value
+                : item.name}
+            </Text>
+            {!this.state.userTabSelected && item.uid != -1 && (
+              <Text style={[style.userCountText]}>
+                {item.users_count} member{item.users_count > 1 ? 's' : ''}
+              </Text>
+            )}
+
+            {/* <View style={[style.infoIconContainerStyle,{backgroundColor:'green'}]}> */}
+            {!this.state.userTabSelected && item.uid != -1 && (
+              <TouchableOpacity
+                onPress={() => this.navigateToGroupInfo(item)}
+              // style={style.imagebuttonStyle}
+              >
+                <Image
+                  style={style.infoIconStyle}
+                  source={icon_info}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+            )}
+
+            <TouchableHighlight
+              // style={style.imagebuttonStyle}
+              underlayColor={Colors.overlayOpacityColor}
+              onPress={() => this.removeFromList(item)}>
+              <Image source={action_close}></Image>
+            </TouchableHighlight>
+
+            {/* </View> */}
+          </View>
+
+        </View>
+      </View>
+    );
+  };
   saveValue = () => {
-    if (this.props.tag == kWhoCanSeeThisMemory) {
+    if (this.props.route.params.tag == kWhoCanSeeThisMemory) {
       this.props.saveWhoCanSee({
         userIds: this.state.referenceListFriends,
         groupIds: this.state.referenceListFriendCircles,
       });
       Keyboard.dismiss();
       this.props.navigation.goBack();
-    } else if (this.props.tag == kCollaborators) {
+    } else if (this.props.route.params.tag == kCollaborators) {
       if (
         this.state.referenceListFriends.length > 0 ||
         this.state.referenceListFriendCircles.length > 0
@@ -290,14 +360,14 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
           isOwner: true,
         });
       } else {
-        this.setState({errorView: true});
+        this.setState({ errorView: true });
       }
     }
   };
 
   tabChange = (setUserTab: boolean) => {
     this.props.saveSearchList([]);
-    this.setState({userTabSelected: setUserTab}, () => {
+    this.setState({ userTabSelected: setUserTab }, () => {
       this.searchBar.current &&
         this.searchBar.current.clearField &&
         this.searchBar.current.clearField();
@@ -308,15 +378,18 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
       <View style={style.fullFlex}>
         <SafeAreaView style={style.emptySafeAreaStyle} />
         <SafeAreaView style={style.SafeAreaViewContainerStyle}>
-          <View style={style.fullFlex} onStartShouldSetResponder={() => false}>
+          <View style={style.fullFlex}>
+
             <NavigationHeaderSafeArea
-              hideBottomSeparator={true}
-              heading={this.props.title}
+              heading={''}
               cancelAction={() => this.cancelAction()}
-              showRightText={true}
+              showRightText={false}
               rightText={'Done'}
-              saveValues={() => this.saveValue()}
+              backIcon={action_close}
+              saveValues={this.saveValue}
             />
+            <View style={style.borderStyle}></View>
+
             {/* <SafeAreaView style={{width: "100%", flex: 1, backgroundColor : "#fff"}}>                    */}
             <StatusBar
               barStyle={
@@ -326,7 +399,12 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
               }
               backgroundColor={Colors.NewThemeColor}
             />
-            <View style={style.tabsContainer}>
+
+            <Text style={style.collectionTextStyle}>
+              Which friends and/or friend circles would you like to see this memory?
+            </Text>
+
+            {/* <View style={style.tabsContainer}>
               <TouchableHighlight
                 underlayColor={Colors.underlayBlackOpacityColor}
                 style={[
@@ -373,18 +451,19 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                   Friend Circle
                 </Text>
               </TouchableHighlight>
-            </View>
+            </View> */}
             <SearchBar
               ref={this.searchBar}
               style={[
                 style.commonFriendSerachStyle,
-                {
-                  borderBottomColor: this.state.errorView
-                    ? Colors.ErrorColor
-                    : Colors.TextColor,
-                },
+                // this.state.inputFocused
+                // ? 
+                style.onFocusStyle,
+                // : 
+                // {},
+
               ]}
-              placeholder={this.props.placeholder}
+              placeholder={this.props.route.params.placeholder}
               onSearchButtonPress={(text: string) => {
                 this.onChangeText(text);
               }}
@@ -393,6 +472,11 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
               }}
               onChangeText={(text: any) => {
                 this.onChangeText(text);
+              }}
+              onFocus={() => {
+                this.setState({
+                  inputFocused: true
+                })
               }}
               showCancelClearButton={false}
             />
@@ -404,8 +488,8 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
 
             {this.props.searchList.length == 0 && (
               <FlatList
-                extraData={this.state}
-                style={style.fullWidth}
+                // extraData={this.state}
+                // style={style.fullWidth}
                 onScroll={() => {
                   Keyboard.dismiss();
                 }}
@@ -417,13 +501,13 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                     ? this.state.referenceListFriends
                     : this.state.referenceListFriendCircles
                 }
-                renderItem={(item: any) => this.renderRow(item, false)}
+                renderItem={(item: any) => this.renderSelectedItems(item, false)}
               />
             )}
 
             {this.state.showSearchList && this.props.searchList.length > 0 && (
               <FlatList
-                extraData={this.state}
+                // extraData={this.state}
                 keyExtractor={(_, index: number) => `${index}`}
                 style={style.SafeAreaViewContainerStyle}
                 keyboardShouldPersistTaps={'handled'}
@@ -436,7 +520,24 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
               />
             )}
             <View
-              style={[style.fullWidth, {height: this.state.bottomView}]}></View>
+              style={[style.fullWidth, { height: this.state.bottomView }]}></View>
+          
+          <TouchableWithoutFeedback
+            // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+            onPress={
+              this.saveValue
+            }>
+            <View
+              style={style.loginSSOButtonStyle}>
+              <Text
+                style={[
+                  CommonTextStyles.fontWeight500Size17Inter,
+                  style.loginTextStyle,
+                ]}>
+                Done
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
           </View>
         </SafeAreaView>
       </View>
@@ -444,7 +545,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     searchList: state.MemoryInitials.searchList,
   };
@@ -453,11 +554,11 @@ const mapState = (state: {[x: string]: any}) => {
 const mapDispatch = (dispatch: Function) => {
   return {
     userSearch: (payload: any) =>
-      dispatch({type: UserSearchAPI, payload: payload}),
+      dispatch({ type: UserSearchAPI, payload: payload }),
     saveSearchList: (payload: any) =>
-      dispatch({type: SaveSearchList, payload: payload}),
+      dispatch({ type: SaveSearchList, payload: payload }),
     saveWhoCanSee: (payload: any) =>
-      dispatch({type: SaveWhoCanSeeIds, payload: payload}),
+      dispatch({ type: SaveWhoCanSeeIds, payload: payload }),
   };
 };
 

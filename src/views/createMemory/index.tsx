@@ -1,8 +1,10 @@
-import React, { createRef } from 'react';
+import React, { createRef, useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  FlatList,
   Image,
   Keyboard,
+  Modal,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -10,15 +12,19 @@ import {
   TextInput,
   TouchableHighlight,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import CustomActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
+import ActionSheet from 'react-native-actions-sheet';
+
+import SelectDropdown from 'react-native-select-dropdown';
 import Text from '../../common/component/Text';
 import {
   Colors,
+  CommonTextStyles,
   ConsoleType,
   decode_utf8,
   DraftActions,
@@ -52,7 +58,9 @@ import styles from './styles';
 import { connect } from 'react-redux';
 import {
   CaptureImage,
+  PickAudio,
   PickImage,
+  PickPDF,
 } from '../../common/component/filePicker/filePicker';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
@@ -81,6 +89,7 @@ import {
   SaveAttachedFile,
   SaveDescription,
   SaveNid,
+  SelectedLocation,
   showCustomAlert,
   showCustomAlertData,
 } from './reducer';
@@ -101,7 +110,7 @@ import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import DateTimePicker from '../../common/component/DateTimePicker';
 
 import moment from 'moment';
-import { arrowRight, calendarWrite, image } from '../../../app/images';
+import { arrowRight, audio, calendarWrite, image, images, map_pin, pdf, upload, x } from '../../../app/images';
 import CustomAlert from '../../common/component/customeAlert';
 import {
   CreateAMemory,
@@ -113,6 +122,8 @@ import {
 import DatePicker from './../../common/component/datePicker';
 import Styles from './styles';
 import BusyIndicator from '../../common/component/busyindicator';
+import TextField from '../../common/component/textField';
+import SearchBar from '../../common/component/SearchBar';
 
 export const createNew = 'Create New';
 export const editDraft = 'Edit Draft';
@@ -188,6 +199,7 @@ export const months = [
   { name: 'Nov', tid: 11 },
   { name: 'Dec', tid: 12 },
 ];
+const countries = ["Egypt", "Canada", "Australia", "Ireland"];
 
 export const MonthObj: any = {
   serverMonthsCount: 0,
@@ -195,46 +207,50 @@ export const MonthObj: any = {
   month: months,
 };
 
-class CreateMemory extends React.Component<Props> {
-  showHideMenuListener: EventManager;
-  saveDraftListener: EventManager;
-  createMemoryHelper: any;
-  _actionSheet: any | ActionSheet = createRef();
-  _mainItemList: any = null;
-  kUploadAction: 'uploadAction';
-  kSaveAction: 'saveAction';
+const CreateMemory = (props: Props) => {
+  let showHideMenuListener: EventManager;
+  let saveDraftListener: EventManager;
+  let createMemoryHelper: any = new CreateMemoryHelper();
+  let _actionSheet = useRef();
+  let optionsActionSheetRef = useRef();
 
-  moment: string;
+  let _mainItemList: any = null;
+  let kUploadAction: 'uploadAction';
+  let kSaveAction: 'saveAction';
+
+  // let moment: string;
   //InputRef reference
-  _inputRef: TextInput | any;
-  keyboardDidShowListener: any;
-  keyboardDidHideListener: any;
+  let _inputRef: TextInput | any;
+  let keyboardDidShowListener: any;
+  let keyboardDidHideListener: any;
 
-  dateOptions: DatePickerOptions = {
+  let dateOptions: DatePickerOptions = {
     display: 'calendar',
     maximumDate: new Date(),
     value: new Date(),
     minimumDate: new Date(1917, 1, 1),
     onChange: (event, date) => {
-      this.setState({
+      setState(prev => ({
+        ...prev,
         showCalender: false,
         memory_date: moment(date).utc().format('DD/MM/YYYY'),
-      });
+      }));
+
     },
   };
 
   //Files array list
   files: Array<MindPopAttachment & { type: string; uri: string }>;
 
-  newMemoryYears = new CreateMemoryHelper().getDateOptions(
+  let newMemoryYears = new CreateMemoryHelper().getDateOptions(
     'year',
     new Date().getFullYear(),
   );
 
   //Component default state
-  currentDate = new Date();
-  etherpadUrl: string = '';
-  state: State = {
+  let currentDate = new Date();
+  let etherpadUrl: string = '';
+  const [state, setState] = useState({
     menuVisibility: false,
     actionSheet: {
       title: '',
@@ -243,23 +259,24 @@ class CreateMemory extends React.Component<Props> {
     },
     itemList: [],
     year: {
-      value: this.currentDate.getUTCFullYear().toString(),
+      value: '',//currentDate.getUTCFullYear().toString(),
       error: false,
     },
     month: {
-      value: MonthObj.month[this.currentDate.getUTCMonth()],
+      value: '',// MonthObj.month[currentDate.getUTCMonth()],
       error: false,
     },
     day: {
-      value: this.currentDate.getDate(),
+      value: '',//currentDate.getDate(),
+      error: false,
     },
-    memory_date:
-      '' +
-      new Date().getUTCDate() +
-      '/' +
-      (new Date().getUTCMonth() + 1) +
-      '/' +
-      new Date().getUTCFullYear(),
+    memory_date: '',
+    // '' +
+    // new Date().getUTCDate() +
+    // '/' +
+    // (new Date().getUTCMonth() + 1) +
+    // '/' +
+    // new Date().getUTCFullYear(),
     dateError: '',
     locationError: '',
     locationText: '',
@@ -283,95 +300,139 @@ class CreateMemory extends React.Component<Props> {
     showCustomAlert: false,
     showCalender: false,
     showEtherPad: true,
+    showCustomValidationAlert: false,
     placeholder: 'Tap to title your memory...',
-  };
+  });
+  const [optionToShow, setOptionToShow] = useState('')
 
-  isEdit: boolean = false;
+  let isEdit: boolean = false;
   // filePathsToUpload: string[];
 
-  filesToUpdate: Array<any> = [];
-  listener: EventManager;
-  backListner: EventManager;
-  bottomPicker: React.RefObject<BottomPicker> = React.createRef<BottomPicker>();
-  memoryCallback: EventManager;
-  deleteDraftListener: EventManager;
-  initialSaveManager: EventManager;
-  updateFilesListener: EventManager;
-  draftDetailsListener: EventManager;
-  constructor(props: Props) {
-    super(props);
-    this.createMemoryHelper = new CreateMemoryHelper();
+  let filesToUpdate: Array<any> = [];
+  let listener: EventManager;
+  let backListner: EventManager;
+  let bottomPicker: React.RefObject<BottomPicker> = React.useRef<BottomPicker>();
+  let memoryCallback: EventManager;
+  let deleteDraftListener: EventManager;
+  let initialSaveManager: EventManager;
+  let updateFilesListener: EventManager;
+  let draftDetailsListener: EventManager;
 
-    // this.showHideMenuListener = EventManager.addListener(
-    //   kShowHideMenu,
-    //   this.showMenu,
-    // );
-    // this.saveDraftListener = EventManager.addListener(
-    //   kSaveDraft,
-    //   this.saveDraft,
-    // );
-    // this.memoryCallback = EventManager.addListener(
-    //   'createMemoryMainListener',
-    //   this.memorySaveCallback,
-    // );
-    // this.deleteDraftListener = EventManager.addListener(
-    //   kDeleteDraftCreateMemo,
-    //   this.deleteDraftCallback,
-    // );
-    // this.updateFilesListener = EventManager.addListener(
-    //   kFilesUpdated,
-    //   this.fileUpdateCallback,
-    // );
-    // this.draftDetailsListener = EventManager.addListener(
-    //   kDraftDetailsFetched,
-    //   this.draftDetailsCallBack,
-    // );
+  // showHideMenuListener = EventManager.addListener(
+  //   kShowHideMenu,
+  //   showMenu,
+  // );
+  // saveDraftListener = EventManager.addListener(
+  //   kSaveDraft,
+  //   saveDraft,
+  // );
+  // memoryCallback = EventManager.addListener(
+  //   'createMemoryMainListener',
+  //   memorySaveCallback,
+  // );
+  // deleteDraftListener = EventManager.addListener(
+  //   kDeleteDraftCreateMemo,
+  //   deleteDraftCallback,
+  // );
+  // updateFilesListener = EventManager.addListener(
+  //   kFilesUpdated,
+  //   fileUpdateCallback,
+  // );
+  // draftDetailsListener = EventManager.addListener(
+  //   kDraftDetailsFetched,
+  //   draftDetailsCallBack,
+  // );
 
-    if (Platform.OS == 'android') {
-      this.keyboardDidShowListener = Keyboard.addListener(
-        'keyboardDidShow',
-        this._keyboardDidShow,
-      );
-      this.keyboardDidHideListener = Keyboard.addListener(
-        'keyboardDidHide',
-        this._keyboardDidHide,
-      );
-    } else {
-      this.keyboardDidShowListener = Keyboard.addListener(
-        'keyboardWillShow',
-        this._keyboardDidShow,
-      );
-      this.keyboardDidHideListener = Keyboard.addListener(
-        'keyboardWillHide',
-        this._keyboardDidHide,
-      );
-    }
-    MonthObj.selectedIndex =
-      this.currentDate.getMonth() + MonthObj.serverMonthsCount;
-    this.backListner = EventManager.addListener(
-      'hardwareBackPress',
-      this.cancelAction,
+
+
+  const _keyboardDidShow = (e: any) => {
+    setState(prevState => ({
+      ...prevState,
+      bottomToolbar: e.endCoordinates.height,
+    }));
+
+  };
+
+  const _keyboardDidHide = (e: any) => {
+    setState(prevState => ({
+      ...prevState,
+      bottomToolbar: 0
+    }));
+
+  };
+
+  const cancelAction = () => {
+    // Alert.alert('', `Are you sure you want to exit?`, [
+    //   {
+    //     text: 'No',
+    //     style: 'cancel',
+    //     onPress: () => { },
+    //   },
+    //   {
+    //     text: 'Yes',
+    //     style: 'default',
+    //     onPress: () => {
+    //       EventManager.callBack(kReloadDraft);
+    //       this.setState({ showMenu: false }, () => {
+    //         Keyboard.dismiss();
+    //         if (this.props.deepLinkBackClick) {
+    //           this.props.navigation.dashBoard();
+    //         } else {
+    //           this.props.navigation.goBack();
+    //         }
+    //       });
+    //     },
+    //   },
+    // ]);
+    // return ();
+  };
+
+
+  if (Platform.OS == 'android') {
+    keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      _keyboardDidShow,
+    );
+    keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      _keyboardDidHide,
     );
   }
+  else {
+    keyboardDidShowListener = Keyboard.addListener(
+      'keyboardWillShow',
+      _keyboardDidShow,
+    );
+    keyboardDidHideListener = Keyboard.addListener(
+      'keyboardWillHide',
+      _keyboardDidHide,
+    );
+  }
+  MonthObj.selectedIndex =
+    currentDate.getMonth() + MonthObj.serverMonthsCount;
+  backListner = EventManager.addListener(
+    'hardwareBackPress',
+    cancelAction,
+  );
 
-  deleteDraftCallback = (success: any) => {
+  const deleteDraftCallback = (success: any) => {
 
     if (success) {
       //loaderHandler.showLoader();
-      this.props.showLoader(true);
-      this.props.loaderText('Loading...');
-      this.props.navigation.navigate('dashBoard');
+      props.showLoader(true);
+      props.loaderText('Loading...');
+      props.navigation.navigate('dashBoard');
     } else {
-     //ToastMessage('Unable to delete draft. Please try again later');
+      //ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 
-  draftDetailsCallBack = (success: any, draftDetails: any) => {
+  const draftDetailsCallBack = (success: any, draftDetails: any) => {
     if (success) {
       draftDetails = new MemoryDraftsDataModel().getEditContentObject(
         draftDetails,
       );
-      this.props.setEditContent(draftDetails);
+      props.setEditContent(draftDetails);
       MonthObj.month.forEach((element: any, index: any) => {
         if (element.name == draftDetails.date.month) {
           MonthObj.selectedIndex = index;
@@ -393,152 +454,175 @@ class CreateMemory extends React.Component<Props> {
         '/' +
         new Date(parseInt(draftDetails.memory_date) * 1000).getUTCFullYear()
         : '';
+      // console.warn("draftDetails >", JSON.stringify(draftDetails))
 
-      this.setState(
-        {
-          title: decode_utf8(draftDetails.title),
-          locationText: draftDetails.location.description,
-          itemList: draftDetails.files,
-          year: { ...this.state.year, value: draftDetails.date.year },
-          month: {
-            ...this.state.month,
-            value: MonthObj.month[MonthObj.selectedIndex],
-          },
-          day: {
-            ...this.state.day,
-            value: draftDetails.date.day > 0 ? draftDetails.date.day : 'Day',
-          },
-          memory_date: newMemoryDate ? newMemoryDate : '',
-          showDay: draftDetails.date.day > 0 ? true : false,
-          isCreatedByUser:
-            draftDetails.isCreatedByUser.uid == Account.selectedData().userID,
-          padDetails: draftDetails.etherpad_details,
-          ownerDetails: draftDetails.isCreatedByUser,
-          youWhereThere: draftDetails.youWhereThere,
-          taggedCount: draftDetails.taggedCount,
-          collaboratorOwner: draftDetails.collaboratorOwner,
+      setState(prevState => ({
+        ...prevState,
+        title: decode_utf8(draftDetails.title),
+        locationText: draftDetails.location.description,
+        itemList: draftDetails.files,
+        year: { ...state.year, value: draftDetails.date.year ? draftDetails.date.year.toString() :''},
+        month: {
+          ...state.month,
+          value: draftDetails.date.month > 0 ?draftDetails.date.month < 10 ? '0'+JSON.stringify(draftDetails.date.month):JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
         },
-        () => {
-          //loaderHandler.hideLoader();
-          this.props.showLoader(false);
-          this.props.loaderText('Loading...');
-          this.setEtherPadContent(
-            'get',
-            '',
-            draftDetails.etherpad_details.padId,
-          );
+        day: {
+          ...state.day,
+          value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
         },
+        memory_date: newMemoryDate ? newMemoryDate : '',
+        showDay: draftDetails.date.day > 0 ? true : false,
+        isCreatedByUser:
+          draftDetails.isCreatedByUser.uid == Account.selectedData().userID,
+        padDetails: draftDetails.etherpad_details,
+        ownerDetails: draftDetails.isCreatedByUser,
+        youWhereThere: draftDetails.youWhereThere,
+        taggedCount: draftDetails.taggedCount,
+        collaboratorOwner: draftDetails.collaboratorOwner,
+
+      }));
+
+      //loaderHandler.hideLoader();
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      setEtherPadContent(
+        'get',
+        '',
+        draftDetails.etherpad_details.padId,
       );
+
       // if(!(draftDetails.isCreatedByUser.uid == Account.selectedData().userID)){
-      // 	CollaboratorActionAPI({nid : this.props.draftNid,
+      // 	CollaboratorActionAPI({nid : props.draftNid,
       // 		id : Account.selectedData().userID,
       // 		action_type: CollaboratorsAction.joinCollaboration})
       // }
       // //loaderHandler.hideLoader();
     } else {
       //loaderHandler.hideLoader();
-      this.props.showLoader(false);
-      this.props.loaderText('Loading...');
-     //ToastMessage(draftDetails, Colors.ErrorColor);
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      //ToastMessage(draftDetails, Colors.ErrorColor);
     }
   };
 
-  componentDidMount = async () => {
-    this.props.setCreateMemory(true);
-    // DefaultPreference.get('hide_memory_draft').then((value: any) => {
-    //   if (value == 'true') {
-    //     this.state.memoryDraftVisibility = false;
-    //   } else {
-    //     this.state.memoryDraftVisibility = true;
-    //   }
-    // });
-
-    this.props.resetAll();
+  const getData = async () => {
     let recentTag = { searchType: kRecentTags, searchTerm: '' };
-    if (this.props.route.params.editMode) {
+    if (props.route.params.editMode) {
       //loaderHandler.showLoader('Loading...');
-      this.props.showLoader(true);
-      this.props.loaderText('Loading...');
+      props.showLoader(true);
+      props.loaderText('Loading...');
       let response: any = await GetDraftsDetails(
-        this.props.route.params.draftNid,
-        resp => this.draftDetailsCallBack(resp.status, resp.responseData),
+        props.route.params.draftNid,
+        resp => draftDetailsCallBack(resp.status, resp.responseData),
       );
     } else {
-      let title = decode_utf8(this.props.route.params.textTitle);
+      let title = decode_utf8(props.route.params.textTitle);
       title = title.replace(/\n/g, ' ');
       if (title.length > 150) {
         title = title.substring(0, 150);
       }
-      // this.setEtherPadContent("set", description);
-      this.setState(
-        {
-          itemList: this.props.route.params.attachments,
-          padDetails: this.props.route.params.padDetails,
-          title: decode_utf8(this.props.route.params.textTitle),
-          location: this.props.route.params.location,
-          year: {
-            ...this.state.year,
-            value: this.props.route.params.memoryDate.year,
-          },
-          month: {
-            ...this.state.month,
-            value:
-              MonthObj.month[
-              this.currentDate.getMonth() + MonthObj.serverMonthsCount
-              ],
-          },
-          isCreatedByUser: true,
-          date: {
-            ...this.state.day,
-            value: this.props.route.params.memoryDate.day,
-          },
+
+      // setEtherPadContent("set", description);
+      setState(prevState => ({
+        ...prevState,
+        itemList: props.route.params.attachments,
+        padDetails: props.route.params.padDetails,
+        title: decode_utf8(props.route.params.textTitle),
+        location: props.route.params.location,
+        year: {
+          ...state.year,
+          value: props.route.params.memoryDate.year,
         },
-        () => {
-          this.props.setNid(this.props.route.params.id);
-          //loaderHandler.hideLoader();
-          this.props.showLoader(false);
-          this.props.loaderText('Loading...');
-          this.setEtherPadContent(
-            'get',
-            '',
-            this.props.route.params.padDetails.padId,
-          );
+        month: {
+          ...state.month,
+          value:
+            MonthObj.month[
+            currentDate.getMonth() + MonthObj.serverMonthsCount
+            ],
         },
+        isCreatedByUser: true,
+        date: {
+          ...state.day,
+          value: props.route.params.memoryDate.day,
+        },
+      }));
+
+      props.setNid(props.route.params.id);
+      //loaderHandler.hideLoader();
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      setEtherPadContent(
+        'get',
+        '',
+        props.route.params.padDetails.padId,
       );
+
     }
-    // // this.setEtherPadContent('set', decode_utf8(this.props.textTitle), this.props.padDetails.padId);
-    // this.props.recentTags(recentTag);
-    // this.props.collectionAPI();
+    props.recentTags(recentTag);
+    props.collectionAPI();
   };
 
-  setEtherPadContent(type: any, description: any, padId?: any) {
+  useEffect(() => {
+    props.setCreateMemory(true);
+    // DefaultPreference.get('hide_memory_draft').then((value: any) => {
+    //   if (value == 'true') {
+    //     state.memoryDraftVisibility = false;
+    //   } else {
+    //     state.memoryDraftVisibility = true;
+    //   }
+    // });
+
+    props.resetAll();
+    getData();
+    // // setEtherPadContent('set', decode_utf8(props.textTitle), props.padDetails.padId);
+
+    return () => {
+      Keyboard.dismiss();
+      // props.resetLocation();
+      // showHideMenuListener.removeListener();
+      // saveDraftListener.removeListener();
+      // memoryCallback.removeListener();
+      // deleteDraftListener.removeListener();
+      // updateFilesListener.removeListener();
+      // draftDetailsListener.removeListener();
+      backListner.removeListener();
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+
+    }
+  }, []);
+
+
+  // };
+
+  const setEtherPadContent = (type: any, description: any, padId?: any) => {
     try {
-      this.props.etherpadContentUpdate({
-        padId: padId ? padId : this.state.padDetails.padId,
+      props.etherpadContentUpdate({
+        padId: padId ? padId : state.padDetails?.padId,
         content: description,
         type: type,
       });
     } catch (error) { }
   }
 
-  memorySaveCallback = (success: any, id?: any, padId?: any, key?: any) => {
+  const memorySaveCallback = (success: any, id?: any, padId?: any, key?: any) => {
     // //loaderHandler.hideLoader();
-    this.props.showLoader(false);
-    this.props.loaderText('Loading...');
+    props.showLoader(false);
+    props.loaderText('Loading...');
     // showConsoleLog(ConsoleType.LOG,'dataaaaa : ', JSON.stringify(success), id, key);
     if (success) {
       // EventManager.callBack('showConfetti');
       if (key == kPublish) {
-        this.props.showAlertCall(true);
-        this.props.showAlertCallData({
+        props.showAlertCall(true);
+        props.showAlertCallData({
           title: 'Memory published! 🎉',
           desc: `Nice work writing Shakespeare! Your new memory has been published!`,
         });
-        // this.props.navigateToDashboard(true);
-        // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+        // props.navigateToDashboard(true);
+        // props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
-        this.props.navigation.replace('dashBoard');
-        // this.props.navigation.reset({
+        props.navigation.replace('dashBoard');
+        // props.navigation.reset({
         //   index: 0,
         //   routes: [{ name: 'dashBoard' }],
         // });
@@ -556,9 +640,9 @@ class CreateMemory extends React.Component<Props> {
         // );
 
         // Actions.dashBoard();
-      } else if (this.props.route.params.editPublsihedMemory) {
-        this.props.showAlertCall(true);
-        this.props.showAlertCallData({
+      } else if (props.route.params.editPublsihedMemory) {
+        props.showAlertCall(true);
+        props.showAlertCallData({
           title: 'Memory saved',
           desc: `Your memory has been saved.`,
         });
@@ -577,33 +661,33 @@ class CreateMemory extends React.Component<Props> {
         //   },
         // ]);
         Keyboard.dismiss();
-        // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
-        // this.props.fetchMemoryList({ type: ListType.Timeline, isLoading: true });
+        // props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+        // props.fetchMemoryList({ type: ListType.Timeline, isLoading: true });
         // EventManager.callBack('memoryUpdateRecentListener');
         // EventManager.callBack('memoryUpdateTimelineListener');
         // EventManager.callBack('memoryUpdatePublishedListener');
         // EventManager.callBack('memoryDetailsListener');
-        // this.props.navigation.replace('writeTabs');
-        this.props.navigation.reset({
+        // props.navigation.replace('writeTabs');
+        props.navigation.reset({
           index: 0,
           routes: [{ name: 'writeTabs' }]
         })
-        // this.props.navigation.writeTabs();
+        // props.navigation.writeTabs();
         // //loaderHandler.showLoader();
-        this.props.showLoader(true);
-        this.props.loaderText('Loading...');
+        props.showLoader(true);
+        props.loaderText('Loading...');
       } else {
-        this.props.showAlertCall(true);
-        this.props.showAlertCallData({
+        props.showAlertCall(true);
+        props.showAlertCallData({
           title: 'New draft saved!',
           desc: `You can see your new draft added with the rest of your in-progress work now.`,
         });
-        this.props.navigation.replace('writeTabs', {
+        props.navigation.replace('writeTabs', {
           showPublishedPopup: true,
           title: 'New draft saved!',
           desc: `You can see your new draft added with the rest of your in-progress work now.`,
         });
-        // this.props.navigation.reset({
+        // props.navigation.reset({
         //   index: 0,
         //   routes: [{
         //     name: 'writeTabs', params: {
@@ -621,68 +705,57 @@ class CreateMemory extends React.Component<Props> {
         //       text: 'Great!',
         //       style: 'default',
         //       onPress: () => {
-        //         // this.props.navigation.jump('memoriesDrafts');
+        //         // props.navigation.jump('memoriesDrafts');
         //       },
         //     },
         //   ],
         // );
-        // // this.props.navigation.writeTabs();
+        // // props.navigation.writeTabs();
 
-        // this.props.navigation.goBack();
+        // props.navigation.goBack();
         // EventManager.callBack(kReloadDraft);
       }
     } else {
       //loaderHandler.hideLoader();
-      this.props.showLoader(false);
-      this.props.loaderText('Loading...');
-     //ToastMessage(id, Colors.ErrorColor);
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      //ToastMessage(id, Colors.ErrorColor);
     }
   };
 
-  _keyboardDidShow = (e: any) => {
-    this.setState({
-      bottomToolbar: e.endCoordinates.height,
-    });
-  };
-
-  _keyboardDidHide = (e: any) => {
-    this.setState({
-      bottomToolbar: 0,
-    });
-  };
-
-  showMenu = (showMenu?: boolean) => {
+  const showMenu = (showMenu?: boolean) => {
     Keyboard.dismiss();
-    this.hideToolTip();
-    this._actionSheet &&
-      this._actionSheet.current &&
-      this._actionSheet.current.hideSheet();
-    this.setState({
-      menuVisibility: !this.state.menuVisibility,
-    });
+    hideToolTip();
+    _actionSheet &&
+      _actionSheet &&
+      _actionSheet.hideSheet();
+    setState(prev => ({
+      ...prev,
+      menuVisibility: !state.menuVisibility,
+    }));
   };
 
-  preview = () => {
+  const preview = () => {
     //loaderHandler.showLoader();
-    this.props.showLoader(true);
-    this.props.loaderText('Loading...');
-    this.saveIntitals();
-    this.hideMenu();
+    props.showLoader(true);
+    props.loaderText('Loading...');
+    saveIntitals();
+    hideMenu();
     setTimeout(() => {
       //loaderHandler.hideLoader();
-      this.props.showLoader(false);
-      this.props.loaderText('Loading...');
-      this.props.navigation.navigate('memoryDetails', {
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      props.navigation.navigate('memoryDetails', {
         previewDraft: true,
-        memoryDetails: this.getDetailsForPreview(),
+        memoryDetails: getDetailsForPreview(),
       });
     }, 1000);
   };
 
-  getDetailsForPreview = () => {
+  const getDetailsForPreview = () => {
     let memoryDataModel = new MemoryDataModel();
     memoryDataModel.shareOption.available = true;
-    switch (this.props.shareOption) {
+    switch (props.shareOption) {
       case 'only_me':
         memoryDataModel.shareOption.shareText = 'Shared only with me';
         memoryDataModel.shareOption.color = Colors.green;
@@ -693,11 +766,11 @@ class CreateMemory extends React.Component<Props> {
         break;
       case 'custom':
         let share_count = 0;
-        this.props.whoCanSeeMemoryGroupIds.forEach((element: any) => {
+        props.whoCanSeeMemoryGroupIds.forEach((element: any) => {
           share_count =
             share_count + element.users_count ? element.users_count : 0;
         });
-        share_count = share_count + this.props.whoCanSeeMemoryUids.length;
+        share_count = share_count + props.whoCanSeeMemoryUids.length;
         memoryDataModel.shareOption.shareText =
           'Shared with ' +
           share_count +
@@ -711,7 +784,7 @@ class CreateMemory extends React.Component<Props> {
     }
     memoryDataModel.userDetails.name = 'You';
     memoryDataModel.memory.description =
-      '<p><p>' + this.props.memoryDescription + '</p></p>';
+      '<p><p>' + props.memoryDescription + '</p></p>';
     let currentDate = new Date();
     memoryDataModel.userDetails.createdOn =
       'on ' +
@@ -727,15 +800,15 @@ class CreateMemory extends React.Component<Props> {
     if (memoryDataModel.userDetails.userProfilePic != profile_placeholder) {
       memoryDataModel.userDetails.isProfileAvailable = true;
     }
-    memoryDataModel.memoryTags = this.props.memoryObject.tags;
-    memoryDataModel.memory.memoryTitle = this.props.memoryObject.title;
+    memoryDataModel.memoryTags = props.memoryObject.tags;
+    memoryDataModel.memory.memoryTitle = props.memoryObject.title;
     memoryDataModel.memory.memoryDate =
-      this.state.month.value.name + ' ' + this.props.memoryObject.date.year;
-    memoryDataModel.memory.memoryPlace = this.props.memoryObject.location
+      state.month.value.name + ' ' + props.memoryObject.date.year;
+    memoryDataModel.memory.memoryPlace = props.memoryObject.location
       .description
-      ? this.props.memoryObject.location.description
+      ? props.memoryObject.location.description
       : '';
-    memoryDataModel.memory.whoElseWasThere = this.props.whoElseWhereThereList;
+    memoryDataModel.memory.whoElseWasThere = props.whoElseWhereThereList;
     memoryDataModel.memory.whoElseWasThere.forEach(
       (element: any, index: any) => {
         if (element.uid == Account.selectedData().userID) {
@@ -744,64 +817,64 @@ class CreateMemory extends React.Component<Props> {
         }
       },
     );
-    // if(this.props.collection.tid){
-    // 		memoryDataModel.memorycollection.collectionName =  this.props.collection.name
-    // 		memoryDataModel.memorycollection.collectionId = this.props.collection.tid
+    // if(props.collection.tid){
+    // 		memoryDataModel.memorycollection.collectionName =  props.collection.name
+    // 		memoryDataModel.memorycollection.collectionId = props.collection.tid
     // }
     memoryDataModel.files = {
-      images: this.state.itemList.filter(
+      images: state.itemList.filter(
         (element: any) => element.type == 'images',
       ),
-      audios: this.state.itemList.filter(
+      audios: state.itemList.filter(
         (element: any) => element.type == 'audios',
       ),
-      pdf: this.state.itemList.filter(
+      pdf: state.itemList.filter(
         (element: any) => element.type == 'files',
       ),
     };
     return memoryDataModel;
   };
 
-  addRemoveTags = () => {
-    this.hideMenu();
+  const addRemoveTags = () => {
+    hideMenu();
     if (Utility.isInternetConnected) {
-      this.props.navigation.navigate('commonListCreateMemory', {
+      props.navigation.navigate('commonListCreateMemory', {
         tag: kTags,
         title: 'Memory Tags',
         showRecent: true,
-        referenceList: this.props.tagsList,
-        placeholder: 'Enter tags here...',
+        referenceList: props.tagsList,
+        placeholder: 'Add tags',
       });
     } else {
       No_Internet_Warning();
     }
   };
 
-  addToCollections = () => {
-    this.hideMenu();
+  const addToCollections = () => {
+    hideMenu();
     if (Utility.isInternetConnected) {
-      this.props.navigation.navigate('collectionList');
+      props.navigation.navigate('collectionList');
     } else {
       No_Internet_Warning();
     }
   };
 
-  whoElseWasthere = () => {
-    this.hideMenu();
+  const whoElseWasthere = () => {
+    hideMenu();
     if (Utility.isInternetConnected) {
-      this.props.navigation.navigate('commonListCreateMemory', {
+      props.navigation.navigate('commonListCreateMemory', {
         tag: kWhoElseWhereThere,
         title: 'Who else where there',
         showRecent: false,
-        referenceList: this.props.whoElseWhereThereList,
-        placeholder: 'Enter name of friends...',
+        referenceList: props.whoElseWhereThereList,
+        placeholder: 'Search...',
       });
     } else {
       No_Internet_Warning();
     }
   };
 
-  deleteDraft = () => {
+  const deleteDraft = () => {
     Alert.alert('Delete Draft?', `You wish to delete this Memory Draft ?`, [
       {
         text: 'No',
@@ -812,13 +885,13 @@ class CreateMemory extends React.Component<Props> {
         text: 'Yes',
         style: 'default',
         onPress: () => {
-          this.hideMenu();
+          hideMenu();
           if (Utility.isInternetConnected) {
             //loaderHandler.showLoader('Deleting...');
-            this.props.showLoader(true);
-            this.props.loaderText('Deleting...');
+            props.showLoader(true);
+            props.loaderText('Deleting...');
             DeleteDraftService(
-              this.props.nid,
+              props.nid,
               DraftActions.deleteDrafts,
               kDeleteDraftCreateMemo,
             );
@@ -830,145 +903,157 @@ class CreateMemory extends React.Component<Props> {
     ]);
   };
 
-  whoCanSee = () => {
-    this.hideMenu();
+  const whoCanSee = () => {
+    hideMenu();
     if (Utility.isInternetConnected) {
-      this.props.navigation.navigate('whoCanSee');
+      props.navigation.navigate('whoCanSee');
     } else {
       No_Internet_Warning();
     }
   };
 
-  saveDraft = () => {
+  const saveDraft = () => {
     Keyboard.dismiss();
-    // this.saveIntitals();
-    this.hideMenu();
+    // saveIntitals();
+    hideMenu();
     if (
-      this.state.title != '' &&
-      this.state.memory_date != '' &&
-      this.state.description != ''
+      state.title != '' &&
+      state.memory_date != '' &&
+      state.description != ''
     ) {
-      this.setState({
+      setState(prevState => ({
+        ...prevState,
         actionSheet: {
           title: 'Memory Draft',
-          type: this.kSaveAction,
+          type: kSaveAction,
           list: publishActions,
         },
-      });
+      }));
+
     }
 
     if (Platform.OS == 'ios') {
-      this._actionSheet &&
-        this._actionSheet.current &&
-        this._actionSheet.current.showSheet();
+      debugger
+      _actionSheet &&
+        _actionSheet &&
+        _actionSheet.showSheet();
     } else {
-      this.setState({
+      setState(prevState => ({
+        ...prevState,
         showActionAndroid: true,
-      });
+      }));
+
     }
-    // if (this.props.editPublsihedMemory) {
-    //   this.saveORPublish('save');
+    // if (props.editPublsihedMemory) {
+    //   saveORPublish('save');
     // }
-    // else if (this.state.isCreatedByUser) {
-    //   this.setState(
+    // else if (state.isCreatedByUser) {
+    //   setState(
     //     {
     //       actionSheet: {
     //         title: 'Memory Draft',
-    //         type: this.kSaveAction,
+    //         type: kSaveAction,
     //         list: SaveActions,
     //       },
     //     },
-    //     this._actionSheet && this._actionSheet.showSheet(),
+    //     _actionSheet && _actionSheet.showSheet(),
     //   );
     // } else {
-    //   this.saveORPublish('save');
+    //   saveORPublish('save');
     // }
   };
 
-  validateDateAndLocation = (checkLocation: boolean) => {
+  const validateDateAndLocation = (checkLocation: boolean) => {
     if (
-      this.state.year.value != 'Year*' &&
-      this.state.title.trim().length > 0 &&
-      this.state.month.value.tid != 0 &&
-      (!checkLocation || this.state.locationText.trim().length > 0)
+      state.year.value != 'Year*' &&
+      state.title.trim().length > 0 &&
+      state.month.value.tid != 0 &&
+      (!checkLocation || state.locationText.trim().length > 0)
     ) {
       return true;
     } else {
-      if (this._mainItemList) {
-        this._mainItemList.scrollToOffset({ animated: true, offset: 0 });
+      if (_mainItemList) {
+        _mainItemList.scrollToOffset({ animated: true, offset: 0 });
       }
     }
 
-    if (this.state.year.value == 'Year*') {
-      this.setState({
-        year: { ...this.state.year, error: true },
+    if (state.year.value == 'Year*') {
+      setState(prevState => ({
+        ...prevState,
+        year: { ...state.year, error: true },
         dateError: '* Please enter a year and month to publish your memory',
-      });
+      }));
     }
 
-    if (this.state.month.value.tid == 0) {
-      this.setState({
-        month: { ...this.state.month, error: true },
+    if (state.month.value.tid == 0) {
+      setState(prevState => ({
+        ...prevState,
+        month: { ...state.month, error: true },
         dateError: '* Please enter a year and month to publish your memory',
-      });
+      }));
+
     }
 
-    if (checkLocation && this.state.locationText.trim().length == 0) {
-      this.setState({
+    if (checkLocation && state.locationText.trim().length == 0) {
+      setState(prevState => ({
+        ...prevState,
         locationError: '* Please enter a location to publish your memory',
-      });
+      }));
     }
 
-    if (this.state.title.trim().length == 0) {
-      this.setState({ titleError: '* Title is mandatory' });
+    if (state.title.trim().length == 0) {
+      setState(prevState => ({
+        ...prevState,
+        titleError: '* Title is mandatory'
+      }));
     }
 
     return false;
   };
 
   /**Menu options for actions*/
-  menuOptions: Array<menuOption> = [
-    { key: 1, title: 'Preview...', onPress: this.preview },
-    { key: 2, title: 'Who can see...', onPress: this.whoCanSee },
-    { key: 3, title: 'Add/Remove Tags...', onPress: this.addRemoveTags },
-    { key: 5, title: 'Who else was there...', onPress: this.whoElseWasthere },
-    { key: 4, title: 'Add to Collections...', onPress: this.addToCollections },
+  const menuOptions: Array<menuOption> = [
+    { key: 1, title: 'Preview...', onPress: preview },
+    { key: 2, title: 'Who can see...', onPress: whoCanSee },
+    { key: 3, title: 'Add/Remove Tags...', onPress: addRemoveTags },
+    { key: 5, title: 'Who else was there...', onPress: whoElseWasthere },
+    { key: 4, title: 'Add to Collections...', onPress: addToCollections },
     {
       key: 6,
       title: 'Delete Draft...',
-      onPress: this.deleteDraft,
+      onPress: deleteDraft,
       color: Colors.NewRadColor,
     },
   ];
 
-  fileUpdateCallback = (success: boolean, message: any, key: any) => {
+  const fileUpdateCallback = (success: boolean, message: any, key: any) => {
     if (success) {
-      this.filesToUpdate = [];
-      this.saveORPublish(key);
+      filesToUpdate = [];
+      saveORPublish(key);
     } else {
-     //ToastMessage(message, Colors.ErrorColor);
+      //ToastMessage(message, Colors.ErrorColor);
       //loaderHandler.hideLoader();
-      this.props.showLoader(false);
-      this.props.loaderText('Loading...');
+      props.showLoader(false);
+      props.loaderText('Loading...');
     }
   };
 
-  saveORPublish = (key: any) => {
-    this.saveIntitals();
+  const saveORPublish = (key: any) => {
+    saveIntitals();
     //loaderHandler.showLoader('Saving');
-    this.props.showLoader(true);
-    this.props.loaderText('Saving...');
+    props.showLoader(true);
+    props.loaderText('Saving...');
     setTimeout(async () => {
       if (Utility.isInternetConnected) {
         // setTimeout(() => {
-        if (this.filesToUpdate.length > 0) {
-          UpdateAttachments(this.props.nid, this.filesToUpdate, key,
+        if (filesToUpdate.length > 0) {
+          UpdateAttachments(props.nid, filesToUpdate, key,
             response => {
               if (response.ResponseCode == 200) {
-                this.fileUpdateCallback(true, response.ResponseMessage, key)
+                fileUpdateCallback(true, response.ResponseMessage, key)
 
               } else {
-                this.fileUpdateCallback(false, response.ResponseMessage, key)
+                fileUpdateCallback(false, response.ResponseMessage, key)
                 // EventManager.callBack(kFilesUpdated, false, response.ResponseMessage);
               }
             });
@@ -976,10 +1061,10 @@ class CreateMemory extends React.Component<Props> {
         // else {
         let memoryDetails = await DefaultCreateMemoryObj(
           key,
-          this.props.memoryObject,
-          this.state.isCreatedByUser,
+          props.memoryObject,
+          state.isCreatedByUser,
         );
-        let filesToUpload = this.state.itemList.filter(
+        let filesToUpload = state.itemList.filter(
           (element: any) => element.isLocal,
         );
 
@@ -990,7 +1075,7 @@ class CreateMemory extends React.Component<Props> {
           key,
           resp => {
             if (resp?.Status) {
-              this.memorySaveCallback(
+              memorySaveCallback(
                 resp.Status,
                 resp.Status,
                 resp.padid,
@@ -1004,39 +1089,40 @@ class CreateMemory extends React.Component<Props> {
         // }, 500);
       } else {
         //loaderHandler.hideLoader();
-        this.props.showLoader(false);
-        this.props.loaderText('Loading...');
+        props.showLoader(false);
+        props.loaderText('Loading...');
         No_Internet_Warning();
       }
     }, 1000);
   };
 
-  saveIntitals = () => {
+  const saveIntitals = () => {
+
     let details: any = {
-      title: this.state.title, //.trim(),
+      title: state.title, //.trim(),
       memory_date: {
         year:
-          this.state.memory_date != ''
-            ? this.state.memory_date.split('/')[2]
-            : '', //new Date(this.state.memory_date).getFullYear(),
+          state.memory_date != ''
+            ? state.memory_date.split('/')[2]
+            : '', //new Date(state.memory_date).getFullYear(),
         month:
-          this.state.memory_date != ''
-            ? parseInt(this.state.memory_date.split('/')[1])
-            : '', // new Date(this.state.memory_date).getMonth(),
+          state.memory_date != ''
+            ? parseInt(state.memory_date.split('/')[1])
+            : '', // new Date(state.memory_date).getMonth(),
         day:
-          this.state.memory_date != ''
-            ? this.state.memory_date.split('/')[0]
-            : '', // new Date(this.state.memory_date).getDate(),
+          state.memory_date != ''
+            ? state.memory_date.split('/')[0]
+            : '', // new Date(state.memory_date).getDate(),
       },
-      location: { description: '', reference: '' },
-      files: this.state.itemList,
+      location: { description: state.location.description, reference: state.locationText == state.location.description ? state.location.reference : '' },
+      files: state.itemList,
       description: '',
     };
     // {
-    //   description: this.state.locationText,
+    //   description: state.locationText,
     //   reference:
-    //     this.state.locationText == this.state.location.description
-    //       ? this.state.location.reference
+    //     state.locationText == state.location.description
+    //       ? state.location.reference
     //       : '',
     // },
 
@@ -1049,51 +1135,38 @@ class CreateMemory extends React.Component<Props> {
     //   details.memory_date = {
     //     ...details.memory_date,
     //     month: MonthObj.month[MonthObj.selectedIndex].tid,
-    //     day: this.state.day.value != 'Day' ? this.state.day.value : undefined,
+    //     day: state.day.value != 'Day' ? state.day.value : undefined,
     //   };
     // }
 
-    this.props.onInitialUpdate(details);
+    props.onInitialUpdate(details);
+
   };
 
-  componentWillUnmount = () => {
-    Keyboard.dismiss();
-    // this.props.resetLocation();
-    // this.showHideMenuListener.removeListener();
-    // this.saveDraftListener.removeListener();
-    // this.memoryCallback.removeListener();
-    // this.deleteDraftListener.removeListener();
-    // this.updateFilesListener.removeListener();
-    // this.draftDetailsListener.removeListener();
-    this.backListner.removeListener();
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
-  };
-
-  hideMenu = () => {
-    this.setState({
+  const hideMenu = () => {
+    setState(prevState => ({
+      ...prevState,
       menuVisibility: false,
-    });
+    }));
   };
 
-  uploadOption = () => {
+  const uploadOption = () => {
     Keyboard.dismiss();
-    this.setState(
-      {
-        actionSheet: {
-          title: '',
-          type: this.kUploadAction,
-          list: ImageActions,
-        },
+    setState(prevState => ({
+      ...prevState,
+      actionSheet: {
+        title: '',
+        type: kUploadAction,
+        list: ImageActions,
       },
-      () =>
-        this._actionSheet &&
-        this._actionSheet.current &&
-        this._actionSheet.current.showSheet(),
-    );
+    }));
+
+    _actionSheet &&
+      _actionSheet &&
+      _actionSheet.showSheet();
   };
 
-  audioAttachmentPress = (selectedItem?: any) => {
+  const audioAttachmentPress = (selectedItem?: any) => {
     Keyboard.dismiss();
     if (
       selectedItem &&
@@ -1102,9 +1175,9 @@ class CreateMemory extends React.Component<Props> {
         selectedItem.filesize == undefined ||
         selectedItem.filesize == '0')
     ) {
-     //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+      //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
     } else {
-      this.props.navigation.navigate('commonAudioRecorder', {
+      props.navigation.navigate('commonAudioRecorder', {
         mindPopID: 0,
         selectedItem: selectedItem ? selectedItem : null,
         hideDelete: true,
@@ -1112,7 +1185,7 @@ class CreateMemory extends React.Component<Props> {
           Keyboard.dismiss();
           let fid = GenerateRandomID();
           let tempFile: TempFile[] = file.map(obj => ({ ...obj, fid }));
-          this.fileCallback(tempFile);
+          fileCallback(tempFile);
         },
         reset: () => { },
         deleteItem: () => { },
@@ -1120,24 +1193,24 @@ class CreateMemory extends React.Component<Props> {
     }
   };
 
-  inviteCollaboratorFlow = () => {
-    let collaborators = this.props.memoryObject.collaborators;
+  const inviteCollaboratorFlow = () => {
+    let collaborators = props.memoryObject.collaborators;
     let keyForPreference =
       Account.selectedData().instanceURL +
       Account.selectedData().userID +
       '-doNotShowAgain';
     // DefaultPreference.get(`${keyForPreference}`).then((value: any) => {
     //   if (value != 'true' || collaborators.length > 0) {
-    //     this.props.navigation.navigate('inviteCollaborators', {
-    //       showLeaveConversation: !this.state.isCreatedByUser,
-    //       owner: this.state.ownerDetails
-    //         ? this.state.ownerDetails
-    //           ? this.state.collaboratorOwner
+    //     props.navigation.navigate('inviteCollaborators', {
+    //       showLeaveConversation: !state.isCreatedByUser,
+    //       owner: state.ownerDetails
+    //         ? state.ownerDetails
+    //           ? state.collaboratorOwner
     //           : {}
     //         : {},
     //     });
     //   } else {
-    //     this.props.navigation.navigate('commonFriendsSearchView', {
+    //     props.navigation.navigate('commonFriendsSearchView', {
     //       title: 'Invite Collaborators',
     //       refListFriends: [],
     //       refListFriendCircles: [],
@@ -1146,7 +1219,8 @@ class CreateMemory extends React.Component<Props> {
     //   }
     // });
   };
-  toolbar = () => {
+
+  const toolbar = () => {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
@@ -1155,27 +1229,27 @@ class CreateMemory extends React.Component<Props> {
           <View style={styles.buttonContainerStyle}>
             <TouchableOpacity
               onPress={() => {
-                CaptureImage(this.fileCallback);
+                CaptureImage(fileCallback);
               }}
               style={styles.toolbarIcons}>
               <Image source={camera} resizeMode="contain" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.audioAttachmentPress();
+                audioAttachmentPress();
               }}
               style={styles.toolbarIcons}>
               <Image source={record} resizeMode="contain" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.uploadOption()}
+              onPress={() => uploadOption()}
               style={styles.toolbarIcons}>
               <Image source={icon_upload_file} resizeMode="contain" />
             </TouchableOpacity>
           </View>
-          {this.props.route.params.editPublsihedMemory ? null : (
+          {props.route.params.editPublsihedMemory ? null : (
             <TouchableOpacity
-              onPress={() => this.inviteCollaboratorFlow()}
+              onPress={() => inviteCollaboratorFlow()}
               style={[styles.toolbarIcons, { flexDirection: 'row' }]}>
               <Text style={styles.collaborateTextStyle}>Collaborate</Text>
               <Image source={icon_collaborators} resizeMode="contain" />
@@ -1189,27 +1263,27 @@ class CreateMemory extends React.Component<Props> {
           <View style={styles.buttonContainerStyle}>
             <TouchableOpacity
               onPress={() => {
-                CaptureImage(this.fileCallback);
+                CaptureImage(fileCallback);
               }}
               style={styles.toolbarIcons}>
               <Image source={camera} resizeMode="contain" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.audioAttachmentPress();
+                audioAttachmentPress();
               }}
               style={styles.toolbarIcons}>
               <Image source={record} resizeMode="contain" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.uploadOption()}
+              onPress={() => uploadOption()}
               style={styles.toolbarIcons}>
               <Image source={icon_upload_file} resizeMode="contain" />
             </TouchableOpacity>
           </View>
-          {this.props.route.params.editPublsihedMemory ? null : (
+          {props.route.params.editPublsihedMemory ? null : (
             <TouchableOpacity
-              onPress={() => this.inviteCollaboratorFlow()}
+              onPress={() => inviteCollaboratorFlow()}
               style={[styles.toolbarIcons, { flexDirection: 'row' }]}>
               <Text style={styles.collaborateTextStyle}>Collaborate</Text>
               <Image source={icon_collaborators} resizeMode="contain" />
@@ -1221,7 +1295,7 @@ class CreateMemory extends React.Component<Props> {
     // <AccessoryView
     // 	style={{
     // 		width: "100%",
-    // 		bottom: this.state.bottomToolbar,
+    // 		bottom: state.bottomToolbar,
     // 		position: "absolute",
     // 		height: 60,
     // 		flexDirection: "row",
@@ -1236,27 +1310,27 @@ class CreateMemory extends React.Component<Props> {
     // 	<View style={{ justifyContent: "space-between", flexDirection: "row", width: "100%" }}>
     // 		<View style={{ justifyContent: "flex-start", flexDirection: "row" }}>
     // 			<TouchableOpacity
-    // 				onPress={() => {CaptureImage(this.fileCallback)}}
+    // 				onPress={() => {CaptureImage(fileCallback)}}
     // 				style={styles.toolbarIcons}>
     // 	    		<Image source={camera} resizeMode="contain" />
     // 			</TouchableOpacity>
     // 			<TouchableOpacity
-    // 				onPress={() => {this.audioAttachmentPress()}}
+    // 				onPress={() => {audioAttachmentPress()}}
     // 				style={styles.toolbarIcons}>
     // 				<Image source={record} resizeMode="contain" />
     // 			</TouchableOpacity>
     // 			<TouchableOpacity
-    // 				onPress={() => this.uploadOption()}
+    // 				onPress={() => uploadOption()}
     // 				style={styles.toolbarIcons}>
     // 				<Image source={icon_upload_file} resizeMode="contain" />
     // 			</TouchableOpacity>
     // 		</View>
     // 		{
-    // 				this.props.editPublsihedMemory?
+    // 				props.editPublsihedMemory?
     // 					null
     // 				:
     // 					<TouchableOpacity
-    // 					onPress={() => this.inviteCollaboratorFlow()}
+    // 					onPress={() => inviteCollaboratorFlow()}
     // 					style={[styles.toolbarIcons, {flexDirection: "row"}]}>
     // 					<Text style={{...fontSize(16), fontWeight:"500", color : Colors.ThemeColor, marginRight: 5}}>Collaborate</Text>
     // 					<Image source={icon_collaborators} resizeMode="contain" />
@@ -1267,15 +1341,15 @@ class CreateMemory extends React.Component<Props> {
     // </AccessoryView>
   };
 
-  fileDescriptionClicked = (file: any) => {
-    this.hideToolTip();
-    this.props.navigation.navigate('fileDescription', {
+  const fileDescriptionClicked = (file: any) => {
+    hideToolTip();
+    props.navigation.navigate('fileDescription', {
       file: file,
-      done: this.updateFileContent,
+      done: updateFileContent,
     });
   };
 
-  renderRow = (data: any, index: number) => {
+  const renderRow = (data: any, index: number) => {
     // let index = data.index;
     // data = data.item;
     data.by = data.file_owner ? getUserName(data) : 'You';
@@ -1286,28 +1360,28 @@ class CreateMemory extends React.Component<Props> {
     let fileDescription = data.file_description ? data.file_description : '';
     return (
       <View key={`key-${index}`} style={styles.fullWidth}>
-        {/* {index == 0 && this.viewBeforList()} */}
+        {/* {index == 0 && viewBeforList()} */}
         <View style={styles.rowConatiner}>
           <View style={styles.textContainer}>
             <Text style={styles.TextStyle}>
               By <Text style={{ fontWeight: '500' }}>{data.by}</Text> on{' '}
               <Text>{date}</Text>
             </Text>
-            {(this.state.isCreatedByUser || data.by == 'You') && (
+            {(state.isCreatedByUser || data.by == 'You') && (
               <TouchableOpacity
                 onPress={() => {
-                  this.deleteFile(data.fid, data.isLocal);
+                  deleteFile(data.fid, data.isLocal);
                 }}>
                 <Image source={delete_icon}></Image>
               </TouchableOpacity>
             )}
           </View>
-          <View>{this.fileHolderView(data)}</View>
+          <View>{fileHolderView(data)}</View>
           <View style={[styles.fullWidth, styles.fileContainerSTyle]}>
             <TouchableHighlight
               disabled={data.by != 'You'}
               underlayColor={'#cccccc11'}
-              onPress={() => this.fileDescriptionClicked(data)}>
+              onPress={() => fileDescriptionClicked(data)}>
               <View>
                 {(fileTitle ? fileTitle.length == 0 : true) &&
                   (fileDescription ? fileDescription.length == 0 : true) &&
@@ -1347,18 +1421,22 @@ class CreateMemory extends React.Component<Props> {
     );
   };
 
-  deleteFile = (fid: any, isTempFile: boolean) => {
+  const deleteFile = (fid: any, isTempFile: boolean) => {
     if (!isTempFile) {
-      this.filesToUpdate.push({ fid: fid, action: 'delete' });
+      filesToUpdate.push({ fid: fid, action: 'delete' });
     }
-    let tempFileArray = this.state.itemList;
+    let tempFileArray = state.itemList;
     let index = tempFileArray.findIndex((element: any) => element.fid === fid);
     tempFileArray.splice(index, 1);
-    this.setState({ itemList: tempFileArray });
+    setState(prevState => ({
+      ...prevState,
+      itemList: tempFileArray
+    }));
+
   };
 
-  updateFileContent = (file: any, title: any, description: any) => {
-    let updatelist = this.state.itemList;
+  const updateFileContent = (file: any, title: any, description: any) => {
+    let updatelist = state.itemList;
     updatelist.forEach((element: any, index: any) => {
       if (element.fid == file.fid) {
         updatelist[index] = {
@@ -1369,23 +1447,27 @@ class CreateMemory extends React.Component<Props> {
       }
     });
     if (!file.isLocal) {
-      this.filesToUpdate.push({
+      filesToUpdate.push({
         fid: file.fid,
         file_title: title,
         file_description: description,
       });
     }
-    this.setState({ itemList: updatelist });
+    setState(prevState => ({
+      ...prevState,
+      itemList: updatelist
+    }));
+
   };
 
-  fileHolderView = (file: any) => {
+  const fileHolderView = (file: any) => {
     switch (file.type) {
       case 'images':
         return (
           <TouchableHighlight
             underlayColor={'#ffffff33'}
             onPress={() =>
-              this.props.navigation.navigate('imageViewer', {
+              props.navigation.navigate('imageViewer', {
                 files: [
                   {
                     url: file.thumbnail_large_url
@@ -1413,7 +1495,7 @@ class CreateMemory extends React.Component<Props> {
           <TouchableHighlight
             underlayColor={'#ffffff33'}
             onPress={() =>
-              this.props.navigation.navigate('pdfViewer', { file: file })
+              props.navigation.navigate('pdfViewer', { file: file })
             }
             style={styles.fileHolderContainer}>
             <View
@@ -1440,7 +1522,7 @@ class CreateMemory extends React.Component<Props> {
         return (
           <TouchableHighlight
             underlayColor={'#ffffff33'}
-            onPress={() => this.audioAttachmentPress(file)}
+            onPress={() => audioAttachmentPress(file)}
             style={styles.audioContainer}>
             <View style={styles.flexRow}>
               <View style={styles.playButtonContainer}>
@@ -1462,85 +1544,123 @@ class CreateMemory extends React.Component<Props> {
     }
   };
 
-  hideToolTip = () => {
-    if (this.state.toolTipVisibility) {
-      this.setState({
+  const hideToolTip = () => {
+    if (state.toolTipVisibility) {
+      setState(prevState => ({
+        ...prevState,
         toolTipVisibility: false,
-      });
+      }));
+
     }
   };
 
-  onActionItemClicked = (index: number): void => {
-    this.saveIntitals();
+  const onActionItemClicked = (index: number): void => {
+    saveIntitals();
 
     switch (index) {
       case 0:
-        this.deleteDraft();
+        deleteDraft();
         break;
       case 1:
         //loaderHandler.showLoader('Saving...');
-        this.props.showLoader(true);
-        this.props.loaderText('Saving...');
-        // if (this.state.padDetails?.padId) {
-        //   this.setEtherPadContent('get', '', this.state.padDetails.padId);
+        props.showLoader(true);
+        props.loaderText('Saving...');
+        // if (state.padDetails?.padId) {
+        //   setEtherPadContent('get', '', state.padDetails.padId);
         // }
         // setTimeout(() => {
-        this.saveORPublish('save');
+        saveORPublish('save');
         // }, 2500);
         break;
       case 2:
-        this._actionSheet &&
-          this._actionSheet.current &&
-          this._actionSheet.current.hideSheet();
+        _actionSheet &&
+          _actionSheet &&
+          _actionSheet.hideSheet();
         break;
       case 3:
-        this.props.showLoader(true);
-        this.props.loaderText('Publishing...');
+        props.showLoader(true);
+        props.loaderText('Publishing...');
         //loaderHandler.showLoader('Publishing...');
         // setTimeout(() => {
-        this.saveORPublish(kPublish);
+        saveORPublish(kPublish);
         // }, 2500);
         break;
     }
     // switch (index) {
     //   case 0:
-    //     file = PickImage(this.fileCallback);
+    //     file = PickImage(fileCallback);
     //     break;
     //   case 1:
-    //     file = PickAudio(this.fileCallback);
+    //     file = PickAudio(fileCallback);
     //     break;
     //   case 2:
-    //     file = PickPDF(this.fileCallback);
+    //     file = PickPDF(fileCallback);
     //     break;
     //   case 4:
-    //     if (this.validateDateAndLocation(false)) {
-    //       this.saveORPublish('');
+    //     if (validateDateAndLocation(false)) {
+    //       saveORPublish('');
     //     }
     //     break;
     //   case 5:
-    //     this.saveIntitals();
-    //     if (this.validateDateAndLocation(true)) {
-    //       this.props.navigation.navigate('publishMemoryDraft', {
-    //         publishMemoryDraft: this.saveORPublish,
-    //         preview: this.preview,
-    //         delete: this.deleteDraft,
+    //     saveIntitals();
+    //     if (validateDateAndLocation(true)) {
+    //       props.navigation.navigate('publishMemoryDraft', {
+    //         publishMemoryDraft: saveORPublish,
+    //         preview: preview,
+    //         delete: deleteDraft,
     //       });
     //     }
     //     break;
     // }
   };
 
-  fileCallback = (file: any) => {
-    let tempfiles = this.state.itemList;
+  const fileCallback = (file: any) => {
+    let tempfiles = state.itemList;
     file.forEach((element: any) => {
       tempfiles.push(element);
     });
-    this.setState({
+    setState(prevState => ({
+      ...prevState,
       itemList: tempfiles,
-    });
+    }));
+
   };
 
-  createLabelSelector = (
+  const validateDateField = (text) => {
+    let limit = 31;
+    if (text) {
+      switch (parseInt(state.month.value)) {
+        case 2:
+          limit = 28;
+          if (state.year.value != 'Year*') {
+            if (parseInt(state.year.value) % 4 == 0) {
+              limit = 29;
+            }
+          }
+          break;
+        case 4 || 6 || 9 || 11:
+          limit = 30;
+          break;
+        default:
+      }
+    }
+    console.error("valid >", text);
+    if (parseInt(text) <= limit) {
+      setState(prev => ({
+        ...prev,
+        day: { ...state.day, value: text, error: false }
+      }));
+    }
+    else {
+      setState(prev => ({
+        ...prev,
+        day: { ...state.day, value: text, error: true }
+      }));
+
+    }
+  };
+
+  const createLabelSelector = (
     selectedValue: any,
     marginEnd: any,
     flex: any,
@@ -1550,7 +1670,7 @@ class CreateMemory extends React.Component<Props> {
       <TouchableOpacity
         style={[
           styles.labelSelectorContainer,
-          styles.inputView,
+          styles.commonFriendSerachStyleView,
           {
             flex: flex,
             marginEnd: marginEnd,
@@ -1559,7 +1679,7 @@ class CreateMemory extends React.Component<Props> {
               : Colors.TextColor,
           },
         ]}
-        onPress={() => this.onOptionSelection(fieldName, selectedValue.value)}>
+        onPress={() => onOptionSelection(fieldName, selectedValue.value)}>
         <Text style={styles.selectedValueTextStyle}>
           {fieldName == 'month'
             ? selectedValue.value.name
@@ -1570,32 +1690,31 @@ class CreateMemory extends React.Component<Props> {
     );
   };
 
-  onOptionSelection = (fieldName: any, value: any) => {
+  const onOptionSelection = (fieldName: any, value: any) => {
     Keyboard.dismiss();
-    let actions = this.createMemoryHelper.getDateOptions(
+    let actions = createMemoryHelper.getDateOptions(
       fieldName,
-      this.state.year.value,
+      state.year.value,
     );
-    this.setState(
-      {
-        selectionData: {
-          actions,
-          selectionValue: value,
-          fieldName: fieldName,
-          title: fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
-        },
+    setState(prevState => ({
+      ...prevState,
+      selectionData: {
+        actions,
+        selectionValue: value,
+        fieldName: fieldName,
+        title: fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
       },
-      () => {
-        this.bottomPicker.current &&
-          this.bottomPicker.current.showPicker &&
-          this.bottomPicker.current.showPicker();
-      },
-    );
+    }));
+
+    // bottomPicker.current &&
+    //   bottomPicker.current.showPicker &&
+    //   bottomPicker.current.showPicker();
+
   };
 
-  dateSelected = (selectedItem: any) => {
+  const dateSelected = (selectedItem: any) => {
     let currentDate = new Date();
-    if (this.state.selectionData.fieldName == 'month') {
+    if (state.selectionData.fieldName == 'month') {
       selectedItem = { name: selectedItem.text, tid: selectedItem.key };
       MonthObj.month.forEach((element: any, index: any) => {
         if (element.name == selectedItem.name) {
@@ -1603,135 +1722,148 @@ class CreateMemory extends React.Component<Props> {
         }
       });
     }
-    switch (this.state.selectionData.fieldName) {
+    switch (state.selectionData.fieldName) {
       case 'year':
         if (
-          this.state.month.value.tid > 0 &&
+          state.month.value.tid > 0 &&
           selectedItem.text == currentDate.getFullYear()
         ) {
           let currentMonth = currentDate.getMonth();
           let selectedMonth =
             MonthObj.selectedIndex - MonthObj.serverMonthsCount;
           if (currentMonth < selectedMonth) {
-            this.setState(
-              {
-                month: { ...this.state.selectionData, value: MonthObj.month[0] },
-              },
-              () => {
-                this.setState({
-                  day: { ...this.state.selectionData, value: 'Day' },
-                });
-              },
-            );
+            setState(prevState => ({
+              ...prevState,
+              month: { ...state.selectionData, value: MonthObj.month[0] },
+              day: { ...state.selectionData, value: 'Day' },
+            }));
+
           } else if (
             currentMonth == selectedMonth &&
-            this.state.day.value != 'Day'
+            state.day.value != 'Day'
           ) {
             let currentDay = currentDate.getDate();
-            let selectedDay = parseInt(this.state.day.value);
+            let selectedDay = parseInt(state.day.value);
             if (currentDay < selectedDay) {
-              this.setState({ day: { ...this.state.selectionData, value: 'Day' } });
+              setState(prevState => ({
+                ...prevState,
+                day: { ...state.selectionData, value: 'Day' }
+              }));
             }
           }
         }
-        this.state.year.error = false;
+        state.year.error = false;
         break;
       case 'month':
         if (
           MonthObj.selectedIndex > 0 &&
           MonthObj.selectedIndex < MonthObj.serverMonthsCount
         ) {
-          this.setState({
-            day: { ...this.state.selectionData, value: 'Day' },
-            showDay: false,
-          });
-        } else if (this.state.day.value != 'Day') {
-          this.setState({ showDay: true }, () => {
-            let currentDay = parseInt(this.state.day.value);
-            if (currentDay >= 28) {
-              let maxDay = 28;
-              switch (selectedItem.text) {
-                case 'Feb':
-                  maxDay = 28;
-                  if (this.state.year.value != 'Year*') {
-                    if (parseInt(this.state.year.value) % 4 == 0) {
-                      maxDay = 29;
-                    }
+          setState(prevState => ({
+            ...prevState,
+            day: { ...state.selectionData, value: 'Day' },
+            showDay: false
+          }));
+
+        } else if (state.day.value != 'Day') {
+          setState(prevState => ({
+            ...prevState,
+            showDay: true
+          }));
+          let currentDay = parseInt(state.day.value);
+          if (currentDay >= 28) {
+            let maxDay = 28;
+            switch (selectedItem.text) {
+              case 'Feb':
+                maxDay = 28;
+                if (state.year.value != 'Year*') {
+                  if (parseInt(state.year.value) % 4 == 0) {
+                    maxDay = 29;
                   }
-                  break;
-                case 'Apr' || 'Jun' || 'Sep' || 'Nov':
-                  maxDay = 30;
-                  break;
-                default:
-              }
-              if (maxDay < currentDay) {
-                this.setState({
-                  day: { ...this.state.selectionData, value: 'Day' },
-                  showDay: true,
-                });
-              }
+                }
+                break;
+              case 'Apr' || 'Jun' || 'Sep' || 'Nov':
+                maxDay = 30;
+                break;
+              default:
             }
-          });
+            if (maxDay < currentDay) {
+              setState(prevState => ({
+                ...prevState,
+                day: { ...state.selectionData, value: 'Day' },
+                showDay: true,
+              }));
+
+            }
+          }
         } else {
-          this.setState({
-            day: { ...this.state.selectionData, value: 'Day' },
-            showDay: true,
-          });
+          setState(prevState => ({
+            ...prevState,
+            day: { ...state.selectionData, value: 'Day' },
+            showDay: true
+          }));
         }
-        this.state.month.error = false;
+        state.month.error = false;
         break;
       case 'day':
         break;
     }
-    if (this.state.selectionData.fieldName == 'month') {
-      this.setState({
-        [this.state.selectionData.fieldName]: {
-          ...this.state.selectionData,
+    if (state.selectionData.fieldName == 'month') {
+      setState(prevState => ({
+        ...prevState,
+        [state.selectionData.fieldName]: {
+          ...state.selectionData,
           value: selectedItem,
         },
-      });
+      }));
+
     } else {
-      this.setState({
-        [this.state.selectionData.fieldName]: {
-          ...this.state.selectionData,
+      setState(prevState => ({
+        ...prevState,
+        [state.selectionData.fieldName]: {
+          ...state.selectionData,
           value: selectedItem.text,
         },
-      });
+      }));
+
     }
-    if (!this.state.month.error && !this.state.year.error) {
-      this.state.dateError = '';
+    if (!state.month.error && !state.year.error) {
+      state.dateError = '';
     }
   };
 
-  // _renderLocation = (locationRow: any) => {
-  //   //showConsoleLog(ConsoleType.LOG,locationRow)
-  //   return (
-  //     <TouchableOpacity
-  //       style={styles.locationContainer}
-  //       onPress={() => {
-  //         this.setState({
-  //           location: locationRow.item,
-  //           locationText: locationRow.item.description,
-  //           locationList: [],
-  //         });
-  //         this.props.resetLocation();
-  //       }}>
-  //       <Text
-  //         style={styles.locationDescTextStyle}
-  //         ellipsizeMode="tail"
-  //         numberOfLines={2}>
-  //         {locationRow.item.description}
-  //       </Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
+  const _renderLocation = ({ item, index }: any) => {
+    showConsoleLog(ConsoleType.WARN,JSON.stringify(item))
+    return (
+      <TouchableOpacity
+        style={styles.locationContainer}
+        onPress={() => {
+          setState(prevState => ({
+            ...prevState,
+            location: item,
+            locationText: item.description,
+            locationList: [],
+            locationError:''
+          }));
+          props.userSelectedLocation(item)
+          props.resetLocation();
+        }}>
+        <Text
+          style={styles.locationDescTextStyle}
+          ellipsizeMode="tail"
+          numberOfLines={2}>
+          {item.description}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
-  viewBeforList = () => {
+  const viewBeforList = () => {
     return (
       // onStartShouldSetResponder={() => true}
       <View style={Styles.viewBeforListContainerStyle}>
         <View>
-          {this.state.isCreatedByUser ? (
+          {state.isCreatedByUser ? (
             <View style={styles.ViewBeforeStyle}>
               {/* <Text
               style={styles.whenHappenTextStyle}>
@@ -1741,10 +1873,10 @@ class CreateMemory extends React.Component<Props> {
               {/* <View
               style={styles.createLableSelectorContainerStyle}
               onStartShouldSetResponder={() => true}>
-              {this.createLabelSelector(this.state.year, 10, 2, 'year')}
-              {this.createLabelSelector(this.state.month, 10, 3, 'month')}
-              {this.state.showDay ? (
-                this.createLabelSelector(this.state.day, 0, 2, 'day')
+              {createLabelSelector(state.year, 10, 2, 'year')}
+              {createLabelSelector(state.month, 10, 3, 'month')}
+              {state.showDay ? (
+                createLabelSelector(state.day, 0, 2, 'day')
               ) : (
                 <View style={styles.flex2Padding} />
               )}
@@ -1752,7 +1884,7 @@ class CreateMemory extends React.Component<Props> {
 
             <Text
               style={styles.dateErrorTextStyle}>
-              {this.state.dateError}
+              {state.dateError}
             </Text> */}
 
               {/* <Text
@@ -1762,19 +1894,19 @@ class CreateMemory extends React.Component<Props> {
             </Text>
             <SearchBar
               style={[styles.searchBarStyle,{
-                borderBottomColor: this.state.locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
+                borderBottomColor: state.locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
               }]}
               placeholder="Enter location here"
               onBlur={() => {
-                this.setState({ locationList: [] });
+                setState({ locationList: [] });
               }}
               onSearchButtonPress={(keyword: string) => {
-                this.setState({ showLocationLoader: true });
-                this.props.onLocationUpdate(keyword);
+                setState({ showLocationLoader: true });
+                props.onLocationUpdate(keyword);
               }}
               onClearField={() => {
-                this.props.resetLocation();
-                this.setState({ locationList: [] });
+                props.resetLocation();
+                setState({ locationList: [] });
               }}
               onChangeText={(text: any) => {
                 this.props.onLocationUpdate(text);
@@ -1791,7 +1923,7 @@ class CreateMemory extends React.Component<Props> {
                 onScroll={() => {
                   Keyboard.dismiss();
                 }}
-                style={styles.flatListStyle}
+                style={styles.locationFlatListStyle}
                 keyExtractor={(_: any, index: number) => `${index}`}
                 data={this.props.locationList}
                 renderItem={this._renderLocation}
@@ -1812,27 +1944,30 @@ class CreateMemory extends React.Component<Props> {
                       styles.memoryDescriptionInput,
                       {
                         borderBottomColor:
-                          this.state.titleError.length > 0
+                          state.titleError.length > 0
                             ? Colors.ErrorColor
                             : Colors.white,
                         borderBottomWidth:
-                          this.state.titleError.length > 0 ? 0.5 : 0,
+                          state.titleError.length > 0 ? 0.5 : 0,
                       },
                     ]}
                     // selection={{start:0}}//, end:0
-                    value={this.state.title}
+                    value={state.title}
                     maxLength={250}
                     multiline={false}
                     onChangeText={(text: any) => {
-                      this.setState({ title: text, titleError: '' });
+                      setState(prev => ({
+                        ...prev,
+                        title: text, titleError: ''
+                      }));
                     }}
-                    placeholder={this.state.placeholder}
+                    placeholder={state.placeholder}
                     placeholderTextColor={
                       Colors.memoryTitlePlaceholderColor
                     }></TextInput>
 
                   <Text style={Styles.errortextStyle}>
-                    {this.state.titleError}
+                    {state.titleError}
                   </Text>
                 </>
               }
@@ -1840,18 +1975,18 @@ class CreateMemory extends React.Component<Props> {
           ) : (
             <View style={styles.ViewBeforeStyle}>
               <Text style={styles.memoryDescriptionInput}>
-                {this.state.title}
+                {state.title}
               </Text>
             </View>
-            // this.ownersViewForCollaborators()
+            // ownersViewForCollaborators()
           )}
           <View style={Styles.etherPadStyle}>
             {/* styles.createdByUserContainer */}
-            {/* {!this.state.isCreatedByUser && (
+            {/* {!state.isCreatedByUser && (
             <View>
               <Text
                 style={styles.titletextContainer}>
-                {this.state.title}
+                {state.title}
               </Text>
               <Border />
             </View>
@@ -1860,28 +1995,28 @@ class CreateMemory extends React.Component<Props> {
             style={styles.memoryDescriptionTextStyle}
             numberOfLines={3}
             ellipsizeMode={'tail'}>
-            {this.props.memoryDescription}
+            {props.memoryDescription}
           </Text> */}
             {/* <View style={styles.ViewBeforeStyle}> */}
-            {this.props.route.params.editMode || this.state.showEtherPad ? (
+            {props.route.params.editMode || state.showEtherPad ? (
               <>
                 <Text
                   style={styles.memoryDescriptionTextStyle}
                   numberOfLines={15}
                   ellipsizeMode={'tail'}>
-                  {this.props.memoryDescription}
+                  {props.memoryDescription}
                 </Text>
 
                 {
-                  this.state.padDetails?.padUrl &&
+                  state.padDetails?.padUrl &&
                   <TouchableOpacity
                     onPress={() => {
-                      if (this.state.padDetails?.padUrl) {
-                        this.props.navigation.navigate('etherPadEditing', {
-                          title: this.state.title.trim(),
-                          padDetails: this.state.padDetails,
-                          updateContent: this.setEtherPadContent.bind(this),
-                          inviteCollaboratorFlow: this.inviteCollaboratorFlow.bind(this),
+                      if (state.padDetails?.padUrl) {
+                        props.navigation.navigate('etherPadEditing', {
+                          title: state.title.trim(),
+                          padDetails: state.padDetails,
+                          updateContent: setEtherPadContent.bind(this),
+                          inviteCollaboratorFlow: inviteCollaboratorFlow.bind(this),
                         })
                       }
                     }}>
@@ -1895,19 +2030,15 @@ class CreateMemory extends React.Component<Props> {
               </>
 
               // <EtherPadEditing
-              //   editMode={this.props.route.params.editMode}
-              //   title={this.state.title.trim()}
-              //   padDetails={this.state.padDetails}
-              //   updateContent={this.setEtherPadContent.bind(this)}
-              //   inviteCollaboratorFlow={this.inviteCollaboratorFlow.bind(this)}
+              //   editMode={props.route.params.editMode}
+              //   title={state.title.trim()}
+              //   padDetails={state.padDetails}
+              //   updateContent={setEtherPadContent.bind(this)}
+              //   inviteCollaboratorFlow={inviteCollaboratorFlow.bind(this)}
               // />
             ) : (
               <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    showEtherPad: true,
-                  })
-                }>
+                onPress={() => setState(prev => ({ ...prev, showEtherPad: true }))}>
                 <Text style={Styles.etherpadTextInputStyle}>
                   {'|Tap to start writing...'}
                 </Text>
@@ -1930,105 +2061,147 @@ class CreateMemory extends React.Component<Props> {
           </TouchableOpacity> */}
           </View>
 
-          {Platform.OS === 'android' && this.state.showCalender && (
+          {Platform.OS === 'android' && state.showCalender && (
             <DateTimePicker
-              isVisible={this.state.showCalender}
+              isVisible={state.showCalender}
               onCancel={() => {
-                this.setState({ showCalender: false });
+                setState(prev => ({ ...prev, showCalender: false }))
                 //showConsoleLog(ConsoleType.LOG,"cancelled")
               }}
               onDateSelection={(date: any) => {
-                this.setState({
+                setState(prev => ({
+                  ...prev,
                   showCalender: false,
                   memory_date: moment(date).format('DD/MM/YYYY'),
-                });
+                }))
+
               }}
             />
           )}
         </View>
 
         {/* {
-          this.state.bottomToolbar ?
+          state.bottomToolbar ?
             null
             : */}
         <View style={Styles.buttonsContainerStyle}>
-          {this.props.memoryDescription &&
-            this.props.memoryDescription != '' ? (
-            <>
-              <TouchableOpacity
-                style={Styles.buttonsStyle}
-                onPress={() => {
-                  // if (Platform.OS === 'android') {
-                  //   DateTimePickerAndroid.open(this.dateOptions);
-                  // } else {
-                  this.setState({
-                    showCalender: true,
-                  });
-                  // }
-                }}>
-                <Image source={calendarWrite} />
-                <Text style={styles.buttonsTextStyle}>Date</Text>
-              </TouchableOpacity>
-              <View style={{ width: 8 }} />
-            </>
-          ) : null}
+          {/* {props.memoryDescription &&
+            props.memoryDescription != '' ? ( */}
+          <>
+            <TouchableOpacity
+              style={Styles.buttonsStyle}
+              onPress={() => {
+                optionsActionSheetRef?.current?.show();
+                setOptionToShow('date')
+                // if (Platform.OS === 'android') {
+                //   DateTimePickerAndroid.open(this.dateOptions);
+                // } else {
+                // this.setState({
+                //   showCalender: true,
+                // });
+                // }
+              }}>
+              <Image style={styles.imageStyles} source={calendarWrite} />
+              <Text style={styles.buttonsTextStyle}>Date</Text>
+            </TouchableOpacity>
+            <View style={{ width: 8 }} />
+          </>
+          {/* ) : null} */}
+
           <TouchableOpacity
             style={Styles.buttonsStyle}
             onPress={() => {
-              // CaptureImage(this.fileCallback);
-              PickImage(this.fileCallback);
+              optionsActionSheetRef?.current?.show();
+              setOptionToShow('location')
             }}>
-            <Image source={image} />
-            <Text style={styles.buttonsTextStyle}>Image</Text>
+            <Image style={styles.imageStyles} source={map_pin} />
+            <Text style={styles.buttonsTextStyle}>Location</Text>
+          </TouchableOpacity>
+          <View style={{ width: 8 }} />
+
+          <TouchableOpacity
+            style={Styles.buttonsStyle}
+            onPress={() => {
+              optionsActionSheetRef?.current?.show();
+              setOptionToShow('upload')
+            }}>
+            <Image style={styles.imageStyles} source={upload} />
+            <Text style={styles.buttonsTextStyle}>Upload</Text>
           </TouchableOpacity>
 
           <View style={{ width: 8 }} />
           <TouchableOpacity
             style={[
               Styles.buttonsStyle,
-              { backgroundColor: Colors.decadeFilterBorder },
+              { backgroundColor: Colors.bordercolor },
             ]}
             onPress={() => {
-              // if (this.props.padDetails?.padId) {
-              this.setEtherPadContent('get', '', this.state.padDetails.padId);
+              // if (props.padDetails?.padId) {
+              // setEtherPadContent('get', '', state.padDetails.padId);
               // }
-              if (
-                this.state.description != '' &&
-                this.state.memory_date == ''
-              ) {
-               //ToastMessage('Please select Date first', Colors.ErrorColor);
-              }
+              // console.warn("state.memory_date  ", state.memory_date, " ,ssss :", JSON.stringify(props.tagsList))
+              // addRemoveTags();
+              // whoElseWasthere()
+           
 
               if (
-                this.state.title != '' &&
-                this.state.memory_date != '' &&
-                this.state.description != ''
+                state.memory_date == '' || state.year.value == ''|| state.month.value == ''
               ) {
-                Keyboard.dismiss();
-                this.hideMenu();
-                this.setState(
-                  {
-                    actionSheet: {
-                      title: 'Memory Draft',
-                      type: this.kSaveAction,
-                      list: publishActions,
-                    },
-                  },
-                  () => {
-                    if (Platform.OS == 'ios') {
-                      this._actionSheet &&
-                        this._actionSheet.current &&
-                        this._actionSheet.current.showSheet();
-                    } else {
-                      this.setState({
-                        showActionAndroid: true,
-                      });
-                    }
-                  },
-                );
+                setState(prev => ({
+                  ...prev,
+                  showCustomValidationAlert: true
+                }))
+
+                //ToastMessage('Please select Date first', Colors.ErrorColor);
               }
+              else if (
+                state.location.description == ''
+              ) {
+                setState(prev => ({
+                  ...prev,
+                  showCustomValidationAlert: true
+                }))
+
+                //ToastMessage('Please select Date first', Colors.ErrorColor);
+              }
+              else{
+                props.navigation.navigate('publishMemoryDraft', {
+                  publishMemoryDraft: saveORPublish,
+                  preview: preview,
+                  delete: deleteDraft,
+                });
+              }
+
+              // if (
+              //   state.title != '' &&
+              //   state.memory_date != '' &&
+              //   state.description != '' &&
+              //   state.location.description != ''
+              // ) {
+              //   Keyboard.dismiss();
+              //   hideMenu();
+              //   setState(prev => ({
+              //     ...prev,
+              //     actionSheet: {
+              //       title: 'Memory Draft',
+              //       type: kSaveAction,
+              //       list: publishActions,
+              //     },
+              //   }));
+
+              //   if (Platform.OS == 'ios') {
+              //     _actionSheet &&
+              //       _actionSheet &&
+              //       _actionSheet.showSheet();
+              //   } else {
+              //     setState(prev => ({
+              //       ...prev,
+              //       showActionAndroid: true,
+              //     }));
+              //   }
+              // }
             }}>
-            <Image source={arrowRight} />
+            <Image style={styles.imageStyles} source={arrowRight} />
             <Text
               style={[styles.buttonsTextStyle, { color: Colors.white }]}>
               Next
@@ -2053,13 +2226,13 @@ class CreateMemory extends React.Component<Props> {
     );
   };
 
-  ownersViewForCollaborators = () => {
+  const ownersViewForCollaborators = () => {
     return (
       <View style={styles.collabratorMainContainer}>
         <View style={styles.fullFexDirectionRowStyle}>
           <View style={styles.placeHolderContainerStyle}>
             <PlaceholderImageView
-              uri={Utility.getFileURLFromPublicURL(this.state.ownerDetails.uri)}
+              uri={Utility.getFileURLFromPublicURL(state.ownerDetails.uri)}
               borderRadius={Platform.OS === 'android' ? 48 : 24}
               style={styles.placeHolderImageStyle}
               profilePic={true}
@@ -2068,8 +2241,8 @@ class CreateMemory extends React.Component<Props> {
           <View style={styles.flexMarginLeftStyle}>
             <View style={styles.directionFlex}>
               <Text style={styles.ownerNameTextStyle}>
-                {this.state.ownerDetails.field_first_name_value}{' '}
-                {this.state.ownerDetails.field_last_name_value}
+                {state.ownerDetails.field_first_name_value}{' '}
+                {state.ownerDetails.field_last_name_value}
                 <Text
                   style={[
                     styles.ownerNameTextStyle,
@@ -2077,21 +2250,21 @@ class CreateMemory extends React.Component<Props> {
                       fontWeight: 'normal',
                     },
                   ]}>
-                  {this.state.youWhereThere
-                    ? this.state.taggedCount == 0
+                  {state.youWhereThere
+                    ? state.taggedCount == 0
                       ? ' and You'
                       : ', You and '
-                    : this.state.taggedCount == 0
+                    : state.taggedCount == 0
                       ? ''
                       : ' and '}
                 </Text>
               </Text>
-              {this.state.taggedCount > 0 && (
+              {state.taggedCount > 0 && (
                 <TouchableOpacity
                   onPress={() =>
-                    this.props.navigation.navigate('customListMemoryDetails', {
+                    props.navigation.navigate('customListMemoryDetails', {
                       heading: 'Who else where there',
-                      itemList: this.props.whoElseWhereThereList,
+                      itemList: props.whoElseWhereThereList,
                     })
                   }>
                   <Text
@@ -2102,19 +2275,19 @@ class CreateMemory extends React.Component<Props> {
                         color: Colors.NewTitleColor,
                       },
                     ]}>
-                    {this.state.taggedCount}
-                    {this.state.taggedCount > 1 ? ' others' : ' other'}
+                    {state.taggedCount}
+                    {state.taggedCount > 1 ? ' others' : ' other'}
                   </Text>
                 </TouchableOpacity>
               )}
             </View>
             <Text style={[styles.ownerNameTextStyle, { paddingTop: 5 }]}>
-              {this.state.month.value.name}{' '}
-              {this.state.showDay && this.state.day.value},{' '}
-              {this.state.year.value}{' '}
-              <Text style={{ color: Colors.darkGray }}>
+              {state.month.value.name}{' '}
+              {state.showDay && state.day.value},{' '}
+              {state.year.value}{' '}
+              <Text style={{ color: Colors.newDescTextColor }}>
                 {' '}
-                {this.state.locationText}{' '}
+                {state.locationText}{' '}
               </Text>
             </Text>
           </View>
@@ -2122,285 +2295,342 @@ class CreateMemory extends React.Component<Props> {
       </View>
     );
   };
-  renderForCollaborator = () => { };
 
-  cancelAction = () => {
-    // Alert.alert('', `Are you sure you want to exit?`, [
-    //   {
-    //     text: 'No',
-    //     style: 'cancel',
-    //     onPress: () => { },
-    //   },
-    //   {
-    //     text: 'Yes',
-    //     style: 'default',
-    //     onPress: () => {
-    //       EventManager.callBack(kReloadDraft);
-    //       this.setState({ showMenu: false }, () => {
-    //         Keyboard.dismiss();
-    //         if (this.props.deepLinkBackClick) {
-    //           this.props.navigation.dashBoard();
-    //         } else {
-    //           this.props.navigation.goBack();
-    //         }
-    //       });
-    //     },
-    //   },
-    // ]);
-    // return ();
+  const validateDate = () => {
+
+    let yearactions = createMemoryHelper.getDateOptions(
+      'year',
+      state.year.value,
+    ), isValidYear = false;
+    let monthactions = createMemoryHelper.getDateOptions(
+      'month',
+      state.year.value,
+    ), isValidMonth = false;
+    // console.log("yearactions arr ", JSON.stringify(yearactions));
+
+
+    if (yearactions && yearactions.length && yearactions.filter(item => (item.text.toLowerCase() === state.year.value) || (item.key.toString().toLowerCase() === state.year.value)).length) {
+      isValidYear = true;
+    }
+
+    let validNumberReg = /^[0-9\b]+$/;
+    let validAlphabatesReg = /^[a-zA-Z]*$/;
+    if (validNumberReg.test(state?.month?.value) || validAlphabatesReg.test(state?.month?.value)) {
+      if (state?.month?.value?.length > 3) {
+        let val = state?.month?.value?.toLowerCase();
+        console.log("monthactions arr ", JSON.stringify(monthactions), val);
+        if (monthactions && monthactions.length && monthactions.filter(item => (item.text.toLowerCase() === val)).length) {
+          isValidMonth = true;
+        }
+      }
+      else if ((state?.month?.value?.length == 2) && monthactions && monthactions.length && monthactions.filter(item => (item.key < 9 ? '0' + item.key.toString().toLowerCase() === state.month.value : item.key.toString().toLowerCase() === state.month.value)).length) {
+        isValidMonth = true;
+      }
+    }
+
+    setState(prev => ({
+      ...prev,
+      year: { ...state.year, error: !isValidYear },
+      month: { ...state.month, error: !isValidMonth },
+    }));
+
+    let isValidDate = false;
+    if (state.day.value != '' && !state.day.error) {
+      isValidDate = true;
+    }
+    console.log(isValidMonth , isValidYear , isValidDate)
+    if (isValidMonth && isValidYear && isValidDate) {
+      optionsActionSheetRef?.current?.hide();
+      // alert('ww')
+
+      setState(prev => ({
+        ...prev,
+        memory_date: `${state.year.value}/${state.month.value}/${state.year.value}`
+      }));
+
+      setTimeout(() => {
+        saveIntitals()
+      }, 1000);
+    };
+
   };
 
-  onChange = (date: any) => {
+
+  const onChange = (date: any) => {
     showConsoleLog(ConsoleType.LOG, 'date');
   };
 
-  render() {
-    return (
-      <View style={styles.fullFlex}>
-        {
-          this.props.showLoaderValue ?
-            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
-            :
-            null
-        }
-        <SafeAreaView style={styles.emptySafeAreaStyle} />
-        {/* <SafeAreaView style={styles.SafeAreaViewContainerStyle}> */}
-          {Platform.OS === 'ios' && this.state.showCalender && (
-            <View style={Styles.calendarViewStyle}>
-              <DatePicker
-                options={{
-                  backgroundColor: Colors.white,
-                  textHeaderColor: Colors.black,
-                  textDefaultColor: Colors.systemRed,
-                  selectedTextColor: Colors.white,
-                  mainColor: Colors.systemRed,
-                  textSecondaryColor: Colors.systemRed,
-                  borderColor: 'rgba(122, 146, 165, 0.1)',
-                }}
-                newMemoryYears={this.newMemoryYears}
-                mode="datepicker"
-                selected={this.state.memory_date}
-                current={this.state.memory_date}
-                selectorEndingYear={new Date().getUTCFullYear()}
-                selectorStartingYear={1917}
-                onSelectedChange={date => {
-                  this.setState({
-                    showCalender: false,
-                    memory_date: date,
-                  });
-                }}
-                style={styles.calendar}
-              />
-            </View>
-          )}
-          <CustomAlert
-            modalVisible={this.state.showCustomAlert}
-            // setModalVisible={setModalVisible}
-            title={'Save your memory'}
-            message={
-              'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'
-            }
-            buttons={[
-              {
-                text: 'Close and save as draft',
-                func: () => {
-                  this.setState({ showCustomAlert: false }, () => {
-                    // if (this.props.padDetails?.padId) {
-                    //   this.setEtherPadContent('get', '', this.state.padDetails.padId);
-                    // }
-                    // setTimeout(() => {
-                    this.saveORPublish('save');
-                    // }, 1000);
-                  });
+  // render() {
+  return (
+    <View style={styles.fullFlex}>
+      {
+        props.showLoaderValue ?
+          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue != '' ? props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+          :
+          null
+      }
+      <SafeAreaView style={styles.emptySafeAreaStyle} />
+      {/* <SafeAreaView style={styles.SafeAreaViewContainerStyle}> */}
+      {Platform.OS === 'ios' && state.showCalender && (
+        <View style={Styles.calendarViewStyle}>
+          <DatePicker
+            options={{
+              backgroundColor: Colors.white,
+              textHeaderColor: Colors.black,
+              textDefaultColor: Colors.systemRed,
+              selectedTextColor: Colors.white,
+              mainColor: Colors.systemRed,
+              textSecondaryColor: Colors.systemRed,
+              borderColor: 'rgba(122, 146, 165, 0.1)',
+            }}
+            newMemoryYears={newMemoryYears}
+            mode="datepicker"
+            selected={state.memory_date}
+            current={state.memory_date}
+            selectorEndingYear={new Date().getUTCFullYear()}
+            selectorStartingYear={1917}
+            onSelectedChange={date => {
+              setState(prev => ({
+                ...prev,
+                showCalender: false,
+                memory_date: date,
+              }));
 
-                  // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                },
-              },
-              {
-                text: 'Continue editing',
-                func: () => {
-                  this.setState({ showCustomAlert: false });
-                  // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                },
-                styles: { fontWeight: '400' },
-              },
-              {
-                text: 'Cancel',
-                func: () => {
-                  this.setState({ showCustomAlert: false }, () => {
-                    this.props.fetchMemoryList({
-                      type: ListType.Recent,
-                      isLoading: true,
-                    });
-                    this.props.fetchMemoryList({
-                      type: ListType.Timeline,
-                      isLoading: true,
-                    });
-                    //loaderHandler.showLoader();
-                    this.props.showLoader(true);
-                    this.props.loaderText('Loading...');
-                    this.props.navigation.goBack();
-                  });
-                  // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                },
-                styles: { fontWeight: '400' },
-              },
-            ]}
+            }}
+            style={styles.calendar}
           />
-          <View
-            style={styles.navigationHeaderContainer}
-          // onStartShouldSetResponder={() => true}
-          // onResponderStart={this.hideToolTip}
-          >
-            <NavigationHeaderSafeArea
-              // heading={'Memory Draft'}
-              showCommunity={false}
-              cancelAction={() => this.saveDraft()} //this.setState({ showCustomAlert: true }) //this.cancelAction}
-              showRightText={true}
-              rightText={
-                this.props.route.params.editPublsihedMemory
-                  ? 'Save'
-                  : // : this.state.isCreatedByUser
-                  //   ? 'Done'
-                  'Save'
-              }
-              backIcon={action_close}
-              saveValues={() => {
-                this.setState({ showCustomAlert: true });
-              }} //this.saveDraft
-            // rightIcon={this.state.isCreatedByUser}
-            // showHideMenu={() => this.showMenu(!this.state.menuVisibility)}
-            />
-            <View style={styles.borderStyle}></View>
-            <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
-              }
-              backgroundColor={Colors.NewThemeColor}
-            />
-            <View style={styles.height22} />
+        </View>
+      )}
+      <CustomAlert
+        modalVisible={state.showCustomAlert}
+        title={'Save your memory'}
+        message={
+          'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'
+        }
+        buttons={[
+          {
+            text: 'Close and save as draft',
+            func: () => {
+              setState(prev => ({
+                ...prev,
+                showCustomAlert: false
+              }));
 
-            <CustomAlert
-              modalVisible={this.state.showActionAndroid}
-              setModalVisible={
-                this.state.actionSheet?.list?.actions &&
-                  this.state.actionSheet?.list?.actions.length &&
-                  this.state.actionSheet?.list?.actions[0] &&
-                  this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
-                  ? `Are you done writing this memory?`
-                  : `Save for later?`
-              }
-              title={this.state.actionSheet.title}
-              message={
-                this.state.actionSheet?.list?.actions &&
-                  this.state.actionSheet?.list?.actions.length &&
-                  this.state.actionSheet?.list?.actions[0] &&
-                  this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
-                  ? ``
-                  : 'Choose to completely discard your work, or save writing this memory for later.'
-              }
-              buttons={
-                (this.state.actionSheet.list = this.state.actionSheet.list.map(
-                  (item: any) => {
-                    return {
-                      text: item.text,
-                      index: item.index,
-                      func: () => {
-                        this.setState(
-                          {
-                            showActionAndroid: false,
-                          },
-                          () => {
-                            this.onActionItemClicked(item.index);
-                          },
-                        );
-                      },
-                    };
+              saveORPublish('save');
+
+              // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            },
+          },
+          {
+            text: 'Continue editing',
+            func: () => {
+              setState(prev => ({
+                ...prev,
+                showCustomAlert: false
+              }));
+              // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            },
+            styles: { fontWeight: '400' },
+          },
+          {
+            text: 'Cancel',
+            func: () => {
+              setState(prev => ({
+                ...prev,
+                showCustomAlert: false
+              }));
+
+              props.fetchMemoryList({
+                type: ListType.Recent,
+                isLoading: true,
+              });
+              props.fetchMemoryList({
+                type: ListType.Timeline,
+                isLoading: true,
+              });
+              //loaderHandler.showLoader();
+              props.showLoader(true);
+              props.loaderText('Loading...');
+              props.navigation.goBack();
+              // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            },
+            styles: { fontWeight: '400' },
+          },
+        ]}
+      />
+
+      <CustomAlert
+        modalVisible={state.showCustomValidationAlert}
+        // setModalVisible={setModalVisible}
+        title={`${state.memory_date == '' ? 'Date' : 'Location'} needed`}
+        message={
+          `To prepare to publish, please input the ${state.memory_date == '' ? 'date' : 'location'} of this memory.`
+        }
+        buttons={[
+          {
+            text: 'Ok',
+            func: () => {
+              setState(prev => ({
+                ...prev,
+                showCustomValidationAlert: false
+              }));
+            },
+          }
+        ]}
+      />
+
+      <View
+        style={styles.navigationHeaderContainer}
+      // onStartShouldSetResponder={() => true}
+      // onResponderStart={this.hideToolTip}
+      >
+        <NavigationHeaderSafeArea
+          // heading={'Memory Draft'}
+          showCommunity={false}
+          cancelAction={() => saveDraft()} //this.setState({ showCustomAlert: true }) //this.cancelAction}
+          showRightText={true}
+          rightText={
+            props.route.params.editPublsihedMemory
+              ? 'Save'
+              : // : state.isCreatedByUser
+              //   ? 'Done'
+              'Save'
+          }
+          backIcon={action_close}
+          saveValues={() => {
+            setState(prev => ({ ...prev, showCustomAlert: true }));
+          }} //saveDraft
+        // rightIcon={state.isCreatedByUser}
+        // showHideMenu={() => showMenu(!state.menuVisibility)}
+        />
+        <View style={styles.borderStyle}></View>
+        <StatusBar
+          barStyle={
+            Utility.currentTheme == 'light'
+              ? 'dark-content'
+              : 'light-content'
+          }
+          backgroundColor={Colors.NewThemeColor}
+        />
+        <View style={styles.height22} />
+
+        <CustomAlert
+          modalVisible={state.showActionAndroid}
+          setModalVisible={
+            state.actionSheet?.list?.actions &&
+              state.actionSheet?.list?.actions.length &&
+              state.actionSheet?.list?.actions[0] &&
+              state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
+              ? `Are you done writing this memory?`
+              : `Save for later?`
+          }
+          title={state.actionSheet.title}
+          message={
+            state.actionSheet?.list?.actions &&
+              state.actionSheet?.list?.actions.length &&
+              state.actionSheet?.list?.actions[0] &&
+              state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
+              ? ``
+              : 'Choose to completely discard your work, or save writing this memory for later.'
+          }
+          buttons={
+            (state.actionSheet.list = state.actionSheet.list.map(
+              (item: any) => {
+                return {
+                  text: item.text,
+                  index: item.index,
+                  func: () => {
+                    setState(prev => ({
+                      ...prev,
+                      showActionAndroid: false,
+                    }));
+                    onActionItemClicked(item.index);
+
                   },
-                ))
-                //   [{
-                //   text: 'Close and save as draft',
-                //   func: () => {
-                //     this.setState({ showCustomAlert: false }, () => {
-                //         this.saveORPublish('save');
-                //     })
+                };
+              },
+            ))
+            //   [{
+            //   text: 'Close and save as draft',
+            //   func: () => {
+            //     this.setState({ showCustomAlert: false }, () => {
+            //         this.saveORPublish('save');
+            //     })
 
-                //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                //   },
-                // },
-                // {
-                //   text: 'Continue editing',
-                //   func: () => {
-                //     this.setState({ showCustomAlert: false })
-                //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                //   },
-                // },
-                // {
-                //   text: 'Cancel',
-                //   func: () => {
-                //     this.setState({ showActionAndroid: false }, () => {
+            //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            //   },
+            // },
+            // {
+            //   text: 'Continue editing',
+            //   func: () => {
+            //     this.setState({ showCustomAlert: false })
+            //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            //   },
+            // },
+            // {
+            //   text: 'Cancel',
+            //   func: () => {
+            //     this.setState({ showActionAndroid: false }, () => {
 
-                //     })
-                //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                //   },
-                // }
-                // ]
-              }
-            />
+            //     })
+            //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            //   },
+            // }
+            // ]
+          }
+        />
+
+        {
+          // this.state.itemList.length ?
+
+          <ScrollView
+            contentContainerStyle={
+              Styles.viewBeforListContentContainerStyle
+            }
+            nestedScrollEnabled={true} overScrollMode='always'
+            style={[styles.fullWidth, { flex: 1 }]}
+            scrollEnabled={state.itemList.length ? true : false}>
+            {/* {state.itemList.length == 0 ? ( */}
+            {viewBeforList()}
+            {/* ) : ( */}
 
             {
-              // this.state.itemList.length ?
-
-              <ScrollView
-                contentContainerStyle={
-                  Styles.viewBeforListContentContainerStyle
-                }
-                nestedScrollEnabled={true} overScrollMode='always'
-                style={[styles.fullWidth, { flex: 1 }]}
-                scrollEnabled={this.state.itemList.length ? true : false}>
-                {/* {this.state.itemList.length == 0 ? ( */}
-                {this.viewBeforList()}
-                {/* ) : ( */}
-
-                {
-                  // this.state.bottomToolbar ?
-                  //   null
-                  //   :
-                  // <FlatList
-                  //   ref={ref => (this._mainItemList = ref)}
-                  //   extraData={this.state}
-                  //   nestedScrollEnabled={true}
-                  //   keyExtractor={(_, index: number) => `${index}`}
-                  //   style={[styles.fullWidth, { marginBottom: 100 }]}
-                  //   onScroll={() => Keyboard.dismiss()}
-                  //   // keyboardShouldPersistTaps={'handled'}
-                  //   showsHorizontalScrollIndicator={false}
-                  //   // showsVerticalScrollIndicator={false}
-                  //   data={this.state.itemList}
-                  //   renderItem={(item: any) => this.renderRow(item)}
-                  // />
-                  this.state.itemList?.length
-                    ? this.state.itemList.map((item, index) =>
-                      this.renderRow(item, index)
-                    )
-                    : null
-                }
-                {/* )} */}
-              </ScrollView>
-              // :
-              // <View style={styles.fullWidth} >
-              //   {this.viewBeforList()}
-              // </View>
+              // state.bottomToolbar ?
+              //   null
+              //   :
+              // <FlatList
+              //   ref={ref => (_mainItemList = ref)}
+              //   extraData={state}
+              //   nestedScrollEnabled={true}
+              //   keyExtractor={(_, index: number) => `${index}`}
+              //   style={[styles.fullWidth, { marginBottom: 100 }]}
+              //   onScroll={() => Keyboard.dismiss()}
+              //   // keyboardShouldPersistTaps={'handled'}
+              //   showsHorizontalScrollIndicator={false}
+              //   // showsVerticalScrollIndicator={false}
+              //   data={state.itemList}
+              //   renderItem={(item: any) => renderRow(item)}
+              // />
+              state.itemList?.length
+                ? state.itemList.map((item, index) =>
+                  renderRow(item, index)
+                )
+                : null
             }
-            {/* {this.state.menuVisibility && (
+            {/* )} */}
+          </ScrollView>
+          // :
+          // <View style={styles.fullWidth} >
+          //   {viewBeforList()}
+          // </View>
+        }
+        {/* {state.menuVisibility && (
               <View
                 style={styles.menuVisibleContainer}
                 onStartShouldSetResponder={() => true}
-                onResponderStart={this.hideMenu}>
+                onResponderStart={hideMenu}>
                 <View style={styles.sideMenu}>
-                  {this.menuOptions.map((data: any) => {
+                  {menuOptions.map((data: any) => {
                     return (
                       <TouchableOpacity
                         key={data.key}
@@ -2417,15 +2647,412 @@ class CreateMemory extends React.Component<Props> {
               </View>
             )} */}
 
-            {/* {this.toolbar()} */}
-            <ActionSheet
-              ref={this._actionSheet}
-              width={DeviceInfo.isTablet() ? '65%' : '100%'}
-              title={this.state.actionSheet.title}
-              actions={this.state.actionSheet.list}
-              onActionClick={this.onActionItemClicked.bind(this)}
-            />
-            {/* {this.state.toolTipVisibility && (
+        {/* {toolbar()} */}
+        <CustomActionSheet
+          ref={ref => _actionSheet = ref}
+          width={DeviceInfo.isTablet() ? '65%' : '100%'}
+          title={state.actionSheet.title}
+          actions={state.actionSheet.list}
+          onActionClick={onActionItemClicked.bind(this)}
+        />
+
+
+        <ActionSheet
+          closeOnTouchBackdrop={false}
+          closeOnPressBack={false}
+          ref={optionsActionSheetRef}>
+
+          <View style={Styles.actionSheetContainer}>
+            <View style={Styles.actionSheetHeaderContainer}>
+              <TouchableHighlight
+                underlayColor={Colors.transparent}
+                style={Styles.jumptoCancelSubContainerStyle}
+                onPress={() => {
+                  optionsActionSheetRef?.current?.hide()
+                }}>
+                <>
+                  <Image style={Styles.cancelImageStyle} source={x} />
+                  <Text style={Styles.cancelTextStyle}>Cancel</Text>
+                </>
+              </TouchableHighlight>
+            </View>
+
+            {
+              optionToShow == 'date' ?
+                <View >
+                  <Text
+                    style={styles.colabratiesTextStyle}>
+                    {'When did this memory happen?'}
+                  </Text>
+                  <View style={styles.textInputContainer}>
+                    <Text
+                      style={styles.labelStyle}>
+                      {'YEAR'}
+                      <Text
+                        style={{ color: Colors.newErrorColor }}>
+                        {'*'}
+                      </Text>
+                    </Text>
+                    <TextInput
+                      style={styles.textInputBoxStyle}
+                      onChangeText={(text: any) => {
+                        setState(prev => ({
+                          ...prev,
+                          year: { ...state.year, value: text, error: false }
+                        }));
+                      }}
+                      placeholderTextColor={Colors.newTextColor}
+                      value={state.year.value}
+                      maxLength={4}
+                      placeholder="YYYY"
+                      returnKeyType="next"
+                      keyboardType="number-pad"
+                    />
+                    {/* <TextField
+                      errorMessage={'Please enter valid Year'}
+                      showError={state.year.error}
+                      value={state.year.value}
+                      placeholder="YYYY"
+                      maxLength={4}
+                      keyboardType="number-pad"
+                      returnKeyType="next"
+                      onChange={(text: any) => {
+                        setState(prev => ({
+                          ...prev,
+                          year: { ...state.year, value: text, error: false }
+                        }));
+                      }}
+                    /> */}
+
+                  </View>
+
+                  <View style={styles.textInputContainer}>
+                    <Text
+                      style={styles.labelStyle}>
+                      {'MONTH'}
+                      <Text
+                        style={{ color: Colors.newErrorColor }}>
+                        {'*'}
+                      </Text>
+                    </Text>
+                    <TextInput
+                      style={styles.textInputBoxStyle}
+                      onChangeText={(text: any) => {
+                        setState(prev => ({
+                          ...prev,
+                          month: { ...state.month, value: text, error: false }
+                        }));
+                      }}
+                      value={state.month.value}
+                      placeholderTextColor={Colors.newTextColor}
+                      maxLength={12}
+                      placeholder="Month or Season"
+                      returnKeyType="done"
+                    // keyboardType="number-pad"
+                    />
+                    {/* <TextField
+                      errorMessage={'Please enter valid month'}
+                      showError={state.month.error}
+                      value={state.month.value}
+                      placeholder="Month or Season"
+                      maxLength={12}
+                      returnKeyType="next"
+                      onChange={(text: any) => {
+                        setState(prev => ({
+                          ...prev,
+                          month: { ...state.month, value: text, error: false }
+                        }));
+                        if (state.day.value != '') {
+                          // validateDateField(state.day.value);
+                        }
+                      }}
+                    /> */}
+
+                  </View>
+
+                  <View style={styles.textInputContainer}>
+                    <Text
+                      style={styles.labelStyle}>
+                      {'DAY'}
+                    </Text>
+                    <TextInput
+                      style={styles.textInputBoxStyle}
+                      onChangeText={(text: any) => {
+                        let limit = 31;
+                        if (text) {
+                          switch (parseInt(state.month.value)) {
+                            case 2:
+                              limit = 28;
+                              if (state.year.value != 'Year*') {
+                                if (parseInt(state.year.value) % 4 == 0) {
+                                  limit = 29;
+                                }
+                              }
+                              break;
+                            case 4 || 6 || 9 || 11:
+                              limit = 30;
+                              break;
+                            default:
+                          }
+                        }
+                        console.error("valid >", text);
+                        if (parseInt(text) <= limit) {
+                          setState(prev => ({
+                            ...prev,
+                            day: { ...state.day, value: text, error: false }
+                          }));
+                        }
+                        else {
+                          setState(prev => ({
+                            ...prev,
+                            day: { ...state.day, value: text, error: true }
+                          }));
+
+                        }
+                      }}
+                      value={state.day.value}
+                      maxLength={4}
+                      placeholder="DD"
+                      placeholderTextColor={Colors.newTextColor}
+                      returnKeyType="done"
+                      keyboardType="number-pad"
+                    />
+                    {/* <TextField
+                      errorMessage={'Please enter valid date'}
+                      showError={state.day.error}
+                      value={state.day.value}
+                      placeholder="DD"
+                      maxLength={2}
+                      keyboardType="number-pad"
+                      returnKeyType="done"
+                      onChange={(text: any) => {
+
+                        let limit = 31;
+                        if (text) {
+                          switch (parseInt(state.month.value)) {
+                            case 2:
+                              limit = 28;
+                              if (state.year.value != 'Year*') {
+                                if (parseInt(state.year.value) % 4 == 0) {
+                                  limit = 29;
+                                }
+                              }
+                              break;
+                            case 4 || 6 || 9 || 11:
+                              limit = 30;
+                              break;
+                            default:
+                          }
+                        }
+                        console.error("valid >", text);
+                        if (parseInt(text) <= limit) {
+                          setState(prev => ({
+                            ...prev,
+                            day: { ...state.day, value: text, error: false }
+                          }));
+                        }
+                        else {
+                          setState(prev => ({
+                            ...prev,
+                            day: { ...state.day, value: text, error: true }
+                          }));
+
+                        }
+
+                      }}
+                    /> */}
+
+                  </View>
+
+                  <TouchableWithoutFeedback
+                    // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                    onPress={() => {
+                      validateDate();
+                    }}>
+                    <View
+                      style={Styles.loginSSOButtonStyle}>
+                      <Text
+                        style={[
+                          CommonTextStyles.fontWeight500Size17Inter,
+                          Styles.loginTextStyle,
+                        ]}>
+                        Done
+                      </Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+                :
+                optionToShow == 'location' ?
+                  <View >
+                    <Text
+                      style={styles.colabratiesTextStyle}>
+                      {'Where did this memory happen?'}
+                    </Text>
+
+                    <SearchBar
+                      style={[styles.searchBarStyle, {
+                        borderBottomColor: state.locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
+                      }]}
+                      placeholder="Add location..."
+                      onBlur={() => {
+                        // setState(prev => ({
+                        //   ...prev,
+                        //   locationList: []
+                        // }));
+                      }}
+                      onSearchButtonPress={(keyword: string) => {
+                        // setState(prev => ({
+                        //   ...prev,
+                        //   showLocationLoader: true
+                        // }));
+                        props.onLocationUpdate(keyword);
+                      }}
+                      onClearField={() => {
+                        props.resetLocation();
+                        // setState(prev => ({
+                        //   ...prev,
+                        //   locationList: []
+                        // }));
+                      }}
+                      onChangeText={(text: any) => {
+                        props.onLocationUpdate(text);
+                        // setState(prev => ({
+                        //   ...prev,
+                        //   locationError: '',
+                        //   locationText: text
+                        // }));
+                      }}
+                      // onFocus={()=> this._mainItemList.scrollToOffset({ animated: true, offset: 100})}
+                      showCancelClearButton={false}
+                      value={state.locationText}
+                    />
+                    {props.locationList.length > 0 && (
+                      <FlatList
+                        keyExtractor={(_, index: number) => `${index}`}
+                        keyboardShouldPersistTaps={'never'}
+                        // onScroll={() => {
+                        //   Keyboard.dismiss();
+                        // }}
+                        nestedScrollEnabled={true}
+                        style={styles.locationFlatListStyle}
+                        data={props.locationList}
+                        renderItem={_renderLocation}
+                        ItemSeparatorComponent={() => (
+                          <View
+                            style={styles.locationListSeparator}></View>
+                        )}
+                      />
+                    )}
+
+                    <Text style={styles.locationErrorTextStyle}>
+                      {state.locationError}
+                    </Text>
+
+                    <TouchableWithoutFeedback
+                      // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                      onPress={() => {
+                        if (state.location.description != '') {
+                          optionsActionSheetRef?.current?.hide();
+                          setTimeout(() => {
+                            saveIntitals();
+                          }, 1000);
+                        } 
+                        else {
+                          setState(prevState => ({
+                            ...prevState,
+                            locationError: '* Please enter a location to publish your memory',
+                          }));
+                        }
+                      }}>
+                      <View
+                        style={Styles.loginSSOButtonStyle}>
+                        <Text
+                          style={[
+                            CommonTextStyles.fontWeight500Size17Inter,
+                            Styles.loginTextStyle,
+                          ]}>
+                          Done
+                        </Text>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                  :
+                  <View >
+                    <Text
+                      style={styles.colabratiesTextStyle}>
+                      {'What would you like to upload?'}
+                    </Text>
+
+                    <View style={{ flexDirection: 'row' }}>
+                      <TouchableWithoutFeedback
+                        // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                        onPress={() => {
+                          PickImage(fileCallback);
+                        }}>
+                        <View style={styles.newFilterItem}>
+                          <View style={styles.iconContainer}>
+                            <Image source={images} />
+                          </View>
+
+                          <View style={styles.iconSeparator}></View>
+
+                          <View style={styles.jumptoYearContainer}>
+                            <Text style={[styles.filterTextJumpto]}>
+                              {'Photo'}
+                            </Text>
+                          </View>
+                        </View>
+                      </TouchableWithoutFeedback>
+
+                      <TouchableWithoutFeedback
+                        // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                        onPress={() => {
+                          PickPDF(fileCallback);
+                        }}>
+                        <View style={styles.newFilterItem}>
+                          <View style={styles.iconContainer}>
+                            <Image source={pdf} />
+                          </View>
+
+                          <View style={styles.iconSeparator}></View>
+
+                          <View style={styles.jumptoYearContainer}>
+                            <Text style={[styles.filterTextJumpto]}>
+                              {'PDF'}
+                            </Text>
+                          </View>
+                        </View>
+                      </TouchableWithoutFeedback>
+
+                      <TouchableWithoutFeedback
+                        // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                        onPress={() => {
+                          PickAudio(fileCallback)
+                        }}>
+                        <View style={styles.newFilterItem}>
+                          <View style={styles.iconContainer}>
+                            <Image source={audio} />
+                          </View>
+
+                          <View style={styles.iconSeparator}></View>
+
+                          <View style={styles.jumptoYearContainer}>
+                            <Text style={[styles.filterTextJumpto]}>
+                              {'Audio'}
+                            </Text>
+                          </View>
+                        </View>
+                      </TouchableWithoutFeedback>
+
+                    </View>
+                  </View>
+            }
+
+          </View>
+        </ActionSheet>
+
+
+        {/* {state.toolTipVisibility && (
               <View style={styles.tooltipVisibleStyle}>
                 <View style={styles.tooltipStyle}>
                   <Text
@@ -2436,30 +3063,30 @@ class CreateMemory extends React.Component<Props> {
                 <View style={styles.toolTipArrow}></View>
               </View>
             )} */}
-            {/* <BottomPicker
-              ref={this.bottomPicker}
+        {/* <BottomPicker
+              ref={bottomPicker}
               onItemSelect={(selectedItem: any) => {
-                this.dateSelected(selectedItem);
+                dateSelected(selectedItem);
               }}
-              title={this.state.selectionData.title}
-              actions={this.state.selectionData.actions}
-              value={this.state.selectionData.selectionValue}
-              selectedValues={[this.state.selectionData.selectionValue]}
+              title={state.selectionData.title}
+              actions={state.selectionData.actions}
+              value={state.selectionData.selectionValue}
+              selectedValues={[state.selectionData.selectionValue]}
             /> */}
-          </View>
-          {/* {this.state.memoryDraftVisibility && (
+      </View>
+      {/* {state.memoryDraftVisibility && (
             <MemoryDraftIntro
               cancelMemoryDraftTour={() => {
-                this.setState({ memoryDraftVisibility: false });
+                setState({ memoryDraftVisibility: false });
                 DefaultPreference.set('hide_memory_draft', 'true').then(
                   function () { },
                 );
               }}></MemoryDraftIntro>
           )} */}
-        {/* </SafeAreaView> */}
-      </View>
-    );
-  }
+      {/* </SafeAreaView> */}
+    </View>
+  );
+  // }
 }
 
 const mapState = (state: { [x: string]: any }) => {
@@ -2491,6 +3118,8 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: MemoryInitialsUpdate, payload: payload }),
     recentTags: (payload: any) =>
       dispatch({ type: MemoryTagsAPI, payload: payload }),
+    userSelectedLocation: (payload: any) =>
+      dispatch({ type: SelectedLocation, payload: payload }),
     collectionAPI: () => dispatch({ type: CollectinAPI }),
     saveNid: (payload: any) => dispatch({ type: SaveNid, payload: payload }),
     saveFiles: (payload: any) =>
