@@ -82,6 +82,7 @@ import {
 import { kCollaborators, kTags, kWhoElseWhereThere } from './publish';
 import {
   EditContent,
+  MemoryInitials,
   MemoryInitialsUpdate,
   NavigateToDashboard,
   ResetALL,
@@ -114,6 +115,7 @@ import { arrowRight, audio, calendarWrite, image, images, map_pin, pdf, upload, 
 import CustomAlert from '../../common/component/customeAlert';
 import {
   CreateAMemory,
+  dashboardReducer,
   GET_MEMORY_LIST,
   ListType,
   SHOW_LOADER_READ,
@@ -230,12 +232,8 @@ const CreateMemory = (props: Props) => {
     value: new Date(),
     minimumDate: new Date(1917, 1, 1),
     onChange: (event, date) => {
-      setState(prev => ({
-        ...prev,
-        showCalender: false,
-        memory_date: moment(date).utc().format('DD/MM/YYYY'),
-      }));
-
+      setShowCalendar(false)
+      setMemoryDate( moment(date).utc().format('DD/MM/YYYY'))
     },
   };
 
@@ -250,59 +248,57 @@ const CreateMemory = (props: Props) => {
   //Component default state
   let currentDate = new Date();
   let etherpadUrl: string = '';
-  const [state, setState] = useState({
-    menuVisibility: false,
-    actionSheet: {
+
+    const [menuVisibility,setMenuVisibility] = useState(false);
+    const [actionSheet,setActionSheet]= useState({
       title: '',
       type: '',
       list: ImageActions,
-    },
-    itemList: [],
-    year: {
+    })
+    const [itemList,setItemList]= useState([])
+    const [year,setYear]= useState({
       value: '',//currentDate.getUTCFullYear().toString(),
       error: false,
-    },
-    month: {
+    })
+    const [month,setMonth] = useState({
       value: '',// MonthObj.month[currentDate.getUTCMonth()],
       error: false,
-    },
-    day: {
+    })
+    const [day,setDay]= useState({
       value: '',//currentDate.getDate(),
       error: false,
-    },
-    memory_date: '',
-    // '' +
-    // new Date().getUTCDate() +
-    // '/' +
-    // (new Date().getUTCMonth() + 1) +
-    // '/' +
-    // new Date().getUTCFullYear(),
-    dateError: '',
-    locationError: '',
-    locationText: '',
-    showDay: true,
-    location: { description: '', reference: '' },
-    selectionData: {
+    })
+    const [memory_date,setMemoryDate]= useState('')
+    const [description,setDescription]= useState('')
+    const [dateError,setDateError]= useState('')
+    const [locationError,setLocationError]= useState('')
+    const [locationText,setLocationText]= useState('')
+    const [showDay,setShowDay]= useState(true)
+    const [location,setLocation]= useState({ description: '', reference: '' })
+    const [selectionData,setSelectionData]= useState( {
       actions: [],
       selectionValue: '',
       fieldName: '',
       title: '',
-    },
-    title: '',
-    titleError: '',
-    bottomToolbar: 0,
-    isCreatedByUser: true,
-    taggedCount: 0,
-    collaboratorOwner: '',
-    memoryDraftVisibility: false,
-    showActionAndroid: false,
-    padDetails: {},
-    showCustomAlert: false,
-    showCalender: false,
-    showEtherPad: true,
-    showCustomValidationAlert: false,
-    placeholder: 'Tap to title your memory...',
-  });
+    })
+    const [title,setTitle]= useState('')
+    const [titleError,setTitleError]= useState('')
+    const [bottomToolbar,setBottomBar]= useState(0)
+    const [isCreatedByUser,setIsCreatedByUser]= useState(true)
+    const [taggedCount,setTaggedCount]= useState(0)
+    const [collaboratorOwner,setCollaboratorOwner]= useState('')
+    const [memoryDraftVisibility,setMemoryDraftVisibility]= useState(false)
+    const [showActionAndroid,setShowActionAndroid]= useState(false)
+    const [padDetails,setPadDetails]= useState({})
+    const [showCustomAlert,setShowCustomAlert]= useState(false)
+    const [showCalender,setShowCalendar]= useState(false)
+    const [showEtherPad,setShowEtherPad]= useState(true)
+    const [showCustomValidationAlert,setShowCustomValidationAlert]= useState(false)
+    const [placeholder,setPlaceHolder]= useState('Tap to title your memory...')
+    const [toolTipVisibility,setToolTilvisibility]= useState(false)
+    const [youWhereThere,setYouWhereThere]= useState('')
+    const [ownerDetails,setOwnerDetails]= useState('')
+  
   const [optionToShow, setOptionToShow] = useState('')
 
   let isEdit: boolean = false;
@@ -346,19 +342,11 @@ const CreateMemory = (props: Props) => {
 
 
   const _keyboardDidShow = (e: any) => {
-    setState(prevState => ({
-      ...prevState,
-      bottomToolbar: e.endCoordinates.height,
-    }));
-
+    setBottomBar(e.endCoordinates.height)
   };
 
   const _keyboardDidHide = (e: any) => {
-    setState(prevState => ({
-      ...prevState,
-      bottomToolbar: 0
-    }));
-
+    setBottomBar(0)
   };
 
   const cancelAction = () => {
@@ -456,31 +444,29 @@ const CreateMemory = (props: Props) => {
         : '';
       // console.warn("draftDetails >", JSON.stringify(draftDetails))
 
-      setState(prevState => ({
-        ...prevState,
-        title: decode_utf8(draftDetails.title),
-        locationText: draftDetails.location.description,
-        itemList: draftDetails.files,
-        year: { ...state.year, value: draftDetails.date.year ? draftDetails.date.year.toString() :''},
-        month: {
-          ...state.month,
-          value: draftDetails.date.month > 0 ?draftDetails.date.month < 10 ? '0'+JSON.stringify(draftDetails.date.month):JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
-        },
-        day: {
-          ...state.day,
-          value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
-        },
-        memory_date: newMemoryDate ? newMemoryDate : '',
-        showDay: draftDetails.date.day > 0 ? true : false,
-        isCreatedByUser:
-          draftDetails.isCreatedByUser.uid == Account.selectedData().userID,
-        padDetails: draftDetails.etherpad_details,
-        ownerDetails: draftDetails.isCreatedByUser,
-        youWhereThere: draftDetails.youWhereThere,
-        taggedCount: draftDetails.taggedCount,
-        collaboratorOwner: draftDetails.collaboratorOwner,
+      setTitle(decode_utf8(draftDetails.title))
 
-      }));
+        setLocationText (draftDetails.location.description)
+        setItemList(draftDetails.files)
+        setYear({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() :''})
+        setMonth({
+          ...month,
+          value: draftDetails.date.month > 0 ?draftDetails.date.month < 10 ? '0'+JSON.stringify(draftDetails.date.month):JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
+        })
+        setDay({
+          ...day,
+          value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
+        })
+        setMemoryDate(newMemoryDate ? newMemoryDate : '')
+       setShowDay(draftDetails.date.day > 0 ? true : false)
+        setIsCreatedByUser(draftDetails.isCreatedByUser.uid == Account.selectedData().userID)
+        setPadDetails(draftDetails.etherpad_details)
+        // ownerDetails
+        setOwnerDetails(draftDetails.isCreatedByUser)
+        // youWhereThere
+        setYouWhereThere(draftDetails.youWhereThere)
+        setTaggedCount(draftDetails.taggedCount)
+        setCollaboratorOwner(draftDetails.collaboratorOwner),
 
       //loaderHandler.hideLoader();
       props.showLoader(false);
@@ -522,30 +508,26 @@ const CreateMemory = (props: Props) => {
         title = title.substring(0, 150);
       }
 
-      // setEtherPadContent("set", description);
-      setState(prevState => ({
-        ...prevState,
-        itemList: props.route.params.attachments,
-        padDetails: props.route.params.padDetails,
-        title: decode_utf8(props.route.params.textTitle),
-        location: props.route.params.location,
-        year: {
-          ...state.year,
+        setItemList(props.route.params.attachments)
+        setPadDetails(props.route.params.padDetails)
+        setTitle(decode_utf8(props.route.params.textTitle))
+        setLocation(props.route.params.location)
+        setYear({
+          ...year,
           value: props.route.params.memoryDate.year,
-        },
-        month: {
-          ...state.month,
+        })
+        setMonth({
+          ...month,
           value:
             MonthObj.month[
             currentDate.getMonth() + MonthObj.serverMonthsCount
             ],
-        },
-        isCreatedByUser: true,
-        date: {
-          ...state.day,
+        })
+        setIsCreatedByUser(true)
+        setDay({
+          ...day,
           value: props.route.params.memoryDate.day,
-        },
-      }));
+        })
 
       props.setNid(props.route.params.id);
       //loaderHandler.hideLoader();
@@ -566,9 +548,9 @@ const CreateMemory = (props: Props) => {
     props.setCreateMemory(true);
     // DefaultPreference.get('hide_memory_draft').then((value: any) => {
     //   if (value == 'true') {
-    //     state.memoryDraftVisibility = false;
+    //     memoryDraftVisibility = false;
     //   } else {
-    //     state.memoryDraftVisibility = true;
+    //     memoryDraftVisibility = true;
     //   }
     // });
 
@@ -598,7 +580,7 @@ const CreateMemory = (props: Props) => {
   const setEtherPadContent = (type: any, description: any, padId?: any) => {
     try {
       props.etherpadContentUpdate({
-        padId: padId ? padId : state.padDetails?.padId,
+        padId: padId ? padId : padDetails?.padId,
         content: description,
         type: type,
       });
@@ -729,10 +711,7 @@ const CreateMemory = (props: Props) => {
     _actionSheet &&
       _actionSheet &&
       _actionSheet.hideSheet();
-    setState(prev => ({
-      ...prev,
-      menuVisibility: !state.menuVisibility,
-    }));
+    setMenuVisibility(!menuVisibility)
   };
 
   const preview = () => {
@@ -803,7 +782,7 @@ const CreateMemory = (props: Props) => {
     memoryDataModel.memoryTags = props.memoryObject.tags;
     memoryDataModel.memory.memoryTitle = props.memoryObject.title;
     memoryDataModel.memory.memoryDate =
-      state.month.value.name + ' ' + props.memoryObject.date.year;
+      month.value.name + ' ' + props.memoryObject.date.year;
     memoryDataModel.memory.memoryPlace = props.memoryObject.location
       .description
       ? props.memoryObject.location.description
@@ -822,13 +801,13 @@ const CreateMemory = (props: Props) => {
     // 		memoryDataModel.memorycollection.collectionId = props.collection.tid
     // }
     memoryDataModel.files = {
-      images: state.itemList.filter(
+      images: itemList.filter(
         (element: any) => element.type == 'images',
       ),
-      audios: state.itemList.filter(
+      audios: itemList.filter(
         (element: any) => element.type == 'audios',
       ),
-      pdf: state.itemList.filter(
+      pdf: itemList.filter(
         (element: any) => element.type == 'files',
       ),
     };
@@ -917,19 +896,15 @@ const CreateMemory = (props: Props) => {
     // saveIntitals();
     hideMenu();
     if (
-      state.title != '' &&
-      state.memory_date != '' &&
-      state.description != ''
+      title != '' &&
+      memory_date != '' &&
+      description != ''
     ) {
-      setState(prevState => ({
-        ...prevState,
-        actionSheet: {
+      setActionSheet({
           title: 'Memory Draft',
           type: kSaveAction,
           list: publishActions,
-        },
-      }));
-
+        })
     }
 
     if (Platform.OS == 'ios') {
@@ -938,16 +913,12 @@ const CreateMemory = (props: Props) => {
         _actionSheet &&
         _actionSheet.showSheet();
     } else {
-      setState(prevState => ({
-        ...prevState,
-        showActionAndroid: true,
-      }));
-
+      setShowActionAndroid(true)
     }
     // if (props.editPublsihedMemory) {
     //   saveORPublish('save');
     // }
-    // else if (state.isCreatedByUser) {
+    // else if (isCreatedByUser) {
     //   setState(
     //     {
     //       actionSheet: {
@@ -965,10 +936,10 @@ const CreateMemory = (props: Props) => {
 
   const validateDateAndLocation = (checkLocation: boolean) => {
     if (
-      state.year.value != 'Year*' &&
-      state.title.trim().length > 0 &&
-      state.month.value.tid != 0 &&
-      (!checkLocation || state.locationText.trim().length > 0)
+      year.value != 'Year*' &&
+      title.trim().length > 0 &&
+      month.value.tid != 0 &&
+      (!checkLocation || locationText.trim().length > 0)
     ) {
       return true;
     } else {
@@ -977,35 +948,22 @@ const CreateMemory = (props: Props) => {
       }
     }
 
-    if (state.year.value == 'Year*') {
-      setState(prevState => ({
-        ...prevState,
-        year: { ...state.year, error: true },
-        dateError: '* Please enter a year and month to publish your memory',
-      }));
+    if (year.value == 'Year*') {
+      setYear({ ...year, error: true })
+      setDateError('* Please enter a year and month to publish your memory')
     }
 
-    if (state.month.value.tid == 0) {
-      setState(prevState => ({
-        ...prevState,
-        month: { ...state.month, error: true },
-        dateError: '* Please enter a year and month to publish your memory',
-      }));
-
+    if (month.value.tid == 0) {
+      setMonth({ ...month, error: true })
+      setDateError('* Please enter a year and month to publish your memory')
     }
 
-    if (checkLocation && state.locationText.trim().length == 0) {
-      setState(prevState => ({
-        ...prevState,
-        locationError: '* Please enter a location to publish your memory',
-      }));
+    if (checkLocation && locationText.trim().length == 0) {
+      setLocationError('* Please enter a location to publish your memory')
     }
 
-    if (state.title.trim().length == 0) {
-      setState(prevState => ({
-        ...prevState,
-        titleError: '* Title is mandatory'
-      }));
+    if (title.trim().length == 0) {
+      setTitleError('* Title is mandatory')
     }
 
     return false;
@@ -1062,9 +1020,9 @@ const CreateMemory = (props: Props) => {
         let memoryDetails = await DefaultCreateMemoryObj(
           key,
           props.memoryObject,
-          state.isCreatedByUser,
+          isCreatedByUser,
         );
-        let filesToUpload = state.itemList.filter(
+        let filesToUpload = itemList.filter(
           (element: any) => element.isLocal,
         );
 
@@ -1099,30 +1057,30 @@ const CreateMemory = (props: Props) => {
   const saveIntitals = () => {
 
     let details: any = {
-      title: state.title, //.trim(),
+      title: title, //.trim(),
       memory_date: {
         year:
-          state.memory_date != ''
-            ? state.memory_date.split('/')[2]
-            : '', //new Date(state.memory_date).getFullYear(),
+          memory_date != ''
+            ? memory_date.split('/')[2]
+            : '', //new Date(memory_date).getFullYear(),
         month:
-          state.memory_date != ''
-            ? parseInt(state.memory_date.split('/')[1])
-            : '', // new Date(state.memory_date).getMonth(),
+          memory_date != ''
+            ? parseInt(memory_date.split('/')[1])
+            : '', // new Date(memory_date).getMonth(),
         day:
-          state.memory_date != ''
-            ? state.memory_date.split('/')[0]
-            : '', // new Date(state.memory_date).getDate(),
+          memory_date != ''
+            ? memory_date.split('/')[0]
+            : '', // new Date(memory_date).getDate(),
       },
-      location: { description: state.location.description, reference: state.locationText == state.location.description ? state.location.reference : '' },
-      files: state.itemList,
+      location: { description: location.description, reference: locationText == location.description ? location.reference : '' },
+      files: itemList,
       description: '',
     };
     // {
-    //   description: state.locationText,
+    //   description: locationText,
     //   reference:
-    //     state.locationText == state.location.description
-    //       ? state.location.reference
+    //     locationText == location.description
+    //       ? location.reference
     //       : '',
     // },
 
@@ -1135,7 +1093,7 @@ const CreateMemory = (props: Props) => {
     //   details.memory_date = {
     //     ...details.memory_date,
     //     month: MonthObj.month[MonthObj.selectedIndex].tid,
-    //     day: state.day.value != 'Day' ? state.day.value : undefined,
+    //     day: day.value != 'Day' ? day.value : undefined,
     //   };
     // }
 
@@ -1144,22 +1102,16 @@ const CreateMemory = (props: Props) => {
   };
 
   const hideMenu = () => {
-    setState(prevState => ({
-      ...prevState,
-      menuVisibility: false,
-    }));
+    setMenuVisibility(false)
   };
 
   const uploadOption = () => {
     Keyboard.dismiss();
-    setState(prevState => ({
-      ...prevState,
-      actionSheet: {
+    setActionSheet({
         title: '',
         type: kUploadAction,
         list: ImageActions,
-      },
-    }));
+      })
 
     _actionSheet &&
       _actionSheet &&
@@ -1202,10 +1154,10 @@ const CreateMemory = (props: Props) => {
     // DefaultPreference.get(`${keyForPreference}`).then((value: any) => {
     //   if (value != 'true' || collaborators.length > 0) {
     //     props.navigation.navigate('inviteCollaborators', {
-    //       showLeaveConversation: !state.isCreatedByUser,
-    //       owner: state.ownerDetails
-    //         ? state.ownerDetails
-    //           ? state.collaboratorOwner
+    //       showLeaveConversation: !isCreatedByUser,
+    //       owner: ownerDetails
+    //         ? ownerDetails
+    //           ? collaboratorOwner
     //           : {}
     //         : {},
     //     });
@@ -1295,7 +1247,7 @@ const CreateMemory = (props: Props) => {
     // <AccessoryView
     // 	style={{
     // 		width: "100%",
-    // 		bottom: state.bottomToolbar,
+    // 		bottom: bottomToolbar,
     // 		position: "absolute",
     // 		height: 60,
     // 		flexDirection: "row",
@@ -1367,7 +1319,7 @@ const CreateMemory = (props: Props) => {
               By <Text style={{ fontWeight: '500' }}>{data.by}</Text> on{' '}
               <Text>{date}</Text>
             </Text>
-            {(state.isCreatedByUser || data.by == 'You') && (
+            {(isCreatedByUser || data.by == 'You') && (
               <TouchableOpacity
                 onPress={() => {
                   deleteFile(data.fid, data.isLocal);
@@ -1425,18 +1377,14 @@ const CreateMemory = (props: Props) => {
     if (!isTempFile) {
       filesToUpdate.push({ fid: fid, action: 'delete' });
     }
-    let tempFileArray = state.itemList;
+    let tempFileArray = itemList;
     let index = tempFileArray.findIndex((element: any) => element.fid === fid);
     tempFileArray.splice(index, 1);
-    setState(prevState => ({
-      ...prevState,
-      itemList: tempFileArray
-    }));
-
+    setItemList(tempFileArray)
   };
 
   const updateFileContent = (file: any, title: any, description: any) => {
-    let updatelist = state.itemList;
+    let updatelist = itemList;
     updatelist.forEach((element: any, index: any) => {
       if (element.fid == file.fid) {
         updatelist[index] = {
@@ -1453,11 +1401,7 @@ const CreateMemory = (props: Props) => {
         file_description: description,
       });
     }
-    setState(prevState => ({
-      ...prevState,
-      itemList: updatelist
-    }));
-
+    setItemList(updatelist)
   };
 
   const fileHolderView = (file: any) => {
@@ -1545,12 +1489,8 @@ const CreateMemory = (props: Props) => {
   };
 
   const hideToolTip = () => {
-    if (state.toolTipVisibility) {
-      setState(prevState => ({
-        ...prevState,
-        toolTipVisibility: false,
-      }));
-
+    if (toolTipVisibility) {
+      setToolTilvisibility(false)
     }
   };
 
@@ -1565,8 +1505,8 @@ const CreateMemory = (props: Props) => {
         //loaderHandler.showLoader('Saving...');
         props.showLoader(true);
         props.loaderText('Saving...');
-        // if (state.padDetails?.padId) {
-        //   setEtherPadContent('get', '', state.padDetails.padId);
+        // if (padDetails?.padId) {
+        //   setEtherPadContent('get', '', padDetails.padId);
         // }
         // setTimeout(() => {
         saveORPublish('save');
@@ -1615,25 +1555,21 @@ const CreateMemory = (props: Props) => {
   };
 
   const fileCallback = (file: any) => {
-    let tempfiles = state.itemList;
+    let tempfiles = itemList;
     file.forEach((element: any) => {
       tempfiles.push(element);
     });
-    setState(prevState => ({
-      ...prevState,
-      itemList: tempfiles,
-    }));
-
+    setItemList( tempfiles)
   };
 
   const validateDateField = (text) => {
     let limit = 31;
     if (text) {
-      switch (parseInt(state.month.value)) {
+      switch (parseInt(month.value)) {
         case 2:
           limit = 28;
-          if (state.year.value != 'Year*') {
-            if (parseInt(state.year.value) % 4 == 0) {
+          if (year.value != 'Year*') {
+            if (parseInt(year.value) % 4 == 0) {
               limit = 29;
             }
           }
@@ -1646,17 +1582,10 @@ const CreateMemory = (props: Props) => {
     }
     console.error("valid >", text);
     if (parseInt(text) <= limit) {
-      setState(prev => ({
-        ...prev,
-        day: { ...state.day, value: text, error: false }
-      }));
+      setDay({ ...day, value: text, error: false })
     }
     else {
-      setState(prev => ({
-        ...prev,
-        day: { ...state.day, value: text, error: true }
-      }));
-
+      setDay({ ...day, value: text, error: true })
     }
   };
 
@@ -1694,18 +1623,14 @@ const CreateMemory = (props: Props) => {
     Keyboard.dismiss();
     let actions = createMemoryHelper.getDateOptions(
       fieldName,
-      state.year.value,
+      year.value,
     );
-    setState(prevState => ({
-      ...prevState,
-      selectionData: {
+    setSelectionData({
         actions,
         selectionValue: value,
         fieldName: fieldName,
         title: fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
-      },
-    }));
-
+      })
     // bottomPicker.current &&
     //   bottomPicker.current.showPicker &&
     //   bottomPicker.current.showPicker();
@@ -1714,7 +1639,7 @@ const CreateMemory = (props: Props) => {
 
   const dateSelected = (selectedItem: any) => {
     let currentDate = new Date();
-    if (state.selectionData.fieldName == 'month') {
+    if (selectionData.fieldName == 'month') {
       selectedItem = { name: selectedItem.text, tid: selectedItem.key };
       MonthObj.month.forEach((element: any, index: any) => {
         if (element.name == selectedItem.name) {
@@ -1722,62 +1647,50 @@ const CreateMemory = (props: Props) => {
         }
       });
     }
-    switch (state.selectionData.fieldName) {
+    switch (selectionData.fieldName) {
       case 'year':
         if (
-          state.month.value.tid > 0 &&
+          month.value.tid > 0 &&
           selectedItem.text == currentDate.getFullYear()
         ) {
           let currentMonth = currentDate.getMonth();
           let selectedMonth =
             MonthObj.selectedIndex - MonthObj.serverMonthsCount;
           if (currentMonth < selectedMonth) {
-            setState(prevState => ({
-              ...prevState,
-              month: { ...state.selectionData, value: MonthObj.month[0] },
-              day: { ...state.selectionData, value: 'Day' },
-            }));
+            setMonth({ ...selectionData, value: MonthObj.month[0] })
+              setDay({ ...selectionData, value: 'Day' })
 
           } else if (
             currentMonth == selectedMonth &&
-            state.day.value != 'Day'
+            day.value != 'Day'
           ) {
             let currentDay = currentDate.getDate();
-            let selectedDay = parseInt(state.day.value);
+            let selectedDay = parseInt(day.value);
             if (currentDay < selectedDay) {
-              setState(prevState => ({
-                ...prevState,
-                day: { ...state.selectionData, value: 'Day' }
-              }));
+              setDay ({ ...selectionData, value: 'Day' })
             }
           }
         }
-        state.year.error = false;
+        year.error = false;
         break;
       case 'month':
         if (
           MonthObj.selectedIndex > 0 &&
           MonthObj.selectedIndex < MonthObj.serverMonthsCount
         ) {
-          setState(prevState => ({
-            ...prevState,
-            day: { ...state.selectionData, value: 'Day' },
-            showDay: false
-          }));
+          setDay({ ...selectionData, value: 'Day' })
+            setShowDay(false)
 
-        } else if (state.day.value != 'Day') {
-          setState(prevState => ({
-            ...prevState,
-            showDay: true
-          }));
-          let currentDay = parseInt(state.day.value);
+        } else if (day.value != 'Day') {
+          setShowDay(true)
+          let currentDay = parseInt(day.value);
           if (currentDay >= 28) {
             let maxDay = 28;
             switch (selectedItem.text) {
               case 'Feb':
                 maxDay = 28;
-                if (state.year.value != 'Year*') {
-                  if (parseInt(state.year.value) % 4 == 0) {
+                if (year.value != 'Year*') {
+                  if (parseInt(year.value) % 4 == 0) {
                     maxDay = 29;
                   }
                 }
@@ -1788,47 +1701,41 @@ const CreateMemory = (props: Props) => {
               default:
             }
             if (maxDay < currentDay) {
-              setState(prevState => ({
-                ...prevState,
-                day: { ...state.selectionData, value: 'Day' },
-                showDay: true,
-              }));
+              setDay({ ...selectionData, value: 'Day' })
+              setShowDay(true)
 
             }
           }
         } else {
-          setState(prevState => ({
-            ...prevState,
-            day: { ...state.selectionData, value: 'Day' },
-            showDay: true
-          }));
+          setDay({ ...selectionData, value: 'Day' })
+          setShowDay(true)
         }
-        state.month.error = false;
+        month.error = false;
         break;
       case 'day':
         break;
     }
-    if (state.selectionData.fieldName == 'month') {
-      setState(prevState => ({
-        ...prevState,
-        [state.selectionData.fieldName]: {
-          ...state.selectionData,
-          value: selectedItem,
-        },
-      }));
+    if (selectionData.fieldName == 'month') {
+      // setState(prevState => ({
+      //   ...prevState,
+      //   [selectionData.fieldName]: {
+      //     ...selectionData,
+      //     value: selectedItem,
+      //   },
+      // }));
 
     } else {
-      setState(prevState => ({
-        ...prevState,
-        [state.selectionData.fieldName]: {
-          ...state.selectionData,
-          value: selectedItem.text,
-        },
-      }));
+      // setState(prevState => ({
+      //   ...prevState,
+      //   [selectionData.fieldName]: {
+      //     ...selectionData,
+      //     value: selectedItem.text,
+      //   },
+      // }));
 
     }
-    if (!state.month.error && !state.year.error) {
-      state.dateError = '';
+    if (!month.error && !year.error) {
+      setDateError('')
     }
   };
 
@@ -1838,13 +1745,10 @@ const CreateMemory = (props: Props) => {
       <TouchableOpacity
         style={styles.locationContainer}
         onPress={() => {
-          setState(prevState => ({
-            ...prevState,
-            location: item,
-            locationText: item.description,
-            locationList: [],
-            locationError:''
-          }));
+          setLocation(item)
+          setLocationText(item.description)
+          setLocationList([])
+          setLocationError('')
           props.userSelectedLocation(item)
           props.resetLocation();
         }}>
@@ -1863,7 +1767,7 @@ const CreateMemory = (props: Props) => {
       // onStartShouldSetResponder={() => true}
       <View style={Styles.viewBeforListContainerStyle}>
         <View>
-          {state.isCreatedByUser ? (
+          {isCreatedByUser ? (
             <View style={styles.ViewBeforeStyle}>
               {/* <Text
               style={styles.whenHappenTextStyle}>
@@ -1873,10 +1777,10 @@ const CreateMemory = (props: Props) => {
               {/* <View
               style={styles.createLableSelectorContainerStyle}
               onStartShouldSetResponder={() => true}>
-              {createLabelSelector(state.year, 10, 2, 'year')}
-              {createLabelSelector(state.month, 10, 3, 'month')}
-              {state.showDay ? (
-                createLabelSelector(state.day, 0, 2, 'day')
+              {createLabelSelector(year, 10, 2, 'year')}
+              {createLabelSelector(month, 10, 3, 'month')}
+              {showDay ? (
+                createLabelSelector(day, 0, 2, 'day')
               ) : (
                 <View style={styles.flex2Padding} />
               )}
@@ -1884,7 +1788,7 @@ const CreateMemory = (props: Props) => {
 
             <Text
               style={styles.dateErrorTextStyle}>
-              {state.dateError}
+              {dateError}
             </Text> */}
 
               {/* <Text
@@ -1894,7 +1798,7 @@ const CreateMemory = (props: Props) => {
             </Text>
             <SearchBar
               style={[styles.searchBarStyle,{
-                borderBottomColor: state.locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
+                borderBottomColor: locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
               }]}
               placeholder="Enter location here"
               onBlur={() => {
@@ -1914,7 +1818,7 @@ const CreateMemory = (props: Props) => {
               }}
               // onFocus={()=> this._mainItemList.scrollToOffset({ animated: true, offset: 100})}
               showCancelClearButton={false}
-              value={this.state.locationText}
+              value={this.locationText}
             /> */}
               {/* {this.props.locationList.length > 0 && (
               <FlatList
@@ -1935,7 +1839,7 @@ const CreateMemory = (props: Props) => {
             )}
 
             <Text style={styles.locationErrorTextStyle}>
-              {this.state.locationError}
+              {this.locationError}
             </Text> */}
               {
                 <>
@@ -1944,30 +1848,28 @@ const CreateMemory = (props: Props) => {
                       styles.memoryDescriptionInput,
                       {
                         borderBottomColor:
-                          state.titleError.length > 0
+                          titleError.length > 0
                             ? Colors.ErrorColor
                             : Colors.white,
                         borderBottomWidth:
-                          state.titleError.length > 0 ? 0.5 : 0,
+                          titleError.length > 0 ? 0.5 : 0,
                       },
                     ]}
                     // selection={{start:0}}//, end:0
-                    value={state.title}
+                    value={title}
                     maxLength={250}
                     multiline={false}
                     onChangeText={(text: any) => {
-                      setState(prev => ({
-                        ...prev,
-                        title: text, titleError: ''
-                      }));
+                      setTitle(text)
+                      setTitleError('')
                     }}
-                    placeholder={state.placeholder}
+                    placeholder={placeholder}
                     placeholderTextColor={
                       Colors.memoryTitlePlaceholderColor
                     }></TextInput>
 
                   <Text style={Styles.errortextStyle}>
-                    {state.titleError}
+                    {titleError}
                   </Text>
                 </>
               }
@@ -1975,18 +1877,18 @@ const CreateMemory = (props: Props) => {
           ) : (
             <View style={styles.ViewBeforeStyle}>
               <Text style={styles.memoryDescriptionInput}>
-                {state.title}
+                {title}
               </Text>
             </View>
             // ownersViewForCollaborators()
           )}
           <View style={Styles.etherPadStyle}>
             {/* styles.createdByUserContainer */}
-            {/* {!state.isCreatedByUser && (
+            {/* {!isCreatedByUser && (
             <View>
               <Text
                 style={styles.titletextContainer}>
-                {state.title}
+                {title}
               </Text>
               <Border />
             </View>
@@ -1998,7 +1900,7 @@ const CreateMemory = (props: Props) => {
             {props.memoryDescription}
           </Text> */}
             {/* <View style={styles.ViewBeforeStyle}> */}
-            {props.route.params.editMode || state.showEtherPad ? (
+            {props.route.params.editMode || showEtherPad ? (
               <>
                 <Text
                   style={styles.memoryDescriptionTextStyle}
@@ -2008,13 +1910,13 @@ const CreateMemory = (props: Props) => {
                 </Text>
 
                 {
-                  state.padDetails?.padUrl &&
+                  padDetails?.padUrl &&
                   <TouchableOpacity
                     onPress={() => {
-                      if (state.padDetails?.padUrl) {
+                      if (padDetails?.padUrl) {
                         props.navigation.navigate('etherPadEditing', {
-                          title: state.title.trim(),
-                          padDetails: state.padDetails,
+                          title: title.trim(),
+                          padDetails: padDetails,
                           updateContent: setEtherPadContent.bind(this),
                           inviteCollaboratorFlow: inviteCollaboratorFlow.bind(this),
                         })
@@ -2031,14 +1933,14 @@ const CreateMemory = (props: Props) => {
 
               // <EtherPadEditing
               //   editMode={props.route.params.editMode}
-              //   title={state.title.trim()}
-              //   padDetails={state.padDetails}
+              //   title={title.trim()}
+              //   padDetails={padDetails}
               //   updateContent={setEtherPadContent.bind(this)}
               //   inviteCollaboratorFlow={inviteCollaboratorFlow.bind(this)}
               // />
             ) : (
               <TouchableOpacity
-                onPress={() => setState(prev => ({ ...prev, showEtherPad: true }))}>
+                onPress={() => setShowEtherPad(true)}>
                 <Text style={Styles.etherpadTextInputStyle}>
                   {'|Tap to start writing...'}
                 </Text>
@@ -2048,8 +1950,8 @@ const CreateMemory = (props: Props) => {
             {/* <TouchableOpacity
             onPress={() =>
               this.props.navigation.navigate('etherPadEditing', {
-                title: this.state.title.trim(),
-                padDetails: this.state.padDetails,
+                title: this.title.trim(),
+                padDetails: this.padDetails,
                 updateContent: this.setEtherPadContent.bind(this),
                 inviteCollaboratorFlow: this.inviteCollaboratorFlow.bind(this),
               })
@@ -2061,19 +1963,15 @@ const CreateMemory = (props: Props) => {
           </TouchableOpacity> */}
           </View>
 
-          {Platform.OS === 'android' && state.showCalender && (
+          {Platform.OS === 'android' && showCalender && (
             <DateTimePicker
-              isVisible={state.showCalender}
+              isVisible={showCalender}
               onCancel={() => {
-                setState(prev => ({ ...prev, showCalender: false }))
-                //showConsoleLog(ConsoleType.LOG,"cancelled")
+                setShowCalendar(false)
               }}
               onDateSelection={(date: any) => {
-                setState(prev => ({
-                  ...prev,
-                  showCalender: false,
-                  memory_date: moment(date).format('DD/MM/YYYY'),
-                }))
+                setShowCalendar(false)
+                setMemoryDate(moment(date).format('DD/MM/YYYY'))
 
               }}
             />
@@ -2081,7 +1979,7 @@ const CreateMemory = (props: Props) => {
         </View>
 
         {/* {
-          state.bottomToolbar ?
+          bottomToolbar ?
             null
             : */}
         <View style={Styles.buttonsContainerStyle}>
@@ -2137,31 +2035,24 @@ const CreateMemory = (props: Props) => {
             ]}
             onPress={() => {
               // if (props.padDetails?.padId) {
-              // setEtherPadContent('get', '', state.padDetails.padId);
+              // setEtherPadContent('get', '', padDetails.padId);
               // }
-              // console.warn("state.memory_date  ", state.memory_date, " ,ssss :", JSON.stringify(props.tagsList))
+              // console.warn("memory_date  ", memory_date, " ,ssss :", JSON.stringify(props.tagsList))
               // addRemoveTags();
               // whoElseWasthere()
            
 
               if (
-                state.memory_date == '' || state.year.value == ''|| state.month.value == ''
+                memory_date == '' || year.value == ''|| month.value == ''
               ) {
-                setState(prev => ({
-                  ...prev,
-                  showCustomValidationAlert: true
-                }))
+                setShowCustomValidationAlert(true)
 
                 //ToastMessage('Please select Date first', Colors.ErrorColor);
               }
               else if (
-                state.location.description == ''
+                location.description == ''
               ) {
-                setState(prev => ({
-                  ...prev,
-                  showCustomValidationAlert: true
-                }))
-
+                setShowCustomValidationAlert(true)
                 //ToastMessage('Please select Date first', Colors.ErrorColor);
               }
               else{
@@ -2173,10 +2064,10 @@ const CreateMemory = (props: Props) => {
               }
 
               // if (
-              //   state.title != '' &&
-              //   state.memory_date != '' &&
-              //   state.description != '' &&
-              //   state.location.description != ''
+              //   title != '' &&
+              //   memory_date != '' &&
+              //   description != '' &&
+              //   location.description != ''
               // ) {
               //   Keyboard.dismiss();
               //   hideMenu();
@@ -2211,13 +2102,13 @@ const CreateMemory = (props: Props) => {
         </View>
         {/* } */}
 
-        {/* {this.state.itemList.length > 0 && (
+        {/* {this.itemList.length > 0 && (
           <View style={{ marginTop: 15 }}>
             <Border />
             <Text
               style={[styles.memoryDescriptionTextStyle, styles.paddingVerticalStyle]}>
               {'Attachments ('}
-              {this.state.itemList.length}
+              {this.itemList.length}
               {')'}
             </Text>
           </View>
@@ -2232,7 +2123,7 @@ const CreateMemory = (props: Props) => {
         <View style={styles.fullFexDirectionRowStyle}>
           <View style={styles.placeHolderContainerStyle}>
             <PlaceholderImageView
-              uri={Utility.getFileURLFromPublicURL(state.ownerDetails.uri)}
+              uri={Utility.getFileURLFromPublicURL(ownerDetails.uri)}
               borderRadius={Platform.OS === 'android' ? 48 : 24}
               style={styles.placeHolderImageStyle}
               profilePic={true}
@@ -2241,8 +2132,8 @@ const CreateMemory = (props: Props) => {
           <View style={styles.flexMarginLeftStyle}>
             <View style={styles.directionFlex}>
               <Text style={styles.ownerNameTextStyle}>
-                {state.ownerDetails.field_first_name_value}{' '}
-                {state.ownerDetails.field_last_name_value}
+                {ownerDetails.field_first_name_value}{' '}
+                {ownerDetails.field_last_name_value}
                 <Text
                   style={[
                     styles.ownerNameTextStyle,
@@ -2250,16 +2141,16 @@ const CreateMemory = (props: Props) => {
                       fontWeight: 'normal',
                     },
                   ]}>
-                  {state.youWhereThere
-                    ? state.taggedCount == 0
+                  {youWhereThere
+                    ? taggedCount == 0
                       ? ' and You'
                       : ', You and '
-                    : state.taggedCount == 0
+                    : taggedCount == 0
                       ? ''
                       : ' and '}
                 </Text>
               </Text>
-              {state.taggedCount > 0 && (
+              {taggedCount > 0 && (
                 <TouchableOpacity
                   onPress={() =>
                     props.navigation.navigate('customListMemoryDetails', {
@@ -2275,19 +2166,19 @@ const CreateMemory = (props: Props) => {
                         color: Colors.NewTitleColor,
                       },
                     ]}>
-                    {state.taggedCount}
-                    {state.taggedCount > 1 ? ' others' : ' other'}
+                    {taggedCount}
+                    {taggedCount > 1 ? ' others' : ' other'}
                   </Text>
                 </TouchableOpacity>
               )}
             </View>
             <Text style={[styles.ownerNameTextStyle, { paddingTop: 5 }]}>
-              {state.month.value.name}{' '}
-              {state.showDay && state.day.value},{' '}
-              {state.year.value}{' '}
+              {month.value.name}{' '}
+              {showDay && day.value},{' '}
+              {year.value}{' '}
               <Text style={{ color: Colors.newDescTextColor }}>
                 {' '}
-                {state.locationText}{' '}
+                {locationText}{' '}
               </Text>
             </Text>
           </View>
@@ -2300,42 +2191,39 @@ const CreateMemory = (props: Props) => {
 
     let yearactions = createMemoryHelper.getDateOptions(
       'year',
-      state.year.value,
+      year.value,
     ), isValidYear = false;
     let monthactions = createMemoryHelper.getDateOptions(
       'month',
-      state.year.value,
+      year.value,
     ), isValidMonth = false;
     // console.log("yearactions arr ", JSON.stringify(yearactions));
 
 
-    if (yearactions && yearactions.length && yearactions.filter(item => (item.text.toLowerCase() === state.year.value) || (item.key.toString().toLowerCase() === state.year.value)).length) {
+    if (yearactions && yearactions.length && yearactions.filter(item => (item.text.toLowerCase() === year.value) || (item.key.toString().toLowerCase() === year.value)).length) {
       isValidYear = true;
     }
 
     let validNumberReg = /^[0-9\b]+$/;
     let validAlphabatesReg = /^[a-zA-Z]*$/;
-    if (validNumberReg.test(state?.month?.value) || validAlphabatesReg.test(state?.month?.value)) {
-      if (state?.month?.value?.length > 3) {
-        let val = state?.month?.value?.toLowerCase();
+    if (validNumberReg.test(month?.value) || validAlphabatesReg.test(month?.value)) {
+      if (month?.value?.length > 3) {
+        let val = month?.value?.toLowerCase();
         console.log("monthactions arr ", JSON.stringify(monthactions), val);
         if (monthactions && monthactions.length && monthactions.filter(item => (item.text.toLowerCase() === val)).length) {
           isValidMonth = true;
         }
       }
-      else if ((state?.month?.value?.length == 2) && monthactions && monthactions.length && monthactions.filter(item => (item.key < 9 ? '0' + item.key.toString().toLowerCase() === state.month.value : item.key.toString().toLowerCase() === state.month.value)).length) {
+      else if ((month?.value?.length == 2) && monthactions && monthactions.length && monthactions.filter(item => (item.key < 9 ? '0' + item.key.toString().toLowerCase() === month.value : item.key.toString().toLowerCase() === month.value)).length) {
         isValidMonth = true;
       }
     }
 
-    setState(prev => ({
-      ...prev,
-      year: { ...state.year, error: !isValidYear },
-      month: { ...state.month, error: !isValidMonth },
-    }));
+    setYear({ ...year, error: !isValidYear })
+      setMonth({ ...month, error: !isValidMonth })
 
     let isValidDate = false;
-    if (state.day.value != '' && !state.day.error) {
+    if (day.value != '' && !day.error) {
       isValidDate = true;
     }
     console.log(isValidMonth , isValidYear , isValidDate)
@@ -2343,11 +2231,7 @@ const CreateMemory = (props: Props) => {
       optionsActionSheetRef?.current?.hide();
       // alert('ww')
 
-      setState(prev => ({
-        ...prev,
-        memory_date: `${state.year.value}/${state.month.value}/${state.year.value}`
-      }));
-
+      setMemoryDate(`${year.value}/${month.value}/${year.value}`)
       setTimeout(() => {
         saveIntitals()
       }, 1000);
@@ -2371,7 +2255,7 @@ const CreateMemory = (props: Props) => {
       }
       <SafeAreaView style={styles.emptySafeAreaStyle} />
       {/* <SafeAreaView style={styles.SafeAreaViewContainerStyle}> */}
-      {Platform.OS === 'ios' && state.showCalender && (
+      {Platform.OS === 'ios' && showCalender && (
         <View style={Styles.calendarViewStyle}>
           <DatePicker
             options={{
@@ -2385,16 +2269,13 @@ const CreateMemory = (props: Props) => {
             }}
             newMemoryYears={newMemoryYears}
             mode="datepicker"
-            selected={state.memory_date}
-            current={state.memory_date}
+            selected={memory_date}
+            current={memory_date}
             selectorEndingYear={new Date().getUTCFullYear()}
             selectorStartingYear={1917}
             onSelectedChange={date => {
-              setState(prev => ({
-                ...prev,
-                showCalender: false,
-                memory_date: date,
-              }));
+              setShowCalendar(false)
+              setMemoryDate(date)
 
             }}
             style={styles.calendar}
@@ -2402,7 +2283,7 @@ const CreateMemory = (props: Props) => {
         </View>
       )}
       <CustomAlert
-        modalVisible={state.showCustomAlert}
+        modalVisible={showCustomAlert}
         title={'Save your memory'}
         message={
           'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'
@@ -2411,11 +2292,7 @@ const CreateMemory = (props: Props) => {
           {
             text: 'Close and save as draft',
             func: () => {
-              setState(prev => ({
-                ...prev,
-                showCustomAlert: false
-              }));
-
+setShowCustomAlert(false)
               saveORPublish('save');
 
               // ReactNativeHapticFeedback.trigger('impactMedium', options);
@@ -2424,10 +2301,7 @@ const CreateMemory = (props: Props) => {
           {
             text: 'Continue editing',
             func: () => {
-              setState(prev => ({
-                ...prev,
-                showCustomAlert: false
-              }));
+setShowCustomAlert(false)
               // ReactNativeHapticFeedback.trigger('impactMedium', options);
             },
             styles: { fontWeight: '400' },
@@ -2435,11 +2309,7 @@ const CreateMemory = (props: Props) => {
           {
             text: 'Cancel',
             func: () => {
-              setState(prev => ({
-                ...prev,
-                showCustomAlert: false
-              }));
-
+              setShowCustomAlert(false)
               props.fetchMemoryList({
                 type: ListType.Recent,
                 isLoading: true,
@@ -2460,20 +2330,17 @@ const CreateMemory = (props: Props) => {
       />
 
       <CustomAlert
-        modalVisible={state.showCustomValidationAlert}
+        modalVisible={showCustomValidationAlert}
         // setModalVisible={setModalVisible}
-        title={`${state.memory_date == '' ? 'Date' : 'Location'} needed`}
+        title={`${memory_date == '' ? 'Date' : 'Location'} needed`}
         message={
-          `To prepare to publish, please input the ${state.memory_date == '' ? 'date' : 'location'} of this memory.`
+          `To prepare to publish, please input the ${memory_date == '' ? 'date' : 'location'} of this memory.`
         }
         buttons={[
           {
             text: 'Ok',
             func: () => {
-              setState(prev => ({
-                ...prev,
-                showCustomValidationAlert: false
-              }));
+              setShowCustomValidationAlert(false)
             },
           }
         ]}
@@ -2492,16 +2359,16 @@ const CreateMemory = (props: Props) => {
           rightText={
             props.route.params.editPublsihedMemory
               ? 'Save'
-              : // : state.isCreatedByUser
+              : // : isCreatedByUser
               //   ? 'Done'
               'Save'
           }
           backIcon={action_close}
           saveValues={() => {
-            setState(prev => ({ ...prev, showCustomAlert: true }));
+setShowCustomAlert(true)
           }} //saveDraft
-        // rightIcon={state.isCreatedByUser}
-        // showHideMenu={() => showMenu(!state.menuVisibility)}
+        // rightIcon={isCreatedByUser}
+        // showHideMenu={() => showMenu(!menuVisibility)}
         />
         <View style={styles.borderStyle}></View>
         <StatusBar
@@ -2515,37 +2382,33 @@ const CreateMemory = (props: Props) => {
         <View style={styles.height22} />
 
         <CustomAlert
-          modalVisible={state.showActionAndroid}
+          modalVisible={showActionAndroid}
           setModalVisible={
-            state.actionSheet?.list?.actions &&
-              state.actionSheet?.list?.actions.length &&
-              state.actionSheet?.list?.actions[0] &&
-              state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
+            actionSheet?.list?.actions &&
+              actionSheet?.list?.actions.length &&
+              actionSheet?.list?.actions[0] &&
+              actionSheet?.list?.actions[0]?.text?.includes('Yes,')
               ? `Are you done writing this memory?`
               : `Save for later?`
           }
-          title={state.actionSheet.title}
+          title={actionSheet.title}
           message={
-            state.actionSheet?.list?.actions &&
-              state.actionSheet?.list?.actions.length &&
-              state.actionSheet?.list?.actions[0] &&
-              state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
+            actionSheet?.list?.actions &&
+              actionSheet?.list?.actions.length &&
+              actionSheet?.list?.actions[0] &&
+              actionSheet?.list?.actions[0]?.text?.includes('Yes,')
               ? ``
               : 'Choose to completely discard your work, or save writing this memory for later.'
           }
           buttons={
-            (state.actionSheet.list = state.actionSheet.list.map(
+            (actionSheet.list = actionSheet.list.map(
               (item: any) => {
                 return {
                   text: item.text,
                   index: item.index,
                   func: () => {
-                    setState(prev => ({
-                      ...prev,
-                      showActionAndroid: false,
-                    }));
+                    setShowActionAndroid(false)
                     onActionItemClicked(item.index);
-
                   },
                 };
               },
@@ -2581,7 +2444,7 @@ const CreateMemory = (props: Props) => {
         />
 
         {
-          // this.state.itemList.length ?
+          // this.itemList.length ?
 
           <ScrollView
             contentContainerStyle={
@@ -2589,13 +2452,13 @@ const CreateMemory = (props: Props) => {
             }
             nestedScrollEnabled={true} overScrollMode='always'
             style={[styles.fullWidth, { flex: 1 }]}
-            scrollEnabled={state.itemList.length ? true : false}>
-            {/* {state.itemList.length == 0 ? ( */}
+            scrollEnabled={itemList.length ? true : false}>
+            {/* {itemList.length == 0 ? ( */}
             {viewBeforList()}
             {/* ) : ( */}
 
             {
-              // state.bottomToolbar ?
+              // bottomToolbar ?
               //   null
               //   :
               // <FlatList
@@ -2608,11 +2471,11 @@ const CreateMemory = (props: Props) => {
               //   // keyboardShouldPersistTaps={'handled'}
               //   showsHorizontalScrollIndicator={false}
               //   // showsVerticalScrollIndicator={false}
-              //   data={state.itemList}
+              //   data={itemList}
               //   renderItem={(item: any) => renderRow(item)}
               // />
-              state.itemList?.length
-                ? state.itemList.map((item, index) =>
+              itemList?.length
+                ? itemList.map((item, index) =>
                   renderRow(item, index)
                 )
                 : null
@@ -2624,7 +2487,7 @@ const CreateMemory = (props: Props) => {
           //   {viewBeforList()}
           // </View>
         }
-        {/* {state.menuVisibility && (
+        {/* {menuVisibility && (
               <View
                 style={styles.menuVisibleContainer}
                 onStartShouldSetResponder={() => true}
@@ -2651,8 +2514,8 @@ const CreateMemory = (props: Props) => {
         <CustomActionSheet
           ref={ref => _actionSheet = ref}
           width={DeviceInfo.isTablet() ? '65%' : '100%'}
-          title={state.actionSheet.title}
-          actions={state.actionSheet.list}
+          title={actionSheet.title}
+          actions={actionSheet.list}
           onActionClick={onActionItemClicked.bind(this)}
         />
 
@@ -2696,13 +2559,10 @@ const CreateMemory = (props: Props) => {
                     <TextInput
                       style={styles.textInputBoxStyle}
                       onChangeText={(text: any) => {
-                        setState(prev => ({
-                          ...prev,
-                          year: { ...state.year, value: text, error: false }
-                        }));
+                        setYear({ ...year, value: text, error: false })
                       }}
                       placeholderTextColor={Colors.newTextColor}
-                      value={state.year.value}
+                      value={year.value}
                       maxLength={4}
                       placeholder="YYYY"
                       returnKeyType="next"
@@ -2710,8 +2570,8 @@ const CreateMemory = (props: Props) => {
                     />
                     {/* <TextField
                       errorMessage={'Please enter valid Year'}
-                      showError={state.year.error}
-                      value={state.year.value}
+                      showError={year.error}
+                      value={year.value}
                       placeholder="YYYY"
                       maxLength={4}
                       keyboardType="number-pad"
@@ -2719,7 +2579,7 @@ const CreateMemory = (props: Props) => {
                       onChange={(text: any) => {
                         setState(prev => ({
                           ...prev,
-                          year: { ...state.year, value: text, error: false }
+                          year: { ...year, value: text, error: false }
                         }));
                       }}
                     /> */}
@@ -2738,12 +2598,9 @@ const CreateMemory = (props: Props) => {
                     <TextInput
                       style={styles.textInputBoxStyle}
                       onChangeText={(text: any) => {
-                        setState(prev => ({
-                          ...prev,
-                          month: { ...state.month, value: text, error: false }
-                        }));
+                        setMonth({ ...month, value: text, error: false })
                       }}
-                      value={state.month.value}
+                      value={month.value}
                       placeholderTextColor={Colors.newTextColor}
                       maxLength={12}
                       placeholder="Month or Season"
@@ -2752,18 +2609,18 @@ const CreateMemory = (props: Props) => {
                     />
                     {/* <TextField
                       errorMessage={'Please enter valid month'}
-                      showError={state.month.error}
-                      value={state.month.value}
+                      showError={month.error}
+                      value={month.value}
                       placeholder="Month or Season"
                       maxLength={12}
                       returnKeyType="next"
                       onChange={(text: any) => {
                         setState(prev => ({
                           ...prev,
-                          month: { ...state.month, value: text, error: false }
+                          month: { ...month, value: text, error: false }
                         }));
-                        if (state.day.value != '') {
-                          // validateDateField(state.day.value);
+                        if (day.value != '') {
+                          // validateDateField(day.value);
                         }
                       }}
                     /> */}
@@ -2780,11 +2637,11 @@ const CreateMemory = (props: Props) => {
                       onChangeText={(text: any) => {
                         let limit = 31;
                         if (text) {
-                          switch (parseInt(state.month.value)) {
+                          switch (parseInt(month.value)) {
                             case 2:
                               limit = 28;
-                              if (state.year.value != 'Year*') {
-                                if (parseInt(state.year.value) % 4 == 0) {
+                              if (year.value != 'Year*') {
+                                if (parseInt(year.value) % 4 == 0) {
                                   limit = 29;
                                 }
                               }
@@ -2797,20 +2654,13 @@ const CreateMemory = (props: Props) => {
                         }
                         console.error("valid >", text);
                         if (parseInt(text) <= limit) {
-                          setState(prev => ({
-                            ...prev,
-                            day: { ...state.day, value: text, error: false }
-                          }));
+                          setDay({ ...day, value: text, error: false })
                         }
                         else {
-                          setState(prev => ({
-                            ...prev,
-                            day: { ...state.day, value: text, error: true }
-                          }));
-
+                          setDay({ ...day, value: text, error: true })
                         }
                       }}
-                      value={state.day.value}
+                      value={day.value}
                       maxLength={4}
                       placeholder="DD"
                       placeholderTextColor={Colors.newTextColor}
@@ -2819,8 +2669,8 @@ const CreateMemory = (props: Props) => {
                     />
                     {/* <TextField
                       errorMessage={'Please enter valid date'}
-                      showError={state.day.error}
-                      value={state.day.value}
+                      showError={day.error}
+                      value={day.value}
                       placeholder="DD"
                       maxLength={2}
                       keyboardType="number-pad"
@@ -2829,11 +2679,11 @@ const CreateMemory = (props: Props) => {
 
                         let limit = 31;
                         if (text) {
-                          switch (parseInt(state.month.value)) {
+                          switch (parseInt(month.value)) {
                             case 2:
                               limit = 28;
-                              if (state.year.value != 'Year*') {
-                                if (parseInt(state.year.value) % 4 == 0) {
+                              if (year.value != 'Year*') {
+                                if (parseInt(year.value) % 4 == 0) {
                                   limit = 29;
                                 }
                               }
@@ -2848,13 +2698,13 @@ const CreateMemory = (props: Props) => {
                         if (parseInt(text) <= limit) {
                           setState(prev => ({
                             ...prev,
-                            day: { ...state.day, value: text, error: false }
+                            day: { ...day, value: text, error: false }
                           }));
                         }
                         else {
                           setState(prev => ({
                             ...prev,
-                            day: { ...state.day, value: text, error: true }
+                            day: { ...day, value: text, error: true }
                           }));
 
                         }
@@ -2865,7 +2715,7 @@ const CreateMemory = (props: Props) => {
                   </View>
 
                   <TouchableWithoutFeedback
-                    // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                    // disabled={(this.username != '' && this.password != '') ? false : true}
                     onPress={() => {
                       validateDate();
                     }}>
@@ -2891,7 +2741,7 @@ const CreateMemory = (props: Props) => {
 
                     <SearchBar
                       style={[styles.searchBarStyle, {
-                        borderBottomColor: state.locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
+                        borderBottomColor: locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
                       }]}
                       placeholder="Add location..."
                       onBlur={() => {
@@ -2924,7 +2774,7 @@ const CreateMemory = (props: Props) => {
                       }}
                       // onFocus={()=> this._mainItemList.scrollToOffset({ animated: true, offset: 100})}
                       showCancelClearButton={false}
-                      value={state.locationText}
+                      value={locationText}
                     />
                     {props.locationList.length > 0 && (
                       <FlatList
@@ -2945,23 +2795,20 @@ const CreateMemory = (props: Props) => {
                     )}
 
                     <Text style={styles.locationErrorTextStyle}>
-                      {state.locationError}
+                      {locationError}
                     </Text>
 
                     <TouchableWithoutFeedback
-                      // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                      // disabled={(this.username != '' && this.password != '') ? false : true}
                       onPress={() => {
-                        if (state.location.description != '') {
+                        if (location.description != '') {
                           optionsActionSheetRef?.current?.hide();
                           setTimeout(() => {
                             saveIntitals();
                           }, 1000);
                         } 
                         else {
-                          setState(prevState => ({
-                            ...prevState,
-                            locationError: '* Please enter a location to publish your memory',
-                          }));
+                          setLocationError('* Please enter a location to publish your memory')
                         }
                       }}>
                       <View
@@ -2985,7 +2832,7 @@ const CreateMemory = (props: Props) => {
 
                     <View style={{ flexDirection: 'row' }}>
                       <TouchableWithoutFeedback
-                        // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                        // disabled={(this.username != '' && this.password != '') ? false : true}
                         onPress={() => {
                           PickImage(fileCallback);
                         }}>
@@ -3005,7 +2852,7 @@ const CreateMemory = (props: Props) => {
                       </TouchableWithoutFeedback>
 
                       <TouchableWithoutFeedback
-                        // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                        // disabled={(this.username != '' && this.password != '') ? false : true}
                         onPress={() => {
                           PickPDF(fileCallback);
                         }}>
@@ -3025,7 +2872,7 @@ const CreateMemory = (props: Props) => {
                       </TouchableWithoutFeedback>
 
                       <TouchableWithoutFeedback
-                        // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                        // disabled={(this.username != '' && this.password != '') ? false : true}
                         onPress={() => {
                           PickAudio(fileCallback)
                         }}>
@@ -3052,7 +2899,7 @@ const CreateMemory = (props: Props) => {
         </ActionSheet>
 
 
-        {/* {state.toolTipVisibility && (
+        {/* {toolTipVisibility && (
               <View style={styles.tooltipVisibleStyle}>
                 <View style={styles.tooltipStyle}>
                   <Text
@@ -3068,13 +2915,13 @@ const CreateMemory = (props: Props) => {
               onItemSelect={(selectedItem: any) => {
                 dateSelected(selectedItem);
               }}
-              title={state.selectionData.title}
-              actions={state.selectionData.actions}
-              value={state.selectionData.selectionValue}
-              selectedValues={[state.selectionData.selectionValue]}
+              title={selectionData.title}
+              actions={selectionData.actions}
+              value={selectionData.selectionValue}
+              selectedValues={[selectionData.selectionValue]}
             /> */}
       </View>
-      {/* {state.memoryDraftVisibility && (
+      {/* {memoryDraftVisibility && (
             <MemoryDraftIntro
               cancelMemoryDraftTour={() => {
                 setState({ memoryDraftVisibility: false });
@@ -3091,19 +2938,19 @@ const CreateMemory = (props: Props) => {
 
 const mapState = (state: { [x: string]: any }) => {
   return {
-    locationList: state.MemoryInitials.locationList,
-    tagsList: state.MemoryInitials.tags,
-    whoElseWhereThereList: state.MemoryInitials.whoElseWhereThere,
-    collection: state.MemoryInitials.collection,
-    nid: state.MemoryInitials.nid,
-    shareOption: state.MemoryInitials.shareOption,
-    whoCanSeeMemoryUids: state.MemoryInitials.whoCanSeeMemoryUids,
-    whoCanSeeMemoryGroupIds: state.MemoryInitials.whoCanSeeMemoryGroupIds,
-    memoryDescription: state.MemoryInitials.description,
-    memoryObject: state.MemoryInitials,
-    goToDashboard: state.MemoryInitials.goToDashboard,
-    showLoaderValue: state.dashboardReducer.showLoader,
-    loaderTextValue: state.dashboardReducer.loaderText,
+    locationList: MemoryInitials.locationList,
+    tagsList: MemoryInitials.tags,
+    whoElseWhereThereList: MemoryInitials.whoElseWhereThere,
+    collection: MemoryInitials.collection,
+    nid: MemoryInitials.nid,
+    shareOption: MemoryInitials.shareOption,
+    whoCanSeeMemoryUids: MemoryInitials.whoCanSeeMemoryUids,
+    whoCanSeeMemoryGroupIds: MemoryInitials.whoCanSeeMemoryGroupIds,
+    memoryDescription: MemoryInitials.description,
+    memoryObject: MemoryInitials,
+    goToDashboard: MemoryInitials.goToDashboard,
+    showLoaderValue: dashboardReducer.showLoader,
+    loaderTextValue: dashboardReducer.loaderText,
   };
 };
 

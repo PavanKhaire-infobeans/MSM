@@ -16,6 +16,7 @@ import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import Text from '../../common/component/Text';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
+  Colors,
   ConsoleType,
   decode_utf8,
   fontSize,
