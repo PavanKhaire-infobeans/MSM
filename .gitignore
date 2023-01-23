@@ -66,3 +66,5 @@ ios/assets/*
 android/app/src/main/res/*
 package-lock.json
 package-lock.json
+android/app/src/main/assets/*
+ios/assets/*

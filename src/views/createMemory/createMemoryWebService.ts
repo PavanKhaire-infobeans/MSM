@@ -287,6 +287,7 @@ export const UpdateMemoryCollection = async (
         Promise.reject(err);
       });
 
+      console.warn(JSON.stringify(response))
     if (response.ResponseCode == 200) {
       EventManager.callBack(callBack, true, response);
     } else {

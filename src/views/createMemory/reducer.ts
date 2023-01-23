@@ -89,6 +89,7 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       //   month: action.payload.memory_date.month,
       //   day: action.payload.memory_date.day,
       // };
+      console.error("action.payload.location :",action.payload.location)
       newState.location = action.payload.location;
       newState.files = action.payload.files;
       break;

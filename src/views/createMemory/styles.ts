@@ -22,6 +22,10 @@ const Styles = EStyleSheet.create({
     height:24,
     width:24
   },
+  arrowStyle:{
+    height:16,
+    width:16
+  },
   onFocusStyle:{
     borderColor: Colors.bordercolor,
     borderWidth: 2,
@@ -40,6 +44,7 @@ const Styles = EStyleSheet.create({
   },
   loginTextStyle:{ 
     color: Colors.white, 
+    fontFamily: fontFamily.Inter,
     marginRight: 12
   },
   jumptoYearContainer: {
@@ -567,7 +572,8 @@ const Styles = EStyleSheet.create({
   },
   searchBarStyle: {
     height: 50,
-    padding: 10,
+    width: '100%',
+    // padding: 10,
     alignItems: 'center',
     borderBottomWidth: 1,
     backgroundColor: Colors.NewLightThemeColor,
@@ -582,9 +588,9 @@ const Styles = EStyleSheet.create({
   },
   locationFlatListStyle: {
     backgroundColor: Colors.white,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    width: '90%',
+    borderRadius: 8,
+    // borderBottomRightRadius: 8,
+    width: Utility.getDeviceWidth()-48,
     borderWidth:1,
     borderColor:Colors.bottomTabColor,
     alignSelf:'center',
@@ -913,6 +919,16 @@ const Styles = EStyleSheet.create({
     color: Colors.ErrorColor,
     ...fontSize(14),
     fontFamily: fontFamily.Inter
+  },
+  errorMessageStyle: {
+    ...fontSize(13),
+    color: Colors.newTextColor,
+    marginTop: 3,
+    lineHeight: 14,
+    textAlign:'right',
+    // marginLeft:5,
+    letterSpacing: -0.1,
+    fontFamily: fontFamily.Inter,
   },
   buttonsContainerStyle: {
     flexDirection: 'row',

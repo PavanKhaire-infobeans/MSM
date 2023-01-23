@@ -26,6 +26,22 @@ const Styles = EStyleSheet.create({
     ...fontSize(19),
     lineHeight:23
   },
+  loginTextStyle:{ 
+    color: Colors.white, 
+    fontFamily: fontFamily.Inter,
+    marginRight: 12
+  },
+  loginSSOButtonStyle:{
+    width: Utility.getDeviceWidth()-32, 
+    height: 44,
+    alignSelf: "center", 
+    alignItems: "center", 
+    justifyContent: "center", 
+    flexDirection: "row",
+    borderRadius: 1000, 
+    backgroundColor: Colors.bordercolor,
+    marginBottom:16
+  },
   borderStyle: {
     height: 1,
     width: '100%',

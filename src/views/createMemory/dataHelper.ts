@@ -51,7 +51,7 @@ export const DefaultDetailsWithoutTitleMemory = (title: any) => {
 };
 
 export class CreateMemoryHelper {
-  getDateOptions(fieldName: any, year: any) {
+  getDateOptions(fieldName: any, year: any, month?: any) {
     let actions: Array<any> = [];
     if (fieldName == 'year') {
       // actions.push({ key: 'Year*', text: 'Year*' });
@@ -93,9 +93,26 @@ export class CreateMemoryHelper {
       let min = 1;
       let max = 31;
       let limit = 31;
-      if (MonthObj.selectedIndex > MonthObj.serverMonthsCount - 1) {
-        switch (MonthObj.month[MonthObj.selectedIndex].name) {
-          case 'Feb':
+      // if (MonthObj.selectedIndex > MonthObj.serverMonthsCount - 1) {
+      //   switch (MonthObj.month[MonthObj.selectedIndex].name) {
+      //     case 'Feb':
+      //       limit = 28;
+      //       if (year != 'Year*') {
+      //         if (parseInt(year) % 4 == 0) {
+      //           limit = 29;
+      //         }
+      //       }
+      //       break;
+      //     case 'Apr' || 'Jun' || 'Sep' || 'Nov':
+      //       limit = 30;
+      //       break;
+      //     default:
+      //   }
+      // }
+
+      if (month != '') {
+        switch (month) {
+          case '02':
             limit = 28;
             if (year != 'Year*') {
               if (parseInt(year) % 4 == 0) {
@@ -103,19 +120,31 @@ export class CreateMemoryHelper {
               }
             }
             break;
-          case 'Apr' || 'Jun' || 'Sep' || 'Nov':
+          case '04':
+            limit = 30;
+            break;
+          case '06':
+            limit = 30;
+            break;
+          case '08':
+            limit = 30;
+            break;
+          case '11':
             limit = 30;
             break;
           default:
         }
       }
+
+      console.log('sssss', month, limit)
       if (
-        year == new Date().getFullYear() &&
-        MonthObj.selectedIndex ==
-        new Date().getMonth() + MonthObj.serverMonthsCount
+        parseInt(year) >= new Date().getFullYear()
+        && parseInt(month) == (new Date().getMonth() + 1)
+        // && MonthObj.selectedIndex == new Date().getMonth() + MonthObj.serverMonthsCount
       ) {
         limit = new Date().getDate();
       }
+
       for (let i = min; i <= max; i++) {
         if (i > limit) {
           actions.push({ key: i, text: i.toString(), disabled: true });
@@ -155,7 +184,7 @@ export const DefaultCreateMemoryObj = (
       // },
       location: initialState.location,
       nid: initialState.nid,
-      share_option: 'only_me',//"'allfriends'",// initialState.shareOption,
+      share_option: initialState.shareOption,//'only_me',//"'allfriends'",// 
       description: description,
     };
     if (

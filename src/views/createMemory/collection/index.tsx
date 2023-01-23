@@ -14,6 +14,7 @@ import {
 import { connect } from 'react-redux';
 import { create_checkbox, create_checkbox_tick } from '../../../../app/images';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import { No_Internet_Warning } from '../../../common/component/Toast';
 import {
   Colors,
   CommonTextStyles,
@@ -31,6 +32,7 @@ import {
   checkbox_active,
   settings_icon,
 } from '../../../images';
+import { MemoryAction } from '../../myMemories/myMemoriesWebService';
 import { SaveCollection } from '../reducer';
 import { CollectinAPI } from '../saga';
 import Styles from './styles';
@@ -80,30 +82,33 @@ class CollectionList extends React.Component<Props, State> {
     this.props.navigation.goBack();
   };
 
-  saveValue = () => {
-    // let collections_nids : any = [];
-    // this.state.collections.forEach((element) => {
-    //     collections_nids.push(element.tid);
-    // })
-    // if(this.props.isFromMemoryAction){
-    //     if(Utility.isInternetConnected){
-    //         //loaderHandler.showLoader();
-    //         MemoryAction("my_stories", this.props.nid, "add_to_collection",'', collections_nids);
-    //         Keyboard.dismiss();
-    //         this.props.navigation.goBack();
-    //     } else{
-    //          No_Internet_Warning();
-    //      }
-    // } else{
+  goToNewCollection = ()=>{
     this.props.navigation.navigate('createRenameCollection', {
       isRename: false,
       callback: this.newCollectionCreated,
     })
+  };
 
-    // this.props.setCollection(this.state.collections);
-    // Keyboard.dismiss();
-    // this.props.navigation.goBack();
-    // }
+  saveValue = () => {
+    let collections_nids : any = [];
+    this.state.collections.forEach((element) => {
+        collections_nids.push(element.tid);
+    })
+    if(this.props.route?.params?.isFromMemoryAction){
+        if(Utility.isInternetConnected){
+            //loaderHandler.showLoader();
+            MemoryAction("my_stories", this.props.nid, "add_to_collection",'', collections_nids);
+            Keyboard.dismiss();
+            this.props.navigation.goBack();
+        } else{
+             No_Internet_Warning();
+         }
+    } 
+    else{
+    this.props.setCollection(this.state.collections);
+    Keyboard.dismiss();
+    this.props.navigation.goBack();
+    }
   };
 
   checkIfLastItemRendered = (item: any) => {
@@ -198,7 +203,7 @@ class CollectionList extends React.Component<Props, State> {
               rightIcon={true}
               backIcon={action_close}
               rightText={'New\nCollection'}
-              saveValues={this.saveValue}
+              saveValues={this.goToNewCollection}
             />
             <StatusBar
               barStyle={
@@ -248,7 +253,7 @@ class CollectionList extends React.Component<Props, State> {
             />
              <TouchableWithoutFeedback
                 // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
-                // onPress={this.publishMemory}
+                onPress={this.saveValue}
                 >
                 <View
                   style={Styles.loginSSOButtonStyle}>

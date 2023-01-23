@@ -67,6 +67,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
       Keyboard.dismiss();
       this.props.navigation.goBack();
     } else {
+      this.cancelAction();
     }
   };
 

@@ -233,7 +233,7 @@ const CreateMemory = (props: Props) => {
     minimumDate: new Date(1917, 1, 1),
     onChange: (event, date) => {
       setShowCalendar(false)
-      setMemoryDate( moment(date).utc().format('DD/MM/YYYY'))
+      setMemoryDate(moment(date).utc().format('DD/MM/YYYY'))
     },
   };
 
@@ -249,56 +249,56 @@ const CreateMemory = (props: Props) => {
   let currentDate = new Date();
   let etherpadUrl: string = '';
 
-    const [menuVisibility,setMenuVisibility] = useState(false);
-    const [actionSheet,setActionSheet]= useState({
-      title: '',
-      type: '',
-      list: ImageActions,
-    })
-    const [itemList,setItemList]= useState([])
-    const [year,setYear]= useState({
-      value: '',//currentDate.getUTCFullYear().toString(),
-      error: false,
-    })
-    const [month,setMonth] = useState({
-      value: '',// MonthObj.month[currentDate.getUTCMonth()],
-      error: false,
-    })
-    const [day,setDay]= useState({
-      value: '',//currentDate.getDate(),
-      error: false,
-    })
-    const [memory_date,setMemoryDate]= useState('')
-    const [description,setDescription]= useState('')
-    const [dateError,setDateError]= useState('')
-    const [locationError,setLocationError]= useState('')
-    const [locationText,setLocationText]= useState('')
-    const [showDay,setShowDay]= useState(true)
-    const [location,setLocation]= useState({ description: '', reference: '' })
-    const [selectionData,setSelectionData]= useState( {
-      actions: [],
-      selectionValue: '',
-      fieldName: '',
-      title: '',
-    })
-    const [title,setTitle]= useState('')
-    const [titleError,setTitleError]= useState('')
-    const [bottomToolbar,setBottomBar]= useState(0)
-    const [isCreatedByUser,setIsCreatedByUser]= useState(true)
-    const [taggedCount,setTaggedCount]= useState(0)
-    const [collaboratorOwner,setCollaboratorOwner]= useState('')
-    const [memoryDraftVisibility,setMemoryDraftVisibility]= useState(false)
-    const [showActionAndroid,setShowActionAndroid]= useState(false)
-    const [padDetails,setPadDetails]= useState({})
-    const [showCustomAlert,setShowCustomAlert]= useState(false)
-    const [showCalender,setShowCalendar]= useState(false)
-    const [showEtherPad,setShowEtherPad]= useState(true)
-    const [showCustomValidationAlert,setShowCustomValidationAlert]= useState(false)
-    const [placeholder,setPlaceHolder]= useState('Tap to title your memory...')
-    const [toolTipVisibility,setToolTilvisibility]= useState(false)
-    const [youWhereThere,setYouWhereThere]= useState('')
-    const [ownerDetails,setOwnerDetails]= useState('')
-  
+  const [menuVisibility, setMenuVisibility] = useState(false);
+  const [actionSheet, setActionSheet] = useState({
+    title: '',
+    type: '',
+    list: ImageActions,
+  })
+  const [itemList, setItemList] = useState([])
+  const [year, setYear] = useState({
+    value: '',//currentDate.getUTCFullYear().toString(),
+    error: false,
+  })
+  const [month, setMonth] = useState({
+    value: '',// MonthObj.month[currentDate.getUTCMonth()],
+    error: false,
+  })
+  const [day, setDay] = useState({
+    value: '',//currentDate.getDate(),
+    error: false,
+  })
+  const [memory_date, setMemoryDate] = useState('')
+  const [description, setDescription] = useState('')
+  const [dateError, setDateError] = useState('')
+  const [locationError, setLocationError] = useState('')
+  const [locationText, setLocationText] = useState('')
+  const [showDay, setShowDay] = useState(true)
+  const [location, setLocation] = useState({ description: '', reference: '' })
+  const [selectionData, setSelectionData] = useState({
+    actions: [],
+    selectionValue: '',
+    fieldName: '',
+    title: '',
+  })
+  const [title, setTitle] = useState('')
+  const [titleError, setTitleError] = useState('')
+  const [bottomToolbar, setBottomBar] = useState(0)
+  const [isCreatedByUser, setIsCreatedByUser] = useState(true)
+  const [taggedCount, setTaggedCount] = useState(0)
+  const [collaboratorOwner, setCollaboratorOwner] = useState('')
+  const [memoryDraftVisibility, setMemoryDraftVisibility] = useState(false)
+  const [showActionAndroid, setShowActionAndroid] = useState(false)
+  const [padDetails, setPadDetails] = useState({})
+  const [showCustomAlert, setShowCustomAlert] = useState(false)
+  const [showCalender, setShowCalendar] = useState(false)
+  const [showEtherPad, setShowEtherPad] = useState(true)
+  const [showCustomValidationAlert, setShowCustomValidationAlert] = useState(false)
+  const [placeholder, setPlaceHolder] = useState('Tap to title your memory...')
+  const [toolTipVisibility, setToolTilvisibility] = useState(false)
+  const [youWhereThere, setYouWhereThere] = useState('')
+  const [ownerDetails, setOwnerDetails] = useState('')
+
   const [optionToShow, setOptionToShow] = useState('')
 
   let isEdit: boolean = false;
@@ -445,31 +445,33 @@ const CreateMemory = (props: Props) => {
       // console.warn("draftDetails >", JSON.stringify(draftDetails))
 
       setTitle(decode_utf8(draftDetails.title))
+      if (draftDetails.location.description) {
+        setLocation(draftDetails.location)
+      }
+      setLocationText(draftDetails.location.description)
+      setItemList(draftDetails.files)
+      setYear({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() : '' })
+      setMonth({
+        ...month,
+        value: draftDetails.date.month > 0 ? draftDetails.date.month < 10 ? '0' + JSON.stringify(draftDetails.date.month) : JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
+      })
+      setDay({
+        ...day,
+        value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
+      })
+      setMemoryDate(newMemoryDate ? newMemoryDate : '')
+      setShowDay(draftDetails.date.day > 0 ? true : false)
+      setIsCreatedByUser(draftDetails.isCreatedByUser.uid == Account.selectedData().userID)
+      setPadDetails(draftDetails.etherpad_details)
+      // ownerDetails
+      setOwnerDetails(draftDetails.isCreatedByUser)
+      // youWhereThere
+      setYouWhereThere(draftDetails.youWhereThere)
+      setTaggedCount(draftDetails.taggedCount)
+      setCollaboratorOwner(draftDetails.collaboratorOwner),
 
-        setLocationText (draftDetails.location.description)
-        setItemList(draftDetails.files)
-        setYear({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() :''})
-        setMonth({
-          ...month,
-          value: draftDetails.date.month > 0 ?draftDetails.date.month < 10 ? '0'+JSON.stringify(draftDetails.date.month):JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
-        })
-        setDay({
-          ...day,
-          value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
-        })
-        setMemoryDate(newMemoryDate ? newMemoryDate : '')
-       setShowDay(draftDetails.date.day > 0 ? true : false)
-        setIsCreatedByUser(draftDetails.isCreatedByUser.uid == Account.selectedData().userID)
-        setPadDetails(draftDetails.etherpad_details)
-        // ownerDetails
-        setOwnerDetails(draftDetails.isCreatedByUser)
-        // youWhereThere
-        setYouWhereThere(draftDetails.youWhereThere)
-        setTaggedCount(draftDetails.taggedCount)
-        setCollaboratorOwner(draftDetails.collaboratorOwner),
-
-      //loaderHandler.hideLoader();
-      props.showLoader(false);
+        //loaderHandler.hideLoader();
+        props.showLoader(false);
       props.loaderText('Loading...');
       setEtherPadContent(
         'get',
@@ -508,26 +510,26 @@ const CreateMemory = (props: Props) => {
         title = title.substring(0, 150);
       }
 
-        setItemList(props.route.params.attachments)
-        setPadDetails(props.route.params.padDetails)
-        setTitle(decode_utf8(props.route.params.textTitle))
-        setLocation(props.route.params.location)
-        setYear({
-          ...year,
-          value: props.route.params.memoryDate.year,
-        })
-        setMonth({
-          ...month,
-          value:
-            MonthObj.month[
-            currentDate.getMonth() + MonthObj.serverMonthsCount
-            ],
-        })
-        setIsCreatedByUser(true)
-        setDay({
-          ...day,
-          value: props.route.params.memoryDate.day,
-        })
+      setItemList(props.route.params.attachments)
+      setPadDetails(props.route.params.padDetails)
+      setTitle(decode_utf8(props.route.params.textTitle))
+      setLocation(props.route.params.location)
+      setYear({
+        ...year,
+        value: props.route.params.memoryDate.year,
+      })
+      setMonth({
+        ...month,
+        value:
+          MonthObj.month[
+          currentDate.getMonth() + MonthObj.serverMonthsCount
+          ],
+      })
+      setIsCreatedByUser(true)
+      setDay({
+        ...day,
+        value: props.route.params.memoryDate.day,
+      })
 
       props.setNid(props.route.params.id);
       //loaderHandler.hideLoader();
@@ -872,7 +874,9 @@ const CreateMemory = (props: Props) => {
             DeleteDraftService(
               props.nid,
               DraftActions.deleteDrafts,
-              kDeleteDraftCreateMemo,
+              response => {
+                deleteDraftCallback(response.status)
+              }
             );
           } else {
             No_Internet_Warning();
@@ -897,14 +901,14 @@ const CreateMemory = (props: Props) => {
     hideMenu();
     if (
       title != '' &&
-      memory_date != '' &&
-      description != ''
+      memory_date != ''
+      && description != ''
     ) {
       setActionSheet({
-          title: 'Memory Draft',
-          type: kSaveAction,
-          list: publishActions,
-        })
+        title: 'Memory Draft',
+        type: kSaveAction,
+        list: publishActions,
+      })
     }
 
     if (Platform.OS == 'ios') {
@@ -1026,6 +1030,7 @@ const CreateMemory = (props: Props) => {
           (element: any) => element.isLocal,
         );
 
+        console.log("objjjj :",JSON.stringify(memoryDetails));
         let resp = await CreateUpdateMemory(
           memoryDetails,
           filesToUpload,
@@ -1108,10 +1113,10 @@ const CreateMemory = (props: Props) => {
   const uploadOption = () => {
     Keyboard.dismiss();
     setActionSheet({
-        title: '',
-        type: kUploadAction,
-        list: ImageActions,
-      })
+      title: '',
+      type: kUploadAction,
+      list: ImageActions,
+    })
 
     _actionSheet &&
       _actionSheet &&
@@ -1559,7 +1564,7 @@ const CreateMemory = (props: Props) => {
     file.forEach((element: any) => {
       tempfiles.push(element);
     });
-    setItemList( tempfiles)
+    setItemList(tempfiles)
   };
 
   const validateDateField = (text) => {
@@ -1626,11 +1631,11 @@ const CreateMemory = (props: Props) => {
       year.value,
     );
     setSelectionData({
-        actions,
-        selectionValue: value,
-        fieldName: fieldName,
-        title: fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
-      })
+      actions,
+      selectionValue: value,
+      fieldName: fieldName,
+      title: fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
+    })
     // bottomPicker.current &&
     //   bottomPicker.current.showPicker &&
     //   bottomPicker.current.showPicker();
@@ -1658,7 +1663,7 @@ const CreateMemory = (props: Props) => {
             MonthObj.selectedIndex - MonthObj.serverMonthsCount;
           if (currentMonth < selectedMonth) {
             setMonth({ ...selectionData, value: MonthObj.month[0] })
-              setDay({ ...selectionData, value: 'Day' })
+            setDay({ ...selectionData, value: 'Day' })
 
           } else if (
             currentMonth == selectedMonth &&
@@ -1667,7 +1672,7 @@ const CreateMemory = (props: Props) => {
             let currentDay = currentDate.getDate();
             let selectedDay = parseInt(day.value);
             if (currentDay < selectedDay) {
-              setDay ({ ...selectionData, value: 'Day' })
+              setDay({ ...selectionData, value: 'Day' })
             }
           }
         }
@@ -1679,7 +1684,7 @@ const CreateMemory = (props: Props) => {
           MonthObj.selectedIndex < MonthObj.serverMonthsCount
         ) {
           setDay({ ...selectionData, value: 'Day' })
-            setShowDay(false)
+          setShowDay(false)
 
         } else if (day.value != 'Day') {
           setShowDay(true)
@@ -1740,14 +1745,14 @@ const CreateMemory = (props: Props) => {
   };
 
   const _renderLocation = ({ item, index }: any) => {
-    showConsoleLog(ConsoleType.WARN,JSON.stringify(item))
+    showConsoleLog(ConsoleType.WARN, JSON.stringify(item))
     return (
       <TouchableOpacity
         style={styles.locationContainer}
         onPress={() => {
           setLocation(item)
           setLocationText(item.description)
-          setLocationList([])
+          // setLocationList([])
           setLocationError('')
           props.userSelectedLocation(item)
           props.resetLocation();
@@ -1917,8 +1922,8 @@ const CreateMemory = (props: Props) => {
                         props.navigation.navigate('etherPadEditing', {
                           title: title.trim(),
                           padDetails: padDetails,
-                          updateContent: setEtherPadContent.bind(this),
-                          inviteCollaboratorFlow: inviteCollaboratorFlow.bind(this),
+                          updateContent: setEtherPadContent,
+                          inviteCollaboratorFlow: inviteCollaboratorFlow,
                         })
                       }
                     }}>
@@ -2040,10 +2045,10 @@ const CreateMemory = (props: Props) => {
               // console.warn("memory_date  ", memory_date, " ,ssss :", JSON.stringify(props.tagsList))
               // addRemoveTags();
               // whoElseWasthere()
-           
+
 
               if (
-                memory_date == '' || year.value == ''|| month.value == ''
+                memory_date == '' || year.value == '' || month.value == ''
               ) {
                 setShowCustomValidationAlert(true)
 
@@ -2055,7 +2060,7 @@ const CreateMemory = (props: Props) => {
                 setShowCustomValidationAlert(true)
                 //ToastMessage('Please select Date first', Colors.ErrorColor);
               }
-              else{
+              else {
                 props.navigation.navigate('publishMemoryDraft', {
                   publishMemoryDraft: saveORPublish,
                   preview: preview,
@@ -2197,7 +2202,6 @@ const CreateMemory = (props: Props) => {
       'month',
       year.value,
     ), isValidMonth = false;
-    // console.log("yearactions arr ", JSON.stringify(yearactions));
 
 
     if (yearactions && yearactions.length && yearactions.filter(item => (item.text.toLowerCase() === year.value) || (item.key.toString().toLowerCase() === year.value)).length) {
@@ -2207,30 +2211,49 @@ const CreateMemory = (props: Props) => {
     let validNumberReg = /^[0-9\b]+$/;
     let validAlphabatesReg = /^[a-zA-Z]*$/;
     if (validNumberReg.test(month?.value) || validAlphabatesReg.test(month?.value)) {
-      if (month?.value?.length > 3) {
-        let val = month?.value?.toLowerCase();
-        console.log("monthactions arr ", JSON.stringify(monthactions), val);
-        if (monthactions && monthactions.length && monthactions.filter(item => (item.text.toLowerCase() === val)).length) {
-          isValidMonth = true;
+      let val = month?.value?.toLowerCase();
+      let getMonthIsValid = monthactions.filter(item => (item.text.toLowerCase() === val) || (item.key && (item.key < 9 ? ('0' + item.key.toString().toLowerCase() === val) : item.key.toString().toLowerCase() === val)));
+      if (month?.value?.length >= 3) {
+        if (monthactions && monthactions.length && getMonthIsValid.length && getMonthIsValid[0]?.disabled != true) {
+          if (parseInt(year.value) <= new Date().getFullYear() && !isNaN(parseInt(month.value)) && (parseInt(month.value) <= (new Date().getMonth() + 1))) {
+            isValidMonth = true;
+          }
+          else if (validAlphabatesReg.test(month?.value)) {
+            isValidMonth = true;
+          }
         }
       }
-      else if ((month?.value?.length == 2) && monthactions && monthactions.length && monthactions.filter(item => (item.key < 9 ? '0' + item.key.toString().toLowerCase() === month.value : item.key.toString().toLowerCase() === month.value)).length) {
+      else if ((month?.value?.length == 2) && parseInt(year.value) <= new Date().getFullYear() && monthactions && monthactions.length && monthactions.filter(item => (item.key < 9 ? ('0' + item.key.toString().toLowerCase() === month.value.toString().toLowerCase()) : item.key.toString().toLowerCase() === month.value.toString().toLowerCase())).length && getMonthIsValid[0]?.disabled != true) {
         isValidMonth = true;
       }
     }
 
-    setYear({ ...year, error: !isValidYear })
-      setMonth({ ...month, error: !isValidMonth })
-
     let isValidDate = false;
     if (day.value != '' && !day.error) {
-      isValidDate = true;
+      let dayactions = createMemoryHelper.getDateOptions(
+        'day',
+        year.value,
+        month.value,
+      );
+      let dayArray = dayactions.filter(item => item.text == day.value);
+      if (dayArray.length && (dayArray[0]?.disabled != true )) {
+        isValidDate = true;
+      }
+      else if (validAlphabatesReg.test(month?.value)) {
+        isValidDate = true;
+      }
+      console.log("monthactions arr ", JSON.stringify(dayactions), JSON.stringify(dayArray));
+
     }
-    console.log(isValidMonth , isValidYear , isValidDate)
+    
+
+    setYear({ ...year, error: !isValidYear })
+    setMonth({ ...month, error: !isValidMonth })
+    setDay({ ...day, error: !isValidDate })
+
+    console.log(isValidMonth, isValidYear, isValidDate)
     if (isValidMonth && isValidYear && isValidDate) {
       optionsActionSheetRef?.current?.hide();
-      // alert('ww')
-
       setMemoryDate(`${year.value}/${month.value}/${year.value}`)
       setTimeout(() => {
         saveIntitals()
@@ -2292,7 +2315,7 @@ const CreateMemory = (props: Props) => {
           {
             text: 'Close and save as draft',
             func: () => {
-setShowCustomAlert(false)
+              setShowCustomAlert(false)
               saveORPublish('save');
 
               // ReactNativeHapticFeedback.trigger('impactMedium', options);
@@ -2301,7 +2324,7 @@ setShowCustomAlert(false)
           {
             text: 'Continue editing',
             func: () => {
-setShowCustomAlert(false)
+              setShowCustomAlert(false)
               // ReactNativeHapticFeedback.trigger('impactMedium', options);
             },
             styles: { fontWeight: '400' },
@@ -2365,7 +2388,7 @@ setShowCustomAlert(false)
           }
           backIcon={action_close}
           saveValues={() => {
-setShowCustomAlert(true)
+            setShowCustomAlert(true)
           }} //saveDraft
         // rightIcon={isCreatedByUser}
         // showHideMenu={() => showMenu(!menuVisibility)}
@@ -2516,7 +2539,7 @@ setShowCustomAlert(true)
           width={DeviceInfo.isTablet() ? '65%' : '100%'}
           title={actionSheet.title}
           actions={actionSheet.list}
-          onActionClick={onActionItemClicked.bind(this)}
+          onActionClick={onActionItemClicked}
         />
 
 
@@ -2568,22 +2591,13 @@ setShowCustomAlert(true)
                       returnKeyType="next"
                       keyboardType="number-pad"
                     />
-                    {/* <TextField
-                      errorMessage={'Please enter valid Year'}
-                      showError={year.error}
-                      value={year.value}
-                      placeholder="YYYY"
-                      maxLength={4}
-                      keyboardType="number-pad"
-                      returnKeyType="next"
-                      onChange={(text: any) => {
-                        setState(prev => ({
-                          ...prev,
-                          year: { ...year, value: text, error: false }
-                        }));
-                      }}
-                    /> */}
 
+                    {
+                      year.error &&
+                      <Text style={styles.errorMessageStyle}>
+                        {`Please enter valid year`}
+                      </Text>
+                    }
                   </View>
 
                   <View style={styles.textInputContainer}>
@@ -2598,7 +2612,18 @@ setShowCustomAlert(true)
                     <TextInput
                       style={styles.textInputBoxStyle}
                       onChangeText={(text: any) => {
+                        let validAlphabatesReg = /^[a-zA-Z]*$/;
+
                         setMonth({ ...month, value: text, error: false })
+                        if (text.length >= 3) {
+                          setShowDay(false)
+                        }
+                        else if (validAlphabatesReg.test(text)) {
+                          setShowDay(false)
+                        }
+                        else {
+                          setShowDay(true)
+                        }
                       }}
                       value={month.value}
                       placeholderTextColor={Colors.newTextColor}
@@ -2607,112 +2632,44 @@ setShowCustomAlert(true)
                       returnKeyType="done"
                     // keyboardType="number-pad"
                     />
-                    {/* <TextField
-                      errorMessage={'Please enter valid month'}
-                      showError={month.error}
-                      value={month.value}
-                      placeholder="Month or Season"
-                      maxLength={12}
-                      returnKeyType="next"
-                      onChange={(text: any) => {
-                        setState(prev => ({
-                          ...prev,
-                          month: { ...month, value: text, error: false }
-                        }));
-                        if (day.value != '') {
-                          // validateDateField(day.value);
-                        }
-                      }}
-                    /> */}
+                    {
+                      month.error &&
+                      <Text style={styles.errorMessageStyle}>
+                        {`Please enter valid month`}
+                      </Text>
+                    }
 
                   </View>
 
-                  <View style={styles.textInputContainer}>
-                    <Text
-                      style={styles.labelStyle}>
-                      {'DAY'}
-                    </Text>
-                    <TextInput
-                      style={styles.textInputBoxStyle}
-                      onChangeText={(text: any) => {
-                        let limit = 31;
-                        if (text) {
-                          switch (parseInt(month.value)) {
-                            case 2:
-                              limit = 28;
-                              if (year.value != 'Year*') {
-                                if (parseInt(year.value) % 4 == 0) {
-                                  limit = 29;
-                                }
-                              }
-                              break;
-                            case 4 || 6 || 9 || 11:
-                              limit = 30;
-                              break;
-                            default:
-                          }
-                        }
-                        console.error("valid >", text);
-                        if (parseInt(text) <= limit) {
+                  {
+                    showDay &&
+                    <View style={styles.textInputContainer}>
+                      <Text
+                        style={styles.labelStyle}>
+                        {'DAY'}
+                      </Text>
+                      <TextInput
+                        style={styles.textInputBoxStyle}
+                        onChangeText={(text: any) => {
                           setDay({ ...day, value: text, error: false })
-                        }
-                        else {
-                          setDay({ ...day, value: text, error: true })
-                        }
-                      }}
-                      value={day.value}
-                      maxLength={4}
-                      placeholder="DD"
-                      placeholderTextColor={Colors.newTextColor}
-                      returnKeyType="done"
-                      keyboardType="number-pad"
-                    />
-                    {/* <TextField
-                      errorMessage={'Please enter valid date'}
-                      showError={day.error}
-                      value={day.value}
-                      placeholder="DD"
-                      maxLength={2}
-                      keyboardType="number-pad"
-                      returnKeyType="done"
-                      onChange={(text: any) => {
+                        }}
+                        value={day.value}
+                        maxLength={4}
+                        placeholder="DD"
+                        placeholderTextColor={Colors.newTextColor}
+                        returnKeyType="done"
+                        keyboardType="number-pad"
+                      />
+                      {
+                        day.error &&
+                        <Text style={styles.errorMessageStyle}>
+                          {`Please enter valid date`}
+                        </Text>
+                      }
 
-                        let limit = 31;
-                        if (text) {
-                          switch (parseInt(month.value)) {
-                            case 2:
-                              limit = 28;
-                              if (year.value != 'Year*') {
-                                if (parseInt(year.value) % 4 == 0) {
-                                  limit = 29;
-                                }
-                              }
-                              break;
-                            case 4 || 6 || 9 || 11:
-                              limit = 30;
-                              break;
-                            default:
-                          }
-                        }
-                        console.error("valid >", text);
-                        if (parseInt(text) <= limit) {
-                          setState(prev => ({
-                            ...prev,
-                            day: { ...day, value: text, error: false }
-                          }));
-                        }
-                        else {
-                          setState(prev => ({
-                            ...prev,
-                            day: { ...day, value: text, error: true }
-                          }));
+                    </View>
+                  }
 
-                        }
-
-                      }}
-                    /> */}
-
-                  </View>
 
                   <TouchableWithoutFeedback
                     // disabled={(this.username != '' && this.password != '') ? false : true}
@@ -2806,7 +2763,7 @@ setShowCustomAlert(true)
                           setTimeout(() => {
                             saveIntitals();
                           }, 1000);
-                        } 
+                        }
                         else {
                           setLocationError('* Please enter a location to publish your memory')
                         }
@@ -2938,19 +2895,19 @@ setShowCustomAlert(true)
 
 const mapState = (state: { [x: string]: any }) => {
   return {
-    locationList: MemoryInitials.locationList,
-    tagsList: MemoryInitials.tags,
-    whoElseWhereThereList: MemoryInitials.whoElseWhereThere,
-    collection: MemoryInitials.collection,
-    nid: MemoryInitials.nid,
-    shareOption: MemoryInitials.shareOption,
-    whoCanSeeMemoryUids: MemoryInitials.whoCanSeeMemoryUids,
-    whoCanSeeMemoryGroupIds: MemoryInitials.whoCanSeeMemoryGroupIds,
-    memoryDescription: MemoryInitials.description,
-    memoryObject: MemoryInitials,
-    goToDashboard: MemoryInitials.goToDashboard,
-    showLoaderValue: dashboardReducer.showLoader,
-    loaderTextValue: dashboardReducer.loaderText,
+    locationList: state.MemoryInitials.locationList,
+    tagsList: state.MemoryInitials.tags,
+    whoElseWhereThereList: state.MemoryInitials.whoElseWhereThere,
+    collection: state.MemoryInitials.collection,
+    nid: state.MemoryInitials.nid,
+    shareOption: state.MemoryInitials.shareOption,
+    whoCanSeeMemoryUids: state.MemoryInitials.whoCanSeeMemoryUids,
+    whoCanSeeMemoryGroupIds: state.MemoryInitials.whoCanSeeMemoryGroupIds,
+    memoryDescription: state.MemoryInitials.description,
+    memoryObject: state.MemoryInitials,
+    goToDashboard: state.MemoryInitials.goToDashboard,
+    showLoaderValue: state.dashboardReducer.showLoader,
+    loaderTextValue: state.dashboardReducer.loaderText
   };
 };
 

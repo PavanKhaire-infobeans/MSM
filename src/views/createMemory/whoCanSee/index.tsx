@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   StatusBar,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import Text from '../../../common/component/Text';
@@ -14,6 +15,7 @@ import Text from '../../../common/component/Text';
 import { connect } from 'react-redux';
 import {
   Colors,
+  CommonTextStyles,
   fontFamily,
   fontSize,
   ShareOptions,
@@ -117,45 +119,45 @@ class WhoCanSee extends React.Component<Props, State> {
         onPress={() =>
           this.setState({ selectedItemIndex: item.index, showError: false })
         }>
-          <>
-        <View style={Styles.ShareOptionsItemStyle}>
-          <Image
-            source={
-              item.index == this.state.selectedItemIndex ? create_radio_on : create_radio_off
-            }
-            style={Styles.imageStyle}
-            resizeMode="contain"
-          />
-          <View style={Styles.container}>
-            <Text style={Styles.shareOptionsStyle}>{item.item}</Text>
+        <>
+          <View style={Styles.ShareOptionsItemStyle}>
+            <Image
+              source={
+                item.index == this.state.selectedItemIndex ? create_radio_on : create_radio_off
+              }
+              style={Styles.imageStyle}
+              resizeMode="contain"
+            />
+            <View style={Styles.container}>
+              <Text style={Styles.shareOptionsStyle}>{item.item}</Text>
 
+            </View>
           </View>
-        </View>
-        {Object['keys'](ShareOptions)[item.index] === 'custom' && (
-          <View>
-            <TouchableHighlight
-              onPress={() => this.whoCanSeeView(item)}
-              underlayColor={'#ffffff33'}
-              style={[
-                Styles.shareOptionContainerStyle,
-              ]}>
-              <View style={Styles.shareOptionSubContainerStyle}>
-                <Text style={Styles.optionsTextStyle}>
-                  {this.getCustomText()}
+          {Object['keys'](ShareOptions)[item.index] === 'custom' && (
+            <View>
+              <TouchableHighlight
+                onPress={() => this.whoCanSeeView(item)}
+                underlayColor={'#ffffff33'}
+                style={[
+                  Styles.shareOptionContainerStyle,
+                ]}>
+                <View style={Styles.shareOptionSubContainerStyle}>
+                  <Text style={Styles.optionsTextStyle}>
+                    {this.getCustomText()}
+                  </Text>
+                  <Image
+                    style={Styles.imageStyle}
+                    source={create_arrowright}
+                    resizeMode={'contain'}></Image>
+                </View>
+              </TouchableHighlight>
+              {this.state.showError && (
+                <Text style={Styles.showErrorStyle}>
+                  *Add atleast one Friend/Friend Circle to share.{' '}
                 </Text>
-                <Image
-                  style={Styles.imageStyle}
-                  source={create_arrowright}
-                  resizeMode={'contain'}></Image>
-              </View>
-            </TouchableHighlight>
-            {this.state.showError && (
-              <Text style={Styles.showErrorStyle}>
-                *Add atleast one Friend/Friend Circle to share.{' '}
-              </Text>
-            )}
-          </View>
-        )}
+              )}
+            </View>
+          )}
         </>
       </TouchableHighlight>
     );
@@ -202,6 +204,22 @@ class WhoCanSee extends React.Component<Props, State> {
               data={Object['values'](ShareOptions)}
               renderItem={(item: any) => this.renderItem(item)}
             />
+
+            <TouchableWithoutFeedback
+            // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+            onPress={this.saveValue}
+            >
+              <View
+                style={Styles.loginSSOButtonStyle}>
+                <Text
+                  style={[
+                    CommonTextStyles.fontWeight500Size17Inter,
+                    Styles.loginTextStyle,
+                  ]}>
+                  Done
+                </Text>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </SafeAreaView>
       </View>

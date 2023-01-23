@@ -1,4 +1,4 @@
-import React, {RefObject} from 'react';
+import React, { RefObject } from 'react';
 import {
   Image,
   ImageStyle,
@@ -8,13 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { search } from '../../../../app/images';
-import {icon_close_black, searchIcon} from '../../../images';
-import {Colors} from '../../constants';
+import { plus_circle, search } from '../../../../app/images';
+import { icon_close_black, searchIcon } from '../../../images';
+import { Colors } from '../../constants';
 import Text from '../Text';
 import searchStyle from './styles';
 
-type Props = {[x: string]: any; placeholder: string};
+type Props = { [x: string]: any; placeholder: string };
 export default class SearchBar extends React.Component<Props> {
   inputField: RefObject<TextInput> = React.createRef<TextInput>();
   state = {
@@ -28,13 +28,13 @@ export default class SearchBar extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(props: Props) {
     if (this.props !== props) {
       if (this.props.value != props.value && props.value != this.state.value) {
-        this.setState({value: props.value || ''});
+        this.setState({ value: props.value || '' });
       }
     }
   }
 
-  componentDidMount =()=> {
-    this.setState({isFocused: this.inputField.current.isFocused()});
+  componentDidMount = () => {
+    this.setState({ isFocused: this.inputField.current.isFocused() });
   }
 
   constructor(props: Props) {
@@ -47,7 +47,7 @@ export default class SearchBar extends React.Component<Props> {
 
   static defaultProps = {
     placeholder: 'Search...',
-    onFocus: () => {},
+    onFocus: () => { },
   };
 
   render() {
@@ -71,7 +71,7 @@ export default class SearchBar extends React.Component<Props> {
       <View
         style={[
           searchStyle.parent,
-          {backgroundColor: Colors.white, flexDirection: 'row'},
+          { backgroundColor: Colors.white, flexDirection: 'row' },
           // this.props.style || {},
         ]}>
         <View
@@ -79,7 +79,7 @@ export default class SearchBar extends React.Component<Props> {
             searchStyle.baseFlex,
             {
               backgroundColor: this.props.textFieldBackgroundColor,
-              borderRadius:  8,
+              borderRadius: 8,
               borderColor: borderRadius ? Colors.bottomTabColor : Colors.bottomTabColor,
               borderWidth: borderRadius ? 1 : 1,
             },
@@ -128,7 +128,7 @@ export default class SearchBar extends React.Component<Props> {
                   },
                 );
               }}
-              placeholder={this.props.placeholder?this.props.placeholder:'Search here...'}
+              placeholder={this.props.placeholder ? this.props.placeholder : 'Search here...'}
               placeholderTextColor={Colors.newTextColor}
               keyboardType="ascii-capable"
               value={this.state.value}
@@ -149,13 +149,13 @@ export default class SearchBar extends React.Component<Props> {
     );
   }
 
-  cancelPressed =()=> {
+  cancelPressed = () => {
     //dismissKeyboard();
     this.blur();
     this.clearField();
   }
 
-  focus =()=> {
+  focus = () => {
     this.setState(
       {
         editing: true,
@@ -168,7 +168,7 @@ export default class SearchBar extends React.Component<Props> {
     );
   }
 
-  blur =()=> {
+  blur = () => {
     this.setState(
       {
         editing: false,
@@ -184,36 +184,36 @@ export default class SearchBar extends React.Component<Props> {
     );
   }
 
-  clearField =()=> {
+  clearField = () => {
     this.inputField.current.clear();
-    this.setState({value: ''}, () => {
+    this.setState({ value: '' }, () => {
       if (this.props.onClearField) {
         this.props.onClearField();
       }
     });
   }
 
-  showClear =()=> {
+  showClear = () => {
     // if (Platform.OS === 'android') {
-      // if (this.state.value.length > 0) {
-        return (
-          <TouchableOpacity
-            onPress={() => {
-              // this.clearField();
-            }}
-            style={searchStyle.clearButton}>
-            <Image
-              source={search}//icon_close_black}
-              // style={{width: 18, height: 18}}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        );
+    // if (this.state.value.length > 0) {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          // this.clearField();
+        }}
+        style={searchStyle.clearButton}>
+        <Image
+          source={this.props.isAddbutton ? plus_circle : search}//icon_close_black}
+          // style={{width: 18, height: 18}}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+    );
     //   }
     // }
   }
 
-  showCancelOnIos =()=> {
+  showCancelOnIos = () => {
     if (Platform.OS == 'ios') {
       if (this.state.editing) {
         return (

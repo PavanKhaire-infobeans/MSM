@@ -384,6 +384,7 @@ const CommonListCreateMemory = (props: Props) => {
               onChangeText(text);
             }}
             showCancelClearButton={false}
+            isAddbutton={state.isMemoryTags ? true : false}
           />
 
           {props.searchList.length == 0 &&
@@ -397,7 +398,7 @@ const CommonListCreateMemory = (props: Props) => {
             </Text>
           )}
 
-          {props.searchList.length == 0 && (
+          {props.searchList.length == 0 && !state.isMemoryTags && (
             <FlatList
               extraData={state}
               style={style.memoryTagContainer}
@@ -409,7 +410,24 @@ const CommonListCreateMemory = (props: Props) => {
               keyboardShouldPersistTaps={'handled'}
               showsHorizontalScrollIndicator={false}
               data={state.referenceList}
-              ItemSeparatorComponent={()=><View style={{width:12}}/>}
+              ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
+              renderItem={({ item, index }) => renderSelectedItems(item, false)}
+            />
+          )}
+
+          {props.searchList.length == 0 && state.isMemoryTags && (
+            <FlatList
+              extraData={state}
+              style={style.memoryTagContainer}
+              keyExtractor={(_, index: number) => `${index}`}
+              onScroll={() => {
+                Keyboard.dismiss();
+              }}
+              horizontal={true}
+              keyboardShouldPersistTaps={'handled'}
+              showsHorizontalScrollIndicator={false}
+              data={state.referenceList}
+              ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
               renderItem={({ item, index }) => renderSelectedItems(item, false)}
             />
           )}
@@ -435,7 +453,7 @@ const CommonListCreateMemory = (props: Props) => {
               publishMemory();
             }}>
             <View
-              style={Styles.loginSSOButtonStyle}>
+              style={[Styles.loginSSOButtonStyle, { position: 'absolute', bottom: 0 }]}>
               <Text
                 style={[
                   CommonTextStyles.fontWeight500Size17Inter,
