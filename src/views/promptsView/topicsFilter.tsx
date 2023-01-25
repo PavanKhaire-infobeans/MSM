@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -39,7 +39,7 @@ const icons = {
   "Friendship": friendship,
   "General": general,
   "Growing Up": growing_Up,
-  "Historial Events": historial_Events,
+  "Historical Events": historial_Events,
   "Life Advice": life_Advice,
   "Life Reflection": life_Reflection,
   "Love/Marriage": love_Marriage,
@@ -91,6 +91,7 @@ const TopicsFilter = (props: Props) => {
     filteredTopics: [],
   })
 
+  let flatlistRef = useRef(null);
   const [selectedFilter, setSelectedFilter] = useState({"label":"","value":"","checked":0});
   const isFocused = useIsFocused()
   useEffect(() => {
@@ -129,6 +130,9 @@ const TopicsFilter = (props: Props) => {
     <TouchableHighlight
       underlayColor={'none'}
       onPress={() => {
+        if (flatlistRef.current) {
+          flatlistRef.current.scrollTo({x: 0, y: 0, animated: true});
+        }
         if (item.label == selectedFilter.label) {
           setSelectedFilter({"label":"","value":"","checked":0})
         }
@@ -198,7 +202,7 @@ const TopicsFilter = (props: Props) => {
       </View>
 
       <View style={Styles.jumptoScreenSubContainer}>
-        <ScrollView nestedScrollEnabled={true} overScrollMode='always' style={Styles.flexContainer}>
+        <ScrollView ref={flatlistRef} nestedScrollEnabled={true} overScrollMode='always' style={Styles.flexContainer}>
           <>
             <View style={[Styles.fullWidth, Styles.justifyalignCenetr]}>
               <View style={Styles.separatorStyle}></View>

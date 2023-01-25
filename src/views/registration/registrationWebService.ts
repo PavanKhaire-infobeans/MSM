@@ -61,7 +61,7 @@ export const registrationForm = async () => {
   }
 };
 
-export const checkUserRegistration = async (submitData: any) => {
+export const checkUserRegistration = async (submitData: any,CB:any) => {
   try {
     if (Utility.isInternetConnected) {
       //loaderHandler.showLoader('Requesting...');
@@ -79,18 +79,22 @@ export const checkUserRegistration = async (submitData: any) => {
 
       showConsoleLog(ConsoleType.LOG,"reg resp : ", JSON.stringify(chkResponse))
       showConsoleLog(ConsoleType.LOG," resp : ", JSON.stringify(resp))
-      EventManager.callBack(
-        kCheckUserProfile,
-        true,
-        resp.isRegistered == 1,
-        resp.personalInfo,
-      );
+
+      CB({ success: true, isRegistered: resp.isRegistered == 1, personalInfo: resp.personalInfo})
+      // EventManager.callBack(
+      //   kCheckUserProfile,
+      //   true,
+      //   resp.isRegistered == 1,
+      //   resp.personalInfo,
+      // );
     } else {
       No_Internet_Warning();
     }
   } catch (err) {
     //loaderHandler.hideLoader();
-    EventManager.callBack(kCheckUserProfile, false, err.message);
+    CB({ success: false, isRegistered: 0, personalInfo: {}})
+
+    // EventManager.callBack(kCheckUserProfile, false, err.message);
   }
 };
 export const submitRegistration = async (registrationData: any) => {

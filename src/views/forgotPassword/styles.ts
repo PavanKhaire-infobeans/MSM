@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   },
   loginSSOButtonStyle: {
     width: '100%',
-    height: 48,
+    height: 44,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: 'center',
@@ -87,6 +87,7 @@ export const styles = StyleSheet.create({
     // height: '100%',//Size.byHeight(180),
     justifyContent: 'space-between',
     // alignItems: 'center', 
+    marginBottom:50
   },
 
   forgotPasswordContainer: {

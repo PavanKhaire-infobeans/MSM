@@ -139,8 +139,6 @@ class DashboardIndex extends React.Component<Props> {
 
   componentDidMount = () => {
     // //loaderHandler.showLoader();
-
-    
     this.props.setCreateMemory(false);
     if (this.props.setTimer == 'false') {
       this.state.appTourVisibility = true;

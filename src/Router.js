@@ -416,12 +416,12 @@ const App = _props => {
         //loaderHandler.hideLoader()
       }
     })
-    if (Platform.OS == 'android') {
-      backEvent = BackHandler.addEventListener(
-        'hardwareBackPress',
-        _backPressAnd,
-      );
-    }
+    // if (Platform.OS == 'android') {
+    //   backEvent = BackHandler.addEventListener(
+    //     'hardwareBackPress',
+    //     _backPressAnd,
+    //   );
+    // }
     themechanges(Appearance.getColorScheme());
 
     return () => {

@@ -149,8 +149,8 @@ class Prologue extends Component<Props> {
       this.setState({ isLoginDrawerOpen: false, isLoginUp: false });
     }
     if (identifier == this.searchIdentifier) {
-      this.setState({ isSearchDrawerOpen: false }, () =>
-        loginDrawerRef.refDrawer.collapse(),
+      this.setState({ isSearchDrawerOpen: false }, () =>{}
+        // loginDrawerRef.refDrawer.collapse(),
       );
     }
     Keyboard.dismiss();
@@ -168,7 +168,7 @@ class Prologue extends Component<Props> {
       switch (direction) {
         case Direction.reset:
           // this.searchDrawerRef.refDrawer._resetPosition();
-          loginDrawerRef.refDrawer._resetPosition();
+          // loginDrawerRef.refDrawer._resetPosition();
           break;
         case Direction.upDirection:
           if (
@@ -193,8 +193,8 @@ class Prologue extends Component<Props> {
             if (this.state.isLoginUp) {
               this.setState({ isLoginUp: false });
             }
-            if (isRelease) loginDrawerRef.refDrawer.collapse();
-            else loginDrawerRef.refDrawer._handlePanResponderMove(e, guesture);
+            // if (isRelease) loginDrawerRef.refDrawer.collapse();
+            // else loginDrawerRef.refDrawer._handlePanResponderMove(e, guesture);
           }
           break;
       }
@@ -207,16 +207,16 @@ class Prologue extends Component<Props> {
     switch (identifier) {
       case this.loginIdentifier:
         if (this.state.isLoginDrawerOpen) {
-          loginDrawerRef.refDrawer.collapse();
+          // loginDrawerRef.refDrawer.collapse();
         } else {
           // this.searchDrawerRef.refDrawer.expand();
-          loginDrawerRef.refDrawer.expand();
+          // loginDrawerRef.refDrawer.expand();
         }
         break;
       case this.searchIdentifier:
         if (this.state.isSearchDrawerOpen) {
           // this.searchDrawerRef.refDrawer.collapse();
-          loginDrawerRef.refDrawer.collapse();
+          // loginDrawerRef.refDrawer.collapse();
         } else {
           // this.searchDrawerRef.refDrawer.expand();
         }
@@ -254,8 +254,8 @@ class Prologue extends Component<Props> {
       !this.state.isLoginDrawerOpen &&
       !this.state.isSearchDrawerOpen
     ) {
-      this.setState({ isRegistrationOpen: false }, () =>
-        loginDrawerRef.refDrawer.collapse(),
+      this.setState({ isRegistrationOpen: false }, () =>{}
+        // loginDrawerRef.refDrawer.collapse(),
       );
       // this.searchDrawerRef.refDrawer.collapse();
     } else if (this.props.showHeader) {
@@ -264,12 +264,12 @@ class Prologue extends Component<Props> {
     // if(this.searchDrawerRef!=null && this.searchDrawerRef.refDrawer!=null){
     // 	this.searchDrawerRef.refDrawer.collapse();
     // }
-    loginDrawerRef.refDrawer.collapse();
+    // loginDrawerRef.refDrawer.collapse();
   };
 
   onRegFinalCallBack = (msg: any) => {
     this.setState({ isRegistrationOpen: false }, () => {
-      loginDrawerRef.refDrawer.expand();
+      // loginDrawerRef.refDrawer.expand();
       //ToastMessage(msg, Colors.ThemeColor, false, true);
     });
   };
@@ -302,7 +302,7 @@ class Prologue extends Component<Props> {
   };
 
   openLoginDrawer = () => {
-    loginDrawerRef.refDrawer.expand();
+    // loginDrawerRef.refDrawer.expand();
   };
 
   _showWithOutClose = (message: any, color: any) => {
@@ -347,8 +347,11 @@ class Prologue extends Component<Props> {
                 null
             }
             <LinearGradient
-              start={{ x: 0.0, y: 0 }} end={{ x: 1, y: 0 }}
-              locations={[0, 0.2]}
+              // start={{ x: 0.0, y: 0 }} end={{ x: 1, y: 0 }}
+                end={{ x: 0.8, y: 0.5 }}
+                start={{ x: -0.1, y: 0.6 }}
+                locations={this.state.isRegistrationOpen ? [0,1]:[0.1, 0.4,0.9]}
+              // locations={this.state.isRegistrationOpen ? [0, 0.2]:[0, 0.4,0.7]}
               colors={this.state.isRegistrationOpen ? ["#ffffff", "#ffffff"] : ['#EDD0ED', '#F2E5E7', '#D1E6FE']}
               style={Styles.findCommunityContainer}>
               <SafeAreaView style={Styles.flexContainer}>
@@ -410,6 +413,7 @@ class Prologue extends Component<Props> {
                               bottomPicker={(isVisible: any) =>
                                 this.bottomPicker(isVisible)
                               }
+                              navigation={this.props.navigation}
                               whyDoAskView={() => {
                                 this.setState({
                                   whyDoAskView: true

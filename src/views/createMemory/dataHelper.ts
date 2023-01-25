@@ -146,11 +146,20 @@ export class CreateMemoryHelper {
       }
 
       for (let i = min; i <= max; i++) {
-        if (i > limit) {
-          actions.push({ key: i, text: i.toString(), disabled: true });
+        if (i < 9) {
+          if (i > limit) {
+            actions.push({ key: i, text: '0'+i.toString(), disabled: true });
+          } else {
+            actions.push({ key: i, text: '0'+i.toString() });
+          }
         } else {
-          actions.push({ key: i, text: i.toString() });
+          if (i > limit) {
+            actions.push({ key: i, text: i.toString(), disabled: true });
+          } else {
+            actions.push({ key: i, text: i.toString() });
+          }
         }
+        
       }
     }
     return actions;

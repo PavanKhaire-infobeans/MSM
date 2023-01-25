@@ -268,6 +268,19 @@ const CreateMemory = (props: Props) => {
     value: '',//currentDate.getDate(),
     error: false,
   })
+  const [yearNew, setYearNew] = useState({
+    value: '',//currentDate.getUTCFullYear().toString(),
+    error: false,
+  })
+  const [monthNew, setMonthNew] = useState({
+    value: '',// MonthObj.month[currentDate.getUTCMonth()],
+    error: false,
+  })
+  const [dayNew, setDayNew] = useState({
+    value: '',//currentDate.getDate(),
+    error: false,
+  })
+
   const [memory_date, setMemoryDate] = useState('')
   const [description, setDescription] = useState('')
   const [dateError, setDateError] = useState('')
@@ -450,15 +463,34 @@ const CreateMemory = (props: Props) => {
       }
       setLocationText(draftDetails.location.description)
       setItemList(draftDetails.files)
-      setYear({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() : '' })
-      setMonth({
-        ...month,
-        value: draftDetails.date.month > 0 ? draftDetails.date.month < 10 ? '0' + JSON.stringify(draftDetails.date.month) : JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
-      })
-      setDay({
-        ...day,
-        value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
-      })
+      props.saveFiles(draftDetails.files);
+
+      if (draftDetails.date.year) {
+        setYear({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() : '' })
+        setYearNew({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() : '' })
+      }
+      if (draftDetails.date.month) {
+        setMonth({
+          ...month,
+          value: draftDetails.date.month > 0 ? draftDetails.date.month < 10 ? '0' + JSON.stringify(draftDetails.date.month) : JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
+        })
+        setMonthNew({
+          ...month,
+          value: draftDetails.date.month > 0 ? draftDetails.date.month < 10 ? '0' + JSON.stringify(draftDetails.date.month) : JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
+        })
+      }
+
+      if (draftDetails.date.day) {
+        setDay({
+          ...day,
+          value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
+        })
+        setDayNew({
+          ...day,
+          value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
+        })
+      }
+
       setMemoryDate(newMemoryDate ? newMemoryDate : '')
       setShowDay(draftDetails.date.day > 0 ? true : false)
       setIsCreatedByUser(draftDetails.isCreatedByUser.uid == Account.selectedData().userID)
@@ -503,7 +535,8 @@ const CreateMemory = (props: Props) => {
         props.route.params.draftNid,
         resp => draftDetailsCallBack(resp.status, resp.responseData),
       );
-    } else {
+    }
+    else {
       let title = decode_utf8(props.route.params.textTitle);
       title = title.replace(/\n/g, ' ');
       if (title.length > 150) {
@@ -511,26 +544,42 @@ const CreateMemory = (props: Props) => {
       }
 
       setItemList(props.route.params.attachments)
+      props.saveFiles(props.route.params.attachments);
+
       setPadDetails(props.route.params.padDetails)
       setTitle(decode_utf8(props.route.params.textTitle))
       setLocation(props.route.params.location)
-      setYear({
-        ...year,
-        value: props.route.params.memoryDate.year,
-      })
-      setMonth({
-        ...month,
-        value:
-          MonthObj.month[
-          currentDate.getMonth() + MonthObj.serverMonthsCount
-          ],
-      })
-      setIsCreatedByUser(true)
-      setDay({
-        ...day,
-        value: props.route.params.memoryDate.day,
-      })
+      if (props.route.params?.memoryDate?.year) {
+        setYear({
+          ...year,
+          value: props.route.params?.memoryDate?.year,
+        })
+        setMonth({
+          ...month,
+          value:
+            props.route.params?.memoryDate?.month,
+        })
+        setDay({
+          ...day,
+          value: props.route.params.memoryDate.day,
+        })
 
+        setYearNew({
+          ...year,
+          value: props.route.params?.memoryDate?.year,
+        })
+        setMonthNew({
+          ...month,
+          value:
+            props.route.params?.memoryDate?.month,
+        })
+        setDayNew({
+          ...day,
+          value: props.route.params.memoryDate.day,
+        })
+      }
+
+      setIsCreatedByUser(true)
       props.setNid(props.route.params.id);
       //loaderHandler.hideLoader();
       props.showLoader(false);
@@ -547,6 +596,7 @@ const CreateMemory = (props: Props) => {
   };
 
   useEffect(() => {
+    props.resetAll();
     props.setCreateMemory(true);
     // DefaultPreference.get('hide_memory_draft').then((value: any) => {
     //   if (value == 'true') {
@@ -556,7 +606,6 @@ const CreateMemory = (props: Props) => {
     //   }
     // });
 
-    props.resetAll();
     getData();
     // // setEtherPadContent('set', decode_utf8(props.textTitle), props.padDetails.padId);
 
@@ -1030,7 +1079,7 @@ const CreateMemory = (props: Props) => {
           (element: any) => element.isLocal,
         );
 
-        console.log("objjjj :",JSON.stringify(memoryDetails));
+        console.log("objjjj :", JSON.stringify(memoryDetails));
         let resp = await CreateUpdateMemory(
           memoryDetails,
           filesToUpload,
@@ -1063,19 +1112,94 @@ const CreateMemory = (props: Props) => {
 
     let details: any = {
       title: title, //.trim(),
+      // memory_date: {
+      //   year:
+      //     memory_date != ''
+      //       ? memory_date.split('/')[2]
+      //       : '', //new Date(memory_date).getFullYear(),
+      //   month:
+      //     memory_date != ''
+      //       ? parseInt(memory_date.split('/')[1])
+      //       : '', // new Date(memory_date).getMonth(),
+      //   day:
+      //     memory_date != ''
+      //       ? memory_date.split('/')[0]
+      //       : '', // new Date(memory_date).getDate(),
+      // },
       memory_date: {
         year:
-          memory_date != ''
-            ? memory_date.split('/')[2]
-            : '', //new Date(memory_date).getFullYear(),
+          year.value != ''
+            ? year.value
+            : new Date().getUTCDate().toString(), //new Date(memory_date).getFullYear(),
         month:
-          memory_date != ''
-            ? parseInt(memory_date.split('/')[1])
-            : '', // new Date(memory_date).getMonth(),
+          month.value != ''
+            ? month.value.length > 2 ? month.value : parseInt(month.value)
+            : new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
         day:
-          memory_date != ''
-            ? memory_date.split('/')[0]
-            : '', // new Date(memory_date).getDate(),
+          day.value != ''
+            ? day.value
+            : new Date().getUTCFullYear().toString(), // new Date(memory_date).getDate(),
+      },
+      location: { description: location.description, reference: locationText == location.description ? location.reference : '' },
+      files: itemList,
+      description: '',
+    };
+    // {
+    //   description: locationText,
+    //   reference:
+    //     locationText == location.description
+    //       ? location.reference
+    //       : '',
+    // },
+
+    // if (MonthObj.selectedIndex <= MonthObj.serverMonthsCount - 1) {
+    //   details.memory_date = {
+    //     ...details.memory_date,
+    //     season: MonthObj.month[MonthObj.selectedIndex].tid,
+    //   };
+    // } else {
+    //   details.memory_date = {
+    //     ...details.memory_date,
+    //     month: MonthObj.month[MonthObj.selectedIndex].tid,
+    //     day: day.value != 'Day' ? day.value : undefined,
+    //   };
+    // }
+
+    props.onInitialUpdate(details);
+
+  };
+
+  const saveIntitalsForDate = (year, month, day) => {
+
+    let details: any = {
+      title: title, //.trim(),
+      // memory_date: {
+      //   year:
+      //     memory_date != ''
+      //       ? memory_date.split('/')[2]
+      //       : '', //new Date(memory_date).getFullYear(),
+      //   month:
+      //     memory_date != ''
+      //       ? parseInt(memory_date.split('/')[1])
+      //       : '', // new Date(memory_date).getMonth(),
+      //   day:
+      //     memory_date != ''
+      //       ? memory_date.split('/')[0]
+      //       : '', // new Date(memory_date).getDate(),
+      // },
+      memory_date: {
+        year:
+          year.value != ''
+            ? year.value
+            : new Date().getUTCDate().toString(), //new Date(memory_date).getFullYear(),
+        month:
+          month.value != ''
+            ? month.value.length > 2 ? month.value : parseInt(month.value)
+            : new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
+        day:
+          day.value != ''
+            ? day.value
+            : new Date().getUTCFullYear().toString(), // new Date(memory_date).getDate(),
       },
       location: { description: location.description, reference: locationText == location.description ? location.reference : '' },
       files: itemList,
@@ -1307,6 +1431,7 @@ const CreateMemory = (props: Props) => {
   };
 
   const renderRow = (data: any, index: number) => {
+    console.log("index ??", index)
     // let index = data.index;
     // data = data.item;
     data.by = data.file_owner ? getUserName(data) : 'You';
@@ -1385,7 +1510,10 @@ const CreateMemory = (props: Props) => {
     let tempFileArray = itemList;
     let index = tempFileArray.findIndex((element: any) => element.fid === fid);
     tempFileArray.splice(index, 1);
-    setItemList(tempFileArray)
+    props.saveFiles(tempFileArray);
+    setTimeout(() => {
+      setItemList(tempFileArray)
+    }, 500);
   };
 
   const updateFileContent = (file: any, title: any, description: any) => {
@@ -1407,6 +1535,8 @@ const CreateMemory = (props: Props) => {
       });
     }
     setItemList(updatelist)
+    props.saveFiles(updatelist);
+
   };
 
   const fileHolderView = (file: any) => {
@@ -1564,7 +1694,9 @@ const CreateMemory = (props: Props) => {
     file.forEach((element: any) => {
       tempfiles.push(element);
     });
-    setItemList(tempfiles)
+    props.saveFiles(tempfiles);
+    setItemList(tempfiles);
+    optionsActionSheetRef?.current?.hide();
   };
 
   const validateDateField = (text) => {
@@ -1774,78 +1906,7 @@ const CreateMemory = (props: Props) => {
         <View>
           {isCreatedByUser ? (
             <View style={styles.ViewBeforeStyle}>
-              {/* <Text
-              style={styles.whenHappenTextStyle}>
-              {'When did it happen? (Approximate)'}
-              <Text style={{ color: Colors.ErrorColor }}>{' *'}</Text>
-            </Text> */}
-              {/* <View
-              style={styles.createLableSelectorContainerStyle}
-              onStartShouldSetResponder={() => true}>
-              {createLabelSelector(year, 10, 2, 'year')}
-              {createLabelSelector(month, 10, 3, 'month')}
-              {showDay ? (
-                createLabelSelector(day, 0, 2, 'day')
-              ) : (
-                <View style={styles.flex2Padding} />
-              )}
-            </View>
 
-            <Text
-              style={styles.dateErrorTextStyle}>
-              {dateError}
-            </Text> */}
-
-              {/* <Text
-              style={styles.whereHappenTextStyle}>
-              {'Where did it happen?'}
-              <Text style={{ color: Colors.ErrorColor }}>{' *'}</Text>
-            </Text>
-            <SearchBar
-              style={[styles.searchBarStyle,{
-                borderBottomColor: locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
-              }]}
-              placeholder="Enter location here"
-              onBlur={() => {
-                setState({ locationList: [] });
-              }}
-              onSearchButtonPress={(keyword: string) => {
-                setState({ showLocationLoader: true });
-                props.onLocationUpdate(keyword);
-              }}
-              onClearField={() => {
-                props.resetLocation();
-                setState({ locationList: [] });
-              }}
-              onChangeText={(text: any) => {
-                this.props.onLocationUpdate(text);
-                this.setState({ locationError: '', locationText: text });
-              }}
-              // onFocus={()=> this._mainItemList.scrollToOffset({ animated: true, offset: 100})}
-              showCancelClearButton={false}
-              value={this.locationText}
-            /> */}
-              {/* {this.props.locationList.length > 0 && (
-              <FlatList
-                keyExtractor={(_, index: number) => `${index}`}
-                keyboardShouldPersistTaps={'handled'}
-                onScroll={() => {
-                  Keyboard.dismiss();
-                }}
-                style={styles.locationFlatListStyle}
-                keyExtractor={(_: any, index: number) => `${index}`}
-                data={this.props.locationList}
-                renderItem={this._renderLocation}
-                ItemSeparatorComponent={() => (
-                  <View
-                    style={styles.separator}></View>
-                )}
-              />
-            )}
-
-            <Text style={styles.locationErrorTextStyle}>
-              {this.locationError}
-            </Text> */}
               {
                 <>
                   <TextInput
@@ -1888,23 +1949,7 @@ const CreateMemory = (props: Props) => {
             // ownersViewForCollaborators()
           )}
           <View style={Styles.etherPadStyle}>
-            {/* styles.createdByUserContainer */}
-            {/* {!isCreatedByUser && (
-            <View>
-              <Text
-                style={styles.titletextContainer}>
-                {title}
-              </Text>
-              <Border />
-            </View>
-          )} */}
-            {/* <Text
-            style={styles.memoryDescriptionTextStyle}
-            numberOfLines={3}
-            ellipsizeMode={'tail'}>
-            {props.memoryDescription}
-          </Text> */}
-            {/* <View style={styles.ViewBeforeStyle}> */}
+
             {props.route.params.editMode || showEtherPad ? (
               <>
                 <Text
@@ -2039,13 +2084,6 @@ const CreateMemory = (props: Props) => {
               { backgroundColor: Colors.bordercolor },
             ]}
             onPress={() => {
-              // if (props.padDetails?.padId) {
-              // setEtherPadContent('get', '', padDetails.padId);
-              // }
-              // console.warn("memory_date  ", memory_date, " ,ssss :", JSON.stringify(props.tagsList))
-              // addRemoveTags();
-              // whoElseWasthere()
-
 
               if (
                 memory_date == '' || year.value == '' || month.value == ''
@@ -2196,75 +2234,104 @@ const CreateMemory = (props: Props) => {
 
     let yearactions = createMemoryHelper.getDateOptions(
       'year',
-      year.value,
+      yearNew.value,
     ), isValidYear = false;
     let monthactions = createMemoryHelper.getDateOptions(
       'month',
-      year.value,
+      yearNew.value,
     ), isValidMonth = false;
+    let isValidDate = false;
 
-
-    if (yearactions && yearactions.length && yearactions.filter(item => (item.text.toLowerCase() === year.value) || (item.key.toString().toLowerCase() === year.value)).length) {
+    if (yearactions && yearactions.length && yearactions.filter(item => (item.text.toLowerCase() === yearNew.value) || (item.key.toString().toLowerCase() === yearNew.value)).length) {
       isValidYear = true;
     }
 
     let validNumberReg = /^[0-9\b]+$/;
     let validAlphabatesReg = /^[a-zA-Z]*$/;
-    if (validNumberReg.test(month?.value) || validAlphabatesReg.test(month?.value)) {
-      let val = month?.value?.toLowerCase();
+    if (validNumberReg.test(monthNew?.value) || validAlphabatesReg.test(monthNew?.value)) {
+      let val = monthNew?.value?.toLowerCase();
       let getMonthIsValid = monthactions.filter(item => (item.text.toLowerCase() === val) || (item.key && (item.key < 9 ? ('0' + item.key.toString().toLowerCase() === val) : item.key.toString().toLowerCase() === val)));
-      if (month?.value?.length >= 3) {
+      if (monthNew?.value?.length > 2) {
         if (monthactions && monthactions.length && getMonthIsValid.length && getMonthIsValid[0]?.disabled != true) {
-          if (parseInt(year.value) <= new Date().getFullYear() && !isNaN(parseInt(month.value)) && (parseInt(month.value) <= (new Date().getMonth() + 1))) {
-            isValidMonth = true;
+          if (parseInt(yearNew.value) == new Date().getFullYear()) {
+
+            let seasonArray = MonthObj?.month?.filter(itm => itm.name == monthNew.value)
+            // && itm.months.filter(monthitm => monthitm.id == new Date().getMonth()+1).length
+            let monthsInSeason = seasonArray.length && seasonArray?.months?.length ? seasonArray.months.map(ii => ii.id).sort(function (a, b) { return a - b }) : []
+            if (parseInt(yearNew.value) <= new Date().getFullYear() && monthsInSeason.length && (new Date().getUTCMonth() + 1 < monthsInSeason[monthsInSeason.length - 1])) {
+              if (!isNaN(parseInt(monthNew.value)) && (parseInt(monthNew.value) <= (new Date().getMonth() + 1))) {
+
+                isValidMonth = true;
+                isValidDate = true;
+                setDayNew({ ...dayNew, value: '' })
+              }
+              else if (validAlphabatesReg.test(monthNew?.value)) {
+                setDayNew({ ...dayNew, value: '' })
+                isValidMonth = true;
+                isValidDate = true;
+              }
+            }
           }
-          else if (validAlphabatesReg.test(month?.value)) {
-            isValidMonth = true;
+          else {
+            if (parseInt(yearNew.value) < new Date().getFullYear()) {
+              if (!isNaN(parseInt(monthNew.value)) && (parseInt(monthNew.value) <= (new Date().getMonth() + 1))) {
+                isValidMonth = true;
+                isValidDate = true;
+                setDayNew({ ...dayNew, value: '' })
+              }
+              else if (validAlphabatesReg.test(monthNew?.value)) {
+                setDayNew({ ...dayNew, value: '' })
+                isValidMonth = true;
+                isValidDate = true;
+              }
+            }
           }
         }
       }
-      else if ((month?.value?.length == 2) && parseInt(year.value) <= new Date().getFullYear() && monthactions && monthactions.length && monthactions.filter(item => (item.key < 9 ? ('0' + item.key.toString().toLowerCase() === month.value.toString().toLowerCase()) : item.key.toString().toLowerCase() === month.value.toString().toLowerCase())).length && getMonthIsValid[0]?.disabled != true) {
+      else if ((monthNew?.value?.length == 2) && parseInt(yearNew.value) <= new Date().getFullYear() && monthactions && monthactions.length && monthactions.filter(item => (item.key < 9 ? ('0' + item.key.toString().toLowerCase() === monthNew.value.toString().toLowerCase()) : item.key.toString().toLowerCase() === monthNew.value.toString().toLowerCase())).length && getMonthIsValid[0]?.disabled != true) {
         isValidMonth = true;
       }
     }
 
-    let isValidDate = false;
-    if (day.value != '' && !day.error) {
+    if (dayNew.value != '' && !dayNew.error) {
       let dayactions = createMemoryHelper.getDateOptions(
         'day',
-        year.value,
-        month.value,
+        yearNew.value,
+        monthNew.value,
       );
       let dayArray = dayactions.filter(item => item.text == day.value);
-      if (dayArray.length && (dayArray[0]?.disabled != true )) {
+      if (dayArray.length && (dayArray[0]?.disabled != true)) {
         isValidDate = true;
       }
-      else if (validAlphabatesReg.test(month?.value)) {
+      else if (validAlphabatesReg.test(monthNew?.value)) {
         isValidDate = true;
       }
-      console.log("monthactions arr ", JSON.stringify(dayactions), JSON.stringify(dayArray));
 
     }
-    
 
-    setYear({ ...year, error: !isValidYear })
-    setMonth({ ...month, error: !isValidMonth })
-    setDay({ ...day, error: !isValidDate })
-
+    setYearNew({ ...yearNew, error: !isValidYear })
+    setMonthNew({ ...monthNew, error: !isValidMonth })
+    if (dayNew.value.length > 2) {
+      setDayNew({ ...dayNew, value: '' })
+    } else {
+      setDayNew({ ...dayNew, error: !isValidDate })
+    }
     console.log(isValidMonth, isValidYear, isValidDate)
+
     if (isValidMonth && isValidYear && isValidDate) {
       optionsActionSheetRef?.current?.hide();
-      setMemoryDate(`${year.value}/${month.value}/${year.value}`)
-      setTimeout(() => {
-        saveIntitals()
-      }, 1000);
+      setMemoryDate(`${yearNew.value}/${monthNew.value}/${yearNew.value}`)
+
+      setYear({ ...yearNew, error: !isValidYear })
+      setMonth({ ...monthNew, error: !isValidMonth })
+      if (dayNew.value.length > 2) {
+        setDayNew({ ...dayNew, value: '' })
+      } else {
+        setDayNew({ ...dayNew, error: !isValidDate })
+      }
+      saveIntitalsForDate(yearNew, monthNew, dayNew)
     };
 
-  };
-
-
-  const onChange = (date: any) => {
-    showConsoleLog(ConsoleType.LOG, 'date');
   };
 
   // render() {
@@ -2473,7 +2540,8 @@ const CreateMemory = (props: Props) => {
             contentContainerStyle={
               Styles.viewBeforListContentContainerStyle
             }
-            nestedScrollEnabled={true} overScrollMode='always'
+            nestedScrollEnabled={true}
+            overScrollMode='always'
             style={[styles.fullWidth, { flex: 1 }]}
             scrollEnabled={itemList.length ? true : false}>
             {/* {itemList.length == 0 ? ( */}
@@ -2497,8 +2565,8 @@ const CreateMemory = (props: Props) => {
               //   data={itemList}
               //   renderItem={(item: any) => renderRow(item)}
               // />
-              itemList?.length
-                ? itemList.map((item, index) =>
+              props.files?.length
+                ? props.files.map((item, index) =>
                   renderRow(item, index)
                 )
                 : null
@@ -2554,6 +2622,14 @@ const CreateMemory = (props: Props) => {
                 underlayColor={Colors.transparent}
                 style={Styles.jumptoCancelSubContainerStyle}
                 onPress={() => {
+                  if (optionToShow == 'date') {
+                    setYearNew({ ...year })
+                    setMonthNew({ ...month })
+                    setDayNew({ ...day })
+                    if (month.value.length < 3) {
+                      setShowDay(true)
+                    }
+                  }
                   optionsActionSheetRef?.current?.hide()
                 }}>
                 <>
@@ -2582,10 +2658,10 @@ const CreateMemory = (props: Props) => {
                     <TextInput
                       style={styles.textInputBoxStyle}
                       onChangeText={(text: any) => {
-                        setYear({ ...year, value: text, error: false })
+                        setYearNew({ ...year, value: text, error: false })
                       }}
                       placeholderTextColor={Colors.newTextColor}
-                      value={year.value}
+                      value={yearNew.value}
                       maxLength={4}
                       placeholder="YYYY"
                       returnKeyType="next"
@@ -2593,7 +2669,7 @@ const CreateMemory = (props: Props) => {
                     />
 
                     {
-                      year.error &&
+                      yearNew.error &&
                       <Text style={styles.errorMessageStyle}>
                         {`Please enter valid year`}
                       </Text>
@@ -2614,28 +2690,30 @@ const CreateMemory = (props: Props) => {
                       onChangeText={(text: any) => {
                         let validAlphabatesReg = /^[a-zA-Z]*$/;
 
-                        setMonth({ ...month, value: text, error: false })
+                        setMonthNew({ ...monthNew, value: text, error: false })
                         if (text.length >= 3) {
                           setShowDay(false)
+                          setDayNew({ value: '', error: false })
                         }
                         else if (validAlphabatesReg.test(text)) {
+                          setDayNew({ value: '', error: false })
                           setShowDay(false)
                         }
                         else {
                           setShowDay(true)
                         }
                       }}
-                      value={month.value}
+                      value={monthNew.value}
                       placeholderTextColor={Colors.newTextColor}
                       maxLength={12}
-                      placeholder="Month or Season"
+                      placeholder="Month(MM) or Season"
                       returnKeyType="done"
                     // keyboardType="number-pad"
                     />
                     {
-                      month.error &&
+                      monthNew.error &&
                       <Text style={styles.errorMessageStyle}>
-                        {`Please enter valid month`}
+                        {`Please enter valid month or season`}
                       </Text>
                     }
 
@@ -2651,7 +2729,7 @@ const CreateMemory = (props: Props) => {
                       <TextInput
                         style={styles.textInputBoxStyle}
                         onChangeText={(text: any) => {
-                          setDay({ ...day, value: text, error: false })
+                          setDayNew({ ...dayNew, value: text, error: false })
                         }}
                         value={day.value}
                         maxLength={4}
@@ -2661,7 +2739,7 @@ const CreateMemory = (props: Props) => {
                         keyboardType="number-pad"
                       />
                       {
-                        day.error &&
+                        dayNew.error &&
                         <Text style={styles.errorMessageStyle}>
                           {`Please enter valid date`}
                         </Text>
@@ -2896,6 +2974,7 @@ const CreateMemory = (props: Props) => {
 const mapState = (state: { [x: string]: any }) => {
   return {
     locationList: state.MemoryInitials.locationList,
+    files: state.MemoryInitials.files,
     tagsList: state.MemoryInitials.tags,
     whoElseWhereThereList: state.MemoryInitials.whoElseWhereThere,
     collection: state.MemoryInitials.collection,

@@ -734,6 +734,7 @@ export const onActionItemClicked = async (
   index: number,
   data: any,
   navigation: any,
+  CB?: any,
 ) => {
   // showConsoleLog(ConsoleType.ERROR,JSON.stringify(data));
   switch (data.actionType) {
@@ -787,15 +788,57 @@ export const onActionItemClicked = async (
             {
               text: 'Yes',
               style: 'default',
-              onPress: () => {
+              onPress: async () => {
                 if (Utility.isInternetConnected) {
                   //loaderHandler.showLoader();
-                  MemoryAction(
-                    data.memoryType,
-                    data.nid,
-                    data.actionType,
-                    data.uid,
-                  );
+
+                  let details: any = {
+                    action_type: data.actionType,
+                    type: data.uid ? 'user' : data.memoryType,
+                    id: data.uid ? data.uid : data.nid,
+                  };
+
+                  if (data.actionType == MemoryActionKeys.blockAndReportKey) {
+                    details = { ...details, memory_id: data.nid };
+                  }
+
+                  let userdata = await Storage.get('userData');
+
+                  let response = await newMemoryService(
+                    `https://${Account.selectedData().instanceURL}/api/actions/memory`,
+                    [
+                      {
+                        'X-CSRF-TOKEN': userdata.userAuthToken,
+                        'Content-Type': 'application/json',
+                      },
+                      { configurationTimestamp: '0', details },
+                    ],
+                    response => {
+                      if (response.ResponseCode == 200) {
+                        if (response.Status) {
+                          navigation.replace('dashBoard');
+                        }
+                        // _onEditMemory(data.nid, navigation);
+                      } else {
+                        //loaderHandler.hideLoader();
+                      }
+                    }
+                  )
+                  // MemoryAction(
+                  //   data.memoryType,
+                  //   data.nid,
+                  //   data.actionType,
+                  //   data.uid,
+                  //   undefined,
+                  //   undefined,
+                  //   resp => {
+                  //     console.log(JSON.stringify(navigation))
+                  //     if (resp.Status) {
+                  //       navigation.replace('dashboard')
+                  //     }
+                  //       // CB(resp)
+                  //   }
+                  // );
                 } else {
                   No_Internet_Warning();
                 }
@@ -914,7 +957,18 @@ export const MemoryActionsList = (item: any) => {
         break;
     }
   }
-  return memoryActions;
+
+  let temp = [...memoryActions];
+  let tempmemoryActions:any = [];
+
+  let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
+  temp = temp.filter(item => item.text.toLowerCase() != 'hide')
+  if (hideObj.length) {
+    tempmemoryActions = [...hideObj,...temp]
+  }
+  console.warn("tem?.actions_on_memory >",JSON.stringify(tempmemoryActions))
+
+  return tempmemoryActions;
 };
 
 export const renderSeparator = () => {
@@ -1267,7 +1321,16 @@ const MemoryActionsListArray = (item: any) => {
     }
   }
 
-  return memoryActions;
+  let temp = [...memoryActions];
+  let tempmemoryActions:any = [];
+
+  let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
+  temp = temp.filter(item => item.text.toLowerCase() != 'hide')
+  if (hideObj.length) {
+    tempmemoryActions = [...hideObj,...temp]
+  }
+  console.warn("tem?.actions_on_memory >",JSON.stringify(tempmemoryActions))
+  return tempmemoryActions;
 };
 
 export const MemoryBasicDetails = (

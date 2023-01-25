@@ -69,10 +69,10 @@ export default class RegFirstStep extends Component<Props> {
   regScroll: any = React.createRef();
   constructor(props: Props) {
     super(props);
-    this.checkProfile = EventManager.addListener(
-      kCheckUserProfile,
-      this.checkUserProfile,
-    );
+    // this.checkProfile = EventManager.addListener(
+    //   kCheckUserProfile,
+    //   this.checkUserProfile,
+    // );
     this.submitReg = EventManager.addListener(
       kSubmitFormItem,
       this.submitRegisterResponse,
@@ -131,7 +131,7 @@ export default class RegFirstStep extends Component<Props> {
   }
 
   componentWillUnmount() {
-    this.checkProfile.removeListener();
+    // this.checkProfile.removeListener();
     this.submitReg.removeListener();
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
@@ -171,17 +171,21 @@ export default class RegFirstStep extends Component<Props> {
     isRegistered: any,
     personalInfo?: any,
   ) => {
-    this.props.hideLoader()
     if (success) {
       let role = getValue(personalInfo, ['role']);
+      
+      console.log(isRegistered, JSON.stringify(personalInfo))
+
       if (isRegistered && role == 'Alumni') {
+        this.props.hideLoader();
         if (this.props.isCuebackRegistration) {
           if (this.props.navBar) {
             Alert.alert(isRegistered);
             this.props.navBar.onRegFinalCallBack(
               `An account with the email already exists, please login to continue`,
             );
-          } else {
+          } 
+          else {
             Alert.alert(isRegistered);
             this.navBar.onRegFinalCallBack(
               `An account with the email already exists, please login to continue`,
@@ -193,11 +197,13 @@ export default class RegFirstStep extends Component<Props> {
           this.props.navigation.replace('userRegStatus');
         }
         // Actions.userRegStatus({ isAlreadyRegistered: true, registeredSuccess: false, userDetails: this.submitForm });
-      } else {
+      }
+      else {
         //Call Register request if profile doesn't exists or is ghost
         submitRegistration(this.submitForm);
       }
     } else {
+      this.props.hideLoader();
       this.showErrorMessage(
         true,
         typeof isRegistered == 'string' ? isRegistered : ERROR_MESSAGE,
@@ -214,20 +220,24 @@ export default class RegFirstStep extends Component<Props> {
     formError: any,
   ) => {
     if (success) {
+      this.props.hideLoader();
       if (this.props.isCuebackRegistration) {
+        console.log("reg res : ", JSON.stringify(message))
         if (this.props.navBar) {
           Alert.alert(message);
-          this.props.navBar.onRegFinalCallBack(
+          this.props.navBar._show(
             `User registered successfully. Please verify link on email and login to continue`,
           );
         } else {
           Alert.alert(message);
-          this.navBar.onRegFinalCallBack(
+          this.navBar._show(
             `User registered successfully. Please verify link on email and login to continue`,
           );
         }
+        console.log(this.props.navigation,JSON.stringify(this.props.navigation))
+        this.props.navigation.navigate('login');
       } else {
-        this.props.navigation.replace('userRegStatus', {
+        this.props.navigation.navigate('userRegStatus', {
           isAlreadyRegistered: false,
           registeredSuccess: true,
           message,
@@ -890,7 +900,7 @@ export default class RegFirstStep extends Component<Props> {
             :
             <TouchableHighlight
               underlayColor={"#ffffff00"}
-              onPress={() => { this.props.showTerms()}}
+              onPress={() => { this.props.showTerms() }}
             >
               <View style={[Styles.termHeader, { margin: 0, justifyContent: 'center' }]} >
                 <Text style={Styles.termStyle}>
@@ -1293,6 +1303,6 @@ export default class RegFirstStep extends Component<Props> {
     checkUserRegistration({
       ...obj,
       configurationTimestamp: submitForm['configurationTimestamp'],
-    });
+    },resp =>  this.checkUserProfile(resp.success,resp.isRegistered,resp.personalInfo));
   };
 }

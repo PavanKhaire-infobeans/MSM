@@ -431,7 +431,8 @@ export const CueBackInsatance = isCueBackInstance
     InstanceID: '2002',
     InstanceName: 'QA Public',
     //InstanceURL: "qa-public.cueback.com",
-    InstanceURL: 'public.cuebackqa.com',
+    InstanceURL: 'cuebackqa.com',
+    // InstanceURL: 'public.cuebackqa.com',
     InstanceImageURL: null,
     is_fake: 0,
   };

@@ -22,6 +22,7 @@ export const SaveWhoCanSeeIds = 'saveWhoCanSeeIds';
 export const SaveCollaboratorNotes = 'saveCollaboratorsNotes';
 export const SaveDescription = 'saveDescription';
 export const EditContent = 'editContent';
+export const FileAttachmentData = 'fileAttachmentData';
 export const NavigateToDashboard = 'navigateToDashboard';
 
 type Payload = { type: string; payload: any };

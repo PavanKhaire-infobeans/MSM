@@ -1692,6 +1692,7 @@ class MemoryDetails extends React.Component<Props, State> {
   _onEditMemory = (nid?: any) => {
     // event = event.nativeEvent;
     // this.getDraftDetails(event)
+    this.props.showLoader(false);
     if (Utility.isInternetConnected) {
       //loaderHandler.showLoader();
       this.props.showLoader(true);

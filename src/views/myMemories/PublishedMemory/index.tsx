@@ -932,7 +932,17 @@ export const MemoryActionsList = (item: any) => {
         break;
     }
   }
-  return memoryActions;
+  
+  let temp = [...memoryActions];
+  let tempmemoryActions:any = [];
+
+  let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
+  temp = temp.filter(item => item.text.toLowerCase() != 'hide')
+  if (hideObj.length) {
+    tempmemoryActions = [...hideObj,...temp]
+  }
+  console.warn("tem?.actions_on_memory >",JSON.stringify(tempmemoryActions))
+  return tempmemoryActions;
 };
 
 export const renderSeparator = () => {

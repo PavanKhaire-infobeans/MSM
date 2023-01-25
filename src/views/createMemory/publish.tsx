@@ -339,8 +339,6 @@ const PublishMemoryDraft = (props) => {
             rightText={'Delete\nDraft'}
             cancleText={'Back'}
             saveValues={() => {
-              props.showLoader(true);
-              props.loaderText('Deleting...');
               props.route.params.delete();
             }}
             rightIcon={true}
@@ -356,7 +354,7 @@ const PublishMemoryDraft = (props) => {
           <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true} style={[Styles.imagebuttonStyle, { flex: 1 }]}>
             {commonListComponent(
               'Date',
-              `${props.date?.day}/ ${props.date?.month}/ ${props.date?.year}`,
+              !isNaN(parseInt((props.date?.month))) ? `${props.date?.day}/ ${props.date?.month}/ ${props.date?.year}` : `${props.date?.month} ${props.date?.year}`,
               'Add Date',
               () => props.navigation.goBack(),
               true
@@ -416,11 +414,11 @@ const PublishMemoryDraft = (props) => {
               </View>
             </TouchableWithoutFeedback>
           </ScrollView>
-          {showMenu && (
+          {/* {showMenu && (
             <View
               style={[Styles.renderLoaderStyle, { top: 0 }]}
               onStartShouldSetResponder={() => true}
-              onResponderStart={() => setShowMenu(false)}>
+              onResponderStart={() => setShowMenu(false)}> */}
               {/* <View style={Styles.sideMenu}>
                   <TouchableOpacity
                     style={Styles.titleContainer}
@@ -434,10 +432,10 @@ const PublishMemoryDraft = (props) => {
                     <Text style={Styles.deleteTextStyle}>Delete Draft...</Text>
                   </TouchableOpacity>
                 </View> */}
-            </View>
-          )}
+            {/* </View>
+          )} */}
         </View>
-        {showGuideOverlay && (
+        {/* {showGuideOverlay && (
           <Modal transparent>
             <SafeAreaView style={Styles.memoryDraftContainer}>
               <Animated.View
@@ -484,7 +482,7 @@ const PublishMemoryDraft = (props) => {
               </Animated.View>
             </SafeAreaView>
           </Modal>
-        )}
+        )} */}
       </SafeAreaView>
     </View>
   );

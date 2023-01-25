@@ -78,7 +78,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
 
   //User state
   state = {
-    _isRemeberMe: false,
+    _isRemeberMe: true,
     username: '',
     password: '',
     userNameError: {
@@ -313,6 +313,13 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     });
   }
 
+  showLoaderData = () => {
+    this.setState({
+      showLoaderValue: true,
+      loaderTextValue: 'Logging In...'
+    })
+  }
+
   selectedCommunity: Account = new Account();
 
   render() {
@@ -456,7 +463,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                     },
                   ]}>
                   <Image source={this.state._isRemeberMe ? checkbox_tick : checkbox} />
-                 <View style={{width:8}}/>
+                  <View style={{ width: 8 }} />
                   <Text
                     style={styles.forgotPasswordText}>
                     Remember Me
@@ -468,12 +475,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
               <TouchableWithoutFeedback
                 // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
                 onPress={() => {
-                  this.setState({
-                    showLoaderValue: true,
-                    loaderTextValue: 'Loging In...'
-                  }, () => {
-                    this.controller.onClick()
-                  })
+                  this.controller.onClick();
                 }}>
                 <View
                   style={[

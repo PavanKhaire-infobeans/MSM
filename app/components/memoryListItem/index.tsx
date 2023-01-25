@@ -85,7 +85,6 @@ export default class MemoryListItem extends React.Component<Props, State> {
       actionType: MemoryActionKeys.shareActionKey,
       uid: item?.user_details?.uid,
     });
-    
     for (var value in item?.actions_on_memory) {
       i += 1;
       switch (value) {
@@ -200,7 +199,17 @@ export default class MemoryListItem extends React.Component<Props, State> {
       }
     }
    
-    return memoryActions;
+    let temp = [...memoryActions];
+    let tempmemoryActions:any = [];
+
+    let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
+    temp = temp.filter(item => item.text.toLowerCase() != 'hide')
+    if (hideObj.length) {
+      tempmemoryActions = [...hideObj,...temp]
+    }
+    console.warn("tem?.actions_on_memory >",JSON.stringify(tempmemoryActions))
+   
+    return tempmemoryActions;
   };
 
   render() {

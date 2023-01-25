@@ -244,6 +244,7 @@ export class LoginController implements LoginControllerProtocol {
 
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
+          this.view.showLoaderData();
           this.view.props.fetchLoginAccounts({
             emailId: username,
             password: password,

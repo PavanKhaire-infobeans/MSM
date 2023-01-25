@@ -40,7 +40,7 @@ type Props = {
 
 class WhoCanSee extends React.Component<Props, State> {
   state: State = {
-    selectedItemIndex: 2,
+    selectedItemIndex: 0,
     showError: false,
   };
 

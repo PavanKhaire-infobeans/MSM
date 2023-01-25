@@ -80,10 +80,10 @@ const WriteTabs = props => {
       kNotificationIndicator,
       changeNotification,
     );
-    const memoryActionsListener = EventManager.addListener(
-      kMemoryActionPerformedOnDashboard,
-      memoryActionCallBack,
-    );
+    // const memoryActionsListener = EventManager.addListener(
+    //   kMemoryActionPerformedOnDashboard,
+    //   memoryActionCallBack,
+    // );
     // const memoryFromPrompt = EventManager.addListener(
     //   promptIdListener,
     //   promptToMemoryCallBack,
@@ -109,7 +109,7 @@ const WriteTabs = props => {
       // notificationListener.removeListener();
       foregroundNotification.removeListener();
       backgroundNotification.removeListener();
-      memoryActionsListener.removeListener();
+      // memoryActionsListener.removeListener();
       eventListener.removeListener();
       // memoryFromPrompt.removeListener();
     };

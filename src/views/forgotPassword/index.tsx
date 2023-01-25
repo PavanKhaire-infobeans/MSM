@@ -302,7 +302,8 @@ const ForgotPassword = (props: Props) => {
                       style={[styles.keyboardAvoiding, {
                         // paddingBottom: keyboardHeight + 56
                       }]}
-                      behavior="padding">
+                      // behavior="padding"
+                      >
                       {
                         state.isRequestSubmitted ?
                           <View style={{ height: 100 }} />

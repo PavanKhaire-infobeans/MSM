@@ -143,7 +143,7 @@ const Styles = EStyleSheet.create({
     // borderBottomWidth: 1,
   },
   collectionListContainer:{ 
-    // minHeight: 24, 
+    marginHorizontal: 24, 
     flex: 1 
   },
   collectionListButtonStyle:{
