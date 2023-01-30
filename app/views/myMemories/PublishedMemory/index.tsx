@@ -959,14 +959,16 @@ export const MemoryActionsList = (item: any) => {
   }
 
   let temp = [...memoryActions];
-  let tempmemoryActions:any = [];
+  let tempmemoryActions: any = [];
 
   let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
   temp = temp.filter(item => item.text.toLowerCase() != 'hide')
   if (hideObj.length) {
-    tempmemoryActions = [...hideObj,...temp]
+    tempmemoryActions = [...hideObj, ...temp]
   }
-  console.warn("tem?.actions_on_memory >",JSON.stringify(tempmemoryActions))
+  else {
+    tempmemoryActions = [...temp]
+  }
 
   return tempmemoryActions;
 };
@@ -1322,14 +1324,16 @@ const MemoryActionsListArray = (item: any) => {
   }
 
   let temp = [...memoryActions];
-  let tempmemoryActions:any = [];
+  let tempmemoryActions: any = [];
 
   let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
   temp = temp.filter(item => item.text.toLowerCase() != 'hide')
   if (hideObj.length) {
-    tempmemoryActions = [...hideObj,...temp]
+    tempmemoryActions = [...hideObj, ...temp]
   }
-  console.warn("tem?.actions_on_memory >",JSON.stringify(tempmemoryActions))
+  else {
+    tempmemoryActions = [...temp]
+  }
   return tempmemoryActions;
 };
 

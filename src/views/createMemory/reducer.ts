@@ -78,11 +78,6 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
           action.payload.memory_date = {"day": new Date().getUTCDate().toString(), "month": new Date().getUTCMonth()+1, "year": new Date().getUTCFullYear()?.toString()};
         }
       }
-      else if ((parseInt(action.payload?.memory_date?.year) <= new Date().getUTCFullYear())) {
-        if ((parseInt(action.payload?.memory_date?.month) == (new Date().getUTCMonth()+1))&&(parseInt(action.payload?.memory_date?.day) > new Date().getUTCDate())) {
-          action.payload.memory_date = {"day": new Date().getUTCDate().toString(), "month": new Date().getUTCMonth()+1, "year": new Date().getUTCFullYear()?.toString()};
-        }
-      }
 
       newState.date = action.payload.memory_date;
       // {

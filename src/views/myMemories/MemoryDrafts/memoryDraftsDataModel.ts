@@ -112,13 +112,13 @@ export class MemoryDraftsDataModel {
       parseInt(getDetails(draftDetails, ['memory_date'])) * 1000,
     );
     if (season && season.trim().length > 0) {
-      date.year = memoryDate.getFullYear();
+      date.year = memoryDate.getUTCFullYear();
       date.month = season.charAt(0).toUpperCase() + season.slice(1);
     } else {
-      date.year = memoryDate.getFullYear();
-      date.month = memoryDate.getMonth()+1;
+      date.year = memoryDate.getUTCFullYear();
+      date.month = memoryDate.getUTCMonth()+1;
       // date.month = months[memoryDate.getMonth()].name;
-      date.day = memoryDate.getDate();
+      date.day = memoryDate.getUTCDate();
     }
     let tags = getDetails(draftDetails, ['memory_tags']).map(
       (element: any, index: any) => {

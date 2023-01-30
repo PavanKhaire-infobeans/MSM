@@ -941,7 +941,9 @@ export const MemoryActionsList = (item: any) => {
   if (hideObj.length) {
     tempmemoryActions = [...hideObj,...temp]
   }
-  console.warn("tem?.actions_on_memory >",JSON.stringify(tempmemoryActions))
+  else {
+    tempmemoryActions = [...temp]
+  }
   return tempmemoryActions;
 };
 

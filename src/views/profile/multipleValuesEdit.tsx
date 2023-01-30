@@ -466,6 +466,7 @@ const MutilpleValueEdit = (props: Props) => {
                         ? ''
                         : default_value
                   }
+                  style={{marginBottom: 16,}}
                   keyboardType={keyboardBoardType}
                   onSubmitEditing={() => {
                     let nextRef = `${index + 1}`;
@@ -1007,6 +1008,7 @@ const MutilpleValueEdit = (props: Props) => {
         <NavigationHeaderSafeArea
           isWhite={true}
           rightText="Save"
+          showRightText={true}
           saveValues={() => saveProfileData()}
           heading={props.route.params.sectionHeading}
           cancelAction={() => {

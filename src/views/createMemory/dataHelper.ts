@@ -148,9 +148,9 @@ export class CreateMemoryHelper {
       for (let i = min; i <= max; i++) {
         if (i < 9) {
           if (i > limit) {
-            actions.push({ key: i, text: '0'+i.toString(), disabled: true });
+            actions.push({ key: i, text: '0' + i.toString(), disabled: true });
           } else {
-            actions.push({ key: i, text: '0'+i.toString() });
+            actions.push({ key: i, text: '0' + i.toString() });
           }
         } else {
           if (i > limit) {
@@ -159,7 +159,7 @@ export class CreateMemoryHelper {
             actions.push({ key: i, text: i.toString() });
           }
         }
-        
+
       }
     }
     return actions;
@@ -177,16 +177,28 @@ export const DefaultCreateMemoryObj = (
   isOwner: boolean,
 ) => {
   let details: any = {};
+  let validAlphabatesReg = /^[a-zA-Z]*$/;
+
   let description = "";//initialState.description.replace(/\n/g, '<br>');
   if (isOwner) {
+
+    let monthArray = MonthObj?.month;
+    if (validAlphabatesReg.test(initialState.date.month)) {
+      monthArray = monthArray?.filter(item => item.name.toLowerCase() === initialState.date.month.toLowerCase());
+    }
     details = {
       title: decode_utf8(initialState.title.trim()),
-      memory_date: initialState.date && initialState.date.year ? {
-        year: initialState.date.year,
-        month: initialState.date.month,
-        day: initialState.date.day != 'Day' ? !isNaN(parseInt(initialState.date.day)) ? parseInt(initialState.date.day).toString() : undefined : undefined,
-      } : undefined,
-      // {
+      memory_date: initialState.date && initialState.date.year ?
+        validAlphabatesReg.test(initialState.date.month) ? {
+          year: initialState.date.year,
+          season: monthArray&&monthArray[0]?.tid,
+          // day: initialState.date.day != 'Day' ? !isNaN(parseInt(initialState.date.day)) ? parseInt(initialState.date.day).toString() : undefined : undefined,
+        } :
+          {
+            year: initialState.date.year,
+            month: initialState.date.month,
+            day: initialState.date.day != 'Day' ? !isNaN(parseInt(initialState.date.day)) ? parseInt(initialState.date.day).toString() : undefined : undefined,
+          } : undefined,  // {
       //   year: initialState.date.year,
       //   month: initialState.date.month,
       //   day: initialState.date.day != 'Day' ? initialState.date.day : undefined,

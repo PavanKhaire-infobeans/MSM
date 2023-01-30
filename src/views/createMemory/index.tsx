@@ -433,6 +433,7 @@ const CreateMemory = (props: Props) => {
       draftDetails = new MemoryDraftsDataModel().getEditContentObject(
         draftDetails,
       );
+      console.log("draftDetails >",JSON.stringify(draftDetails))
       props.setEditContent(draftDetails);
       MonthObj.month.forEach((element: any, index: any) => {
         if (element.name == draftDetails.date.month) {
@@ -448,6 +449,8 @@ const CreateMemory = (props: Props) => {
       // 	// Alert.alert("Date error")
       // 	draftDetails.date.day = date.getDate();
       // }
+      let validAlphabatesReg = /^[a-zA-Z]*$/;
+
       let newMemoryDate = draftDetails.memory_date
         ? new Date(parseInt(draftDetails.memory_date) * 1000).getUTCDate() +
         '/' +
@@ -469,7 +472,17 @@ const CreateMemory = (props: Props) => {
         setYear({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() : '' })
         setYearNew({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() : '' })
       }
-      if (draftDetails.date.month) {
+      if (draftDetails.date.month && validAlphabatesReg.test(draftDetails.date.month)) {
+        setMonth({
+          ...month,
+          value: draftDetails.date.month
+        })
+        setMonthNew({
+          ...month,
+          value: draftDetails.date.month
+        })
+      }
+      else if (draftDetails.date.month ) {
         setMonth({
           ...month,
           value: draftDetails.date.month > 0 ? draftDetails.date.month < 10 ? '0' + JSON.stringify(draftDetails.date.month) : JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
@@ -1191,7 +1204,7 @@ const CreateMemory = (props: Props) => {
         year:
           year.value != ''
             ? year.value
-            : new Date().getUTCDate().toString(), //new Date(memory_date).getFullYear(),
+            : new Date().getUTCFullYear().toString(), //new Date(memory_date).getFullYear(),
         month:
           month.value != ''
             ? month.value.length > 2 ? month.value : parseInt(month.value)
@@ -1199,7 +1212,7 @@ const CreateMemory = (props: Props) => {
         day:
           day.value != ''
             ? day.value
-            : new Date().getUTCFullYear().toString(), // new Date(memory_date).getDate(),
+            : new Date().getUTCDate().toString(), // new Date(memory_date).getDate(),
       },
       location: { description: location.description, reference: locationText == location.description ? location.reference : '' },
       files: itemList,
@@ -1225,6 +1238,7 @@ const CreateMemory = (props: Props) => {
     //     day: day.value != 'Day' ? day.value : undefined,
     //   };
     // }
+    console.log(year, month, day,details)
 
     props.onInitialUpdate(details);
 
@@ -1431,7 +1445,6 @@ const CreateMemory = (props: Props) => {
   };
 
   const renderRow = (data: any, index: number) => {
-    console.log("index ??", index)
     // let index = data.index;
     // data = data.item;
     data.by = data.file_owner ? getUserName(data) : 'You';
@@ -2230,7 +2243,7 @@ const CreateMemory = (props: Props) => {
     );
   };
 
-  const validateDate = () => {
+  const validateDate = (yearNew,monthNew,dayNew) => {
 
     let yearactions = createMemoryHelper.getDateOptions(
       'year',
@@ -2251,6 +2264,7 @@ const CreateMemory = (props: Props) => {
     if (validNumberReg.test(monthNew?.value) || validAlphabatesReg.test(monthNew?.value)) {
       let val = monthNew?.value?.toLowerCase();
       let getMonthIsValid = monthactions.filter(item => (item.text.toLowerCase() === val) || (item.key && (item.key < 9 ? ('0' + item.key.toString().toLowerCase() === val) : item.key.toString().toLowerCase() === val)));
+      let monthData = monthactions.filter(item => (item.key < 9 ? (('0' + item.key.toString().toLowerCase()) === monthNew.value.toString().toLowerCase()) : item.key.toString().toLowerCase() == monthNew.value.toString().toLowerCase()));
       if (monthNew?.value?.length > 2) {
         if (monthactions && monthactions.length && getMonthIsValid.length && getMonthIsValid[0]?.disabled != true) {
           if (parseInt(yearNew.value) == new Date().getFullYear()) {
@@ -2288,34 +2302,31 @@ const CreateMemory = (props: Props) => {
           }
         }
       }
-      else if ((monthNew?.value?.length == 2) && parseInt(yearNew.value) <= new Date().getFullYear() && monthactions && monthactions.length && monthactions.filter(item => (item.key < 9 ? ('0' + item.key.toString().toLowerCase() === monthNew.value.toString().toLowerCase()) : item.key.toString().toLowerCase() === monthNew.value.toString().toLowerCase())).length && getMonthIsValid[0]?.disabled != true) {
+      else if ((monthNew?.value?.length == 2) && (parseInt(yearNew.value) <= new Date().getFullYear()) && monthactions && monthactions.length && monthData.length && monthData[0]?.disabled != true) {
         isValidMonth = true;
       }
     }
 
-    if (dayNew.value != '' && !dayNew.error) {
+    if (dayNew.value != '') {
       let dayactions = createMemoryHelper.getDateOptions(
         'day',
         yearNew.value,
         monthNew.value,
       );
-      let dayArray = dayactions.filter(item => item.text == day.value);
+      let dayArray = dayactions.filter(item => item.text.toString() === dayNew.value.toString());
       if (dayArray.length && (dayArray[0]?.disabled != true)) {
         isValidDate = true;
       }
       else if (validAlphabatesReg.test(monthNew?.value)) {
         isValidDate = true;
       }
+      console.log("dayactions kljkjkj >",JSON.stringify(dayArray),JSON.stringify(dayactions))
 
     }
 
     setYearNew({ ...yearNew, error: !isValidYear })
     setMonthNew({ ...monthNew, error: !isValidMonth })
-    if (dayNew.value.length > 2) {
-      setDayNew({ ...dayNew, value: '' })
-    } else {
-      setDayNew({ ...dayNew, error: !isValidDate })
-    }
+    setDayNew({ ...dayNew, error: !isValidDate })
     console.log(isValidMonth, isValidYear, isValidDate)
 
     if (isValidMonth && isValidYear && isValidDate) {
@@ -2324,11 +2335,7 @@ const CreateMemory = (props: Props) => {
 
       setYear({ ...yearNew, error: !isValidYear })
       setMonth({ ...monthNew, error: !isValidMonth })
-      if (dayNew.value.length > 2) {
-        setDayNew({ ...dayNew, value: '' })
-      } else {
-        setDayNew({ ...dayNew, error: !isValidDate })
-      }
+      setDay({ ...dayNew, error: !isValidDate })
       saveIntitalsForDate(yearNew, monthNew, dayNew)
     };
 
@@ -2658,7 +2665,7 @@ const CreateMemory = (props: Props) => {
                     <TextInput
                       style={styles.textInputBoxStyle}
                       onChangeText={(text: any) => {
-                        setYearNew({ ...year, value: text, error: false })
+                        setYearNew({ ...yearNew, value: text, error: false })
                       }}
                       placeholderTextColor={Colors.newTextColor}
                       value={yearNew.value}
@@ -2691,13 +2698,14 @@ const CreateMemory = (props: Props) => {
                         let validAlphabatesReg = /^[a-zA-Z]*$/;
 
                         setMonthNew({ ...monthNew, value: text, error: false })
-                        if (text.length >= 3) {
-                          setShowDay(false)
+                       
+                        if (validAlphabatesReg.test(text)) {
                           setDayNew({ value: '', error: false })
+                          setShowDay(false)
                         }
-                        else if (validAlphabatesReg.test(text)) {
-                          setDayNew({ value: '', error: false })
+                        else if (text.length >= 3) {
                           setShowDay(false)
+                          setDayNew({ value: '', error: false })
                         }
                         else {
                           setShowDay(true)
@@ -2731,7 +2739,7 @@ const CreateMemory = (props: Props) => {
                         onChangeText={(text: any) => {
                           setDayNew({ ...dayNew, value: text, error: false })
                         }}
-                        value={day.value}
+                        value={dayNew.value}
                         maxLength={4}
                         placeholder="DD"
                         placeholderTextColor={Colors.newTextColor}
@@ -2752,7 +2760,7 @@ const CreateMemory = (props: Props) => {
                   <TouchableWithoutFeedback
                     // disabled={(this.username != '' && this.password != '') ? false : true}
                     onPress={() => {
-                      validateDate();
+                      validateDate(yearNew,monthNew,dayNew);
                     }}>
                     <View
                       style={Styles.loginSSOButtonStyle}>
