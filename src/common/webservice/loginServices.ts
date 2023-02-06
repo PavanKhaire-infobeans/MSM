@@ -65,8 +65,8 @@ function configurations(url: string, userAuthToken: string,CB:any) {
   );
 }
 
-function SSOLoginFetch(url: string, param: any) {
-  return Webservice.postRequest(url, {checksum: 'Q3VlQmFjazIwMTgh'}, param);
+async function SSOLoginFetch(url: string, param: any) {
+  return await Webservice.postRequest(url, {checksum: 'Q3VlQmFjazIwMTgh'}, param);
 }
 
 export const SSOLogin = async (params: any) => {
@@ -85,9 +85,9 @@ export const SSOLogin = async (params: any) => {
           'Unable to process your login request',
         );
       });
-      showConsoleLog(ConsoleType.LOG,'sos google >',JSON.stringify(params),JSON.stringify(response));
 
-    if (response != undefined && response != null) {
+    if (response) {
+      showConsoleLog(ConsoleType.LOG,response);
       if (response.ResponseCode == 200) {
         EventManager.callBack(kSSOLogin, true, response);
       } else {

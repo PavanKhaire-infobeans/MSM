@@ -91,6 +91,7 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       break;
     case RecentTags:
       newState.recentTags = action.payload;
+      break;
     case SelectedLocation:
       newState.location = action.payload;
       break;

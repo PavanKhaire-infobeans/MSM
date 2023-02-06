@@ -77,7 +77,7 @@ const PublishMemoryDraft = (props) => {
       //  explosion.stop();
       setShowMenu(false);
     }
-  }, [isFocused])
+  }, [])
 
   const cancelAction = () => {
     Alert.alert('', `Are you sure you want to exit?`, [
@@ -113,6 +113,7 @@ const PublishMemoryDraft = (props) => {
     onPressCallback: any,
     isRequired?: boolean
   ) => {
+    console.log("rrrr >",value, title ,getText(title, value),  props.location?.description)
     return (
       <TouchableHighlight
         key={value?.length > 0 ? getText(title, value) : placeholder}
@@ -362,7 +363,7 @@ const PublishMemoryDraft = (props) => {
             )}
             {commonListComponent(
               'Location',
-              props.location?.description,
+              props.location?.description? props.location?.description:'',
               'Add location...',
               () => props.navigation.goBack(),
               true

@@ -348,8 +348,14 @@ class Prologue extends Component<Props> {
                 null
             }
             <View style={{ height: 0, width: 0 }}>
-            {/* ref={instance => { this.loginRef = instance; }} */}
-              <Login loginRef={click => this.loginRef = click} navBar={this} isLoginUp={this.state.isLoginUp} />
+              {/* ref={instance => { this.loginRef = instance; }} */}
+              <Login loginRef={click => this.loginRef = click} navigation={this.props.navigation} navBar={this}
+                showErr={(message) => {
+                  this.messageRef._show({ message, color: Colors.ErrorColor });
+                  setTimeout(() => {
+                    this.messageRef && this.messageRef._hide();
+                  }, 4000);
+                }} isLoginUp={this.state.isLoginUp} />
             </View>
 
             <LinearGradient
@@ -361,6 +367,8 @@ class Prologue extends Component<Props> {
               colors={this.state.isRegistrationOpen ? ["#ffffff", "#ffffff"] : ['#EDD0ED', '#F2E5E7', '#D1E6FE']}
               style={Styles.findCommunityContainer}>
               <SafeAreaView style={Styles.flexContainer}>
+                <MessageDialogue ref={(ref: any) => (this.messageRef = ref)} />
+
                 {/*<RegistrationBackground/>*/}
                 {/* <NavigationHeaderSafeArea height={0} ref={(ref)=> this.navBar = ref} showCommunity={false} cancelAction={()=> Actions.pop()} 
                                       hideClose={true} showRightText={false} isWhite={false}/>	 */}
@@ -481,12 +489,7 @@ class Prologue extends Component<Props> {
                           <TouchableOpacity
                             activeOpacity={1}
                             onPress={() => {
-                              // EventManager.callBack(
-                              //   kRegSignUp,
-                              //   loginType.googleLogin,
-                              // );
-                              this.loginRef(loginType.googleLogin)
-                              // .regSignUpListener(loginType.googleLogin)
+                              EventManager.callBack(kRegSignUp, loginType.googleLogin)
                             }}>
                             <View style={Styles.loginSSOButtonStyle}>
                               <Image source={google} />
@@ -636,7 +639,6 @@ class Prologue extends Component<Props> {
                 {/* {(this.state.isLoginDrawerOpen || this.state.isSearchDrawerOpen || this.state.isRegistrationOpen || this.props.showHeader) && this.prologueHeader()} */}
                 {/* <View style={[]}>
 				</View> */}
-                <MessageDialogue ref={(ref: any) => (this.messageRef = ref)} />
               </SafeAreaView>
             </LinearGradient>
           </View>

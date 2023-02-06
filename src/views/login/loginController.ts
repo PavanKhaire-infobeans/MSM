@@ -131,16 +131,16 @@ export class LoginController implements LoginControllerProtocol {
       );
       // this.view.props.clearDashboard();
       setTimeout(() => {
-        this.view.props.navigation.reset({
-          index: 0,
-          routes: [{ name: 'dashBoard' }]
-        })
+        // this.view.props.navigation.reset({
+        //   index: 0,
+        //   routes: [{ name: 'dashBoard' }]
+        // })
         //loaderHandler.hideLoader();
         //this.view.props.showLoader(false);
       //this.view.props.loaderText('Loading...');
 
       }, 100);
-      this.view.props.clean();
+      // this.view.props.clean();
     } else {
       //loaderHandler.hideLoader();
       //this.view.props.showLoader(false);
@@ -158,10 +158,7 @@ export class LoginController implements LoginControllerProtocol {
       await GoogleSignin.hasPlayServices();
       userInfo = await GoogleSignin.signIn();
       let params = {};
-      //loaderHandler.showLoader();
-      ////this.view.props.showLoader(true);
-      //this.view.props.loaderText('Loading...');
-
+      loaderHandler.showLoader();
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
           params = {

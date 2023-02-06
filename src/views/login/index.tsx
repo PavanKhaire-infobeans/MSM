@@ -198,8 +198,6 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       'showMessage',
       this._show,
     );
-
-    this.props.loginRef(this.regSignUpListener);
     
     LoginStore.listAllAccounts()
       .then((resp: any) => {
@@ -294,6 +292,9 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     let height = 0;
     if (show) {
       // height = 70;
+      if (this.props.showErr) {
+        this.props.showErr(message)
+      }
       this.messageRef._show({ message, color: Colors.ErrorColor });
       setTimeout(() => {
         this.messageRef && this.messageRef._hide();
@@ -313,8 +314,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       this.showErrorMessage(false);
       this.keyboardDidShowListener.remove();
       this.keyboardDidHideListener.remove();
-      this.appleLoginCallBack.removeListener();
-      DeviceEventEmitter.removeAllListeners('AppleLoginResult');
+      // this.appleLoginCallBack.removeListener();
+      // DeviceEventEmitter.removeAllListeners('AppleLoginResult');
     });
   }
 
