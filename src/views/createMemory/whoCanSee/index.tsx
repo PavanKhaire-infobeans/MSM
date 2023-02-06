@@ -130,10 +130,9 @@ class WhoCanSee extends React.Component<Props, State> {
             />
             <View style={Styles.container}>
               <Text style={Styles.shareOptionsStyle}>{item.item}</Text>
-
             </View>
           </View>
-          {Object['keys'](ShareOptions)[item.index] === 'custom' && (
+          {Object['keys'](ShareOptions)[item.index] === 'custom' && item.index == this.state.selectedItemIndex && (
             <View>
               <TouchableHighlight
                 onPress={() => this.whoCanSeeView(item)}

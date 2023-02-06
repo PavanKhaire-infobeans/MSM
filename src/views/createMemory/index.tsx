@@ -1,6 +1,7 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  AppState,
   FlatList,
   Image,
   Keyboard,
@@ -126,6 +127,7 @@ import Styles from './styles';
 import BusyIndicator from '../../common/component/busyindicator';
 import TextField from '../../common/component/textField';
 import SearchBar from '../../common/component/SearchBar';
+import { useIsFocused } from '@react-navigation/native';
 
 export const createNew = 'Create New';
 export const editDraft = 'Edit Draft';
@@ -280,7 +282,7 @@ const CreateMemory = (props: Props) => {
     value: '',//currentDate.getDate(),
     error: false,
   })
-
+  const [doNotReload, setDoNotReload] = useState(false)
   const [memory_date, setMemoryDate] = useState('')
   const [description, setDescription] = useState('')
   const [dateError, setDateError] = useState('')
@@ -315,44 +317,12 @@ const CreateMemory = (props: Props) => {
   const [optionToShow, setOptionToShow] = useState('')
 
   let isEdit: boolean = false;
+  let isFocused = useIsFocused();
   // filePathsToUpload: string[];
 
   let filesToUpdate: Array<any> = [];
   let listener: EventManager;
   let backListner: EventManager;
-  let bottomPicker: React.RefObject<BottomPicker> = React.useRef<BottomPicker>();
-  let memoryCallback: EventManager;
-  let deleteDraftListener: EventManager;
-  let initialSaveManager: EventManager;
-  let updateFilesListener: EventManager;
-  let draftDetailsListener: EventManager;
-
-  // showHideMenuListener = EventManager.addListener(
-  //   kShowHideMenu,
-  //   showMenu,
-  // );
-  // saveDraftListener = EventManager.addListener(
-  //   kSaveDraft,
-  //   saveDraft,
-  // );
-  // memoryCallback = EventManager.addListener(
-  //   'createMemoryMainListener',
-  //   memorySaveCallback,
-  // );
-  // deleteDraftListener = EventManager.addListener(
-  //   kDeleteDraftCreateMemo,
-  //   deleteDraftCallback,
-  // );
-  // updateFilesListener = EventManager.addListener(
-  //   kFilesUpdated,
-  //   fileUpdateCallback,
-  // );
-  // draftDetailsListener = EventManager.addListener(
-  //   kDraftDetailsFetched,
-  //   draftDetailsCallBack,
-  // );
-
-
 
   const _keyboardDidShow = (e: any) => {
     setBottomBar(e.endCoordinates.height)
@@ -363,29 +333,7 @@ const CreateMemory = (props: Props) => {
   };
 
   const cancelAction = () => {
-    // Alert.alert('', `Are you sure you want to exit?`, [
-    //   {
-    //     text: 'No',
-    //     style: 'cancel',
-    //     onPress: () => { },
-    //   },
-    //   {
-    //     text: 'Yes',
-    //     style: 'default',
-    //     onPress: () => {
-    //       EventManager.callBack(kReloadDraft);
-    //       this.setState({ showMenu: false }, () => {
-    //         Keyboard.dismiss();
-    //         if (this.props.deepLinkBackClick) {
-    //           this.props.navigation.dashBoard();
-    //         } else {
-    //           this.props.navigation.goBack();
-    //         }
-    //       });
-    //     },
-    //   },
-    // ]);
-    // return ();
+
   };
 
 
@@ -422,7 +370,11 @@ const CreateMemory = (props: Props) => {
       //loaderHandler.showLoader();
       props.showLoader(true);
       props.loaderText('Loading...');
-      props.navigation.navigate('dashBoard');
+      // props.navigation.navigate('dashBoard');
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: 'dashBoard' }]
+      })
     } else {
       //ToastMessage('Unable to delete draft. Please try again later');
     }
@@ -433,7 +385,6 @@ const CreateMemory = (props: Props) => {
       draftDetails = new MemoryDraftsDataModel().getEditContentObject(
         draftDetails,
       );
-      console.log("draftDetails >",JSON.stringify(draftDetails))
       props.setEditContent(draftDetails);
       MonthObj.month.forEach((element: any, index: any) => {
         if (element.name == draftDetails.date.month) {
@@ -482,7 +433,7 @@ const CreateMemory = (props: Props) => {
           value: draftDetails.date.month
         })
       }
-      else if (draftDetails.date.month ) {
+      else if (draftDetails.date.month) {
         setMonth({
           ...month,
           value: draftDetails.date.month > 0 ? draftDetails.date.month < 10 ? '0' + JSON.stringify(draftDetails.date.month) : JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
@@ -530,16 +481,19 @@ const CreateMemory = (props: Props) => {
       // 		action_type: CollaboratorsAction.joinCollaboration})
       // }
       // //loaderHandler.hideLoader();
-    } else {
+    }
+    else {
       //loaderHandler.hideLoader();
-      props.showLoader(false);
-      props.loaderText('Loading...');
+
       //ToastMessage(draftDetails, Colors.ErrorColor);
     }
+    props.showLoader(false);
+    props.loaderText('Loading...');
   };
 
   const getData = async () => {
     let recentTag = { searchType: kRecentTags, searchTerm: '' };
+    console.log("props.route.params.editMode >", props.route.params.editMode)
     if (props.route.params.editMode) {
       //loaderHandler.showLoader('Loading...');
       props.showLoader(true);
@@ -611,32 +565,30 @@ const CreateMemory = (props: Props) => {
   useEffect(() => {
     props.resetAll();
     props.setCreateMemory(true);
-    // DefaultPreference.get('hide_memory_draft').then((value: any) => {
-    //   if (value == 'true') {
-    //     memoryDraftVisibility = false;
-    //   } else {
-    //     memoryDraftVisibility = true;
-    //   }
-    // });
 
     getData();
-    // // setEtherPadContent('set', decode_utf8(props.textTitle), props.padDetails.padId);
+
+    // setEtherPadContent('set', decode_utf8(props.textTitle), props.padDetails.padId);
 
     return () => {
       Keyboard.dismiss();
-      // props.resetLocation();
-      // showHideMenuListener.removeListener();
-      // saveDraftListener.removeListener();
-      // memoryCallback.removeListener();
-      // deleteDraftListener.removeListener();
-      // updateFilesListener.removeListener();
-      // draftDetailsListener.removeListener();
       backListner.removeListener();
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
 
     }
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      console.log("props.route.params >", JSON.stringify(props.route.params), doNotReload, (props.route.params?.isFromPrompt, props.route.params?.editPublsihedMemory, props.route.params?.editPublsihedMemory, props.route.params?.editMode))
+      if (!doNotReload && (props.route.params?.isFromPrompt || props.route.params?.editPublsihedMemory || props.route.params?.editPublsihedMemory || props.route.params?.editMode)) {
+        props.resetAll();
+        props.setCreateMemory(true);
+        getData();
+      }
+    }
+  }, [isFocused]);
 
 
   // };
@@ -655,9 +607,7 @@ const CreateMemory = (props: Props) => {
     // //loaderHandler.hideLoader();
     props.showLoader(false);
     props.loaderText('Loading...');
-    // showConsoleLog(ConsoleType.LOG,'dataaaaa : ', JSON.stringify(success), id, key);
     if (success) {
-      // EventManager.callBack('showConfetti');
       if (key == kPublish) {
         props.showAlertCall(true);
         props.showAlertCallData({
@@ -668,52 +618,15 @@ const CreateMemory = (props: Props) => {
         // props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
         props.navigation.replace('dashBoard');
-        // props.navigation.reset({
-        //   index: 0,
-        //   routes: [{ name: 'dashBoard' }],
-        // });
-        // Alert.alert(
-        //   'Memory published! 🎉',
-        //   `Nice work writing Shakespeare! Your new memory has been published!`,
-        //   [
-        //     {
-        //       text: 'Ok',
-        //       style: 'default',
-        //       onPress: () => {
-        //       },
-        //     },
-        //   ],
-        // );
 
-        // Actions.dashBoard();
       } else if (props.route.params.editPublsihedMemory) {
         props.showAlertCall(true);
         props.showAlertCallData({
           title: 'Memory saved',
           desc: `Your memory has been saved.`,
         });
-        // Actions.replace('writeTabs', {
-        //   showPublishedPopup: true,
-        //   title: 'Memory saved',
-        //   desc: `Your memory has been saved.`,
-        // });
-        // Alert.alert('Memory saved', `Your memory has been saved.`, [
-        //   {
-        //     text: 'Ok',
-        //     style: 'default',
-        //     onPress: () => {
 
-        //     },
-        //   },
-        // ]);
         Keyboard.dismiss();
-        // props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
-        // props.fetchMemoryList({ type: ListType.Timeline, isLoading: true });
-        // EventManager.callBack('memoryUpdateRecentListener');
-        // EventManager.callBack('memoryUpdateTimelineListener');
-        // EventManager.callBack('memoryUpdatePublishedListener');
-        // EventManager.callBack('memoryDetailsListener');
-        // props.navigation.replace('writeTabs');
         props.navigation.reset({
           index: 0,
           routes: [{ name: 'writeTabs' }]
@@ -733,33 +646,7 @@ const CreateMemory = (props: Props) => {
           title: 'New draft saved!',
           desc: `You can see your new draft added with the rest of your in-progress work now.`,
         });
-        // props.navigation.reset({
-        //   index: 0,
-        //   routes: [{
-        //     name: 'writeTabs', params: {
-        //       showPublishedPopup: true,
-        //       title: 'New draft saved!',
-        //       desc: `You can see your new draft added with the rest of your in-progress work now.`,
-        //     }
-        //   }]
-        // })
-        // Alert.alert(
-        //   'New draft saved!',
-        //   `You can see your new draft added with the rest of your in-progress work now.`,
-        //   [
-        //     {
-        //       text: 'Great!',
-        //       style: 'default',
-        //       onPress: () => {
-        //         // props.navigation.jump('memoriesDrafts');
-        //       },
-        //     },
-        //   ],
-        // );
-        // // props.navigation.writeTabs();
 
-        // props.navigation.goBack();
-        // EventManager.callBack(kReloadDraft);
       }
     } else {
       //loaderHandler.hideLoader();
@@ -878,45 +765,6 @@ const CreateMemory = (props: Props) => {
     return memoryDataModel;
   };
 
-  const addRemoveTags = () => {
-    hideMenu();
-    if (Utility.isInternetConnected) {
-      props.navigation.navigate('commonListCreateMemory', {
-        tag: kTags,
-        title: 'Memory Tags',
-        showRecent: true,
-        referenceList: props.tagsList,
-        placeholder: 'Add tags',
-      });
-    } else {
-      No_Internet_Warning();
-    }
-  };
-
-  const addToCollections = () => {
-    hideMenu();
-    if (Utility.isInternetConnected) {
-      props.navigation.navigate('collectionList');
-    } else {
-      No_Internet_Warning();
-    }
-  };
-
-  const whoElseWasthere = () => {
-    hideMenu();
-    if (Utility.isInternetConnected) {
-      props.navigation.navigate('commonListCreateMemory', {
-        tag: kWhoElseWhereThere,
-        title: 'Who else where there',
-        showRecent: false,
-        referenceList: props.whoElseWhereThereList,
-        placeholder: 'Search...',
-      });
-    } else {
-      No_Internet_Warning();
-    }
-  };
-
   const deleteDraft = () => {
     Alert.alert('Delete Draft?', `You wish to delete this Memory Draft ?`, [
       {
@@ -946,15 +794,6 @@ const CreateMemory = (props: Props) => {
         },
       },
     ]);
-  };
-
-  const whoCanSee = () => {
-    hideMenu();
-    if (Utility.isInternetConnected) {
-      props.navigation.navigate('whoCanSee');
-    } else {
-      No_Internet_Warning();
-    }
   };
 
   const saveDraft = () => {
@@ -1036,19 +875,19 @@ const CreateMemory = (props: Props) => {
   };
 
   /**Menu options for actions*/
-  const menuOptions: Array<menuOption> = [
-    { key: 1, title: 'Preview...', onPress: preview },
-    { key: 2, title: 'Who can see...', onPress: whoCanSee },
-    { key: 3, title: 'Add/Remove Tags...', onPress: addRemoveTags },
-    { key: 5, title: 'Who else was there...', onPress: whoElseWasthere },
-    { key: 4, title: 'Add to Collections...', onPress: addToCollections },
-    {
-      key: 6,
-      title: 'Delete Draft...',
-      onPress: deleteDraft,
-      color: Colors.NewRadColor,
-    },
-  ];
+  // const menuOptions: Array<menuOption> = [
+  //   { key: 1, title: 'Preview...', onPress: preview },
+  //   { key: 2, title: 'Who can see...', onPress: whoCanSee },
+  //   { key: 3, title: 'Add/Remove Tags...', onPress: addRemoveTags },
+  //   { key: 5, title: 'Who else was there...', onPress: whoElseWasthere },
+  //   { key: 4, title: 'Add to Collections...', onPress: addToCollections },
+  //   {
+  //     key: 6,
+  //     title: 'Delete Draft...',
+  //     onPress: deleteDraft,
+  //     color: Colors.NewRadColor,
+  //   },
+  // ];
 
   const fileUpdateCallback = (success: boolean, message: any, key: any) => {
     if (success) {
@@ -1143,15 +982,15 @@ const CreateMemory = (props: Props) => {
         year:
           year.value != ''
             ? year.value
-            : new Date().getUTCDate().toString(), //new Date(memory_date).getFullYear(),
+            : '',//new Date().getUTCDate().toString(), //new Date(memory_date).getFullYear(),
         month:
           month.value != ''
             ? month.value.length > 2 ? month.value : parseInt(month.value)
-            : new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
+            : '',//new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
         day:
           day.value != ''
             ? day.value
-            : new Date().getUTCFullYear().toString(), // new Date(memory_date).getDate(),
+            : '',//new Date().getUTCFullYear().toString(), // new Date(memory_date).getDate(),
       },
       location: { description: location.description, reference: locationText == location.description ? location.reference : '' },
       files: itemList,
@@ -1204,15 +1043,15 @@ const CreateMemory = (props: Props) => {
         year:
           year.value != ''
             ? year.value
-            : new Date().getUTCFullYear().toString(), //new Date(memory_date).getFullYear(),
+            : '',//new Date().getUTCFullYear().toString(), //new Date(memory_date).getFullYear(),
         month:
           month.value != ''
             ? month.value.length > 2 ? month.value : parseInt(month.value)
-            : new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
+            : '',//new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
         day:
           day.value != ''
             ? day.value
-            : new Date().getUTCDate().toString(), // new Date(memory_date).getDate(),
+            : '',//new Date().getUTCDate().toString(), // new Date(memory_date).getDate(),
       },
       location: { description: location.description, reference: locationText == location.description ? location.reference : '' },
       files: itemList,
@@ -1238,7 +1077,7 @@ const CreateMemory = (props: Props) => {
     //     day: day.value != 'Day' ? day.value : undefined,
     //   };
     // }
-    console.log(year, month, day,details)
+    console.log(year, month, day, details)
 
     props.onInitialUpdate(details);
 
@@ -1276,6 +1115,7 @@ const CreateMemory = (props: Props) => {
         mindPopID: 0,
         selectedItem: selectedItem ? selectedItem : null,
         hideDelete: true,
+        doNotReload: val => setDoNotReload(val),
         editRefresh: (file: any[]) => {
           Keyboard.dismiss();
           let fid = GenerateRandomID();
@@ -1440,6 +1280,7 @@ const CreateMemory = (props: Props) => {
     hideToolTip();
     props.navigation.navigate('fileDescription', {
       file: file,
+      doNotReload: val => setDoNotReload(val),
       done: updateFileContent,
     });
   };
@@ -1569,6 +1410,7 @@ const CreateMemory = (props: Props) => {
                         : file.thumb_uri,
                   },
                 ],
+                doNotReload: val => setDoNotReload(val),
                 hideDescription: true,
               })
             }
@@ -1587,7 +1429,10 @@ const CreateMemory = (props: Props) => {
           <TouchableHighlight
             underlayColor={'#ffffff33'}
             onPress={() =>
-              props.navigation.navigate('pdfViewer', { file: file })
+              props.navigation.navigate('pdfViewer', { 
+                file: file ,
+                doNotReload: val => setDoNotReload(val),
+              })
             }
             style={styles.fileHolderContainer}>
             <View
@@ -1980,6 +1825,7 @@ const CreateMemory = (props: Props) => {
                         props.navigation.navigate('etherPadEditing', {
                           title: title.trim(),
                           padDetails: padDetails,
+                          doNotReload: val => setDoNotReload(val),
                           updateContent: setEtherPadContent,
                           inviteCollaboratorFlow: inviteCollaboratorFlow,
                         })
@@ -2114,6 +1960,7 @@ const CreateMemory = (props: Props) => {
               else {
                 props.navigation.navigate('publishMemoryDraft', {
                   publishMemoryDraft: saveORPublish,
+                  doNotReload: val => setDoNotReload(val),
                   preview: preview,
                   delete: deleteDraft,
                 });
@@ -2206,7 +2053,7 @@ const CreateMemory = (props: Props) => {
                       : ' and '}
                 </Text>
               </Text>
-              {taggedCount > 0 && (
+              {/* {taggedCount > 0 && (
                 <TouchableOpacity
                   onPress={() =>
                     props.navigation.navigate('customListMemoryDetails', {
@@ -2226,7 +2073,7 @@ const CreateMemory = (props: Props) => {
                     {taggedCount > 1 ? ' others' : ' other'}
                   </Text>
                 </TouchableOpacity>
-              )}
+              )} */}
             </View>
             <Text style={[styles.ownerNameTextStyle, { paddingTop: 5 }]}>
               {month.value.name}{' '}
@@ -2243,7 +2090,7 @@ const CreateMemory = (props: Props) => {
     );
   };
 
-  const validateDate = (yearNew,monthNew,dayNew) => {
+  const validateDate = (yearNew, monthNew, dayNew) => {
 
     let yearactions = createMemoryHelper.getDateOptions(
       'year',
@@ -2263,8 +2110,8 @@ const CreateMemory = (props: Props) => {
     let validAlphabatesReg = /^[a-zA-Z]*$/;
     if (validNumberReg.test(monthNew?.value) || validAlphabatesReg.test(monthNew?.value)) {
       let val = monthNew?.value?.toLowerCase();
-      let getMonthIsValid = monthactions.filter(item => (item.text.toLowerCase() === val) || (item.key && (item.key < 9 ? ('0' + item.key.toString().toLowerCase() === val) : item.key.toString().toLowerCase() === val)));
-      let monthData = monthactions.filter(item => (item.key < 9 ? (('0' + item.key.toString().toLowerCase()) === monthNew.value.toString().toLowerCase()) : item.key.toString().toLowerCase() == monthNew.value.toString().toLowerCase()));
+      let getMonthIsValid = monthactions.filter(item => (item.text.toLowerCase() === val) || (item.key && (item.key <= 9 ? ('0' + item.key.toString().toLowerCase() === val) : item.key.toString().toLowerCase() === val)));
+      let monthData = monthactions.filter(item => (item.key <= 9 ? (('0' + item.key.toString().toLowerCase()) === monthNew.value.toString().toLowerCase()) : item.key.toString().toLowerCase() == monthNew.value.toString().toLowerCase()));
       if (monthNew?.value?.length > 2) {
         if (monthactions && monthactions.length && getMonthIsValid.length && getMonthIsValid[0]?.disabled != true) {
           if (parseInt(yearNew.value) == new Date().getFullYear()) {
@@ -2320,7 +2167,6 @@ const CreateMemory = (props: Props) => {
       else if (validAlphabatesReg.test(monthNew?.value)) {
         isValidDate = true;
       }
-      console.log("dayactions kljkjkj >",JSON.stringify(dayArray),JSON.stringify(dayactions))
 
     }
 
@@ -2698,7 +2544,7 @@ const CreateMemory = (props: Props) => {
                         let validAlphabatesReg = /^[a-zA-Z]*$/;
 
                         setMonthNew({ ...monthNew, value: text, error: false })
-                       
+
                         if (validAlphabatesReg.test(text)) {
                           setDayNew({ value: '', error: false })
                           setShowDay(false)
@@ -2760,7 +2606,7 @@ const CreateMemory = (props: Props) => {
                   <TouchableWithoutFeedback
                     // disabled={(this.username != '' && this.password != '') ? false : true}
                     onPress={() => {
-                      validateDate(yearNew,monthNew,dayNew);
+                      validateDate(yearNew, monthNew, dayNew);
                     }}>
                     <View
                       style={Styles.loginSSOButtonStyle}>

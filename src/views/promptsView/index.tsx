@@ -501,11 +501,10 @@ const PromptsView = (props: Props) => {
       {
         selectedIndex = id;
         //loaderHandler.showLoader('Creating Memory...');
-        props.showLoader(true);
-        props.loaderText('Creating Memory...');
         let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
         draftDetails.prompt_id = parseInt(id);
-
+        props.showLoader(true);
+        props.loaderText('Creating Memory...');
         let response: any = await CreateUpdateMemory(
           draftDetails,
           [],
@@ -529,6 +528,8 @@ const PromptsView = (props: Props) => {
   const promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
     if (success) {
       removeSelectedPrompt();
+      props.showLoader(false);
+      props.loaderText('Loading...');
       props.navigation.navigate('createMemory', {
         editMode: true,
         draftNid: draftDetails,

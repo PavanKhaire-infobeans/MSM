@@ -152,8 +152,8 @@ const TopicsFilter = (props: Props) => {
 
         <View style={Styles.iconSeparator}></View>
 
-        <View style={Styles.jumptoYearContainer}>
-          <Text style={[Styles.filterTextJumpto]}>
+        <View style={[Styles.jumptoYearContainer,{width:'100%'}]}>
+          <Text style={[Styles.filterTextJumpto,{width:'100%',textAlign:'center'}]}>
             {item.label}
           </Text>
         </View>

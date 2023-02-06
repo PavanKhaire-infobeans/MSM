@@ -1009,6 +1009,7 @@ const MutilpleValueEdit = (props: Props) => {
           isWhite={true}
           rightText="Save"
           showRightText={true}
+          multiValuesPage={true}
           saveValues={() => saveProfileData()}
           heading={props.route.params.sectionHeading}
           cancelAction={() => {
@@ -1062,8 +1063,7 @@ const MutilpleValueEdit = (props: Props) => {
           actions={state.actionSheet.list}
           onActionClick={onActionItemClicked.bind(this)}
         />
-      </SafeAreaView>
-      <BottomPicker
+        <BottomPicker
         ref={bottomPicker}
         onItemSelect={(selectedItem: ActionSheetItem) => {
           let fieldName = state.selectionData.fieldName;
@@ -1124,6 +1124,8 @@ const MutilpleValueEdit = (props: Props) => {
         }}
         multipleValuesComponent={true}
       />
+      </SafeAreaView>
+      
     </View>
   );
 

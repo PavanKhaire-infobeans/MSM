@@ -39,7 +39,8 @@ const Styles = EStyleSheet.create({
     textAlign: 'left' 
   },
   inputsContainer: {
-    height: (Utility.getDeviceHeight() * 0.75) - 20,
+    flex: 1,
+    height: '100%',//(Utility.getDeviceHeight() * 0.75) - 20,
     width: Utility.getDeviceWidth() - 48,
     justifyContent: 'space-between'
   },
@@ -50,7 +51,8 @@ const Styles = EStyleSheet.create({
   },
   buttonContainer:{
     width: Utility.getDeviceWidth() - 48,
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    marginBottom: 24,
   },
   loginTextStyle:{ 
     color: Colors.white, 

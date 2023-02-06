@@ -3,6 +3,7 @@ import {
   Alert,
   Animated,
   DeviceEventEmitter,
+  Easing,
   Image,
   Keyboard,
   SafeAreaView,
@@ -104,16 +105,18 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   startMoveOnYAxis = () => {
     Animated.timing(this.moveOnYAxis, {
       toValue: 1,
-      duration: 5,
+      duration: 500,
       useNativeDriver: true,
+      easing: Easing.out(Easing.poly(5))
     }).start();
   };
 
   startMoveDownYAxis = () => {
     Animated.timing(this.moveOnYAxis, {
       toValue: 0,
-      duration: 5,
+      duration: 500,
       useNativeDriver: true,
+      easing: Easing.out(Easing.poly(5))
     }).start();
   };
 
@@ -196,6 +199,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       this._show,
     );
 
+    this.props.loginRef(this.regSignUpListener);
+    
     LoginStore.listAllAccounts()
       .then((resp: any) => {
         let list = resp.rows.raw() as Array<UserData>;
@@ -328,8 +333,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       inputRange: [0, 0.5, 1],
       outputRange: [
         0,
-        -(this.state.keyboardHeight * 0.55),
-        -(this.state.keyboardHeight * 0.85),
+        -(this.state.keyboardHeight ),
+        -(this.state.keyboardHeight ),
       ],
     });
 
@@ -437,15 +442,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
               </TouchableHighlight>
             </View>
 
-            {/* <View
-                  // behavior={Platform.OS === "ios" ? "padding" : "height"}
-                  // keyboardVerticalOffset={60}
-                  style={{
-                    width: Utility.getDeviceWidth() - 48,
-                    marginLeft: 24,
-                    height: 380 - this.state.keyboardHeight
-                  }}> */}
-            <Animated.View style={[Styles.buttonContainer, animStyle]}>
+            <Animated.View style={[Styles.buttonContainer, animStyle,]}>
               <TouchableHighlight
                 underlayColor={'#ffffffff'}
                 style={styles.forgotPassword}
@@ -506,73 +503,9 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
               </TouchableWithoutFeedback>
             </Animated.View>
           </View>
-          {/** Sign In section */}
-          {/* <TouchableHighlight
-                  underlayColor={'#ffffffff'}
-                  style={styles.forgotPassword}
-                  onPress={() =>
-                    this.setState({ _isRemeberMe: !this.state._isRemeberMe })
-                  }>
-                  <View
-                    style={[
-                      styles.forgotPasswordContainer,
-                      {
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      },
-                    ]}>
-                    <Text
-                      style={{
-                        fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
-                        color: Colors.TextColor,
-                        ...fontSize(Size.byWidth(16)),
-                      }}>
-                      Remember Me
-                    </Text>
-                    <ToggleSwitch
-                      isOn={this.state._isRemeberMe}
-                      onColor={Colors.NewTitleColor}
-                      offColor="#E5E5E5"
-                      labelStyle={{
-                        color: 'black',
-                        fontWeight: Platform.OS === 'ios' ? '900' : 'bold',
-                      }}
-                      size="medium"
-                      onToggle={(isOn: any) => {
-                        this.setState({ _isRemeberMe: isOn });
-                      }}
-                    />
-                  </View>
-                </TouchableHighlight>
-                */}
-
-          {/** Forgot Passwrod button */}
-          {/* <View style={styles.forgotPasswordContainer}>
-                  <TouchableOpacity
-                    style={styles.forgotPassword}
-                    onPress={() => {
-                      this.showErrorMessage(false);
-                      this.props.navigation.navigate('forgotPassword');
-                    }}>
-                    <Text
-                      style={{
-                        fontWeight: '600',
-                        color: Colors.NewTitleColor,
-                        ...fontSize(Size.byWidth(16)),
-                      }}>
-                      Forgot Password?
-                    </Text>
-                  </TouchableOpacity>
-                </View> */}
-
-          {/* </View> */}
-          {/* </View> */}
-          {/* </View> */}
+     
         </SafeAreaView>
-        {/* </LinearGradient> */}
-        {/* </TouchableWithoutFeedback> */}
-        {/* </ImageBackground> */}
+     
       </View>
     );
   }

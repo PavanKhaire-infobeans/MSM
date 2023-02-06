@@ -92,6 +92,7 @@ const PublishMemoryDraft = (props) => {
         onPress: () => {
           setShowMenu(false);
           Keyboard.dismiss();
+          props.route.params.doNotReload(true);
           props.navigation.goBack();
         },
       },
@@ -114,7 +115,7 @@ const PublishMemoryDraft = (props) => {
   ) => {
     return (
       <TouchableHighlight
-        // key={value}
+        key={value?.length > 0 ? getText(title, value) : placeholder}
         style={Styles.commonListComponentButtonContainer}
         onPress={() => onPressCallback()}
         underlayColor={Colors.underlay33OpacityColor}>

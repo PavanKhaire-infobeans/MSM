@@ -736,6 +736,7 @@ export const onActionItemClicked = async (
   navigation: any,
   CB?: any,
 ) => {
+  console.log("CB : ", CB)
   // showConsoleLog(ConsoleType.ERROR,JSON.stringify(data));
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
@@ -743,7 +744,7 @@ export const onActionItemClicked = async (
       break;
     case MemoryActionKeys.editMemoryKey:
       //loaderHandler.showLoader();
-
+      CB(true);
       let details: any = {
         action_type: MemoryActionKeys.moveToDraftKey,
         type: data.memoryType,
@@ -791,7 +792,7 @@ export const onActionItemClicked = async (
               onPress: async () => {
                 if (Utility.isInternetConnected) {
                   //loaderHandler.showLoader();
-
+                  CB(true);
                   let details: any = {
                     action_type: data.actionType,
                     type: data.uid ? 'user' : data.memoryType,
@@ -814,6 +815,7 @@ export const onActionItemClicked = async (
                       { configurationTimestamp: '0', details },
                     ],
                     response => {
+                      console.log("response >",JSON.stringify(details),JSON.stringify(response))
                       if (response.ResponseCode == 200) {
                         if (response.Status) {
                           navigation.replace('dashBoard');
@@ -1343,6 +1345,7 @@ export const MemoryBasicDetails = (
   openMemoryActions?: any,
   listType?: any,
   navigation?: any,
+  CB?: any
 ) => {
   let memoryActions = MemoryActionsListArray(item);
   return (
@@ -1402,7 +1405,7 @@ export const MemoryBasicDetails = (
                 itm => itm.title === e.nativeEvent.name,
               );
               if (data && data[0]) {
-                onActionItemClicked(e.nativeEvent.index, data[0], navigation);
+                onActionItemClicked(e.nativeEvent.index, data[0], navigation, loader => CB(loader));
               }
             }}>
             <Image source={moreoptions} />

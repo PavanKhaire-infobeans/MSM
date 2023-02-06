@@ -382,6 +382,11 @@ const Recent = (props: Props) => {
           _onAddProptToMemoryAction(firstIndex, secondIndex)
         }
         }
+        showLoader={(loader)=>{
+          if (loader) {
+            props.showLoader(true)
+          }
+        }}
         navigation={props.navigation}
       />
     </>

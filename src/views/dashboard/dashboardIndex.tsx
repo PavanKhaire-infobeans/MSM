@@ -196,24 +196,24 @@ class DashboardIndex extends React.Component<Props> {
         Utility.notificationObject.hasNotification = false;
         Utility.notificationObject.isBackgroundNotification = true;
         // //loaderHandler.showLoader();
-        
-          GetActivities(
-            {
-              notification_params: {
-                nid: Utility.notificationObject.data.nid,
-                notification_id: Utility.notificationObject.data.notification_id,
-              },
+
+        GetActivities(
+          {
+            notification_params: {
+              nid: Utility.notificationObject.data.nid,
+              notification_id: Utility.notificationObject.data.notification_id,
             },
-            kGetInvidualNotification,
-            response => {
-              if (response.ResponseCode == 200) {
-                this.notificationCallback(true, response['Details']);
-              } else {
-                this.notificationCallback(false, response['ResponseMessage']);
-              }
+          },
+          kGetInvidualNotification,
+          response => {
+            if (response.ResponseCode == 200) {
+              this.notificationCallback(true, response['Details']);
+            } else {
+              this.notificationCallback(false, response['ResponseMessage']);
             }
-          );
-        
+          }
+        );
+
       } else {
         No_Internet_Warning();
       }
@@ -262,7 +262,7 @@ class DashboardIndex extends React.Component<Props> {
     } else if (!Utility.isInternetConnected) {
       No_Internet_Warning();
     }
-    
+
     // //loaderHandler.hideLoader();
 
   };
@@ -271,14 +271,14 @@ class DashboardIndex extends React.Component<Props> {
     if (Utility.isInternetConnected) {
       // //loaderHandler.showLoader('Creating Memory...');
       this.props.loaderText('Creating Memory...');
-     
+
       let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
       draftDetails.prompt_id = parseInt(id);
       CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
         res => {
           this.promptToMemoryCallBack(res.status, res.id)
         });
-    
+
     } else {
       No_Internet_Warning();
     }
@@ -287,14 +287,14 @@ class DashboardIndex extends React.Component<Props> {
   promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
     if (success) {
       // //loaderHandler.hideLoader();
-     
+
       this.props.navigation.navigate("createMemory", { editMode: true, draftNid: draftDetails, isFromPrompt: true })
-     
+
     } else {
       // //loaderHandler.hideLoader();
-     
+
       //ToastMessage(draftDetails);
-     
+
     }
   };
 
@@ -316,7 +316,7 @@ class DashboardIndex extends React.Component<Props> {
     type?: any,
     uid?: any,
   ) => {
-   
+
     if (fetched) {
       // if (type == MemoryActionKeys.removeMeFromThisPostKey){
       //     publishedMemoriesArray.forEach((element: any, index: any) => {
@@ -351,7 +351,7 @@ class DashboardIndex extends React.Component<Props> {
       <View style={Styles.fullFlex}>
         {
           this.props.showLoaderValue ?
-            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue !=''? this.props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
             :
             null
         }
@@ -444,19 +444,22 @@ class DashboardIndex extends React.Component<Props> {
               <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Write} />
             </View>
           </View>
-
+          {this.state.appTourVisibility && (
+            <AppGuidedTour
+              navigation={this.props.navigation}
+              cancelAppTour={() => {
+                this.setState({ appTourVisibility: false }, () =>
+                  DefaultPreference.set('hide_guide_tour', 'true').then(
+                    () => {
+                      this.props.navigation.replace('writeTabs', { showPromptView: true })
+                    },
+                  ),
+                );
+              }}
+            />
+          )}
         </SafeAreaView>
-        {this.state.appTourVisibility && (
-          <AppGuidedTour
-            cancelAppTour={() => {
-              this.setState({ appTourVisibility: false }, () =>
-                DefaultPreference.set('hide_guide_tour', 'true').then(
-                  function () { },
-                ),
-              );
-            }}
-          />
-        )}
+
       </View>
     );
   }

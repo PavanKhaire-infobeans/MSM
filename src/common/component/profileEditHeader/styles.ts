@@ -6,7 +6,7 @@ const Styles = EStyleSheet.create({
   $size: Size.byWidth(43),
   container: {
     padding: Size.byWidth(10),
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: Colors.bordercolor,
     flexDirection: 'row',
     backgroundColor: Colors.white,
@@ -155,13 +155,13 @@ const Styles = EStyleSheet.create({
     // marginBottom: 4,
     height: 24,
     width: 24,
-    marginLeft: 30
+    // marginLeft: 30
   },
   cancelImageConditional: {
     marginBottom: 4,
     height: 24,
     width: 24,
-    marginLeft: 30
+    // marginLeft: 16
   },
   cancleTextContainer: {
     justifyContent: 'center',
@@ -191,6 +191,7 @@ const Styles = EStyleSheet.create({
   },
   leftButtonTouchableContainer: {
     justifyContent: 'center',
+    alignItems: 'center',
     height: '100%',
     // padding: 15,
     // marginTop: 5,

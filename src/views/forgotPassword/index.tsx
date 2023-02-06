@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
+  Animated,
+  Easing,
   Image,
   Keyboard,
   KeyboardAvoidingView,
@@ -63,12 +65,12 @@ const ForgotPassword = (props: Props) => {
     loaderTextValue: 'Loading...'
   });
 
-  const keyboardHeight = useKeyboard();
+  // const keyboardHeight = useKeyboard();
 
   let selectedCommunity: Account = new Account();
-
+  const moveOnYAxis = useRef(new Animated.Value(0)).current;
   selectedCommunity.values = Account.tempData();
-
+  const [keyboardHeight,setKeyboardHeight] = useState(0);
   useEffect(() => {
     if (props?.forgotPasswordStatus?.completed) {
       props?.clean();
@@ -93,7 +95,7 @@ const ForgotPassword = (props: Props) => {
           setState(prevState => ({
             ...prevState,
             isRequestSubmitted: true,
-            showLoaderValue:false
+            showLoaderValue: false
           }));
         } else {
           //loaderHandler.hideLoader();
@@ -103,7 +105,7 @@ const ForgotPassword = (props: Props) => {
           setState(prevState => ({
             ...prevState,
             isRequestSubmitted: false,
-            showLoaderValue:false
+            showLoaderValue: false
           }));
 
         }
@@ -119,6 +121,51 @@ const ForgotPassword = (props: Props) => {
       emailError: ''
     }));
   }
+  
+  const _keyboardDidShow = e => {
+    try {
+      const { height, screenX, screenY, width } = e.endCoordinates;
+
+      if (height) {
+        setKeyboardHeight(height)
+        startMoveOnYAxis();
+      }
+    } catch (error) {
+      showConsoleLog(ConsoleType.WARN, error);
+    }
+  };
+
+  const _keyboardDidHide = () => {
+      setKeyboardHeight(0)
+      startMoveDownYAxis();
+  };
+
+  let keyboardDidShowListener = Keyboard.addListener(
+    'keyboardDidShow',
+    _keyboardDidShow,
+  );
+  let keyboardDidHideListener = Keyboard.addListener(
+    'keyboardDidHide',
+    _keyboardDidHide,
+  );
+
+  const startMoveOnYAxis = () => {
+    Animated.timing(moveOnYAxis, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.poly(5))
+    }).start();
+  };
+
+  const startMoveDownYAxis = () => {
+    Animated.timing(moveOnYAxis, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.poly(5))
+    }).start();
+  };
 
   const resetButtonAction = () => {
     if (Utility.isInternetConnected) {
@@ -205,6 +252,23 @@ const ForgotPassword = (props: Props) => {
     Keyboard.dismiss();
     props.navigation.goBack();
   }
+
+  const yVal = moveOnYAxis.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [
+      0,
+      -(keyboardHeight ),
+      -(keyboardHeight ),
+    ],
+  });
+
+  const animStyle = {
+    transform: [
+      {
+        translateY: yVal,
+      },
+    ],
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -302,8 +366,8 @@ const ForgotPassword = (props: Props) => {
                       style={[styles.keyboardAvoiding, {
                         // paddingBottom: keyboardHeight + 56
                       }]}
-                      // behavior="padding"
-                      >
+                    // behavior="padding"
+                    >
                       {
                         state.isRequestSubmitted ?
                           <View style={{ height: 100 }} />
@@ -338,51 +402,17 @@ const ForgotPassword = (props: Props) => {
                       text="Reset Password"
                       onPress={resetButtonAction}
                     /> */}
-                      <TouchableHighlight
-                        underlayColor={'#ffffff00'}
-                        onPress={state.isRequestSubmitted ? onDoneButtonAction : resetButtonAction}>
-                        <View
-                          style={[
-                            styles.loginSSOButtonStyle,
-                            { backgroundColor: Colors.bordercolor },
-                          ]}>
-                          {
-                            !state.isRequestSubmitted ?
-                              <>
-                                <Text
-                                  style={[
-                                    CommonTextStyles.fontWeight400Size19Inter,
-                                    styles.ssoTextStyle,
-                                    { color: Colors.white },
-                                  ]}>
-                                  Send email
-                                </Text>
-                                <Image source={send} />
-                              </>
-                              :
-                              <>
-                                <Image style={{ transform: [{ rotate: '180deg' }] }} source={arrowRightCircle} />
-                                <Text
-                                  style={[
-                                    CommonTextStyles.fontWeight400Size19Inter,
-                                    styles.ssoTextStyle,
-                                    { color: Colors.white },
-                                  ]}>
-                                  Retutn to login
-                                </Text>
-                              </>
-                          }
 
-                        </View>
-                      </TouchableHighlight>
-                      {keyboardHeight ?
-                        <View style={{ height: 72 + (StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0) }} />
-                        :
-                        null
-                      }
 
                     </KeyboardAvoidingView>
                   )}
+
+
+                {/* {keyboardHeight ?
+                        <View style={{ height: 72 + (StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0) }} />
+                        :
+                        null
+                      } */}
               </View>
             </View>
             {/* <View style={styles.resendContainer}>
@@ -406,6 +436,46 @@ const ForgotPassword = (props: Props) => {
               </View> */}
           </View>
         </KeyboardAwareScrollView>
+
+        <Animated.View style={[styles.buttonContainer, animStyle]}>
+          <TouchableHighlight
+            underlayColor={'#ffffff00'}
+            onPress={state.isRequestSubmitted ? onDoneButtonAction : resetButtonAction}>
+            <View
+              style={[
+                styles.loginSSOButtonStyle,
+                { backgroundColor: Colors.bordercolor, position: 'absolute', bottom: 0 },
+              ]}>
+              {
+                !state.isRequestSubmitted ?
+                  <>
+                    <Text
+                      style={[
+                        CommonTextStyles.fontWeight400Size19Inter,
+                        styles.ssoTextStyle,
+                        { color: Colors.white },
+                      ]}>
+                      Send email
+                    </Text>
+                    <Image source={send} />
+                  </>
+                  :
+                  <>
+                    <Image style={{ transform: [{ rotate: '180deg' }] }} source={arrowRightCircle} />
+                    <Text
+                      style={[
+                        CommonTextStyles.fontWeight400Size19Inter,
+                        styles.ssoTextStyle,
+                        { color: Colors.white },
+                      ]}>
+                      Retutn to login
+                    </Text>
+                  </>
+              }
+
+            </View>
+          </TouchableHighlight>
+        </Animated.View>
       </View>
     </SafeAreaView>
   );

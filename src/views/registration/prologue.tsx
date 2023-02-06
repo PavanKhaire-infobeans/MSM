@@ -30,7 +30,7 @@ import BottomDrawer from '../../common/component/rn-bottom-drawer';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import { kRegSignUp, loginType } from '../login';
+import Login, { kRegSignUp, loginType } from '../login';
 import GetFormData, {
   kCueBackFormData,
   kCueBackRegistration,
@@ -68,6 +68,7 @@ class Prologue extends Component<Props> {
   messageRef: any;
   regStep: any;
   loginControllerRef: any;
+  loginRef: any;
   state = {
     isLoginUp: false,
     isLoginDrawerOpen: false,
@@ -149,7 +150,7 @@ class Prologue extends Component<Props> {
       this.setState({ isLoginDrawerOpen: false, isLoginUp: false });
     }
     if (identifier == this.searchIdentifier) {
-      this.setState({ isSearchDrawerOpen: false }, () =>{}
+      this.setState({ isSearchDrawerOpen: false }, () => { }
         // loginDrawerRef.refDrawer.collapse(),
       );
     }
@@ -254,7 +255,7 @@ class Prologue extends Component<Props> {
       !this.state.isLoginDrawerOpen &&
       !this.state.isSearchDrawerOpen
     ) {
-      this.setState({ isRegistrationOpen: false }, () =>{}
+      this.setState({ isRegistrationOpen: false }, () => { }
         // loginDrawerRef.refDrawer.collapse(),
       );
       // this.searchDrawerRef.refDrawer.collapse();
@@ -346,11 +347,16 @@ class Prologue extends Component<Props> {
                 :
                 null
             }
+            <View style={{ height: 0, width: 0 }}>
+            {/* ref={instance => { this.loginRef = instance; }} */}
+              <Login loginRef={click => this.loginRef = click} navBar={this} isLoginUp={this.state.isLoginUp} />
+            </View>
+
             <LinearGradient
               // start={{ x: 0.0, y: 0 }} end={{ x: 1, y: 0 }}
-                end={{ x: 0.8, y: 0.5 }}
-                start={{ x: -0.1, y: 0.6 }}
-                locations={this.state.isRegistrationOpen ? [0,1]:[0.1, 0.4,0.9]}
+              end={{ x: 0.8, y: 0.5 }}
+              start={{ x: -0.1, y: 0.6 }}
+              locations={this.state.isRegistrationOpen ? [0, 1] : [0.1, 0.4, 0.9]}
               // locations={this.state.isRegistrationOpen ? [0, 0.2]:[0, 0.4,0.7]}
               colors={this.state.isRegistrationOpen ? ["#ffffff", "#ffffff"] : ['#EDD0ED', '#F2E5E7', '#D1E6FE']}
               style={Styles.findCommunityContainer}>
@@ -361,7 +367,7 @@ class Prologue extends Component<Props> {
                 {/* <View style={{ height: "100%", width: "100%", position: "absolute", top: "50%" }}></View> */}
                 <View style={Styles.prologSubContainer}>
                   {this.state.isRegistrationOpen ? (
-                    <View>
+                    <View style={{ flex: 1 }}>
                       {/* <View style={Styles.prologHeaderContainer}>
                         <TouchableOpacity
                           onPress={() =>
@@ -399,9 +405,9 @@ class Prologue extends Component<Props> {
                             </Text>
                           </View>
                           :
-                          <>
+                          <View style={{ flex: 1 }}>
                             <View style={Styles.separatorHeightStyle32} />
-                            <View style={Styles.prologHeaderEmptyView} />
+                            {/* <View style={Styles.prologHeaderEmptyView} /> */}
                             <RegFirstStep
                               showTerms={() => navigate("commonWebView", { url: "https://mystoriesmatter.com/content/end-user-license-agreement?no_header=1", title: "Terms and Conditions" })}
                               ref={(ref: any) => {
@@ -428,7 +434,7 @@ class Prologue extends Component<Props> {
                                 this.props.loaderText('Loading...');
                               }}
                             />
-                          </>
+                          </View>
                       }
                     </View>
                   ) :
@@ -450,8 +456,8 @@ class Prologue extends Component<Props> {
                           {Platform.OS == 'ios' &&
                             (Platform.Version >= 13 ||
                               Platform.Version >= '13') && (
-                              <TouchableHighlight
-                                underlayColor={'#ffffff00'}
+                              <TouchableOpacity
+                                activeOpacity={1}
                                 onPress={() => {
                                   EventManager.callBack(
                                     kRegSignUp,
@@ -468,17 +474,19 @@ class Prologue extends Component<Props> {
                                     Continue with Apple
                                   </Text>
                                 </View>
-                              </TouchableHighlight>
+                              </TouchableOpacity>
                             )}
                           <View style={Styles.separatorHeightStyle24} />
 
-                          <TouchableHighlight
-                            underlayColor={'#ffffff00'}
+                          <TouchableOpacity
+                            activeOpacity={1}
                             onPress={() => {
-                              EventManager.callBack(
-                                kRegSignUp,
-                                loginType.googleLogin,
-                              );
+                              // EventManager.callBack(
+                              //   kRegSignUp,
+                              //   loginType.googleLogin,
+                              // );
+                              this.loginRef(loginType.googleLogin)
+                              // .regSignUpListener(loginType.googleLogin)
                             }}>
                             <View style={Styles.loginSSOButtonStyle}>
                               <Image source={google} />
@@ -490,7 +498,7 @@ class Prologue extends Component<Props> {
                                 Continue with Google
                               </Text>
                             </View>
-                          </TouchableHighlight>
+                          </TouchableOpacity>
 
                           <View style={Styles.separatorHeightStyle24} />
                           <View style={Styles.orContainer}>

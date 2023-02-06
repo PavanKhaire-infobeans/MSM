@@ -82,11 +82,10 @@ const Styles = EStyleSheet.create({
     width: '100%'
   },
   regFirstStepSubContainer: {
-    height: Dimensions.get('window').height - 100,
+    flex:1,
     paddingHorizontal: 24,
-    paddingBottom: 20 + (Platform.OS == "ios" && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom + 50 : 0)
   },
-  formContainer: { width: '100%' },
+  formContainer: {  },
   inputLableStyle: {
     marginLeft: 8,
     marginBottom: 4,
@@ -363,7 +362,7 @@ const Styles = EStyleSheet.create({
     justifyContent: "center",
     alignSelf: 'center',
     flexDirection: "row",
-    paddingHorizontal: 24,
+    // paddingHorizontal: 24,
     borderRadius: 1000,
     backgroundColor: Colors.white
   },

@@ -193,16 +193,17 @@ export class MemoryDataModel {
     updateMemoryObj(memoryDetails: any) {
         this.actions_on_memory = getDetails(memoryDetails, ["actions_on_memory"], keyObject)
         this.memory.memoryTitle = getDetails(memoryDetails, ["title"]);
-        this.memory.memoryDateDisplay =  moment.utc((parseInt(getDetails(memoryDetails, ["memory_date"])) * 1000)).format('LL');
        
-        // this.memory.memoryDate = Utility.dateObjectToDefaultFormat(new Date(parseInt(getDetails(memoryDetails, ["memory_date"])) * 1000));
-        // if (memoryDetails.season && memoryDetails.season.trim().length > 0) {
-        //     let season = memoryDetails.season.trim();
-        //     this.memory.memoryDate = Utility.dateAccordingToFormat("" + this.memory.memoryDate, "Y");
-        //     this.memory.memoryDate = season.charAt(0).toUpperCase() + season.slice(1) + " " + this.memory.memoryDate;
-        // } else {
-        //     this.memory.memoryDate = Utility.dateAccordingToFormat("" + this.memory.memoryDate, "M Y");
-        // }
+        this.memory.memoryDate = Utility.dateObjectToDefaultFormat(new Date(parseInt(getDetails(memoryDetails, ["memory_date"])) * 1000));
+        if (memoryDetails.season && memoryDetails.season.trim().length > 0) {
+            let season = memoryDetails.season.trim();
+            this.memory.memoryDate = Utility.dateAccordingToFormat("" + this.memory.memoryDate, "Y");
+            this.memory.memoryDate = season.charAt(0).toUpperCase() + season.slice(1) + " " + this.memory.memoryDate;
+            this.memory.memoryDateDisplay =  this.memory.memoryDate;
+        } else {
+            this.memory.memoryDate = Utility.dateAccordingToFormat("" + this.memory.memoryDate, "M Y");
+            this.memory.memoryDateDisplay =  moment.utc((parseInt(getDetails(memoryDetails, ["memory_date"])) * 1000)).format('LL');
+        }
         this.memory.memoryPlace = getDetails(memoryDetails, ["location"]);
         this.memory.memoryReadTime = getDetails(memoryDetails, ["mins_to_read"], keyInt);
         if (this.memory.memoryReadTime.length > 0) {

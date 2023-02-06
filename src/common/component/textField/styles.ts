@@ -143,7 +143,7 @@ export const styles = StyleSheet.create({
   },
   errorTextStyle:{
     ...fontSize(13),
-    color: Colors.newTextColor,//ErrorColor,
+    color: Colors.ErrorColor,//ErrorColor,
     marginTop: 3,
     lineHeight: 16,
     textAlign:'right',

@@ -33,7 +33,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
       <View>
         {!this.props.hideClose ? (
           <TouchableWithoutFeedback onPress={() => this.props.cancelAction()}>
-            <View style={styles.leftButtonTouchableContainer}>
+            <View style={[styles.leftButtonTouchableContainer, { marginLeft: this.props.multiValuesPage ? 16 : 0 }]}>
               <Image
                 style={
                   this.props.showRightText
@@ -77,7 +77,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
         <Text
           style={[
             styles.titleText,
-            { color: this.props.isWhite ? Colors.black : Colors.TextColor },
+            { color: this.props.isWhite ? Colors.newDescTextColor : Colors.TextColor },
           ]}
           numberOfLines={1}
           ellipsizeMode="tail">

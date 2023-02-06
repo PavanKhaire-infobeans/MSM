@@ -39,6 +39,7 @@ type Props = {
   MemoryActions?: any;
   onLayout?: any;
   navigation?: any;
+  showLoader?:any
 };
 
 type State = {activeIndex: any};
@@ -272,6 +273,11 @@ export default class MemoryListItem extends React.Component<Props, State> {
                               e.nativeEvent.index,
                               data[0],
                               this.props.navigation,
+                              loader =>{
+                                if (loader) {
+                                  this.props.showLoader();
+                                }
+                              }
                             );
                           }
                         }}>
@@ -339,6 +345,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                     this.setItem,
                     this.props.listType,
                     this.props.navigation,
+                    this.props.showLoader
                     // this.props.openMemoryActions,
                     // _onShowMemoryDetails(this.props.item.item,"Recent")
                   )}

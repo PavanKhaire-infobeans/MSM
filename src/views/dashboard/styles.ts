@@ -290,7 +290,7 @@ const Styles = EStyleSheet.create({
   newBackContainer: {
     alignItems: 'flex-start',
     width: "100%",
-    bottom: Platform.OS == 'ios' ? 20 : 50,
+    bottom: Platform.OS == 'ios' ? 50 : 50,
     zIndex: 99999
   },
   newBackbuttonStyle: { marginLeft: 16 },
@@ -431,8 +431,8 @@ const Styles = EStyleSheet.create({
     alignItems: 'center',
   },
   jumptoYearContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
     height: 52
   },
   filterDescContainer: {
@@ -508,7 +508,7 @@ const Styles = EStyleSheet.create({
     fontFamily: fontFamily.Inter,
     fontWeight: '400',
     lineHeight: 23,
-    color: Colors.bordercolor
+    color: Colors.bordercolor,
   },
   filterThemeText: {
     ...fontSize(17),

@@ -59,7 +59,10 @@ const FileDescription = props => {
   const cancelAction = () => {
     if (file_title == fileTitle && description == fileDesc) {
       Keyboard.dismiss();
-      props.navigation.goBack();
+    if (props.route.params.doNotReload) {
+      props.route.params.doNotReload(true);
+    }
+    props.navigation.goBack();
     } else {
       Alert.alert('Save changes?', `Do you want to save your changes?`, [
         {

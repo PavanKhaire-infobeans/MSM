@@ -87,6 +87,9 @@ export default class ImageViewer extends React.Component<Props> {
 
   cancelAction = () => {
     Keyboard.dismiss();
+    if (this.props.route.params.doNotReload) {
+      this.props.route.params.doNotReload(true);
+    }
     this.props.navigation.goBack();
   };
 

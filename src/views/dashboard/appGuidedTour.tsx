@@ -232,7 +232,7 @@ export default class AppGuidedTour extends React.Component<Props> {
     this.fadeOutView();
     setTimeout(() => {
       this.props.cancelAppTour();
-      this.props.navigation.navigate('promptsView', {animated: true});
+      // this.props.navigation.navigate('promptsView', {animated: true});
     }, 1000);
   }
 

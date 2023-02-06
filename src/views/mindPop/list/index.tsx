@@ -404,6 +404,7 @@ class MindPopList extends React.Component<{
           if (this.convertToMemoryObject.callForCreateMemory) {
             this.convertToMemoryObject.callForCreateMemory = false;
             this.props.navigation.navigate('createMemory', {
+              editMode:true,
               attachments: this.convertToMemoryObject.attachments,
               id: this.convertToMemoryObject.nid,
               textTitle: this.convertToMemoryObject.details.title,
@@ -754,7 +755,7 @@ class MindPopList extends React.Component<{
             ) : null}
           </View>
         </SafeAreaView>
-        {this.state.mindPopIntroVisibility && (
+        {/* {this.state.mindPopIntroVisibility && (
           <MindPopIntro
             cancelMindPopIntro={() => {
               this.setState({ mindPopIntroVisibility: false }, () => {
@@ -763,7 +764,7 @@ class MindPopList extends React.Component<{
                 );
               });
             }}></MindPopIntro>
-        )}
+        )} */}
       </View>
     );
   }
@@ -1223,7 +1224,6 @@ const styles = EStyleSheet.create({
   emptyViewStyle: {
     height: 30,
     width: '100%',
-    backgroundColor: 'red',
   },
   containerSearch: {
     backgroundColor: Colors.white,

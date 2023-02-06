@@ -61,16 +61,17 @@ export class DashboardDataModel {
             } else {
                 parsedMemory.showLikeCount = false;
             }
-            
+
             let memDate = parseInt(getDetails(parsedMemory, ["memory_date"])) * 1000;
             parsedMemory.memory_date = Utility.dateObjectToDefaultFormat(new Date(memDate));
-            parsedMemory.memoryDateDisplay = moment.utc(memDate).format('ll');
             parsedMemory.memoryYear = new Date(memDate).getFullYear();
             if (parsedMemory.season && parsedMemory.season.trim().length > 0) {
                 let season = parsedMemory.season.trim();
                 parsedMemory.memory_date = Utility.dateAccordingToFormat("" + parsedMemory.memory_date, "Y");
                 parsedMemory.memory_date = season.charAt(0).toUpperCase() + season.slice(1) + " " + parsedMemory.memory_date;
+                parsedMemory.memoryDateDisplay = parsedMemory.memory_date;
             } else {
+                parsedMemory.memoryDateDisplay = moment.utc(memDate).format('ll');
                 parsedMemory.memory_date = Utility.dateAccordingToFormat("" + parsedMemory.memory_date, "M Y");
             }
             if (parsedMemory.location) {
@@ -81,7 +82,7 @@ export class DashboardDataModel {
                 parsedMemory.memoryDescription = parsedMemory['version_data']['data'][0]['content'];
             }
 
-            if (parsedMemory.description.includes('\n')||parsedMemory.description.includes('\r')) {
+            if (parsedMemory.description.includes('\n') || parsedMemory.description.includes('\r')) {
                 // console.log("desc > ",JSON.stringify(parsedMemory.description))
                 parsedMemory.description = parsedMemory.description.replace(/<\/p><br\/><p>/ig, '');
                 parsedMemory.description = parsedMemory.description.replace(/<\/p><br><p>/ig, '');
@@ -93,7 +94,7 @@ export class DashboardDataModel {
                 parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');
                 parsedMemory.description = parsedMemory.description.trim();
                 // console.log("desc after > ",JSON.stringify(parsedMemory.description))
-            } 
+            }
             else {
                 parsedMemory.description = parsedMemory.description.replace(/<\/p><br\/><p>/ig, ' \n \n');
                 parsedMemory.description = parsedMemory.description.replace(/<\/p><br><p>/ig, ' \n \n');
@@ -102,9 +103,9 @@ export class DashboardDataModel {
                 parsedMemory.description = parsedMemory.description.replace(/<br \/>/ig, ' \n');
                 parsedMemory.description = parsedMemory.description.replace(/<br\/>/ig, ' \n');
                 parsedMemory.description = parsedMemory.description.replace(/<p>/ig, '');
-                parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');    
+                parsedMemory.description = parsedMemory.description.replace(/<\/p>/ig, '');
             }
-            
+
             if (parsedMemory.memoryDateDisplay !== 'Invalid date') {
                 memories.push(parsedMemory);
             }

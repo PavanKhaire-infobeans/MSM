@@ -134,6 +134,9 @@ export default class CommonAudioRecorder extends React.Component<
   };
 
   back = () => {
+    if (this.props.route.params.doNotReload) {
+      this.props.route.params.doNotReload(true);
+    }
     this.isRecordingFromAddContent
       ? this.navigateBackOrReset()
       : this.props.navigation.goBack();

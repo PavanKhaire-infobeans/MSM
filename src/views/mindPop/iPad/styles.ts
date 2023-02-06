@@ -32,7 +32,6 @@ const Styles = EStyleSheet.create({
     },
   
     leftCrossButtonContainer: {
-      backgroundColor: 'red',
       alignItems: 'center',
       justifyContent: 'center',
     },

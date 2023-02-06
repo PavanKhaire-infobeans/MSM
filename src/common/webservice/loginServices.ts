@@ -85,8 +85,9 @@ export const SSOLogin = async (params: any) => {
           'Unable to process your login request',
         );
       });
+      showConsoleLog(ConsoleType.LOG,'sos google >',JSON.stringify(params),JSON.stringify(response));
+
     if (response != undefined && response != null) {
-      showConsoleLog(ConsoleType.LOG,response);
       if (response.ResponseCode == 200) {
         EventManager.callBack(kSSOLogin, true, response);
       } else {

@@ -93,6 +93,7 @@ import {
   kForegroundNotice,
 } from './views/notificationView/notificationServices';
 import TopicsFilter from './views/promptsView/topicsFilter';
+import PromptsView from './views/promptsView';
 import WriteTabs from './views/writeTabs';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -366,6 +367,11 @@ const AppNavigationRouter = () => {
           name="notificationView"
           title={'Notifications'}
           component={NotificationView}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="promptsView"
+          component={PromptsView}
           options={{headerShown: false}}
         />
         <RootStack.Screen

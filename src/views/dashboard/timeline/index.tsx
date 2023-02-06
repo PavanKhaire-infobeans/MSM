@@ -502,6 +502,11 @@ const Timeline = (props: Props) => {
           jumpToDate: memory_date,
         }))
       }
+      showLoader={(loader)=>{
+        if (loader) {
+          props.showLoader(true)
+        }
+      }}
       openMemoryActions={itm => openMemoryActions(itm)}
       navigation={props.navigation}
     />
