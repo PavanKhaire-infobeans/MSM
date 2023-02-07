@@ -128,7 +128,7 @@ export class MemoryDraftsDataModel {
     let shareOption =
       getDetails(draftDetails, ['share_option_value']).length > 0
         ? getDetails(draftDetails, ['share_option_value'])
-        : 'allfriends';
+        : 'only_me';
     let images: any = [];
     getDetails(draftDetails, ['images'], keyArray).forEach((element: any) => {
       images.push({ ...element, type: 'images' });

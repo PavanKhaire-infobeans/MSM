@@ -68,7 +68,7 @@ const PublishMemoryDraft = (props) => {
         setShowGuideOverlay(true);
       }
     });
-    
+
     return () => {
       showConfettiCanon.removeListener();
       if (_confettiView) {
@@ -103,7 +103,7 @@ const PublishMemoryDraft = (props) => {
     setShowMenu(false);
     props.showLoader(true);
     props.loaderText('Loading...');
-    props.route.params.publishMemoryDraft(kPublish);
+    props.route.params.publishMemoryDraft({ key: kPublish, data: props.memoryObject });
   };
 
   const commonListComponent = (
@@ -113,7 +113,6 @@ const PublishMemoryDraft = (props) => {
     onPressCallback: any,
     isRequired?: boolean
   ) => {
-    console.log("rrrr >",value, title ,getText(title, value),  props.location?.description)
     return (
       <TouchableHighlight
         key={value?.length > 0 ? getText(title, value) : placeholder}
@@ -125,7 +124,7 @@ const PublishMemoryDraft = (props) => {
             {title?.toUpperCase()}
             {
               isRequired &&
-              <Text style={{color:Colors.ErrorColor}}>*</Text>
+              <Text style={{ color: Colors.ErrorColor }}>*</Text>
             }
           </TextNew>
           <View style={Styles.commonListComponentContainer}>
@@ -317,11 +316,11 @@ const PublishMemoryDraft = (props) => {
           untilStopped={false}
         />
         {
-        props.showLoaderValue ?
-          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue != '' ? props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
-          :
-          null
-      }
+          props.showLoaderValue ?
+            <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue != '' ? props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         {/* <ConfettiCannon
             count={200}
             origin={{x: -10, y: 0}}
@@ -363,7 +362,7 @@ const PublishMemoryDraft = (props) => {
             )}
             {commonListComponent(
               'Location',
-              props.location?.description? props.location?.description:'',
+              props.location?.description ? props.location?.description : '',
               'Add location...',
               () => props.navigation.goBack(),
               true
@@ -404,7 +403,7 @@ const PublishMemoryDraft = (props) => {
               disabled={(props.location?.description == '' || props.date?.month == '' || props.date?.year == '') ? true : false}
               onPress={publishMemory}>
               <View
-                style={[Styles.loginSSOButtonStyle, (props.location?.description == '' || props.date?.month == '' || props.date?.year == '') ? { opacity: 0.5 } : {opacity: 1}, { overflow: 'hidden', width: '100%' }]}>
+                style={[Styles.loginSSOButtonStyle, (props.location?.description == '' || props.date?.month == '' || props.date?.year == '') ? { opacity: 0.5 } : { opacity: 1 }, { overflow: 'hidden', width: '100%' }]}>
                 <Text
                   style={[
                     CommonTextStyles.fontWeight500Size17Inter,
@@ -421,7 +420,7 @@ const PublishMemoryDraft = (props) => {
               style={[Styles.renderLoaderStyle, { top: 0 }]}
               onStartShouldSetResponder={() => true}
               onResponderStart={() => setShowMenu(false)}> */}
-              {/* <View style={Styles.sideMenu}>
+          {/* <View style={Styles.sideMenu}>
                   <TouchableOpacity
                     style={Styles.titleContainer}
                     onPress={() => this.props.preview()}>
@@ -434,7 +433,7 @@ const PublishMemoryDraft = (props) => {
                     <Text style={Styles.deleteTextStyle}>Delete Draft...</Text>
                   </TouchableOpacity>
                 </View> */}
-            {/* </View>
+          {/* </View>
           )} */}
         </View>
         {/* {showGuideOverlay && (
@@ -496,6 +495,7 @@ const mapState = (state: { [x: string]: any }) => {
     date: state.MemoryInitials.date,
     location: state.MemoryInitials.location,
     tagsList: state.MemoryInitials.tags,
+    memoryObject: state.MemoryInitials,
     whoElseWhereThereList: state.MemoryInitials.whoElseWhereThere,
     collections: state.MemoryInitials.collections,
     whoCanSeeIds: state.MemoryInitials.whoCanSeeMemoryUids,

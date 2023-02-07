@@ -677,7 +677,7 @@ const CreateMemory = (props: Props) => {
       props.loaderText('Loading...');
       props.navigation.navigate('memoryDetails', {
         previewDraft: true,
-        memoryDetails: getDetailsForPreview(),
+        // memoryDetails: getDetailsForPreview(),
       });
     }, 1000);
   };
@@ -901,8 +901,10 @@ const CreateMemory = (props: Props) => {
     }
   };
 
-  const saveORPublish = (key: any) => {
-    saveIntitals();
+  const saveORPublish = (key: any,fromPublish?: any,data?: any) => {
+    if (!fromPublish) {
+      saveIntitals();
+    }
     //loaderHandler.showLoader('Saving');
     props.showLoader(true);
     props.loaderText('Saving...');
@@ -924,14 +926,13 @@ const CreateMemory = (props: Props) => {
         // else {
         let memoryDetails = await DefaultCreateMemoryObj(
           key,
-          props.memoryObject,
+          data ? data : props.memoryObject,
           isCreatedByUser,
         );
         let filesToUpload = itemList.filter(
           (element: any) => element.isLocal,
         );
 
-        console.log("objjjj :", JSON.stringify(memoryDetails));
         let resp = await CreateUpdateMemory(
           memoryDetails,
           filesToUpload,
@@ -1958,10 +1959,11 @@ const CreateMemory = (props: Props) => {
                 //ToastMessage('Please select Date first', Colors.ErrorColor);
               }
               else {
+                // preview
                 props.navigation.navigate('publishMemoryDraft', {
-                  publishMemoryDraft: saveORPublish,
+                  publishMemoryDraft: val => saveORPublish(val.key,true,val.data),
                   doNotReload: val => setDoNotReload(val),
-                  preview: preview,
+                  preview: ()=>{},
                   delete: deleteDraft,
                 });
               }

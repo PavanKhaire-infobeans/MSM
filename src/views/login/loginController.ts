@@ -73,8 +73,8 @@ export class LoginController implements LoginControllerProtocol {
     let user = { id: params.id };
     if (params.id != null && params.id.trim() != '') {
       //loaderHandler.showLoader();
-      ////this.view.props.showLoader(true);
-      //this.view.props.loaderText('Loading...');
+      this.view.props.showLoader(true);
+      this.view.props.loaderText('Loading...');
       if (params.email != null && params.email.trim() != '') {
         user = {
           ...user,
@@ -105,6 +105,8 @@ export class LoginController implements LoginControllerProtocol {
         },
       );
     } else {
+      this.view.props.showLoader(false);
+      this.view.props.loaderText('Loading...');
       this.view.showErrorMessage(
         true,
         'Unable to fetch details from Apple Sign in',
@@ -131,20 +133,20 @@ export class LoginController implements LoginControllerProtocol {
       );
       // this.view.props.clearDashboard();
       setTimeout(() => {
-        // this.view.props.navigation.reset({
-        //   index: 0,
-        //   routes: [{ name: 'dashBoard' }]
-        // })
-        //loaderHandler.hideLoader();
-        //this.view.props.showLoader(false);
-      //this.view.props.loaderText('Loading...');
+        this.view.props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'dashBoard' }]
+        })
+        // loaderHandler.hideLoader();
+        this.view.props.showLoader(false);
+        this.view.props.loaderText('Loading...');
 
       }, 100);
       // this.view.props.clean();
     } else {
       //loaderHandler.hideLoader();
-      //this.view.props.showLoader(false);
-      //this.view.props.loaderText('Loading...');
+      this.view.props.showLoader(false);
+      this.view.props.loaderText('Loading...');
 
       this.view.showErrorMessage(true, response);
     }
@@ -158,7 +160,9 @@ export class LoginController implements LoginControllerProtocol {
       await GoogleSignin.hasPlayServices();
       userInfo = await GoogleSignin.signIn();
       let params = {};
-      loaderHandler.showLoader();
+      // loaderHandler.showLoader();
+      this.view.props.showLoader(true);
+      this.view.props.loaderText('Loading...');
       DefaultPreference.get('firebaseToken').then(
         (value: any) => {
           params = {
@@ -180,6 +184,8 @@ export class LoginController implements LoginControllerProtocol {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
     } catch (error) {
+      this.view.props.showLoader(false);
+      this.view.props.loaderText('Loading...');
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         this.view.showErrorMessage(true, 'Sign in process was cancelled');
       } else if (error.code === statusCodes.IN_PROGRESS) {
