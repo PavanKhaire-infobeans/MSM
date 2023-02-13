@@ -1124,7 +1124,9 @@ const CreateMemory = (props: Props) => {
           fileCallback(tempFile);
         },
         reset: () => { },
-        deleteItem: () => { },
+        deleteItem: () => { 
+          deleteFile(selectedItem?.fid, selectedItem?.isLocal);
+        },
       });
     }
   };

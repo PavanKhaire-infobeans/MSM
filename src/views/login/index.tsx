@@ -67,11 +67,11 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   //Password Field Reference
   _passwordField?: TextInput = null;
   _usernameField?: TextInput = null;
-  regScroll: any = React.createRef();
 
   //Registration screen login callBacks
   appleLoginCallBack: EventManager;
   googleLoginCallBack: EventManager;
+  regScroll: any;
 
   //Login Controller
   controller: LoginControllerProtocol;
@@ -79,30 +79,6 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   //Flag to check if user had already logged in
   dataWasStored?: string = null;
   keyheightsKey: number;
-
-  //User state
-  state = {
-    _isRemeberMe: true,
-    username: '',
-    password: '',
-    userNameError: {
-      error: false,
-      text: '',
-    },
-    passwordError: {
-      error: false,
-      text: '',
-    },
-    errorViewHeight: 0,
-    errorMessage: '',
-    isVisible: false,
-    instanceData: [],
-    isDisabledAccount: false,
-    keyboardHeight: 0,
-    passwordFocus: false,
-    showLoaderValue: false,
-    loaderTextValue: 'Loading...'
-  };
 
   moveOnYAxis = new Animated.Value(0);
 
@@ -133,6 +109,30 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   constructor(props: Props) {
     super(props);
     this.navBar = this.props.navBar;
+    //User state
+    this.state = {
+      _isRemeberMe: true,
+      username: '',
+      password: '',
+      userNameError: {
+        error: false,
+        text: '',
+      },
+      passwordError: {
+        error: false,
+        text: '',
+      },
+      errorViewHeight: 0,
+      errorMessage: '',
+      isVisible: false,
+      instanceData: [],
+      isDisabledAccount: false,
+      keyboardHeight: 0,
+      passwordFocus: false,
+      showLoaderValue: false,
+      loaderTextValue: 'Loading...'
+    };
+
     this.controller = new LoginController(this);
     DeviceEventEmitter.addListener(
       'AppleLoginResult',
@@ -146,6 +146,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       kRegSignUp,
       this.regSignUpListener.bind(this),
     );
+    this.regScroll = React.createRef();
+
   }
 
   regSignUpListener = (type: any) => {
@@ -292,7 +294,6 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   };
 
   showErrorMessage = (show: boolean, message?: string) => {
-    debugger;
     let height = 0;
     if (show) {
       // height = 70;
@@ -331,6 +332,21 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   }
 
   selectedCommunity: Account = new Account();
+
+  moveTopasswordField = () => {
+    this.setState({
+      passwordFocus: true
+    }, () => {
+      debugger
+      console.log(this.regScroll)
+      this.regScroll.scrollToPosition(
+        0,
+        100,
+        true,
+      );
+      this._passwordField && this._passwordField.focus();
+    })
+  };
 
   render() {
     // let keyboardHeight = this.state.keyboardHeight
@@ -391,7 +407,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             ref={ref => (this.regScroll = ref)}
             // style={{ width: "100%", paddingHorizontal: 24 }}
             bounces={false}
-            extraScrollHeight={this.state.passwordFocus ? 100 : 160}
+            extraScrollHeight={140}
           >
             <View style={Styles.LoginHeader}>
               <Text style={Styles.hederText}>Login</Text>
@@ -415,29 +431,17 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                   errorMessage={this.state.userNameError.text}
                   showError={this.state.userNameError.error}
                   reference={ref => (this._usernameField = ref)}
-                  onSubmitEditing={() => {
-                    this.setState({
-                      passwordFocus: true
-                    }, () => {
-                      // this.regScroll.scrollToPosition(
-                      //   0,
-                      //   160,
-                      //   true,
-                      // );
-                      this._passwordField && this._passwordField.focus();
-                    })
-
-                  }}
+                  onSubmitEditing={this.moveTopasswordField}
                   value={this.state.username}
                   onFocus={() => {
                     this.setState({
                       passwordFocus: false
                     })
-                  //   this.regScroll.scrollToPosition(
-                  //     0,
-                  //     100,
-                  //     true,
-                  //   );
+                    //   this.regScroll.scrollToPosition(
+                    //     0,
+                    //     100,
+                    //     true,
+                    //   );
                   }}
                   placeholder="Enter email..."
                   keyboardType="email-address"
@@ -469,11 +473,11 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                     this.setState({
                       passwordFocus: true
                     })
-                  //   this.regScroll.scrollToPosition(
-                  //     0,
-                  //     this.state.keyboardHeight/2,
-                  //     true,
-                  //   );
+                    //   this.regScroll.scrollToPosition(
+                    //     0,
+                    //     this.state.keyboardHeight/2,
+                    //     true,
+                    //   );
                   }}
                   onChange={(text: any) =>
                     this.controller.onTextChange('password', text)

@@ -98,6 +98,8 @@
 		<string>The app would like to save photos from the app to your gallery</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera permission to upload camera images</string>
+	<key>NSAppleMusicUsageDescription</key>
+		<string>The app would like to save Music in to your gallery</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The app needs Microphone to record audio on users demand</string>
 	<key>NSPhotoLibraryUsageDescription</key>
