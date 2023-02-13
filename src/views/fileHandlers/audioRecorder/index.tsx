@@ -109,11 +109,11 @@ export default class CommonAudioRecorder extends React.Component<
   }
 
   componentDidMount = () => { 
-    console.log(JSON.stringify(this.props?.route?.params?.selectedItem.url))
     if (this.props?.route?.params?.selectedItem) {
+      console.log(JSON.stringify(this.props?.route?.params?.selectedItem?.url))
       this.setState({
         audioState: 'recorded',
-        path: this.props?.route?.params?.selectedItem.uri || this.props?.route?.params?.selectedItem.url || this.props?.route?.params?.selectedItem.filePath,
+        path: this.props?.route?.params?.selectedItem?.uri || this.props?.route?.params?.selectedItem?.url || this.props?.route?.params?.selectedItem?.filePath,
       })
     } else {
       this.setState({

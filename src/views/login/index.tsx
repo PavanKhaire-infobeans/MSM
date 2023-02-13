@@ -99,6 +99,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
     instanceData: [],
     isDisabledAccount: false,
     keyboardHeight: 0,
+    passwordFocus: false,
     showLoaderValue: false,
     loaderTextValue: 'Loading...'
   };
@@ -385,12 +386,12 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
           </TouchableOpacity>
 
           <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="handled"
+            keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}
             ref={ref => (this.regScroll = ref)}
             // style={{ width: "100%", paddingHorizontal: 24 }}
-            // bounces={false}
-            extraScrollHeight={120}
+            bounces={false}
+            extraScrollHeight={this.state.passwordFocus ? 100 : 160}
           >
             <View style={Styles.LoginHeader}>
               <Text style={Styles.hederText}>Login</Text>
@@ -415,20 +416,28 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                   showError={this.state.userNameError.error}
                   reference={ref => (this._usernameField = ref)}
                   onSubmitEditing={() => {
-                    this.regScroll.scrollToPosition(
-                      0,
-                      160,
-                      true,
-                    );
-                    this._passwordField && this._passwordField.focus();
+                    this.setState({
+                      passwordFocus: true
+                    }, () => {
+                      // this.regScroll.scrollToPosition(
+                      //   0,
+                      //   160,
+                      //   true,
+                      // );
+                      this._passwordField && this._passwordField.focus();
+                    })
+
                   }}
                   value={this.state.username}
                   onFocus={() => {
-                      this.regScroll.scrollToPosition(
-                        0,
-                        100,
-                        true,
-                      );
+                    this.setState({
+                      passwordFocus: false
+                    })
+                  //   this.regScroll.scrollToPosition(
+                  //     0,
+                  //     100,
+                  //     true,
+                  //   );
                   }}
                   placeholder="Enter email..."
                   keyboardType="email-address"
@@ -456,6 +465,16 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                   secureTextEntry={true}
                   onSubmitEditing={this.controller.onClick.bind(this.controller)}
                   returnKeyType="go"
+                  onFocus={() => {
+                    this.setState({
+                      passwordFocus: true
+                    })
+                  //   this.regScroll.scrollToPosition(
+                  //     0,
+                  //     this.state.keyboardHeight/2,
+                  //     true,
+                  //   );
+                  }}
                   onChange={(text: any) =>
                     this.controller.onTextChange('password', text)
                   }
