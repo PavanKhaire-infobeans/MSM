@@ -94,6 +94,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>The app would like to save photos from the app to your gallery</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera permission to upload camera images</string>
 	<key>NSMicrophoneUsageDescription</key>

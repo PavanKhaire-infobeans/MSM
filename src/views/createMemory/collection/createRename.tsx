@@ -21,6 +21,7 @@ import Utility from '../../../common/utility';
 import styles from './styles';
 import TextField from '../../../common/component/textField';
 import { action_close } from '../../../images';
+import BusyIndicator from '../../../common/component/busyindicator';
 
 type State = { [x: string]: any };
 type Props = {
@@ -36,11 +37,13 @@ class CreateRenameCollection extends React.Component<Props, State> {
   state: State = {
     content: '',
     showError: false,
+    showLoaderValue:false,
+    loaderTextValue:'Loading...'
   };
 
   componentDidMount() {
-    if (this.props.isRename) {
-      this.setState({ content: this.props.collectionName });
+    if (this.props.route.params.isRename) {
+      this.setState({ content: this.props.route.params.collectionName });
     }
     this.collectionUpdated = EventManager.addListener(
       kCollectionUpdated,
@@ -50,25 +53,30 @@ class CreateRenameCollection extends React.Component<Props, State> {
 
   collectionUpdate = (success: any, response: any) => {
     //loaderHandler.hideLoader();
-    if (success) {
-      let newCollection = getValue(response, ['CollectionStatus', 'data']);
-      if (this.props.isRename) {
-        if (this.props.collection.tid == this.props.tid) {
+    this.setState({
+      showLoaderValue: true
+    },()=>{
+      if (success) {
+        let newCollection = getValue(response, ['CollectionStatus', 'data']);
+        if (this.props.route.params.isRename) {
+          if (this.props.collection.tid == this.props.route.params.tid) {
+            this.props.setCollection(newCollection);
+          }
+          this.props.route.params.callback(this.state.content);
+          this.props.collectionAPI();
+        } else {
+          newCollection = { ...newCollection, memory_count: 0 };
           this.props.setCollection(newCollection);
+          this.props.collectionList.unshift(newCollection);
+          this.props.route.params.callback(newCollection);
         }
-        this.props.callback(this.state.content);
-        this.props.collectionAPI();
+        Keyboard.dismiss();
+        this.props.navigation.goBack();
       } else {
-        newCollection = { ...newCollection, memory_count: 0 };
-        this.props.setCollection(newCollection);
-        this.props.collectionList.unshift(newCollection);
-        this.props.callback(newCollection);
+        this.cancelAction();
       }
-      Keyboard.dismiss();
-      this.props.navigation.goBack();
-    } else {
-      this.cancelAction();
-    }
+    });
+    
   };
 
   componentWillUnmount = () => {
@@ -77,23 +85,27 @@ class CreateRenameCollection extends React.Component<Props, State> {
 
   saveValue = () => {
     if (this.state.content.trim().length > 0) {
-      //loaderHandler.showLoader('Saving...');
-      if (this.props.isRename) {
-        UpdateMemoryCollection(
-          {
-            collection_tid: this.props.tid,
-            name: decode_utf8(this.state.content.trim()),
-          },
-          false,
-        );
-      } else {
-        UpdateMemoryCollection(
-          { name: decode_utf8(this.state.content.trim()) },
-          false,
-        );
-      }
+      this.setState({
+        showLoaderValue: true
+      },()=>{
+        if (this.props.route.params.isRename) {
+          UpdateMemoryCollection(
+            {
+              collection_tid: this.props.route.params.tid,
+              name: decode_utf8(this.state.content.trim()),
+            },
+            false,
+          );
+        } else {
+          UpdateMemoryCollection(
+            { name: decode_utf8(this.state.content.trim()) },
+            false,
+          );
+        }
+      })
+     
     } else {
-      this.setState({ showError: true });
+      this.setState({ showLoaderValue: false,showError: true });
     }
   };
 
@@ -105,12 +117,19 @@ class CreateRenameCollection extends React.Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
+
+        {
+          this.state.showLoaderValue ?
+            <BusyIndicator startVisible={this.state.showLoaderValue} text={this.state.loaderTextValue != '' ? this.state.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <SafeAreaView
           style={styles.invisibleContainer}
         />
         <SafeAreaView style={styles.safeAreaContainer}>
           <View style={styles.container}>
-            
+
             <NavigationHeaderSafeArea
               heading={''}
               //   this.props.isRename
@@ -118,6 +137,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
               //     : 'Create New Collection'
               // }
               cancelAction={() => this.cancelAction()}
+              // multiValuesPage={true}
               showRightText={false}
               rightText={'Done'}
               backIcon={action_close}
@@ -143,7 +163,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
                 }}
                 value={this.state.content}
                 // multiline={false}
-                maxLength={30}
+                maxLength={50}
                 style={styles.CollectionInputStyle}
               //   borderBottomColor: this.state.showError
               //     ? Colors.ErrorColor : 'rgba(0,0,0,0.4)',
@@ -157,20 +177,20 @@ class CreateRenameCollection extends React.Component<Props, State> {
             </View>
 
             <TouchableWithoutFeedback
-                // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
-                onPress={this.saveValue}
-                >
-                <View
-                  style={[styles.loginSSOButtonStyle,{position:'absolute',bottom:24}]}>
-                  <Text
-                    style={[
-                      CommonTextStyles.fontWeight500Size17Inter,
-                      styles.loginTextStyle,
-                    ]}>
-                    Done
-                  </Text>
-                </View>
-              </TouchableWithoutFeedback>
+              // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+              onPress={this.saveValue}
+            >
+              <View
+                style={[styles.loginSSOButtonStyle, { position: 'absolute', bottom: 24 }]}>
+                <Text
+                  style={[
+                    CommonTextStyles.fontWeight500Size17Inter,
+                    styles.loginTextStyle,
+                  ]}>
+                  Done
+                </Text>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </SafeAreaView>
       </View>
@@ -180,7 +200,8 @@ class CreateRenameCollection extends React.Component<Props, State> {
 const mapState = (state: { [x: string]: any }) => {
   return {
     collectionList: state.MemoryInitials.collectionList,
-    collection: state.MemoryInitials.collection,
+    // collection: state.MemoryInitials.collection,
+    collection: state.MemoryInitials.collections,
   };
 };
 

@@ -17,6 +17,7 @@ const Styles = EStyleSheet.create({
   mainContainer: {
     flexDirection: 'row',
     width: '100%',
+    paddingLeft: 16,
     height: 68,
     justifyContent: 'center',
     alignItems: 'center',

@@ -28,7 +28,25 @@ const Styles = EStyleSheet.create({
   LoginHeader:{ 
     width: Utility.getDeviceWidth() - 48, 
     flexDirection: 'row', 
-    marginTop: 24
+    // marginTop: 24
+  },
+  backButtonContainerStyle:{ 
+    flexDirection: 'row', 
+    width: 120, 
+    borderRadius: 1000, 
+    height: 44, 
+    marginTop: 24, 
+    marginBottom: 32, 
+    borderColor: Colors.bottomTabColor, 
+    borderWidth: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: Colors.white 
+  },
+  backIconStyle:{ 
+    tintColor: Colors.newTextColor, 
+    marginRight: 12, 
+    transform: [{ rotate: '180deg' }] 
   },
   hederText:{ 
     fontWeight: '500', 

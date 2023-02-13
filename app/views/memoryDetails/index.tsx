@@ -2058,7 +2058,8 @@ class MemoryDetails extends React.Component<Props, State> {
                 {/* <View style={{ height: 15 }} /> */}
                 {/* Render Attachments */}
                 {this.storyType.indexOf('song') != -1 ? (
-                  <ScrollView nestedScrollEnabled={true} overScrollMode='always' style={{ flex: 1 }}>
+                  <ScrollView   showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false} nestedScrollEnabled={true} overScrollMode='always' style={{ flex: 1 }}>
                     <WebView
                       useWebKit={true}
                       ref={(ref: any) => (this._webView = ref)}

@@ -104,8 +104,8 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    let refListFriends = this.props.route.params.refListFriends.slice(0);
-    let refListFriendCircles = this.props.route.params.refListFriendCircles.slice(0);
+    let refListFriends = this.props.route.params?.refListFriends?.slice(0);
+    let refListFriendCircles = this.props.route?.params?.refListFriendCircles?.slice(0);
     this.setState({
       isMemoryTags: this.props.route.params.tag == kTags,
       isCollaborator: this.props.route.params.tag == kCollaborators,

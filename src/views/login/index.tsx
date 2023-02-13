@@ -10,6 +10,7 @@ import {
   StatusBar,
   TextInput,
   TouchableHighlight,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -55,6 +56,7 @@ import {
 import Styles from './styles';
 import Utility from '../../common/utility';
 import BusyIndicator from '../../common/component/busyindicator';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 export const kRegSignUp = 'Registration SignUp';
 export enum loginType {
   googleLogin = 'Google',
@@ -65,6 +67,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   //Password Field Reference
   _passwordField?: TextInput = null;
   _usernameField?: TextInput = null;
+  regScroll: any = React.createRef();
 
   //Registration screen login callBacks
   appleLoginCallBack: EventManager;
@@ -198,7 +201,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       'showMessage',
       this._show,
     );
-    
+
     LoginStore.listAllAccounts()
       .then((resp: any) => {
         let list = resp.rows.raw() as Array<UserData>;
@@ -334,8 +337,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       inputRange: [0, 0.5, 1],
       outputRange: [
         0,
-        -(this.state.keyboardHeight ),
-        -(this.state.keyboardHeight ),
+        -(this.state.keyboardHeight),
+        -(this.state.keyboardHeight),
       ],
     });
 
@@ -371,142 +374,173 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
           />
         </SafeAreaView>
         <SafeAreaView style={Styles.flexContainer}>
-          <View style={Styles.LoginHeader}>
-            <Text style={Styles.hederText}>Login</Text>
-          </View>
 
-          <View style={Styles.separatorHeightStyle16} />
-          <View style={Styles.separatorHeightStyle16} />
+          <TouchableOpacity activeOpacity={1}
+            onPress={() => {
+              this.props.navigation.goBack()
+            }}
+            style={Styles.backButtonContainerStyle} >
+            <Image style={Styles.backIconStyle} source={arrowRightCircle} />
+            <Text style={[CommonTextStyles.fontWeight500Size17Inter, { color: Colors.newTextColor }]}>Back</Text>
+          </TouchableOpacity>
 
-          <View style={Styles.inputsContainer}>
-            <View>
-              <Text
-                style={[
-                  CommonTextStyles.fontWeight500Size13Inter,
-                  Styles.labelStyle,
-                ]}>
-                EMAIL
-              </Text>
-
-              <TextField
-                errorMessage={this.state.userNameError.text}
-                showError={this.state.userNameError.error}
-                reference={ref => (this._usernameField = ref)}
-                onSubmitEditing={() => {
-                  this._passwordField && this._passwordField.focus();
-                }}
-                value={this.state.username}
-                placeholder="Enter email..."
-                keyboardType="email-address"
-                returnKeyType="next"
-                onChange={(text: any) =>
-                  this.controller.onTextChange('username', text)
-                }
-              />
-              <View style={Styles.separatorHeightStyle24} />
-              <Text
-                style={[
-                  CommonTextStyles.fontWeight500Size13Inter,
-                  Styles.labelStyle,
-                ]}>
-                PASSWORD
-              </Text>
-
-              <TextField
-                passwordToggle={true}
-                errorMessage={this.state.passwordError.text}
-                showError={this.state.passwordError.error}
-                reference={ref => (this._passwordField = ref)}
-                value={this.state.password}
-                placeholder="Enter password..."
-                secureTextEntry={true}
-                onSubmitEditing={this.controller.onClick.bind(this.controller)}
-                returnKeyType="go"
-                onChange={(text: any) =>
-                  this.controller.onTextChange('password', text)
-                }
-              />
-              {/* <View style={{ height: 10 }} /> */}
-              <TouchableHighlight
-                underlayColor={Colors.white}
-                onPress={() => {
-                  this.showErrorMessage(false);
-                  this.props.navigation.navigate('forgotPassword');
-                }}>
-                <View style={styles.forgotPassword}>
-                  <Text
-                    style={Styles.forwardTextStyle}>
-                    Forgot Password?
-                  </Text>
-
-                </View>
-              </TouchableHighlight>
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+            ref={ref => (this.regScroll = ref)}
+            // style={{ width: "100%", paddingHorizontal: 24 }}
+            // bounces={false}
+            extraScrollHeight={120}
+          >
+            <View style={Styles.LoginHeader}>
+              <Text style={Styles.hederText}>Login</Text>
             </View>
 
-            <Animated.View style={[Styles.buttonContainer, animStyle,]}>
-              <TouchableHighlight
-                underlayColor={'#ffffffff'}
-                style={styles.forgotPassword}
-                onPress={() =>
-                  this.setState({ _isRemeberMe: !this.state._isRemeberMe })
-                }>
-                <View
-                  style={[
-                    styles.forgotPasswordContainer,
-                    {
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: 32
-                    },
-                  ]}>
-                  <Image source={this.state._isRemeberMe ? checkbox_tick : checkbox} />
-                  <View style={{ width: 8 }} />
-                  <Text
-                    style={styles.forgotPasswordText}>
-                    Remember Me
-                  </Text>
+            <View style={Styles.separatorHeightStyle16} />
+            <View style={Styles.separatorHeightStyle16} />
 
-                </View>
-              </TouchableHighlight>
+            <View style={Styles.inputsContainer}>
 
-              <TouchableWithoutFeedback
-                // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
-                onPress={() => {
-                  this.controller.onClick();
-                }}>
-                <View
+              <View>
+                <Text
                   style={[
-                    Styles.loginSSOButtonStyle,
-                    {
-                      height: 44,
-                      backgroundColor:
-                        this.state.username != '' && this.state.password != ''
-                          ? Colors.bordercolor
-                          : Colors.bordercolor,
-                      opacity:
-                        this.state.username != '' && this.state.password != ''
-                          ? 1
-                          : 1,
-                      flexDirection: 'row',
-                      // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
-                    },
+                    CommonTextStyles.fontWeight500Size13Inter,
+                    Styles.labelStyle,
                   ]}>
-                  <Text
-                    style={[
-                      CommonTextStyles.fontWeight500Size17Inter,
-                      Styles.loginTextStyle,
-                    ]}>
-                    Login
-                  </Text>
-                  <Image source={arrowRightCircle} />
-                </View>
-              </TouchableWithoutFeedback>
-            </Animated.View>
-          </View>
-     
+                  EMAIL
+                </Text>
+
+                <TextField
+                  errorMessage={this.state.userNameError.text}
+                  showError={this.state.userNameError.error}
+                  reference={ref => (this._usernameField = ref)}
+                  onSubmitEditing={() => {
+                    this.regScroll.scrollToPosition(
+                      0,
+                      160,
+                      true,
+                    );
+                    this._passwordField && this._passwordField.focus();
+                  }}
+                  value={this.state.username}
+                  onFocus={() => {
+                      this.regScroll.scrollToPosition(
+                        0,
+                        100,
+                        true,
+                      );
+                  }}
+                  placeholder="Enter email..."
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  onChange={(text: any) =>
+                    this.controller.onTextChange('username', text)
+                  }
+                />
+                <View style={Styles.separatorHeightStyle24} />
+                <Text
+                  style={[
+                    CommonTextStyles.fontWeight500Size13Inter,
+                    Styles.labelStyle,
+                  ]}>
+                  PASSWORD
+                </Text>
+
+                <TextField
+                  passwordToggle={true}
+                  errorMessage={this.state.passwordError.text}
+                  showError={this.state.passwordError.error}
+                  reference={ref => (this._passwordField = ref)}
+                  value={this.state.password}
+                  placeholder="Enter password..."
+                  secureTextEntry={true}
+                  onSubmitEditing={this.controller.onClick.bind(this.controller)}
+                  returnKeyType="go"
+                  onChange={(text: any) =>
+                    this.controller.onTextChange('password', text)
+                  }
+                />
+                {/* <View style={{ height: 10 }} /> */}
+                <TouchableHighlight
+                  underlayColor={Colors.white}
+                  onPress={() => {
+                    this.showErrorMessage(false);
+                    this.props.navigation.navigate('forgotPassword');
+                  }}>
+                  <View style={styles.forgotPassword}>
+                    <Text
+                      style={Styles.forwardTextStyle}>
+                      Forgot Password?
+                    </Text>
+
+                  </View>
+                </TouchableHighlight>
+              </View>
+
+            </View>
+          </KeyboardAwareScrollView>
+          <Animated.View style={[Styles.buttonContainer, animStyle,]}>
+            <TouchableHighlight
+              underlayColor={'#ffffffff'}
+              style={styles.forgotPassword}
+              onPress={() =>
+                this.setState({ _isRemeberMe: !this.state._isRemeberMe })
+              }>
+              <View
+                style={[
+                  styles.forgotPasswordContainer,
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 32
+                  },
+                ]}>
+                <Image source={this.state._isRemeberMe ? checkbox_tick : checkbox} />
+                <View style={{ width: 8 }} />
+                <Text
+                  style={styles.forgotPasswordText}>
+                  Remember Me
+                </Text>
+
+              </View>
+            </TouchableHighlight>
+
+            <TouchableWithoutFeedback
+              // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+              onPress={() => {
+                this.controller.onClick();
+              }}>
+              <View
+                style={[
+                  Styles.loginSSOButtonStyle,
+                  {
+                    height: 44,
+                    backgroundColor:
+                      this.state.username != '' && this.state.password != ''
+                        ? Colors.bordercolor
+                        : Colors.bordercolor,
+                    opacity:
+                      this.state.username != '' && this.state.password != ''
+                        ? 1
+                        : 1,
+                    flexDirection: 'row',
+                    // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
+                  },
+                ]}>
+                <Text
+                  style={[
+                    CommonTextStyles.fontWeight500Size17Inter,
+                    Styles.loginTextStyle,
+                  ]}>
+                  Login
+                </Text>
+                <Image source={arrowRightCircle} />
+              </View>
+            </TouchableWithoutFeedback>
+          </Animated.View>
         </SafeAreaView>
-     
+
       </View>
     );
   }

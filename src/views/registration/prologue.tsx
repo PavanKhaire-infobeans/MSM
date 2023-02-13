@@ -74,6 +74,7 @@ class Prologue extends Component<Props> {
     isLoginDrawerOpen: false,
     isSearchDrawerOpen: false,
     isRegistrationOpen: false,
+    showFirstStep: true,
     registrationFormData: null,
     isBottomPickerVisible: false,
     wasLoading: false,
@@ -322,7 +323,6 @@ class Prologue extends Component<Props> {
   render() {
     let heightScreenHeight = Dimensions.get('window').height;
     const { navigate } = this.props.navigation;
-    // showConsoleLog(ConsoleType.LOG,"Device interensic height is : ", StaticSafeAreaInsets.safeAreaInsetsBottom);
     return (
       <View style={Styles.flexContainer}>
         <StatusBar
@@ -332,10 +332,7 @@ class Prologue extends Component<Props> {
           backgroundColor={Colors.AudioViewBg}
         />
         <View style={{ flex: 1, backgroundColor: Colors.NewThemeColor }}>
-          {/* <ImageBackground source={background_msm} style={{flex: 1, justifyContent: "center"}}>	 */}
           <View
-            // source={Rectangle}
-            // resizeMode="stretch"
             style={{
               height: Utility.getDeviceHeight() * 1,
               width: Utility.getDeviceWidth() * 1,
@@ -369,30 +366,20 @@ class Prologue extends Component<Props> {
               <SafeAreaView style={Styles.flexContainer}>
                 <MessageDialogue ref={(ref: any) => (this.messageRef = ref)} />
 
-                {/*<RegistrationBackground/>*/}
-                {/* <NavigationHeaderSafeArea height={0} ref={(ref)=> this.navBar = ref} showCommunity={false} cancelAction={()=> Actions.pop()} 
-                                      hideClose={true} showRightText={false} isWhite={false}/>	 */}
-                {/* <View style={{ height: "100%", width: "100%", position: "absolute", top: "50%" }}></View> */}
                 <View style={Styles.prologSubContainer}>
                   {this.state.isRegistrationOpen ? (
                     <View style={{ flex: 1 }}>
-                      {/* <View style={Styles.prologHeaderContainer}>
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.setState({ isRegistrationOpen: false })
-                          }>
-                          <Image source={loginBack} />
-                        </TouchableOpacity>
-                        <Text style={Styles.signUp}>Sign up</Text>
-                        <View style={Styles.prologHeaderContainerEmpty} />
-                      </View> */}
+
                       <View style={Styles.LoginHeader}>
                         {
                           this.state.whyDoAskView ?
-                            <View style={{ flexDirection: 'row' }}>
-                              <Text style={Styles.whoTextStyle}>Why do we ask for your birth year?</Text>
+                            <View style={{ flexDirection: 'row', marginTop: 24, }}>
+                              <View style={{ width: Utility.getDeviceWidth() - 84, marginRight: 12 }}>
+                                <Text style={Styles.whoTextStyle}>Why do we ask for your birth year?</Text>
+                              </View>
                               <TouchableHighlight
                                 underlayColor={'#ffffff00'}
+                                style={{ height: 24, width: 24 }}
                                 onPress={() => {
                                   this.setState({
                                     whyDoAskView: false
@@ -402,56 +389,69 @@ class Prologue extends Component<Props> {
                               </TouchableHighlight>
                             </View>
                             :
-                            <Text style={Styles.hederText}>Sign up</Text>
+                            <>
+                              <TouchableOpacity activeOpacity={1}
+                                onPress={() => {
+                                  if (this.state.isRegistrationOpen && !this.state.showFirstStep) {
+                                    this.setState({
+                                      showFirstStep: true
+                                    })
+                                  }
+                                  else if (this.state.isRegistrationOpen) {
+                                    this.setState({
+                                      isRegistrationOpen: false
+                                    })
+                                  }
+                                  // this.props.navigation.goBack()
+                                }}
+                                style={Styles.backButtonContainerStyle} >
+                                <Image style={Styles.backIconStyle} source={arrowRightCircle} />
+                                <Text style={[CommonTextStyles.fontWeight500Size17Inter, { color: Colors.newTextColor }]}>Back</Text>
+                              </TouchableOpacity>
+                              <Text style={Styles.hederText}>Sign up</Text>
+                            </>
                         }
                       </View>
-                      {
-                        this.state.whyDoAskView ?
-                          <View style={[Styles.LoginHeader, { margin: 0 }]} >
-                            <Text style={Styles.whoTextDescStyle}>
-                              Not only do we want to abide by <Text style={{ textDecorationLine: 'underline', color: Colors.loginTextColor }}>COPPA</Text> {`(Children’s Online Privacy Protection Act) to protect children’s online privacy, but we also want to help personalize your My Stories Matter experience from the get-go based on your age-demographic.\n\nWe do not share and will not share this information for any purpose.`}
-                            </Text>
-                          </View>
-                          :
-                          <View style={{ flex: 1 }}>
-                            <View style={Styles.separatorHeightStyle32} />
-                            {/* <View style={Styles.prologHeaderEmptyView} /> */}
-                            <RegFirstStep
-                              showTerms={() => navigate("commonWebView", { url: "https://mystoriesmatter.com/content/end-user-license-agreement?no_header=1", title: "Terms and Conditions" })}
-                              ref={(ref: any) => {
-                                this.regStep = ref;
-                              }}
-                              formList={this.state.registrationFormData}
-                              isCuebackRegistration={true}
-                              navBar={this}
-                              bottomPicker={(isVisible: any) =>
-                                this.bottomPicker(isVisible)
-                              }
-                              navigation={this.props.navigation}
-                              whyDoAskView={() => {
-                                this.setState({
-                                  whyDoAskView: true
-                                })
-                              }}
-                              showLoader={() => {
-                                this.props.showLoader(true);
-                                this.props.loaderText('Loading...');
-                              }}
-                              hideLoader={() => {
-                                this.props.showLoader(false);
-                                this.props.loaderText('Loading...');
-                              }}
-                            />
-                          </View>
-                      }
+
+                      <View style={{ flex: 1 }}>
+                        <View style={Styles.separatorHeightStyle32} />
+                        {/* <View style={Styles.prologHeaderEmptyView} /> */}
+                        <RegFirstStep
+                          showFirstStep={this.state.showFirstStep}
+                          setHideFirstStep={() => this.setState({ showFirstStep: false })}
+                          showTerms={() => navigate("commonWebView", { url: "https://mystoriesmatter.com/content/end-user-license-agreement?no_header=1", title: "Terms and Conditions" })}
+                          ref={(ref: any) => {
+                            this.regStep = ref;
+                          }}
+                          formList={this.state.registrationFormData}
+                          isCuebackRegistration={true}
+                          navBar={this}
+                          bottomPicker={(isVisible: any) =>
+                            this.bottomPicker(isVisible)
+                          }
+                          navigation={this.props.navigation}
+                          whyDoAskViewValue={this.state.whyDoAskView}
+                          whyDoAskView={() => {
+                            this.setState({
+                              whyDoAskView: true
+                            })
+                          }}
+                          showLoader={() => {
+                            this.props.showLoader(true);
+                            this.props.loaderText('Loading...');
+                          }}
+                          hideLoader={() => {
+                            this.props.showLoader(false);
+                            this.props.loaderText('Loading...');
+                          }}
+                        />
+                      </View>
+
                     </View>
                   ) :
 
                     (
                       <View>
-                        {/* <Image style={{ margin: 16, marginBottom: 0 }} source={recordRegistration}></Image> */}
-
-                        {/* <Text style={{ padding: 16, paddingBottom: 10, fontWeight: '500', ...fontSize(24), color: Colors.TextColor }}>'New to{"\n"}My Stories Matter?'</Text> */}
                         <View style={Styles.ReadyContainer}>
                           <Text style={Styles.readyText}>
                             Ready to start reminiscing?
@@ -591,54 +591,7 @@ class Prologue extends Component<Props> {
                       </View>
                     )}
                 </View>
-                {/* {!this.state.isBottomPickerVisible && <BottomDrawer
-					ref={(ref: any) => {this.searchDrawerRef = ref}}
-					identifier={this.searchIdentifier}
-					containerHeight={heightScreenHeight-70}
-					startUp={false}
-					downDisplay={heightScreenHeight-180-(Platform.OS == "ios" && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10 : 0)}
-					backgroundColor={"white"}
-					shadow={true}
-					onExpanded = {(identifier: any) => this.onDrawerExpand(identifier)}
-					onCollapsed = {(identifier: any) => this.onDrawerCollapse(identifier)}
-					drawerTapped = {(identifier: any) => this.drawerTapped(identifier)}
-					responseRelease = {(e: any, guesture: any, identifier: any, direction: any) => 
-										this.onResponder(e, guesture, identifier, direction, true)}
-					panResponderMove = {(e: any, guesture: any, identifier: any, direction: any)=> 
-										this.onResponder(e, guesture, identifier, direction, false)}
-					offset={10}>
-					<View style={{flexDirection: "row", width: "100%", padding : 15, justifyContent: "space-between"}}>
-						<View style={{flexDirection: "row", alignItems: "center"}}>
-							<Image source={search_theme}></Image>
-							<Text style={{paddingLeft: 10, fontWeight: "500", ...fontSize(18)}}>Find your private community</Text>
-						</View>
-						<Image source={icon_arrow} style={{transform: [{ rotate: this.state.isSearchDrawerOpen ? '90deg' : '-90deg' }]}}/>
-					</View>
-					<FindCommunity openLoginDrawer={()=> this.openLoginDrawer()}/>
-				</BottomDrawer>} */}
-                {/* {!this.state.isBottomPickerVisible && <BottomDrawer
-									ref={(ref: any) => { loginDrawerRef = ref }}
-									identifier={this.loginIdentifier}
-									containerHeight={heightScreenHeight}
-									startUp={false}
-									// downDisplay={heightScreenHeight-170-(Platform.OS == "ios" && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10 : 0)}
-									downDisplay={heightScreenHeight}
-									backgroundColor={"white"}
-									shadow={true}
-									onExpanded={(identifier: any) => this.onDrawerExpand(identifier)}
-									onCollapsed={(identifier: any) => this.onDrawerCollapse(identifier)}
-									responseRelease={(e: any, guesture: any, identifier: any, direction: any) =>
-										this.onResponder(e, guesture, identifier, direction, true)}
-									panResponderMove={(e: any, guesture: any, identifier: any, direction: any) =>
-										this.onResponder(e, guesture, identifier, direction, false)}
-									drawerTapped={(identifier: any) => this.drawerTapped(identifier)}
-									offset={10}>
-									
-									<Login navBar={this} isLoginUp={this.state.isLoginUp} />
-								</BottomDrawer>} */}
-                {/* {(this.state.isLoginDrawerOpen || this.state.isSearchDrawerOpen || this.state.isRegistrationOpen || this.props.showHeader) && this.prologueHeader()} */}
-                {/* <View style={[]}>
-				</View> */}
+
               </SafeAreaView>
             </LinearGradient>
           </View>

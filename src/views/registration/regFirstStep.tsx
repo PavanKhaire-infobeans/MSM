@@ -134,6 +134,16 @@ export default class RegFirstStep extends Component<Props> {
     );
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps: Readonly<any>, nextContext: any): void {
+      if(nextProps != this.props){
+        if(nextProps.showFirstStep){
+          this.setState({
+            regFirstStep: true    
+          })
+        }
+      }
+  };
+
   componentWillUnmount() {
     // this.checkProfile.removeListener();
     this.submitReg.removeListener();
@@ -433,7 +443,7 @@ export default class RegFirstStep extends Component<Props> {
                 scrollHeight: this.state.scrollHeight + 70,
               },
               () => {
-                this.regScroll.scrollToPosition(0,this.state.scrollHeight,true);
+                this.regScroll.scrollToPosition(0, this.state.scrollHeight, true);
               },
             );
           }}
@@ -752,11 +762,11 @@ export default class RegFirstStep extends Component<Props> {
         this.setState({
           regFirstStep: false,
           keyboardHeight: 0,
-        });
+        },()=>{this.props.setHideFirstStep()});
     } else {
       this.onSubmit();
     }
-    this.regScroll.scrollToPosition(0,0,true);
+    this.regScroll.scrollToPosition(0, 0, true);
   }
 
   renderCueBackRegistertaion = (yVal) => {
@@ -799,13 +809,14 @@ export default class RegFirstStep extends Component<Props> {
 
     return (
       <View style={Styles.regFirstStepSubContainer}>
+
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           ref={ref => (this.regScroll = ref)}
-        // style={{ width: "100%", paddingHorizontal: 24 }}
-        // bounces={false}
-        extraScrollHeight={100}
+          // style={{ width: "100%", paddingHorizontal: 24 }}
+          // bounces={false}
+          extraScrollHeight={100}
         >
           {/* {sortedForm.map((form: FormStruct, index: number) => {
 							return this.getFormEntity(form, { fieldID: `${index}`, isLast: formLength - 1 == index });
@@ -851,22 +862,6 @@ export default class RegFirstStep extends Component<Props> {
                 : 280 - this.state.keyboardHeight,
             }}
           /> */}
-          {this.state.regFirstStep ?
-            null
-            :
-            <TouchableHighlight
-              underlayColor={"#ffffff00"}
-              onPress={() => { this.props.showTerms() }}
-            >
-              <View style={[Styles.termHeader, { margin: 0, justifyContent: 'center' }]} >
-                <Text style={Styles.termStyle}>
-                  By signing up, I agree to the <Text style={{ textDecorationLine: 'underline' }}>
-                    Terms and Conditions
-                  </Text>
-                </Text>
-              </View>
-            </TouchableHighlight>
-          }
 
           {/* <View style={Styles.ScrollViewBottomView}></View> */}
           {/* <SubmitButton style={{backgroundColor: "#fff"}} text="Join" onPress={this.onSubmit} />									 */}
@@ -878,10 +873,11 @@ export default class RegFirstStep extends Component<Props> {
               translateY: yVal,
             },
           ],
+          position: 'absolute', bottom: 10,left:24
         }}>
           <TouchableOpacity
             activeOpacity={1}
-            style={[Styles.loginSSOButtonStyle, { position: 'absolute', bottom: 10 }]}
+            style={[Styles.loginSSOButtonStyle, {}]}
             onPress={this.validateFields}
           // disabled={
           //   this.state.regFirstStep
@@ -925,7 +921,24 @@ export default class RegFirstStep extends Component<Props> {
               <Image source={arrowRightCircle} />
             </View>
           </TouchableOpacity>
+          {this.state.regFirstStep ?
+            null
+            :
+            <TouchableHighlight
+              underlayColor={"#ffffff00"}
+              onPress={() => { this.props.showTerms() }}
+            >
+              <View style={[Styles.termHeader, { margin: 0, justifyContent: 'center' }]} >
+                <Text style={Styles.termStyle}>
+                  By signing up, I agree to the <Text style={{ textDecorationLine: 'underline' }}>
+                    Terms and Conditions
+                  </Text>
+                </Text>
+              </View>
+            </TouchableHighlight>
+          }
         </Animated.View>
+
       </View>
     );
   };
@@ -949,70 +962,78 @@ export default class RegFirstStep extends Component<Props> {
 
     return (
       <View style={{ flex: 1 }}>
-        {this.props.isCuebackRegistration ? (
-          this.renderCueBackRegistertaion(yVal)
-        ) : (
-          <SafeAreaView style={Styles.firstStepContainer}>
-            <View style={Styles.firstStepSubContainer}>
-              <NavigationHeaderSafeArea
-                isRegisteration={true}
-                ref={ref => (this.navBar = ref)}
-              />
-              <StatusBar
-                barStyle={
-                  Utility.currentTheme == 'light'
-                    ? 'dark-content'
-                    : 'light-content'
-                }
-                backgroundColor={Colors.NewThemeColor}
-              />
-              <View
-                style={{ height: this.state.errorHeight, width: '100%' }}></View>
-              <View
-                keyboardShouldPersistTaps="always"
-                style={Styles.ScrollViewStyle}
-                contentContainerStyle={{ alignItems: 'center' }}
-                bounces={false}>
-                <View style={Styles.registrationStyles}>
-                  <View style={Styles.registrationSubStyles}>
-                    <Image source={registration_vector} />
-                    <Text style={Styles.RegistrationText}>Registration</Text>
-                  </View>
-                  {this.form.map((form: FormStruct, index: number) => {
+        {
+          this.props.whyDoAskViewValue ?
+            <View style={[Styles.LoginHeader, { margin: 0 }]} >
+              <Text style={Styles.whoTextDescStyle}>
+                Not only do we want to abide by <Text style={{ textDecorationLine: 'underline', color: Colors.loginTextColor }}>COPPA</Text> {`(Children’s Online Privacy Protection Act) to protect children’s online privacy, but we also want to help personalize your My Stories Matter experience from the get-go based on your age-demographic.\n\nWe do not share and will not share this information for any purpose.`}
+              </Text>
+            </View>
+            :
+            this.props.isCuebackRegistration ? (
+              this.renderCueBackRegistertaion(yVal)
+            ) : (
+              <SafeAreaView style={Styles.firstStepContainer}>
+                <View style={Styles.firstStepSubContainer}>
+                  <NavigationHeaderSafeArea
+                    isRegisteration={true}
+                    ref={ref => (this.navBar = ref)}
+                  />
+                  <StatusBar
+                    barStyle={
+                      Utility.currentTheme == 'light'
+                        ? 'dark-content'
+                        : 'light-content'
+                    }
+                    backgroundColor={Colors.NewThemeColor}
+                  />
+                  <View
+                    style={{ height: this.state.errorHeight, width: '100%' }}></View>
+                  <View
+                    keyboardShouldPersistTaps="always"
+                    style={Styles.ScrollViewStyle}
+                    contentContainerStyle={{ alignItems: 'center' }}
+                    bounces={false}>
+                    <View style={Styles.registrationStyles}>
+                      <View style={Styles.registrationSubStyles}>
+                        <Image source={registration_vector} />
+                        <Text style={Styles.RegistrationText}>Registration</Text>
+                      </View>
+                      {this.form.map((form: FormStruct, index: number) => {
 
-                    return this.getFormEntity(form, {
-                      fieldID: `${index}`,
-                      isLast: formLength - 1 == index,
-                    });
-                  })}
+                        return this.getFormEntity(form, {
+                          fieldID: `${index}`,
+                          isLast: formLength - 1 == index,
+                        });
+                      })}
 
-                  {/* {this.isBirthYear && <View style={{ flexDirection: "row", top: -15, marginBottom: 10, justifyContent: "flex-start" }}>
+                      {/* {this.isBirthYear && <View style={{ flexDirection: "row", top: -15, marginBottom: 10, justifyContent: "flex-start" }}>
 											<Image source={info_icon} style={{ tintColor: "#000", marginTop: 2 }} />
 											<Text style={{ flex: 1, marginLeft: 5, ...fontSize(15), fontWeight: "300", fontStyle: "italic", color: "#000" }}>We only use your birth year to customize what you see on My Stories Matter, such as your personal Timeline.</Text>
 										</View>} */}
-                  <SubmitButton
-                    text="Send Request to Join"
-                    onPress={this.onSubmit}
-                  />
-                  {/** Join now UI */}
-                  <View style={Styles.alreadyMemberContainer}>
-                    <Text style={Styles.alreadyMemberText}>
-                      {'Already a member? '}
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.props.openLoginDrawer();
-                        setTimeout(() => {
-                          this.props.navigation.goBack();
-                        }, 500);
-                      }}
-                      style={Styles.loginButtonContainer}>
-                      <Text style={Styles.loginText}>Login</Text>
-                    </TouchableOpacity>
+                      <SubmitButton
+                        text="Send Request to Join"
+                        onPress={this.onSubmit}
+                      />
+                      {/** Join now UI */}
+                      <View style={Styles.alreadyMemberContainer}>
+                        <Text style={Styles.alreadyMemberText}>
+                          {'Already a member? '}
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.props.openLoginDrawer();
+                            setTimeout(() => {
+                              this.props.navigation.goBack();
+                            }, 500);
+                          }}
+                          style={Styles.loginButtonContainer}>
+                          <Text style={Styles.loginText}>Login</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
                   </View>
-                </View>
-              </View>
-              {/* <BottomPicker
+                  {/* <BottomPicker
 								ref={this.bottomPicker}
 								onItemSelect={(selectedItem: ActionSheetItem) => {
 									let fieldName = this.state.selectionData.fieldName;
@@ -1032,9 +1053,9 @@ export default class RegFirstStep extends Component<Props> {
 								actions={this.state.selectionData.actions}
 								value={this.state.selectionData.selectionValue}
 							/> */}
-            </View>
-          </SafeAreaView>
-        )}
+                </View>
+              </SafeAreaView>
+            )}
       </View>
     );
   }

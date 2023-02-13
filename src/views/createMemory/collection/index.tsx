@@ -77,6 +77,14 @@ class CollectionList extends React.Component<Props, State> {
     }
   }
 
+  UNSAFE_componentWillReceiveProps=(nextProps: Readonly<Props>, nextContext: any): void =>{
+    if(nextProps != this.props){
+      this.setState({
+        collections: this.props.collections,
+      });
+    }    
+  };
+
   cancelAction = () => {
     Keyboard.dismiss();
     this.props.navigation.goBack();
@@ -139,6 +147,7 @@ class CollectionList extends React.Component<Props, State> {
       showConsoleLog(ConsoleType.LOG, error);
     }
   };
+
   renderRow = (item: any) => {
     let isSelected = false;
     if (this.state && this.state.collections && this.state.collections.length) {

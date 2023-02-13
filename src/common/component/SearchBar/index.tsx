@@ -200,6 +200,9 @@ export default class SearchBar extends React.Component<Props> {
       <TouchableOpacity
         onPress={() => {
           // this.clearField();
+          if (this.props.onSearchButtonPress) {
+            this.props.onSearchButtonPress(this.state.value);
+          }
         }}
         style={searchStyle.clearButton}>
         <Image

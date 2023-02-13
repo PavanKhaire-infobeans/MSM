@@ -283,6 +283,7 @@ function* getFiltersTimeLine(action: any) {
           if (responseBody.Details && responseBody.Details.timeline_years) {
 
             DefaultPreference.set('timeline_years', JSON.stringify(responseBody.Details.timeline_years)).then(function () {
+              console.log("filters >>", JSON.stringify(responseBody.Details.timeline_years))
             });
             Account.selectedData().start_year = responseBody.Details.timeline_years.start_year;
             Account.selectedData().end_year = responseBody.Details.timeline_years.end_year;

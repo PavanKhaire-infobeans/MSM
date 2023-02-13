@@ -106,18 +106,22 @@ export default class CommonAudioRecorder extends React.Component<
       changedName: '',
       error: { errMsg: '', show: false },
     };
-    if (this.props?.route?.params?.selectedItem) {
-      this.state = {
-        ...this.state,
-        audioState: 'recorded',
-        path: this.props?.route?.params?.selectedItem.uri || this.props?.route?.params?.selectedItem.filePath,
-      };
-    } else {
-      this.state = { ...this.state, audioState: 'none', path: '' };
-    }
   }
 
-  componentDidMount = () => { };
+  componentDidMount = () => { 
+    console.log(JSON.stringify(this.props?.route?.params?.selectedItem.url))
+    if (this.props?.route?.params?.selectedItem) {
+      this.setState({
+        audioState: 'recorded',
+        path: this.props?.route?.params?.selectedItem.uri || this.props?.route?.params?.selectedItem.url || this.props?.route?.params?.selectedItem.filePath,
+      })
+    } else {
+      this.setState({
+        audioState: 'none', 
+        path: ''
+      })
+    }
+  };
 
   isBackground = (state: AppStateStatus) => {
     if (state == 'background') {
@@ -136,7 +140,11 @@ export default class CommonAudioRecorder extends React.Component<
   back = () => {
     if (this.props.route.params.doNotReload) {
       this.props.route.params.doNotReload(true);
+      this.props.navigation.goBack();
+      return;
     }
+
+    
     this.isRecordingFromAddContent
       ? this.navigateBackOrReset()
       : this.props.navigation.goBack();
@@ -473,7 +481,12 @@ export default class CommonAudioRecorder extends React.Component<
             }${secInt}`,
         },
       ]);
-      this.props.navigation.goBack();
+      if (this.props.route.params.doNotReload) {
+        this.props.route.params.doNotReload(true);
+        this.props.navigation.goBack();
+      }
+      else
+        this.props.navigation.goBack();
     });
   };
 
@@ -639,8 +652,15 @@ export default class CommonAudioRecorder extends React.Component<
             {!getValue(this.props?.route?.params?.selectedItem, ['isLocal']) ? (
               <TouchableOpacity
                 onPress={() => {
-                  this.props.deleteItem();
-                  this.props.navigation.goBack();
+                  if (this.props.route?.params.deleteItem) {
+                    this.props.route?.params?.deleteItem();
+                  }
+                  if (this.props.route.params.doNotReload) {
+                    this.props.route.params.doNotReload(true);
+                    this.props.navigation.goBack();
+                  }
+                  else
+                    this.props.navigation.goBack();
                 }}
                 style={Styles.selectedRecordItemButton}>
                 <Image source={rubbish} resizeMode="contain" />
@@ -648,8 +668,15 @@ export default class CommonAudioRecorder extends React.Component<
             ) : null}
             <TouchableOpacity
               onPress={() => {
-                this.props.navigation.goBack();
-                this.props.reset();
+                if (this.props.route?.params.reset) {
+                  this.props.route?.params?.reset();
+                }
+                if (this.props.route.params.doNotReload) {
+                  this.props.route.params.doNotReload(true);
+                  this.props.navigation.goBack();
+                }
+                else
+                  this.props.navigation.goBack();
               }}
               style={Styles.closeContainer}>
               <Text style={Styles.cancelText}>Close</Text>

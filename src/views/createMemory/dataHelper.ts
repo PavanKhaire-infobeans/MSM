@@ -51,8 +51,12 @@ export const DefaultDetailsWithoutTitleMemory = (title: any) => {
 };
 
 export class CreateMemoryHelper {
-  getDateOptions(fieldName: any, year: any, month?: any) {
+  getDateOptions(fieldName: any, yearData: any, monthData?: any) {
     let actions: Array<any> = [];
+    let year = parseInt(yearData), month;
+    if(monthData){
+      month = parseInt(monthData)
+    }
     if (fieldName == 'year') {
       // actions.push({ key: 'Year*', text: 'Year*' });
       let minYear = 1917;
@@ -146,7 +150,7 @@ export class CreateMemoryHelper {
       }
 
       for (let i = min; i <= max; i++) {
-        if (i < 9) {
+        if (i <= 9) {
           if (i > limit) {
             actions.push({ key: i, text: '0' + i.toString(), disabled: true });
           } else {
@@ -196,7 +200,7 @@ export const DefaultCreateMemoryObj = (
         } :
           {
             year: initialState.date.year,
-            month: initialState.date.month,
+            month: parseInt(initialState.date.month),
             day: initialState.date.day != 'Day' ? !isNaN(parseInt(initialState.date.day)) ? parseInt(initialState.date.day).toString() : undefined : undefined,
           } : undefined,  // {
       //   year: initialState.date.year,

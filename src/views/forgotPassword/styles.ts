@@ -20,6 +20,25 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 24,
   },
+  backButtonContainerStyle:{ 
+    flexDirection: 'row', 
+    width: 120, 
+    borderRadius: 1000, 
+    height: 44, 
+    marginTop: 24, 
+    marginLeft: 24, 
+    marginBottom: 32, 
+    borderColor: Colors.bottomTabColor, 
+    borderWidth: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: Colors.white 
+  },
+  backIconStyle:{ 
+    tintColor: Colors.newTextColor, 
+    marginRight: 12, 
+    transform: [{ rotate: '180deg' }] 
+  },
   loginSSOButtonStyle: {
     width: '100%',
     height: 44,
@@ -52,7 +71,6 @@ export const styles = StyleSheet.create({
     width: Utility.getDeviceWidth() - 48,
     alignSelf: 'center',
     flexDirection: 'row',
-    marginTop: 24
   },
   titleText: {
     ...fontSize(Size.byWidth(24)),

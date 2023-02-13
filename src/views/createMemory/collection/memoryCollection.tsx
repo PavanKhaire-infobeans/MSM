@@ -61,7 +61,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
   componentDidMount() {
     //loaderHandler.showLoader();
     this.props.collectionAPI();
-    GetPublishedMemoryCollections(this.props.nid);
+    GetPublishedMemoryCollections(this.props.route.params.nid);
     this.checkForScroll = true;
   }
 
@@ -191,6 +191,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
               heading={'Add to Collections'}
               cancelAction={() => this.cancelAction()}
               showRightText={true}
+              multiValuesPage={true}
               rightText={'Done'}
               saveValues={this.saveValue}
             />

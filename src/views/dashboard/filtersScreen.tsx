@@ -241,7 +241,8 @@ const FilterScreen = (props: Props) => {
           }
           backgroundColor={Colors.NewThemeColor}
         />
-        <ScrollView nestedScrollEnabled={true} overScrollMode='always' style={[styles.scrollViewStyle,{flex:1}]}>
+        <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false} overScrollMode='always' style={[styles.scrollViewStyle,{flex:1}]}>
           <View style={styles.justifyContentSpaceBetween}>
             <View>
               {props.currentScreen == ListType.Timeline && (

@@ -55,7 +55,7 @@ export default class CommonWebView extends React.Component<Props> {
                 backgroundColor={Colors.NewThemeColor}
                 hideClose={false}
                 rightIcon={false}
-                heading={this.props.route.params.title || this.props.title}
+                heading={this.props.route?.params?.title || this.props.title}
                 cancelAction={() => {
                   Keyboard.dismiss();
                   if (this.props.route.params.deepLinkBackClick || this.props.deepLinkBackClick) {

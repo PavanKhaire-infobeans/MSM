@@ -12,6 +12,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   TouchableOpacityProperties,
+  FlatList,
   View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
@@ -29,7 +30,7 @@ import {
   PickImage,
   PickPDF,
 } from '../../../common/component/filePicker/filePicker';
-import { KeyboardAwareFlatList as FlatList } from '../../../common/component/keyboardaware-scrollview';
+// import { KeyboardAwareFlatList as FlatList } from '../../../common/component/keyboardaware-scrollview';
 import Text from '../../../common/component/Text';
 import { ToastMessage } from '../../../common/component/Toast';
 import {
@@ -500,7 +501,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         let fItem: {
           [x: string]: any;
         } = { ...file, uri };
-        if (fItem.type == 'images') {
+        if (fItem.type == 'images' && fItem.thumb_uri) {
           let thumb_uri = (fItem.thumb_uri as string).replace(
             'public://',
             this.fileMain,
@@ -1007,19 +1008,23 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   };
 
   onActionItemClicked = (index: number): void => {
-    switch (index) {
-      case 0:
-        PickImage(this.fileCallbackHandler);
-        break;
-      case 1:
-        PickAudio(this.fileCallbackHandler);
-        break;
-      case 2:
-        PickPDF(this.fileCallbackHandler);
-        break;
-    }
+    this._actionSheet.hideSheet();
     this.setState({
       actionSheet: { ...this.state.actionSheet, type: 'none', list: [] },
+    },()=>{
+      setTimeout(() => {
+        switch (index) {
+          case 0:
+            PickImage(this.fileCallbackHandler);
+            break;
+          case 1:
+            PickAudio(this.fileCallbackHandler);
+            break;
+          case 2:
+            PickPDF(this.fileCallbackHandler);
+            break;
+        }   
+      }, 200);
     });
   };
 
@@ -1297,6 +1302,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 : 60,
           },
         ]}
+        showsHorizontalScrollIndicator={false}
         keyExtractor={(_: any, index: number) => `${index}`}
         keyboardShouldPersistTaps="always"
         horizontal={true}
@@ -1490,7 +1496,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         {found ? (
           <View></View>
         ) : (
-          <TouchableOpacity key={item.fid} style={{ padding: 13 }}>
+          <TouchableOpacity {...props} key={item.fid} style={{ padding: 13 }}>
             <View
               style={{
                 borderWidth: 1,

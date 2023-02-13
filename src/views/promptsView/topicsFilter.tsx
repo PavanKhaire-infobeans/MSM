@@ -202,7 +202,8 @@ const TopicsFilter = (props: Props) => {
       </View>
 
       <View style={Styles.jumptoScreenSubContainer}>
-        <ScrollView ref={flatlistRef} nestedScrollEnabled={true} overScrollMode='always' style={Styles.flexContainer}>
+        <ScrollView ref={flatlistRef} showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false} nestedScrollEnabled={true} overScrollMode='always' style={Styles.flexContainer}>
           <>
             <View style={[Styles.fullWidth, Styles.justifyalignCenetr]}>
               <View style={Styles.separatorStyle}></View>

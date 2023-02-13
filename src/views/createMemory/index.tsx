@@ -420,8 +420,8 @@ const CreateMemory = (props: Props) => {
       props.saveFiles(draftDetails.files);
 
       if (draftDetails.date.year) {
-        setYear({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() : '' })
-        setYearNew({ ...year, value: draftDetails.date.year ? draftDetails.date.year.toString() : '' })
+        setYear({ ...year, value: draftDetails.date.year ? draftDetails.date.year : '' })
+        setYearNew({ ...year, value: draftDetails.date.year ? draftDetails.date.year : '' })
       }
       if (draftDetails.date.month && validAlphabatesReg.test(draftDetails.date.month)) {
         setMonth({
@@ -436,27 +436,27 @@ const CreateMemory = (props: Props) => {
       else if (draftDetails.date.month) {
         setMonth({
           ...month,
-          value: draftDetails.date.month > 0 ? draftDetails.date.month < 10 ? '0' + JSON.stringify(draftDetails.date.month) : JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
+          value: draftDetails.date.month ? draftDetails.date.month : '',//MonthObj.month[MonthObj.selectedIndex],
         })
         setMonthNew({
           ...month,
-          value: draftDetails.date.month > 0 ? draftDetails.date.month < 10 ? '0' + JSON.stringify(draftDetails.date.month) : JSON.stringify(draftDetails.date.month) : '',//MonthObj.month[MonthObj.selectedIndex],
+          value: draftDetails.date.month? draftDetails.date.month : '',//MonthObj.month[MonthObj.selectedIndex],
         })
       }
 
       if (draftDetails.date.day) {
         setDay({
           ...day,
-          value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
+          value: draftDetails.date.day ? draftDetails.date.day : '',
         })
         setDayNew({
           ...day,
-          value: draftDetails.date.day > 0 ? JSON.stringify(draftDetails.date.day) : '',
+          value: draftDetails.date.day ? draftDetails.date.day : '',
         })
+        setShowDay(parseInt(draftDetails.date.day) > 0 ? true : false)
       }
 
       setMemoryDate(newMemoryDate ? newMemoryDate : '')
-      setShowDay(draftDetails.date.day > 0 ? true : false)
       setIsCreatedByUser(draftDetails.isCreatedByUser.uid == Account.selectedData().userID)
       setPadDetails(draftDetails.etherpad_details)
       // ownerDetails
@@ -493,7 +493,7 @@ const CreateMemory = (props: Props) => {
 
   const getData = async () => {
     let recentTag = { searchType: kRecentTags, searchTerm: '' };
-    console.log("props.route.params.editMode >", props.route.params.editMode)
+    
     if (props.route.params.editMode) {
       //loaderHandler.showLoader('Loading...');
       props.showLoader(true);
@@ -986,7 +986,7 @@ const CreateMemory = (props: Props) => {
             : '',//new Date().getUTCDate().toString(), //new Date(memory_date).getFullYear(),
         month:
           month.value != ''
-            ? month.value.length > 2 ? month.value : parseInt(month.value)
+            ? month.value.length > 2 ? month.value : month.value
             : '',//new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
         day:
           day.value != ''
@@ -1047,7 +1047,7 @@ const CreateMemory = (props: Props) => {
             : '',//new Date().getUTCFullYear().toString(), //new Date(memory_date).getFullYear(),
         month:
           month.value != ''
-            ? month.value.length > 2 ? month.value : parseInt(month.value)
+            ? month.value.length > 2 ? month.value : (month.value)
             : '',//new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
         day:
           day.value != ''
@@ -1736,7 +1736,7 @@ const CreateMemory = (props: Props) => {
   };
 
   const _renderLocation = ({ item, index }: any) => {
-    showConsoleLog(ConsoleType.WARN, JSON.stringify(item))
+    
     return (
       <TouchableOpacity
         style={styles.locationContainer}
@@ -2119,9 +2119,10 @@ const CreateMemory = (props: Props) => {
           if (parseInt(yearNew.value) == new Date().getFullYear()) {
 
             let seasonArray = MonthObj?.month?.filter(itm => itm.name == monthNew.value)
+            // seasonArray = seasonArray.length ? seasonArray.sort(function (a, b) { return a - b }) :[]
             // && itm.months.filter(monthitm => monthitm.id == new Date().getMonth()+1).length
-            let monthsInSeason = seasonArray.length && seasonArray?.months?.length ? seasonArray.months.map(ii => ii.id).sort(function (a, b) { return a - b }) : []
-            if (parseInt(yearNew.value) <= new Date().getFullYear() && monthsInSeason.length && (new Date().getUTCMonth() + 1 < monthsInSeason[monthsInSeason.length - 1])) {
+            let monthsInSeason = seasonArray.length ? seasonArray[0].months.map(ii => ii.id).sort(function (a, b) { return a - b }) : []
+            if (parseInt(yearNew.value) <= new Date().getFullYear() && monthsInSeason.length && (monthsInSeason.indexOf(new Date().getUTCMonth() + 1) != -1)) {
               if (!isNaN(parseInt(monthNew.value)) && (parseInt(monthNew.value) <= (new Date().getMonth() + 1))) {
 
                 isValidMonth = true;
@@ -2395,6 +2396,8 @@ const CreateMemory = (props: Props) => {
             contentContainerStyle={
               Styles.viewBeforListContentContainerStyle
             }
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             nestedScrollEnabled={true}
             overScrollMode='always'
             style={[styles.fullWidth, { flex: 1 }]}
@@ -2833,7 +2836,8 @@ const mapState = (state: { [x: string]: any }) => {
     files: state.MemoryInitials.files,
     tagsList: state.MemoryInitials.tags,
     whoElseWhereThereList: state.MemoryInitials.whoElseWhereThere,
-    collection: state.MemoryInitials.collection,
+    // collection: state.MemoryInitials.collection,
+    collection: state.MemoryInitials.collections,
     nid: state.MemoryInitials.nid,
     shareOption: state.MemoryInitials.shareOption,
     whoCanSeeMemoryUids: state.MemoryInitials.whoCanSeeMemoryUids,

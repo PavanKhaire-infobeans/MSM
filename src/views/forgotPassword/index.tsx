@@ -70,7 +70,7 @@ const ForgotPassword = (props: Props) => {
   let selectedCommunity: Account = new Account();
   const moveOnYAxis = useRef(new Animated.Value(0)).current;
   selectedCommunity.values = Account.tempData();
-  const [keyboardHeight,setKeyboardHeight] = useState(0);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   useEffect(() => {
     if (props?.forgotPasswordStatus?.completed) {
       props?.clean();
@@ -121,7 +121,7 @@ const ForgotPassword = (props: Props) => {
       emailError: ''
     }));
   }
-  
+
   const _keyboardDidShow = e => {
     try {
       const { height, screenX, screenY, width } = e.endCoordinates;
@@ -136,8 +136,8 @@ const ForgotPassword = (props: Props) => {
   };
 
   const _keyboardDidHide = () => {
-      setKeyboardHeight(0)
-      startMoveDownYAxis();
+    setKeyboardHeight(0)
+    startMoveDownYAxis();
   };
 
   let keyboardDidShowListener = Keyboard.addListener(
@@ -257,8 +257,8 @@ const ForgotPassword = (props: Props) => {
     inputRange: [0, 0.5, 1],
     outputRange: [
       0,
-      -(keyboardHeight ),
-      -(keyboardHeight ),
+      -(keyboardHeight),
+      -(keyboardHeight),
     ],
   });
 
@@ -297,7 +297,22 @@ const ForgotPassword = (props: Props) => {
           }
           backgroundColor={Colors.NewDarkThemeColor}
         />
-        <View style={styles.LoginHeader}>
+
+        {
+          !state.isRequestSubmitted ?
+            <TouchableOpacity activeOpacity={1}
+              onPress={() => {
+                props.navigation.goBack()
+              }}
+              style={styles.backButtonContainerStyle} >
+              <Image style={styles.backIconStyle} source={arrowRightCircle} />
+              <Text style={[CommonTextStyles.fontWeight500Size17Inter, { color: Colors.newTextColor }]}>Back</Text>
+            </TouchableOpacity>
+            :
+            null
+        }
+
+        <View style={[styles.LoginHeader, state.isRequestSubmitted && { marginTop: 24 }]}>
           <Text style={styles.hederText}>Password Recovery</Text>
         </View>
 

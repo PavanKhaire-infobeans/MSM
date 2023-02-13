@@ -2151,7 +2151,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
                   : this.InternalQueue()}
 
                 {this.storyType.indexOf('song') != -1 ? (
-                  <ScrollView nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}>
+                  <ScrollView   showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false} nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}>
                     <WebView
                       useWebKit={true}
                       ref={(ref: any) => (this._webView = ref)}

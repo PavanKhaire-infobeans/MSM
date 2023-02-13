@@ -404,7 +404,7 @@ class MindPopList extends React.Component<{
           if (this.convertToMemoryObject.callForCreateMemory) {
             this.convertToMemoryObject.callForCreateMemory = false;
             this.props.navigation.navigate('createMemory', {
-              editMode:true,
+              editMode: true,
               attachments: this.convertToMemoryObject.attachments,
               id: this.convertToMemoryObject.nid,
               textTitle: this.convertToMemoryObject.details.title,
@@ -421,7 +421,7 @@ class MindPopList extends React.Component<{
             'message',
           ]);
           let message: string = errorMsg || ERROR_MESSAGE;
-         //ToastMessage(message,message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor);
+          //ToastMessage(message,message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor);
         }
       }
     }
@@ -592,7 +592,7 @@ class MindPopList extends React.Component<{
     }
   };
 
-  _editAction(rowMap: any, data: any, edit: boolean = false) {
+  _editAction = (rowMap: any, data: any, edit: boolean = false) => {
     this.closeRow(rowMap, data.item.id);
     if (edit) {
       this.props.editMode(data.item);
@@ -690,14 +690,14 @@ class MindPopList extends React.Component<{
     </View>
   );
 
-  _doApiCall = ()=>{
+  _doApiCall = () => {
     this.updateList();
   }
 
   render() {
     return (
       <View style={Styles.container}>
-         {
+        {
           this.props.showLoaderValue ?
             <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
             :
@@ -705,7 +705,7 @@ class MindPopList extends React.Component<{
         }
         <SafeAreaView style={Styles.noflexContainer} />
         <SafeAreaView style={Styles.mainContainer}>
-          
+
           <View style={Styles.container}>
             {this.props.showAlert && this.props.showAlertData?.title ? (
               <CustomAlert
@@ -793,12 +793,12 @@ class MindPopList extends React.Component<{
             //loaderHandler.hideLoader();
             this.props.showLoader(false);
             this.props.loaderText('Loading...');
-           //ToastMessage(resp.message);
+            //ToastMessage(resp.message);
           }
         },
       );
     } else {
-     //ToastMessage(NO_INTERNET);
+      //ToastMessage(NO_INTERNET);
     }
   };
 
@@ -1132,17 +1132,44 @@ class MindPopList extends React.Component<{
     });
   };
 
+  searchFunction = (search: string) => {
+    let mindPopArray = [...this.state.listSectionItems], resultArray: any = [];
+
+    if(mindPopArray && mindPopArray.length && mindPopArray[1] && mindPopArray[1].data && mindPopArray[1].data.length){
+      resultArray = mindPopArray[1].data.filter(item => item.message.toLowerCase() == search.toLowerCase());
+      resultArray = [mindPopArray[0], {
+        "title": "1",
+        "data": [...resultArray]
+      }];
+    }
+   
+    this.setState({
+      listSectionItems: resultArray,
+      searchMode: true
+    });
+  };
+
   getListView(): JSX.Element {
+    let {listSectionItems}= this.state;
+    if(listSectionItems && listSectionItems[0]&&listSectionItems[0].title && listSectionItems[0].title ==='1'){
+      
+      let unique = [...new Map(listSectionItems[0].data.map(item =>
+        [item['instanceID'], item])).values()]
+      // const unique:any = [...new Set(listSectionItems[0].data.map(item => item.instanceID))];
+      listSectionItems[0].data = unique;
+    }
     return (
       <View style={styles.container}>
         {this.props.isSelectingItem ||
           (this.state.totalItems < 1 && !this.state.searchMode) ? null : (
           <SearchBar
+            showCancelClearButton={false}
             style={styles.containerSearch}
             value={this.searchKeyword.trim()}
             placeholder="Search"
             onSearchButtonPress={(keyword: string) => {
-              this.performSearch(keyword.trim());
+              // this.performSearch(keyword.trim());
+              this.searchFunction(keyword);
             }}
             onClearField={() => {
               this.clearSearch();
@@ -1156,7 +1183,7 @@ class MindPopList extends React.Component<{
           />
         )}
         {
-          this.state.listSectionItems.length == 0 ? (
+          listSectionItems.length == 0 ? (
             this.state.searchMode ? (
               this._empty()
             ) : this.state.webserviceBeingCalled ? (
@@ -1178,7 +1205,7 @@ class MindPopList extends React.Component<{
                 useSectionList={true}
                 maxToRenderPerBatch={8}
                 removeClippedSubviews={true}
-                sections={this.state.listSectionItems}
+                sections={listSectionItems}
                 renderItem={this._renderFrontCell}
                 renderHiddenItem={
                   this.props.isSelectingItem ? null : this._renderBackHiddenCell

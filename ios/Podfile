@@ -17,7 +17,8 @@ target 'MyStoriesMatter' do
   pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone/Permission-Microphone.podspec"
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera/Permission-Camera.podspec"
   pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary/Permission-PhotoLibrary.podspec"
-
+  pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary"
+  
   target 'MyStoriesMatterTests' do
     inherit! :complete
     # Pods for testing
