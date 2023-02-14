@@ -2304,6 +2304,7 @@ const CreateMemory = (props: Props) => {
           showCommunity={false}
           cancelAction={() => saveDraft()} //this.setState({ showCustomAlert: true }) //this.cancelAction}
           showRightText={true}
+          createMemoryPage={true}
           rightText={
             props.route.params.editPublsihedMemory
               ? 'Save'

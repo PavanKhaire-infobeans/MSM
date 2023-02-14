@@ -1,5 +1,6 @@
 import React, { createRef } from 'react';
 import {
+  AppState,
   DeviceEventEmitter,
   Image,
   Platform,
@@ -34,6 +35,7 @@ import {
   GET_MEMORY_LIST,
   ListType,
   MEMORY_ACTIONS_DASHBOARD,
+  SHOW_LOADER_READ,
   SHOW_LOADER_TEXT,
 } from './dashboardReducer';
 // @ts-ignore
@@ -102,34 +104,11 @@ class DashboardIndex extends React.Component<Props> {
     super(props);
     this.FetchConfigurations();
     this.notificationModel = new NotificationDataModel();
-    // this.eventManager = EventManager.addListener(
-    //   'addContentTabPressed',
-    //   this.navigateToAddContent,
-    // );
-    // this.notificationListener = EventManager.addListener(
-    //   kGetInvidualNotification,
-    //   this.notificationCallback,
-    // );
-    // this.foregroundNotification = EventManager.addListener(
-    //   kForegroundNotice,
-    //   this.foregroundNotificationCallback,
-    // );
-    // this.backgroundNotification = EventManager.addListener(
-    //   kBackgroundNotice,
-    //   this.checkNotificationAvailiability,
-    // );
-    // this.eventListener = EventManager.addListener(
-    //   kNotificationIndicator,
-    //   this.changeNotification,
-    // );
-    // this.memoryActionsListener = EventManager.addListener(
-    //   kMemoryActionPerformedOnDashboard,
-    //   this.memoryActionCallBack,
-    // );
-    // this.memoryFromPrompt = EventManager.addListener(
-    //   promptIdListener,
-    //   this.promptToMemoryCallBack,
-    // );
+    AppState.addEventListener('change',()=>{
+      if (AppState.currentState === 'background') {
+        this.props.showLoader(false)
+      }
+    })
   }
 
   navigateToAddContent = () => {
@@ -615,6 +594,8 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: ACTIVE_TAB_ON_DASHBOARD, payload: payload }),
     loaderText: (payload: any) =>
       dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
   };
 };
 

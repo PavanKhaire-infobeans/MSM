@@ -33,7 +33,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
       <View>
         {!this.props.hideClose ? (
           <TouchableWithoutFeedback onPress={() => this.props.cancelAction()}>
-            <View style={[styles.leftButtonTouchableContainer, { marginLeft: this.props.multiValuesPage ? 16 : 0 }]}>
+            <View style={[styles.leftButtonTouchableContainer, { marginLeft: this.props.multiValuesPage ? 0 : 0 }]}>
               <Image
                 style={
                   this.props.showRightText
@@ -159,7 +159,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
     let url = accData.instanceURL == '192.168.2.6' ? 'calpoly.cueback.com' : accData.instanceURL;
 
     return (
-      <View>
+      <View style={{ width: '100%' }}>
         {
           this.props.isRegisteration ? (
             <View style={styles.registrationContainerStyle}>
@@ -192,6 +192,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
                   styles.mainContainer,
                   {
                     borderBottomWidth: this.props.isWhite ? 2 : 0,
+                    paddingLeft: this.props.cancleText ||this.props.createMemoryPage ? 0 : 16
                     // borderTopLeftRadius: 12,
                     // borderTopRightRadius: 12,
                   },
@@ -212,6 +213,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
                     styles.mainContainer,
                     {
                       borderBottomWidth: this.props.isWhite ? 2 : 0,
+                      paddingLeft: this.props.cancleText ||this.props.createMemoryPage ? 0 : 16
                       // borderTopLeftRadius: 12,
                       // borderTopRightRadius: 12,
                     },

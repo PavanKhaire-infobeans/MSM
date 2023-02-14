@@ -357,14 +357,20 @@ const PublishMemoryDraft = (props) => {
               'Date',
               !isNaN(parseInt((props.date?.month))) ? `${props.date?.day}/ ${props.date?.month}/ ${props.date?.year}` : `${props.date?.month} ${props.date?.year}`,
               'Add Date',
-              () => props.navigation.goBack(),
+              () =>{
+                props.route.params.doNotReload(true);    
+                props.navigation.goBack()
+              },
               true
             )}
             {commonListComponent(
               'Location',
               props.location?.description ? props.location?.description : '',
               'Add location...',
-              () => props.navigation.goBack(),
+              () => {
+                props.route.params.doNotReload(true);
+                props.navigation.goBack()
+              },
               true
             )}
             {commonListComponent(

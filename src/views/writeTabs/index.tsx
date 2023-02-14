@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  AppState,
   Dimensions,
   FlatList,
   Platform,
@@ -82,6 +83,11 @@ const WriteTabs = props => {
       setShowCustomAlert(true);
     }
    
+    AppState.addEventListener('change',()=>{
+      if (AppState.currentState === 'background') {
+        props.showLoader(false)
+      }
+    })
     return () => {
       props.showAlertCall(false);
       foregroundNotification.removeListener();
