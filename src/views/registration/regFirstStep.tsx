@@ -135,13 +135,13 @@ export default class RegFirstStep extends Component<Props> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Readonly<any>, nextContext: any): void {
-      if(nextProps != this.props){
-        if(nextProps.showFirstStep){
-          this.setState({
-            regFirstStep: true    
-          })
-        }
+    if (nextProps != this.props) {
+      if (nextProps.showFirstStep) {
+        this.setState({
+          regFirstStep: true
+        })
       }
+    }
   };
 
   componentWillUnmount() {
@@ -762,7 +762,7 @@ export default class RegFirstStep extends Component<Props> {
         this.setState({
           regFirstStep: false,
           keyboardHeight: 0,
-        },()=>{this.props.setHideFirstStep()});
+        }, () => { this.props.setHideFirstStep() });
     } else {
       this.onSubmit();
     }
@@ -813,6 +813,7 @@ export default class RegFirstStep extends Component<Props> {
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
           ref={ref => (this.regScroll = ref)}
           // style={{ width: "100%", paddingHorizontal: 24 }}
           // bounces={false}
@@ -873,7 +874,7 @@ export default class RegFirstStep extends Component<Props> {
               translateY: yVal,
             },
           ],
-          position: 'absolute', bottom: 10,left:24
+          position: 'absolute', bottom: 10, left: 24
         }}>
           <TouchableOpacity
             activeOpacity={1}

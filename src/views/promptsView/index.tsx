@@ -254,7 +254,7 @@ const PromptsView = (props: Props) => {
               }
             });
           }
-          showConsoleLog(ConsoleType.LOG, "data >> ", JSON.stringify(values));
+          // showConsoleLog(ConsoleType.LOG, "data >> ", JSON.stringify(values));
 
           if (ifLoadMore) {
             setState(prevState => ({

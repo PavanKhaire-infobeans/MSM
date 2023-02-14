@@ -19,7 +19,7 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CustomActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
-import ActionSheet from 'react-native-actions-sheet';
+import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 
 import SelectDropdown from 'react-native-select-dropdown';
 import Text from '../../common/component/Text';
@@ -216,7 +216,7 @@ const CreateMemory = (props: Props) => {
   let saveDraftListener: EventManager;
   let createMemoryHelper: any = new CreateMemoryHelper();
   let _actionSheet = useRef();
-  let optionsActionSheetRef = useRef();
+  let optionsActionSheetRef = useRef<ActionSheetRef>(null);
 
   let _mainItemList: any = null;
   let kUploadAction: 'uploadAction';
@@ -440,7 +440,7 @@ const CreateMemory = (props: Props) => {
         })
         setMonthNew({
           ...month,
-          value: draftDetails.date.month? draftDetails.date.month : '',//MonthObj.month[MonthObj.selectedIndex],
+          value: draftDetails.date.month ? draftDetails.date.month : '',//MonthObj.month[MonthObj.selectedIndex],
         })
       }
 
@@ -493,7 +493,7 @@ const CreateMemory = (props: Props) => {
 
   const getData = async () => {
     let recentTag = { searchType: kRecentTags, searchTerm: '' };
-    
+
     if (props.route.params.editMode) {
       //loaderHandler.showLoader('Loading...');
       props.showLoader(true);
@@ -901,7 +901,7 @@ const CreateMemory = (props: Props) => {
     }
   };
 
-  const saveORPublish = (key: any,fromPublish?: any,data?: any) => {
+  const saveORPublish = (key: any, fromPublish?: any, data?: any) => {
     if (!fromPublish) {
       saveIntitals();
     }
@@ -1124,7 +1124,7 @@ const CreateMemory = (props: Props) => {
           fileCallback(tempFile);
         },
         reset: () => { },
-        deleteItem: () => { 
+        deleteItem: () => {
           deleteFile(selectedItem?.fid, selectedItem?.isLocal);
         },
       });
@@ -1432,8 +1432,8 @@ const CreateMemory = (props: Props) => {
           <TouchableHighlight
             underlayColor={'#ffffff33'}
             onPress={() =>
-              props.navigation.navigate('pdfViewer', { 
-                file: file ,
+              props.navigation.navigate('pdfViewer', {
+                file: file,
                 doNotReload: val => setDoNotReload(val),
               })
             }
@@ -1738,7 +1738,7 @@ const CreateMemory = (props: Props) => {
   };
 
   const _renderLocation = ({ item, index }: any) => {
-    
+
     return (
       <TouchableOpacity
         style={styles.locationContainer}
@@ -1875,7 +1875,7 @@ const CreateMemory = (props: Props) => {
           </TouchableOpacity> */}
           </View>
 
-          {Platform.OS === 'android' && showCalender && (
+          {/* {Platform.OS === 'android' && showCalender && (
             <DateTimePicker
               isVisible={showCalender}
               onCancel={() => {
@@ -1887,7 +1887,7 @@ const CreateMemory = (props: Props) => {
 
               }}
             />
-          )}
+          )} */}
         </View>
 
         {/* {
@@ -1901,8 +1901,8 @@ const CreateMemory = (props: Props) => {
             <TouchableOpacity
               style={Styles.buttonsStyle}
               onPress={() => {
-                optionsActionSheetRef?.current?.show();
                 setOptionToShow('date')
+                optionsActionSheetRef?.current?.show();
                 // if (Platform.OS === 'android') {
                 //   DateTimePickerAndroid.open(this.dateOptions);
                 // } else {
@@ -1963,9 +1963,9 @@ const CreateMemory = (props: Props) => {
               else {
                 // preview
                 props.navigation.navigate('publishMemoryDraft', {
-                  publishMemoryDraft: val => saveORPublish(val.key,true,val.data),
+                  publishMemoryDraft: val => saveORPublish(val.key, true, val.data),
                   doNotReload: val => setDoNotReload(val),
-                  preview: ()=>{},
+                  preview: () => { },
                   delete: deleteDraft,
                 });
               }
@@ -2117,6 +2117,7 @@ const CreateMemory = (props: Props) => {
       let getMonthIsValid = monthactions.filter(item => (item.text.toLowerCase() === val) || (item.key && (item.key <= 9 ? ('0' + item.key.toString().toLowerCase() === val) : item.key.toString().toLowerCase() === val)));
       let monthData = monthactions.filter(item => (item.key <= 9 ? (('0' + item.key.toString().toLowerCase()) === monthNew.value.toString().toLowerCase()) : item.key.toString().toLowerCase() == monthNew.value.toString().toLowerCase()));
       if (monthNew?.value?.length > 2) {
+        console.log(JSON.stringify(monthactions), JSON.stringify(getMonthIsValid))
         if (monthactions && monthactions.length && getMonthIsValid.length && getMonthIsValid[0]?.disabled != true) {
           if (parseInt(yearNew.value) == new Date().getFullYear()) {
 
@@ -2141,12 +2142,14 @@ const CreateMemory = (props: Props) => {
           else {
             if (parseInt(yearNew.value) < new Date().getFullYear()) {
               if (!isNaN(parseInt(monthNew.value)) && (parseInt(monthNew.value) <= (new Date().getMonth() + 1))) {
+                console.log(JSON.stringify(yearNew.value))
                 isValidMonth = true;
                 isValidDate = true;
                 setDayNew({ ...dayNew, value: '' })
               }
               else if (validAlphabatesReg.test(monthNew?.value)) {
                 setDayNew({ ...dayNew, value: '' })
+                console.log(JSON.stringify(monthNew.value))
                 isValidMonth = true;
                 isValidDate = true;
               }
@@ -2203,7 +2206,7 @@ const CreateMemory = (props: Props) => {
       }
       <SafeAreaView style={styles.emptySafeAreaStyle} />
       {/* <SafeAreaView style={styles.SafeAreaViewContainerStyle}> */}
-      {Platform.OS === 'ios' && showCalender && (
+      {/* {Platform.OS === 'ios' && showCalender && (
         <View style={Styles.calendarViewStyle}>
           <DatePicker
             options={{
@@ -2229,7 +2232,7 @@ const CreateMemory = (props: Props) => {
             style={styles.calendar}
           />
         </View>
-      )}
+      )} */}
       <CustomAlert
         modalVisible={showCustomAlert}
         title={'Save your memory'}
@@ -2463,250 +2466,164 @@ const CreateMemory = (props: Props) => {
             )} */}
 
         {/* {toolbar()} */}
-        <CustomActionSheet
-          ref={ref => _actionSheet = ref}
-          width={DeviceInfo.isTablet() ? '65%' : '100%'}
-          title={actionSheet.title}
-          actions={actionSheet.list}
-          onActionClick={onActionItemClicked}
-        />
-
+        {
+          Platform.OS === 'ios' &&
+          <CustomActionSheet
+            ref={ref => _actionSheet = ref}
+            width={DeviceInfo.isTablet() ? '65%' : '100%'}
+            title={actionSheet.title}
+            actions={actionSheet.list}
+            onActionClick={onActionItemClicked}
+          />
+        }
 
         <ActionSheet
           closeOnTouchBackdrop={false}
           closeOnPressBack={false}
           ref={optionsActionSheetRef}>
-
-          <View style={Styles.actionSheetContainer}>
-            <View style={Styles.actionSheetHeaderContainer}>
-              <TouchableHighlight
-                underlayColor={Colors.transparent}
-                style={Styles.jumptoCancelSubContainerStyle}
-                onPress={() => {
-                  if (optionToShow == 'date') {
-                    setYearNew({ ...year })
-                    setMonthNew({ ...month })
-                    setDayNew({ ...day })
-                    if (month.value.length < 3) {
-                      setShowDay(true)
+          <>
+            <View style={Styles.actionSheetContainer}>
+              <View style={Styles.actionSheetHeaderContainer}>
+                <TouchableHighlight
+                  underlayColor={Colors.transparent}
+                  style={Styles.jumptoCancelSubContainerStyle}
+                  onPress={() => {
+                    if (optionToShow == 'date') {
+                      setYearNew({ ...year })
+                      setMonthNew({ ...month })
+                      setDayNew({ ...day })
+                      if (month.value.length < 3) {
+                        setShowDay(true)
+                      }
                     }
-                  }
-                  optionsActionSheetRef?.current?.hide()
-                }}>
-                <>
-                  <Image style={Styles.cancelImageStyle} source={x} />
-                  <Text style={Styles.cancelTextStyle}>Cancel</Text>
-                </>
-              </TouchableHighlight>
-            </View>
+                    optionsActionSheetRef?.current?.hide()
+                  }}>
+                  <>
+                    <Image style={Styles.cancelImageStyle} source={x} />
+                    <Text style={Styles.cancelTextStyle}>Cancel</Text>
+                  </>
+                </TouchableHighlight>
+              </View>
 
-            {
-              optionToShow == 'date' ?
-                <View >
-                  <Text
-                    style={styles.colabratiesTextStyle}>
-                    {'When did this memory happen?'}
-                  </Text>
-                  <View style={styles.textInputContainer}>
+              {
+                optionToShow == 'date' ?
+                  <View >
                     <Text
-                      style={styles.labelStyle}>
-                      {'YEAR'}
-                      <Text
-                        style={{ color: Colors.newErrorColor }}>
-                        {'*'}
-                      </Text>
+                      style={styles.colabratiesTextStyle}>
+                      {'When did this memory happen?'}
                     </Text>
-                    <TextInput
-                      style={styles.textInputBoxStyle}
-                      onChangeText={(text: any) => {
-                        setYearNew({ ...yearNew, value: text, error: false })
-                      }}
-                      placeholderTextColor={Colors.newTextColor}
-                      value={yearNew.value}
-                      maxLength={4}
-                      placeholder="YYYY"
-                      returnKeyType="next"
-                      keyboardType="number-pad"
-                    />
-
-                    {
-                      yearNew.error &&
-                      <Text style={styles.errorMessageStyle}>
-                        {`Please enter valid year`}
-                      </Text>
-                    }
-                  </View>
-
-                  <View style={styles.textInputContainer}>
-                    <Text
-                      style={styles.labelStyle}>
-                      {'MONTH'}
-                      <Text
-                        style={{ color: Colors.newErrorColor }}>
-                        {'*'}
-                      </Text>
-                    </Text>
-                    <TextInput
-                      style={styles.textInputBoxStyle}
-                      onChangeText={(text: any) => {
-                        let validAlphabatesReg = /^[a-zA-Z]*$/;
-
-                        setMonthNew({ ...monthNew, value: text, error: false })
-
-                        if (validAlphabatesReg.test(text)) {
-                          setDayNew({ value: '', error: false })
-                          setShowDay(false)
-                        }
-                        else if (text.length >= 3) {
-                          setShowDay(false)
-                          setDayNew({ value: '', error: false })
-                        }
-                        else {
-                          setShowDay(true)
-                        }
-                      }}
-                      value={monthNew.value}
-                      placeholderTextColor={Colors.newTextColor}
-                      maxLength={12}
-                      placeholder="Month(MM) or Season"
-                      returnKeyType="done"
-                    // keyboardType="number-pad"
-                    />
-                    {
-                      monthNew.error &&
-                      <Text style={styles.errorMessageStyle}>
-                        {`Please enter valid month or season`}
-                      </Text>
-                    }
-
-                  </View>
-
-                  {
-                    showDay &&
                     <View style={styles.textInputContainer}>
                       <Text
                         style={styles.labelStyle}>
-                        {'DAY'}
+                        {'YEAR'}
+                        <Text
+                          style={{ color: Colors.newErrorColor }}>
+                          {'*'}
+                        </Text>
                       </Text>
                       <TextInput
                         style={styles.textInputBoxStyle}
                         onChangeText={(text: any) => {
-                          setDayNew({ ...dayNew, value: text, error: false })
+                          setYearNew({ ...yearNew, value: text, error: false })
                         }}
-                        value={dayNew.value}
-                        maxLength={4}
-                        placeholder="DD"
                         placeholderTextColor={Colors.newTextColor}
-                        returnKeyType="done"
+                        value={yearNew.value}
+                        maxLength={4}
+                        placeholder="YYYY"
+                        returnKeyType="next"
                         keyboardType="number-pad"
                       />
+
                       {
-                        dayNew.error &&
+                        yearNew.error &&
                         <Text style={styles.errorMessageStyle}>
-                          {`Please enter valid date`}
+                          {`Please enter valid year`}
+                        </Text>
+                      }
+                    </View>
+
+                    <View style={styles.textInputContainer}>
+                      <Text
+                        style={styles.labelStyle}>
+                        {'MONTH'}
+                        <Text
+                          style={{ color: Colors.newErrorColor }}>
+                          {'*'}
+                        </Text>
+                      </Text>
+                      <TextInput
+                        style={styles.textInputBoxStyle}
+                        onChangeText={(text: any) => {
+                          let validAlphabatesReg = /^[a-zA-Z]*$/;
+
+                          setMonthNew({ ...monthNew, value: text, error: false })
+
+                          if (validAlphabatesReg.test(text)) {
+                            setDayNew({ value: '', error: false })
+                            setShowDay(false)
+                          }
+                          else if (text.length >= 3) {
+                            setShowDay(false)
+                            setDayNew({ value: '', error: false })
+                          }
+                          else {
+                            setShowDay(true)
+                          }
+                        }}
+                        value={monthNew.value}
+                        placeholderTextColor={Colors.newTextColor}
+                        maxLength={12}
+                        placeholder="Month(MM) or Season"
+                        returnKeyType="done"
+                      // keyboardType="number-pad"
+                      />
+                      {
+                        monthNew.error &&
+                        <Text style={styles.errorMessageStyle}>
+                          {`Please enter valid month or season`}
                         </Text>
                       }
 
                     </View>
-                  }
 
+                    {
+                      showDay &&
+                      <View style={styles.textInputContainer}>
+                        <Text
+                          style={styles.labelStyle}>
+                          {'DAY'}
+                          <Text
+                            style={{ color: Colors.newErrorColor }}>
+                            {'*'}
+                          </Text>
+                        </Text>
+                        <TextInput
+                          style={styles.textInputBoxStyle}
+                          onChangeText={(text: any) => {
+                            setDayNew({ ...dayNew, value: text, error: false })
+                          }}
+                          value={dayNew.value}
+                          maxLength={4}
+                          placeholder="DD"
+                          placeholderTextColor={Colors.newTextColor}
+                          returnKeyType="done"
+                          keyboardType="number-pad"
+                        />
+                        {
+                          dayNew.error &&
+                          <Text style={styles.errorMessageStyle}>
+                            {`Please enter valid date`}
+                          </Text>
+                        }
 
-                  <TouchableWithoutFeedback
-                    // disabled={(this.username != '' && this.password != '') ? false : true}
-                    onPress={() => {
-                      validateDate(yearNew, monthNew, dayNew);
-                    }}>
-                    <View
-                      style={Styles.loginSSOButtonStyle}>
-                      <Text
-                        style={[
-                          CommonTextStyles.fontWeight500Size17Inter,
-                          Styles.loginTextStyle,
-                        ]}>
-                        Done
-                      </Text>
-                    </View>
-                  </TouchableWithoutFeedback>
-                </View>
-                :
-                optionToShow == 'location' ?
-                  <View >
-                    <Text
-                      style={styles.colabratiesTextStyle}>
-                      {'Where did this memory happen?'}
-                    </Text>
+                      </View>
+                    }
 
-                    <SearchBar
-                      style={[styles.searchBarStyle, {
-                        borderBottomColor: locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
-                      }]}
-                      placeholder="Add location..."
-                      onBlur={() => {
-                        // setState(prev => ({
-                        //   ...prev,
-                        //   locationList: []
-                        // }));
-                      }}
-                      onSearchButtonPress={(keyword: string) => {
-                        // setState(prev => ({
-                        //   ...prev,
-                        //   showLocationLoader: true
-                        // }));
-                        props.onLocationUpdate(keyword);
-                      }}
-                      onClearField={() => {
-                        props.resetLocation();
-                        // setState(prev => ({
-                        //   ...prev,
-                        //   locationList: []
-                        // }));
-                      }}
-                      onChangeText={(text: any) => {
-                        props.onLocationUpdate(text);
-                        // setState(prev => ({
-                        //   ...prev,
-                        //   locationError: '',
-                        //   locationText: text
-                        // }));
-                      }}
-                      // onFocus={()=> this._mainItemList.scrollToOffset({ animated: true, offset: 100})}
-                      showCancelClearButton={false}
-                      value={locationText}
-                    />
-                    {props.locationList.length > 0 && (
-                      <FlatList
-                        keyExtractor={(_, index: number) => `${index}`}
-                        keyboardShouldPersistTaps={'never'}
-                        // onScroll={() => {
-                        //   Keyboard.dismiss();
-                        // }}
-                        nestedScrollEnabled={true}
-                        style={styles.locationFlatListStyle}
-                        data={props.locationList}
-                        renderItem={_renderLocation}
-                        ItemSeparatorComponent={() => (
-                          <View
-                            style={styles.locationListSeparator}></View>
-                        )}
-                      />
-                    )}
-
-                    <Text style={styles.locationErrorTextStyle}>
-                      {locationError}
-                    </Text>
 
                     <TouchableWithoutFeedback
                       // disabled={(this.username != '' && this.password != '') ? false : true}
                       onPress={() => {
-                        if (location.description != '') {
-                          optionsActionSheetRef?.current?.hide();
-                          setTimeout(() => {
-                            saveIntitals();
-                          }, 1000);
-                        }
-                        else {
-                          setLocationError('* Please enter a location to publish your memory')
-                        }
+                        validateDate(yearNew, monthNew, dayNew);
                       }}>
                       <View
                         style={Styles.loginSSOButtonStyle}>
@@ -2721,78 +2638,176 @@ const CreateMemory = (props: Props) => {
                     </TouchableWithoutFeedback>
                   </View>
                   :
-                  <View >
-                    <Text
-                      style={styles.colabratiesTextStyle}>
-                      {'What would you like to upload?'}
-                    </Text>
+                  optionToShow == 'location' ?
+                    <View >
+                      <Text
+                        style={styles.colabratiesTextStyle}>
+                        {'Where did this memory happen?'}
+                      </Text>
 
-                    <View style={{ flexDirection: 'row' }}>
+                      <SearchBar
+                        style={[styles.searchBarStyle, {
+                          borderBottomColor: locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
+                        }]}
+                        placeholder="Add location..."
+                        onBlur={() => {
+                          // setState(prev => ({
+                          //   ...prev,
+                          //   locationList: []
+                          // }));
+                        }}
+                        onSearchButtonPress={(keyword: string) => {
+                          // setState(prev => ({
+                          //   ...prev,
+                          //   showLocationLoader: true
+                          // }));
+                          props.onLocationUpdate(keyword);
+                        }}
+                        onClearField={() => {
+                          props.resetLocation();
+                          // setState(prev => ({
+                          //   ...prev,
+                          //   locationList: []
+                          // }));
+                        }}
+                        onChangeText={(text: any) => {
+                          props.onLocationUpdate(text);
+                          // setState(prev => ({
+                          //   ...prev,
+                          //   locationError: '',
+                          //   locationText: text
+                          // }));
+                        }}
+                        // onFocus={()=> this._mainItemList.scrollToOffset({ animated: true, offset: 100})}
+                        showCancelClearButton={false}
+                        value={locationText}
+                      />
+                      {props.locationList.length > 0 && (
+                        <FlatList
+                          keyExtractor={(_, index: number) => `${index}`}
+                          keyboardShouldPersistTaps={'never'}
+                          // onScroll={() => {
+                          //   Keyboard.dismiss();
+                          // }}
+                          nestedScrollEnabled={true}
+                          showsHorizontalScrollIndicator={false}
+                          showsVerticalScrollIndicator={false}
+                          style={styles.locationFlatListStyle}
+                          data={props.locationList}
+                          renderItem={_renderLocation}
+                          ItemSeparatorComponent={() => (
+                            <View
+                              style={styles.locationListSeparator}></View>
+                          )}
+                        />
+                      )}
+
+                      <Text style={styles.locationErrorTextStyle}>
+                        {locationError}
+                      </Text>
+
                       <TouchableWithoutFeedback
                         // disabled={(this.username != '' && this.password != '') ? false : true}
                         onPress={() => {
-                          PickImage(fileCallback);
+                          if (location.description != '') {
+                            optionsActionSheetRef?.current?.hide();
+                            setTimeout(() => {
+                              saveIntitals();
+                            }, 1000);
+                          }
+                          else {
+                            setLocationError('* Please enter a location to publish your memory')
+                          }
                         }}>
-                        <View style={styles.newFilterItem}>
-                          <View style={styles.iconContainer}>
-                            <Image source={images} />
-                          </View>
-
-                          <View style={styles.iconSeparator}></View>
-
-                          <View style={styles.jumptoYearContainer}>
-                            <Text style={[styles.filterTextJumpto]}>
-                              {'Photo'}
-                            </Text>
-                          </View>
+                        <View
+                          style={Styles.loginSSOButtonStyle}>
+                          <Text
+                            style={[
+                              CommonTextStyles.fontWeight500Size17Inter,
+                              Styles.loginTextStyle,
+                            ]}>
+                            Done
+                          </Text>
                         </View>
                       </TouchableWithoutFeedback>
-
-                      <TouchableWithoutFeedback
-                        // disabled={(this.username != '' && this.password != '') ? false : true}
-                        onPress={() => {
-                          PickPDF(fileCallback);
-                        }}>
-                        <View style={styles.newFilterItem}>
-                          <View style={styles.iconContainer}>
-                            <Image source={pdf} />
-                          </View>
-
-                          <View style={styles.iconSeparator}></View>
-
-                          <View style={styles.jumptoYearContainer}>
-                            <Text style={[styles.filterTextJumpto]}>
-                              {'PDF'}
-                            </Text>
-                          </View>
-                        </View>
-                      </TouchableWithoutFeedback>
-
-                      <TouchableWithoutFeedback
-                        // disabled={(this.username != '' && this.password != '') ? false : true}
-                        onPress={() => {
-                          PickAudio(fileCallback)
-                        }}>
-                        <View style={styles.newFilterItem}>
-                          <View style={styles.iconContainer}>
-                            <Image source={audio} />
-                          </View>
-
-                          <View style={styles.iconSeparator}></View>
-
-                          <View style={styles.jumptoYearContainer}>
-                            <Text style={[styles.filterTextJumpto]}>
-                              {'Audio'}
-                            </Text>
-                          </View>
-                        </View>
-                      </TouchableWithoutFeedback>
-
                     </View>
-                  </View>
-            }
+                    :
+                    <View >
+                      <Text
+                        style={styles.colabratiesTextStyle}>
+                        {'What would you like to upload?'}
+                      </Text>
 
-          </View>
+                      <View style={{ flexDirection: 'row' }}>
+                        <TouchableWithoutFeedback
+                          // disabled={(this.username != '' && this.password != '') ? false : true}
+                          onPress={() => {
+                            PickImage(fileCallback);
+                          }}>
+                          <View style={styles.newFilterItem}>
+                            <View style={styles.iconContainer}>
+                              <Image source={images} />
+                            </View>
+
+                            <View style={styles.iconSeparator}></View>
+
+                            <View style={styles.jumptoYearContainer}>
+                              <Text style={[styles.filterTextJumpto]}>
+                                {'Photo'}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableWithoutFeedback>
+
+                        <TouchableWithoutFeedback
+                          // disabled={(this.username != '' && this.password != '') ? false : true}
+                          onPress={() => {
+                            PickPDF(fileCallback);
+                          }}>
+                          <View style={styles.newFilterItem}>
+                            <View style={styles.iconContainer}>
+                              <Image source={pdf} />
+                            </View>
+
+                            <View style={styles.iconSeparator}></View>
+
+                            <View style={styles.jumptoYearContainer}>
+                              <Text style={[styles.filterTextJumpto]}>
+                                {'PDF'}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableWithoutFeedback>
+
+                        <TouchableWithoutFeedback
+                          // disabled={(this.username != '' && this.password != '') ? false : true}
+                          onPress={() => {
+                            PickAudio(fileCallback)
+                          }}>
+                          <View style={styles.newFilterItem}>
+                            <View style={styles.iconContainer}>
+                              <Image source={audio} />
+                            </View>
+
+                            <View style={styles.iconSeparator}></View>
+
+                            <View style={styles.jumptoYearContainer}>
+                              <Text style={[styles.filterTextJumpto]}>
+                                {'Audio'}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableWithoutFeedback>
+
+                      </View>
+                    </View>
+              }
+
+            </View>
+            {Platform.OS == 'android' &&
+              <View style={{ height: bottomToolbar / 2 }}></View>
+            }
+          </>
         </ActionSheet>
 
 
