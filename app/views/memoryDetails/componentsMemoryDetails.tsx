@@ -13,7 +13,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import PlaceholderImageView from './../../../src/common/component/placeHolderImageView';
 import {
   Colors,
@@ -31,17 +31,17 @@ import {
   white_head_icon,
 } from './../../../src/images';
 
-import {pen, share} from './../../images';
+import { pen, share } from './../../images';
 // import NavigationHeader from '../../common/component/navigationHeader';
 import {
   No_Internet_Warning,
   ToastMessage,
 } from './../../../src/common/component/Toast';
 // import {getUserName} from '../createMemory/dataHelper';
-import {Account} from './../../../src/common/loginStore';
+import { Account } from './../../../src/common/loginStore';
 // import PublishedMemory from '../myMemories/PublishedMemory';
 import * as Animatable from 'react-native-animatable';
-import {getUserName} from '../../../src/views/createMemory/dataHelper';
+import { getUserName } from '../../../src/views/createMemory/dataHelper';
 import PublishedMemory from '../../../src/views/myMemories/PublishedMemory';
 import EventManager from './../../../src/common/eventManager';
 import Styles from './styles';
@@ -86,16 +86,16 @@ export const MemoryCollections = (props: {
         <Text style={Styles.byTextStyle}>
           {'By '}
           {Account.selectedData().userID ==
-          props.collectionList[props.selectedCollectionIndex].user.uid
+            props.collectionList[props.selectedCollectionIndex].user.uid
             ? 'You'
             : props.collectionList[props.selectedCollectionIndex].user
-                .username}
+              .username}
         </Text>
       </View>
     </TouchableHighlight>
   );
 
-  const carouselRenderItem= (item: any) => (
+  const carouselRenderItem = (item: any) => (
     <TouchableHighlight
       underlayColor="#cccccc3e"
       onPress={() =>
@@ -152,12 +152,12 @@ export const MemoryCollections = (props: {
             ? item.item.whoElseWasThere.length > 1
               ? ' others '
               : item.item.youWhereThere
-              ? ''
-              : ' other '
+                ? ''
+                : ' other '
             : ''}
           <Text style={Styles.whoelseSubTextStyle}>
             {item.item.whoElseWasThere.length > 0 ||
-            item.item.youWhereThere
+              item.item.youWhereThere
               ? item.item.whoElseWasThere.length > 1
                 ? 'were also there'
                 : 'was also there'
@@ -177,6 +177,7 @@ export const MemoryCollections = (props: {
         {/* {props.collectionList.length > 1 ? */}
         <FlatList
           data={props.collectionList}
+          showsHorizontalScrollIndicator={false}
           horizontal
           nestedScrollEnabled
           renderItem={renderItem}
@@ -216,7 +217,7 @@ export const Border = (props: {
   );
 };
 
-export const MemoryTags = (props: {memoryTags: any; onPressCallback?: any}) => {
+export const MemoryTags = (props: { memoryTags: any; onPressCallback?: any }) => {
   const renderItem = (item: any) => (
     <TouchableHighlight
       underlayColor={'#ffffff33'}
@@ -240,6 +241,7 @@ export const MemoryTags = (props: {memoryTags: any; onPressCallback?: any}) => {
       horizontal
       keyExtractor={(_, index: number) => `${index}`}
       showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
       data={props.memoryTags}
       style={Styles.MemoryTagsFlatlistStyle}
       renderItem={renderItem}
@@ -247,7 +249,7 @@ export const MemoryTags = (props: {memoryTags: any; onPressCallback?: any}) => {
   );
 };
 
-export const CollaboratorView = (props: {collaborators: any}) => {
+export const CollaboratorView = (props: { collaborators: any }) => {
 
   const renderItem = (item: any) => (
     <View style={Styles.CollaboratorViewContainer}>
@@ -257,7 +259,7 @@ export const CollaboratorView = (props: {collaborators: any}) => {
         imageStyle={Styles.CollaboratorImageStyle}>
         <Image
           source={
-            item.item.uri != '' ? {uri: item.item.uri} : profile_placeholder
+            item.item.uri != '' ? { uri: item.item.uri } : profile_placeholder
           }
           style={Styles.CollaboratorProfileImageStyle}></Image>
       </ImageBackground>
@@ -268,6 +270,7 @@ export const CollaboratorView = (props: {collaborators: any}) => {
     <FlatList
       horizontal
       showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
       data={props.collaborators}
       style={Styles.MemoryTagsFlatlistStyle}
       keyExtractor={(_, index: number) => `${index}`}
@@ -287,11 +290,11 @@ export const UserDetails = (props: {
 }) => {
   let showCueBackLogo =
     props.userDetails.name.toLowerCase().trim() == 'cueback' ||
-    props.userDetails.name.toLowerCase().trim() == 'my stories matter'
+      props.userDetails.name.toLowerCase().trim() == 'my stories matter'
       ? true
       : props.storyType == 'internal_cues'
-      ? true
-      : false;
+        ? true
+        : false;
   return (
     <View style={Styles.userDetailsContainer}>
       <View style={Styles.userDetailsSubContainer}>
@@ -314,7 +317,7 @@ export const UserDetails = (props: {
               resizeMode="cover"
               source={
                 props.userDetails.isProfileAvailable
-                  ? {uri: props.userDetails.userProfilePic}
+                  ? { uri: props.userDetails.userProfilePic }
                   : props.userDetails.userProfilePic
               }
             />
@@ -398,11 +401,11 @@ export const ShowSharedaetilsDetails = (props: {
 }) => {
   let showCueBackLogo =
     props.userDetails.name.toLowerCase().trim() == 'cueback' ||
-    props.userDetails.name.toLowerCase().trim() == 'my stories matter'
+      props.userDetails.name.toLowerCase().trim() == 'my stories matter'
       ? true
       : props.storyType == 'internal_cues'
-      ? true
-      : false;
+        ? true
+        : false;
   return (
     <View style={Styles.ShowSharedaetilsDetailsContainer}>
       {props.shareDetails.available && (
@@ -427,7 +430,7 @@ export const ShowSharedaetilsDetails = (props: {
                 })
               }>
               <View style={Styles.EditContainer}>
-                <Text style={[Styles.shareTextStyle, {color: Colors.white}]}>
+                <Text style={[Styles.shareTextStyle, { color: Colors.white }]}>
                   Edit
                 </Text>
                 <Image source={pen}></Image>
@@ -478,7 +481,7 @@ export const CarousalFilesView = (props: {
     />
   );
 
-  const showPDF =(item: any) => (
+  const showPDF = (item: any) => (
     <CommonPDFView file={item.item} files={props.files} />
   );
 
@@ -506,7 +509,7 @@ export const CarousalFilesView = (props: {
   return null;
 };
 
-export const CommonPDFView = (props: {file: any; files: any}) => {
+export const CommonPDFView = (props: { file: any; files: any }) => {
   const navigation = useNavigation();
 
   return (
@@ -514,9 +517,9 @@ export const CommonPDFView = (props: {file: any; files: any}) => {
       <TouchableWithoutFeedback
         onPress={() => {
           if (Utility.isInternetConnected) {
-            navigation.navigate('pdfViewer', {file: props.file});
+            navigation.navigate('pdfViewer', { file: props.file });
           } else {
-           //ToastMessage(NO_INTERNET, Colors.WarningColor);
+            //ToastMessage(NO_INTERNET, Colors.WarningColor);
           }
         }}>
         <View>
@@ -528,7 +531,7 @@ export const CommonPDFView = (props: {file: any; files: any}) => {
               <Image
                 source={
                   props.file.pdf_image_url
-                    ? {uri: props.file.pdf_image_url}
+                    ? { uri: props.file.pdf_image_url }
                     : pdf_icon
                 }
                 defaultSource={pdf_icon}
@@ -573,8 +576,8 @@ export const CommonImageView = (props: {
                 props.file.thumbnail_url
                   ? props.file.thumbnail_url
                   : props.file.url
-                  ? props.file.url
-                  : props.file.filePath
+                    ? props.file.url
+                    : props.file.filePath
               }
               resizeMode={'contain'}
             />
@@ -588,7 +591,7 @@ export const CommonImageView = (props: {
   );
 };
 
-export const TitleAndDescription = (props: {file: any; type: any}) => {
+export const TitleAndDescription = (props: { file: any; type: any }) => {
   let fileTitle = props.file.file_title
     ? props.file.file_title.replace(/["']/g, "\\'").toString()
     : '';
@@ -615,8 +618,8 @@ export const TitleAndDescription = (props: {file: any; type: any}) => {
                 16,
                 Dimensions.get('window').width - 70,
               ) > 3 && (
-                <Text style={Styles.seemoreTextStyle}>{'See more'}</Text>
-              )}
+                  <Text style={Styles.seemoreTextStyle}>{'See more'}</Text>
+                )}
               <Text></Text>
               <Text style={Styles.fileDescTextStyle}>
                 {'By: '}
@@ -645,7 +648,7 @@ export const LikeView = (props: {
 }) => {
   return (
     <View style={Styles.LikeViewContainer}>
-      <Image source={props.icon} style={{padding: 1}} resizeMode="contain" />
+      <Image source={props.icon} style={{ padding: 1 }} resizeMode="contain" />
       <TouchableHighlight
         underlayColor={Colors.touchableunderlayColor}
         onPress={() => props.onPress()}>
@@ -699,7 +702,7 @@ export const LikeCommentShare = (props: {
         style={[
           Styles.LikeCommentShareContainer,
           {
-            transform: [{translateX: PublishedMemory.shakeAnimation}],
+            transform: [{ translateX: PublishedMemory.shakeAnimation }],
             borderWidth: props.selectedItem ? 0 : 1,
           },
         ]}>
@@ -738,15 +741,15 @@ export const LikeCommentShare = (props: {
   );
 };
 
-export const TitleAndValue = (props: {title: string; description: string}) => {
+export const TitleAndValue = (props: { title: string; description: string }) => {
   return (
     <View style={Styles.TitleAndValueContainer}>
       <Text
-        style={[Styles.titleandValueTextStyle, {color: Colors.newTextColor}]}>
+        style={[Styles.titleandValueTextStyle, { color: Colors.newTextColor }]}>
         {props.title}
       </Text>
       <Text
-        style={[Styles.titleandValueTextStyle, {color: Colors.bordercolor}]}>
+        style={[Styles.titleandValueTextStyle, { color: Colors.bordercolor }]}>
         {props.description}
       </Text>
     </View>

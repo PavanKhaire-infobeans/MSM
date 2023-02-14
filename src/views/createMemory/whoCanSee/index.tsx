@@ -199,6 +199,8 @@ class WhoCanSee extends React.Component<Props, State> {
               onScroll={() => {
                 Keyboard.dismiss();
               }}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(_, index: number) => `${index}`}
               data={Object['values'](ShareOptions)}
               renderItem={(item: any) => this.renderItem(item)}

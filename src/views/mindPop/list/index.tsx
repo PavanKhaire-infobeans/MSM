@@ -1203,6 +1203,8 @@ class MindPopList extends React.Component<{
                 }}
                 style={{ backgroundColor: Colors.NewThemeColor }}
                 useSectionList={true}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 maxToRenderPerBatch={8}
                 removeClippedSubviews={true}
                 sections={listSectionItems}

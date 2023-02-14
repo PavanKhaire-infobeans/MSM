@@ -1,5 +1,5 @@
 import NetInfo from '@react-native-community/netinfo';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -12,21 +12,21 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import SearchBar from '../../common/component/SearchBar';
 import Text from '../../common/component/Text';
-import {Colors, fontSize, Size} from '../../common/constants';
-import {Account, LoginStore, UserData} from '../../common/loginStore';
+import { Colors, fontSize, Size } from '../../common/constants';
+import { Account, LoginStore, UserData } from '../../common/loginStore';
 import InstanceView from './instanceView';
 
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import MessageDialogue from '../../common/component/messageDialogue';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import Utility from '../../common/utility';
-import {search_illustration} from '../../images';
+import { search_illustration } from '../../images';
 import GetFormData from './getFormData';
-import {GetInstances} from './reducer';
+import { GetInstances } from './reducer';
 import Styles from './styles';
 
 type Item = {
@@ -36,9 +36,9 @@ type Item = {
   InstanceImageURL: string;
 };
 
-type State = {isSearching: boolean; searchText: string; selectedItem?: Item};
+type State = { isSearching: boolean; searchText: string; selectedItem?: Item };
 type FindProps = {
-  request: {completed: boolean};
+  request: { completed: boolean };
   end: Function;
   getAllInstances: Function;
   list: Item[];
@@ -64,9 +64,9 @@ class FindCommunity extends Component<FindProps, State> {
     // this.props.getAllInstances();
 
     /*const netInfo = useNetInfo();
-		if(netInfo.isConnected && this.filteredList.length == 0){
-			this.props.getAllInstances();
-		}*/
+    if(netInfo.isConnected && this.filteredList.length == 0){
+      this.props.getAllInstances();
+    }*/
 
     NetInfo.fetch().then(state => {
       this.connected = state.isConnected;
@@ -76,18 +76,18 @@ class FindCommunity extends Component<FindProps, State> {
     });
 
     /*NetInfo.isConnected.addEventListener("connectionChange", (connected: boolean) => {
-			this.connected = connected;
-			if (connected && this.filteredList.length == 0) {
-				this.props.getAllInstances();
-			}
-		});*/
+      this.connected = connected;
+      if (connected && this.filteredList.length == 0) {
+        this.props.getAllInstances();
+      }
+    });*/
   }
 
   getAll = async () => {
     try {
       let resp: any = await LoginStore.listAllAccounts();
       this.instanceList = resp.rows.raw() as Array<UserData>;
-    } catch (err) {}
+    } catch (err) { }
   };
 
   UNSAFE_componentWillReceiveProps(nextProps: FindProps) {
@@ -147,7 +147,7 @@ class FindCommunity extends Component<FindProps, State> {
         No_Internet_Warning();
       }
     } else {
-     //ToastMessage('Sorry, that community is not activated',Colors.ErrorColor,false,true);
+      //ToastMessage('Sorry, that community is not activated',Colors.ErrorColor,false,true);
     }
   };
   render() {
@@ -166,18 +166,18 @@ class FindCommunity extends Component<FindProps, State> {
           </Text>
           <SearchBar
             onChangeText={(text: string) => {
-              this.setState({searchText: text});
+              this.setState({ searchText: text });
             }}
             onClearField={() => {
-              this.setState({searchText: '', isSearching: false});
+              this.setState({ searchText: '', isSearching: false });
             }}
             placeholder="Your community name"
             onFocus={() => {
-              this.setState({isSearching: true});
+              this.setState({ isSearching: true });
             }}
-            onSearchButtonPress={() => {}}
+            onSearchButtonPress={() => { }}
             showCancelClearButton={false}
-            style={{backgroundColor: Colors.NewLightThemeColor}}
+            style={{ backgroundColor: Colors.NewLightThemeColor }}
           />
           <View
             style={[
@@ -187,7 +187,7 @@ class FindCommunity extends Component<FindProps, State> {
                 marginBottom:
                   60 +
                   (Platform.OS == 'ios' &&
-                  StaticSafeAreaInsets.safeAreaInsetsBottom
+                    StaticSafeAreaInsets.safeAreaInsetsBottom
                     ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10
                     : 0),
               },
@@ -211,14 +211,14 @@ class FindCommunity extends Component<FindProps, State> {
     );
   }
 }
-const mapState = (state: {[x: string]: any}) => ({
+const mapState = (state: { [x: string]: any }) => ({
   request: state.requestInstances,
   list: state.intanceList.list,
 });
 
 const mapDispatch = (dispatch: Function) => ({
-  getAllInstances: () => dispatch({type: GetInstances.GetCall}),
-  end: () => dispatch({type: GetInstances.GetEnd}),
+  getAllInstances: () => dispatch({ type: GetInstances.GetCall }),
+  end: () => dispatch({ type: GetInstances.GetEnd }),
 });
 
 export default connect(mapState, mapDispatch)(FindCommunity);
@@ -271,6 +271,8 @@ class ListItems extends React.Component<{
           onScroll={() => {
             Keyboard.dismiss();
           }}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(_: any, index: number) => `${index}`}
           renderItem={this._renderItem}
           // matchFieldName={'InstanceName'}

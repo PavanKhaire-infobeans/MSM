@@ -283,6 +283,8 @@ export const MemoryCollections = (props: {
         <FlatList
           data={props.collectionList}
           horizontal
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           renderItem={renderItem}
         />
         {/* : 
@@ -323,6 +325,7 @@ export const MemoryTags = (props: {memoryTags: any; onPressCallback?: any}) => {
       horizontal
       keyExtractor={(_, index: number) => `${index}`}
       showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
       data={props.memoryTags}
       style={{paddingBottom: 10}}
       renderItem={(item: any) => (
@@ -362,6 +365,7 @@ export const CollaboratorView = (props: {collaborators: any}) => {
     <FlatList
       horizontal
       showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
       data={props.collaborators}
       style={{paddingBottom: 10}}
       keyExtractor={(_, index: number) => `${index}`}

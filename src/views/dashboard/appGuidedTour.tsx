@@ -441,6 +441,7 @@ export default class AppGuidedTour extends React.Component<Props> {
                   horizontal
                   pagingEnabled={true}
                   showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
                   keyExtractor={(_item, index) => index + ''}
                   onScroll={e => this.onScroll(e)}
                 />

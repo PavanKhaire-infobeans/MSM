@@ -295,7 +295,7 @@ const ForgotPassword = (props: Props) => {
           barStyle={
             Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
           }
-          backgroundColor={Colors.NewDarkThemeColor}
+          backgroundColor={Colors.NewThemeColor}
         />
 
         {

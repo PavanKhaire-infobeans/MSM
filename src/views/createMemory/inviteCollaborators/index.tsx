@@ -350,6 +350,7 @@ class InviteCollaborators extends React.Component<Props, State> {
                   keyExtractor={(_, index: number) => `${index}`}
                   keyboardShouldPersistTaps={'handled'}
                   showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
                   renderItem={(item: any) => this.renderItem(item)}></FlatList>
                 {this.state.showMenu && (
                   <View

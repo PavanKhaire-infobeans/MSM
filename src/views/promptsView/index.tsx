@@ -137,7 +137,7 @@ const PromptsView = (props: Props) => {
                 }
               });
             }
-          
+
             if (ifLoadMore) {
               setState(prevState => ({
                 ...prevState,
@@ -197,7 +197,7 @@ const PromptsView = (props: Props) => {
     setState(prevState => ({
       ...prevState,
       loading: true,
-      items:[]
+      items: []
     }));
     GetPrompts(filteredTopics, false, 0,
       response => {
@@ -651,6 +651,8 @@ const PromptsView = (props: Props) => {
             windowSize={5}
             initialNumToRender={10}
             removeClippedSubviews={true}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => <View style={Styles.separator} />}
             keyExtractor={(_, index: number) => `${index}`}
             style={Styles.flatlistStyle}

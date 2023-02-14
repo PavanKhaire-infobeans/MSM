@@ -626,6 +626,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
         data={lastComments}
         style={{paddingBottom: 10}}
         initialNumToRender={10}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}
         keyExtractor={(_, index: number) => `${index}`}
         renderItem={(item: any) => this.renderCommentView(item)}

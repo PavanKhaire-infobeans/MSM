@@ -825,6 +825,8 @@ class MemoryDrafts extends React.Component<Props, State> {
           nestedScrollEnabled
           initialNumToRender={10}
           windowSize={5}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           removeClippedSubviews={true}
           refreshControl={
             <RefreshControl

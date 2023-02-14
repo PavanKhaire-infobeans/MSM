@@ -92,7 +92,7 @@ const TopicsFilter = (props: Props) => {
   })
 
   let flatlistRef = useRef(null);
-  const [selectedFilter, setSelectedFilter] = useState({"label":"","value":"","checked":0});
+  const [selectedFilter, setSelectedFilter] = useState({ "label": "", "value": "", "checked": 0 });
   const isFocused = useIsFocused()
   useEffect(() => {
     topicsArr = [];
@@ -103,7 +103,7 @@ const TopicsFilter = (props: Props) => {
       topicsArr.push(props.categories[key]);
       setState(prevState => ({ ...prevState, topicsArray: topicsArr }));
     }
-    setSelectedFilter({"label":"","value":"","checked":0});
+    setSelectedFilter({ "label": "", "value": "", "checked": 0 });
     console.log()
   }, [isFocused])
 
@@ -131,10 +131,10 @@ const TopicsFilter = (props: Props) => {
       underlayColor={'none'}
       onPress={() => {
         if (flatlistRef.current) {
-          flatlistRef.current.scrollTo({x: 0, y: 0, animated: true});
+          flatlistRef.current.scrollTo({ x: 0, y: 0, animated: true });
         }
         if (item.label == selectedFilter.label) {
-          setSelectedFilter({"label":"","value":"","checked":0})
+          setSelectedFilter({ "label": "", "value": "", "checked": 0 })
         }
         else {
           setSelectedFilter(item)
@@ -152,8 +152,8 @@ const TopicsFilter = (props: Props) => {
 
         <View style={Styles.iconSeparator}></View>
 
-        <View style={[Styles.jumptoYearContainer,{width:'100%'}]}>
-          <Text style={[Styles.filterTextJumpto,{width:'100%',textAlign:'center'}]}>
+        <View style={[Styles.jumptoYearContainer, { width: '100%' }]}>
+          <Text style={[Styles.filterTextJumpto, { width: '100%', textAlign: 'center' }]}>
             {item.label}
           </Text>
         </View>
@@ -167,7 +167,7 @@ const TopicsFilter = (props: Props) => {
       onPress={() => {
         props.applyFilters(selectedFilter.value);
       }}
-      >
+    >
       <View style={Styles.renderThemeContainerStyle}>
         <View style={Styles.filterIconContainer}>
           <Image style={Styles.filterThemeImageStyle} resizeMode="contain" source={icons[item.name]} />
@@ -203,7 +203,7 @@ const TopicsFilter = (props: Props) => {
 
       <View style={Styles.jumptoScreenSubContainer}>
         <ScrollView ref={flatlistRef} showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false} nestedScrollEnabled={true} overScrollMode='always' style={Styles.flexContainer}>
+          showsHorizontalScrollIndicator={false} nestedScrollEnabled={true} overScrollMode='always' style={Styles.flexContainer}>
           <>
             <View style={[Styles.fullWidth, Styles.justifyalignCenetr]}>
               <View style={Styles.separatorStyle}></View>
@@ -220,6 +220,8 @@ const TopicsFilter = (props: Props) => {
                     keyExtractor={(_, index: number) => `${index}`}
                     numColumns={2}
                     nestedScrollEnabled={true}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
                     initialNumToRender={state.topicsArray.length}
                     removeClippedSubviews={true}
                     style={Styles.fullWidth}
@@ -242,6 +244,8 @@ const TopicsFilter = (props: Props) => {
                     nestedScrollEnabled={true}
                     initialNumToRender={topicsThemeArr.length}
                     removeClippedSubviews={true}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
                     style={Styles.fullWidth}
                     ItemSeparatorComponent={() => {
                       return <View style={Styles.separatorStyle} />;

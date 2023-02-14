@@ -489,6 +489,8 @@ const BottomPicker = forwardRef((props: Props, ref: any) => {
             }}
             initialNumToRender={10}
             removeClippedSubviews={true}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => (
               <View style={styles.renderSeparator} />
             )}

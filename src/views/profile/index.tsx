@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Dimensions,
@@ -29,7 +29,7 @@ import BusyIndicator from '../../common/component/busyindicator';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import NoInternetView from '../../common/component/NoInternetView';
 import Text from '../../common/component/Text';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
   Colors,
   GenerateRandomID,
@@ -37,7 +37,7 @@ import {
   requestPermission,
 } from '../../common/constants';
 import EventManager from '../../common/eventManager';
-import {Account} from '../../common/loginStore';
+import { Account } from '../../common/loginStore';
 import Utility from '../../common/utility';
 import {
   action_camera,
@@ -64,7 +64,7 @@ import {
   UserProfile,
 } from './userProfileWebService';
 
-const {width: deviceWidth} = Dimensions.get('window');
+const { width: deviceWidth } = Dimensions.get('window');
 
 const options: Options = {
   multiple: false,
@@ -106,7 +106,7 @@ const Profile = props => {
       kGetUserProfileData,
       getUserProfileDataCallBack,
     );
-      getUserProfileData();
+    getUserProfileData();
 
     return () => {
       props.showLoader(false);
@@ -159,7 +159,7 @@ const Profile = props => {
         });
       }
     } else {
-     //ToastMessage('Information not available', Colors.ErrorColor);
+      //ToastMessage('Information not available', Colors.ErrorColor);
     }
   };
 
@@ -181,7 +181,7 @@ const Profile = props => {
   };
 
   const prepareCard = (
-    {heading, fields}: {heading: string; fields: Array<any>},
+    { heading, fields }: { heading: string; fields: Array<any> },
     index: number,
   ) => {
     return (
@@ -189,7 +189,7 @@ const Profile = props => {
         key={`${index}`}
         showEdit={true}
         editButtonClicked={() =>
-          editForMultipleValues({heading: heading, fields: fields}, false)
+          editForMultipleValues({ heading: heading, fields: fields }, false)
         }
         heading={heading}>
         <View style={Styles.cardContainer}>
@@ -264,14 +264,14 @@ const Profile = props => {
         <ImageBackground
           defaultSource={default_cover_img}
           source={
-            isCoverImageAvailable ? {uri: coverImageURL} : default_cover_img
+            isCoverImageAvailable ? { uri: coverImageURL } : default_cover_img
           }
           resizeMode="stretch"
           style={Styles.ImageBackgroundStyle}>
           <View style={Styles.imageCoontainer}>
             <Image
               source={
-                isCoverImageAvailable ? {uri: coverImageURL} : default_cover_img
+                isCoverImageAvailable ? { uri: coverImageURL } : default_cover_img
               }
               style={[
                 Styles.imageSTyle,
@@ -312,7 +312,7 @@ const Profile = props => {
               defaultSource={profile_placeholder}
               source={
                 isProfieImageAvailable
-                  ? {uri: profilePicURL}
+                  ? { uri: profilePicURL }
                   : profile_placeholder
               }
               style={Styles.profileimage}
@@ -438,7 +438,7 @@ const Profile = props => {
                     uploadImage(tempfile);
                   }
                 })
-                .catch(e => {});
+                .catch(e => { });
             }
           });
 
@@ -468,7 +468,7 @@ const Profile = props => {
                   // });
                   uploadImage(tempfile);
                 })
-                .catch(e => {});
+                .catch(e => { });
             }
           });
           break;
@@ -517,7 +517,7 @@ const Profile = props => {
         {
           text: 'No',
           style: 'cancel',
-          onPress: () => {},
+          onPress: () => { },
         },
         {
           text: 'Yes',
@@ -543,7 +543,7 @@ const Profile = props => {
               .catch((error: any) => {
                 props.showLoader(false);
                 props.loaderText('Loading...');
-               //ToastMessage(error.message, Colors.ErrorColor);
+                //ToastMessage(error.message, Colors.ErrorColor);
                 //loaderHandler.hideLoader();
               });
           },
@@ -558,7 +558,7 @@ const Profile = props => {
 
   const FriendListView = (props: {
     heading: String;
-    friendsList: Array<{uri: any; name: String; index?: any}>;
+    friendsList: Array<{ uri: any; name: String; index?: any }>;
     viewFriendsList: () => void;
   }) => {
     return (
@@ -572,13 +572,15 @@ const Profile = props => {
         <FlatList
           data={props.friendsList}
           horizontal
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(_, index: number) => `${index}`}
           showsHorizontalScrollIndicator={false}
           style={Styles.friendListStyle}
           onScroll={() => {
             Keyboard.dismiss();
           }}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <View style={Styles.friendlistContainer}>
               <Image source={item.uri} style={Styles.friendIcon} />
               <Text style={Styles.friendName}> {item.name} </Text>
@@ -612,7 +614,7 @@ const Profile = props => {
     );
   };
 
-  const TextViewWithHeading = (props: {heading: String; value: String}) => {
+  const TextViewWithHeading = (props: { heading: String; value: String }) => {
     return (
       <View style={Styles.TextViewWithHeadingContainer}>
         <Text style={Styles.headingText}> {props.heading} </Text>
@@ -623,12 +625,12 @@ const Profile = props => {
     );
   };
 
-  const TextWithIcon = (props: {iconUri: any; items: Array<String>}) => {
+  const TextWithIcon = (props: { iconUri: any; items: Array<String> }) => {
     if (props.iconUri != null)
       return (
         <View style={Styles.TextWithIconContainer}>
           <Image style={Styles.TextWithIconStyle} source={props.iconUri} />
-          <View style={{flexDirection: 'column'}}>
+          <View style={{ flexDirection: 'column' }}>
             {props.items.map((itemInformation, index) => {
               return (
                 <Text key={`${index}`} style={Styles.information}>
@@ -646,7 +648,7 @@ const Profile = props => {
     <View style={Styles.container}>
       {
         props.showLoaderValue ?
-          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue !=''? props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue != '' ? props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
           :
           null
       }
@@ -666,10 +668,10 @@ const Profile = props => {
           />
           {Utility.isInternetConnected ? (
             <ScrollView
-              contentContainerStyle={{width: deviceWidth}}
+              contentContainerStyle={{ width: deviceWidth }}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              nestedScrollEnabled={true} overScrollMode='always'style={{flex: 1}}
+              nestedScrollEnabled={true} overScrollMode='always' style={{ flex: 1 }}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
@@ -736,7 +738,7 @@ const cardStyles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 5,
   },
-  buttonStyle: {borderRadius: 20, backgroundColor: '#fff', padding: 10},
+  buttonStyle: { borderRadius: 20, backgroundColor: '#fff', padding: 10 },
 });
 
 
@@ -759,14 +761,14 @@ enum TempFileStatus {
 }
 
 const AllImageActions: Array<ImageSelectionSheetItem> = [
-  {index: 0, text: 'Capture from Camera', image: action_camera},
-  {index: 1, text: 'Upload from Gallery', image: action_picture},
-  {index: 2, text: 'Remove cover photo', isDestructive: 1, image: rubbish},
-  {index: 3, text: 'Cancel', image: action_close},
+  { index: 0, text: 'Capture from Camera', image: action_camera },
+  { index: 1, text: 'Upload from Gallery', image: action_picture },
+  { index: 2, text: 'Remove cover photo', isDestructive: 1, image: rubbish },
+  { index: 3, text: 'Cancel', image: action_close },
 ];
 
 const ImageActions: Array<ImageSelectionSheetItem> = [
-  {index: 0, text: 'Capture from Camera', image: action_camera},
-  {index: 1, text: 'Upload from Gallery', image: action_picture},
-  {index: 2, text: 'Cancel', image: action_close},
+  { index: 0, text: 'Capture from Camera', image: action_camera },
+  { index: 1, text: 'Upload from Gallery', image: action_picture },
+  { index: 2, text: 'Cancel', image: action_close },
 ];

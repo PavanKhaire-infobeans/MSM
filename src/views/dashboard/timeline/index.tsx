@@ -502,7 +502,7 @@ const Timeline = (props: Props) => {
           jumpToDate: memory_date,
         }))
       }
-      showLoader={(loader)=>{
+      showLoader={(loader) => {
         if (loader) {
           props.showLoader(true)
         }
@@ -737,6 +737,8 @@ const Timeline = (props: Props) => {
                       inverted={true}
                       horizontal={true}
                       nestedScrollEnabled={true}
+                      showsHorizontalScrollIndicator={false}
+                      showsVerticalScrollIndicator={false}
                       maxToRenderPerBatch={5}
                       windowSize={5}
                       removeClippedSubviews={true}
@@ -847,6 +849,8 @@ const Timeline = (props: Props) => {
             nestedScrollEnabled={true}
             initialNumToRender={10}
             removeClippedSubviews={true}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             maxToRenderPerBatch={5}
             windowSize={5}
             keyExtractor={keyExtractor}

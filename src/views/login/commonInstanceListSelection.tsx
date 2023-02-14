@@ -396,6 +396,8 @@ export default class CommonInstanceListsSelection extends React.Component<Props>
               data={this.props.listAccounts}
               style={styles.flatlistStyle}
               keyboardShouldPersistTaps={'handled'}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               onScroll={() => {
                 Keyboard.dismiss();
               }}

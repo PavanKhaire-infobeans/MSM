@@ -165,6 +165,8 @@ export default class MoreOptions extends React.Component<Props> {
             />
             <FlatList
               data={this.Items}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatListStyle}
               renderItem={this.renderItem}

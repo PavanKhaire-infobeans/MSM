@@ -123,6 +123,8 @@ export default class CustomListView extends React.Component<Props> {
             }}
             data={this.props.itemList}
             initialNumToRender={10}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             removeClippedSubviews={true}
             keyExtractor={(_, index: number) => `${index}`}
             ListEmptyComponent={() => (

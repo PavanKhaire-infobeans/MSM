@@ -267,6 +267,8 @@ const SelectDropdown = (
               <FlatList
                 data={data}
                 scrollEnabled={false}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
                 ref={ref => (dropDownFlatlistRef.current = ref)}
                 renderItem={renderFlatlistItem}

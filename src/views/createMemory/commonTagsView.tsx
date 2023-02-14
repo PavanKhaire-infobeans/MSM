@@ -284,6 +284,7 @@ const CommonListCreateMemory = (props: Props) => {
               horizontal
               keyExtractor={(_, index: number) => `${index}`}
               showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               data={props.recentTags}
               ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
               // style={style.imagebuttonStyle}
@@ -409,6 +410,7 @@ const CommonListCreateMemory = (props: Props) => {
               horizontal={true}
               keyboardShouldPersistTaps={'handled'}
               showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               data={state.referenceList}
               ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
               renderItem={({ item, index }) => renderSelectedItems(item, false)}
@@ -426,6 +428,7 @@ const CommonListCreateMemory = (props: Props) => {
               horizontal={true}
               keyboardShouldPersistTaps={'handled'}
               showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               data={state.referenceList}
               ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
               renderItem={({ item, index }) => renderSelectedItems(item, false)}
@@ -441,7 +444,8 @@ const CommonListCreateMemory = (props: Props) => {
               onScroll={() => {
                 Keyboard.dismiss();
               }}
-              showsHorizontalScrollIndicator={true}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               data={props.searchList}
               renderItem={({ item, index }) => renderRow(item, true)}
             />

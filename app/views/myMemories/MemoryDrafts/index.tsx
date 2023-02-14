@@ -376,6 +376,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           // maxToRenderPerBatch={50}
           initialNumToRender={10}
           removeClippedSubviews={true}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
               colors={[

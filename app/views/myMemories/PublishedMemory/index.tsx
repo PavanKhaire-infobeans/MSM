@@ -412,6 +412,8 @@ export default class PublishedMemory extends React.Component<Props, State> {
               extraData={this.state}
               initialNumToRender={10}
               removeClippedSubviews={true}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(_, index: number) => `${index}`}
               onScroll={() => {
                 Keyboard.dismiss();

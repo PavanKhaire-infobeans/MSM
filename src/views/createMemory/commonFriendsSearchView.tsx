@@ -496,6 +496,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 keyboardShouldPersistTaps={'handled'}
                 keyExtractor={(_, index: number) => `${index}`}
                 showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 data={
                   this.state.userTabSelected
                     ? this.state.referenceListFriends
@@ -514,7 +515,8 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
                 onScroll={() => {
                   Keyboard.dismiss();
                 }}
-                showsHorizontalScrollIndicator={true}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 data={this.props.searchList}
                 renderItem={(item: any) => this.renderRow(item, true)}
               />

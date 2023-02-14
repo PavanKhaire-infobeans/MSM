@@ -280,6 +280,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
               }}
               keyboardShouldPersistTaps={'handled'}
               showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               data={this.props.collectionList}
               keyExtractor={(_, index: number) => `${index}`}
               renderItem={this.renderRow}

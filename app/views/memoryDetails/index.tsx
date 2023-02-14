@@ -649,6 +649,8 @@ class MemoryDetails extends React.Component<Props, State> {
         data={lastComments}
         style={Styles.MemoryTagsFlatlistStyle}
         initialNumToRender={10}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         maxToRenderPerBatch={10}
         windowSize={10}
         removeClippedSubviews={true}
@@ -1449,13 +1451,14 @@ class MemoryDetails extends React.Component<Props, State> {
             initialNumToRender={
               this.memoryDataModel.externalQueue.collection.length
             }
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             renderItem={this.renderExternalQueueItem}
             horizontal={true}
             windowSize={10}
             maxToRenderPerBatch={10}
             removeClippedSubviews={true}
             pagingEnabled={true}
-            showsHorizontalScrollIndicator={false}
             keyExtractor={(_item, index) => index + ''}
             onScroll={e => this.onScroll(e)}
           />

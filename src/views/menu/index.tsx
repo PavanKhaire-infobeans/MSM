@@ -79,6 +79,8 @@ class Menu extends React.Component<MenuProps> {
         <FlatList
           data={[...this.state.list, {type: 'AddCommunity'}]}
           keyExtractor={(_: any, index: number) => `${index}`}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(_, index: number) => `${index}`}
           renderItem={this.renderRow}
         />

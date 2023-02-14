@@ -404,6 +404,8 @@ const Recent = (props: Props) => {
             initialNumToRender={10}
             removeClippedSubviews={true}
             maxToRenderPerBatch={5}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             windowSize={5}
             renderItem={renderList}
             indicatorStyle="white"

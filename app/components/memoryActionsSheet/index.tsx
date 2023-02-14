@@ -186,6 +186,7 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                   data={actions}
                   keyExtractor={(_, index: number) => `${index}`}
                   nestedScrollEnabled
+                  showsVerticalScrollIndicator={false}
                   onScroll={() => {
                     Keyboard.dismiss();
                   }}

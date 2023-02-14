@@ -65,7 +65,7 @@ const WriteTabs = props => {
 
   useEffect(() => {
     notificationModel = new NotificationDataModel();
-   
+
     const foregroundNotification = EventManager.addListener(
       kForegroundNotice,
       foregroundNotificationCallback,
@@ -78,12 +78,12 @@ const WriteTabs = props => {
       kNotificationIndicator,
       changeNotification,
     );
-   
+
     if (props.showPublishedPopup) {
       setShowCustomAlert(true);
     }
-   
-    AppState.addEventListener('change',()=>{
+
+    AppState.addEventListener('change', () => {
       if (AppState.currentState === 'background') {
         props.showLoader(false)
       }
@@ -96,7 +96,7 @@ const WriteTabs = props => {
     };
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (props.route?.params?.showPromptView) {
       setCurrentIndex(2)
       setOnOptionClick(true);
@@ -106,7 +106,7 @@ const WriteTabs = props => {
       });
     }
     // console.log( flatListRef?.current)
-  },[flatListRef?.current && props.route?.params?.showPromptView])
+  }, [flatListRef?.current && props.route?.params?.showPromptView])
 
   useEffect(() => {
     if (currentIndex === 1 && !onOptionClick) {
@@ -368,6 +368,8 @@ const WriteTabs = props => {
             style={Styles.fullWidth}
             initialNumToRender={3}
             removeClippedSubviews={true}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             renderItem={_renderItem}
             horizontal={true}
             getItemLayout={(data, index) => {

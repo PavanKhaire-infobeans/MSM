@@ -535,6 +535,8 @@ const AddContentDetails = props => {
                     horizontal={true}
                     initialNumToRender={files.length}
                     removeClippedSubviews={true}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps={'handled'}
                     keyExtractor={(_, index: number) => `${index}`}
                     style={[
