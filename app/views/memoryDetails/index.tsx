@@ -1259,6 +1259,7 @@ class MemoryDetails extends React.Component<Props, State> {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
+        enableOnAndroid={true}
         style={style.CommentBoxContainer}>
         <View style={style.CommentBoxSubContainer}>
           {/* <ImageBackground style={[style.avatar]} imageStyle={{ borderRadius: 20}} source={profile_placeholder}>
@@ -1551,6 +1552,7 @@ class MemoryDetails extends React.Component<Props, State> {
             nid: this.memoryDataModel.nid,
             memoryType: this.storyType,
             actionType: MemoryActionKeys.deleteMemoryKey,
+            destructive:true
           });
           break;
         case MemoryActionKeys.moveToDraftKey:

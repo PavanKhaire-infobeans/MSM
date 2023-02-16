@@ -318,6 +318,7 @@ const ForgotPassword = (props: Props) => {
 
         <KeyboardAwareScrollView
           showsHorizontalScrollIndicator={false}
+          enableOnAndroid={true}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps='always'
           // contentContainerStyle={styles.scrollViewStyles}

@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native';
 //@ts-ignore
-import {Player} from '@react-native-community/audio-toolkit';
+import { Player } from '@react-native-community/audio-toolkit';
 import {
   audio_details_close,
   audio_details_open,
@@ -27,7 +27,7 @@ import {
   showConsoleLog,
 } from '../../constants';
 import Utility from '../../utility';
-import {No_Internet_Warning, ToastMessage} from '../Toast';
+import { No_Internet_Warning, ToastMessage } from '../Toast';
 import styles from './styles';
 
 type Props = {
@@ -93,7 +93,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
       if (Utility.isInternetConnected) {
         try {
           if (props.files[index].url == null || props.files[index].url == '') {
-           //ToastMessage('Audio file is corrupted', Colors.ErrorColor);
+            //ToastMessage('Audio file is corrupted', Colors.ErrorColor);
             tooglePlayPause();
             return;
           }
@@ -104,10 +104,10 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
             let songTitle = props.files[index].file_title
               ? props.files[index].file_title
               : props.files[index].title
-              ? props.files[index].title
-              : props.files[index].filename
-              ? props.files[index].filename
-              : '';
+                ? props.files[index].title
+                : props.files[index].filename
+                  ? props.files[index].filename
+                  : '';
             try {
               setState(prev => ({
                 ...prev,
@@ -123,7 +123,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
                 loadingText: true,
                 index: index,
               }));
-            } catch (error) {}
+            } catch (error) { }
 
             if (player && player?.canPlay) {
               player?.stop();
@@ -133,8 +133,8 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
               props.files[index].url
                 ? props.files[index].url
                 : props.files[index].filePath
-                ? props.files[index].filePath
-                : '',
+                  ? props.files[index].filePath
+                  : '',
             );
             // showConsoleLog(ConsoleType.LOG,"Path before ::", path);
             if (
@@ -168,15 +168,15 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
                       currentDuration = setInterval(setCurrentTime, 500);
                     }, 2000);
                   },
-                  () => {},
+                  () => { },
                 );
                 setPlayer(newplayer);
               },
-              () => {},
+              () => { },
             );
             totalDuration = setInterval(setTotalTime, 500);
           } else {
-           //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+            //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
             setTimeout(() => {
               hidePlayer();
             }, 1000);
@@ -227,7 +227,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
     if (Utility.isInternetConnected) {
       try {
         if (props.files[index].url == null || props.files[index].url == '') {
-         //ToastMessage('Audio file is corrupted', Colors.ErrorColor);
+          //ToastMessage('Audio file is corrupted', Colors.ErrorColor);
           tooglePlayPause();
           return;
         }
@@ -235,10 +235,10 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
           let songTitle = props.files[index].file_title
             ? props.files[index].file_title
             : props.files[index].title
-            ? props.files[index].title
-            : props.files[index].filename
-            ? props.files[index].filename
-            : '';
+              ? props.files[index].title
+              : props.files[index].filename
+                ? props.files[index].filename
+                : '';
           setState(prev => ({
             ...prev,
             playerShowing: true,
@@ -262,8 +262,8 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
             props.files[index].url
               ? props.files[index].url
               : props.files[index].filePath
-              ? props.files[index].filePath
-              : '',
+                ? props.files[index].filePath
+                : '',
           );
           if (path.indexOf('https://') == -1 && path.indexOf('file://') == -1) {
             path = 'file://' + path;
@@ -292,7 +292,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
 
           totalDuration = setInterval(setTotalTime, 500);
         } else {
-         //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+          //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
           setTimeout(() => {
             hidePlayer();
           }, 1000);
@@ -462,11 +462,12 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
     };
   }, []);
 
+  // console.log("vallll ",isNaN(state.sliderValue)? state.maximumSeekValue : state.sliderValue)
   return (
     <View
       style={[
         styles.mainContainer,
-        {bottom: props.bottom ? props.bottom : 80},
+        { bottom: props.bottom ? props.bottom : 80 },
       ]}>
       {state.playerShowing && (
         <View
@@ -499,9 +500,7 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
           <Slider
             // value={playershow?.currentTime ? Math.round(playershow?.currentTime / 1000): 0}
             value={
-              isNaN(state.sliderValue)
-                ? state.maximumSeekValue
-                : state.sliderValue
+              state.ended ? 0 : isNaN(state.sliderValue) ? state.maximumSeekValue : state.sliderValue
             }
             minimumTrackTintColor={Colors.NewRadColor}
             maximumTrackTintColor={'rgba(196, 196, 196, 0.4)'}
@@ -516,7 +515,9 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
               }));
               let newplayer = player;
               newplayer.currentTime = value * 1000;
-              playershow.currentTime = value * 1000;
+              if (playershow) {
+                playershow.currentTime = value * 1000;
+              }
               setPlayer(newplayer);
               playershow = newplayer;
             }}
@@ -596,11 +597,11 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
           <View
             style={[
               styles.playerShowing,
-              {bottom: state.minimizedView ? 105 : 205},
+              { bottom: state.minimizedView ? 105 : 205 },
             ]}>
             <Image
               source={small_close_white_}
-              style={{height: 11, width: 11}}
+              style={{ height: 11, width: 11 }}
             />
           </View>
         </TouchableWithoutFeedback>
@@ -619,7 +620,7 @@ AudioPlayer.defaultProps = {
   by: 'by You',
 };
 
-const PlayPause = (props: {playing: boolean; togglePlayPause: () => void}) => {
+const PlayPause = (props: { playing: boolean; togglePlayPause: () => void }) => {
   return (
     <TouchableWithoutFeedback onPress={() => props.togglePlayPause()}>
       <View style={styles.PlayPauseTouch}>
@@ -637,7 +638,7 @@ const PlayPause = (props: {playing: boolean; togglePlayPause: () => void}) => {
   );
 };
 
-const ForwardIcon = (props: {disabled: boolean; nextSong: () => void}) => {
+const ForwardIcon = (props: { disabled: boolean; nextSong: () => void }) => {
   return (
     <TouchableHighlight
       underlayColor={Colors.underlayColor}
@@ -657,7 +658,7 @@ const ForwardIcon = (props: {disabled: boolean; nextSong: () => void}) => {
   );
 };
 
-const BackwardIcon = (props: {disabled: boolean; previousSong: () => void}) => {
+const BackwardIcon = (props: { disabled: boolean; previousSong: () => void }) => {
   return (
     <TouchableHighlight
       underlayColor={Colors.underlayColor}
@@ -678,9 +679,9 @@ const BackwardIcon = (props: {disabled: boolean; previousSong: () => void}) => {
   );
 };
 
-const PlayButtonDefault = (props: {color: any}) => {
+const PlayButtonDefault = (props: { color: any }) => {
   return (
-    <View style={[styles.PlayButtonDefault, {borderLeftColor: props.color}]} />
+    <View style={[styles.PlayButtonDefault, { borderLeftColor: props.color }]} />
   );
 };
 

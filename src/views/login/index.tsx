@@ -408,6 +408,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             // style={{ width: "100%", paddingHorizontal: 24 }}
             bounces={false}
             extraScrollHeight={140}
+            enableOnAndroid={true}
           >
             <View style={Styles.LoginHeader}>
               <Text style={Styles.hederText}>Login</Text>

@@ -18,6 +18,7 @@ export type MemoryActionsSheetItem = {
   memoryType?: any;
   actionType?: any;
   uid?: any;
+  destructive?:boolean
 };
 
 type Props = {

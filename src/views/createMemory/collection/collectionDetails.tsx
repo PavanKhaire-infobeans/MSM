@@ -197,7 +197,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
             <TouchableOpacity
               style={styles.visiblityImageContainer}
               onPress={() =>
-                this.props.navigation.navigate('memoryDetails', {
+                this.props.navigation.navigate('newmemoryDetails', {
                   nid: item.id,
                   type: 'my_stories',
                 })

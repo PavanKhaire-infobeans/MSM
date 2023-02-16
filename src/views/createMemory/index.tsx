@@ -1161,6 +1161,7 @@ const CreateMemory = (props: Props) => {
   const toolbar = () => {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
+        enableOnAndroid={true}
         keyboardShouldPersistTaps="always"
         style={styles.toolBarKeyboardAwareScrollViewStyle}>
         <View style={styles.toolBarKeyboardAwareScrollViewContainerStyle}>
@@ -2500,7 +2501,7 @@ const CreateMemory = (props: Props) => {
                   }}>
                   <>
                     <Image style={Styles.cancelImageStyle} source={x} />
-                    <Text style={Styles.cancelTextStyle}>Cancel</Text>
+                    <Text style={Styles.cancelTextStyle}>Close</Text>
                   </>
                 </TouchableHighlight>
               </View>
@@ -2644,7 +2645,14 @@ const CreateMemory = (props: Props) => {
                         style={styles.colabratiesTextStyle}>
                         {'Where did this memory happen?'}
                       </Text>
-
+                      <Text
+                        style={[styles.labelStyle, { marginLeft: 24, }]}>
+                        {'LOCATION'}
+                        <Text
+                          style={{ color: Colors.newErrorColor }}>
+                          {'*'}
+                        </Text>
+                      </Text>
                       <SearchBar
                         style={[styles.searchBarStyle, {
                           borderBottomColor: locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,

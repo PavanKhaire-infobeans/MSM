@@ -107,6 +107,7 @@ export default class EtherPadEditing extends React.Component<Props, State> {
   toolbar = () => {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
+        enableOnAndroid={true}
         keyboardShouldPersistTaps="always"
         style={Styles.toolBarKeyboardAwareScrollViewStyle}>
         <View

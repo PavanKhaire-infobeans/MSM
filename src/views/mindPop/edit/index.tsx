@@ -777,6 +777,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
   toolbar = () => {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
+        enableOnAndroid={true}
         keyboardShouldPersistTaps="always"
         style={Styles.scrollViewStyle}>
         <View
@@ -1011,7 +1012,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
     this._actionSheet.hideSheet();
     this.setState({
       actionSheet: { ...this.state.actionSheet, type: 'none', list: [] },
-    },()=>{
+    }, () => {
       setTimeout(() => {
         switch (index) {
           case 0:
@@ -1023,7 +1024,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
           case 2:
             PickPDF(this.fileCallbackHandler);
             break;
-        }   
+        }
       }, 200);
     });
   };

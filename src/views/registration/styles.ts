@@ -29,7 +29,7 @@ const Styles = EStyleSheet.create({
     borderRadius: 1000, 
     height: 44, 
     marginTop: 24, 
-    marginBottom: 32, 
+    // marginBottom: 32, 
     borderColor: Colors.bottomTabColor, 
     borderWidth: 1, 
     justifyContent: 'center', 

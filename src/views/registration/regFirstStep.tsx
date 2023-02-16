@@ -416,7 +416,14 @@ export default class RegFirstStep extends Component<Props> {
             if (form.text == 'Birth year') {
               this.regScroll.scrollToPosition(
                 0,
-                200,
+                100,
+                true,
+              );
+            }
+            else if ((form.label.toLowerCase() == 'first name') || (form.label.toLowerCase() == 'last name')) {
+              this.regScroll.scrollToPosition(
+                0,
+                100,
                 true,
               );
             }
@@ -813,15 +820,27 @@ export default class RegFirstStep extends Component<Props> {
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          enableOnAndroid={true}
           nestedScrollEnabled={true}
+          enableAutomaticScroll={true}
           ref={ref => (this.regScroll = ref)}
-          // style={{ width: "100%", paddingHorizontal: 24 }}
+          // style={{ width: "100%", backgroundColor: 'red' }}
           // bounces={false}
-          extraScrollHeight={100}
+          extraScrollHeight={160}
         >
           {/* {sortedForm.map((form: FormStruct, index: number) => {
 							return this.getFormEntity(form, { fieldID: `${index}`, isLast: formLength - 1 == index });
 						})} */}
+
+          {
+            this.state.keyboardHeight > 0 ?
+              null
+              :
+              <>
+                <Text style={Styles.hederText}>Sign up</Text>
+                <View style={Styles.separatorHeightStyle32} />
+              </>
+          }
 
           <View style={Styles.formContainer}>
             {this.state.regFirstStep

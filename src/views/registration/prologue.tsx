@@ -408,7 +408,7 @@ class Prologue extends Component<Props> {
                                 <Image style={Styles.backIconStyle} source={arrowRightCircle} />
                                 <Text style={[CommonTextStyles.fontWeight500Size17Inter, { color: Colors.newTextColor }]}>Back</Text>
                               </TouchableOpacity>
-                              <Text style={Styles.hederText}>Sign up</Text>
+                              {/* <Text style={Styles.hederText}>Sign up</Text> */}
                             </>
                         }
                       </View>

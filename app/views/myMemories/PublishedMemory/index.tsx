@@ -892,6 +892,7 @@ export const MemoryActionsList = (item: any) => {
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.deleteMemoryKey,
+          destructive:true
         });
         break;
       case MemoryActionKeys.moveToDraftKey:
@@ -966,12 +967,17 @@ export const MemoryActionsList = (item: any) => {
   let tempmemoryActions: any = [];
 
   let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
+  let deleteObj = temp.filter(item => item.text.toLowerCase() == 'delete')
   temp = temp.filter(item => item.text.toLowerCase() != 'hide')
+  temp = temp.filter(item => item.text.toLowerCase() != 'delete')
   if (hideObj.length) {
-    tempmemoryActions = [...hideObj, ...temp]
+    tempmemoryActions = [...hideObj, ...temp,...deleteObj]
   }
   else {
     tempmemoryActions = [...temp]
+    if (deleteObj.length) {
+      tempmemoryActions = [...tempmemoryActions,...deleteObj]
+    }
   }
 
   return tempmemoryActions;
@@ -1251,6 +1257,7 @@ const MemoryActionsListArray = (item: any) => {
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.deleteMemoryKey,
+          destructive:true
         });
         break;
       case MemoryActionKeys.moveToDraftKey:
@@ -1329,14 +1336,19 @@ const MemoryActionsListArray = (item: any) => {
 
   let temp = [...memoryActions];
   let tempmemoryActions: any = [];
-
+  
   let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
+  let deleteObj = temp.filter(item => item.text.toLowerCase() == 'delete')
   temp = temp.filter(item => item.text.toLowerCase() != 'hide')
+  temp = temp.filter(item => item.text.toLowerCase() != 'delete')
   if (hideObj.length) {
-    tempmemoryActions = [...hideObj, ...temp]
+    tempmemoryActions = [...hideObj, ...temp,...deleteObj]
   }
   else {
     tempmemoryActions = [...temp]
+    if (deleteObj.length) {
+      tempmemoryActions = [...tempmemoryActions,...deleteObj]
+    }
   }
   return tempmemoryActions;
 };

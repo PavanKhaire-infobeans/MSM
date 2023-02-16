@@ -58,8 +58,8 @@ const Styles = EStyleSheet.create({
     marginRight: 10
   },
   titleContainer: { 
-    alignItems:'center',
-    justifyContent: 'center', 
+    alignItems:'flex-start',
+    justifyContent: 'flex-start', 
   },
   titleText: {
     ...fontSize(18),
@@ -87,11 +87,11 @@ const Styles = EStyleSheet.create({
     justifyContent: 'space-between',
   },
   collectionTitleContainer: {
-    flex: 1,
+    flex: 7,
     alignItems: 'flex-start',
     flexDirection: 'row'
   },
-  visiblityImageContainer: { padding: 15 },
+  visiblityImageContainer: {flex: 1, },
   container: {
     flex: 1
   },

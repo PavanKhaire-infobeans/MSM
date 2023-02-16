@@ -204,6 +204,7 @@ const ChangePassword = props => {
       />
       <KeyboardAwareScrollView
         showsHorizontalScrollIndicator={false}
+        enableOnAndroid={true}
         showsVerticalScrollIndicator={false}
         style={styles.scrollViewContainerStyle}>
         <TextField

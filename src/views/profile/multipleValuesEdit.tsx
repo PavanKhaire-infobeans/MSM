@@ -140,8 +140,8 @@ const MutilpleValueEdit = (props: Props) => {
       // } = useUserProfileData({});
       // setAllFormSections([]);
 
-        props.navigation.goBack();
-        // props.navigation.replace('profile');
+      props.navigation.goBack();
+      // props.navigation.replace('profile');
     });
 
     if (props.basicInfo) {
@@ -259,9 +259,9 @@ const MutilpleValueEdit = (props: Props) => {
     }));
     // console.log("actionsss ?",JSON.stringify(actions),field.multipleSelection)
 
-      bottomPicker.current &&
+    bottomPicker.current &&
       bottomPicker.current.showPicker &&
-      bottomPicker.current.showPicker();  
+      bottomPicker.current.showPicker();
 
   }
 
@@ -418,7 +418,7 @@ const MutilpleValueEdit = (props: Props) => {
                   onOptionSelected={() => onOptionSelection(field)}
                 />
               );
-              
+
             } else if (type == 'text_textfield') {
               let val = getValue(field, ['default_value']);
               if (val) {
@@ -466,7 +466,7 @@ const MutilpleValueEdit = (props: Props) => {
                         ? ''
                         : default_value
                   }
-                  style={{marginBottom: 16,}}
+                  style={{ marginBottom: 16, }}
                   keyboardType={keyboardBoardType}
                   onSubmitEditing={() => {
                     let nextRef = `${index + 1}`;
@@ -1029,6 +1029,7 @@ const MutilpleValueEdit = (props: Props) => {
         }
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps="always"
+          enableOnAndroid={true}
           keyboardDismissMode="on-drag"
           style={Styles.KeyboardAwareScrollViewStyle}
           contentContainerStyle={{ alignItems: 'center' }}
@@ -1064,68 +1065,68 @@ const MutilpleValueEdit = (props: Props) => {
           onActionClick={onActionItemClicked.bind(this)}
         />
         <BottomPicker
-        ref={bottomPicker}
-        onItemSelect={(selectedItem: ActionSheetItem) => {
-          let fieldName = state.selectionData.fieldName;
-          if (state.selectionData.isFromMultipleDropDown) {
-            let date: Date = new Date();
-            date.setFullYear(parseInt(selectedItem.text));
-            setState(prevState => ({
-              ...prevState,
-              [fieldName]: {
-                ...state[fieldName],
-                [selectedItem.key]: Utility.dateObjectToDefaultFormat(date),
-              },
-              error: {
-                ...state.error,
-                [fieldName]: { error: false, message: '' },
-              }
-            }));
+          ref={bottomPicker}
+          onItemSelect={(selectedItem: ActionSheetItem) => {
+            let fieldName = state.selectionData.fieldName;
+            if (state.selectionData.isFromMultipleDropDown) {
+              let date: Date = new Date();
+              date.setFullYear(parseInt(selectedItem.text));
+              setState(prevState => ({
+                ...prevState,
+                [fieldName]: {
+                  ...state[fieldName],
+                  [selectedItem.key]: Utility.dateObjectToDefaultFormat(date),
+                },
+                error: {
+                  ...state.error,
+                  [fieldName]: { error: false, message: '' },
+                }
+              }));
 
-          } else {
-            setState(prevState => ({
-              ...prevState,
-              [fieldName]: { [selectedItem.key]: selectedItem.text },
-              error: {
-                ...state.error,
-                [fieldName]: { error: false, message: '' },
-              },
-            }));
+            } else {
+              setState(prevState => ({
+                ...prevState,
+                [fieldName]: { [selectedItem.key]: selectedItem.text },
+                error: {
+                  ...state.error,
+                  [fieldName]: { error: false, message: '' },
+                },
+              }));
 
+            }
+
+          }}
+          actions={state.selectionData.actions}
+          value={state.selectionData.selectionValue}
+          selectedValues={state.selectionData.selectedValues}
+          selectionType={state.selectionData.selectionType}
+          fieldName={state.selectionData.fieldName}
+          fullscreen={true}
+          label={state.selectionData.label}
+          maxLimit={state.selectionData.maxLimit}
+          isFromMultipleDropDown={
+            state.selectionData.isFromMultipleDropDown
           }
-
-        }}
-        actions={state.selectionData.actions}
-        value={state.selectionData.selectionValue}
-        selectedValues={state.selectionData.selectedValues}
-        selectionType={state.selectionData.selectionType}
-        fieldName={state.selectionData.fieldName}
-        fullscreen={true}
-        label={state.selectionData.label}
-        maxLimit={state.selectionData.maxLimit}
-        isFromMultipleDropDown={
-          state.selectionData.isFromMultipleDropDown
-        }
-        fieldNameOfMultipleDropDown={
-          state.selectionData.fieldNameOfMultipleDropDown
-        }
-        saveSelectedValues={(selectedValueObjects: any) => {
-          let fieldName = state.selectionData.fieldName;
-          setState(prevState => ({
-            ...prevState,
-            [fieldName]: selectedValueObjects,
-            error: {
-              ...state.error,
-              [fieldName]: { error: false, message: '' },
-            },
-          }));
-          StateData = state;
-          //showConsoleLog(ConsoleType.LOG,state)
-        }}
-        multipleValuesComponent={true}
-      />
+          fieldNameOfMultipleDropDown={
+            state.selectionData.fieldNameOfMultipleDropDown
+          }
+          saveSelectedValues={(selectedValueObjects: any) => {
+            let fieldName = state.selectionData.fieldName;
+            setState(prevState => ({
+              ...prevState,
+              [fieldName]: selectedValueObjects,
+              error: {
+                ...state.error,
+                [fieldName]: { error: false, message: '' },
+              },
+            }));
+            StateData = state;
+            //showConsoleLog(ConsoleType.LOG,state)
+          }}
+          multipleValuesComponent={true}
+        />
       </SafeAreaView>
-      
+
     </View>
   );
 

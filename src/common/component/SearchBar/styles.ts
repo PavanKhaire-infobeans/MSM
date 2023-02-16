@@ -22,7 +22,7 @@ const Styles = EStyleSheet.create({
       inputView: {
         width: '100%',
         height: '100%',
-        paddingLeft: 15,
+        paddingLeft: 16,
         flexDirection: 'row',
       },
       clearButton: {
@@ -41,7 +41,7 @@ const Styles = EStyleSheet.create({
         lineHeight: 23.75,
         fontWeight:'400',
         fontFamily:fontFamily.Inter,
-        color: Colors.black,
+        color: Colors.newTextColor,
         backgroundColor: 'transparent',
       },
       placeholder: {
