@@ -398,7 +398,7 @@ export default class RegFirstStep extends Component<Props> {
     // 	return <DropDown isCuebackRegistration={this.props.isCuebackRegistration} key={form.field_name} placeholderText={form.label} {...extra} onOptionSelected={this.onOptionSelection(form)} />
     // }
     var txtF = (
-      <View style={{ width: form.label.toLowerCase() == 'first name' ? '95%' : '100%' }}>
+      <View key={form.label} style={{ width: form.label.toLowerCase() == 'first name' ? '95%' : '100%' }}>
         <Text style={Styles.inputLableStyle}>{form.text.toUpperCase()}</Text>
         <TextField
           key={form.field_name}
@@ -420,13 +420,13 @@ export default class RegFirstStep extends Component<Props> {
                 true,
               );
             }
-            else if ((form.label.toLowerCase() == 'first name') || (form.label.toLowerCase() == 'last name')) {
-              this.regScroll.scrollToPosition(
-                0,
-                100,
-                true,
-              );
-            }
+            // else if ((form.label.toLowerCase() == 'first name') || (form.label.toLowerCase() == 'last name')) {
+            //   // this.regScroll.scrollToPosition(
+            //   //   0,
+            //   //   100,
+            //   //   true,
+            //   // );
+            // }
           }}
           returnKeyType={isLast ? 'done' : 'next'}
           onChange={(text: string) => {
@@ -450,7 +450,7 @@ export default class RegFirstStep extends Component<Props> {
                 scrollHeight: this.state.scrollHeight + 70,
               },
               () => {
-                this.regScroll.scrollToPosition(0, this.state.scrollHeight, true);
+                // this.regScroll.scrollToPosition(0, this.state.scrollHeight, true);
               },
             );
           }}
@@ -826,7 +826,7 @@ export default class RegFirstStep extends Component<Props> {
           ref={ref => (this.regScroll = ref)}
           // style={{ width: "100%", backgroundColor: 'red' }}
           // bounces={false}
-          extraScrollHeight={160}
+          extraScrollHeight={100}
         >
           {/* {sortedForm.map((form: FormStruct, index: number) => {
 							return this.getFormEntity(form, { fieldID: `${index}`, isLast: formLength - 1 == index });
