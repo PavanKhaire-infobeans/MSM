@@ -32,6 +32,7 @@ export interface FormStruct {
   field_name?: string;
   required?: boolean;
   values?: any;
+  text?: any;
 }
 
 export const registrationForm = async () => {

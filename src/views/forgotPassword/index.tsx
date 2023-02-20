@@ -368,7 +368,7 @@ const ForgotPassword = (props: Props) => {
                   //                   styles.ssoTextStyle,
                   //                   { color: Colors.white },
                   //                 ]}>
-                  //                 Retutn to login
+                  //                 Return to login
                   //               </Text>
                   //             </>
                   //         }
@@ -484,7 +484,7 @@ const ForgotPassword = (props: Props) => {
                         styles.ssoTextStyle,
                         { color: Colors.white },
                       ]}>
-                      Retutn to login
+                      Return to login
                     </Text>
                   </>
               }

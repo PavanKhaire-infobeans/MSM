@@ -147,7 +147,7 @@ const TopicsFilter = (props: Props) => {
       ]}>
       <>
         <View style={Styles.iconContainer}>
-          <Image resizeMode="contain" source={icons[item.label]} />
+          <Image resizeMode="contain" source={icons[item.label] ? icons[item.label] :general} />
         </View>
 
         <View style={Styles.iconSeparator}></View>
