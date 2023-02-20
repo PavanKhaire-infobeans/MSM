@@ -826,7 +826,7 @@ export default class RegFirstStep extends Component<Props> {
           ref={ref => (this.regScroll = ref)}
           // style={{ width: "100%", backgroundColor: 'red' }}
           // bounces={false}
-          extraScrollHeight={100}
+          extraScrollHeight={Platform.OS == 'android' && StaticSafeAreaInsets.safeAreaInsetsBottom ? (StaticSafeAreaInsets.safeAreaInsetsBottom + 100) : 100}
         >
           {/* {sortedForm.map((form: FormStruct, index: number) => {
 							return this.getFormEntity(form, { fieldID: `${index}`, isLast: formLength - 1 == index });
@@ -893,7 +893,7 @@ export default class RegFirstStep extends Component<Props> {
               translateY: yVal,
             },
           ],
-          position: 'absolute', bottom: 10, left: 24
+          position: 'absolute', bottom: Platform.OS == 'android' && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom - 10 : 10, left: 24
         }}>
           <TouchableOpacity
             activeOpacity={1}
@@ -975,8 +975,8 @@ export default class RegFirstStep extends Component<Props> {
       inputRange: [0, 0.5, 1],
       outputRange: [
         0,
-        -(this.state.keyboardHeight),
-        -(this.state.keyboardHeight),
+        -(this.state.keyboardHeight + (StaticSafeAreaInsets.safeAreaInsetsBottom && (Platform.OS === 'android') ? StaticSafeAreaInsets.safeAreaInsetsBottom - 10 : 0)),
+        -(this.state.keyboardHeight + (StaticSafeAreaInsets.safeAreaInsetsBottom && (Platform.OS === 'android') ? StaticSafeAreaInsets.safeAreaInsetsBottom - 10 : 0)),
       ],
     });
 

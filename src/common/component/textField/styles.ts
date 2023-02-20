@@ -136,7 +136,7 @@ export const styles = StyleSheet.create({
   },
   animatedViewStyle:{
     width: '100%',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',//flex-end
   },
   minWidth:{ 
     // minWidth: 180 

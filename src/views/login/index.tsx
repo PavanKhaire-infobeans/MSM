@@ -6,6 +6,7 @@ import {
   Easing,
   Image,
   Keyboard,
+  Platform,
   SafeAreaView,
   StatusBar,
   TextInput,
@@ -354,8 +355,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       inputRange: [0, 0.5, 1],
       outputRange: [
         0,
-        -(this.state.keyboardHeight),
-        -(this.state.keyboardHeight),
+        -(this.state.keyboardHeight + (Platform.OS == 'ios' ? 0 : -10)),
+        -(this.state.keyboardHeight + (Platform.OS == 'ios' ? 0 : -10)),
       ],
     });
 
@@ -410,12 +411,19 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             extraScrollHeight={140}
             enableOnAndroid={true}
           >
-            <View style={Styles.LoginHeader}>
-              <Text style={Styles.hederText}>Login</Text>
-            </View>
+            {
+              this.state.keyboardHeight ?
+                null
+                :
+                <>
+                  <View style={Styles.LoginHeader}>
+                    <Text style={Styles.hederText}>Login</Text>
+                  </View>
+                  <View style={Styles.separatorHeightStyle16} />
+                  <View style={Styles.separatorHeightStyle16} />
+                </>
 
-            <View style={Styles.separatorHeightStyle16} />
-            <View style={Styles.separatorHeightStyle16} />
+            }
 
             <View style={Styles.inputsContainer}>
 

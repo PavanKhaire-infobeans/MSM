@@ -331,7 +331,7 @@ class Prologue extends Component<Props> {
           }
           backgroundColor={Colors.AudioViewBg}
         />
-        <View style={{ flex: 1, backgroundColor: Colors.NewThemeColor }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NewThemeColor }}>
           <View
             style={{
               height: Utility.getDeviceHeight() * 1,
@@ -595,7 +595,7 @@ class Prologue extends Component<Props> {
               </SafeAreaView>
             </LinearGradient>
           </View>
-        </View>
+        </SafeAreaView>
       </View>
     );
   }

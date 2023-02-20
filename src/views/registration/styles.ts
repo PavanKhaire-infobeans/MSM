@@ -1,6 +1,5 @@
 import { Dimensions, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
 import Utility from '../../common/utility';
 

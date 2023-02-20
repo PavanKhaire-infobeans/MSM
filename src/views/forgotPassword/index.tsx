@@ -5,6 +5,7 @@ import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   StatusBar,
   TextInput,
@@ -168,8 +169,10 @@ const ForgotPassword = (props: Props) => {
   };
 
   const resetButtonAction = () => {
+    console.log('email')
     if (Utility.isInternetConnected) {
       let email = state.email && state.email.trim();
+      console.log(email)
       if (email.length == 0) {
         setState(prevState => ({
           ...prevState,
@@ -257,8 +260,8 @@ const ForgotPassword = (props: Props) => {
     inputRange: [0, 0.5, 1],
     outputRange: [
       0,
-      -(keyboardHeight),
-      -(keyboardHeight),
+      -(keyboardHeight+(Platform.OS=='ios'?0:20)),
+      -(keyboardHeight+(Platform.OS=='ios'?0:20)),
     ],
   });
 
@@ -453,10 +456,10 @@ const ForgotPassword = (props: Props) => {
           </View>
         </KeyboardAwareScrollView>
 
-        <Animated.View style={[styles.buttonContainer, animStyle]}>
-          <TouchableHighlight
-            underlayColor={'#ffffff00'}
-            onPress={state.isRequestSubmitted ? onDoneButtonAction : resetButtonAction}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={state.isRequestSubmitted ? onDoneButtonAction : resetButtonAction}>
+          <Animated.View style={[styles.buttonContainer, animStyle]}>
             <View
               style={[
                 styles.loginSSOButtonStyle,
@@ -490,8 +493,9 @@ const ForgotPassword = (props: Props) => {
               }
 
             </View>
-          </TouchableHighlight>
-        </Animated.View>
+          </Animated.View>
+        </TouchableOpacity>
+
       </View>
     </SafeAreaView>
   );

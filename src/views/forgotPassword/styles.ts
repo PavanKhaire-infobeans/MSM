@@ -16,7 +16,8 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: Utility.getDeviceWidth() - 48,
-    justifyContent: "flex-end",
+    height:44,
+    // justifyContent: "flex-end",
     alignSelf: 'center',
     marginBottom: 24,
   },
@@ -83,19 +84,23 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    height: '100%',
+    // height: '100%',
     marginTop: Size.byHeight(12),
   },
 
   communityBanner: {
     width: Utility.getDeviceWidth() - 48,
     alignSelf: 'center',
-    height: '100%',
+    // height: '100%',
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
-  subcommunityBanner: { width: '100%', height: '100%', flex: 1 },
+  subcommunityBanner: { 
+    width: '100%',
+    //  height: '100%', 
+     flex: 1 
+    },
   doneContainer: { flex: 1, height: 100 },
   textFieldStyle: { width: '100%', height: 75 },
   enterEmailText: {
@@ -109,7 +114,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
     // height:Utility.getDeviceHeight()*0.6, 
-    height: '100%',//Size.byHeight(180),
+    // height: '100%',//Size.byHeight(180),
     justifyContent: 'space-between',
     // alignItems: 'center', 
     marginBottom: 50

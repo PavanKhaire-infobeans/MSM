@@ -273,8 +273,8 @@ export function uploadTask(
   failure: (error: any) => void,
 ): (options: object) => void {
   // const UploadManager = require('react-native-background-upload').default;
-  const loaderHandler =
-    require('../common/component/busyindicator/LoaderHandler').default;
+  // const loaderHandler =
+  //   require('../common/component/busyindicator/LoaderHandler').default;
   return function (options: any): void {
     try {
       asyncGen(function* () {
@@ -328,12 +328,14 @@ export function uploadTask(
           //   failure(err);
           // })
         } catch (err) {
+          showConsoleLog(ConsoleType.LOG,'Upload error!', err)
           // hideLoaderWithTimeOut();
           failure(err);
         }
       });
     } catch (error) {
-      // hideLoaderWithTimeOut();
+      showConsoleLog(ConsoleType.LOG,'Upload errordadasdasdas!', error)
+        // hideLoaderWithTimeOut();
       failure(error);
     }
   };
@@ -636,7 +638,8 @@ export const requestPermission = async (type: string): Promise<boolean> => {
       // }),
     ).then(result => {
       // …
-      if (result === 'granted' || result === 'limited') return true;
+      console.log(result)
+      if (result === 'granted' || result === 'limited'|| result === 'unavailable') return true;
       else return false;
     });
     if (!test) {
