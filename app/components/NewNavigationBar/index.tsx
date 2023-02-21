@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DeviceEventEmitter, Image, TouchableWithoutFeedback, View } from 'react-native';
+import { DeviceEventEmitter, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { connect } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { kNotificationIndicator } from '../../../src/common/component/TabBarIcons';
@@ -133,8 +133,9 @@ const NavigationBar = (props: Props) => {
   return (
     <View
       style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
-      <TouchableWithoutFeedback
+      <TouchableOpacity
         testID={testID.leftButtons.menu}
+        activeOpacity={1}
         onPress={() => {
           navigation.navigate('myAccount');
           // showClose ? _closeAction() : navigation.drawerOpen();
@@ -165,7 +166,7 @@ const NavigationBar = (props: Props) => {
             )}
         </View>
 
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
       {_renderMiddle()}
       {_renderRight()}
     </View>

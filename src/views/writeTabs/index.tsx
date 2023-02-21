@@ -97,12 +97,12 @@ const WriteTabs = props => {
   }, []);
 
   useEffect(() => {
-    if (props.route?.params?.showPromptView) {
-      setCurrentIndex(2)
+    if (props.route?.params?.showPromptView && props.route?.params?.showPromptView != undefined) {
+      setCurrentIndex(props.route?.params?.showPromptView)
       setOnOptionClick(true);
       flatListRef?.current?.scrollToIndex({
         animated: true,
-        index: 2,
+        index: props.route?.params?.showPromptView,
       });
     }
     // console.log( flatListRef?.current)

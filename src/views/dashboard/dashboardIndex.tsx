@@ -426,11 +426,14 @@ class DashboardIndex extends React.Component<Props> {
           {this.state.appTourVisibility && (
             <AppGuidedTour
               navigation={this.props.navigation}
-              cancelAppTour={() => {
+              cancelAppTour={(navigate,goToPage) => {
                 this.setState({ appTourVisibility: false }, () =>
                   DefaultPreference.set('hide_guide_tour', 'true').then(
                     () => {
-                      this.props.navigation.replace('writeTabs', { showPromptView: true })
+                      if (navigate) {
+                        console.log("goToPage ",goToPage)
+                        this.props.navigation.replace('writeTabs', { showPromptView: goToPage })
+                      }
                     },
                   ),
                 );

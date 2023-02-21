@@ -355,8 +355,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       inputRange: [0, 0.5, 1],
       outputRange: [
         0,
-        -(this.state.keyboardHeight + (Platform.OS == 'ios' ? 0 : -10)),
-        -(this.state.keyboardHeight + (Platform.OS == 'ios' ? 0 : -10)),
+        -(this.state.keyboardHeight),
+        -(this.state.keyboardHeight),
       ],
     });
 
@@ -408,12 +408,17 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             ref={ref => (this.regScroll = ref)}
             // style={{ width: "100%", paddingHorizontal: 24 }}
             bounces={false}
-            extraScrollHeight={140}
+            extraScrollHeight={100}
             enableOnAndroid={true}
           >
             {
               this.state.keyboardHeight ?
-                null
+                Platform.OS == 'ios' ?
+                  <>
+                    <View style={Styles.separatorHeightStyle16} />
+                  </>
+                  :
+                  null
                 :
                 <>
                   <View style={Styles.LoginHeader}>

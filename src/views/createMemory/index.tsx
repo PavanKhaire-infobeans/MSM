@@ -1096,9 +1096,14 @@ const CreateMemory = (props: Props) => {
       list: ImageActions,
     })
 
-    _actionSheet &&
+    if (Platform.OS == 'ios') {
+      debugger
       _actionSheet &&
-      _actionSheet.showSheet();
+        _actionSheet &&
+        _actionSheet.showSheet();
+    } else {
+      setShowActionAndroid(true)
+    }
   };
 
   const audioAttachmentPress = (selectedItem?: any) => {
@@ -1510,9 +1515,13 @@ const CreateMemory = (props: Props) => {
         // }, 2500);
         break;
       case 2:
-        _actionSheet &&
-          _actionSheet &&
-          _actionSheet.hideSheet();
+          if (Platform.OS == 'ios') {
+            _actionSheet &&
+              _actionSheet &&
+              _actionSheet.hideSheet();
+          } else {
+            setShowActionAndroid(false)
+          }
         break;
       case 3:
         props.showLoader(true);

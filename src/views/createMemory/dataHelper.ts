@@ -22,6 +22,7 @@ export const DefaultDetailsMemory = (title: any) => {
       description: '',
       reference: '',
     },
+    share_option: 'only_me'
   };
   return draftDetails;
 };
@@ -38,14 +39,14 @@ export const DefaultDetailsWithoutTitleMemory = (title: any) => {
     description: description,
     memory_date: {
       year: new Date().getFullYear(),
-      month:
-        MonthObj.month[new Date().getMonth() + MonthObj.serverMonthsCount].tid,
+      month: MonthObj.month[new Date().getMonth() + MonthObj.serverMonthsCount].tid,
       day: new Date().getDate(),
     },
     location: {
       description: '',
       reference: '',
     },
+    share_option: 'only_me'
   };
   return draftDetails;
 };

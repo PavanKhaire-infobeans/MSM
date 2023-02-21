@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, Text, TouchableHighlight, View } from 'react-native';
+import { Dimensions, Image, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 //@ts-ignore
 import { book, write } from '../../../app/images';
 import {
@@ -123,8 +123,8 @@ export default class TabIcon extends React.Component<{ [x: string]: any }> {
     }
 
     return (
-      <TouchableHighlight
-        underlayColor={Colors.bottomTabColor}
+      <TouchableOpacity
+        activeOpacity={1}
         style={[style.container, {
           borderTopLeftRadius: this.props.title == 'Read' ? 14 : 0,
           borderBottomLeftRadius: this.props.title == 'Read' ? 14 : 0,
@@ -170,7 +170,7 @@ export default class TabIcon extends React.Component<{ [x: string]: any }> {
           )}
         </View>
 
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 }

@@ -893,7 +893,7 @@ export default class RegFirstStep extends Component<Props> {
               translateY: yVal,
             },
           ],
-          position: 'absolute', bottom: Platform.OS == 'android' && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom - 10 : 10, left: 24
+          position: 'absolute', bottom: Platform.OS == 'android' && StaticSafeAreaInsets.safeAreaInsetsBottom ? 10 : 10, left: 24
         }}>
           <TouchableOpacity
             activeOpacity={1}
@@ -975,13 +975,13 @@ export default class RegFirstStep extends Component<Props> {
       inputRange: [0, 0.5, 1],
       outputRange: [
         0,
-        -(this.state.keyboardHeight + (StaticSafeAreaInsets.safeAreaInsetsBottom && (Platform.OS === 'android') ? StaticSafeAreaInsets.safeAreaInsetsBottom - 10 : 0)),
-        -(this.state.keyboardHeight + (StaticSafeAreaInsets.safeAreaInsetsBottom && (Platform.OS === 'android') ? StaticSafeAreaInsets.safeAreaInsetsBottom - 10 : 0)),
+        -(this.state.keyboardHeight + (StaticSafeAreaInsets.safeAreaInsetsBottom && (Platform.OS === 'android') ? 0 : 0)),
+        -(this.state.keyboardHeight + (StaticSafeAreaInsets.safeAreaInsetsBottom && (Platform.OS === 'android') ? 0 : 0)),
       ],
     });
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, marginBottom:Platform.OS=='android' && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom :0}}>
         {
           this.props.whyDoAskViewValue ?
             <View style={[Styles.LoginHeader, { margin: 0 }]} >

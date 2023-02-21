@@ -183,6 +183,8 @@ android {
         pickFirst 'lib/x86/libc++_shared.so'
         pickFirst 'lib/armeabi-v7a/libc++_shared.so'
         pickFirst 'lib/mips/libblasV8.so'
+        pickFirst 'lib/x86_64/libjsc.so'
+        pickFirst 'lib/arm64-v8a/libjsc.so'
     }
 
     // applicationVariants are e.g. debug, release

@@ -5,7 +5,7 @@ const {
 } = ReactNative;
 
 const Button = (props) => {
-  return <TouchableOpacity {...props}>
+  return <TouchableOpacity activeOpacity={1} {...props}>
     {props.children}
   </TouchableOpacity>;
 };

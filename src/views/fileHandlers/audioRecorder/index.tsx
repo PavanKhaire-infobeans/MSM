@@ -4,6 +4,7 @@ import {
   AppStateStatus,
   Image,
   Modal,
+  PermissionsAndroid,
   Platform,
   SafeAreaView,
   Slider,
@@ -108,7 +109,7 @@ export default class CommonAudioRecorder extends React.Component<
     };
   }
 
-  componentDidMount = () => { 
+  componentDidMount = () => {
     if (this.props?.route?.params?.selectedItem) {
       console.log(JSON.stringify(this.props?.route?.params?.selectedItem?.url))
       this.setState({
@@ -117,7 +118,7 @@ export default class CommonAudioRecorder extends React.Component<
       })
     } else {
       this.setState({
-        audioState: 'none', 
+        audioState: 'none',
         path: ''
       })
     }
@@ -144,7 +145,7 @@ export default class CommonAudioRecorder extends React.Component<
       return;
     }
 
-    
+
     this.isRecordingFromAddContent
       ? this.navigateBackOrReset()
       : this.props.navigation.goBack();
@@ -235,7 +236,7 @@ export default class CommonAudioRecorder extends React.Component<
    * According to state of player
    */
   audioActions = () => {
-    showConsoleLog(ConsoleType.LOG, 'this.state.audioState >', this.state.audioState );
+    showConsoleLog(ConsoleType.LOG, 'this.state.audioState >', this.state.audioState);
     if (this.state.audioState == 'none') {
       let today = new Date();
       this.recording = `Rec${today.getMonth() +
@@ -251,7 +252,7 @@ export default class CommonAudioRecorder extends React.Component<
         today.getSeconds()
         }.m4a`;
 
-      requestPermission('microphone').then(success => {
+      requestPermission('microphone').then(async (success) => {
         if (success) {
           let path = SoundRecorder.PATH_CACHE + `/${this.recording}`;
           var options: { [key: string]: any } = {
@@ -260,16 +261,43 @@ export default class CommonAudioRecorder extends React.Component<
           if (Platform.OS == 'android') {
             options = { ...options, encoder: ENCODER_AAC };
           }
-          SoundRecorder.start(path, options)
-            .then(() => {
-              this.processing = true;
-              this.setState({ path, audioState: 'recording' }, () => {
-                this.time();
+
+          if (Platform.OS === 'android') {
+            const grants = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+            );
+            console.log('record audio', grants);
+
+            if (grants === PermissionsAndroid.RESULTS.GRANTED) {
+              SoundRecorder.start(path, options)
+                .then(() => {
+                  this.processing = true;
+                  this.setState({ path, audioState: 'recording' }, () => {
+                    this.time();
+                  });
+                })
+                .catch((err: Error) => {
+                  showConsoleLog(ConsoleType.LOG, 'Error SoundRecorder', err, path, options);
+                });
+
+            } else {
+              console.log('All required permissions not granted')
+              return;
+            }
+          }
+          else {
+
+            SoundRecorder.start(path, options)
+              .then(() => {
+                this.processing = true;
+                this.setState({ path, audioState: 'recording' }, () => {
+                  this.time();
+                });
+              })
+              .catch((err: Error) => {
+                showConsoleLog(ConsoleType.LOG, 'Error SoundRecorder', err, path, options);
               });
-            })
-            .catch((err: Error) => {
-              showConsoleLog(ConsoleType.LOG, 'Error SoundRecorder', err, path, options);
-            });
+          }
           // this.recorder = new Recorder(this.recording);
           // this.recorder.prepare((error: any, path: string) => {
           // 	if (error && error.err) {

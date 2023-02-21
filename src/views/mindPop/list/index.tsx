@@ -1135,14 +1135,21 @@ class MindPopList extends React.Component<{
   searchFunction = (search: string) => {
     let mindPopArray = [...this.state.listSectionItems], resultArray: any = [];
 
-    if(mindPopArray && mindPopArray.length && mindPopArray[1] && mindPopArray[1].data && mindPopArray[1].data.length){
-      resultArray = mindPopArray[1].data.filter(item => item.message.toLowerCase() == search.toLowerCase());
+    if (mindPopArray && mindPopArray.length && mindPopArray[1] && mindPopArray[1].data && mindPopArray[1].data.length) {
+      resultArray = mindPopArray[1].data.filter(item => item.message.toLowerCase().includes(search.toLowerCase()));
       resultArray = [mindPopArray[0], {
         "title": "1",
         "data": [...resultArray]
       }];
     }
-   
+    else if (mindPopArray && mindPopArray.length && mindPopArray[0] && mindPopArray[0].data && mindPopArray[0].data.length) {
+      resultArray = mindPopArray[0].data.filter(item => item.message.toLowerCase().includes(search.toLowerCase()));
+      resultArray = [{
+        "title": "1",
+        "data": [...resultArray]
+      }];
+    }
+
     this.setState({
       listSectionItems: resultArray,
       searchMode: true
@@ -1150,11 +1157,11 @@ class MindPopList extends React.Component<{
   };
 
   getListView(): JSX.Element {
-    let {listSectionItems}= this.state;
-    if(listSectionItems && listSectionItems[0]&&listSectionItems[0].title && listSectionItems[0].title ==='1'){
-      
+    let { listSectionItems } = this.state;
+    if (listSectionItems && listSectionItems[0] && listSectionItems[0].title && listSectionItems[0].title === '1') {
+
       let unique = [...new Map(listSectionItems[0].data.map(item =>
-        [item['instanceID'], item])).values()]
+        [item['id'], item])).values()]
       // const unique:any = [...new Set(listSectionItems[0].data.map(item => item.instanceID))];
       listSectionItems[0].data = unique;
     }
