@@ -39,6 +39,7 @@ import RegFirstStep from './regFirstStep';
 import Styles from './styles';
 import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
 import BusyIndicator from '../../common/component/busyindicator';
+import { GetUserData } from '../myAccount/reducer';
 
 export enum Direction {
   upDirection = 'upward',
@@ -55,7 +56,7 @@ type Props = {
   request: { completed: boolean; success: boolean };
   showLoaderValue: boolean;
   loaderTextValue: string;
-
+  getUserData?:(e:any)=>void;
 };
 class Prologue extends Component<Props> {
   _panel: any = null;
@@ -100,6 +101,8 @@ class Prologue extends Component<Props> {
     // 	showConsoleLog(ConsoleType.LOG,result)
     // 	// { safeAreaInsets: { top: 44, left: 0, bottom: 34, right: 0 } }
     // })
+    
+    this.props.getUserData({});
     this.setState({ isBottomPickerVisible: false }, () => {
       this.registrationData = EventManager.addListener(
         kCueBackFormData,
@@ -609,6 +612,8 @@ const mapState = (state: { [x: string]: any }) => ({
 const mapDispatch = (dispatch: Function) => ({
   getAllInstances: () => dispatch({ type: GetInstances.GetCall }),
   end: () => dispatch({ type: GetInstances.GetEnd }),
+  getUserData: (payload: any) =>
+    dispatch({ type: GetUserData, payload: payload }),
   showLoader: (payload: any) =>
     dispatch({ type: SHOW_LOADER_READ, payload: payload }),
   loaderText: (payload: any) =>

@@ -83,7 +83,7 @@ import messaging from '@react-native-firebase/messaging';
 import DeepLinking from 'react-native-deep-linking';
 import DefaultPreference from 'react-native-default-preference';
 // import { Notification, NotificationOpen } from 'react-native-firebase';
-import analytics from '@segment/analytics-react-native';
+// import analytics from '@segment/analytics-react-native';
 import loaderHandler from './common/component/busyindicator/LoaderHandler';
 import AppIntro from './views/appIntro';
 import DashboardIndex from './views/dashboard/dashboardIndex';
@@ -413,7 +413,7 @@ const App = _props => {
   useEffect(() => {
     setTimeout(() => SplashScreen.hide(), 500);
     networkConnectivitySaga();
-    loadSegmentAnalytics();
+    // loadSegmentAnalytics();
     checkPermission();
     getFontScale();
     createNotificationListeners();
@@ -564,14 +564,14 @@ const App = _props => {
   //     onTokenRefreshListener();
   //   }
 
-  const loadSegmentAnalytics = async () => {
-    await analytics.setup('UIejGdlPobXDuxYQC2YU19IBomGe5oQO', {
-      // Record screen views automatically!
-      recordScreenViews: true,
-      // Record certain application events automatically!
-      trackAppLifecycleEvents: true,
-    });
-  };
+  // const loadSegmentAnalytics = async () => {
+  //   await analytics.setup('UIejGdlPobXDuxYQC2YU19IBomGe5oQO', {
+  //     // Record screen views automatically!
+  //     recordScreenViews: true,
+  //     // Record certain application events automatically!
+  //     trackAppLifecycleEvents: true,
+  //   });
+  // };
 
   return (
     <Provider store={store}>

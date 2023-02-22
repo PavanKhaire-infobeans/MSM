@@ -1,5 +1,4 @@
 PODS:
-  - Analytics (4.1.6)
   - AppAuth (1.5.0):
     - AppAuth/Core (= 1.5.0)
     - AppAuth/ExternalUserAgent (= 1.5.0)
@@ -336,7 +335,7 @@ PODS:
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
   - React-jsinspector (0.64.2)
-  - react-native-background-upload (6.2.0):
+  - react-native-background-upload (6.5.1):
     - React
   - react-native-context-menu-view (1.5.2):
     - React
@@ -430,9 +429,6 @@ PODS:
     - React
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNAnalytics (1.5.0):
-    - Analytics
-    - React-Core
   - RNCAsyncStorage (1.15.6):
     - React-Core
   - RNCMaskedView (0.1.11):
@@ -441,7 +437,7 @@ PODS:
     - React-Core
   - RNDefaultPreference (1.4.3):
     - React
-  - RNDeviceInfo (8.3.0):
+  - RNDeviceInfo (8.7.1):
     - React-Core
   - RNFBApp (12.7.1):
     - Firebase/CoreOnly (= 8.6.0)
@@ -495,7 +491,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.17.0):
+  - RNScreens (3.11.1):
     - React-Core
     - React-RCTImage
   - RNShare (7.4.1):
@@ -586,7 +582,6 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "ReactNativeAudioToolkit (from `../node_modules/@react-native-community/audio-toolkit`)"
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
-  - "RNAnalytics (from `../node_modules/@segment/analytics-react-native`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
@@ -610,7 +605,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Analytics
     - AppAuth
     - boost-for-react-native
     - CocoaAsyncSocket
@@ -736,8 +730,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/audio-toolkit"
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
-  RNAnalytics:
-    :path: "../node_modules/@segment/analytics-react-native"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
@@ -780,7 +772,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  Analytics: eefe524436f904b8bb3f8c8c3425280e43b34efc
   AppAuth: 80317d99ac7ff2801a2f18ff86b48cd315ed465d
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
@@ -827,7 +818,7 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
-  react-native-background-upload: 4f82b6b9b2538a9f6d25dc275f4259d038065849
+  react-native-background-upload: 221b35720317853266f3eb09b9a5747db8649793
   react-native-context-menu-view: c72d4120597f5cf3917dcb348cf819f215ed9207
   react-native-document-picker: 4e7773361aea6ce573f6a2f0618041bba443eaa7
   react-native-image-picker: 9f9eb160a4f4fc0702f9d0a60fa453b413258ef8
@@ -854,12 +845,11 @@ SPEC CHECKSUMS:
   ReactCommon: 149906e01aa51142707a10665185db879898e966
   ReactNativeAudioToolkit: e3e27fbcd12080f54f8715c54de7a232d3beb98d
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNAnalytics: a6dc48511d5d99b1ecaaf7157d8b5c618d15337e
   RNCAsyncStorage: bb9649cb43f0040f82948084a0044e45292c5be3
   RNCMaskedView: f127cd9652acfa31b91dcff613e07ba18b774db6
   RNDateTimePicker: 042a33cd9fa98ae7bc1d4ef078f260e1ab4cabf8
   RNDefaultPreference: 21816c0a6f61a2829ccc0cef034392e9b509ee5f
-  RNDeviceInfo: 85f751647430c4fb7e87d0e6615907087c23682c
+  RNDeviceInfo: af47a7d1a09d64c8cbb8b0c883db9bca422a9813
   RNFBApp: a4ce8d24c5c6864fa543a34b030a014bd015e628
   RNFBMessaging: 510bef8284ab30807e3815dde6d91a02c282abe0
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
@@ -868,7 +858,7 @@ SPEC CHECKSUMS:
   RNPermissions: 79d0c889562fd792329821bea3155fe6eb54d359
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
   RNReanimated: cce4727fde9f4da9b800d999fa9975ea7a021dcf
-  RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
+  RNScreens: 4d83613b50b74ed277026375dc0810893b0c347f
   RNShare: 2074af48908436c310847c6c47ebb6129db1dc89
   RNSound: c980916b596cc15c8dcd2f6ecd3b13c4881dbe20
   RNSoundRecorder: a753a2f5f3744c0e13922537222c6e0b926e5227

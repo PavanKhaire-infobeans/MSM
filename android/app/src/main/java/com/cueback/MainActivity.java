@@ -22,7 +22,7 @@ public class MainActivity extends ReactActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     SplashScreen.show(this, R.style.SplashTheme);
-    super.onCreate(null);
+    super.onCreate(savedInstanceState);
     // ATTENTION: This was auto-generated to handle app links.
     Intent appLinkIntent = getIntent();
     String appLinkAction = appLinkIntent.getAction();

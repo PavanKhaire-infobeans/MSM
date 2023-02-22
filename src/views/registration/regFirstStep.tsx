@@ -773,7 +773,7 @@ export default class RegFirstStep extends Component<Props> {
     } else {
       this.onSubmit();
     }
-    this.regScroll.scrollToPosition(0, 0, true);
+    // this.regScroll.scrollToPosition(0, 0, true);
   }
 
   renderCueBackRegistertaion = (yVal) => {
