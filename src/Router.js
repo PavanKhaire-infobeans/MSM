@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {PureComponent, useEffect} from 'react';
 import {
   Appearance,
   BackHandler,
@@ -7,6 +7,9 @@ import {
   Text,
   LogBox,
   AppState,
+  StyleSheet,
+  Dimensions,
+  View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -98,6 +101,34 @@ import WriteTabs from './views/writeTabs';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+const { width } = Dimensions.get('window');
+const MiniOfflineSign = () =>{
+  return (
+    <View style={styles.offlineContainer}>
+      <Text style={styles.offlineText}>No Internet Connection</Text>
+    </View>
+  );
+}
+
+export class OfflineNotice extends PureComponent {
+  render() {
+      return <MiniOfflineSign />;
+  }
+};
+
+const styles = StyleSheet.create({
+  offlineContainer: {
+    backgroundColor: '#b52424',
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width,
+  },
+  offlineText: { 
+    color: '#fff'
+  }
+});
 
 EStyleSheet.build();
 

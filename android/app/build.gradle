@@ -132,7 +132,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.cueback"
+        applicationId "com.mystoriesmatter.mobileapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 8

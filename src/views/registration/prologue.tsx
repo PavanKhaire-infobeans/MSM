@@ -21,7 +21,8 @@ import {
   showConsoleLog,
 } from '../../common/constants';
 import { GetInstances } from './reducer';
-//@ts-ignore
+import NetInfo from '@react-native-community/netinfo';
+
 import LinearGradient from 'react-native-linear-gradient';
 import { apple, arrowRightCircle, google, loginBack, Rectangle, xClose } from '../../../app/images';
 import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
@@ -40,6 +41,7 @@ import Styles from './styles';
 import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
 import BusyIndicator from '../../common/component/busyindicator';
 import { GetUserData } from '../myAccount/reducer';
+import { OfflineNotice } from '../../Router';
 
 export enum Direction {
   upDirection = 'upward',
@@ -56,7 +58,7 @@ type Props = {
   request: { completed: boolean; success: boolean };
   showLoaderValue: boolean;
   loaderTextValue: string;
-  getUserData?:(e:any)=>void;
+  getUserData?: (e: any) => void;
 };
 class Prologue extends Component<Props> {
   _panel: any = null;
@@ -79,7 +81,8 @@ class Prologue extends Component<Props> {
     registrationFormData: null,
     isBottomPickerVisible: false,
     wasLoading: false,
-    whyDoAskView: false
+    whyDoAskView: false,
+    isConnected: true
   };
   static defaultProps = {
     showHeader: false,
@@ -101,7 +104,13 @@ class Prologue extends Component<Props> {
     // 	showConsoleLog(ConsoleType.LOG,result)
     // 	// { safeAreaInsets: { top: 44, left: 0, bottom: 34, right: 0 } }
     // })
-    
+    const unsubscribe = NetInfo.addEventListener((state: any) => {
+      console.log("Net ", state?.isConnected)
+      this.setState({
+        isConnected: state?.isConnected
+      })
+    });
+
     this.props.getUserData({});
     this.setState({ isBottomPickerVisible: false }, () => {
       this.registrationData = EventManager.addListener(
@@ -367,6 +376,10 @@ class Prologue extends Component<Props> {
               colors={this.state.isRegistrationOpen ? ["#ffffff", "#ffffff"] : ['#EDD0ED', '#F2E5E7', '#D1E6FE']}
               style={Styles.findCommunityContainer}>
               <SafeAreaView style={Styles.flexContainer}>
+                {this.state.isConnected ?
+                  null :
+                  <OfflineNotice />
+                }
                 <MessageDialogue ref={(ref: any) => (this.messageRef = ref)} />
 
                 <View style={Styles.prologSubContainer}>

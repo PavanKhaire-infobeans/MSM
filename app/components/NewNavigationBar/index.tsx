@@ -16,6 +16,8 @@ import { AddNewNotification } from '../../../src/views/notificationView/reducer'
 import { kProfilePicUpdated } from '../../../src/views/profile/profileDataModel';
 import { jumptocalendar, user } from '../../images';
 import styles from './styles';
+import { OfflineNotice } from '../../../src/Router';
+import NetInfo from '@react-native-community/netinfo';
 
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
@@ -35,10 +37,15 @@ const NavigationBar = (props: Props) => {
   let notificationReceivedForeground: EventManager;
   let notificationReceived;
   const [state, setState] = useState({ showBadge: false });
+  const [isNetAvailable, setIsNetAvailable] = useState(true);
 
   const navigation = useNavigation();
 
   useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state:any) => {
+      console.log("Net ", state?.isConnected)
+      setIsNetAvailable(state?.isConnected)
+    });
 
     if (Utility.unreadNotification[key] > 0) {
       setState(prevState => ({ ...prevState, showBadge: true }));
@@ -53,12 +60,15 @@ const NavigationBar = (props: Props) => {
       notificationReceived,
     );
 
-    return ()=>{
+    return () => {
       DeviceEventEmitter.removeAllListeners(kProfilePicUpdated)
       notificationReceivedForeground.removeListener()
+      // unsubscribe()
     }
 
   }, [])
+
+
 
   notificationReceived = (details: any) => {
     let group_id = new NotificationDataModel().getGroupId(
@@ -131,45 +141,49 @@ const NavigationBar = (props: Props) => {
     : false;
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
-      <TouchableOpacity
-        testID={testID.leftButtons.menu}
-        activeOpacity={1}
-        onPress={() => {
-          navigation.navigate('myAccount');
-          // showClose ? _closeAction() : navigation.drawerOpen();
-        }}>
-        <View style={styles.leftButtonTouchableContainer}>
-          {showClose ? (
-            <View style={styles.closeButton}>
-              <View style={styles.imageContainer}  >
-                <Image source={close_white} />
-              </View>
-              <View style={styles.imageSeparator} />
-              <View style={[styles.textContainer,{ justifyContent: 'center' }]}>
-                <Text style={styles.JumptoText}>Cancle</Text>
-              </View>
-            </View>
-          )
-            :
-            (
+    <>
+      <View
+        style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
+        <TouchableOpacity
+          testID={testID.leftButtons.menu}
+          activeOpacity={1}
+          onPress={() => {
+            navigation.navigate('myAccount');
+            // showClose ? _closeAction() : navigation.drawerOpen();
+          }}>
+          <View style={styles.leftButtonTouchableContainer}>
+            {showClose ? (
               <View style={styles.closeButton}>
-                <View style={styles.imageContainer} >
-                  <Image source={user} />
+                <View style={styles.imageContainer}  >
+                  <Image source={close_white} />
                 </View>
                 <View style={styles.imageSeparator} />
-                <View style={styles.profileImgSeparator}>
-                  <Text style={styles.JumptoText}>Profile</Text>
+                <View style={[styles.textContainer, { justifyContent: 'center' }]}>
+                  <Text style={styles.JumptoText}>Cancle</Text>
                 </View>
               </View>
-            )}
-        </View>
+            )
+              :
+              (
+                <View style={styles.closeButton}>
+                  <View style={styles.imageContainer} >
+                    <Image source={user} />
+                  </View>
+                  <View style={styles.imageSeparator} />
+                  <View style={styles.profileImgSeparator}>
+                    <Text style={styles.JumptoText}>Profile</Text>
+                  </View>
+                </View>
+              )}
+          </View>
 
-      </TouchableOpacity>
-      {_renderMiddle()}
-      {_renderRight()}
-    </View>
+        </TouchableOpacity>
+        {_renderMiddle()}
+        {_renderRight()}
+      </View>
+      {!isNetAvailable && <OfflineNotice />}
+    </>
+
   );
 
 }

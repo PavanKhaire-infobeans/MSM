@@ -1,4 +1,4 @@
-package com.cueback;
+package com.mystoriesmatter.mobileapp;
 
 import android.content.Intent;
 import android.os.Bundle;

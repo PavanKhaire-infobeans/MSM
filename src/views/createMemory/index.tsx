@@ -383,8 +383,10 @@ const CreateMemory = (props: Props) => {
   const draftDetailsCallBack = (success: any, draftDetails: any) => {
     if (success) {
       draftDetails = new MemoryDraftsDataModel().getEditContentObject(
-        draftDetails,
+        draftDetails
       );
+      console.log("draftDetails > ", JSON.stringify(draftDetails))
+
       props.setEditContent(draftDetails);
       MonthObj.month.forEach((element: any, index: any) => {
         if (element.name == draftDetails.date.month) {
@@ -519,30 +521,30 @@ const CreateMemory = (props: Props) => {
       if (props.route.params?.memoryDate?.year) {
         setYear({
           ...year,
-          value: props.route.params?.memoryDate?.year,
+          value: typeof (props.route.params?.memoryDate?.year) == 'string' ? props.route.params?.memoryDate?.year : JSON.stringify(props.route.params?.memoryDate?.year),
         })
         setMonth({
           ...month,
           value:
-            props.route.params?.memoryDate?.month,
+            typeof (props.route.params?.memoryDate?.month) == 'string' ? props.route.params?.memoryDate?.month : JSON.stringify(props.route.params?.memoryDate?.month),
         })
         setDay({
           ...day,
-          value: props.route.params.memoryDate.day,
+          value: typeof (props.route.params?.memoryDate?.day) == 'string' ? props.route.params?.memoryDate?.day : JSON.stringify(props.route.params?.memoryDate?.day),
         })
 
         setYearNew({
           ...year,
-          value: props.route.params?.memoryDate?.year,
+          value: typeof (props.route.params?.memoryDate?.year) == 'string' ? props.route.params?.memoryDate?.year : JSON.stringify(props.route.params?.memoryDate?.year),
         })
         setMonthNew({
           ...month,
           value:
-            props.route.params?.memoryDate?.month,
+            typeof (props.route.params?.memoryDate?.month) == 'string' ? props.route.params?.memoryDate?.month : JSON.stringify(props.route.params?.memoryDate?.month),
         })
         setDayNew({
           ...day,
-          value: props.route.params.memoryDate.day,
+          value: typeof (props.route.params?.memoryDate?.day) == 'string' ? props.route.params?.memoryDate?.day : JSON.stringify(props.route.params?.memoryDate?.day),
         })
       }
 
@@ -1515,13 +1517,13 @@ const CreateMemory = (props: Props) => {
         // }, 2500);
         break;
       case 2:
-          if (Platform.OS == 'ios') {
+        if (Platform.OS == 'ios') {
+          _actionSheet &&
             _actionSheet &&
-              _actionSheet &&
-              _actionSheet.hideSheet();
-          } else {
-            setShowActionAndroid(false)
-          }
+            _actionSheet.hideSheet();
+        } else {
+          setShowActionAndroid(false)
+        }
         break;
       case 3:
         props.showLoader(true);
@@ -2120,7 +2122,7 @@ const CreateMemory = (props: Props) => {
       isValidYear = true;
     }
 
-    let validNumberReg = /^[0-9\b]+$/;
+    let validNumberReg = /^[0-9]+$/;
     let validAlphabatesReg = /^[a-zA-Z]*$/;
     if (validNumberReg.test(monthNew?.value) || validAlphabatesReg.test(monthNew?.value)) {
       let val = monthNew?.value?.toLowerCase();
@@ -2179,6 +2181,7 @@ const CreateMemory = (props: Props) => {
         monthNew.value,
       );
       let dayArray = dayactions.filter(item => item.text.toString() === dayNew.value.toString());
+      // console.log("sssss >>",JSON.stringify(dayactions),JSON.stringify(dayArray))
       if (dayArray.length && (dayArray[0]?.disabled != true)) {
         isValidDate = true;
       }
@@ -2564,17 +2567,20 @@ const CreateMemory = (props: Props) => {
                       <TextInput
                         style={styles.textInputBoxStyle}
                         onChangeText={(text: any) => {
-                          let validAlphabatesReg = /^[a-zA-Z]*$/;
+                          let validAlphabatesReg = /^[a-zA-Z]{0,6}$/;
+                          let validNumberReg = /^[0-9]{1,2}$/;
 
-                          setMonthNew({ ...monthNew, value: text, error: false })
 
                           if (validAlphabatesReg.test(text)) {
                             setDayNew({ value: '', error: false })
                             setShowDay(false)
+                            setMonthNew({ ...monthNew, value: text, error: false })
                           }
-                          else if (text.length >= 3) {
-                            setShowDay(false)
-                            setDayNew({ value: '', error: false })
+                          else if (validNumberReg.test(text)) {
+                            setShowDay(true)
+                            if (parseInt(text) <= 12) {
+                              setMonthNew({ ...monthNew, value: text, error: false })
+                            }
                           }
                           else {
                             setShowDay(true)
@@ -2582,7 +2588,7 @@ const CreateMemory = (props: Props) => {
                         }}
                         value={monthNew.value}
                         placeholderTextColor={Colors.newTextColor}
-                        maxLength={12}
+                        // maxLength={12}
                         placeholder="Month(MM) or Season"
                         returnKeyType="done"
                       // keyboardType="number-pad"
@@ -2613,7 +2619,7 @@ const CreateMemory = (props: Props) => {
                             setDayNew({ ...dayNew, value: text, error: false })
                           }}
                           value={dayNew.value}
-                          maxLength={4}
+                          maxLength={2}
                           placeholder="DD"
                           placeholderTextColor={Colors.newTextColor}
                           returnKeyType="done"

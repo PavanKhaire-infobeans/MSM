@@ -1,6 +1,6 @@
 import { Platform, Alert, DeviceEventEmitter } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { ConsoleType, showConsoleLog, Storage } from '../constants';
+import { ConsoleType, NO_INTERNET, showConsoleLog, Storage } from '../constants';
 import Utility, { getshowLogoutPopUp, setshowLogoutPopUp } from '../utility';
 import loaderHandler from '../component/busyindicator/LoaderHandler';
 import { LoginStore, Account, UserData } from '../loginStore';
@@ -223,11 +223,12 @@ const WebserviceCall = (() => {
             })
             .catch((err: Error) => {
               showConsoleLog(ConsoleType.LOG, 'Error is : ', err);
+
               return Promise.reject(err);
             });
         })
         .catch((err: Error) => {
-          showConsoleLog(ConsoleType.LOG, 'Error is : ', err);
+          showConsoleLog(ConsoleType.LOG, 'Erroradds is : ', err);
           return Promise.reject(err);
         });
     },
@@ -257,7 +258,8 @@ const WebserviceCall = (() => {
       //showConsoleLog(ConsoleType.LOG,"URL : " + url, "\nMethod : POST\n", "Request", JSON.stringify(reqMod));
       //showConsoleLog(ConsoleType.LOG,"Headers", JSON.stringify(headers));
       if (!Utility.isInternetConnected) {
-        //return Promise.reject(new Error(NO_INTERNET));
+        CB(NO_INTERNET)
+        return Promise.reject(new Error(NO_INTERNET));
       }
       showConsoleLog(ConsoleType.LOG, 'request : login ' + url, new Date().toTimeString());
       let responseData = await fetch(url, {
@@ -304,7 +306,7 @@ const WebserviceCall = (() => {
 
         })
         .catch((err: Error) => {
-          showConsoleLog(ConsoleType.LOG, 'Error is : ', err);
+          showConsoleLog(ConsoleType.LOG, 'Errordasd is : ', (err) == 'TypeError: Network request failed', Utility.isInternetConnected);
           return Promise.reject(err);
         });
     },

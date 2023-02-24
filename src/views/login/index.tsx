@@ -58,6 +58,8 @@ import Styles from './styles';
 import Utility from '../../common/utility';
 import BusyIndicator from '../../common/component/busyindicator';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import NetInfo from '@react-native-community/netinfo';
+import { OfflineNotice } from '../../Router';
 export const kRegSignUp = 'Registration SignUp';
 export enum loginType {
   googleLogin = 'Google',
@@ -131,7 +133,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       keyboardHeight: 0,
       passwordFocus: false,
       showLoaderValue: false,
-      loaderTextValue: 'Loading...'
+      loaderTextValue: 'Loading...',
+      isConnected: true
     };
 
     this.controller = new LoginController(this);
@@ -205,6 +208,13 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       'showMessage',
       this._show,
     );
+
+    const unsubscribe = NetInfo.addEventListener((state: any) => {
+      console.log("Net ", state?.isConnected)
+      this.setState({
+        isConnected: state?.isConnected
+      })
+    });
 
     LoginStore.listAllAccounts()
       .then((resp: any) => {
@@ -387,6 +397,10 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             null
         }
         <SafeAreaView style={{ width: '100%' }}>
+          {this.state.isConnected ?
+            null :
+            <OfflineNotice />
+          }
           <MessageDialogue
             ref={(ref: any) => (this.messageRef = ref)}
           />
