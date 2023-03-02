@@ -15,9 +15,7 @@ import DeviceInfo from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import {Provider} from 'react-redux';
-import Busyindicator from './common/component/busyindicator';
-import TabIcon, {NewTabItems} from './common/component/TabBarIcons';
-import {Colors, ConsoleType, showConsoleLog} from './common/constants';
+import analytics from '@react-native-firebase/analytics';
 import EventManager from './common/eventManager';
 import store from './common/reducer/reducers';
 import Utility, {
@@ -444,7 +442,7 @@ const App = _props => {
   useEffect(() => {
     setTimeout(() => SplashScreen.hide(), 500);
     networkConnectivitySaga();
-    // loadSegmentAnalytics();
+    loadAnalytics();
     checkPermission();
     getFontScale();
     createNotificationListeners();
@@ -595,14 +593,10 @@ const App = _props => {
   //     onTokenRefreshListener();
   //   }
 
-  // const loadSegmentAnalytics = async () => {
-  //   await analytics.setup('UIejGdlPobXDuxYQC2YU19IBomGe5oQO', {
-  //     // Record screen views automatically!
-  //     recordScreenViews: true,
-  //     // Record certain application events automatically!
-  //     trackAppLifecycleEvents: true,
-  //   });
-  // };
+  const loadAnalytics = async () => {
+    const appInstanceId = await analytics().getAppInstanceId();
+    console.log("appInstanceId > ",appInstanceId)
+  };
 
   return (
     <Provider store={store}>
