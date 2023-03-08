@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Dimensions,
   View,
+  PermissionsAndroid,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -529,6 +530,9 @@ const App = _props => {
 
   const checkPermission = async () => {
     const enabled = await messaging().hasPermission();
+    // if (Platform.OS == 'android') {
+    //   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+    // }
     if (enabled) {
       await messaging().registerDeviceForRemoteMessages();
       //    showAlert("Permission", "enabled")

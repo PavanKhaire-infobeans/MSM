@@ -311,7 +311,7 @@ PODS:
     - React
   - react-native-document-picker (8.1.3):
     - React-Core
-  - react-native-image-picker (4.8.4):
+  - react-native-image-picker (4.10.0):
     - React-Core
   - react-native-netinfo (6.0.0):
     - React-Core
@@ -763,7 +763,7 @@ SPEC CHECKSUMS:
   react-native-background-upload: 221b35720317853266f3eb09b9a5747db8649793
   react-native-context-menu-view: c72d4120597f5cf3917dcb348cf819f215ed9207
   react-native-document-picker: 4e7773361aea6ce573f6a2f0618041bba443eaa7
-  react-native-image-picker: 9f9eb160a4f4fc0702f9d0a60fa453b413258ef8
+  react-native-image-picker: 35834940bc572ba914707c39b60e043a06f88178
   react-native-netinfo: 34f4d7a42f49157f3b45c14217d256bce7dc9682
   react-native-pager-view: c63e9d2b4177b132c225f0ceaed4e8faf12767c3
   react-native-pdf: ef641e79a6d550cfabe5d7ec1916799726514c43
