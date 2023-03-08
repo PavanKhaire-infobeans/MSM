@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {Platform, SafeAreaView, StatusBar, View} from 'react-native';
 // @ts-ignore
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import CustomAlert from '../../common/component/customeAlert';
 import {Colors, MyMemoriesTapBarOptions} from '../../common/constants';
 import EventManager from '../../common/eventManager';
@@ -10,6 +10,13 @@ import MemoryDrafts from './MemoryDrafts/index';
 
 const MyMemoriesContainer = props => {
   useEffect(() => {
+    const screenLog = async () => {
+      await analytics().logScreenView({
+        screen_name: "MemoryDrafts",
+        screen_class: "MemoryDrafts",
+      });
+    };
+    screenLog();
     const backListner = EventManager.addListener('hardwareBackPress', _onBack);
     return () => {
       backListner.removeListener();

@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import ActionSheet, {
   ActionSheetItem,
 } from '../../../common/component/actionSheet';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 //@ts-ignore
 import { EditHeader } from '..';
 import {
@@ -749,8 +749,9 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
         this.filesToUpload,
         'mindpopEditMemoryListener',
         'save',
-        resp => {
+        async(resp) => {
           if (resp.status) {
+            await analytics().logEvent('memory_created_from_mindpop');
             this.props.navigation.replace('createMemory', {
               editMode: true,
               draftNid: resp.id,

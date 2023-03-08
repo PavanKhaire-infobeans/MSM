@@ -36,6 +36,7 @@ import { MemoryAction } from '../../myMemories/myMemoriesWebService';
 import { SaveCollection } from '../reducer';
 import { CollectinAPI } from '../saga';
 import Styles from './styles';
+import analytics from '@react-native-firebase/analytics';
 
 type State = { [x: string]: any };
 type Props = { [x: string]: any };

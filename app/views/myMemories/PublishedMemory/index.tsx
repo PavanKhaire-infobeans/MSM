@@ -43,7 +43,7 @@ import AudioPlayer, {
   kPlaying,
   kPrevious,
 } from './../../../../src/common/component/audio_player/audio_player';
-import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
 import Text from './../../../../src/common/component/Text';
 import {
@@ -693,8 +693,9 @@ const _addToCollection = (nid: any, navigation: any) => {
   }
 };
 
-const _onEditMemory = (nid: any, navigation: any) => {
+const _onEditMemory = async(nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
+    await analytics().logEvent('edit_published_memory');
     //loaderHandler.showLoader();
     navigation.navigate('createMemory', {
       editMode: true,
@@ -740,6 +741,7 @@ export const onActionItemClicked = async (
 ) => {
   console.log("CB : ", CB)
   // showConsoleLog(ConsoleType.ERROR,JSON.stringify(data));
+  await analytics().logEvent(`${data.actionType}_action_on_memory`);
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
       _addToCollection(data.nid, navigation);

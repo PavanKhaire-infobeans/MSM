@@ -88,7 +88,7 @@ import AudioPlayer, {
   kPlaying,
   kPrevious,
 } from '../../common/component/audio_player/audio_player';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import MemoryActionsSheet, {
   MemoryActionsSheetItem,
 } from '../../common/component/memoryActionsSheet';
@@ -1709,7 +1709,7 @@ export default class MemoryDetails extends React.Component<Props, State> {
             nid: this.memoryDataModel.nid,
             memoryType: this.storyType,
             actionType: MemoryActionKeys.deleteMemoryKey,
-            destructive:true
+            destructive: true
           });
           break;
         case MemoryActionKeys.moveToDraftKey:
@@ -1757,7 +1757,8 @@ export default class MemoryDetails extends React.Component<Props, State> {
     Keyboard.dismiss();
     // }, 1000);
   };
-  onActionItemClicked = (index: number, data: any): void => {
+  onActionItemClicked = async(index: number, data: any): void => {
+    await analytics().logEvent(`${data.actionType}_action_on_memory`);
     switch (data.actionType) {
       case MemoryActionKeys.addToCollection:
         this._addToCollection(data.nid);
@@ -1812,11 +1813,12 @@ export default class MemoryDetails extends React.Component<Props, State> {
       No_Internet_Warning();
     }
   };
-  _onEditMemory(event: any, nid?: any) {
+  _onEditMemory = async (event: any, nid?: any) => {
     event = event.nativeEvent;
     // this.getDraftDetails(event)
     if (Utility.isInternetConnected) {
       //loaderHandler.showLoader();
+      await analytics().logEvent('edit_published_memory');
       if (nid) {
         this.props.navigation.navigate('createMemory', {
           editMode: true,

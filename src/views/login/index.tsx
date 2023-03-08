@@ -41,7 +41,6 @@ import {
 } from './loginReducer';
 //@ts-ignore
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { ToastMessage } from '../../common/component/Toast';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore

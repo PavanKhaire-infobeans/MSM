@@ -47,7 +47,7 @@ import {
 import CustomAlert from '../../../common/component/customeAlert';
 import SelectionStatusBar from '../../../common/component/inputAccessoryViews/itemSelectionStatusBar';
 import SearchBar from '../../../common/component/SearchBar';
-import { ToastMessage } from '../../../common/component/Toast';
+import analytics from '@react-native-firebase/analytics';
 import MindPopStore, {
   FileType,
 } from '../../../common/database/mindPopStore/mindPopStore';
@@ -259,7 +259,7 @@ class MindPopList extends React.Component<{
     reloadList(updatedSectionListData);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: { [x: string]: any }) {
+  async UNSAFE_componentWillReceiveProps(nextProps: { [x: string]: any }) {
     if (this.props !== nextProps) {
       if (nextProps.list.completed) {
         // LoaderHandler.hideLoader();
@@ -403,6 +403,7 @@ class MindPopList extends React.Component<{
           }
           if (this.convertToMemoryObject.callForCreateMemory) {
             this.convertToMemoryObject.callForCreateMemory = false;
+            await analytics().logEvent('memory_created_from_mindpop');
             this.props.navigation.navigate('createMemory', {
               editMode: true,
               attachments: this.convertToMemoryObject.attachments,
@@ -782,8 +783,9 @@ class MindPopList extends React.Component<{
         filesToUpload,
         'mindpopEditMemoryListener',
         'save',
-        resp => {
+        async(resp) => {
           if (resp.status) {
+            await analytics().logEvent('memory_created_from_mindpop')
             this.props.navigation.replace('createMemory', {
               editMode: true,
               draftNid: resp.id,

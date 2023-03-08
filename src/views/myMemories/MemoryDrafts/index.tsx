@@ -16,7 +16,7 @@ import {
   View,
 } from 'react-native';
 import { connect } from 'react-redux';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 // import { styles } from '../../../common/component/multipleDropDownView/styles';
 import Text from '../../../common/component/Text';
 import {
@@ -473,17 +473,17 @@ class MemoryDrafts extends React.Component<Props, State> {
           );
         }
         memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
-        this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() },()=>{
-        if(this.state.memoryDraftsArray.length === 0){
-          firstRender =false
-        }
+        this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() }, () => {
+          if (this.state.memoryDraftsArray.length === 0) {
+            firstRender = false
+          }
         });
       } else {
         if (page != 0) {
           page--;
         }
         if (this.state.memoryDraftsArray.length == 0) {
-         //ToastMessage(response.ResponseMessage, Colors.ErrorColor);
+          //ToastMessage(response.ResponseMessage, Colors.ErrorColor);
         }
       }
       this.setState({
@@ -501,7 +501,7 @@ class MemoryDrafts extends React.Component<Props, State> {
     loadingDataFromServer = false;
     // let memoryDraftDetails = response.data
     if (fetched) {
-      console.log("memoryDraftDetails >",JSON.stringify(memoryDraftDetails))
+      console.log("memoryDraftDetails >", JSON.stringify(memoryDraftDetails))
       if (this.state.isRefreshing) {
         memoryDraftsArray = [];
         this.setState({ memoryDraftsArray: [] })
@@ -518,9 +518,9 @@ class MemoryDrafts extends React.Component<Props, State> {
         );
       }
       memoryDraftsArray = this.memoryDraftsDataModel.getMemoryDrafts();
-      this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() },()=>{
+      this.setState({ memoryDetailAvailable: true, memoryDraftsArray: this.memoryDraftsDataModel.getMemoryDrafts() }, () => {
         if (this.state.memoryDraftsArray.length === 0) {
-            firstRender = false;
+          firstRender = false;
         }
       });
     } else {
@@ -755,7 +755,7 @@ class MemoryDrafts extends React.Component<Props, State> {
       //loaderHandler.hideLoader();
       this.props.showLoader(false);
       this.props.loaderText('Loading...');
-     //ToastMessage('Unable to delete draft. Please try again later');
+      //ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 
@@ -914,11 +914,12 @@ class MemoryDrafts extends React.Component<Props, State> {
     );
   }
 
-  getDraftDetails = (item: any) => {
+  getDraftDetails = async (item: any) => {
     if (Utility.isInternetConnected) {
       //loaderHandler.showLoader();
       this.props.showLoader(true);
       this.props.loaderText('Loading...');
+      await analytics().logEvent('edit_draft_memory');
       this.props.navigation?.navigate('createMemory', {
         editMode: true,
         draftNid: item.item.nid,

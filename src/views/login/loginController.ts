@@ -23,6 +23,7 @@ import { NativeEventEmitter, NativeModules } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
 import EventManager from '../../common/eventManager';
 import { kSSOLogin, SSOLogin } from '../../common/webservice/loginServices';
+import analytics from '@react-native-firebase/analytics';
 
 let userInfo: any = {};
 export const kAppleCredentials = 'appleUserCredentials';
@@ -87,20 +88,22 @@ export class LoginController implements LoginControllerProtocol {
       }
       userInfo = { user };
       DefaultPreference.get('firebaseToken').then(
-        (value: any) => {
+        async(value: any) => {
           params = {
             userDetails: userInfo.user,
             sso_type: 'Apple',
             fcm_token: value,
           };
+          await analytics().logEvent('user_loggedInwith_apple')
           SSOLogin(params);
         },
-        (err: any) => {
+        async(err: any) => {
           params = {
             userDetails: userInfo.user,
             sso_type: 'Apple',
             fcm_token: '',
           };
+          await analytics().logEvent('user_loggedInwith_apple')
           SSOLogin(params);
         },
       );
@@ -132,11 +135,11 @@ export class LoginController implements LoginControllerProtocol {
         CueBackInsatance,
       );
       // this.view.props.clearDashboard();
-      setTimeout(() => {
+      setTimeout(async() => {
         this.view.props.navigation.reset({
           index: 0,
           routes: [{ name: 'dashBoard' }]
-        })
+        });
         // loaderHandler.hideLoader();
         this.view.props.showLoader(false);
         this.view.props.loaderText('Loading...');
@@ -164,20 +167,22 @@ export class LoginController implements LoginControllerProtocol {
       this.view.props.showLoader(true);
       this.view.props.loaderText('Loading...');
       DefaultPreference.get('firebaseToken').then(
-        (value: any) => {
+        async(value: any) => {
           params = {
             userDetails: userInfo.user,
             sso_type: 'Google',
             fcm_token: value,
           };
+          await analytics().logEvent('user_loggedInwith_google')
           SSOLogin(params);
         },
-        (err: any) => {
+        async(err: any) => {
           params = {
             userDetails: userInfo.user,
             sso_type: 'Google',
             fcm_token: '',
           };
+          await analytics().logEvent('user_loggedInwith_google')
           SSOLogin(params);
         },
       );
@@ -416,7 +421,7 @@ export class LoginController implements LoginControllerProtocol {
             );
           });
           
-          setTimeout(() => {
+          setTimeout(async() => {
             let obj = {
               username: this.view.state.username,
               password: this.view.state.password,
@@ -438,6 +443,8 @@ export class LoginController implements LoginControllerProtocol {
             }
 
             // Actions.dashBoard();
+            await analytics().logEvent('user_loggedIn');
+
             this.view.props.navigation.reset({
               index: 0,
               routes: [{ name: 'dashBoard' }]

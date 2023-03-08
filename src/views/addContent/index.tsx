@@ -55,7 +55,7 @@ import {
   addEditMindPop,
   kMindPopUploadedIdentifier,
 } from '../mindPop/edit/addMindPopflow';
-// import DefaultPreference from 'react-native-default-preference';
+import analytics from '@react-native-firebase/analytics';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { connect } from 'react-redux';
 import CustomAlert from '../../common/component/customeAlert';
@@ -100,6 +100,13 @@ const AddContentDetails = props => {
   const [placeholder, setPlaceholder] = useState('|Tap to start writing...');
 
   useEffect(() => {
+    const screenLog = async () => {
+      await analytics().logScreenView({
+        screen_name: "CreateMemory",
+        screen_class: "CreateMemory",
+      });
+    };
+    screenLog();
     // DefaultPreference.get('hide_memory_intro').then((value: any) => {
     //   if (value == 'true') {
     //     setMemoryIntroVisibility(false);
@@ -133,7 +140,7 @@ const AddContentDetails = props => {
       // keyboardDidHideListener.remove();
       props?.route?.params?.beforeBack && props?.route?.params?.beforeBack();
     };
-  });
+  }, []);
 
   const nextDialogView = () => {
     return (
@@ -159,7 +166,7 @@ const AddContentDetails = props => {
                 ReactNativeHapticFeedback.trigger('impactMedium', options);
                 saveMindPop();
               } else {
-               //ToastMessage('Title is mandatory');
+                //ToastMessage('Title is mandatory');
                 setTitleError('Title is mandatory');
               }
             },
@@ -200,7 +207,7 @@ const AddContentDetails = props => {
         type: createNew,
       });
     } else {
-     //ToastMessage('Unable to create memory');
+      //ToastMessage('Unable to create memory');
     }
   };
 
@@ -286,10 +293,11 @@ const AddContentDetails = props => {
         [],
         'addContentCreateMemory',
         '',
-        res => {
+        async (res) => {
           if (res.status) {
             // createMemoryCallBack(res.status, res.id, res.padDetails);
             if (res.status) {
+              await analytics().logEvent('new_memory_created');
               props.navigation.replace('createMemory', {
                 attachments: files,
                 id: res.id,
@@ -301,7 +309,7 @@ const AddContentDetails = props => {
                 type: createNew,
               });
             } else {
-             //ToastMessage('Unable to create memory');
+              //ToastMessage('Unable to create memory');
             }
           }
         },
@@ -373,7 +381,7 @@ const AddContentDetails = props => {
         if (file.filesize != 0) {
           audioAttachmentPress(file);
         } else {
-         //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+          //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
         }
         break;
       case 'files':

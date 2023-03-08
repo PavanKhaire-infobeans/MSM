@@ -23,7 +23,7 @@ import ActionSheet, {
 import BottomPicker, {
   ActionSheetItem,
 } from '../../common/component/bottomPicker';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import {
   Colors,
   ConsoleType,
@@ -127,7 +127,7 @@ const MutilpleValueEdit = (props: Props) => {
       }));
     });
 
-    profileUpdated = EventManager.addListener(kSetUserProfileData, () => {
+    profileUpdated = EventManager.addListener(kSetUserProfileData, async () => {
       showConsoleLog(ConsoleType.INFO, "Profile response in listener: ");
       setState(prevState => ({
         ...prevState,
@@ -139,7 +139,7 @@ const MutilpleValueEdit = (props: Props) => {
       //   setAllFormSections,
       // } = useUserProfileData({});
       // setAllFormSections([]);
-
+      await analytics().logEvent('user_profile_updated');
       props.navigation.goBack();
       // props.navigation.replace('profile');
     });
@@ -153,13 +153,14 @@ const MutilpleValueEdit = (props: Props) => {
 
       profileUpdated = EventManager.addListener(
         kSetUserProfileData,
-        () => {
+        async () => {
           showConsoleLog(ConsoleType.INFO, "Profile response in listenerssss: ");
           setState(prevState => ({
             ...prevState,
             showLoaderValue: false,
             loaderTextValue: 'Loading...'
           }));
+          await analytics().logEvent('user_profile_updated');
           Keyboard.dismiss();
           props.navigation.goBack();
           // props.navigation.replace('profile');

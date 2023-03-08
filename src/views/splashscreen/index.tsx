@@ -12,7 +12,7 @@ import DefaultPreference from 'react-native-default-preference';
 import DeviceInfo from 'react-native-device-info';
 import { connect } from 'react-redux';
 import BusyIndicator from '../../common/component/busyindicator';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import Text from '../../common/component/Text';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
@@ -81,8 +81,9 @@ const Splash = props => {
               [],
               promptIdListener,
               'save',
-              response => {
+              async (response) => {
                 if (response.success) {
+                  await analytics().logEvent('memory_created_from_prompt_of_the_week');
                   props.navigation.navigate('createMemory', {
                     editMode: true,
                     draftNid: response.id,
@@ -93,7 +94,7 @@ const Splash = props => {
                   //loaderHandler.hideLoader();
                   props.showLoader(false);
                   props.loaderText('Loading...');
-                 //ToastMessage(response?.ResponseMessage? response?.ResponseMessage: 'Error while proccessing',);
+                  //ToastMessage(response?.ResponseMessage? response?.ResponseMessage: 'Error while proccessing',);
                 }
               },
             );
@@ -231,8 +232,9 @@ const Splash = props => {
                         [],
                         promptIdListener,
                         'save',
-                        response => {
+                        async (response) => {
                           if (response.success) {
+                            await analytics().logEvent('memory_created_from_prompt_of_the_week');
                             props.navigation.navigate('createMemory', {
                               editMode: true,
                               draftNid: response.id,
@@ -243,7 +245,7 @@ const Splash = props => {
                             //loaderHandler.hideLoader();
                             props.showLoader(false);
                             props.loaderText('Loading...');
-                           //ToastMessage(response?.ResponseMessage? response?.ResponseMessage: 'Error while proccessing');
+                            //ToastMessage(response?.ResponseMessage? response?.ResponseMessage: 'Error while proccessing');
                           }
                         },
                       );

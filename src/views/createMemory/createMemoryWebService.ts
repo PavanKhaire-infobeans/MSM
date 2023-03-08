@@ -10,6 +10,7 @@ import { Account } from '../../common/loginStore';
 import { MemoryService, newMemoryService } from '../../common/webservice/memoryServices';
 import { TempFile } from '../mindPop/edit';
 import { CollaboratorsAction } from './inviteCollaborators';
+import analytics from '@react-native-firebase/analytics';
 
 export const kCollectionMemories = 'CollectionMemories';
 export const kCollectionUpdated = 'CollectionUpdated';
@@ -82,7 +83,7 @@ export const CreateUpdateMemory = async (
 
           }
           else {
-            
+
             if (listener == "mindpopEditMemoryListener") {
               CB({ status: true, id, padDetails, key, prompt_id });
               // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
@@ -287,7 +288,7 @@ export const UpdateMemoryCollection = async (
         Promise.reject(err);
       });
 
-      console.warn(JSON.stringify(response))
+    console.warn(JSON.stringify(response))
     if (response.ResponseCode == 200) {
       EventManager.callBack(callBack, true, response);
     } else {
@@ -470,7 +471,8 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
                   resolve({ message: 'Upload cancelled', uploadId, data });
                 },
               );
-              Upload.addListener('completed', uploadId, (data: any) => {
+              Upload.addListener('completed', uploadId, async(data: any) => {
+                await analytics().logEvent(`new_${options['field']}_file_attached`);
                 respArray.push(data)
                 resolve(data);
               });

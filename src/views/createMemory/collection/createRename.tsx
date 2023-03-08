@@ -6,7 +6,7 @@ import {
   TextInput, TouchableWithoutFeedback, View
 } from 'react-native';
 import { connect } from 'react-redux';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import {
   Colors, CommonTextStyles, decode_utf8, fontSize, getValue
 } from '../../../common/constants';
@@ -87,7 +87,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
     if (this.state.content.trim().length > 0) {
       this.setState({
         showLoaderValue: true
-      },()=>{
+      },async()=>{
         if (this.props.route.params.isRename) {
           UpdateMemoryCollection(
             {
@@ -96,7 +96,9 @@ class CreateRenameCollection extends React.Component<Props, State> {
             },
             false,
           );
-        } else {
+        } 
+        else {
+          await analytics().logEvent('new_collection_created');
           UpdateMemoryCollection(
             { name: decode_utf8(this.state.content.trim()) },
             false,

@@ -52,6 +52,7 @@ import { chevronleftfilter, leftgradient } from '../../../../app/images';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import EventManager from '../../../common/eventManager';
 import JumpToScreen from '../jumpToScreen';
+import analytics from '@react-native-firebase/analytics';
 type State = { [x: string]: any };
 type Props = { [x: string]: any };
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
@@ -170,6 +171,14 @@ const Timeline = (props: Props) => {
   }, [currentItemYear]);
 
   useEffect(() => {
+    const screenLog = async () => {
+      await analytics().logScreenView({
+        screen_name: "Timeline",
+        screen_class: "Timeline",
+      });
+    };
+    screenLog();
+
     memoryTimelineUpdateListener = EventManager.addListener(
       'memoryUpdateTimelineListener',
       () => {

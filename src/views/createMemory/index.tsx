@@ -80,7 +80,7 @@ import {
   DefaultCreateMemoryObj,
   getUserName,
 } from './dataHelper';
-import { kCollaborators, kTags, kWhoElseWhereThere } from './publish';
+import analytics from '@react-native-firebase/analytics';
 import {
   EditContent,
   MemoryInitials,
@@ -605,7 +605,7 @@ const CreateMemory = (props: Props) => {
     } catch (error) { }
   }
 
-  const memorySaveCallback = (success: any, id?: any, padId?: any, key?: any) => {
+  const memorySaveCallback = async(success: any, id?: any, padId?: any, key?: any) => {
     // //loaderHandler.hideLoader();
     props.showLoader(false);
     props.loaderText('Loading...');
@@ -618,7 +618,7 @@ const CreateMemory = (props: Props) => {
         });
         // props.navigateToDashboard(true);
         // props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
-
+        await analytics().logEvent('new_memory_published');
         props.navigation.replace('dashBoard');
 
       } else if (props.route.params.editPublsihedMemory) {
@@ -627,6 +627,7 @@ const CreateMemory = (props: Props) => {
           title: 'Memory saved',
           desc: `Your memory has been saved.`,
         });
+        await analytics().logEvent('memory_save_as_draft');
 
         Keyboard.dismiss();
         props.navigation.reset({

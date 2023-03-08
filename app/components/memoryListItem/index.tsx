@@ -415,9 +415,9 @@ export default class MemoryListItem extends React.Component<Props, State> {
                       }
                       {this.props.item.item.description &&
                       this.props.item.item.description.length != 0 ? (
-                        <Text numberOfLines={5} style={styles.descriptionText}>
+                        <TextNew numberOfLines={5} style={styles.descriptionText}>
                           {this.props.item.item.description}
-                        </Text>
+                        </TextNew>
                       ) : // <RenderHtml
                       //   tagsStyles={{ p: Styles.descriptionText, li: Styles.descriptionText, span: Styles.descriptionText }}
                       //   source={{ html: this.props.item.item.memoryDescription }}

@@ -15,7 +15,7 @@ import {
   View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { useNavigation } from '@react-navigation/native';
+import analytics from '@react-native-firebase/analytics';
 import Text from '../../../common/component/Text';
 import {
   Colors,
@@ -478,7 +478,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
           width={DeviceInfo.isTablet() ? '65%' : '100%'}
           actions={MemoryActions}
           memoryActions={true}
-          onActionClick={onActionItemClicked}
+          onActionClick={(index, data?)=>onActionItemClicked(index, data, this.props.navigation)}
         />
       </View>
     );
@@ -760,9 +760,9 @@ export default class PublishedMemory extends React.Component<Props, State> {
   }
 }
 
-const _addToCollection = (nid: any) => {
+const _addToCollection = (nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
-    this.props.navigation.navigate('memoryCollectionList', {
+    navigation.navigate('memoryCollectionList', {
       isFromMemoryAction: true,
       nid: nid,
     });
@@ -770,10 +770,10 @@ const _addToCollection = (nid: any) => {
     No_Internet_Warning();
   }
 };
-const _onEditMemory = (nid: any) => {
+const _onEditMemory = (nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
     //loaderHandler.showLoader();
-    this.props.navigation.navigate('createMemory', {
+    navigation.navigate('createMemory', {
       editMode: true,
       draftNid: nid,
       editPublsihedMemory: true,
@@ -783,14 +783,15 @@ const _onEditMemory = (nid: any) => {
   }
 };
 
-export const onActionItemClicked = (index: number, data: any): void => {
+export const onActionItemClicked = async(index: number, data?: any, navigation?: any): void => {
   //showConsoleLog(ConsoleType.LOG,data);
+  await analytics().logEvent(`${data.actionType}_action_on_memory`);
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
-      _addToCollection(data.nid);
+      _addToCollection(data.nid,navigation);
       break;
     case MemoryActionKeys.editMemoryKey:
-      _onEditMemory(data.nid);
+      _onEditMemory(data.nid, navigation);
       break;
     case MemoryActionKeys.cancelActionKey:
       break;

@@ -17,7 +17,7 @@ import ActionSheet from 'react-native-actions-sheet';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { plus, sampleimage } from '../../../app/images';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import TextNew from '../../common/component/Text';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
@@ -66,6 +66,13 @@ const PromptsView = (props: Props) => {
 
 
   useEffect(() => {
+    const screenLog = async () => {
+      await analytics().logScreenView({
+        screen_name: "Prompts",
+        screen_class: "Prompts",
+      });
+    };
+    screenLog();
     scrollFlatlistListener = EventManager.addListener(
       'scrollFlatlist',
       () => {
@@ -525,12 +532,13 @@ const PromptsView = (props: Props) => {
     }
   }
 
-  const promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
+  const promptToMemoryCallBack = async(success: boolean, draftDetails: any) => {
     if (success) {
       removeSelectedPrompt();
       props.showLoader(false);
       props.loaderText('Loading...');
-      props.navigation.navigate('createMemory', {
+      await analytics().logEvent('memory_created_from_prompt');
+       props.navigation.navigate('createMemory', {
         editMode: true,
         draftNid: draftDetails,
         isFromPrompt: true,

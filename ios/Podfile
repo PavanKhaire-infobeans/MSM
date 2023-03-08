@@ -5,7 +5,7 @@ platform :ios, '11.0'
 target 'MyStoriesMatter' do
   config = use_native_modules!
   $FirebaseSDKVersion = '10.5.0'
-
+  $RNFirebaseAnalyticsWithoutAdIdSupport = true
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
@@ -31,6 +31,9 @@ target 'MyStoriesMatter' do
   # use_flipper!()
   use_frameworks! :linkage => :static
   $RNFirebaseAsStaticFramework = true
+
+  # need to move 'Generate Specs' build_phase to be first for FBReactNativeSpec
+ 
   post_install do |installer|
     react_native_post_install(installer)
     installer.pods_project.build_configurations.each do |config|

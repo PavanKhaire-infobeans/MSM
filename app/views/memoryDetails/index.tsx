@@ -42,7 +42,7 @@ import AudioPlayer, {
   kPlaying,
   kPrevious,
 } from './../../../src/common/component/audio_player/audio_player';
-import loaderHandler from './../../../src/common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import MemoryActionsSheet, {
   MemoryActionsSheetItem,
 } from './../../../src/common/component/memoryActionsSheet';
@@ -1603,7 +1603,8 @@ class MemoryDetails extends React.Component<Props, State> {
   };
 
   onActionItemClicked = async (index: number, data: any): void => {
-    switch (data.actionType) {
+  await analytics().logEvent(`${data.actionType}_action_on_memory`);
+  switch (data.actionType) {
       case MemoryActionKeys.addToCollection:
         this._addToCollection(data.nid);
         break;
@@ -1694,7 +1695,7 @@ class MemoryDetails extends React.Component<Props, State> {
     }
   };
 
-  _onEditMemory = (nid?: any) => {
+  _onEditMemory = async(nid?: any) => {
     // event = event.nativeEvent;
     // this.getDraftDetails(event)
     this.props.showLoader(false);
@@ -1702,6 +1703,7 @@ class MemoryDetails extends React.Component<Props, State> {
       //loaderHandler.showLoader();
       this.props.showLoader(true);
       this.props.loaderText('Loading...');
+      await analytics().logEvent('edit_published_memory');
       if (nid) {
         this.props.navigation.navigate('createMemory', {
           editMode: true,

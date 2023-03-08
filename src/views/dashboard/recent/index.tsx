@@ -52,7 +52,7 @@ import {
   promptIdListener,
 } from '../../createMemory/createMemoryWebService';
 import { DefaultDetailsMemory } from '../../createMemory/dataHelper';
-import Busyindicator from './../../../common/component/busyindicator';
+import analytics from '@react-native-firebase/analytics';
 
 import styles from './styles';
 type State = { [x: string]: any };
@@ -88,6 +88,13 @@ const Recent = (props: Props) => {
 
   useEffect(() => {
 
+    const screenLog = async () => {
+      await analytics().logScreenView({
+        screen_name: "Recent",
+        screen_class: "Recent",
+      });
+    };
+    screenLog();
     memoryUpdateListener = EventManager.addListener(
       'memoryUpdateRecentListener',
       () => {
@@ -96,7 +103,7 @@ const Recent = (props: Props) => {
     );
     props.showLoader(true)
     props.loaderText('Loading...');
-    
+
     props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
     return () => {
@@ -339,11 +346,12 @@ const Recent = (props: Props) => {
         //   promptToMemoryCallBack,
         // );
         CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
-          res => {
-            
+          async(res) => {
+
             if (res.status) {
               props.removePrompt(selectedPrompt);
               // //loaderHandler.hideLoader();
+              await analytics().logEvent('memory_created_from_prompt');
               props.navigation.navigate('createMemory', {
                 editMode: true,
                 draftNid: res.id,
@@ -351,7 +359,7 @@ const Recent = (props: Props) => {
               });
             } else {
               // //loaderHandler.hideLoader();
-             // ToastMessage(draftDetails.ResponseMessage);
+              // ToastMessage(draftDetails.ResponseMessage);
             }
             props.showLoader(false);
             props.loaderText('Loading...');
@@ -382,7 +390,7 @@ const Recent = (props: Props) => {
           _onAddProptToMemoryAction(firstIndex, secondIndex)
         }
         }
-        showLoader={(loader)=>{
+        showLoader={(loader) => {
           if (loader) {
             props.showLoader(true)
           }
@@ -394,7 +402,7 @@ const Recent = (props: Props) => {
 
   return (
     <View style={styles.mainContainer}>
-   
+
       <SafeAreaView style={styles.container}>
         <View style={styles.subcontainer}>
           <FlatList
@@ -500,7 +508,7 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: SHOW_LOADER_READ, payload: payload }),
     loaderText: (payload: any) =>
       dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
-      
+
   };
 };
 

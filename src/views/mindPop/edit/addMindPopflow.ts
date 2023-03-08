@@ -1,6 +1,6 @@
 import Upload from 'react-native-background-upload';
 import { TempFile } from '.';
-import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import {
   asyncGen, ConsoleType, ERROR_MESSAGE, getValue, showConsoleLog, Storage, TimeStampMilliSeconds, uploadTask
 } from '../../../common/constants';
@@ -45,16 +45,17 @@ export const addEditMindPop = async (
           return;
         }
 
+        await analytics().logEvent('new_mindpop_created');
         if (files.length > 0) {
           //MindPopsInProgress.push(mindpopId);
           await uploadAttachments(mindpopId, files);
           // await uploadFile(mindpopId, files, data=>{
           //   console.log("sassas :",JSON.stringify(data))
-            EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
+          EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
           // })
           // //loaderHandler.hideLoader();
         } else {
-          console.log("nononon :",JSON.stringify(data))
+          console.log("nononon :", JSON.stringify(data))
           // //loaderHandler.hideLoader();
           EventManager.callBack(kMindPopUploadedIdentifier, true, mindpopId);
         }
@@ -95,11 +96,11 @@ export const addEditMindPop = async (
                 }
               } else {
                 EventManager.callBack(kAddEditIdentifier, false, ERROR_MESSAGE);
-              }    
+              }
             } catch (error) {
-              console.log("sssss >",error)
+              console.log("sssss >", error)
             }
-          
+
           }
         )
         //     .then((response: Response) => response.json())
@@ -134,7 +135,7 @@ async function uploadAttachments(mindpopId: number, files: TempFile[]) {
         }
         resolve(resp);
       } catch (err) {
-        showConsoleLog(ConsoleType.LOG,"Error in uploading files: ", err)
+        showConsoleLog(ConsoleType.LOG, "Error in uploading files: ", err)
         reject(err);
       }
     });
@@ -253,8 +254,9 @@ async function uploadFile(mindpopID: number, file: TempFile) {
 
   return new Promise((resolve, reject) => {
     uploadTask(
-      (data: any) => {
-        showConsoleLog(ConsoleType.LOG,"After upload", data);
+      async(data: any) => {
+        showConsoleLog(ConsoleType.LOG, "After upload", data);
+        await analytics().logEvent(`new_${options['field']}_file_attached`);
         let response = JSON.parse(data.responseBody);
         if (response.ResponseCode == '200') {
           resolve(response);
@@ -263,7 +265,7 @@ async function uploadFile(mindpopID: number, file: TempFile) {
         }
       },
       (err: Error) => {
-        showConsoleLog(ConsoleType.LOG,"Upload error!", err);
+        showConsoleLog(ConsoleType.LOG, "Upload error!", err);
         reject(err);
       },
     )(options);

@@ -26,6 +26,7 @@ import BottomPicker, {
 import { SubmitButton } from '../../common/component/button';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import Text from '../../common/component/Text';
+import analytics from '@react-native-firebase/analytics';
 import TextField from '../../common/component/textField';
 import {
   Colors,
@@ -123,7 +124,14 @@ export default class RegFirstStep extends Component<Props> {
     }).start();
   };
 
+  screenLog = async () => {
+    await analytics().logScreenView({
+      screen_name: "SignUp",
+      screen_class: "SignUp",
+    });
+  };
   componentDidMount() {
+    this.screenLog();
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       this._keyboardDidShow,
@@ -227,7 +235,7 @@ export default class RegFirstStep extends Component<Props> {
   };
 
   //On Register web service end
-  submitRegisterResponse = (
+  submitRegisterResponse = async(
     success: boolean,
     message: string,
     registrationData: any,
@@ -248,7 +256,7 @@ export default class RegFirstStep extends Component<Props> {
             `User registered successfully. Please verify link on email and login to continue`,
           );
         }
-        console.log(this.props.navigation, JSON.stringify(this.props.navigation))
+        await analytics().logEvent('New_user');
         this.props.navigation.navigate('login');
       } else {
         this.props.navigation.navigate('userRegStatus', {

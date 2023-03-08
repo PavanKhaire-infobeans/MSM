@@ -29,6 +29,7 @@ import {
 import Utility from '../../utility';
 import { No_Internet_Warning, ToastMessage } from '../Toast';
 import styles from './styles';
+import analytics from '@react-native-firebase/analytics';
 
 type Props = {
   files?: any;
@@ -70,8 +71,10 @@ const AudioPlayer = forwardRef((props: Props, ref: any) => {
   });
 
   useImperativeHandle(ref, () => ({
-    tooglePlayPause: () => {
+    tooglePlayPause: async() => {
       showConsoleLog(ConsoleType.LOG, 'tooglePlayPause');
+      await analytics().logEvent('user_played_a_song');
+
       let play = !state.playing;
       try {
         if (play) {
