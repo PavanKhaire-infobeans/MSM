@@ -381,7 +381,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       <View
         style={styles.container}
         onTouchStart={() => {
-          Keyboard.dismiss();
+          // Keyboard.dismiss();
         }}>
         <StatusBar
           barStyle={

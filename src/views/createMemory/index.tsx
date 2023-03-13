@@ -2571,7 +2571,6 @@ const CreateMemory = (props: Props) => {
                           let validAlphabatesReg = /^[a-zA-Z]{0,6}$/;
                           let validNumberReg = /^[0-9]{1,2}$/;
 
-
                           if (validAlphabatesReg.test(text)) {
                             setDayNew({ value: '', error: false })
                             setShowDay(false)
@@ -2584,7 +2583,7 @@ const CreateMemory = (props: Props) => {
                             }
                           }
                           else {
-                            setShowDay(true)
+                            // setShowDay(true)
                           }
                         }}
                         value={monthNew.value}

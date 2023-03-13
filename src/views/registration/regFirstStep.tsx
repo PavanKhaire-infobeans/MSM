@@ -131,6 +131,7 @@ export default class RegFirstStep extends Component<Props> {
     });
   };
   componentDidMount() {
+
     this.screenLog();
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -222,7 +223,42 @@ export default class RegFirstStep extends Component<Props> {
       }
       else {
         //Call Register request if profile doesn't exists or is ghost
-        submitRegistration(this.submitForm);
+        submitRegistration(this.submitForm, (resp) => {
+          if (resp.ResponseCode == 200) {
+            this.submitRegisterResponse(
+              true,
+              resp?.ResponseMessage,
+              ''
+            )
+
+          } else {
+            var form_error = { ...(getValue(resp, ['form_errors']) || {}) };
+            let message = resp.ResponseMessage;
+            if (Object.keys(form_error).length) {
+              message = '';
+              const HTML_TAGS: RegExp = /(<.{0,7}>)|(<.*=".*"\s{0,}>)/g;
+              for (let key in { ...form_error }) {
+                let err_str: string = form_error[key];
+                err_str = err_str.replace(HTML_TAGS, '');
+                form_error[key] = err_str;
+                message += `${message.length > 0 ? ', ' : ''}${err_str}`;
+              }
+              this.submitRegisterResponse(
+                false,
+                message,
+                form_error
+              )
+            }
+            else {
+              this.submitRegisterResponse(
+                false,
+                message,
+                form_error
+              )
+            }
+
+          }
+        });
       }
     } else {
       this.props.hideLoader();
@@ -235,23 +271,21 @@ export default class RegFirstStep extends Component<Props> {
   };
 
   //On Register web service end
-  submitRegisterResponse = async(
+  submitRegisterResponse = async (
     success: boolean,
     message: string,
-    registrationData: any,
     formError: any,
   ) => {
     if (success) {
       this.props.hideLoader();
       if (this.props.isCuebackRegistration) {
-        console.log("reg res : ", JSON.stringify(message))
         if (this.props.navBar) {
-          Alert.alert(message);
+          Alert.alert('',message);
           this.props.navBar._show(
             `User registered successfully. Please verify link on email and login to continue`,
           );
         } else {
-          Alert.alert(message);
+          Alert.alert('',message);
           this.navBar._show(
             `User registered successfully. Please verify link on email and login to continue`,
           );
@@ -267,6 +301,7 @@ export default class RegFirstStep extends Component<Props> {
       }
     } else {
       var error = {};
+      this.props.hideLoader();
       for (let key in formError) {
         let strKey = key.replace(/].*$/, '');
         error = { ...error, [strKey]: { error: true, message: formError[key] } };
@@ -466,11 +501,12 @@ export default class RegFirstStep extends Component<Props> {
         <View style={Styles.separatorHeightStyle24} >
           {
             form.label == 'Year' ?
-              <TouchableHighlight underlayColor={Colors.white} onPress={() => {
-                this.props.whyDoAskView(true);
-              }}>
+              <TouchableOpacity activeOpacity={1}
+                onPress={() => {
+                  this.props.whyDoAskView(true);
+                }}>
                 <Text style={Styles.whyinputLableStyle}>{`Why do we ask this?`}</Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
               :
               null
           }
@@ -529,8 +565,8 @@ export default class RegFirstStep extends Component<Props> {
   showErrorMessage = (show: boolean, message?: string) => {
     let height = 0;
     if (show) {
-      height = 0;
-      this.navBar._showWithOutClose(message, Colors.ErrorColor);
+      height = 50;
+      this.navBar._showWithOutClose({ message, color: Colors.ErrorColor });
     } else {
       this.navBar._hide();
     }
@@ -989,7 +1025,7 @@ export default class RegFirstStep extends Component<Props> {
     });
 
     return (
-      <View style={{ flex: 1, marginBottom:Platform.OS=='android' && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom :0}}>
+      <View style={{ flex: 1, marginBottom: Platform.OS == 'android' && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0 }}>
         {
           this.props.whyDoAskViewValue ?
             <View style={[Styles.LoginHeader, { margin: 0 }]} >

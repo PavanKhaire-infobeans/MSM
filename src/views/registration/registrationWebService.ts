@@ -98,7 +98,7 @@ export const checkUserRegistration = async (submitData: any,CB:any) => {
     // EventManager.callBack(kCheckUserProfile, false, err.message);
   }
 };
-export const submitRegistration = async (registrationData: any) => {
+export const submitRegistration = async (registrationData: any, CB:any) => {
   try {
     if (Utility.isInternetConnected) {
       //loaderHandler.showLoader('Requesting...');
@@ -117,33 +117,36 @@ export const submitRegistration = async (registrationData: any) => {
       showConsoleLog(ConsoleType.LOG,'registration response:', resp);
       // let resp: { ResponseCode: number; ResponseMessage: string; userId: number } = await (async () => response.json())();
       //loaderHandler.hideLoader();
-      if (resp.ResponseCode == 200) {
-        EventManager.callBack(
-          kSubmitFormItem,
-          true,
-          resp.ResponseMessage,
-          registrationData,
-        );
-      } else {
-        var form_error = { ...(getValue(resp, ['form_errors']) || {}) };
-        let message = resp.ResponseMessage;
-        if (form_error) {
-          message = '';
-          for (let key in { ...form_error }) {
-            let err_str: string = form_error[key];
-            err_str = err_str.replace(HTML_TAGS, '');
-            form_error[key] = err_str;
-            message += `${message.length > 0 ? ', ' : ''}${err_str}`;
-          }
-        }
-        EventManager.callBack(kSubmitFormItem, false, message, form_error);
-      }
+      CB(resp);
+      // if (resp.ResponseCode == 200) {
+      //   EventManager.callBack(
+      //     kSubmitFormItem,
+      //     true,
+      //     resp.ResponseMessage,
+      //     registrationData,
+      //   );
+      // } else {
+      //   var form_error = { ...(getValue(resp, ['form_errors']) || {}) };
+      //   let message = resp.ResponseMessage;
+      //   if (form_error) {
+      //     message = '';
+      //     for (let key in { ...form_error }) {
+      //       let err_str: string = form_error[key];
+      //       err_str = err_str.replace(HTML_TAGS, '');
+      //       form_error[key] = err_str;
+      //       message += `${message.length > 0 ? ', ' : ''}${err_str}`;
+      //     }
+      //   }
+      //   EventManager.callBack(kSubmitFormItem, false, message, form_error);
+      // }
     } else {
+      CB({ResponseCode : 400,ResponseMessage:'No Internet'});
       No_Internet_Warning();
     }
   } catch (err) {
     //loaderHandler.hideLoader();
-    EventManager.callBack(kSubmitFormItem, false, err.message);
+      CB({ResponseCode : 401,ResponseMessage:err.message});
+      // EventManager.callBack(kSubmitFormItem, false, err.message);
   }
 };
 

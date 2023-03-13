@@ -64,7 +64,8 @@ class MessageDialogue extends Component<{}, State> {
   }
 
   _showWithOutClose = ({ message, color }: { message: string; color: string }) => {
-    this.setState({ showClose: false, backgroundColor: color, message }, () => {
+    this.setState({ showClose: false, backgroundColor: color, message, height: 45  }, () => {
+      alert(color)
       if ((this.height as any)._value == 0) {
         Animated.parallel([
           Animated.timing(this.height, {
