@@ -515,6 +515,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
                   underlayColor={Colors.white}
                   onPress={() => {
                     this.showErrorMessage(false);
+                    Keyboard.dismiss()
                     this.props.navigation.navigate('forgotPassword');
                   }}>
                   <View style={styles.forgotPassword}>
@@ -534,7 +535,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
               underlayColor={'#ffffffff'}
               style={styles.forgotPassword}
               onPress={() =>
-                this.setState({ _isRemeberMe: !this.state._isRemeberMe })
+                this.setState({ _isRemeberMe: !this.state._isRemeberMe },()=>Keyboard.dismiss())
               }>
               <View
                 style={[

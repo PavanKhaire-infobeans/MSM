@@ -4,8 +4,8 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '11.0'
 target 'MyStoriesMatter' do
   config = use_native_modules!
-  $FirebaseSDKVersion = '10.5.0'
-  $RNFirebaseAnalyticsWithoutAdIdSupport = true
+  $FirebaseSDKVersion = '8.13.0'
+  # $RNFirebaseAnalyticsWithoutAdIdSupport = true
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
@@ -14,9 +14,9 @@ target 'MyStoriesMatter' do
 
   permissions_path = '../node_modules/react-native-permissions/ios'
 
-  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone/Permission-Microphone.podspec"
-  pod 'Permission-Camera', :path => "#{permissions_path}/Camera/Permission-Camera.podspec"
-  pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary/Permission-PhotoLibrary.podspec"
+  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
   pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary"
   
   target 'MyStoriesMatterTests' do
@@ -28,10 +28,13 @@ target 'MyStoriesMatter' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable the next line.
-  # use_flipper!()
-  use_frameworks! :linkage => :static
+  use_flipper!()
+  # use_frameworks! :linkage => :static
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
   $RNFirebaseAsStaticFramework = true
-
   # need to move 'Generate Specs' build_phase to be first for FBReactNativeSpec
  
   post_install do |installer|
