@@ -69,3 +69,4 @@ package-lock.json
 android/app/src/main/assets/*
 ios/assets/*
 ios/assets/app/*
+android/app/src/main/assets/index.android.bundle
