@@ -180,7 +180,7 @@ const Styles = EStyleSheet.create({
   },
   emptyView: {
     height: 10,
-    width: 15
+    width: 16, 
   },
   titleText: {
     color: Colors.newTextColor,
@@ -194,10 +194,23 @@ const Styles = EStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
-    // padding: 15,
+    width: 72,
+    marginLeft: 8,
     // marginTop: 5,
   },
-
+  leftButtonAddtoCollectionTouchableContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    marginLeft: 8,
+    // marginTop: 5,
+  },
+  leftButtonNoMarginTouchableContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    // marginTop: 5,
+  },
   leftButtonContainer: {
     backgroundColor: 'transparent',
     borderColor: Colors.white,

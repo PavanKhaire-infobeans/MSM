@@ -210,6 +210,7 @@ class CollectionList extends React.Component<Props, State> {
               cancelAction={() => this.cancelAction()}
               showRightText={true}
               showNewCollection={true}
+              createMemoryPage={true}
               rightIcon={true}
               backIcon={action_close}
               rightText={'New\nCollection'}

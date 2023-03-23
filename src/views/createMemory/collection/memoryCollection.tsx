@@ -242,6 +242,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
             <NavigationHeaderSafeArea
               heading={'Add to Collections'}
               cancelAction={() => this.cancelAction()}
+              addToCollectionOption={true}
               showRightText={true}
               multiValuesPage={true}
               rightText={'Done'}
@@ -274,7 +275,7 @@ class MemoryCollectionList extends React.Component<Props, State> {
             <FlatList
               extraData={this.state}
               ref={ref => (this._listRef = ref)}
-              style={styles.safeAreaContainer}
+              style={[styles.safeAreaContainer,{paddingHorizontal:16}]}
               onScroll={() => {
                 Keyboard.dismiss();
               }}

@@ -386,6 +386,7 @@ const BottomPicker = forwardRef((props: Props, ref: any) => {
                     heading={props.label}
                     cancelAction={() => hidePicker()}
                     rightText={'Done'}
+                    noFullWidth={true}
                     saveValues={() => {
                       saveSelectedValues();
                     }}
@@ -395,6 +396,7 @@ const BottomPicker = forwardRef((props: Props, ref: any) => {
                 <View style={styles.profileEditor}>
                   <ProfileEditHeader
                     showRightText={state.isMultiSelect}
+                    noFullWidth={true}
                     heading={props.label}
                     cancelAction={() => hidePicker()}
                     rightText={'Done'}
@@ -425,7 +427,7 @@ const BottomPicker = forwardRef((props: Props, ref: any) => {
                   }));
                   searchInFilteredList('');
                 }}
-                placeholder="Search community here..."
+                placeholder="Search here..."
                 onFocus={() => {
                   setState(prev => ({ ...prev, isSearching: true }));
                   searchInFilteredList(state.searchText);

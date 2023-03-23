@@ -334,6 +334,7 @@ const CommonListCreateMemory = (props: Props) => {
             // heading={'Memory Draft'}
             showCommunity={false}
             cancelAction={() => cancelAction()} //this.setState({ showCustomAlert: true }) //this.cancelAction}
+            createMemoryPage={true}
             showRightText={false}
             backIcon={action_close}
             saveValues={() => { }} //saveDraft  publishMemory

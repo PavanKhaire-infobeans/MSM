@@ -139,6 +139,7 @@ class CreateRenameCollection extends React.Component<Props, State> {
               //     : 'Create New Collection'
               // }
               cancelAction={() => this.cancelAction()}
+              createMemoryPage={true}
               // multiValuesPage={true}
               showRightText={false}
               rightText={'Done'}

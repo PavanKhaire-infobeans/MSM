@@ -384,6 +384,7 @@ class CommonFriendsSearchView extends React.Component<Props, State> {
               heading={''}
               cancelAction={() => this.cancelAction()}
               showRightText={false}
+              createMemoryPage={true}
               rightText={'Done'}
               backIcon={action_close}
               saveValues={this.saveValue}

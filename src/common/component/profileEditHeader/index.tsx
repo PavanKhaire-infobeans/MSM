@@ -13,7 +13,7 @@ class ProfileEditHeader extends React.Component<{ [x: string]: any }> {
   _renderLeft() {
     return (
       <TouchableOpacity
-        style={[styles.leftButtonTouchableContainer]}
+        style={[this.props.noFullWidth? styles.leftButtonAddtoCollectionTouchableContainer:styles.leftButtonTouchableContainer]}
         onPress={() => this.props.cancelAction()}>
         <Image
           // style={{height: 28, width: 28}}

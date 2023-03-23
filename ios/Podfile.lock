@@ -418,8 +418,8 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.4.1):
     - React-Core
-  - react-native-splash-screen (3.3.0):
-    - React-Core
+  - react-native-splash-screen (3.2.0):
+    - React
   - react-native-sqlite-storage (5.0.0):
     - React
   - react-native-webview (11.26.1):
@@ -496,7 +496,7 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
-  - RNDateTimePicker (6.7.5):
+  - RNDateTimePicker (6.1.2):
     - React-Core
   - RNDefaultPreference (1.4.4):
     - React-Core
@@ -908,7 +908,7 @@ SPEC CHECKSUMS:
   react-native-progress-bar-android: 385c946ab2c8b921633bff4eb94f5544c0f5ff61
   react-native-progress-view: 9846b6848c1b618fd2333149561d14638148c6a7
   react-native-safe-area-context: 5b8a418400eb3d8364aa87300e865c0262cc17b9
-  react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
+  react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-sqlite-storage: ce71689c5a73b79390a1ab213555ae80979a5dc7
   react-native-webview: e3b659a6d614bb37fb12a2de82c91a378c59d84b
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
@@ -927,7 +927,7 @@ SPEC CHECKSUMS:
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNCAsyncStorage: 889cea2408e52fe71da475306dcef43951577da0
   RNCMaskedView: f127cd9652acfa31b91dcff613e07ba18b774db6
-  RNDateTimePicker: 74353cf8939677358c75d3473947002daff97934
+  RNDateTimePicker: 042a33cd9fa98ae7bc1d4ef078f260e1ab4cabf8
   RNDefaultPreference: dc356c8dc839f47e4289ef72a07ccd768dde9d30
   RNDeviceInfo: af47a7d1a09d64c8cbb8b0c883db9bca422a9813
   RNFBAnalytics: fa62561e1d0217a1beab27cb5c5f7bd0d7180acf

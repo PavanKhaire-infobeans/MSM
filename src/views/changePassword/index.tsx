@@ -195,6 +195,7 @@ const ChangePassword = props => {
         cancelAction={cancelAction}
         showRightText={false}
         isWhite={true}
+        noMarginLeft={true}
       />
       <StatusBar
         barStyle={

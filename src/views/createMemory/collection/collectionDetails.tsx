@@ -220,6 +220,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
               heading={'Manage Collection'}
               multiValuesPage={true}
               cancelAction={() => this.cancelAction()}
+              createMemoryPage={true}
               showRightText={true}
               rightText={'Done'}
               saveValues={this.saveValue}

@@ -178,6 +178,7 @@ class WhoCanSee extends React.Component<Props, State> {
               cancelAction={() => this.cancelAction()}
               showRightText={false}
               rightText={'Done'}
+              createMemoryPage={true}
               backIcon={action_close}
               saveValues={this.saveValue}
             />

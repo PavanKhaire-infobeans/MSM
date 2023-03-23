@@ -500,6 +500,7 @@ const AddContentDetails = props => {
             cancelAction={saveMemoryOrMindpop}
             showRightText={content.length ? true : false}
             isWhite={true}
+            createMemoryPage={true}
             rightText={'Save'}
             saveValues={saveMemoryOrMindpop}
             backIcon={action_close}

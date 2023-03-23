@@ -1011,6 +1011,7 @@ const MutilpleValueEdit = (props: Props) => {
           rightText="Save"
           showRightText={true}
           multiValuesPage={true}
+          noMarginLeft={true}
           saveValues={() => saveProfileData()}
           heading={props.route.params.sectionHeading}
           cancelAction={() => {

@@ -33,7 +33,9 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
       <View>
         {!this.props.hideClose ? (
           <TouchableWithoutFeedback onPress={() => this.props.cancelAction()}>
-            <View style={[styles.leftButtonTouchableContainer, { marginLeft: this.props.multiValuesPage ? 0 : 0 }]}>
+            <View style={[this.props.addToCollectionOption ? styles.leftButtonAddtoCollectionTouchableContainer : this.props.noMarginLeft ? styles.leftButtonNoMarginTouchableContainer:styles.leftButtonTouchableContainer,
+              // { marginLeft: this.props.multiValuesPage ? 0 : 0 }
+            ]}>
               <Image
                 style={
                   this.props.showRightText
@@ -61,9 +63,13 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
               ) : null}
             </View>
           </TouchableWithoutFeedback>
-        ) : (
-          <View style={styles.emptyView}></View>
-        )}
+        ) :
+          this.props.etherpadScreen ?
+            null
+            :
+            (
+              <View style={styles.emptyView}></View>
+            )}
       </View>
     );
   }
@@ -192,7 +198,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
                   styles.mainContainer,
                   {
                     borderBottomWidth: this.props.isWhite ? 2 : 0,
-                    paddingLeft: this.props.cancleText ||this.props.createMemoryPage ? 0 : 16
+                    paddingLeft: this.props.cancleText || this.props.createMemoryPage ? 0 : 16
                     // borderTopLeftRadius: 12,
                     // borderTopRightRadius: 12,
                   },
@@ -213,7 +219,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
                     styles.mainContainer,
                     {
                       borderBottomWidth: this.props.isWhite ? 2 : 0,
-                      paddingLeft: this.props.cancleText ||this.props.createMemoryPage ? 0 : 16
+                      paddingLeft: this.props.cancleText || this.props.createMemoryPage ? 0 : 16
                       // borderTopLeftRadius: 12,
                       // borderTopRightRadius: 12,
                     },

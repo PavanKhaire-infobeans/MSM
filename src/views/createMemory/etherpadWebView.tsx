@@ -204,6 +204,7 @@ export default class EtherPadEditing extends React.Component<Props, State> {
           <View style={Styles.etherpadNavHeaderCOntainerStyle}>
             <NavigationHeaderSafeArea
               hideClose={true}
+              etherpadScreen={true}
               heading={this.props.route.params.title}
               cancelAction={() => this.cancelAction()}
               showRightText={true}

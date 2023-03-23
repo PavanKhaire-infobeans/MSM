@@ -523,24 +523,27 @@ const CreateMemory = (props: Props) => {
           ...year,
           value: typeof (props.route.params?.memoryDate?.year) == 'string' ? props.route.params?.memoryDate?.year : JSON.stringify(props.route.params?.memoryDate?.year),
         })
-        setMonth({
-          ...month,
-          value:
-            typeof (props.route.params?.memoryDate?.month) == 'string' ? props.route.params?.memoryDate?.month : JSON.stringify(props.route.params?.memoryDate?.month),
-        })
-        setDay({
-          ...day,
-          value: typeof (props.route.params?.memoryDate?.day) == 'string' ? props.route.params?.memoryDate?.day : JSON.stringify(props.route.params?.memoryDate?.day),
-        })
-
         setYearNew({
           ...year,
           value: typeof (props.route.params?.memoryDate?.year) == 'string' ? props.route.params?.memoryDate?.year : JSON.stringify(props.route.params?.memoryDate?.year),
         })
-        setMonthNew({
-          ...month,
-          value:
-            typeof (props.route.params?.memoryDate?.month) == 'string' ? props.route.params?.memoryDate?.month : JSON.stringify(props.route.params?.memoryDate?.month),
+
+        if (props.route.params?.memoryDate?.month) {
+          let navigationMonth = !isNaN(parseInt(props.route.params?.memoryDate?.month))? parseInt(props.route.params?.memoryDate?.month): '';
+        
+          setMonth({
+            ...month,
+            value: navigationMonth <=9 ? ('0'+navigationMonth):navigationMonth.toString()
+          })
+          setMonthNew({
+            ...month,
+            value: navigationMonth <=9 ? ('0'+navigationMonth):navigationMonth.toString()
+          })
+        }
+        
+        setDay({
+          ...day,
+          value: typeof (props.route.params?.memoryDate?.day) == 'string' ? props.route.params?.memoryDate?.day : JSON.stringify(props.route.params?.memoryDate?.day),
         })
         setDayNew({
           ...day,
