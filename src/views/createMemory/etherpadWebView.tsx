@@ -85,8 +85,12 @@ export default class EtherPadEditing extends React.Component<Props, State> {
     }
     this.props.navigation.goBack();
   };
+  
   saveValue = () => {
     if (this.props.route.params.updateContent) {
+      if (this.props.route.params.doNotReload) {
+        this.props.route.params.doNotReload(true);
+      }
       this.props.route.params.updateContent('get', '');
     }
     else if (this.props.updateContent) {

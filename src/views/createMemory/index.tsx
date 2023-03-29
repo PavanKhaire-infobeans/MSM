@@ -385,7 +385,6 @@ const CreateMemory = (props: Props) => {
       draftDetails = new MemoryDraftsDataModel().getEditContentObject(
         draftDetails
       );
-      console.log("draftDetails > ", JSON.stringify(draftDetails))
 
       props.setEditContent(draftDetails);
       MonthObj.month.forEach((element: any, index: any) => {
@@ -506,6 +505,7 @@ const CreateMemory = (props: Props) => {
       );
     }
     else {
+
       let title = decode_utf8(props.route.params.textTitle);
       title = title.replace(/\n/g, ' ');
       if (title.length > 150) {
@@ -577,6 +577,7 @@ const CreateMemory = (props: Props) => {
 
     return () => {
       Keyboard.dismiss();
+      setDoNotReload(false);
       backListner.removeListener();
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
@@ -592,6 +593,10 @@ const CreateMemory = (props: Props) => {
         props.setCreateMemory(true);
         getData();
       }
+    }
+    return () => {
+      Keyboard.dismiss();
+      setDoNotReload(false);
     }
   }, [isFocused]);
 
@@ -622,6 +627,7 @@ const CreateMemory = (props: Props) => {
         // props.navigateToDashboard(true);
         // props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
         await analytics().logEvent('new_memory_published');
+        props.resetAll();
         props.navigation.replace('dashBoard');
 
       } else if (props.route.params.editPublsihedMemory) {
@@ -633,6 +639,7 @@ const CreateMemory = (props: Props) => {
         await analytics().logEvent('memory_save_as_draft');
 
         Keyboard.dismiss();
+        props.resetAll();
         props.navigation.reset({
           index: 0,
           routes: [{ name: 'writeTabs' }]
@@ -641,8 +648,10 @@ const CreateMemory = (props: Props) => {
         // //loaderHandler.showLoader();
         props.showLoader(true);
         props.loaderText('Loading...');
-      } else {
+      } 
+      else {
         props.showAlertCall(true);
+        props.resetAll();
         props.showAlertCallData({
           title: 'New draft saved!',
           desc: `You can see your new draft added with the rest of your in-progress work now.`,
@@ -1084,7 +1093,7 @@ const CreateMemory = (props: Props) => {
     //     day: day.value != 'Day' ? day.value : undefined,
     //   };
     // }
-    console.log(year, month, day, details)
+    // console.log(year, month, day, details)
 
     props.onInitialUpdate(details);
 
@@ -1127,7 +1136,9 @@ const CreateMemory = (props: Props) => {
         mindPopID: 0,
         selectedItem: selectedItem ? selectedItem : null,
         hideDelete: true,
-        doNotReload: val => setDoNotReload(val),
+        doNotReload: val => { 
+          setDoNotReload(val)
+        },
         editRefresh: (file: any[]) => {
           Keyboard.dismiss();
           let fid = GenerateRandomID();
@@ -1295,7 +1306,9 @@ const CreateMemory = (props: Props) => {
     hideToolTip();
     props.navigation.navigate('fileDescription', {
       file: file,
-      doNotReload: val => setDoNotReload(val),
+      doNotReload: val => { 
+        setDoNotReload(val)
+      },
       done: updateFileContent,
     });
   };
@@ -1425,7 +1438,9 @@ const CreateMemory = (props: Props) => {
                         : file.thumb_uri,
                   },
                 ],
-                doNotReload: val => setDoNotReload(val),
+                doNotReload: val => { 
+                  setDoNotReload(val)
+                },
                 hideDescription: true,
               })
             }
@@ -1446,7 +1461,9 @@ const CreateMemory = (props: Props) => {
             onPress={() =>
               props.navigation.navigate('pdfViewer', {
                 file: file,
-                doNotReload: val => setDoNotReload(val),
+                doNotReload: val => { 
+                  setDoNotReload(val)
+                },
               })
             }
             style={styles.fileHolderContainer}>
@@ -1844,7 +1861,9 @@ const CreateMemory = (props: Props) => {
                         props.navigation.navigate('etherPadEditing', {
                           title: title.trim(),
                           padDetails: padDetails,
-                          doNotReload: val => setDoNotReload(val),
+                          doNotReload: val => { 
+                            setDoNotReload(val)
+                          },
                           updateContent: setEtherPadContent,
                           inviteCollaboratorFlow: inviteCollaboratorFlow,
                         })
@@ -1980,7 +1999,9 @@ const CreateMemory = (props: Props) => {
                 // preview
                 props.navigation.navigate('publishMemoryDraft', {
                   publishMemoryDraft: val => saveORPublish(val.key, true, val.data),
-                  doNotReload: val => setDoNotReload(val),
+                  doNotReload: val => { 
+                    setDoNotReload(val)
+                  },
                   preview: () => { },
                   delete: deleteDraft,
                 });
@@ -2133,7 +2154,6 @@ const CreateMemory = (props: Props) => {
       let getMonthIsValid = monthactions.filter(item => (item.text.toLowerCase() === val) || (item.key && (item.key <= 9 ? ('0' + item.key.toString().toLowerCase() === val) : item.key.toString().toLowerCase() === val)));
       let monthData = monthactions.filter(item => (item.key <= 9 ? (('0' + item.key.toString().toLowerCase()) === monthNew.value.toString().toLowerCase()) : item.key.toString().toLowerCase() == monthNew.value.toString().toLowerCase()));
       if (monthNew?.value?.length > 2) {
-        console.log(JSON.stringify(monthactions), JSON.stringify(getMonthIsValid))
         if (monthactions && monthactions.length && getMonthIsValid.length && getMonthIsValid[0]?.disabled != true) {
           if (parseInt(yearNew.value) == new Date().getFullYear()) {
 
@@ -2158,14 +2178,12 @@ const CreateMemory = (props: Props) => {
           else {
             if (parseInt(yearNew.value) < new Date().getFullYear()) {
               if (!isNaN(parseInt(monthNew.value)) && (parseInt(monthNew.value) <= (new Date().getMonth() + 1))) {
-                console.log(JSON.stringify(yearNew.value))
                 isValidMonth = true;
                 isValidDate = true;
                 setDayNew({ ...dayNew, value: '' })
               }
               else if (validAlphabatesReg.test(monthNew?.value)) {
                 setDayNew({ ...dayNew, value: '' })
-                console.log(JSON.stringify(monthNew.value))
                 isValidMonth = true;
                 isValidDate = true;
               }
