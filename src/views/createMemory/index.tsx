@@ -371,6 +371,7 @@ const CreateMemory = (props: Props) => {
       props.showLoader(true);
       props.loaderText('Loading...');
       // props.navigation.navigate('dashBoard');
+      setLocation({ description: '', reference: '' })
       props.navigation.reset({
         index: 0,
         routes: [{ name: 'dashBoard' }]
@@ -494,7 +495,7 @@ const CreateMemory = (props: Props) => {
 
   const getData = async () => {
     let recentTag = { searchType: kRecentTags, searchTerm: '' };
-
+    setLocation({ description: '', reference: '' });
     if (props.route.params.editMode) {
       //loaderHandler.showLoader('Loading...');
       props.showLoader(true);
@@ -529,26 +530,30 @@ const CreateMemory = (props: Props) => {
         })
 
         if (props.route.params?.memoryDate?.month) {
-          let navigationMonth = !isNaN(parseInt(props.route.params?.memoryDate?.month))? parseInt(props.route.params?.memoryDate?.month): '';
-        
+          let navigationMonth = !isNaN(parseInt(props.route.params?.memoryDate?.month)) ? parseInt(props.route.params?.memoryDate?.month) : '';
+
           setMonth({
             ...month,
-            value: navigationMonth <=9 ? ('0'+navigationMonth):navigationMonth.toString()
+            value: navigationMonth <= 9 ? ('0' + navigationMonth) : navigationMonth.toString()
           })
           setMonthNew({
             ...month,
-            value: navigationMonth <=9 ? ('0'+navigationMonth):navigationMonth.toString()
+            value: navigationMonth <= 9 ? ('0' + navigationMonth) : navigationMonth.toString()
           })
         }
-        
-        setDay({
-          ...day,
-          value: typeof (props.route.params?.memoryDate?.day) == 'string' ? props.route.params?.memoryDate?.day : JSON.stringify(props.route.params?.memoryDate?.day),
-        })
-        setDayNew({
-          ...day,
-          value: typeof (props.route.params?.memoryDate?.day) == 'string' ? props.route.params?.memoryDate?.day : JSON.stringify(props.route.params?.memoryDate?.day),
-        })
+
+        if (props.route.params?.memoryDate?.day) {
+          let navigationDay = !isNaN(parseInt(props.route.params?.memoryDate?.day)) ? parseInt(props.route.params?.memoryDate?.day) : '';
+          setDay({
+            ...day,
+            value: navigationDay <= 9 ? ('0' + navigationDay) : navigationDay.toString()
+          })
+          setDayNew({
+            ...day,
+            value: navigationDay <= 9 ? ('0' + navigationDay) : navigationDay.toString()
+          })
+        }
+       
       }
 
       setIsCreatedByUser(true)
@@ -556,11 +561,11 @@ const CreateMemory = (props: Props) => {
       //loaderHandler.hideLoader();
       props.showLoader(false);
       props.loaderText('Loading...');
-      setEtherPadContent(
-        'get',
-        '',
-        props.route.params.padDetails.padId,
-      );
+      // setEtherPadContent(
+      //   'get',
+      //   '',
+      //   props.route.params.padDetails.padId,
+      // );
 
     }
     props.recentTags(recentTag);
@@ -573,11 +578,12 @@ const CreateMemory = (props: Props) => {
 
     getData();
 
-    // setEtherPadContent('set', decode_utf8(props.textTitle), props.padDetails.padId);
-
     return () => {
       Keyboard.dismiss();
+      console.log("useeffect doNotReload >", doNotReload)
       setDoNotReload(false);
+      props.resetAll();
+      setLocation({ description: '', reference: '' });
       backListner.removeListener();
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
@@ -589,12 +595,16 @@ const CreateMemory = (props: Props) => {
     if (isFocused) {
       console.log("props.route.params >", JSON.stringify(props.route.params), doNotReload, (props.route.params?.isFromPrompt, props.route.params?.editPublsihedMemory, props.route.params?.editPublsihedMemory, props.route.params?.editMode))
       if (!doNotReload && (props.route.params?.isFromPrompt || props.route.params?.editPublsihedMemory || props.route.params?.editPublsihedMemory || props.route.params?.editMode)) {
-        props.resetAll();
+        // props.resetAll();
         props.setCreateMemory(true);
         getData();
       }
     }
+
     return () => {
+      console.log("focured doNotReload >", doNotReload)
+      // setLocation({ description: '', reference: '' })
+      // props.resetAll();
       Keyboard.dismiss();
       setDoNotReload(false);
     }
@@ -613,7 +623,7 @@ const CreateMemory = (props: Props) => {
     } catch (error) { }
   }
 
-  const memorySaveCallback = async(success: any, id?: any, padId?: any, key?: any) => {
+  const memorySaveCallback = async (success: any, id?: any, padId?: any, key?: any) => {
     // //loaderHandler.hideLoader();
     props.showLoader(false);
     props.loaderText('Loading...');
@@ -628,7 +638,8 @@ const CreateMemory = (props: Props) => {
         // props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
         await analytics().logEvent('new_memory_published');
         props.resetAll();
-        props.navigation.replace('dashBoard');
+      setLocation({ description: '', reference: '' })
+      props.navigation.replace('dashBoard');
 
       } else if (props.route.params.editPublsihedMemory) {
         props.showAlertCall(true);
@@ -637,6 +648,7 @@ const CreateMemory = (props: Props) => {
           desc: `Your memory has been saved.`,
         });
         await analytics().logEvent('memory_save_as_draft');
+        setLocation({ description: '', reference: '' })
 
         Keyboard.dismiss();
         props.resetAll();
@@ -648,9 +660,10 @@ const CreateMemory = (props: Props) => {
         // //loaderHandler.showLoader();
         props.showLoader(true);
         props.loaderText('Loading...');
-      } 
+      }
       else {
         props.showAlertCall(true);
+        setLocation({ description: '', reference: '' })
         props.resetAll();
         props.showAlertCallData({
           title: 'New draft saved!',
@@ -1136,7 +1149,7 @@ const CreateMemory = (props: Props) => {
         mindPopID: 0,
         selectedItem: selectedItem ? selectedItem : null,
         hideDelete: true,
-        doNotReload: val => { 
+        doNotReload: val => {
           setDoNotReload(val)
         },
         editRefresh: (file: any[]) => {
@@ -1306,7 +1319,7 @@ const CreateMemory = (props: Props) => {
     hideToolTip();
     props.navigation.navigate('fileDescription', {
       file: file,
-      doNotReload: val => { 
+      doNotReload: val => {
         setDoNotReload(val)
       },
       done: updateFileContent,
@@ -1438,7 +1451,7 @@ const CreateMemory = (props: Props) => {
                         : file.thumb_uri,
                   },
                 ],
-                doNotReload: val => { 
+                doNotReload: val => {
                   setDoNotReload(val)
                 },
                 hideDescription: true,
@@ -1461,7 +1474,7 @@ const CreateMemory = (props: Props) => {
             onPress={() =>
               props.navigation.navigate('pdfViewer', {
                 file: file,
-                doNotReload: val => { 
+                doNotReload: val => {
                   setDoNotReload(val)
                 },
               })
@@ -1530,10 +1543,6 @@ const CreateMemory = (props: Props) => {
         //loaderHandler.showLoader('Saving...');
         props.showLoader(true);
         props.loaderText('Saving...');
-        // if (padDetails?.padId) {
-        //   setEtherPadContent('get', '', padDetails.padId);
-        // }
-        // setTimeout(() => {
         saveORPublish('save');
         // }, 2500);
         break;
@@ -1794,6 +1803,7 @@ const CreateMemory = (props: Props) => {
   };
 
   const viewBeforList = () => {
+    console.log('memory desc >>',props.memoryDescription)
     return (
       // onStartShouldSetResponder={() => true}
       <View style={Styles.viewBeforListContainerStyle}>
@@ -1861,10 +1871,10 @@ const CreateMemory = (props: Props) => {
                         props.navigation.navigate('etherPadEditing', {
                           title: title.trim(),
                           padDetails: padDetails,
-                          doNotReload: val => { 
+                          doNotReload: val => {
                             setDoNotReload(val)
                           },
-                          updateContent: setEtherPadContent,
+                          updateContent: setEtherPadContent, 
                           inviteCollaboratorFlow: inviteCollaboratorFlow,
                         })
                       }
@@ -1882,7 +1892,6 @@ const CreateMemory = (props: Props) => {
               //   editMode={props.route.params.editMode}
               //   title={title.trim()}
               //   padDetails={padDetails}
-              //   updateContent={setEtherPadContent.bind(this)}
               //   inviteCollaboratorFlow={inviteCollaboratorFlow.bind(this)}
               // />
             ) : (
@@ -1899,7 +1908,6 @@ const CreateMemory = (props: Props) => {
               this.props.navigation.navigate('etherPadEditing', {
                 title: this.title.trim(),
                 padDetails: this.padDetails,
-                updateContent: this.setEtherPadContent.bind(this),
                 inviteCollaboratorFlow: this.inviteCollaboratorFlow.bind(this),
               })
             }>
@@ -1981,25 +1989,22 @@ const CreateMemory = (props: Props) => {
               { backgroundColor: Colors.bordercolor },
             ]}
             onPress={() => {
-
+console.warn("locationlocation > ",JSON.stringify(location))
               if (
                 memory_date == '' || year.value == '' || month.value == ''
               ) {
                 setShowCustomValidationAlert(true)
-
-                //ToastMessage('Please select Date first', Colors.ErrorColor);
               }
               else if (
-                location.description == ''
+                location.description == '' || location.description == null || location.description == undefined 
               ) {
                 setShowCustomValidationAlert(true)
-                //ToastMessage('Please select Date first', Colors.ErrorColor);
               }
               else {
                 // preview
                 props.navigation.navigate('publishMemoryDraft', {
                   publishMemoryDraft: val => saveORPublish(val.key, true, val.data),
-                  doNotReload: val => { 
+                  doNotReload: val => {
                     setDoNotReload(val)
                   },
                   preview: () => { },
@@ -2849,7 +2854,7 @@ const CreateMemory = (props: Props) => {
 
             </View>
             {Platform.OS == 'android' &&
-              <View style={{ height: bottomToolbar / 2 }}></View>
+              <View style={{ height: bottomToolbar }}></View>
             }
           </>
         </ActionSheet>

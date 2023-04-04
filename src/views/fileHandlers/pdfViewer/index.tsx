@@ -1,15 +1,15 @@
 import React from 'react';
-import {Dimensions, Image, Keyboard, SafeAreaView, StatusBar, TouchableOpacity, View} from 'react-native';
+import { Dimensions, Image, Keyboard, SafeAreaView, StatusBar, TouchableOpacity, View } from 'react-native';
 
-import {ToastMessage} from '../../../common/component/Toast';
+import { ToastMessage } from '../../../common/component/Toast';
 //@ts-ignore
 import Pdf from 'react-native-pdf';
-import {Colors, decode_utf8} from '../../../common/constants';
+import { Colors, decode_utf8 } from '../../../common/constants';
 import Utility from '../../../common/utility';
 import Styles from './styles';
 import { close_white_ } from '../../../images';
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 export default class PDFViewer extends React.Component<Props> {
   state: State = {
     loading: true,
@@ -28,18 +28,18 @@ export default class PDFViewer extends React.Component<Props> {
 
   render() {
     let filePath = this.props?.route?.params?.file.url
-      ? unescape(this.props?.route?.params?.file.url)
+      ? this.props?.route?.params?.file.url
+      // ? unescape(this.props?.route?.params?.file.url)
       : this.props?.route?.params?.file.filePath;
-      console.log(JSON.stringify(this.props?.route?.params?.file), filePath)
-      if (filePath.indexOf('file://') > -1) {
+    if (filePath.indexOf('file://') > -1) {
       filePath = decode_utf8(filePath);
+      console.log("source >>",JSON.stringify(filePath))
     }
-    let source = {uri: filePath, cache: false};
+    let source = { uri: filePath, cache: false };
 
     // if(this.props?.route?.params?.file.isLocal){
     //     source = {uri:filePath,cache:true};
     // }
-
     return (
       <SafeAreaView style={Styles.container}>
         <StatusBar
@@ -84,7 +84,7 @@ export default class PDFViewer extends React.Component<Props> {
             alignItems: 'center',
           }}>
           <TouchableOpacity activeOpacity={1} onPress={this.cancelAction}>
-            <Image source={close_white_} style={{padding: 16}} />
+            <Image source={close_white_} style={{ padding: 16 }} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>

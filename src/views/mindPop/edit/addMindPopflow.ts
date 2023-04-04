@@ -10,6 +10,7 @@ import { Account } from '../../../common/loginStore';
 import {
   addMindPops, getMindPopWithId
 } from '../../../common/webservice/mindPopServices';
+import { Platform } from 'react-native';
 
 export const kAddEditIdentifier = 'kAddEditIdentifier';
 export const kMindpopContentIdentifier = 'kMindpopContentIdentifier';
@@ -227,9 +228,9 @@ async function uploadAttachments(mindpopId: number, files: TempFile[]) {
 
 async function uploadFile(mindpopID: number, file: TempFile) {
   var filePath = file.filePath;
-  // if (Platform.OS == "android") {
-  filePath = filePath.replace('file://', '');
-  // }
+  if (Platform.OS == "android") {
+    filePath = filePath.replace('file://', '');
+  }
   let options: { [x: string]: any } = {
     url: `https://${Account.selectedData().instanceURL}/api/mindpop/upload`,
     path: filePath,

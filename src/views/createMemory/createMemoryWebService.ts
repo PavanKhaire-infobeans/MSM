@@ -11,6 +11,7 @@ import { MemoryService, newMemoryService } from '../../common/webservice/memoryS
 import { TempFile } from '../mindPop/edit';
 import { CollaboratorsAction } from './inviteCollaborators';
 import analytics from '@react-native-firebase/analytics';
+import { Platform } from 'react-native';
 
 export const kCollectionMemories = 'CollectionMemories';
 export const kCollectionUpdated = 'CollectionUpdated';
@@ -61,7 +62,7 @@ export const CreateUpdateMemory = async (
           if (filesToUpload.length > 0) {
             await uploadFile(id, filesToUpload,
               datareturn => {
-                // console.log("file upload response : ", JSON.stringify(datareturn))
+                console.log("file upload response : ", JSON.stringify(datareturn))
                 if (listener == "mindpopEditMemoryListener") {
                   CB({ status: true, id, padDetails, key, prompt_id });
                   // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
@@ -423,9 +424,9 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
       return new Promise(async (resolve) => {
 
         var filePath = file.filePath;
-        // if (Platform.OS == "android") {
+        if (Platform.OS == "android") {
         filePath = filePath.replace('file://', '');
-        // }
+        }
         let options: { [x: string]: any } = {
           url: `https://${Account.selectedData().instanceURL
             }/api/mystory/file_upload`,
@@ -456,6 +457,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
         try {
 
+          // console.log("options payload > ",JSON.stringify(options))
           try {
             let uploadId = await Upload.startUpload(options);
             if (typeof uploadId == 'string') {
