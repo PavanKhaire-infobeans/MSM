@@ -62,7 +62,7 @@ export const CreateUpdateMemory = async (
           if (filesToUpload.length > 0) {
             await uploadFile(id, filesToUpload,
               datareturn => {
-                console.log("file upload response : ", JSON.stringify(datareturn))
+                // console.log("file upload response : ", JSON.stringify(datareturn))
                 if (listener == "mindpopEditMemoryListener") {
                   CB({ status: true, id, padDetails, key, prompt_id });
                   // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
@@ -289,7 +289,6 @@ export const UpdateMemoryCollection = async (
         Promise.reject(err);
       });
 
-    console.warn(JSON.stringify(response))
     if (response.ResponseCode == 200) {
       EventManager.callBack(callBack, true, response);
     } else {
@@ -425,7 +424,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
         var filePath = file.filePath;
         if (Platform.OS == "android") {
-        filePath = filePath.replace('file://', '');
+          filePath = filePath.replace('file://', '');
         }
         let options: { [x: string]: any } = {
           url: `https://${Account.selectedData().instanceURL

@@ -819,7 +819,7 @@ export const onActionItemClicked = async (
                       { configurationTimestamp: '0', details },
                     ],
                     response => {
-                      console.log("response >",JSON.stringify(details),JSON.stringify(response))
+                      // console.log("response >",JSON.stringify(details),JSON.stringify(response))
                       if (response.ResponseCode == 200) {
                         if (response.Status) {
                           navigation.replace('dashBoard');

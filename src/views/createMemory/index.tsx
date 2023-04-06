@@ -561,11 +561,11 @@ const CreateMemory = (props: Props) => {
       //loaderHandler.hideLoader();
       props.showLoader(false);
       props.loaderText('Loading...');
-      // setEtherPadContent(
-      //   'get',
-      //   '',
-      //   props.route.params.padDetails.padId,
-      // );
+      setEtherPadContent(
+        'get',
+        '',
+        props.route.params.padDetails.padId,
+      );
 
     }
     props.recentTags(recentTag);
@@ -1803,7 +1803,6 @@ const CreateMemory = (props: Props) => {
   };
 
   const viewBeforList = () => {
-    console.log('memory desc >>',props.memoryDescription)
     return (
       // onStartShouldSetResponder={() => true}
       <View style={Styles.viewBeforListContainerStyle}>
@@ -1989,7 +1988,6 @@ const CreateMemory = (props: Props) => {
               { backgroundColor: Colors.bordercolor },
             ]}
             onPress={() => {
-console.warn("locationlocation > ",JSON.stringify(location))
               if (
                 memory_date == '' || year.value == '' || month.value == ''
               ) {
