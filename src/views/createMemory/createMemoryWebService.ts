@@ -1,4 +1,4 @@
-import Upload from 'react-native-background-upload';
+import Upload, { UploadOptions } from 'react-native-background-upload';
 // import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
   asyncGen,
@@ -423,12 +423,12 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
       return new Promise(async (resolve) => {
 
         var filePath = file.filePath;
-        if (Platform.OS == "android") {
+        if (Platform.OS === "android") {
           filePath = filePath.replace('file://', '');
-        }
-        let options: { [x: string]: any } = {
-          url: `https://${Account.selectedData().instanceURL
-            }/api/mystory/file_upload`,
+        };
+
+        let options: UploadOptions = {
+          url: `https://${Account.selectedData().instanceURL}/api/mystory/file_upload`,
           path: filePath,
           method: 'POST',
           ...(file.type == 'audios' ? { name: file.filename } : {}),
@@ -456,7 +456,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
         try {
 
-          // console.log("options payload > ",JSON.stringify(options))
+          console.log("options payload > ",JSON.stringify(options))
           try {
             let uploadId = await Upload.startUpload(options);
             if (typeof uploadId == 'string') {

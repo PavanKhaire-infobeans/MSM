@@ -105,33 +105,39 @@ const selectAudio = async callback => {
   try {
     const res = await DocumentPicker.pick({
       type: types.audio,
-      allowMultiSelection: false
+      allowMultiSelection: false,
+      copyTo: 'documentDirectory'
     }).then(res => {
       showConsoleLog(ConsoleType.LOG, 'res : ' + JSON.stringify(res),);
       if (res) {
         // let path = res[0].uri.indexOf("file://") != -1 ? res[0].uri : "file://" + res[0].uri;
         let fid = GenerateRandomID();
         if (Platform.OS === 'ios') {
-          let path =
-            res[0].uri.indexOf('file://') != -1 ? res[0].uri : 'file://' + res[0].uri;
-          var tempfile: TempFile = {
-            fid: fid,
-            filePath: path,
-            thumb_uri: path,
-            isLocal: true,
-            type: `${FileType[FileType.audio]}s`,
-            status: TempFileStatus.needsToUpload,
-            filename: res[0].name,
-            userId: Account.selectedData().userID,
-            file_title: '',
-            file_description: '',
-            userName:
-              Account.selectedData().firstName +
-              ' ' +
-              Account.selectedData().lastName,
-            date: Utility.dateObjectToDefaultFormat(new Date()),
-          };
-          callback([tempfile]);
+          let path = res[0].uri.indexOf('file://') != -1 ? res[0].fileCopyUri : 'file://' + res[0].fileCopyUri;
+          if (path) {
+            var tempfile: TempFile = {
+              fid: fid,
+              filePath: path ? unescape(path) : '',
+              thumb_uri: unescape(path),
+              isLocal: true,
+              type: `${FileType[FileType.audio]}s`,
+              status: TempFileStatus.needsToUpload,
+              filename: res[0].name ? res[0].name : '',
+              userId: Account.selectedData().userID,
+              file_title: '',
+              file_description: '',
+              userName:
+                Account.selectedData().firstName +
+                ' ' +
+                Account.selectedData().lastName,
+              date: Utility.dateObjectToDefaultFormat(new Date()),
+            };
+            callback([tempfile]);
+          }
+          else{
+            callback([]);  
+          }
+
         } else if (res[0].uri.indexOf('content://') != -1) {
           RNFetchBlob.fs.readFile(res[0].uri, 'base64').then(fileData => {
             // this.setState({base64Str:files
@@ -150,7 +156,7 @@ const selectAudio = async callback => {
                   isLocal: true,
                   type: `${FileType[FileType.audio]}s`,
                   status: TempFileStatus.needsToUpload,
-                  filename: res[0].name,
+                  filename: res[0].name ? res[0].name : '',
                   userId: Account.selectedData().userID,
                   file_title: '',
                   file_description: '',
@@ -201,7 +207,7 @@ const selectAudio = async callback => {
             isLocal: true,
             type: `${FileType[FileType.audio]}s`,
             status: TempFileStatus.needsToUpload,
-            filename: res[0].name,
+            filename: res[0].name?res[0].name:'',
             userId: Account.selectedData().userID,
             file_title: '',
             file_description: '',
@@ -240,32 +246,37 @@ const selectPDF = async (callback) => {
   try {
     const res = await DocumentPicker.pick({
       type: [DocumentPicker.types.pdf],
-      allowMultiSelection: false
+      allowMultiSelection: false,
+      copyTo: 'documentDirectory'
     }).then(res => {
 
-      showConsoleLog(ConsoleType.LOG, 'res : ' + JSON.stringify(res));
       if (res) {
-        let path =
-          res[0].uri.indexOf('file://') != -1 ? res[0].uri : 'file://' + res[0].uri;
+        let path = res[0].uri.indexOf('file://') != -1 ? res[0].fileCopyUri : 'file://' + res[0].fileCopyUri;
         let fid = GenerateRandomID();
-        var tempfile: TempFile = {
-          fid: fid,
-          filePath: path,
-          thumb_uri: path,
-          isLocal: true,
-          type: `${FileType[FileType.file]}s`,
-          status: TempFileStatus.needsToUpload,
-          filename: res[0].name,
-          userId: Account.selectedData().userID,
-          file_title: '',
-          file_description: '',
-          userName:
-            Account.selectedData().firstName +
-            ' ' +
-            Account.selectedData().lastName,
-          date: Utility.dateObjectToDefaultFormat(new Date()),
-        };
-        callback([tempfile]);
+        if (path) {
+          var tempfile: TempFile = {
+            fid: fid,
+            filePath: path ?unescape(path):'',
+            thumb_uri: path? unescape(path):'',
+            isLocal: true,
+            type: `${FileType[FileType.file]}s`,
+            status: TempFileStatus.needsToUpload,
+            filename: `${res[0].name ? res[0].name : ''}`,
+            userId: Account.selectedData().userID,
+            file_title: '',
+            file_description: '',
+            userName:
+              Account.selectedData().firstName +
+              ' ' +
+              Account.selectedData().lastName,
+            date: Utility.dateObjectToDefaultFormat(new Date()),
+          };
+          showConsoleLog(ConsoleType.LOG, 'res s ss: ' + JSON.stringify(tempfile));
+          callback([tempfile]);  
+        }
+        else{
+          callback([]);  
+        }        
       }
     });
 
