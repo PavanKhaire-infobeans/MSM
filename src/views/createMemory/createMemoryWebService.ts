@@ -12,6 +12,7 @@ import { TempFile } from '../mindPop/edit';
 import { CollaboratorsAction } from './inviteCollaborators';
 import analytics from '@react-native-firebase/analytics';
 import { Platform } from 'react-native';
+import { FileType } from '../../common/database/mindPopStore/mindPopStore';
 
 export const kCollectionMemories = 'CollectionMemories';
 export const kCollectionUpdated = 'CollectionUpdated';
@@ -429,7 +430,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
         let options: UploadOptions = {
           url: `https://${Account.selectedData().instanceURL}/api/mystory/file_upload`,
-          path: filePath,
+          path: Platform.OS == 'ios' && FileType[FileType.audio] ? unescape(filePath) : Platform.OS === "android" ? filePath.replace('file://', ''):filePath,
           method: 'POST',
           ...(file.type == 'audios' ? { name: file.filename } : {}),
           field: file.type == 'images' ? 'image' : file.type,
@@ -456,7 +457,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
         try {
 
-          console.log("options payload > ",JSON.stringify(options))
+          console.log("options payload > ", JSON.stringify(options))
           try {
             let uploadId = await Upload.startUpload(options);
             if (typeof uploadId == 'string') {
@@ -472,7 +473,7 @@ async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
                   resolve({ message: 'Upload cancelled', uploadId, data });
                 },
               );
-              Upload.addListener('completed', uploadId, async(data: any) => {
+              Upload.addListener('completed', uploadId, async (data: any) => {
                 await analytics().logEvent(`new_${options['field']}_file_attached`);
                 respArray.push(data)
                 resolve(data);

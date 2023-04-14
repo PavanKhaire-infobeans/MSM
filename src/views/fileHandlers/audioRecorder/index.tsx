@@ -236,7 +236,7 @@ export default class CommonAudioRecorder extends React.Component<
    * According to state of player
    */
   audioActions = () => {
-    showConsoleLog(ConsoleType.LOG, 'this.state.audioState >', this.state.audioState);
+    showConsoleLog(ConsoleType.LOG, 'this.state.audioState >', this.state.audioState,this.state.path);
     if (this.state.audioState == 'none') {
       let today = new Date();
       this.recording = `Rec${today.getMonth() +
@@ -347,6 +347,8 @@ export default class CommonAudioRecorder extends React.Component<
           if (path.indexOf('https://') == -1 && path.indexOf('file://') == -1) {
             path = 'file://' + path;
           }
+          // path = path.replace("file://","");
+          console.log(path)
           this.player = new Player(path);
           this.player.volume = 0.5;
 

@@ -1493,6 +1493,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
       let filePaths = this.filePathsToUpload.map((filePath: string) => filePath);
       found = this.filePathsToUpload.length == 0 || filePaths.indexOf(item.filePath) == -1;
     }*/
+    console.log("item.thumb_uriitem.thumb_uriitem.thumb_uri >",item.thumb_uri, item)
     return (
       <View>
         {found ? (
@@ -1525,7 +1526,7 @@ class MindPopEdit extends React.Component<{ [x: string]: any }, State> {
                 </ImageBackground>
               ) : item.type == 'images' ? (
                 <Image
-                  source={{ uri: item.thumb_uri }}
+                  source={{ uri: item.thumb_uri && item.thumb_uri != ''? item.thumb_uri :item.uri }}
                   style={{ width: width, height: thumbnailHeight }}
                   resizeMode="contain"
                 />

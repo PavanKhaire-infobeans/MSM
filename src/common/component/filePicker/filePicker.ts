@@ -113,12 +113,12 @@ const selectAudio = async callback => {
         // let path = res[0].uri.indexOf("file://") != -1 ? res[0].uri : "file://" + res[0].uri;
         let fid = GenerateRandomID();
         if (Platform.OS === 'ios') {
-          let path = res[0].uri.indexOf('file://') != -1 ? res[0].fileCopyUri : 'file://' + res[0].fileCopyUri;
+          let path = res[0].fileCopyUri && (res[0].fileCopyUri.indexOf('file://') != -1) ? res[0].fileCopyUri : 'file://' + res[0].fileCopyUri;
           if (path) {
             var tempfile: TempFile = {
               fid: fid,
-              filePath: path ? unescape(path) : '',
-              thumb_uri: unescape(path),
+              filePath: path ? (path) : '',
+              thumb_uri: (path),
               isLocal: true,
               type: `${FileType[FileType.audio]}s`,
               status: TempFileStatus.needsToUpload,
@@ -145,7 +145,7 @@ const selectAudio = async callback => {
             // //showConsoleLog(ConsoleType.LOG,fileData)
             // const path = '${RNFS.DocumentDirectoryPath}/${attachment}.aac';
             RNFetchBlob.fs
-              .stat(res[0].uri)
+              .stat(res[0].fileCopyUri?res[0].fileCopyUri:'')
               .then(stats => {
                 //showConsoleLog(ConsoleType.LOG,stats)
                 const path = stats.path;
@@ -251,13 +251,13 @@ const selectPDF = async (callback) => {
     }).then(res => {
 
       if (res) {
-        let path = res[0].uri.indexOf('file://') != -1 ? res[0].fileCopyUri : 'file://' + res[0].fileCopyUri;
+        let path =  Platform.OS == 'ios' ? (res[0].uri.indexOf('file://') != -1 ? res[0].fileCopyUri : 'file://' + res[0].fileCopyUri) : res[0].uri;
         let fid = GenerateRandomID();
         if (path) {
           var tempfile: TempFile = {
             fid: fid,
-            filePath: path ?unescape(path):'',
-            thumb_uri: path? unescape(path):'',
+            filePath: path ? Platform.OS == 'ios' ? unescape(path) : path : '',
+            thumb_uri: path ? Platform.OS == 'ios' ? unescape(path) : path : '',
             isLocal: true,
             type: `${FileType[FileType.file]}s`,
             status: TempFileStatus.needsToUpload,

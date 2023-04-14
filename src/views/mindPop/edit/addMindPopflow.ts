@@ -4,7 +4,7 @@ import analytics from '@react-native-firebase/analytics';
 import {
   asyncGen, ConsoleType, ERROR_MESSAGE, getValue, showConsoleLog, Storage, TimeStampMilliSeconds, uploadTask
 } from '../../../common/constants';
-import MindPopStore from '../../../common/database/mindPopStore/mindPopStore';
+import MindPopStore, { FileType } from '../../../common/database/mindPopStore/mindPopStore';
 import EventManager from '../../../common/eventManager';
 import { Account } from '../../../common/loginStore';
 import {
@@ -231,9 +231,12 @@ async function uploadFile(mindpopID: number, file: TempFile) {
   if (Platform.OS == "android") {
     filePath = filePath.replace('file://', '');
   }
+  if (Platform.OS == 'ios') {
+    filePath = filePath.indexOf('file://')== -1?`file://${filePath}`:filePath;
+  }
   let options: { [x: string]: any } = {
     url: `https://${Account.selectedData().instanceURL}/api/mindpop/upload`,
-    path: filePath,
+    path: Platform.OS == 'ios' && FileType[FileType.audio] ? unescape(filePath) : filePath,
     method: 'POST',
     ...(file.type == 'audios' ? { title: file.filename } : {}),
     field: file.type == 'images' ? 'image' : file.type,
@@ -252,7 +255,7 @@ async function uploadFile(mindpopID: number, file: TempFile) {
     options['parameters'] = { ...options['parameters'], title: name };
   }
   //loaderHandler.showLoader('Uploading..');
-
+console.log("options >>",JSON.stringify(options))
   return new Promise((resolve, reject) => {
     uploadTask(
       async(data: any) => {

@@ -107,7 +107,8 @@ const Recent = (props: Props) => {
     props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
     return () => {
-      memoryUpdateListener.removeListener();
+      _onCloseAudios();
+       memoryUpdateListener.removeListener();
       // memoryFromPrompt.removeListener();
     };
   }, []);
@@ -130,12 +131,14 @@ const Recent = (props: Props) => {
           memoryDetails = props.recentList[props.recentList.length - 1];
         }
         // if(props.totalCount > 5)
-        props.fetchMemoryList({
-          type: ListType.Recent,
-          isLoadMore: true,
-          lastMemoryDate: memoryDetails.updated,
-          filters: props.filters,
-        });
+        if (props.isRecentDataUpdated) {
+          props.fetchMemoryList({
+            type: ListType.Recent,
+            isLoadMore: true,
+            lastMemoryDate: memoryDetails.updated,
+            filters: props.filters,
+          });
+        }
       }
     }
   };
@@ -267,9 +270,9 @@ const Recent = (props: Props) => {
     }
   };
 
-  const _onCloseAudios = (event: Event) => {
+  const _onCloseAudios = () => {
     try {
-      audioPlayer.current.hidePlayer();
+      audioPlayer.current && audioPlayer.current.hidePlayer && audioPlayer.current.hidePlayer();
     } catch (error) { }
   };
 
@@ -346,7 +349,7 @@ const Recent = (props: Props) => {
         //   promptToMemoryCallBack,
         // );
         CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
-          async(res) => {
+          async (res) => {
 
             if (res.status) {
               props.removePrompt(selectedPrompt);
@@ -495,6 +498,7 @@ const mapState = (state: any) => {
     totalCount: state.dashboardReducer.recentCount,
     filters: state.dashboardReducer.filterDataRecent,
     active_prompts: state.dashboardReducer.active_prompts,
+    isRecentDataUpdated: state.dashboardReducer.isRecentDataUpdated,
   };
 };
 

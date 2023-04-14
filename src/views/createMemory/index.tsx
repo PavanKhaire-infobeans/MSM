@@ -553,7 +553,7 @@ const CreateMemory = (props: Props) => {
             value: navigationDay <= 9 ? ('0' + navigationDay) : navigationDay.toString()
           })
         }
-       
+
       }
 
       setIsCreatedByUser(true)
@@ -625,8 +625,7 @@ const CreateMemory = (props: Props) => {
 
   const memorySaveCallback = async (success: any, id?: any, padId?: any, key?: any) => {
     // //loaderHandler.hideLoader();
-    props.showLoader(false);
-    props.loaderText('Loading...');
+
     if (success) {
       if (key == kPublish) {
         props.showAlertCall(true);
@@ -638,8 +637,10 @@ const CreateMemory = (props: Props) => {
         // props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
         await analytics().logEvent('new_memory_published');
         props.resetAll();
-      setLocation({ description: '', reference: '' })
-      props.navigation.replace('dashBoard');
+        setLocation({ description: '', reference: '' })
+        props.showLoader(false);
+        props.loaderText('Loading...');
+        props.navigation.replace('dashBoard');
 
       } else if (props.route.params.editPublsihedMemory) {
         props.showAlertCall(true);
@@ -1135,6 +1136,7 @@ const CreateMemory = (props: Props) => {
   };
 
   const audioAttachmentPress = (selectedItem?: any) => {
+    console.log(selectedItem)
     Keyboard.dismiss();
     if (
       selectedItem &&
@@ -1873,7 +1875,7 @@ const CreateMemory = (props: Props) => {
                           doNotReload: val => {
                             setDoNotReload(val)
                           },
-                          updateContent: setEtherPadContent, 
+                          updateContent: setEtherPadContent,
                           inviteCollaboratorFlow: inviteCollaboratorFlow,
                         })
                       }
@@ -1994,7 +1996,7 @@ const CreateMemory = (props: Props) => {
                 setShowCustomValidationAlert(true)
               }
               else if (
-                location.description == '' || location.description == null || location.description == undefined 
+                location.description == '' || location.description == null || location.description == undefined
               ) {
                 setShowCustomValidationAlert(true)
               }

@@ -677,7 +677,7 @@ const Styles = EStyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     flexDirection: 'row',
-    paddingTop: 5,
+    // paddingTop: 5,
   },
   seemoreTextStyle: {
     ...fontSize(16),
@@ -695,7 +695,7 @@ const Styles = EStyleSheet.create({
   DescriptionStyles: {
     justifyContent: 'flex-end',
     width: '100%',
-    padding: 15
+    paddingRight: 15
   },
   deleteButtonContainer:{
     flexDirection: 'row',
