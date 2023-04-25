@@ -94,6 +94,8 @@ export const dashboardReducer = (
     case SET_RECENT_FILTERS:
       newState = { ...newState, filterDataRecent: action.payload };
       break;
+    case SET_TIMELINE_FILTER_YEAR: 
+      newState = { ...newState, timelineFilterYear: action.payload }
     case SET_FILTERS_NAME:
       newState = { ...newState, filterName: action.payload };
       break;

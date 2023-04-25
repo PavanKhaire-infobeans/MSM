@@ -2,6 +2,7 @@ import { Dimensions, Platform } from 'react-native';
 import deviceInfoModule from 'react-native-device-info';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, fontFamily, fontSize, Size } from '../../../src/common/constants';
+import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 
 const Styles = EStyleSheet.create({
   RenderHtmlStyle: {
@@ -16,13 +17,13 @@ const Styles = EStyleSheet.create({
   renderExternalQueueItemContainer: {
     padding: 16
   },
-  MemoryTagsFlatlistStyle:{
+  MemoryTagsFlatlistStyle: {
     paddingBottom: 10
   },
-  externalQueueItemContainer:{
-    width: Dimensions.get('screen').width, 
+  externalQueueItemContainer: {
+    width: Dimensions.get('screen').width,
   },
-  externalQueueItemDescriptionContainer:{
+  externalQueueItemDescriptionContainer: {
     paddingHorizontal: 24
   },
   dotStyle: {
@@ -80,14 +81,14 @@ const Styles = EStyleSheet.create({
     // borderBottomColor: Colors.timeLinebackground,
     // borderBottomWidth: 2
   },
-  fieldFirstnameContainerStyle:{
+  fieldFirstnameContainerStyle: {
     marginBottom: 10,
     marginLeft: 10,
     backgroundColor: Colors.NewLightThemeColor,
     borderRadius: 5,
     flex: 1,
   },
-  fieldFirstnameSubContainerStyle:{
+  fieldFirstnameSubContainerStyle: {
     flexDirection: 'row',
     flex: 1,
     padding: 10,
@@ -95,43 +96,43 @@ const Styles = EStyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.NewLightCommentHeader,
   },
-  fieldFirstnameTextStyle:{
+  fieldFirstnameTextStyle: {
     lineHeight: 20,
     flex: 1,
     fontSize: 16,
     color: Colors.NewTitleColor,
   },
-  createdOnTextStyle:{
+  createdOnTextStyle: {
     color: Colors.TextColor,
     paddingLeft: 10,
     fontSize: 14,
     lineHeight: 20,
   },
-  commentbodyContainer:{
+  commentbodyContainer: {
     flexDirection: 'row',
     padding: 10,
     paddingBottom: 5,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  commentbodyTextStyle:{ 
-    ...fontSize(16), 
-    color: Colors.TextColor 
+  commentbodyTextStyle: {
+    ...fontSize(16),
+    color: Colors.TextColor
   },
-  likebuttonContainer:{
+  likebuttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 5,
     paddingBottom: 10,
   },
-  likeButtonStyle:{ 
-    flexDirection: 'row', 
-    padding: 5 
+  likeButtonStyle: {
+    flexDirection: 'row',
+    padding: 5
   },
-  likeImageStyle:{ 
-    marginRight: 5, 
-    marginLeft: 5 
+  likeImageStyle: {
+    marginRight: 5,
+    marginLeft: 5
   },
   collectionContainer: {
     padding: 10,
@@ -167,14 +168,14 @@ const Styles = EStyleSheet.create({
     width: '100%',
     backgroundColor: Colors.white,
   },
-  CommentBoxContainer:{
+  CommentBoxContainer: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: Colors.f5f5f5,
+    backgroundColor: Colors.white,
   },
-  commentContainer:{
+  commentContainer: {
     backgroundColor: Colors.white,
     position: 'absolute',
     width: '100%',
@@ -186,44 +187,59 @@ const Styles = EStyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: Colors.blackOpacity60,
+    // marginBottom: 56,
+    bottom: (Platform.OS == 'ios' &&
+      StaticSafeAreaInsets.safeAreaInsetsBottom
+      ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10
+      : 0)
+
   },
-  CommentBoxSubContainer:{
+  CommentBoxSubContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 10,
+    marginBottom: (Platform.OS == 'ios' &&
+      StaticSafeAreaInsets.safeAreaInsetsBottom
+      ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10
+      : 0)
   },
-  postContainer:{
+  postContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingRight: 10,
   },
-  descreptionContainer:{ 
+  memoryTagsStyle: {
+    marginHorizontal: 16,
+  },
+  descreptionContainer: {
     paddingHorizontal: 24
   },
-  descreptionSeparatorContainer:{ 
-    height: 16 , 
+  descreptionSeparatorContainer: {
+    height: 16,
     paddingHorizontal: 24,
   },
-  postStyle:{
+  postStyle: {
     fontSize: 12,
     textAlign: 'center',
     color: Colors.NewTitleColor,
     padding: 1,
   },
-  commentBoxTextInput:{
-    ...fontSize(16),
+  commentBoxTextInput: {
+    ...fontSize(19),
     flex: 1,
     borderWidth: 1,
     maxHeight: 100,
-    borderColor: Colors.TextColor,
+    minHeight: 56,
+    borderColor: Colors.newTextColor,
     margin: 8,
+    fontFamily:fontFamily.Inter,
     borderRadius: 5,
-    padding: 10,
+    paddingHorizontal: 16,
     paddingBottom: 8,
     paddingTop: 8,
-    color: Colors.TextColor,
+    color: Colors.newTextColor,
   },
   fileDetailsContainer: {
     width: '100%',
@@ -256,7 +272,7 @@ const Styles = EStyleSheet.create({
     paddingTop: 15,
     flex: 1,
   },
-  renderCommentViewStyle:{
+  renderCommentViewStyle: {
     flexDirection: 'row',
     paddingTop: 5,
     justifyContent: 'flex-start',
@@ -459,12 +475,12 @@ const Styles = EStyleSheet.create({
     paddingLeft: 10,
     paddingBottom: 5,
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 8,
     paddingTop: 5,
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: Colors.TextColor,
+    borderColor: Colors.newDescTextColor,
   },
   CollaboratorViewContainer: {
     flexDirection: 'row',
@@ -575,7 +591,7 @@ const Styles = EStyleSheet.create({
     width: (Dimensions.get('window').width - 32) / 2,
     height: 53,
     flexDirection: 'row',
-    backgroundColor: Colors.timeLinebackground, 
+    backgroundColor: Colors.timeLinebackground,
     borderColor: Colors.bottomTabColor,
   },
   EditContainer: {
@@ -586,7 +602,7 @@ const Styles = EStyleSheet.create({
     width: (Dimensions.get('window').width - 32) / 2,
     height: 53,
     flexDirection: 'row',
-    backgroundColor: Colors.decadeFilterBorder, 
+    backgroundColor: Colors.decadeFilterBorder,
     borderColor: Colors.decadeFilterBorder
   },
   shareTextStyle: {
@@ -697,18 +713,18 @@ const Styles = EStyleSheet.create({
     width: '100%',
     paddingRight: 15
   },
-  deleteButtonContainer:{
+  deleteButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
     paddingRight: 10,
   },
-  deleteTextStyle:{ 
-    ...fontSize(16), 
-    color: Colors.ErrorColor, 
-    marginLeft: 27 
+  deleteTextStyle: {
+    ...fontSize(16),
+    color: Colors.ErrorColor,
+    marginLeft: 27
   },
-  pauseButtonStyle:{
+  pauseButtonStyle: {
     height: 24,
     width: 24,
     marginLeft: 10,
@@ -719,47 +735,47 @@ const Styles = EStyleSheet.create({
     borderBottomColor: Colors.transparent,
     borderBottomWidth: 12,
   },
-  durationContainer:{ 
-    marginLeft: 10 
+  durationContainer: {
+    marginLeft: 10
   },
-  CommonBottomSectionContainer:{ 
-    paddingRight: 15, 
-    paddingLeft: 15, 
-    marginBottom: 50 
+  CommonBottomSectionContainer: {
+    paddingRight: 15,
+    paddingLeft: 15,
+    marginBottom: 50
   },
-  hideCommentText:{
+  hideCommentText: {
     fontWeight: Platform.OS === 'ios' ? '500' : 'bold',
     lineHeight: 20,
     fontSize: 16,
     color: Colors.NewYellowColor,
   },
-  likeImageContainer:{
+  likeImageContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
   },
-  fileNameStyle:{ 
-    color: Colors.black, 
-    marginBottom: 5, 
-    paddingRight: 80 
+  fileNameStyle: {
+    color: Colors.black,
+    marginBottom: 5,
+    paddingRight: 80
   },
-  playButtonStyle:{
+  playButtonStyle: {
     backgroundColor: Colors.bordercolor,
     flex: 1,
     width: 5,
   },
-  playButtonTransparentStyle:{
+  playButtonTransparentStyle: {
     backgroundColor: 'transparent',
     flex: 1,
     width: 2,
   },
-  playingSubContainer:{
+  playingSubContainer: {
     height: 20,
     width: 16,
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-  playButtonContainer:{
+  playButtonContainer: {
     width: 55,
     height: 55,
     marginLeft: 15,
@@ -770,14 +786,14 @@ const Styles = EStyleSheet.create({
     borderWidth: 4,
     borderColor: Colors.bordercolor,
   },
-  playPauseContainer:{
+  playPauseContainer: {
     width: '100%',
     paddingVertical: 10,
     justifyContent: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  audioViewContainer:{
+  audioViewContainer: {
     backgroundColor: Colors.timeLinebackground,
     marginBottom: 15,
     borderWidth: 2,
@@ -798,7 +814,7 @@ const Styles = EStyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     color: Colors.bordercolor,
   },
-  noCommenttextStyle:{
+  noCommenttextStyle: {
     width: '100%',
     textAlign: 'center',
     ...fontSize(16),
@@ -821,21 +837,22 @@ const Styles = EStyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500',
   },
-  MemoryTagsNamestyle:{ 
-    ...fontSize(14), 
-    marginBottom: 0 
+  MemoryTagsNamestyle: {
+    ...fontSize(14),
+    marginBottom: 0
   },
-  userImageBackgrounStyle:{ 
-    borderRadius: 21 
+  userImageBackgrounStyle: {
+    borderRadius: 21
   },
-  TitleAndValueContainer:{
+  TitleAndValueContainer: {
     flex: 1
   },
-  linearGradStyle:{ 
-    height: 34, 
-    width: '100%', 
-    position: 'absolute', 
-    bottom: 0 }
+  linearGradStyle: {
+    height: 34,
+    width: '100%',
+    position: 'absolute',
+    bottom: 0
+  }
 });
 
 export default Styles;

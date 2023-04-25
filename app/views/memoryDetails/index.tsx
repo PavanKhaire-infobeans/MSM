@@ -28,7 +28,7 @@ import { connect } from 'react-redux';
 import BusyIndicator from '../../../src/common/component/busyindicator';
 import NavigationHeaderSafeArea from '../../../src/common/component/profileEditHeader/navigationHeaderSafeArea';
 import { MemoryService, newMemoryService } from '../../../src/common/webservice/memoryServices';
-import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../../../src/views/dashboard/dashboardReducer';
+import { GET_MEMORY_LIST, GET_TIMELINE_LIST, ListType, SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../../../src/views/dashboard/dashboardReducer';
 import {
   kMemoryActionPerformedOnMemoryDetails,
   MemoryAction,
@@ -91,6 +91,7 @@ import {
   CarousalFilesView,
   kImage,
   kPDF,
+  MemoryCollections,
   MemoryTags,
   UserDetails,
 } from './componentsMemoryDetails';
@@ -117,6 +118,7 @@ import {
 import { kNews, MemoryDataModel } from './memoryDataModel';
 import Styles from './styles';
 import style from './styles';
+import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
 
@@ -509,7 +511,7 @@ class MemoryDetails extends React.Component<Props, State> {
         nodetype ? nodetype : null,
       );
       //loaderHandler.showLoader('Loading...');
-      this.props.showLoader(true);
+      // this.props.showLoader(true);
       this.props.loaderText('Loading...');
     }
     // }
@@ -542,9 +544,10 @@ class MemoryDetails extends React.Component<Props, State> {
     //loaderHandler.hideLoader();
     this.props.showLoader(false);
     this.props.loaderText('Loading...');
+    console.log("ssssss ", fetched, JSON.stringify(getAllLikes))
     if (fetched) {
       this.showList(this.keyLiked, getAllLikes);
-      // this.setState({});
+      this.setState({});
     } else {
       //ToastMessage(getAllLikes, Colors.ErrorColor);
     }
@@ -644,6 +647,7 @@ class MemoryDetails extends React.Component<Props, State> {
 
   prepareViewForComments = () => {
     let lastComments = this.getComments();
+    console.log("object  mmm ")
     return (
       <FlatList
         data={lastComments}
@@ -726,7 +730,7 @@ class MemoryDetails extends React.Component<Props, State> {
           this.memoryDataModel.likesComments.commentsList[
             index
           ].like_comment_data.like_count = likeCount;
-        // this.setState({});
+        this.setState({});
       } else {
         let commentsList = [...this.state.allCommentsList];
         commentsList[index].like_comment_data.like_flag = likeFlag;
@@ -808,9 +812,10 @@ class MemoryDetails extends React.Component<Props, State> {
                 <TouchableHighlight
                   underlayColor={'#ffffffff'}
                   onPress={() =>
-                    likeCount > 0
-                      ? this.getAllLikes(item.item.cid, 'comment')
-                      : this.likeOnComment(item)
+                    // likeCount > 0
+                    //   ? this.getAllLikes(item.item.cid, 'comment')
+                    //   : 
+                    this.likeOnComment(item)
                   }>
                   <Text style={style.likeTextStyle}>{likeText}</Text>
                 </TouchableHighlight>
@@ -863,8 +868,7 @@ class MemoryDetails extends React.Component<Props, State> {
       if (this.memoryDataModel.likesComments.isLikedByUser) {
         Unlike(this.memoryDataModel.nid, this.storyType, kUnliked);
         this.memoryDataModel.likesComments.isLikedByUser = 0;
-        this.memoryDataModel.likesComments.noOfLikes =
-          this.memoryDataModel.likesComments.noOfLikes - 1;
+        this.memoryDataModel.likesComments.noOfLikes = this.memoryDataModel.likesComments.noOfLikes - 1;
       } else {
         Like(this.memoryDataModel.nid, this.storyType, kLiked);
         this.memoryDataModel.likesComments.isLikedByUser = 1;
@@ -881,7 +885,7 @@ class MemoryDetails extends React.Component<Props, State> {
         ].likesComments.isLikedByUser =
           this.memoryDataModel.likesComments.isLikedByUser;
       }
-      // this.setState({});
+      this.setState({});
     } else {
       No_Internet_Warning();
     }
@@ -1139,10 +1143,11 @@ class MemoryDetails extends React.Component<Props, State> {
             }}>
             <TouchableWithoutFeedback
               onPress={() => {
-                this.memoryDataModel.likesComments.noOfLikes > 0 &&
-                  this.memoryDataModel.likesComments.showLikeCount
-                  ? this.getAllLikes()
-                  : this.like();
+                // this.memoryDataModel.likesComments.noOfLikes > 0 &&
+                //   this.memoryDataModel.likesComments.showLikeCount
+                //   ? this.getAllLikes()
+                //   : 
+                this.like();
               }}>
               <Image
                 source={
@@ -1552,7 +1557,7 @@ class MemoryDetails extends React.Component<Props, State> {
             nid: this.memoryDataModel.nid,
             memoryType: this.storyType,
             actionType: MemoryActionKeys.deleteMemoryKey,
-            destructive:true
+            destructive: true
           });
           break;
         case MemoryActionKeys.moveToDraftKey:
@@ -1603,8 +1608,8 @@ class MemoryDetails extends React.Component<Props, State> {
   };
 
   onActionItemClicked = async (index: number, data: any): void => {
-  await analytics().logEvent(`${data.actionType}_action_on_memory`);
-  switch (data.actionType) {
+    await analytics().logEvent(`${data.actionType}_action_on_memory`);
+    switch (data.actionType) {
       case MemoryActionKeys.addToCollection:
         this._addToCollection(data.nid);
         break;
@@ -1695,7 +1700,7 @@ class MemoryDetails extends React.Component<Props, State> {
     }
   };
 
-  _onEditMemory = async(nid?: any) => {
+  _onEditMemory = async (nid?: any) => {
     // event = event.nativeEvent;
     // this.getDraftDetails(event)
     this.props.showLoader(false);
@@ -1971,7 +1976,19 @@ class MemoryDetails extends React.Component<Props, State> {
               heading={''}
               cancleText={'Back'}
               showCommunity={false}
-              cancelAction={() => this.props.navigation.goBack()}
+              cancelAction={() => {
+                this.props.showLoader(true);
+                this.props.loaderText('Loading...');
+                this.props.fetchTimelineMemoryList({
+                  type: ListType.Timeline,
+                  isLoading: true,
+                  isRefresh: false,
+                  filters: this.props.filters,
+                });
+                this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true, isRefresh: false, });
+                this.props.navigation.goBack()
+
+              }}
               showRightText={false}
               isWhite={true}
               rightText={
@@ -2065,8 +2082,8 @@ class MemoryDetails extends React.Component<Props, State> {
                 {/* <View style={{ height: 15 }} /> */}
                 {/* Render Attachments */}
                 {this.storyType.indexOf('song') != -1 ? (
-                  <ScrollView   showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false} nestedScrollEnabled={true} overScrollMode='always' style={{ flex: 1 }}>
+                  <ScrollView showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false} nestedScrollEnabled={true} overScrollMode='always' style={{ flex: 1 }}>
                     <WebView
                       useWebKit={true}
                       ref={(ref: any) => (this._webView = ref)}
@@ -2128,27 +2145,28 @@ class MemoryDetails extends React.Component<Props, State> {
                   ? this.ExternalQueue()
                   : this.InternalQueue()}
 
-                {/* <View style={style.paddingHorizontal}>
+                <View style={style.memoryTagsStyle}>
                   {this.memoryDataModel.memoryTags.length > 0 && (
                     <MemoryTags
                       memoryTags={this.memoryDataModel.memoryTags}></MemoryTags>
                   )}
-                </View> */}
+                </View>
                 {/* Includes memory tags and like comment share section */}
-                {/* {!this.props.previewDraft && this.CommonBottomSection()} */}
+                {!this.props.previewDraft && this.CommonBottomSection()}
 
                 {/* If memory is associated with any collection */}
-                {/* {!this.props.previewDraft &&
+                {!this.props.previewDraft &&
                   this.memoryDataModel.collection_list.length > 0 && (
                     <MemoryCollections
                       collectionList={this.memoryDataModel.collection_list}
                       selectedCollectionIndex={
                         this.state.selectedCollectionIndex
                       }
+                      navigation={this.props.navigation}
                       changeIndex={(index: any) =>
                         this.setState({ selectedCollectionIndex: index })
                       }></MemoryCollections>
-                  )} */}
+                  )}
 
                 {/* Blank view for extended scrolling */}
                 {
@@ -2174,9 +2192,9 @@ class MemoryDetails extends React.Component<Props, State> {
             </View>
           )}
           {/* Common comment box for all sections */}
-          {/* {!this.props.previewDraft &&
+          {!this.props.previewDraft &&
             this.state.memoryDetailAvailable &&
-            this.CommentBox()} */}
+            this.CommentBox()}
           <View style={style.absoluteView}></View>
           <AudioPlayer
             ref={this.audioPlayer}
@@ -2192,6 +2210,14 @@ class MemoryDetails extends React.Component<Props, State> {
             memoryActions={true}
             onActionClick={this.onActionItemClicked.bind(this)}
           />
+          <View style={{
+            height:
+              60 +
+              (Platform.OS == 'ios' &&
+                StaticSafeAreaInsets.safeAreaInsetsBottom
+                ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10
+                : 0),
+          }} />
         </>
 
         <LinearGradient
@@ -2205,6 +2231,7 @@ class MemoryDetails extends React.Component<Props, State> {
 const mapState = (state: { [x: string]: any }) => ({
   showLoaderValue: state.dashboardReducer.showLoader,
   loaderTextValue: state.dashboardReducer.loaderText,
+  filters: state.dashboardReducer.filterDataTimeline,
 });
 
 const mapDispatch = (dispatch: Function) => {
@@ -2213,6 +2240,10 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: SHOW_LOADER_READ, payload: payload }),
     loaderText: (payload: any) =>
       dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
+    fetchMemoryList: (payload: any) =>
+      dispatch({ type: GET_MEMORY_LIST, payload: payload }),
+    fetchTimelineMemoryList: (payload: any) =>
+      dispatch({ type: GET_TIMELINE_LIST, payload: payload }),
   };
 };
 export default connect(mapState, mapDispatch)(MemoryDetails);

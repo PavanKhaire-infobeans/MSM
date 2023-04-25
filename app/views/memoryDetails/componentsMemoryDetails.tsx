@@ -57,6 +57,7 @@ export const MemoryCollections = (props: {
   collectionList: any;
   selectedCollectionIndex: any;
   changeIndex: (index: any) => void;
+  navigation: any
 }) => {
 
   const renderItem = (item: any) => (
@@ -98,12 +99,13 @@ export const MemoryCollections = (props: {
   const carouselRenderItem = (item: any) => (
     <TouchableHighlight
       underlayColor="#cccccc3e"
-      onPress={() =>
-        this.props.navigation.navigate('memoryDetails', {
+      onPress={() =>{
+        console.warn(item.item)
+        props.navigation.replace('newmemoryDetails', {
           nid: item.item.nid,
           type: item.item.type,
         })
-      }>
+      }}>
       <View style={Styles.carouselContainer}>
         <View style={Styles.carouselContainerSub}>
           <PlaceholderImageView
