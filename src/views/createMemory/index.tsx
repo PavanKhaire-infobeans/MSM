@@ -320,7 +320,8 @@ const CreateMemory = (props: Props) => {
   let isFocused = useIsFocused();
   // filePathsToUpload: string[];
 
-  let filesToUpdate: Array<any> = [];
+  // let filesToUpdate: Array<any> = [];
+  const [filesToUpdate, setFilesToUpdate]: any[] = useState([]);
   let listener: EventManager;
   let backListner: EventManager;
 
@@ -920,7 +921,8 @@ const CreateMemory = (props: Props) => {
 
   const fileUpdateCallback = (success: boolean, message: any, key: any) => {
     if (success) {
-      filesToUpdate = [];
+      // filesToUpdate = [];
+      setFilesToUpdate([]);
       saveORPublish(key);
     } else {
       //ToastMessage(message, Colors.ErrorColor);
@@ -940,6 +942,8 @@ const CreateMemory = (props: Props) => {
     setTimeout(async () => {
       if (Utility.isInternetConnected) {
         // setTimeout(() => {
+    console.log("filesToUpdate > ",JSON.stringify(filesToUpdate))
+
         if (filesToUpdate.length > 0) {
           UpdateAttachments(props.nid, filesToUpdate, key,
             response => {
@@ -1402,9 +1406,11 @@ const CreateMemory = (props: Props) => {
 
   const deleteFile = (fid: any, isTempFile: boolean) => {
     if (!isTempFile) {
-      filesToUpdate.push({ fid: fid, action: 'delete' });
+      setFilesToUpdate([...filesToUpdate,{ fid: fid, action: 'delete' }]);
+      // filesToUpdate.push({ fid: fid, action: 'delete' });
     }
     let tempFileArray = itemList;
+    console.log("tempFileArray > ",JSON.stringify(isTempFile),fid)
     let index = tempFileArray.findIndex((element: any) => element.fid === fid);
     tempFileArray.splice(index, 1);
     props.saveFiles(tempFileArray);
@@ -1414,7 +1420,7 @@ const CreateMemory = (props: Props) => {
   };
 
   const updateFileContent = (file: any, title: any, description: any) => {
-    let updatelist = itemList;
+    let updatelist: any = itemList;
     updatelist.forEach((element: any, index: any) => {
       if (element.fid == file.fid) {
         updatelist[index] = {
@@ -1425,11 +1431,17 @@ const CreateMemory = (props: Props) => {
       }
     });
     if (!file.isLocal) {
-      filesToUpdate.push({
+      setFilesToUpdate([...filesToUpdate,{
         fid: file.fid,
         file_title: title,
         file_description: description,
-      });
+      }]);
+
+      // filesToUpdate.push({
+      //   fid: file.fid,
+      //   file_title: title,
+      //   file_description: description,
+      // });
     }
     setItemList(updatelist)
     props.saveFiles(updatelist);

@@ -268,19 +268,88 @@ export const ShareOptions: any = {
   allfriends: 'All friends',
   cueback: 'All members',
 };
+// export function uploadTask(
+//   success: (data: { [x: string]: any }) => void,
+//   failure: (error: any) => void,
+// ): (options: object) => void {
+//   // const UploadManager = require('react-native-background-upload').default;
+//   // const loaderHandler =
+//   //   require('../common/component/busyindicator/LoaderHandler').default;
+//   return function (options: any): void {
+//     try {
+//       asyncGen(function* () {
+
+//         // showConsoleLog(ConsoleType.LOG,"File Upload payload:",JSON.stringify(options));
+//         //loaderHandler.showLoader('Uploading..');
+//         try {
+//           let uploadId = yield Upload.startUpload(options);
+//           if (typeof uploadId == 'string') {
+//             Upload.addListener('error', uploadId, (data: any) => {
+//               // hideLoaderWithTimeOut();
+//               failure(data);
+//             });
+//             Upload.addListener(
+//               'cancelled',
+//               uploadId,
+//               (...data: any[]) => {
+//                 // hideLoaderWithTimeOut();
+//                 failure({ message: 'Upload cancelled', uploadId, data });
+//               },
+//             );
+//             Upload.addListener('completed', uploadId, (data: any) => {
+//               // hideLoaderWithTimeOut();
+//               success(data);
+//             });
+//           } else {
+//             // hideLoaderWithTimeOut();
+//             failure(uploadId);
+//           }
+
+//           // Upload.startUpload(options).then((uploadId) => {
+//           //   showConsoleLog(ConsoleType.LOG,'Upload started')
+//           //   Upload.addListener('progress', uploadId, (data) => {
+//           //     showConsoleLog(ConsoleType.LOG,`Progress: ${data.progress}%`)
+//           //   })
+//           //   Upload.addListener('error', uploadId, (data) => {
+//           //     showConsoleLog(ConsoleType.LOG,`Error: ${data.error}%`)
+//           //     failure(data);
+//           //   })
+//           //   Upload.addListener('cancelled', uploadId, (data) => {
+//           //     showConsoleLog(ConsoleType.LOG,`Cancelled!`)
+//           //     failure({ message: 'Upload cancelled', uploadId, data });
+//           //   })
+//           //   Upload.addListener('completed', uploadId, (data) => {
+//           //     // data includes responseCode: number and responseBody: Object
+//           //     success(data);
+//           //     showConsoleLog(ConsoleType.LOG,'Completed!')
+//           //   })
+//           // }).catch((err) => {
+//           //   showConsoleLog(ConsoleType.LOG,'Upload error!', err)
+//           //   failure(err);
+//           // })
+//         } catch (err) {
+//           showConsoleLog(ConsoleType.LOG,'Upload error!', err)
+//           // hideLoaderWithTimeOut();
+//           failure(err);
+//         }
+//       });
+//     } catch (error) {
+//       showConsoleLog(ConsoleType.LOG,'Upload errordadasdasdas!', error)
+//         // hideLoaderWithTimeOut();
+//       failure(error);
+//     }
+//   };
+// }
+
 export function uploadTask(
-  success: (data: { [x: string]: any }) => void,
+  success: (data: {[x: string]: any}) => void,
   failure: (error: any) => void,
 ): (options: object) => void {
   // const UploadManager = require('react-native-background-upload').default;
-  // const loaderHandler =
-  //   require('../common/component/busyindicator/LoaderHandler').default;
+  
   return function (options: any): void {
     try {
       asyncGen(function* () {
-
-        // showConsoleLog(ConsoleType.LOG,"File Upload payload:",JSON.stringify(options));
-        //loaderHandler.showLoader('Uploading..');
         try {
           let uploadId = yield Upload.startUpload(options);
           if (typeof uploadId == 'string') {
@@ -293,7 +362,7 @@ export function uploadTask(
               uploadId,
               (...data: any[]) => {
                 // hideLoaderWithTimeOut();
-                failure({ message: 'Upload cancelled', uploadId, data });
+                failure({message: 'Upload cancelled', uploadId, data});
               },
             );
             Upload.addListener('completed', uploadId, (data: any) => {
@@ -304,38 +373,13 @@ export function uploadTask(
             // hideLoaderWithTimeOut();
             failure(uploadId);
           }
-
-          // Upload.startUpload(options).then((uploadId) => {
-          //   showConsoleLog(ConsoleType.LOG,'Upload started')
-          //   Upload.addListener('progress', uploadId, (data) => {
-          //     showConsoleLog(ConsoleType.LOG,`Progress: ${data.progress}%`)
-          //   })
-          //   Upload.addListener('error', uploadId, (data) => {
-          //     showConsoleLog(ConsoleType.LOG,`Error: ${data.error}%`)
-          //     failure(data);
-          //   })
-          //   Upload.addListener('cancelled', uploadId, (data) => {
-          //     showConsoleLog(ConsoleType.LOG,`Cancelled!`)
-          //     failure({ message: 'Upload cancelled', uploadId, data });
-          //   })
-          //   Upload.addListener('completed', uploadId, (data) => {
-          //     // data includes responseCode: number and responseBody: Object
-          //     success(data);
-          //     showConsoleLog(ConsoleType.LOG,'Completed!')
-          //   })
-          // }).catch((err) => {
-          //   showConsoleLog(ConsoleType.LOG,'Upload error!', err)
-          //   failure(err);
-          // })
         } catch (err) {
-          showConsoleLog(ConsoleType.LOG,'Upload error!', err)
           // hideLoaderWithTimeOut();
           failure(err);
         }
       });
     } catch (error) {
-      showConsoleLog(ConsoleType.LOG,'Upload errordadasdasdas!', error)
-        // hideLoaderWithTimeOut();
+      // hideLoaderWithTimeOut();
       failure(error);
     }
   };
