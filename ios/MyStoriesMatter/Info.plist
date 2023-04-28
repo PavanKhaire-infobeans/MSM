@@ -41,7 +41,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.cueback</string>
+			<string>com.mystoriesmatter.mobileapp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>mystoriesmatter</string>

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "MyStoriesMatterDev.app"
+               BuildableName = "MyStoriesMatter.app"
                BlueprintName = "MyStoriesMatter"
                ReferencedContainer = "container:MyStoriesMatter.xcodeproj">
             </BuildableReference>
@@ -55,16 +55,16 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "MyStoriesMatterDev.app"
-            BlueprintName = "MyStoriesMatterDev"
-            ReferencedContainer = "container:MyStoriesMatterDev.xcodeproj">
+            BuildableName = "MyStoriesMatter.app"
+            BlueprintName = "MyStoriesMatter"
+            ReferencedContainer = "container:MyStoriesMatter.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "MyStoriesMatterDev.app"
+            BuildableName = "MyStoriesMatter.app"
             BlueprintName = "MyStoriesMatter"
             ReferencedContainer = "container:MyStoriesMatter.xcodeproj">
          </BuildableReference>
@@ -81,7 +81,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "MyStoriesMatterDev.app"
+            BuildableName = "MyStoriesMatter.app"
             BlueprintName = "MyStoriesMatter"
             ReferencedContainer = "container:MyStoriesMatter.xcodeproj">
          </BuildableReference>
