@@ -91,6 +91,14 @@ const Timeline = (props: Props) => {
     useState(false);
   let memoryTimelineUpdateListener: EventManager;
 
+
+  const _onCloseAudios = () => {
+    try {
+      audioPlayer?.current?.hidePlayer();
+    } catch (error) { }
+  };
+
+
   useEffect(() => {
     let allYearsTemp = [...allYears];
     props.jumpToYears?.forEach((element: any, index: any) => {
@@ -208,6 +216,7 @@ const Timeline = (props: Props) => {
     });
 
     return () => {
+      _onCloseAudios();
       memoryTimelineUpdateListener.removeListener();
     };
   }, []);
@@ -387,12 +396,6 @@ const Timeline = (props: Props) => {
     } else {
       No_Internet_Warning();
     }
-  };
-
-  const _onCloseAudios = (event: Event) => {
-    try {
-      audioPlayer.current.hidePlayer();
-    } catch (error) { }
   };
 
   const like = (item: any) => {

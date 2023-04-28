@@ -923,7 +923,9 @@ const CreateMemory = (props: Props) => {
     if (success) {
       // filesToUpdate = [];
       setFilesToUpdate([]);
-      saveORPublish(key);
+      setTimeout(() => {
+        saveORPublish(key);
+      }, 500);
     } else {
       //ToastMessage(message, Colors.ErrorColor);
       //loaderHandler.hideLoader();
@@ -942,16 +944,22 @@ const CreateMemory = (props: Props) => {
     setTimeout(async () => {
       if (Utility.isInternetConnected) {
         // setTimeout(() => {
-    console.log("filesToUpdate > ",JSON.stringify(filesToUpdate))
 
         if (filesToUpdate.length > 0) {
-          UpdateAttachments(props.nid, filesToUpdate, key,
-            response => {
+         await UpdateAttachments(props.nid, filesToUpdate, key,
+            async(response) => {
               if (response.ResponseCode == 200) {
-                fileUpdateCallback(true, response.ResponseMessage, key)
 
+                 await setFilesToUpdate([]);
+                  setTimeout(() => {
+                    saveORPublish(key);
+                  }, 500);
+               
               } else {
-                fileUpdateCallback(false, response.ResponseMessage, key)
+                   //ToastMessage(message, Colors.ErrorColor);
+                  //loaderHandler.hideLoader();
+                  props.showLoader(false);
+                  props.loaderText('Loading...');
                 // EventManager.callBack(kFilesUpdated, false, response.ResponseMessage);
               }
             });

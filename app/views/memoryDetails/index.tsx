@@ -886,6 +886,14 @@ class MemoryDetails extends React.Component<Props, State> {
           this.memoryDataModel.likesComments.isLikedByUser;
       }
       this.setState({});
+      this.props.fetchTimelineMemoryList({
+        type: ListType.Timeline,
+        isLoading: true,
+        isRefresh: false,
+        filters: this.props.filters,
+      });
+      this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true, isRefresh: false, });
+
     } else {
       No_Internet_Warning();
     }
@@ -1265,7 +1273,7 @@ class MemoryDetails extends React.Component<Props, State> {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
-        style={style.CommentBoxContainer}>
+        style={[style.CommentBoxContainer, { maxHeight: 100 }]}>
         <View style={style.CommentBoxSubContainer}>
           {/* <ImageBackground style={[style.avatar]} imageStyle={{ borderRadius: 20}} source={profile_placeholder}>
                         <Image style={{height: 40, width: 40, borderRadius: 20, alignContent: "center"}} source={Account.selectedData().profileImage != "" ? {uri : Account.selectedData().profileImage} : profile_placeholder}/>                    
@@ -1292,7 +1300,9 @@ class MemoryDetails extends React.Component<Props, State> {
               </Text>
             </View>
           </TouchableWithoutFeedback>
+
         </View>
+
       </KeyboardAwareScrollView>
     ) : (
       <KeyboardAccessory style={style.commentContainer}>
@@ -1312,7 +1322,7 @@ class MemoryDetails extends React.Component<Props, State> {
             }}
             placeholder={'Write a comment..'}
             multiline={true}
-            placeholderTextColor={Colors.TextColor}></TextInput>
+            placeholderTextColor={Colors.TextColor} />
 
           <TouchableWithoutFeedback onPress={() => this.postcomment()}>
             <View style={style.postContainer}>
@@ -1323,6 +1333,11 @@ class MemoryDetails extends React.Component<Props, State> {
             </View>
           </TouchableWithoutFeedback>
         </View>
+        {
+          this.state.bottomToolbar == 0 &&
+          <View style={{ height: 40 }} />
+        }
+
       </KeyboardAccessory>
     );
   };
@@ -1977,15 +1992,15 @@ class MemoryDetails extends React.Component<Props, State> {
               cancleText={'Back'}
               showCommunity={false}
               cancelAction={() => {
-                this.props.showLoader(true);
-                this.props.loaderText('Loading...');
-                this.props.fetchTimelineMemoryList({
-                  type: ListType.Timeline,
-                  isLoading: true,
-                  isRefresh: false,
-                  filters: this.props.filters,
-                });
-                this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true, isRefresh: false, });
+                // this.props.showLoader(true);
+                // this.props.loaderText('Loading...');
+                // this.props.fetchTimelineMemoryList({
+                //   type: ListType.Timeline,
+                //   isLoading: true,
+                //   isRefresh: false,
+                //   filters: this.props.filters,
+                // });
+                // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true, isRefresh: false, });
                 this.props.navigation.goBack()
 
               }}
@@ -2048,6 +2063,7 @@ class MemoryDetails extends React.Component<Props, State> {
                 enableResetScrollToCoords={false}
                 enableAutomaticScroll={true}
                 nestedScrollEnabled={true}
+                showsVerticalScrollIndicator={false}
                 style={
                   {
                     width: '100%'
@@ -2177,7 +2193,7 @@ class MemoryDetails extends React.Component<Props, State> {
                           ? this.state.bottomToolbar == 0
                             ? 110
                             : 80
-                          : 0) +
+                          : 120) +
                         (this.state.isExternalQueue ? 60 : 0) +
                         (this.state.height ? this.state.height * 0.5 : 0),
                       width: 100,
@@ -2215,8 +2231,8 @@ class MemoryDetails extends React.Component<Props, State> {
               60 +
               (Platform.OS == 'ios' &&
                 StaticSafeAreaInsets.safeAreaInsetsBottom
-                ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10
-                : 0),
+                ? StaticSafeAreaInsets.safeAreaInsetsBottom + 20
+                : 80),
           }} />
         </>
 

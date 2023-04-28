@@ -551,12 +551,14 @@ export const CollaboratorActionAPI = async (params: any) => {
 //   // });
 // }
 async function uploadFile(memoryId: number, file: TempFile) {
-  debugger
+  
   var filePath = file.filePath;
   if (Platform.OS == "android") {
     filePath = filePath.replace('file://', '');
   }
-  
+  if (Platform.OS == "ios") {
+    filePath = (file.type == `${FileType[FileType.audio]}s`) ? unescape(filePath):filePath;
+  }
   let options: { [x: string]: any } = {
     url: `https://${Account.selectedData().instanceURL
       }/api/mystory/file_upload`,

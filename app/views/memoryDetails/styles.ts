@@ -146,6 +146,7 @@ const Styles = EStyleSheet.create({
   memoryDetailAvailable: {
     width: '100%',
     backgroundColor: Colors.white,
+    marginBottom: 80,
   },
   externalQueue: {
     width: '100%',
@@ -199,7 +200,9 @@ const Styles = EStyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    width:'100%',
     paddingLeft: 10,
+    paddingTop: 8,
     marginBottom: (Platform.OS == 'ios' &&
       StaticSafeAreaInsets.safeAreaInsetsBottom
       ? StaticSafeAreaInsets.safeAreaInsetsBottom + 10
@@ -232,13 +235,16 @@ const Styles = EStyleSheet.create({
     borderWidth: 1,
     maxHeight: 100,
     minHeight: 56,
+    // height:'90%',
     borderColor: Colors.newTextColor,
     margin: 8,
     fontFamily:fontFamily.Inter,
     borderRadius: 5,
     paddingHorizontal: 16,
-    paddingBottom: 8,
-    paddingTop: 8,
+    paddingVertical: 8,
+    width:'100%',
+    // paddingBottom: 8,
+    // paddingTop: 8,
     color: Colors.newTextColor,
   },
   fileDetailsContainer: {
