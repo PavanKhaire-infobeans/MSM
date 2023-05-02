@@ -2,7 +2,7 @@ workflows:
   react-native-android:
     name: MSM Android
     environment:
-      node: latest
+      node: 18.15.0
       groups:
         - Secret_Token
     triggering:
@@ -14,9 +14,6 @@ workflows:
           source: true
       cancel_previous_builds: false
     scripts:
-      - name: Set Android SDK location
-        script: |
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
       - name: Install dependencies
         script: |
           yarn
