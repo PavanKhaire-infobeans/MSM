@@ -5,7 +5,6 @@ workflows:
       node: 16.8.0
       groups:
         - firebase_credentials
-        - Secret_Token
       vars:
         PACKAGE_NAME: "com.mystoriesmatter.mobileapp"
     triggering:
@@ -36,7 +35,7 @@ workflows:
           success: true # To not receive a notification when a build succeeds
           failure: false # To not receive a notification when a build fails
       firebase:
-        firebase_service_account: $ANDROID_FIREBASE_SECRET
+        firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
         android:
           app_id: $APP_ID
           groups:
