@@ -19,7 +19,7 @@ workflows:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
       - name: Install dependencies
         script: |
-          npm ci --legacy-peer-deps
+          yarn
       - name: Build Android release
         script: |
           cd android && ./gradlew assembleRelease
