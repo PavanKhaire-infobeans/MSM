@@ -4,7 +4,7 @@ workflows:
     environment:
       node: 16.8.0
       groups:
-        - Secret_Token
+        - firebase_credentials
     triggering:
       events:
         - push
