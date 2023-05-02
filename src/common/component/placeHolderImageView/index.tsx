@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image } from 'react-native';
 import {
   default_placeholder,
@@ -15,68 +15,68 @@ type Props = {
   borderRadius?: any;
   openPDF?: any;
 };
-export default class PlaceholderImageView extends Component<Props> {
-  state: State = {
+const PlaceholderImageView =(props:Props) => {
+  const [state,setState] = useState({
     uri: '',
     showErrorImage: false,
     showDefaultImage: true,
-    resizeMode: '',
-  };
+    resizeMode: 'contain',
+  });
 
-  componentDidMount() {
+  useEffect(()=>{
     setTimeout(() => {
-      this.setState({ showDefaultImage: false });
+      setState({ ...state,showDefaultImage: false });
     }, 100);
-  }
+  },[])
+ 
 
-  getImageToLoad = () => {
-    if (this.state.showErrorImage) {
-      if (this.props.openPDF) {
+  const getImageToLoad = () => {
+    if (state.showErrorImage) {
+      if (props.openPDF) {
         return pdf_icon;
       }
-      return this.props.profilePic ? profile_placeholder : default_error_img;
-    } else if (this.state.showDefaultImage) {
-      if (this.props.openPDF) {
+      return props.profilePic ? profile_placeholder : default_error_img;
+    } else if (state.showDefaultImage) {
+      if (props.openPDF) {
         return pdf_icon;
       }
-      return this.props.profilePic ? profile_placeholder : default_placeholder;
+      return props.profilePic ? profile_placeholder : default_placeholder;
     } else {
-      if (this.props.uri != '') {
-        return { uri: this.props.uri };
+      if (props.uri != '') {
+        return { uri: props.uri };
       } else {
-        return this.props.profilePic ? profile_placeholder : default_error_img;
+        return props.profilePic ? profile_placeholder : default_error_img;
       }
     }
   };
 
-  render() {
     return (
       // <CustomFastImage
-      //   style={this.props.style}
-      //   url={this.getImageToLoad()}
+      //   style={props.style}
+      //   url={getImageToLoad()}
       // />
       <Image
-        style={this.props.style}
-        source={this.getImageToLoad()}
+        style={props.style}
+        source={getImageToLoad()}
         defaultSource={
-          this.props.profilePic ? profile_placeholder : default_placeholder
+          props.profilePic ? profile_placeholder : default_placeholder
         }
-        borderRadius={this.props.borderRadius ? this.props.borderRadius : 0}
+        borderRadius={props.borderRadius ? props.borderRadius : 0}
         onError={() =>
-          this.setState({
+          setState({
+            ...state,
             showErrorImage: true,
             resizeMode: 'center',
           })
         }
         resizeMode={
-          this.state.resizeMode.length > 0
-            ? this.state.resizeMode
-            : this.props.profilePic
+          state.resizeMode.length > 0 ? state.resizeMode
+            : props.profilePic
               ? 'stretch'
               :
               'contain'
         }
       />
     );
-  }
 }
+export default PlaceholderImageView;

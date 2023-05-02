@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import styles from './styles';
@@ -8,63 +8,56 @@ type Props = {
   isVisible: boolean;
   defaultDate: any
 };
-export default class DateTimePickerView extends Component<Props> {
- 
-  state = {
-    isDateTimePickerVisible: this.props.isVisible,
-    dateSelected: this.props.defaultDate ? this.props.defaultDate : new Date(),
-  };
+const DateTimePickerView = (props: Props) => {
 
-  constructor(props: Props) {
-    super(props);
-  }
+  const [state, setState] = useState({
+    isDateTimePickerVisible: props.isVisible,
+    dateSelected: props.defaultDate ? props.defaultDate : new Date(),
+  });
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props != nextProps) {
-      if (nextProps.defaultDate) {
-        if (typeof(nextProps.defaultDate)==='string') {
-          this.setState({dateSelected:new Date(nextProps.defaultDate)})
-        }
+  useEffect(() => {
+    if (props.defaultDate) {
+      if (typeof (props.defaultDate) === 'string') {
+        setState({ ...state, dateSelected: new Date(props.defaultDate) })
       }
     }
-  }
+  }, [props.defaultDate])
 
-  _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+  const _showDateTimePicker = () => setState({ ...state, isDateTimePickerVisible: true });
 
-  _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+  const _hideDateTimePicker = () => setState({ ...state, isDateTimePickerVisible: false });
 
-  _handleDatePicked = (date: any) => {
-    this.setState({ dateSelected: date },()=>{
-      this._hideDateTimePicker();
-      this.props.onDateSelection(date);
-    })
+  const _handleDatePicked = (date: any) => {
+    setState({ ...state, dateSelected: date })
+    _hideDateTimePicker();
+    props.onDateSelection(date);
   };
 
-  _onCancel = () => {
-    this._hideDateTimePicker();
-    this.props.onCancel();
+  const _onCancel = () => {
+    _hideDateTimePicker();
+    props.onCancel();
   };
 
-  getMinimumDate = () => {
+  const getMinimumDate = () => {
     let date = new Date();
     date.setFullYear(1917);
     date.setMonth(0);
     date.setDate(1);
     return date;
   };
-  render() {
 
-    return (
-      <View style={styles.container}>
-        <DateTimePicker
-          isVisible={this.props.isVisible}
-          onConfirm={this._handleDatePicked}
-          onCancel={this._onCancel}
-          date={this.state.dateSelected}
-          maximumDate={new Date()}
-          minimumDate={this.getMinimumDate()}
-        />
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      <DateTimePicker
+        isVisible={props.isVisible}
+        onConfirm={_handleDatePicked}
+        onCancel={_onCancel}
+        date={state.dateSelected}
+        maximumDate={new Date()}
+        minimumDate={getMinimumDate()}
+      />
+    </View>
+  );
 }
+
+export default DateTimePickerView;

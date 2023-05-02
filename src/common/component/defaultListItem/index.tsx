@@ -16,50 +16,51 @@ type Props = {
   onPress?: (key: any) => void;
 };
 
-export default class DefaultListItem extends React.Component<Props> {
-  static defaultProps: Props = {
-    title: '',
-    showArrow: true,
-    count: 0,
-    identifier: '',
-    isLast: false,
-    onPress: () => {},
-  };
+const DefaultListItem =(props:Props)=> {
 
-  render() {
     return (
       <TouchableHighlight
         underlayColor="#cccccc3e"
         style={styles.width100}
-        onPress={() => this.props.onPress(this.props.identifier)}>
+        onPress={() => props.onPress(props.identifier)}>
         <View
           style={[
             styles.container,
-            {borderBottomWidth: this.props.isLast ? 0 : 1},
+            {borderBottomWidth: props.isLast ? 0 : 1},
           ]}>
           <View style={styles.headercontainer}>
-            {this.props.icon && (
-              <Image style={styles.imageStyle} source={this.props.icon} />
+            {props.icon && (
+              <Image style={styles.imageStyle} source={props.icon} />
             )}
             <View style={styles.textContainer}>
-              <Text style={styles.title}>{this.props.title}</Text>
-              {this.props.subTitle && (
-                <Text style={styles.subTitle}>{this.props.subTitle}</Text>
+              <Text style={styles.title}>{props.title}</Text>
+              {props.subTitle && (
+                <Text style={styles.subTitle}>{props.subTitle}</Text>
               )}
             </View>
           </View>
           <View style={styles.countContainer}>
-            {this.props.count > 0 && (
+            {props.count > 0 && (
               <View style={styles.notificationCountBG}>
                 <Text style={styles.notificationCountText}>
-                  {this.props.count}
+                  {props.count}
                 </Text>
               </View>
             )}
-            {this.props.showArrow && <Image source={icon_arrow} />}
+            {props.showArrow && <Image source={icon_arrow} />}
           </View>
         </View>
       </TouchableHighlight>
     );
-  }
 }
+
+DefaultListItem.defaultProps ={
+  title: '',
+  showArrow: true,
+  count: 0,
+  identifier: '',
+  isLast: false,
+  onPress: () => {},
+};
+
+export default DefaultListItem;

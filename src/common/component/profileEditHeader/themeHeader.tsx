@@ -7,17 +7,15 @@ import { Colors, fontSize } from '../../constants';
 import { Account } from '../../loginStore';
 import styles from './styles';
 
-class ThemeHeader extends React.Component<{ [x: string]: any }> {
-  static defaultProps = {
-    showRightText: true,
-  };
-  _renderLeft() {
+const ThemeHeader = (props: any) => {
+
+  const _renderLeft = () => {
     return (
       <View>
-        {!this.props.hideClose ? (
+        {!props.hideClose ? (
           <TouchableOpacity
             style={[styles.leftButtonTouchableContainer]}
-            onPress={() => this.props.cancelAction()}>
+            onPress={() => props.cancelAction()}>
             <Image
               style={{ height: 28, width: 28 }}
               resizeMode="center"
@@ -31,34 +29,34 @@ class ThemeHeader extends React.Component<{ [x: string]: any }> {
     );
   }
 
-  _renderMiddle() {
+  const _renderMiddle = () => {
     return (
       <View style={styles.titleContainer}>
-        {this.props.showCommunity && (
+        {props.showCommunity && (
           <Text style={styles.name}>{Account.selectedData().name}</Text>
         )}
         <Text style={styles.titleText} numberOfLines={1} ellipsizeMode="tail">
-          {this.props.heading}
+          {props.heading}
         </Text>
       </View>
     );
   }
 
-  _renderRight() {
+  const _renderRight = () => {
     return (
       <View style={[styles.rightButtonsContainer]}>
-        {this.props.showRightText && (
+        {props.showRightText && (
           <TouchableOpacity
-            onPress={() => this.props.saveValues()}
+            onPress={() => props.saveValues()}
             style={styles.rightButtonsTouchable}>
             <Text
               style={styles.rightTextStyle}>
-              {this.props.rightText}
+              {props.rightText}
             </Text>
           </TouchableOpacity>
         )}
-        {this.props.rightIcon && (
-          <TouchableOpacity onPress={() => this.props.showHideMenu()}>
+        {props.rightIcon && (
+          <TouchableOpacity onPress={() => props.showHideMenu()}>
             <View
               style={styles.rightIconContainer}>
               <View
@@ -74,20 +72,20 @@ class ThemeHeader extends React.Component<{ [x: string]: any }> {
     );
   }
 
-  render() {
-    return (
+  return (
+    <View
+      style={styles.headerContainerStyle}>
       <View
-        style={styles.headerContainerStyle}>
-        <View
-          style={styles.centerandLeftContainer}>
-          {this._renderLeft()}
-          {this._renderMiddle()}
-        </View>
-        {(this.props.showRightText || this.props.rightIcon) &&
-          this._renderRight()}
+        style={styles.centerandLeftContainer}>
+        {_renderLeft()}
+        {_renderMiddle()}
       </View>
-    );
-  }
+      {(props.showRightText || props.rightIcon) &&
+        _renderRight()}
+    </View>
+  );
 }
-
+ThemeHeader.defaultProps = {
+  showRightText: true,
+};
 export default ThemeHeader;

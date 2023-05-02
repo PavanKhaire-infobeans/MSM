@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
 import {
   Image,
   ImageStyle,
@@ -15,198 +15,81 @@ import Text from '../Text';
 import searchStyle from './styles';
 
 type Props = { [x: string]: any; placeholder: string };
-export default class SearchBar extends React.Component<Props> {
-  inputField: RefObject<TextInput> = React.createRef<TextInput>();
-  state = {
+const SearchBar = (props: Props) => {
+  let inputField: RefObject<TextInput> = useRef(null);
+  const [state, setState] = useState({
     editing: false,
-    value: '',
+    value: props.value || '',
     barWidth: 0,
     searchWidth: 0,
     isFocused: false,
-  };
+  });
 
-  UNSAFE_componentWillReceiveProps(props: Props) {
-    if (this.props !== props) {
-      if (this.props.value != props.value && props.value != this.state.value) {
-        this.setState({ value: props.value || '' });
-      }
+  useEffect(() => {
+    setState({ ...state, isFocused: inputField.current.isFocused() });
+  }, []);
+
+  useEffect(() => {
+    if (props.value != props.value && props.value != state.value) {
+      setState({ ...state, value: props.value || '' });
     }
-  }
+  }, [props]);
 
-  componentDidMount = () => {
-    this.setState({ isFocused: this.inputField.current.isFocused() });
-  }
-
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      ...this.state,
-      value: props.value || '',
-    };
-  }
-
-  static defaultProps = {
-    placeholder: 'Search...',
-    onFocus: () => { },
-  };
-
-  render() {
-    var design: any[] = [searchStyle.imageParent];
-    var showCancelClear = true;
-    var borderRadius = false;
-    if (typeof this.props.showCancelClearButton !== 'undefined') {
-      showCancelClear = this.props.showCancelClearButton;
-    }
-
-    if (typeof this.props.borderRadius !== 'undefined') {
-      borderRadius = this.props.borderRadius;
-    }
-
-    design.push({
-      left: 0,
-      position: 'absolute',
-    });
-
-    return (
-      <View
-        style={[
-          searchStyle.parent,
-          { backgroundColor: Colors.white, flexDirection: 'row' },
-          // this.props.style || {},
-        ]}>
-        <View
-          style={[
-            searchStyle.baseFlex,
-            {
-              backgroundColor: this.props.textFieldBackgroundColor,
-              borderRadius: 8,
-              borderColor: borderRadius ? Colors.bottomTabColor : Colors.bottomTabColor,
-              borderWidth: borderRadius ? 1 : 1,
-            },
-          ]}>
-          {/* <View style={design}>
-            <Image
-              resizeMode="contain"
-              style={searchStyle.imageStyle as StyleProp<ImageStyle>}
-              source={searchIcon}
-            />
-            <Text
-              style={[
-                searchStyle.placeholder,
-                {
-                  opacity: this.state.value.length > 0 ? 0 : 1,
-                },
-              ]}>
-              {this.props.placeholder}
-            </Text>
-          </View> */}
-          <View style={searchStyle.inputView}>
-            <TextInput
-              ref={this.inputField}
-              autoCapitalize="none"
-              allowFontScaling={false}
-              // clearButtonMode="always"
-              autoCorrect={false}
-              style={searchStyle.inputStyle}
-              maxLength={35}
-              onChangeText={text => {
-                this.setState(
-                  {
-                    value: text,
-                  },
-                  () => {
-                    if (this.props.onChangeText) {
-                      this.props.onChangeText(text);
-                    }
-
-                    if (this.props.onClearField && text.length == 0) {
-                      if (!this.props.retainFocus) {
-                        this.inputField.current.blur();
-                      }
-                      this.props.onClearField();
-                    }
-                  },
-                );
-              }}
-              placeholder={this.props.placeholder ? this.props.placeholder : 'Search here...'}
-              placeholderTextColor={Colors.newTextColor}
-              keyboardType="ascii-capable"
-              value={this.state.value}
-              enablesReturnKeyAutomatically={true}
-              returnKeyType="search"
-              underlineColorAndroid="transparent"
-              onFocus={this.focus}
-              onBlur={this.blur}
-              onSubmitEditing={() =>
-                this.props.onSearchButtonPress(this.state.value)
-              }
-            />
-            {this.showClear()}
-          </View>
-        </View>
-        {showCancelClear ? this.showCancelOnIos() : null}
-      </View>
-    );
-  }
-
-  cancelPressed = () => {
+  const cancelPressed = () => {
     //dismissKeyboard();
-    this.blur();
-    this.clearField();
+    blur();
+    clearField();
   }
 
-  focus = () => {
-    this.setState(
+  const focus = () => {
+    setState(
       {
+        ...state,
         editing: true,
       },
-      () => {
-        if (this.props.onFocus) {
-          this.props.onFocus();
-        }
-      },
     );
+    if (props.onFocus) {
+      props.onFocus();
+    }
   }
 
-  blur = () => {
-    this.setState(
+  const blur = () => {
+    setState(
       {
+        ...state,
         editing: false,
-      },
-      () => {
-        if (this.inputField) {
-          this.inputField.current.blur();
-        }
-        if (this.props.onBlur) {
-          this.props.onBlur();
-        }
-      },
-    );
-  }
+      });
+    if (inputField) {
+      inputField.current.blur();
+    }
+    if (props.onBlur) {
+      props.onBlur();
+    }
 
-  clearField = () => {
-    this.inputField.current.clear();
-    this.setState({ value: '' }, () => {
-      if (this.props.onClearField) {
-        this.props.onClearField();
-      }
-    });
-  }
+  };
 
-  showClear = () => {
+  const clearField = () => {
+    inputField.current.clear();
+    setState({ ...state, value: '' })
+    if (props.onClearField) {
+      props.onClearField();
+    }
+  };
+
+  const showClear = () => {
     // if (Platform.OS === 'android') {
-    // if (this.state.value.length > 0) {
+    // if (state.value.length > 0) {
     return (
       <TouchableOpacity
         onPress={() => {
-          // this.clearField();
-          if (this.props.onSearchButtonPress) {
-            this.props.onSearchButtonPress(this.state.value);
+          // clearField();
+          if (props.onSearchButtonPress) {
+            props.onSearchButtonPress(state.value);
           }
         }}
         style={searchStyle.clearButton}>
         <Image
-          source={this.props.isAddbutton ? plus_circle : search}//icon_close_black}
+          source={props.isAddbutton ? plus_circle : search}//icon_close_black}
           // style={{width: 18, height: 18}}
           resizeMode="contain"
         />
@@ -216,13 +99,13 @@ export default class SearchBar extends React.Component<Props> {
     // }
   }
 
-  showCancelOnIos = () => {
+  const showCancelOnIos = () => {
     if (Platform.OS == 'ios') {
-      if (this.state.editing) {
+      if (state.editing) {
         return (
           <TouchableOpacity
             onPress={() => {
-              this.cancelPressed();
+              cancelPressed();
             }}
             style={searchStyle.buttonTextStyle}>
             <Text style={searchStyle.cancel}>Cancel</Text>
@@ -232,4 +115,105 @@ export default class SearchBar extends React.Component<Props> {
     }
     return null;
   }
-}
+
+  let design: any[] = [searchStyle.imageParent];
+  let showCancelClear = true;
+  let borderRadius = false;
+  if (typeof props.showCancelClearButton !== 'undefined') {
+    showCancelClear = props.showCancelClearButton;
+  }
+
+  if (typeof props.borderRadius !== 'undefined') {
+    borderRadius = props.borderRadius;
+  }
+
+  design.push({
+    left: 0,
+    position: 'absolute',
+  });
+
+  return (
+    <View
+      style={[
+        searchStyle.parent,
+        { backgroundColor: Colors.white, flexDirection: 'row' },
+      ]}>
+      <View
+        style={[
+          searchStyle.baseFlex,
+          {
+            backgroundColor: props.textFieldBackgroundColor,
+            borderRadius: 8,
+            borderColor: borderRadius ? Colors.bottomTabColor : Colors.bottomTabColor,
+            borderWidth: borderRadius ? 1 : 1,
+          },
+        ]}>
+        {/* <View style={design}>
+            <Image
+              resizeMode="contain"
+              style={searchStyle.imageStyle as StyleProp<ImageStyle>}
+              source={searchIcon}
+            />
+            <Text
+              style={[
+                searchStyle.placeholder,
+                {
+                  opacity: state.value.length > 0 ? 0 : 1,
+                },
+              ]}>
+              {props.placeholder}
+            </Text>
+          </View> */}
+        <View style={searchStyle.inputView}>
+          <TextInput
+            ref={inputField}
+            autoCapitalize="none"
+            allowFontScaling={false}
+            // clearButtonMode="always"
+            autoCorrect={false}
+            style={searchStyle.inputStyle}
+            maxLength={35}
+            onChangeText={text => {
+              setState(
+                {
+                  ...state,
+                  value: text,
+                });
+              if (props.onChangeText) {
+                props.onChangeText(text);
+              }
+
+              if (props.onClearField && text.length == 0) {
+                if (!props.retainFocus) {
+                  inputField.current.blur();
+                }
+                props.onClearField();
+              }
+            }}
+            placeholder={props.placeholder ? props.placeholder : 'Search here...'}
+            placeholderTextColor={Colors.newTextColor}
+            keyboardType="ascii-capable"
+            value={state.value}
+            enablesReturnKeyAutomatically={true}
+            returnKeyType="search"
+            underlineColorAndroid="transparent"
+            onFocus={focus}
+            onBlur={blur}
+            onSubmitEditing={() =>
+              props.onSearchButtonPress(state.value)
+            }
+          />
+          {showClear()}
+        </View>
+      </View>
+      {showCancelClear ? showCancelOnIos() : null}
+    </View>
+  );
+
+};
+
+SearchBar.defaultProps = {
+  placeholder: 'Search...',
+  onFocus: () => { },
+};
+export default SearchBar;

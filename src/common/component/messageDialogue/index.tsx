@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useRef, useState } from 'react';
 import {
   Animated, DeviceEventEmitter, Platform, Text as DefText, TouchableHighlight, View
 } from 'react-native';
@@ -11,157 +11,149 @@ type State = {
   height: number;
   showClose: boolean;
 };
-class MessageDialogue extends Component<{}, State> {
-  height = new Animated.Value(0);
-  opacity = new Animated.Value(0);
-  constructor(props) {
-    super(props)
-    this.state = {
-      backgroundColor: 'black',
-      message: '',
-      showClose: true,
-      height: 0
-    };
+const MessageDialogue = (props) => {
+  const height = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
 
-  }
+  const [state, setState] = useState({
+    backgroundColor: 'black',
+    message: '',
+    showClose: true,
+    height: 0
+  });
 
-  static showMessage = (message: string, color: string) => {
-    DeviceEventEmitter.emit('showMessage', { message, color });
-  };
-
-  static showMessageWithoutClose = (message: string, color: string) => {
-    DeviceEventEmitter.emit('showListenerWithoutClose', { message, color });
-  };
-
-  static hideMessage = () => {
-    DeviceEventEmitter.emit('hideMessage');
-  };
-
-  showListener?: any = null;
-  hideListener?: any = null;
-  showListenerWithoutClose?: any = null;
-  
-  UNSAFE_componentWillMount() {
-    //  componentWillMount() {
-    this.showListener = DeviceEventEmitter.addListener(
+  useEffect(() => {
+    let showListener = DeviceEventEmitter.addListener(
       'showMessage',
-      this._show,
+      _show,
     );
-    this.hideListener = DeviceEventEmitter.addListener(
+    let hideListener = DeviceEventEmitter.addListener(
       'hideMessage',
-      this._hide,
+      _hide,
     );
-    this.showListenerWithoutClose = DeviceEventEmitter.addListener(
+    let showListenerWithoutClose = DeviceEventEmitter.addListener(
       'showListenerWithoutClose',
-      this._showWithOutClose,
+      _showWithOutClose,
     );
-  }
 
-  componentWillUnmount(){
-    DeviceEventEmitter.removeAllListeners("showMessage")
-    DeviceEventEmitter.removeAllListeners("hideMessage")
-    DeviceEventEmitter.removeAllListeners("showListenerWithoutClose")
-  }
+    return () => {
+      DeviceEventEmitter.removeAllListeners("showMessage")
+      DeviceEventEmitter.removeAllListeners("hideMessage")
+      DeviceEventEmitter.removeAllListeners("showListenerWithoutClose")
+    }
+  }, []);
 
-  _showWithOutClose = ({ message, color }: { message: string; color: string }) => {
-    this.setState({ showClose: false, backgroundColor: color, message, height: 45  }, () => {
-      alert(color)
-      if ((this.height as any)._value == 0) {
+  const _showWithOutClose = ({ message, color }: { message: string; color: string }) => {
+    setState({ ...state, showClose: false, backgroundColor: color, message, height: 45 });
+    setTimeout(() => {
+      if ((height as any)._value == 0) {
         Animated.parallel([
-          Animated.timing(this.height, {
+          Animated.timing(height, {
+            toValue: 45,
+            duration: 1,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 1,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      }
+    }, 100);
+  };
+
+  const _show = ({ message, color }: { message: string; color: string }) => {
+    setState({ ...state, backgroundColor: color, message, height: 45 })
+    setTimeout(() => {
+      if ((height as any)._value == 0) {
+        Animated.parallel([
+          Animated.timing(height, {
             toValue: 45,
             duration: 0.1,
             useNativeDriver: true,
           }),
-          Animated.timing(this.opacity, {
+          Animated.timing(opacity, {
             toValue: 1,
             duration: 0.1,
             useNativeDriver: true,
           }),
         ]).start();
       }
-    });
+    }, 100);
   };
 
-  _show = ({ message, color }: { message: string; color: string }) => {
-    this.setState({ backgroundColor: color, message, height: 45 }, () => {
-      if ((this.height as any)._value == 0) {
-        Animated.parallel([
-          Animated.timing(this.height, {
-            toValue: 45,
-            duration: 0.1,
-            useNativeDriver: true,
-          }),
-          Animated.timing(this.opacity, {
-            toValue: 1,
-            duration: 0.1,
-            useNativeDriver: true,
-          }),
-        ]).start();
-      }
-    });
-  };
-
-  _hide = () => {
+  const _hide = () => {
     Animated.parallel([
-      Animated.timing(this.height, {
+      Animated.timing(height, {
         toValue: 0,
         duration: 0.1,
         useNativeDriver: true,
       }),
-      Animated.timing(this.opacity, {
+      Animated.timing(opacity, {
         toValue: 0,
         duration: 0.1,
         useNativeDriver: true,
       }),
     ]).start(() => {
-      this.setState({ showClose: true, message: '', backgroundColor: 'black', height: 0 });
+      setState({ showClose: true, message: '', backgroundColor: 'black', height: 0 });
     });
   };
 
-  No_Internet = () => { };
+  const No_Internet = () => { };
 
-  showToast = () => { };
+  const showToast = () => { };
 
-  render() {
-    if (this.state.message != undefined && this.state.message.length == 0) {
-      return <View style={{ height: 0, width: 0, position: 'absolute' }} />;
-    }
-    return (
-      <Animated.View
-        style={[Styles.container, {
-          // opacity: this.opacity,
-          backgroundColor: this.state.backgroundColor,
-          height: this.state.height//this.height,
-        }]}>
-        <View
-          style={Styles.messageContainer}>
-          <Text
-            numberOfLines={2}
-            style={Styles.messageTextStyle}>
-            {this.state.message}
-          </Text>
-        </View>
-        {this.state.showClose && (
-          <View
-            style={Styles.closeContainer}>
-            <TouchableHighlight
-              underlayColor="transparent"
-              onPress={this._hide}
-              style={Styles.cancleButtonContainer}>
+  return (
+    <>
+      {
+        (state.message != undefined && state.message.length == 0) ?
+          <View style={{ height: 0, width: 0, position: 'absolute' }} />
+          :
+          <Animated.View
+            style={[Styles.container, {
+              // opacity: opacity,
+              backgroundColor: state.backgroundColor,
+              height: state.height//height,
+            }]}>
+            <View
+              style={Styles.messageContainer}>
+              <Text
+                numberOfLines={2}
+                style={Styles.messageTextStyle}>
+                {state.message}
+              </Text>
+            </View>
+            {state.showClose && (
               <View
-                style={Styles.imageContainer}>
-                <DefText
-                  style={[Styles.textStyle, { color: this.state.backgroundColor, }]}>
-                  ✕
-                </DefText>
+                style={Styles.closeContainer}>
+                <TouchableHighlight
+                  underlayColor="transparent"
+                  onPress={_hide}
+                  style={Styles.cancleButtonContainer}>
+                  <View
+                    style={Styles.imageContainer}>
+                    <DefText
+                      style={[Styles.textStyle, { color: state.backgroundColor, }]}>
+                      ✕
+                    </DefText>
+                  </View>
+                </TouchableHighlight>
               </View>
-            </TouchableHighlight>
-          </View>
-        )}
-      </Animated.View>
-    );
-  }
-}
+            )}
+          </Animated.View>
+      }
+    </>
+  );
+};
 
+MessageDialogue.showMessage = (message: string, color: string) => {
+  DeviceEventEmitter.emit('showMessage', { message, color });
+};
+MessageDialogue.showMessageWithoutClose = (message: string, color: string) => {
+  DeviceEventEmitter.emit('showListenerWithoutClose', { message, color });
+};
+MessageDialogue.hideMessage = () => {
+  DeviceEventEmitter.emit('hideMessage');
+};
 export default MessageDialogue;
