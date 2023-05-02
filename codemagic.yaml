@@ -2,7 +2,7 @@ workflows:
   react-native-android:
     name: MSM Android
     environment:
-      node: 18.15.0
+      node: 16.8.0
       groups:
         - Secret_Token
     triggering:
