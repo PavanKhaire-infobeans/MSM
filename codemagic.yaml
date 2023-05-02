@@ -33,7 +33,7 @@ workflows:
           success: true # To not receive a notification when a build succeeds
           failure: false # To not receive a notification when a build fails
       firebase:
-        firebase_token: $FIREBASE_TOKEN
+        firebase_service_account: $ANDROID_FIREBASE_SECRET
         android:
           app_id: $APP_ID
           groups:
