@@ -14,9 +14,12 @@ workflows:
           source: true
       cancel_previous_builds: false
     scripts:
+      - name: Set Android SDK location
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
       - name: Install dependencies
         script: |
-          yarn
+          npm ci --legacy-peer-deps
       - name: Build Android release
         script: |
           cd android && ./gradlew assembleRelease
