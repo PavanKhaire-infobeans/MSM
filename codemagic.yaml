@@ -5,6 +5,8 @@ workflows:
       node: 16.8.0
       groups:
         - firebase_credentials
+      vars:
+        PACKAGE_NAME: "com.mystoriesmatter.mobileapp"
     triggering:
       events:
         - push
