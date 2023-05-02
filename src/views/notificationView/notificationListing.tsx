@@ -13,26 +13,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {NotificationListener} from '.';
+import { connect } from 'react-redux';
+import { NotificationListener } from '.';
 import BusyIndicator from '../../common/component/busyindicator';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import {kNotificationIndicator} from '../../common/component/TabBarIcons';
-import {No_Internet_Warning} from '../../common/component/Toast';
-import {Colors, fontFamily, fontSize} from '../../common/constants';
+import { kNotificationIndicator } from '../../common/component/TabBarIcons';
+import { No_Internet_Warning } from '../../common/component/Toast';
+import { Colors, fontFamily, fontSize } from '../../common/constants';
 import EventManager from '../../common/eventManager';
 import Utility from '../../common/utility';
-import {memory_read, memory_read_all, memory_unread} from '../../images';
+import { memory_read, memory_read_all, memory_unread } from '../../images';
 import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
-import {NotificationDataModel} from './notificationDataModel';
-import {kForegroundNotificationListener} from './notificationServices';
-import {AddNewNotification, MarkAllRead, SeenFlag} from './reducer';
-import {GetNotificationAPI, LoadMoreNotifications, SetSeenFlag} from './saga';
+import { NotificationDataModel } from './notificationDataModel';
+import { kForegroundNotificationListener } from './notificationServices';
+import { AddNewNotification, MarkAllRead, SeenFlag } from './reducer';
+import { GetNotificationAPI, LoadMoreNotifications, SetSeenFlag } from './saga';
 import Styles from './styles';
 
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 
 class NotificationListing extends React.Component<Props> {
   loadMoreNotifications: EventManager;
@@ -55,14 +55,14 @@ class NotificationListing extends React.Component<Props> {
     let group_id = new NotificationDataModel().getGroupId(
       details.notificationType,
     );
-    this.props.addNotificationItem({group_id: group_id, details: [details]});
+    this.props.addNotificationItem({ group_id: group_id, details: [details] });
     setTimeout(() => {
       EventManager.callBack(kNotificationIndicator);
     }, 2000);
   };
 
   componentDidMount() {
-    this.setState({index: this.props.route.params.index});
+    this.setState({ index: this.props.route.params.index });
   }
 
   componentWillUnmount = () => {
@@ -92,7 +92,7 @@ class NotificationListing extends React.Component<Props> {
           detailsIndex: this.state.index,
           dataIndex: index,
         });
-        this.props.setNotificationFlag({ids: item.ids});
+        this.props.setNotificationFlag({ ids: item.ids });
         // this.setState({});
         EventManager.callBack(NotificationListener);
       }
@@ -103,7 +103,7 @@ class NotificationListing extends React.Component<Props> {
 
   markAllRead = () => {
     if (Utility.isInternetConnected) {
-      this.props.markAllActions({detailsIndex: this.state.index});
+      this.props.markAllActions({ detailsIndex: this.state.index });
       this.props.setNotificationFlag({
         group_ids: this.props.notificationList[this.state.index].group_id,
       });
@@ -170,18 +170,18 @@ class NotificationListing extends React.Component<Props> {
           <View style={Styles.container}>
             <Text style={Styles.displayName}>
               {item.displayName}{' '}
-              <Text style={{color: Colors.TextColor}} numberOfLines={2}>
+              <Text style={{ color: Colors.TextColor }} numberOfLines={2}>
                 {item.descriptionText}
               </Text>{' '}
               '{item.title}'
             </Text>
             <Text style={Styles.date}>{item.date}</Text>
             {item.isJoinInvite &&
-            item.noteToCollaborator &&
-            item.noteToCollaborator.length > 0 ? (
+              item.noteToCollaborator &&
+              item.noteToCollaborator.length > 0 ? (
               <Text style={Styles.collaborators}>
                 Notes to collaborators:{' '}
-                <Text style={{fontWeight: 'normal'}}>
+                <Text style={{ fontWeight: 'normal' }}>
                   {item.noteToCollaborator}
                 </Text>
               </Text>
@@ -208,7 +208,7 @@ class NotificationListing extends React.Component<Props> {
   };
 
   refreshNotifications = () => {
-    this.setState({isRefreshing: true}, () => {
+    this.setState({ isRefreshing: true }, () => {
       if (Utility.isInternetConnected) {
         this.props.getNotificationTypes();
       } else {
@@ -221,7 +221,7 @@ class NotificationListing extends React.Component<Props> {
     if (!this.state.isLoadMore) return null;
     return (
       <View style={Styles.footer}>
-        <ActivityIndicator style={{color: Colors.black}} />
+        <ActivityIndicator style={{ color: Colors.black }} />
       </View>
     );
   };
@@ -229,10 +229,10 @@ class NotificationListing extends React.Component<Props> {
   handleLoadMore = () => {
     if (
       this.props.notificationList[this.state.index].total_count >
-        this.props.notificationList[this.state.index].data.length &&
+      this.props.notificationList[this.state.index].data.length &&
       !this.state.isLoadMore
     ) {
-      this.setState({isLoadMore: true}, () => {
+      this.setState({ isLoadMore: true }, () => {
         this.props.loadMore({
           group_id: this.props.notificationList[this.state.index].group_id,
           limit: 20,
@@ -240,7 +240,7 @@ class NotificationListing extends React.Component<Props> {
           index: this.state.index,
         });
         setTimeout(() => {
-          this.setState({isLoadMore: false});
+          this.setState({ isLoadMore: false });
         }, 3000);
       });
     }
@@ -277,29 +277,31 @@ class NotificationListing extends React.Component<Props> {
               {/* <SafeAreaView style={{ width : "100%", flex: 1,  alignItems: "center" }}>                 */}
               {this.props.notificationList[this.state.index].unseen_count >
                 0 && (
-                <View style={Styles.unSeenContainer}>
-                  <Text style={Styles.unread}>
-                    {this.props.notificationList[this.state.index].unseen_count}{' '}
-                    {'Unread'}
-                  </Text>
-                  <TouchableHighlight
-                    onPress={() => this.markAllRead()}
-                    underlayColor={'#ffffff33'}>
-                    <View style={Styles.allreadCOntainer}>
-                      <Text style={Styles.allread}>Mark all as read</Text>
-                      <Image
-                        style={Styles.allReadImage}
-                        source={memory_read_all}
-                      />
-                    </View>
-                  </TouchableHighlight>
-                </View>
-              )}
+                  <View style={Styles.unSeenContainer}>
+                    <Text style={Styles.unread}>
+                      {this.props.notificationList[this.state.index].unseen_count}{' '}
+                      {'Unread'}
+                    </Text>
+                    <TouchableHighlight
+                      onPress={() => this.markAllRead()}
+                      underlayColor={'#ffffff33'}>
+                      <View style={Styles.allreadCOntainer}>
+                        <Text style={Styles.allread}>Mark all as read</Text>
+                        <Image
+                          style={Styles.allReadImage}
+                          source={memory_read_all}
+                        />
+                      </View>
+                    </TouchableHighlight>
+                  </View>
+                )}
               <FlatList
                 data={
                   this.props.notificationList[this.props.route.params.index]
                     .data
                 }
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 style={Styles.flatListStyle}
                 // extraData={this.props}
                 renderItem={this.renderActivityView}
@@ -319,12 +321,12 @@ class NotificationListing extends React.Component<Props> {
                     onRefresh={() => this.refreshNotifications()}
                   />
                 }
-                ListFooterComponent={()=>this.renderFooter()}
+                ListFooterComponent={() => this.renderFooter()}
                 onEndReachedThreshold={0.5}
-                onEndReached={()=>this.handleLoadMore()}
+                onEndReached={() => this.handleLoadMore()}
               />
               {this.props.notificationList[this.state.index].total_count ==
-              0 ? (
+                0 ? (
                 <View style={Styles.noCountContainer} pointerEvents="none">
                   <Text style={Styles.noCount}>
                     There are no notifications to display at this moment.
@@ -338,7 +340,7 @@ class NotificationListing extends React.Component<Props> {
     );
   }
 }
-const mapState = (state: {[x: string]: any}) => ({
+const mapState = (state: { [x: string]: any }) => ({
   notificationList: state.NotificationsRedux.notificationData.slice(0),
   showLoaderValue: state.dashboardReducer.showLoader,
   loaderTextValue: state.dashboardReducer.loaderText,
@@ -346,17 +348,17 @@ const mapState = (state: {[x: string]: any}) => ({
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    getNotificationTypes: () => dispatch({type: GetNotificationAPI}),
+    getNotificationTypes: () => dispatch({ type: GetNotificationAPI }),
     updateReadAction: (payload: any) =>
-      dispatch({type: SeenFlag, payload: payload}),
+      dispatch({ type: SeenFlag, payload: payload }),
     markAllActions: (payload: any) =>
-      dispatch({type: MarkAllRead, payload: payload}),
+      dispatch({ type: MarkAllRead, payload: payload }),
     setNotificationFlag: (payload: any) =>
-      dispatch({type: SetSeenFlag, payload: payload}),
+      dispatch({ type: SetSeenFlag, payload: payload }),
     loadMore: (payload: any) =>
-      dispatch({type: LoadMoreNotifications, payload: payload}),
+      dispatch({ type: LoadMoreNotifications, payload: payload }),
     addNotificationItem: (payload: any) =>
-      dispatch({type: AddNewNotification, payload: payload}),
+      dispatch({ type: AddNewNotification, payload: payload }),
     showLoader: (payload: any) =>
       dispatch({ type: SHOW_LOADER_READ, payload: payload }),
     loaderText: (payload: any) =>

@@ -26,7 +26,6 @@ export const account = (
     case UserAccount.Get:
       return { ...copy };
     case UserAccount.Store:
-
       Storage.save('userData', action.payload);
     case UserAccount.Set:
       Account.selectedData().values = action.payload;

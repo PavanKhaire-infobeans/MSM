@@ -1,8 +1,11 @@
-import React, { createRef } from 'react';
+import React, { createRef, useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  AppState,
+  FlatList,
   Image,
   Keyboard,
+  Modal,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -10,15 +13,19 @@ import {
   TextInput,
   TouchableHighlight,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import ActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import CustomActionSheet, { ActionSheetItem } from '../../common/component/actionSheet';
+import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
+
+import SelectDropdown from 'react-native-select-dropdown';
 import Text from '../../common/component/Text';
 import {
   Colors,
+  CommonTextStyles,
   ConsoleType,
   decode_utf8,
   DraftActions,
@@ -52,7 +59,9 @@ import styles from './styles';
 import { connect } from 'react-redux';
 import {
   CaptureImage,
+  PickAudio,
   PickImage,
+  PickPDF,
 } from '../../common/component/filePicker/filePicker';
 import PlaceholderImageView from '../../common/component/placeHolderImageView';
 import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
@@ -71,9 +80,10 @@ import {
   DefaultCreateMemoryObj,
   getUserName,
 } from './dataHelper';
-import { kCollaborators, kTags, kWhoElseWhereThere } from './publish';
+import analytics from '@react-native-firebase/analytics';
 import {
   EditContent,
+  MemoryInitials,
   MemoryInitialsUpdate,
   NavigateToDashboard,
   ResetALL,
@@ -81,6 +91,7 @@ import {
   SaveAttachedFile,
   SaveDescription,
   SaveNid,
+  SelectedLocation,
   showCustomAlert,
   showCustomAlertData,
 } from './reducer';
@@ -101,10 +112,11 @@ import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import DateTimePicker from '../../common/component/DateTimePicker';
 
 import moment from 'moment';
-import { arrowRight, calendarWrite, image } from '../../../app/images';
+import { arrowRight, audio, calendarWrite, image, images, map_pin, pdf, upload, x } from '../../../app/images';
 import CustomAlert from '../../common/component/customeAlert';
 import {
   CreateAMemory,
+  dashboardReducer,
   GET_MEMORY_LIST,
   ListType,
   SHOW_LOADER_READ,
@@ -113,6 +125,9 @@ import {
 import DatePicker from './../../common/component/datePicker';
 import Styles from './styles';
 import BusyIndicator from '../../common/component/busyindicator';
+import TextField from '../../common/component/textField';
+import SearchBar from '../../common/component/SearchBar';
+import { useIsFocused } from '@react-navigation/native';
 
 export const createNew = 'Create New';
 export const editDraft = 'Edit Draft';
@@ -188,6 +203,7 @@ export const months = [
   { name: 'Nov', tid: 11 },
   { name: 'Dec', tid: 12 },
 ];
+const countries = ["Egypt", "Canada", "Australia", "Ireland"];
 
 export const MonthObj: any = {
   serverMonthsCount: 0,
@@ -195,183 +211,184 @@ export const MonthObj: any = {
   month: months,
 };
 
-class CreateMemory extends React.Component<Props> {
-  showHideMenuListener: EventManager;
-  saveDraftListener: EventManager;
-  createMemoryHelper: any;
-  _actionSheet: any | ActionSheet = createRef();
-  _mainItemList: any = null;
-  kUploadAction: 'uploadAction';
-  kSaveAction: 'saveAction';
+const CreateMemory = (props: Props) => {
+  let showHideMenuListener: EventManager;
+  let saveDraftListener: EventManager;
+  let createMemoryHelper: any = new CreateMemoryHelper();
+  let _actionSheet = useRef();
+  let optionsActionSheetRef = useRef<ActionSheetRef>(null);
 
-  moment: string;
+  let _mainItemList: any = null;
+  let kUploadAction: 'uploadAction';
+  let kSaveAction: 'saveAction';
+
+  // let moment: string;
   //InputRef reference
-  _inputRef: TextInput | any;
-  keyboardDidShowListener: any;
-  keyboardDidHideListener: any;
+  let _inputRef: TextInput | any;
+  let keyboardDidShowListener: any;
+  let keyboardDidHideListener: any;
 
-  dateOptions: DatePickerOptions = {
+  let dateOptions: DatePickerOptions = {
     display: 'calendar',
     maximumDate: new Date(),
     value: new Date(),
     minimumDate: new Date(1917, 1, 1),
     onChange: (event, date) => {
-      this.setState({
-        showCalender: false,
-        memory_date: moment(date).utc().format('DD/MM/YYYY'),
-      });
+      setShowCalendar(false)
+      setMemoryDate(moment(date).utc().format('DD/MM/YYYY'))
     },
   };
 
   //Files array list
   files: Array<MindPopAttachment & { type: string; uri: string }>;
 
-  newMemoryYears = new CreateMemoryHelper().getDateOptions(
+  let newMemoryYears = new CreateMemoryHelper().getDateOptions(
     'year',
     new Date().getFullYear(),
   );
 
   //Component default state
-  currentDate = new Date();
-  etherpadUrl: string = '';
-  state: State = {
-    menuVisibility: false,
-    actionSheet: {
-      title: '',
-      type: '',
-      list: ImageActions,
-    },
-    itemList: [],
-    year: {
-      value: this.currentDate.getUTCFullYear().toString(),
-      error: false,
-    },
-    month: {
-      value: MonthObj.month[this.currentDate.getUTCMonth()],
-      error: false,
-    },
-    day: {
-      value: this.currentDate.getDate(),
-    },
-    memory_date:
-      '' +
-      new Date().getUTCDate() +
-      '/' +
-      (new Date().getUTCMonth() + 1) +
-      '/' +
-      new Date().getUTCFullYear(),
-    dateError: '',
-    locationError: '',
-    locationText: '',
-    showDay: true,
-    location: { description: '', reference: '' },
-    selectionData: {
-      actions: [],
-      selectionValue: '',
-      fieldName: '',
-      title: '',
-    },
-    title: '',
-    titleError: '',
-    bottomToolbar: 0,
-    isCreatedByUser: true,
-    taggedCount: 0,
-    collaboratorOwner: '',
-    memoryDraftVisibility: false,
-    showActionAndroid: false,
-    padDetails: {},
-    showCustomAlert: false,
-    showCalender: false,
-    showEtherPad: true,
-    placeholder: 'Tap to title your memory...',
-  };
+  let currentDate = new Date();
+  let etherpadUrl: string = '';
 
-  isEdit: boolean = false;
+  const [menuVisibility, setMenuVisibility] = useState(false);
+  const [actionSheet, setActionSheet] = useState({
+    title: '',
+    type: '',
+    list: ImageActions,
+  })
+  const [itemList, setItemList] = useState([])
+  const [year, setYear] = useState({
+    value: '',//currentDate.getUTCFullYear().toString(),
+    error: false,
+  })
+  const [month, setMonth] = useState({
+    value: '',// MonthObj.month[currentDate.getUTCMonth()],
+    error: false,
+  })
+  const [day, setDay] = useState({
+    value: '',//currentDate.getDate(),
+    error: false,
+  })
+  const [yearNew, setYearNew] = useState({
+    value: '',//currentDate.getUTCFullYear().toString(),
+    error: false,
+  })
+  const [monthNew, setMonthNew] = useState({
+    value: '',// MonthObj.month[currentDate.getUTCMonth()],
+    error: false,
+  })
+  const [dayNew, setDayNew] = useState({
+    value: '',//currentDate.getDate(),
+    error: false,
+  })
+  const [doNotReload, setDoNotReload] = useState(false)
+  const [memory_date, setMemoryDate] = useState('')
+  const [description, setDescription] = useState('')
+  const [dateError, setDateError] = useState('')
+  const [locationError, setLocationError] = useState('')
+  const [locationText, setLocationText] = useState('')
+  const [showDay, setShowDay] = useState(true)
+  const [location, setLocation] = useState({ description: '', reference: '' })
+  const [selectionData, setSelectionData] = useState({
+    actions: [],
+    selectionValue: '',
+    fieldName: '',
+    title: '',
+  })
+  const [title, setTitle] = useState('')
+  const [titleError, setTitleError] = useState('')
+  const [bottomToolbar, setBottomBar] = useState(0)
+  const [isCreatedByUser, setIsCreatedByUser] = useState(true)
+  const [taggedCount, setTaggedCount] = useState(0)
+  const [collaboratorOwner, setCollaboratorOwner] = useState('')
+  const [memoryDraftVisibility, setMemoryDraftVisibility] = useState(false)
+  const [showActionAndroid, setShowActionAndroid] = useState(false)
+  const [padDetails, setPadDetails] = useState({})
+  const [showCustomAlert, setShowCustomAlert] = useState(false)
+  const [showCalender, setShowCalendar] = useState(false)
+  const [showEtherPad, setShowEtherPad] = useState(true)
+  const [showCustomValidationAlert, setShowCustomValidationAlert] = useState(false)
+  const [placeholder, setPlaceHolder] = useState('Tap to title your memory...')
+  const [toolTipVisibility, setToolTilvisibility] = useState(false)
+  const [youWhereThere, setYouWhereThere] = useState('')
+  const [ownerDetails, setOwnerDetails] = useState('')
+
+  const [optionToShow, setOptionToShow] = useState('')
+
+  let isEdit: boolean = false;
+  let isFocused = useIsFocused();
   // filePathsToUpload: string[];
 
-  filesToUpdate: Array<any> = [];
-  listener: EventManager;
-  backListner: EventManager;
-  bottomPicker: React.RefObject<BottomPicker> = React.createRef<BottomPicker>();
-  memoryCallback: EventManager;
-  deleteDraftListener: EventManager;
-  initialSaveManager: EventManager;
-  updateFilesListener: EventManager;
-  draftDetailsListener: EventManager;
-  constructor(props: Props) {
-    super(props);
-    this.createMemoryHelper = new CreateMemoryHelper();
+  // let filesToUpdate: Array<any> = [];
+  const [filesToUpdate, setFilesToUpdate]: any[] = useState([]);
+  let listener: EventManager;
+  let backListner: EventManager;
 
-    // this.showHideMenuListener = EventManager.addListener(
-    //   kShowHideMenu,
-    //   this.showMenu,
-    // );
-    // this.saveDraftListener = EventManager.addListener(
-    //   kSaveDraft,
-    //   this.saveDraft,
-    // );
-    // this.memoryCallback = EventManager.addListener(
-    //   'createMemoryMainListener',
-    //   this.memorySaveCallback,
-    // );
-    // this.deleteDraftListener = EventManager.addListener(
-    //   kDeleteDraftCreateMemo,
-    //   this.deleteDraftCallback,
-    // );
-    // this.updateFilesListener = EventManager.addListener(
-    //   kFilesUpdated,
-    //   this.fileUpdateCallback,
-    // );
-    // this.draftDetailsListener = EventManager.addListener(
-    //   kDraftDetailsFetched,
-    //   this.draftDetailsCallBack,
-    // );
+  const _keyboardDidShow = (e: any) => {
+    setBottomBar(e.endCoordinates.height)
+  };
 
-    if (Platform.OS == 'android') {
-      this.keyboardDidShowListener = Keyboard.addListener(
-        'keyboardDidShow',
-        this._keyboardDidShow,
-      );
-      this.keyboardDidHideListener = Keyboard.addListener(
-        'keyboardDidHide',
-        this._keyboardDidHide,
-      );
-    } else {
-      this.keyboardDidShowListener = Keyboard.addListener(
-        'keyboardWillShow',
-        this._keyboardDidShow,
-      );
-      this.keyboardDidHideListener = Keyboard.addListener(
-        'keyboardWillHide',
-        this._keyboardDidHide,
-      );
-    }
-    MonthObj.selectedIndex =
-      this.currentDate.getMonth() + MonthObj.serverMonthsCount;
-    this.backListner = EventManager.addListener(
-      'hardwareBackPress',
-      this.cancelAction,
+  const _keyboardDidHide = (e: any) => {
+    setBottomBar(0)
+  };
+
+  const cancelAction = () => {
+
+  };
+
+
+  if (Platform.OS == 'android') {
+    keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      _keyboardDidShow,
+    );
+    keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      _keyboardDidHide,
     );
   }
+  else {
+    keyboardDidShowListener = Keyboard.addListener(
+      'keyboardWillShow',
+      _keyboardDidShow,
+    );
+    keyboardDidHideListener = Keyboard.addListener(
+      'keyboardWillHide',
+      _keyboardDidHide,
+    );
+  }
+  MonthObj.selectedIndex =
+    currentDate.getMonth() + MonthObj.serverMonthsCount;
+  backListner = EventManager.addListener(
+    'hardwareBackPress',
+    cancelAction,
+  );
 
-  deleteDraftCallback = (success: any) => {
+  const deleteDraftCallback = (success: any) => {
 
     if (success) {
       //loaderHandler.showLoader();
-      this.props.showLoader(true);
-      this.props.loaderText('Loading...');
-      this.props.navigation.navigate('dashBoard');
+      props.showLoader(true);
+      props.loaderText('Loading...');
+      // props.navigation.navigate('dashBoard');
+      setLocation({ description: '', reference: '' })
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: 'dashBoard' }]
+      })
     } else {
-     //ToastMessage('Unable to delete draft. Please try again later');
+      //ToastMessage('Unable to delete draft. Please try again later');
     }
   };
 
-  draftDetailsCallBack = (success: any, draftDetails: any) => {
+  const draftDetailsCallBack = (success: any, draftDetails: any) => {
     if (success) {
       draftDetails = new MemoryDraftsDataModel().getEditContentObject(
-        draftDetails,
+        draftDetails
       );
-      this.props.setEditContent(draftDetails);
+
+      props.setEditContent(draftDetails);
       MonthObj.month.forEach((element: any, index: any) => {
         if (element.name == draftDetails.date.month) {
           MonthObj.selectedIndex = index;
@@ -386,6 +403,8 @@ class CreateMemory extends React.Component<Props> {
       // 	// Alert.alert("Date error")
       // 	draftDetails.date.day = date.getDate();
       // }
+      let validAlphabatesReg = /^[a-zA-Z]*$/;
+
       let newMemoryDate = draftDetails.memory_date
         ? new Date(parseInt(draftDetails.memory_date) * 1000).getUTCDate() +
         '/' +
@@ -393,296 +412,310 @@ class CreateMemory extends React.Component<Props> {
         '/' +
         new Date(parseInt(draftDetails.memory_date) * 1000).getUTCFullYear()
         : '';
+      // console.warn("draftDetails >", JSON.stringify(draftDetails))
 
-      this.setState(
-        {
-          title: decode_utf8(draftDetails.title),
-          locationText: draftDetails.location.description,
-          itemList: draftDetails.files,
-          year: { ...this.state.year, value: draftDetails.date.year },
-          month: {
-            ...this.state.month,
-            value: MonthObj.month[MonthObj.selectedIndex],
-          },
-          day: {
-            ...this.state.day,
-            value: draftDetails.date.day > 0 ? draftDetails.date.day : 'Day',
-          },
-          memory_date: newMemoryDate ? newMemoryDate : '',
-          showDay: draftDetails.date.day > 0 ? true : false,
-          isCreatedByUser:
-            draftDetails.isCreatedByUser.uid == Account.selectedData().userID,
-          padDetails: draftDetails.etherpad_details,
-          ownerDetails: draftDetails.isCreatedByUser,
-          youWhereThere: draftDetails.youWhereThere,
-          taggedCount: draftDetails.taggedCount,
-          collaboratorOwner: draftDetails.collaboratorOwner,
-        },
-        () => {
-          //loaderHandler.hideLoader();
-          this.props.showLoader(false);
-          this.props.loaderText('Loading...');
-          this.setEtherPadContent(
-            'get',
-            '',
-            draftDetails.etherpad_details.padId,
-          );
-        },
+      setTitle(decode_utf8(draftDetails.title))
+      if (draftDetails.location.description) {
+        setLocation(draftDetails.location)
+      }
+      setLocationText(draftDetails.location.description)
+      setItemList(draftDetails.files)
+      props.saveFiles(draftDetails.files);
+
+      if (draftDetails.date.year) {
+        setYear({ ...year, value: draftDetails.date.year ? draftDetails.date.year : '' })
+        setYearNew({ ...year, value: draftDetails.date.year ? draftDetails.date.year : '' })
+      }
+      if (draftDetails.date.month && validAlphabatesReg.test(draftDetails.date.month)) {
+        setMonth({
+          ...month,
+          value: draftDetails.date.month
+        })
+        setMonthNew({
+          ...month,
+          value: draftDetails.date.month
+        })
+      }
+      else if (draftDetails.date.month) {
+        setMonth({
+          ...month,
+          value: draftDetails.date.month ? draftDetails.date.month : '',//MonthObj.month[MonthObj.selectedIndex],
+        })
+        setMonthNew({
+          ...month,
+          value: draftDetails.date.month ? draftDetails.date.month : '',//MonthObj.month[MonthObj.selectedIndex],
+        })
+      }
+
+      if (draftDetails.date.day) {
+        setDay({
+          ...day,
+          value: draftDetails.date.day ? draftDetails.date.day : '',
+        })
+        setDayNew({
+          ...day,
+          value: draftDetails.date.day ? draftDetails.date.day : '',
+        })
+        setShowDay(parseInt(draftDetails.date.day) > 0 ? true : false)
+      }
+
+      setMemoryDate(newMemoryDate ? newMemoryDate : '')
+      setIsCreatedByUser(draftDetails.isCreatedByUser.uid == Account.selectedData().userID)
+      setPadDetails(draftDetails.etherpad_details)
+      // ownerDetails
+      setOwnerDetails(draftDetails.isCreatedByUser)
+      // youWhereThere
+      setYouWhereThere(draftDetails.youWhereThere)
+      setTaggedCount(draftDetails.taggedCount)
+      setCollaboratorOwner(draftDetails.collaboratorOwner),
+
+        //loaderHandler.hideLoader();
+        props.showLoader(false);
+      props.loaderText('Loading...');
+      setEtherPadContent(
+        'get',
+        '',
+        draftDetails.etherpad_details.padId,
       );
+
       // if(!(draftDetails.isCreatedByUser.uid == Account.selectedData().userID)){
-      // 	CollaboratorActionAPI({nid : this.props.draftNid,
+      // 	CollaboratorActionAPI({nid : props.draftNid,
       // 		id : Account.selectedData().userID,
       // 		action_type: CollaboratorsAction.joinCollaboration})
       // }
       // //loaderHandler.hideLoader();
-    } else {
-      //loaderHandler.hideLoader();
-      this.props.showLoader(false);
-      this.props.loaderText('Loading...');
-     //ToastMessage(draftDetails, Colors.ErrorColor);
     }
+    else {
+      //loaderHandler.hideLoader();
+
+      //ToastMessage(draftDetails, Colors.ErrorColor);
+    }
+    props.showLoader(false);
+    props.loaderText('Loading...');
   };
 
-  componentDidMount = async () => {
-    this.props.setCreateMemory(true);
-    // DefaultPreference.get('hide_memory_draft').then((value: any) => {
-    //   if (value == 'true') {
-    //     this.state.memoryDraftVisibility = false;
-    //   } else {
-    //     this.state.memoryDraftVisibility = true;
-    //   }
-    // });
-
-    this.props.resetAll();
+  const getData = async () => {
     let recentTag = { searchType: kRecentTags, searchTerm: '' };
-    if (this.props.route.params.editMode) {
+    setLocation({ description: '', reference: '' });
+    if (props.route.params.editMode) {
       //loaderHandler.showLoader('Loading...');
-      this.props.showLoader(true);
-      this.props.loaderText('Loading...');
+      props.showLoader(true);
+      props.loaderText('Loading...');
       let response: any = await GetDraftsDetails(
-        this.props.route.params.draftNid,
-        resp => this.draftDetailsCallBack(resp.status, resp.responseData),
+        props.route.params.draftNid,
+        resp => draftDetailsCallBack(resp.status, resp.responseData),
       );
-    } else {
-      let title = decode_utf8(this.props.route.params.textTitle);
+    }
+    else {
+
+      let title = decode_utf8(props.route.params.textTitle);
       title = title.replace(/\n/g, ' ');
       if (title.length > 150) {
         title = title.substring(0, 150);
       }
-      // this.setEtherPadContent("set", description);
-      this.setState(
-        {
-          itemList: this.props.route.params.attachments,
-          padDetails: this.props.route.params.padDetails,
-          title: decode_utf8(this.props.route.params.textTitle),
-          location: this.props.route.params.location,
-          year: {
-            ...this.state.year,
-            value: this.props.route.params.memoryDate.year,
-          },
-          month: {
-            ...this.state.month,
-            value:
-              MonthObj.month[
-              this.currentDate.getMonth() + MonthObj.serverMonthsCount
-              ],
-          },
-          isCreatedByUser: true,
-          date: {
-            ...this.state.day,
-            value: this.props.route.params.memoryDate.day,
-          },
-        },
-        () => {
-          this.props.setNid(this.props.route.params.id);
-          //loaderHandler.hideLoader();
-          this.props.showLoader(false);
-          this.props.loaderText('Loading...');
-          this.setEtherPadContent(
-            'get',
-            '',
-            this.props.route.params.padDetails.padId,
-          );
-        },
+
+      setItemList(props.route.params.attachments)
+      props.saveFiles(props.route.params.attachments);
+
+      setPadDetails(props.route.params.padDetails)
+      setTitle(decode_utf8(props.route.params.textTitle))
+      setLocation(props.route.params.location)
+      if (props.route.params?.memoryDate?.year) {
+        setYear({
+          ...year,
+          value: typeof (props.route.params?.memoryDate?.year) == 'string' ? props.route.params?.memoryDate?.year : JSON.stringify(props.route.params?.memoryDate?.year),
+        })
+        setYearNew({
+          ...year,
+          value: typeof (props.route.params?.memoryDate?.year) == 'string' ? props.route.params?.memoryDate?.year : JSON.stringify(props.route.params?.memoryDate?.year),
+        })
+
+        if (props.route.params?.memoryDate?.month) {
+          let navigationMonth = !isNaN(parseInt(props.route.params?.memoryDate?.month)) ? parseInt(props.route.params?.memoryDate?.month) : '';
+
+          setMonth({
+            ...month,
+            value: navigationMonth <= 9 ? ('0' + navigationMonth) : navigationMonth.toString()
+          })
+          setMonthNew({
+            ...month,
+            value: navigationMonth <= 9 ? ('0' + navigationMonth) : navigationMonth.toString()
+          })
+        }
+
+        if (props.route.params?.memoryDate?.day) {
+          let navigationDay = !isNaN(parseInt(props.route.params?.memoryDate?.day)) ? parseInt(props.route.params?.memoryDate?.day) : '';
+          setDay({
+            ...day,
+            value: navigationDay <= 9 ? ('0' + navigationDay) : navigationDay.toString()
+          })
+          setDayNew({
+            ...day,
+            value: navigationDay <= 9 ? ('0' + navigationDay) : navigationDay.toString()
+          })
+        }
+
+      }
+
+      setIsCreatedByUser(true)
+      props.setNid(props.route.params.id);
+      //loaderHandler.hideLoader();
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      setEtherPadContent(
+        'get',
+        '',
+        props.route.params.padDetails.padId,
       );
+
     }
-    // // this.setEtherPadContent('set', decode_utf8(this.props.textTitle), this.props.padDetails.padId);
-    // this.props.recentTags(recentTag);
-    // this.props.collectionAPI();
+    props.recentTags(recentTag);
+    props.collectionAPI();
   };
 
-  setEtherPadContent(type: any, description: any, padId?: any) {
+  useEffect(() => {
+    props.resetAll();
+    props.setCreateMemory(true);
+
+    getData();
+
+    return () => {
+      Keyboard.dismiss();
+      console.log("useeffect doNotReload >", doNotReload)
+      setDoNotReload(false);
+      props.resetAll();
+      setLocation({ description: '', reference: '' });
+      backListner.removeListener();
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      console.log("props.route.params >", JSON.stringify(props.route.params), doNotReload, (props.route.params?.isFromPrompt, props.route.params?.editPublsihedMemory, props.route.params?.editPublsihedMemory, props.route.params?.editMode))
+      if (!doNotReload && (props.route.params?.isFromPrompt || props.route.params?.editPublsihedMemory || props.route.params?.editPublsihedMemory || props.route.params?.editMode)) {
+        // props.resetAll();
+        props.setCreateMemory(true);
+        getData();
+      }
+    }
+
+    return () => {
+      console.log("focured doNotReload >", doNotReload)
+      // setLocation({ description: '', reference: '' })
+      // props.resetAll();
+      Keyboard.dismiss();
+      setDoNotReload(false);
+    }
+  }, [isFocused]);
+
+
+  // };
+
+  const setEtherPadContent = (type: any, description: any, padId?: any) => {
     try {
-      this.props.etherpadContentUpdate({
-        padId: padId ? padId : this.state.padDetails.padId,
+      props.etherpadContentUpdate({
+        padId: padId ? padId : padDetails?.padId,
         content: description,
         type: type,
       });
     } catch (error) { }
   }
 
-  memorySaveCallback = (success: any, id?: any, padId?: any, key?: any) => {
+  const memorySaveCallback = async (success: any, id?: any, padId?: any, key?: any) => {
     // //loaderHandler.hideLoader();
-    this.props.showLoader(false);
-    this.props.loaderText('Loading...');
-    // showConsoleLog(ConsoleType.LOG,'dataaaaa : ', JSON.stringify(success), id, key);
+
     if (success) {
-      // EventManager.callBack('showConfetti');
       if (key == kPublish) {
-        this.props.showAlertCall(true);
-        this.props.showAlertCallData({
+        props.showAlertCall(true);
+        props.showAlertCallData({
           title: 'Memory published! 🎉',
           desc: `Nice work writing Shakespeare! Your new memory has been published!`,
         });
-        // this.props.navigateToDashboard(true);
-        // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+        // props.navigateToDashboard(true);
+        // props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
+        await analytics().logEvent('new_memory_published');
+        props.resetAll();
+        setLocation({ description: '', reference: '' })
+        props.showLoader(false);
+        props.loaderText('Loading...');
+        props.navigation.replace('dashBoard');
 
-        this.props.navigation.replace('dashBoard');
-        // this.props.navigation.reset({
-        //   index: 0,
-        //   routes: [{ name: 'dashBoard' }],
-        // });
-        // Alert.alert(
-        //   'Memory published! 🎉',
-        //   `Nice work writing Shakespeare! Your new memory has been published!`,
-        //   [
-        //     {
-        //       text: 'Ok',
-        //       style: 'default',
-        //       onPress: () => {
-        //       },
-        //     },
-        //   ],
-        // );
-
-        // Actions.dashBoard();
-      } else if (this.props.route.params.editPublsihedMemory) {
-        this.props.showAlertCall(true);
-        this.props.showAlertCallData({
+      } else if (props.route.params.editPublsihedMemory) {
+        props.showAlertCall(true);
+        props.showAlertCallData({
           title: 'Memory saved',
           desc: `Your memory has been saved.`,
         });
-        // Actions.replace('writeTabs', {
-        //   showPublishedPopup: true,
-        //   title: 'Memory saved',
-        //   desc: `Your memory has been saved.`,
-        // });
-        // Alert.alert('Memory saved', `Your memory has been saved.`, [
-        //   {
-        //     text: 'Ok',
-        //     style: 'default',
-        //     onPress: () => {
+        await analytics().logEvent('memory_save_as_draft');
+        setLocation({ description: '', reference: '' })
 
-        //     },
-        //   },
-        // ]);
         Keyboard.dismiss();
-        // this.props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
-        // this.props.fetchMemoryList({ type: ListType.Timeline, isLoading: true });
-        // EventManager.callBack('memoryUpdateRecentListener');
-        // EventManager.callBack('memoryUpdateTimelineListener');
-        // EventManager.callBack('memoryUpdatePublishedListener');
-        // EventManager.callBack('memoryDetailsListener');
-        // this.props.navigation.replace('writeTabs');
-        this.props.navigation.reset({
+        props.resetAll();
+        props.navigation.reset({
           index: 0,
           routes: [{ name: 'writeTabs' }]
         })
-        // this.props.navigation.writeTabs();
+        // props.navigation.writeTabs();
         // //loaderHandler.showLoader();
-        this.props.showLoader(true);
-        this.props.loaderText('Loading...');
-      } else {
-        this.props.showAlertCall(true);
-        this.props.showAlertCallData({
+        props.showLoader(true);
+        props.loaderText('Loading...');
+      }
+      else {
+        props.showAlertCall(true);
+        setLocation({ description: '', reference: '' })
+        props.resetAll();
+        props.showAlertCallData({
           title: 'New draft saved!',
           desc: `You can see your new draft added with the rest of your in-progress work now.`,
         });
-        this.props.navigation.replace('writeTabs', {
+        props.navigation.replace('writeTabs', {
           showPublishedPopup: true,
           title: 'New draft saved!',
           desc: `You can see your new draft added with the rest of your in-progress work now.`,
         });
-        // this.props.navigation.reset({
-        //   index: 0,
-        //   routes: [{
-        //     name: 'writeTabs', params: {
-        //       showPublishedPopup: true,
-        //       title: 'New draft saved!',
-        //       desc: `You can see your new draft added with the rest of your in-progress work now.`,
-        //     }
-        //   }]
-        // })
-        // Alert.alert(
-        //   'New draft saved!',
-        //   `You can see your new draft added with the rest of your in-progress work now.`,
-        //   [
-        //     {
-        //       text: 'Great!',
-        //       style: 'default',
-        //       onPress: () => {
-        //         // this.props.navigation.jump('memoriesDrafts');
-        //       },
-        //     },
-        //   ],
-        // );
-        // // this.props.navigation.writeTabs();
 
-        // this.props.navigation.goBack();
-        // EventManager.callBack(kReloadDraft);
       }
     } else {
       //loaderHandler.hideLoader();
-      this.props.showLoader(false);
-      this.props.loaderText('Loading...');
-     //ToastMessage(id, Colors.ErrorColor);
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      //ToastMessage(id, Colors.ErrorColor);
     }
   };
 
-  _keyboardDidShow = (e: any) => {
-    this.setState({
-      bottomToolbar: e.endCoordinates.height,
-    });
-  };
-
-  _keyboardDidHide = (e: any) => {
-    this.setState({
-      bottomToolbar: 0,
-    });
-  };
-
-  showMenu = (showMenu?: boolean) => {
+  const showMenu = (showMenu?: boolean) => {
     Keyboard.dismiss();
-    this.hideToolTip();
-    this._actionSheet &&
-      this._actionSheet.current &&
-      this._actionSheet.current.hideSheet();
-    this.setState({
-      menuVisibility: !this.state.menuVisibility,
-    });
+    hideToolTip();
+    _actionSheet &&
+      _actionSheet &&
+      _actionSheet.hideSheet();
+    setMenuVisibility(!menuVisibility)
   };
 
-  preview = () => {
+  const preview = () => {
     //loaderHandler.showLoader();
-    this.props.showLoader(true);
-    this.props.loaderText('Loading...');
-    this.saveIntitals();
-    this.hideMenu();
+    props.showLoader(true);
+    props.loaderText('Loading...');
+    saveIntitals();
+    hideMenu();
     setTimeout(() => {
       //loaderHandler.hideLoader();
-      this.props.showLoader(false);
-      this.props.loaderText('Loading...');
-      this.props.navigation.navigate('memoryDetails', {
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      props.navigation.navigate('memoryDetails', {
         previewDraft: true,
-        memoryDetails: this.getDetailsForPreview(),
+        // memoryDetails: getDetailsForPreview(),
       });
     }, 1000);
   };
 
-  getDetailsForPreview = () => {
+  const getDetailsForPreview = () => {
     let memoryDataModel = new MemoryDataModel();
     memoryDataModel.shareOption.available = true;
-    switch (this.props.shareOption) {
+    switch (props.shareOption) {
       case 'only_me':
         memoryDataModel.shareOption.shareText = 'Shared only with me';
         memoryDataModel.shareOption.color = Colors.green;
@@ -693,11 +726,11 @@ class CreateMemory extends React.Component<Props> {
         break;
       case 'custom':
         let share_count = 0;
-        this.props.whoCanSeeMemoryGroupIds.forEach((element: any) => {
+        props.whoCanSeeMemoryGroupIds.forEach((element: any) => {
           share_count =
             share_count + element.users_count ? element.users_count : 0;
         });
-        share_count = share_count + this.props.whoCanSeeMemoryUids.length;
+        share_count = share_count + props.whoCanSeeMemoryUids.length;
         memoryDataModel.shareOption.shareText =
           'Shared with ' +
           share_count +
@@ -711,7 +744,7 @@ class CreateMemory extends React.Component<Props> {
     }
     memoryDataModel.userDetails.name = 'You';
     memoryDataModel.memory.description =
-      '<p><p>' + this.props.memoryDescription + '</p></p>';
+      '<p><p>' + props.memoryDescription + '</p></p>';
     let currentDate = new Date();
     memoryDataModel.userDetails.createdOn =
       'on ' +
@@ -727,15 +760,15 @@ class CreateMemory extends React.Component<Props> {
     if (memoryDataModel.userDetails.userProfilePic != profile_placeholder) {
       memoryDataModel.userDetails.isProfileAvailable = true;
     }
-    memoryDataModel.memoryTags = this.props.memoryObject.tags;
-    memoryDataModel.memory.memoryTitle = this.props.memoryObject.title;
+    memoryDataModel.memoryTags = props.memoryObject.tags;
+    memoryDataModel.memory.memoryTitle = props.memoryObject.title;
     memoryDataModel.memory.memoryDate =
-      this.state.month.value.name + ' ' + this.props.memoryObject.date.year;
-    memoryDataModel.memory.memoryPlace = this.props.memoryObject.location
+      month.value.name + ' ' + props.memoryObject.date.year;
+    memoryDataModel.memory.memoryPlace = props.memoryObject.location
       .description
-      ? this.props.memoryObject.location.description
+      ? props.memoryObject.location.description
       : '';
-    memoryDataModel.memory.whoElseWasThere = this.props.whoElseWhereThereList;
+    memoryDataModel.memory.whoElseWasThere = props.whoElseWhereThereList;
     memoryDataModel.memory.whoElseWasThere.forEach(
       (element: any, index: any) => {
         if (element.uid == Account.selectedData().userID) {
@@ -744,64 +777,25 @@ class CreateMemory extends React.Component<Props> {
         }
       },
     );
-    // if(this.props.collection.tid){
-    // 		memoryDataModel.memorycollection.collectionName =  this.props.collection.name
-    // 		memoryDataModel.memorycollection.collectionId = this.props.collection.tid
+    // if(props.collection.tid){
+    // 		memoryDataModel.memorycollection.collectionName =  props.collection.name
+    // 		memoryDataModel.memorycollection.collectionId = props.collection.tid
     // }
     memoryDataModel.files = {
-      images: this.state.itemList.filter(
+      images: itemList.filter(
         (element: any) => element.type == 'images',
       ),
-      audios: this.state.itemList.filter(
+      audios: itemList.filter(
         (element: any) => element.type == 'audios',
       ),
-      pdf: this.state.itemList.filter(
+      pdf: itemList.filter(
         (element: any) => element.type == 'files',
       ),
     };
     return memoryDataModel;
   };
 
-  addRemoveTags = () => {
-    this.hideMenu();
-    if (Utility.isInternetConnected) {
-      this.props.navigation.navigate('commonListCreateMemory', {
-        tag: kTags,
-        title: 'Memory Tags',
-        showRecent: true,
-        referenceList: this.props.tagsList,
-        placeholder: 'Enter tags here...',
-      });
-    } else {
-      No_Internet_Warning();
-    }
-  };
-
-  addToCollections = () => {
-    this.hideMenu();
-    if (Utility.isInternetConnected) {
-      this.props.navigation.navigate('collectionList');
-    } else {
-      No_Internet_Warning();
-    }
-  };
-
-  whoElseWasthere = () => {
-    this.hideMenu();
-    if (Utility.isInternetConnected) {
-      this.props.navigation.navigate('commonListCreateMemory', {
-        tag: kWhoElseWhereThere,
-        title: 'Who else where there',
-        showRecent: false,
-        referenceList: this.props.whoElseWhereThereList,
-        placeholder: 'Enter name of friends...',
-      });
-    } else {
-      No_Internet_Warning();
-    }
-  };
-
-  deleteDraft = () => {
+  const deleteDraft = () => {
     Alert.alert('Delete Draft?', `You wish to delete this Memory Draft ?`, [
       {
         text: 'No',
@@ -812,15 +806,17 @@ class CreateMemory extends React.Component<Props> {
         text: 'Yes',
         style: 'default',
         onPress: () => {
-          this.hideMenu();
+          hideMenu();
           if (Utility.isInternetConnected) {
             //loaderHandler.showLoader('Deleting...');
-            this.props.showLoader(true);
-            this.props.loaderText('Deleting...');
+            props.showLoader(true);
+            props.loaderText('Deleting...');
             DeleteDraftService(
-              this.props.nid,
+              props.nid,
               DraftActions.deleteDrafts,
-              kDeleteDraftCreateMemo,
+              response => {
+                deleteDraftCallback(response.status)
+              }
             );
           } else {
             No_Internet_Warning();
@@ -830,145 +826,140 @@ class CreateMemory extends React.Component<Props> {
     ]);
   };
 
-  whoCanSee = () => {
-    this.hideMenu();
-    if (Utility.isInternetConnected) {
-      this.props.navigation.navigate('whoCanSee');
-    } else {
-      No_Internet_Warning();
-    }
-  };
-
-  saveDraft = () => {
+  const saveDraft = () => {
     Keyboard.dismiss();
-    // this.saveIntitals();
-    this.hideMenu();
+    // saveIntitals();
+    hideMenu();
     if (
-      this.state.title != '' &&
-      this.state.memory_date != '' &&
-      this.state.description != ''
+      title != '' &&
+      memory_date != ''
+      && description != ''
     ) {
-      this.setState({
-        actionSheet: {
-          title: 'Memory Draft',
-          type: this.kSaveAction,
-          list: publishActions,
-        },
-      });
+      setActionSheet({
+        title: 'Memory Draft',
+        type: kSaveAction,
+        list: publishActions,
+      })
     }
 
     if (Platform.OS == 'ios') {
-      this._actionSheet &&
-        this._actionSheet.current &&
-        this._actionSheet.current.showSheet();
+      debugger
+      _actionSheet &&
+        _actionSheet &&
+        _actionSheet.showSheet();
     } else {
-      this.setState({
-        showActionAndroid: true,
-      });
+      setShowActionAndroid(true)
     }
-    // if (this.props.editPublsihedMemory) {
-    //   this.saveORPublish('save');
+    // if (props.editPublsihedMemory) {
+    //   saveORPublish('save');
     // }
-    // else if (this.state.isCreatedByUser) {
-    //   this.setState(
+    // else if (isCreatedByUser) {
+    //   setState(
     //     {
     //       actionSheet: {
     //         title: 'Memory Draft',
-    //         type: this.kSaveAction,
+    //         type: kSaveAction,
     //         list: SaveActions,
     //       },
     //     },
-    //     this._actionSheet && this._actionSheet.showSheet(),
+    //     _actionSheet && _actionSheet.showSheet(),
     //   );
     // } else {
-    //   this.saveORPublish('save');
+    //   saveORPublish('save');
     // }
   };
 
-  validateDateAndLocation = (checkLocation: boolean) => {
+  const validateDateAndLocation = (checkLocation: boolean) => {
     if (
-      this.state.year.value != 'Year*' &&
-      this.state.title.trim().length > 0 &&
-      this.state.month.value.tid != 0 &&
-      (!checkLocation || this.state.locationText.trim().length > 0)
+      year.value != 'Year*' &&
+      title.trim().length > 0 &&
+      month.value.tid != 0 &&
+      (!checkLocation || locationText.trim().length > 0)
     ) {
       return true;
     } else {
-      if (this._mainItemList) {
-        this._mainItemList.scrollToOffset({ animated: true, offset: 0 });
+      if (_mainItemList) {
+        _mainItemList.scrollToOffset({ animated: true, offset: 0 });
       }
     }
 
-    if (this.state.year.value == 'Year*') {
-      this.setState({
-        year: { ...this.state.year, error: true },
-        dateError: '* Please enter a year and month to publish your memory',
-      });
+    if (year.value == 'Year*') {
+      setYear({ ...year, error: true })
+      setDateError('* Please enter a year and month to publish your memory')
     }
 
-    if (this.state.month.value.tid == 0) {
-      this.setState({
-        month: { ...this.state.month, error: true },
-        dateError: '* Please enter a year and month to publish your memory',
-      });
+    if (month.value.tid == 0) {
+      setMonth({ ...month, error: true })
+      setDateError('* Please enter a year and month to publish your memory')
     }
 
-    if (checkLocation && this.state.locationText.trim().length == 0) {
-      this.setState({
-        locationError: '* Please enter a location to publish your memory',
-      });
+    if (checkLocation && locationText.trim().length == 0) {
+      setLocationError('* Please enter a location to publish your memory')
     }
 
-    if (this.state.title.trim().length == 0) {
-      this.setState({ titleError: '* Title is mandatory' });
+    if (title.trim().length == 0) {
+      setTitleError('* Title is mandatory')
     }
 
     return false;
   };
 
   /**Menu options for actions*/
-  menuOptions: Array<menuOption> = [
-    { key: 1, title: 'Preview...', onPress: this.preview },
-    { key: 2, title: 'Who can see...', onPress: this.whoCanSee },
-    { key: 3, title: 'Add/Remove Tags...', onPress: this.addRemoveTags },
-    { key: 5, title: 'Who else was there...', onPress: this.whoElseWasthere },
-    { key: 4, title: 'Add to Collections...', onPress: this.addToCollections },
-    {
-      key: 6,
-      title: 'Delete Draft...',
-      onPress: this.deleteDraft,
-      color: Colors.NewRadColor,
-    },
-  ];
+  // const menuOptions: Array<menuOption> = [
+  //   { key: 1, title: 'Preview...', onPress: preview },
+  //   { key: 2, title: 'Who can see...', onPress: whoCanSee },
+  //   { key: 3, title: 'Add/Remove Tags...', onPress: addRemoveTags },
+  //   { key: 5, title: 'Who else was there...', onPress: whoElseWasthere },
+  //   { key: 4, title: 'Add to Collections...', onPress: addToCollections },
+  //   {
+  //     key: 6,
+  //     title: 'Delete Draft...',
+  //     onPress: deleteDraft,
+  //     color: Colors.NewRadColor,
+  //   },
+  // ];
 
-  fileUpdateCallback = (success: boolean, message: any, key: any) => {
+  const fileUpdateCallback = (success: boolean, message: any, key: any) => {
     if (success) {
-      this.filesToUpdate = [];
-      this.saveORPublish(key);
+      // filesToUpdate = [];
+      setFilesToUpdate([]);
+      setTimeout(() => {
+        saveORPublish(key);
+      }, 500);
     } else {
-     //ToastMessage(message, Colors.ErrorColor);
+      //ToastMessage(message, Colors.ErrorColor);
       //loaderHandler.hideLoader();
-      this.props.showLoader(false);
-      this.props.loaderText('Loading...');
+      props.showLoader(false);
+      props.loaderText('Loading...');
     }
   };
 
-  saveORPublish = (key: any) => {
-    this.saveIntitals();
+  const saveORPublish = (key: any, fromPublish?: any, data?: any) => {
+    if (!fromPublish) {
+      saveIntitals();
+    }
     //loaderHandler.showLoader('Saving');
-    this.props.showLoader(true);
-    this.props.loaderText('Saving...');
+    props.showLoader(true);
+    props.loaderText('Saving...');
     setTimeout(async () => {
       if (Utility.isInternetConnected) {
         // setTimeout(() => {
-        if (this.filesToUpdate.length > 0) {
-          UpdateAttachments(this.props.nid, this.filesToUpdate, key,
-            response => {
-              if (response.ResponseCode == 200) {
-                this.fileUpdateCallback(true, response.ResponseMessage, key)
 
+        if (filesToUpdate.length > 0) {
+         await UpdateAttachments(props.nid, filesToUpdate, key,
+            async(response) => {
+              if (response.ResponseCode == 200) {
+
+                 await setFilesToUpdate([]);
+                  setTimeout(() => {
+                    saveORPublish(key);
+                  }, 500);
+               
               } else {
-                this.fileUpdateCallback(false, response.ResponseMessage, key)
+                   //ToastMessage(message, Colors.ErrorColor);
+                  //loaderHandler.hideLoader();
+                  props.showLoader(false);
+                  props.loaderText('Loading...');
                 // EventManager.callBack(kFilesUpdated, false, response.ResponseMessage);
               }
             });
@@ -976,10 +967,10 @@ class CreateMemory extends React.Component<Props> {
         // else {
         let memoryDetails = await DefaultCreateMemoryObj(
           key,
-          this.props.memoryObject,
-          this.state.isCreatedByUser,
+          data ? data : props.memoryObject,
+          isCreatedByUser,
         );
-        let filesToUpload = this.state.itemList.filter(
+        let filesToUpload = itemList.filter(
           (element: any) => element.isLocal,
         );
 
@@ -990,7 +981,7 @@ class CreateMemory extends React.Component<Props> {
           key,
           resp => {
             if (resp?.Status) {
-              this.memorySaveCallback(
+              memorySaveCallback(
                 resp.Status,
                 resp.Status,
                 resp.padid,
@@ -1004,39 +995,54 @@ class CreateMemory extends React.Component<Props> {
         // }, 500);
       } else {
         //loaderHandler.hideLoader();
-        this.props.showLoader(false);
-        this.props.loaderText('Loading...');
+        props.showLoader(false);
+        props.loaderText('Loading...');
         No_Internet_Warning();
       }
     }, 1000);
   };
 
-  saveIntitals = () => {
+  const saveIntitals = () => {
+
     let details: any = {
-      title: this.state.title, //.trim(),
+      title: title, //.trim(),
+      // memory_date: {
+      //   year:
+      //     memory_date != ''
+      //       ? memory_date.split('/')[2]
+      //       : '', //new Date(memory_date).getFullYear(),
+      //   month:
+      //     memory_date != ''
+      //       ? parseInt(memory_date.split('/')[1])
+      //       : '', // new Date(memory_date).getMonth(),
+      //   day:
+      //     memory_date != ''
+      //       ? memory_date.split('/')[0]
+      //       : '', // new Date(memory_date).getDate(),
+      // },
       memory_date: {
         year:
-          this.state.memory_date != ''
-            ? this.state.memory_date.split('/')[2]
-            : '', //new Date(this.state.memory_date).getFullYear(),
+          year.value != ''
+            ? year.value
+            : '',//new Date().getUTCDate().toString(), //new Date(memory_date).getFullYear(),
         month:
-          this.state.memory_date != ''
-            ? parseInt(this.state.memory_date.split('/')[1])
-            : '', // new Date(this.state.memory_date).getMonth(),
+          month.value != ''
+            ? month.value.length > 2 ? month.value : month.value
+            : '',//new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
         day:
-          this.state.memory_date != ''
-            ? this.state.memory_date.split('/')[0]
-            : '', // new Date(this.state.memory_date).getDate(),
+          day.value != ''
+            ? day.value
+            : '',//new Date().getUTCFullYear().toString(), // new Date(memory_date).getDate(),
       },
-      location: { description: '', reference: '' },
-      files: this.state.itemList,
+      location: { description: location.description, reference: locationText == location.description ? location.reference : '' },
+      files: itemList,
       description: '',
     };
     // {
-    //   description: this.state.locationText,
+    //   description: locationText,
     //   reference:
-    //     this.state.locationText == this.state.location.description
-    //       ? this.state.location.reference
+    //     locationText == location.description
+    //       ? location.reference
     //       : '',
     // },
 
@@ -1049,51 +1055,100 @@ class CreateMemory extends React.Component<Props> {
     //   details.memory_date = {
     //     ...details.memory_date,
     //     month: MonthObj.month[MonthObj.selectedIndex].tid,
-    //     day: this.state.day.value != 'Day' ? this.state.day.value : undefined,
+    //     day: day.value != 'Day' ? day.value : undefined,
     //   };
     // }
 
-    this.props.onInitialUpdate(details);
+    props.onInitialUpdate(details);
+
   };
 
-  componentWillUnmount = () => {
-    Keyboard.dismiss();
-    // this.props.resetLocation();
-    // this.showHideMenuListener.removeListener();
-    // this.saveDraftListener.removeListener();
-    // this.memoryCallback.removeListener();
-    // this.deleteDraftListener.removeListener();
-    // this.updateFilesListener.removeListener();
-    // this.draftDetailsListener.removeListener();
-    this.backListner.removeListener();
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
-  };
+  const saveIntitalsForDate = (year, month, day) => {
 
-  hideMenu = () => {
-    this.setState({
-      menuVisibility: false,
-    });
-  };
-
-  uploadOption = () => {
-    Keyboard.dismiss();
-    this.setState(
-      {
-        actionSheet: {
-          title: '',
-          type: this.kUploadAction,
-          list: ImageActions,
-        },
+    let details: any = {
+      title: title, //.trim(),
+      // memory_date: {
+      //   year:
+      //     memory_date != ''
+      //       ? memory_date.split('/')[2]
+      //       : '', //new Date(memory_date).getFullYear(),
+      //   month:
+      //     memory_date != ''
+      //       ? parseInt(memory_date.split('/')[1])
+      //       : '', // new Date(memory_date).getMonth(),
+      //   day:
+      //     memory_date != ''
+      //       ? memory_date.split('/')[0]
+      //       : '', // new Date(memory_date).getDate(),
+      // },
+      memory_date: {
+        year:
+          year.value != ''
+            ? year.value
+            : '',//new Date().getUTCFullYear().toString(), //new Date(memory_date).getFullYear(),
+        month:
+          month.value != ''
+            ? month.value.length > 2 ? month.value : (month.value)
+            : '',//new Date().getUTCMonth() + 1, // new Date(memory_date).getMonth(),
+        day:
+          day.value != ''
+            ? day.value
+            : '',//new Date().getUTCDate().toString(), // new Date(memory_date).getDate(),
       },
-      () =>
-        this._actionSheet &&
-        this._actionSheet.current &&
-        this._actionSheet.current.showSheet(),
-    );
+      location: { description: location.description, reference: locationText == location.description ? location.reference : '' },
+      files: itemList,
+      description: '',
+    };
+    // {
+    //   description: locationText,
+    //   reference:
+    //     locationText == location.description
+    //       ? location.reference
+    //       : '',
+    // },
+
+    // if (MonthObj.selectedIndex <= MonthObj.serverMonthsCount - 1) {
+    //   details.memory_date = {
+    //     ...details.memory_date,
+    //     season: MonthObj.month[MonthObj.selectedIndex].tid,
+    //   };
+    // } else {
+    //   details.memory_date = {
+    //     ...details.memory_date,
+    //     month: MonthObj.month[MonthObj.selectedIndex].tid,
+    //     day: day.value != 'Day' ? day.value : undefined,
+    //   };
+    // }
+    // console.log(year, month, day, details)
+
+    props.onInitialUpdate(details);
+
   };
 
-  audioAttachmentPress = (selectedItem?: any) => {
+  const hideMenu = () => {
+    setMenuVisibility(false)
+  };
+
+  const uploadOption = () => {
+    Keyboard.dismiss();
+    setActionSheet({
+      title: '',
+      type: kUploadAction,
+      list: ImageActions,
+    })
+
+    if (Platform.OS == 'ios') {
+      debugger
+      _actionSheet &&
+        _actionSheet &&
+        _actionSheet.showSheet();
+    } else {
+      setShowActionAndroid(true)
+    }
+  };
+
+  const audioAttachmentPress = (selectedItem?: any) => {
+    console.log(selectedItem)
     Keyboard.dismiss();
     if (
       selectedItem &&
@@ -1102,42 +1157,47 @@ class CreateMemory extends React.Component<Props> {
         selectedItem.filesize == undefined ||
         selectedItem.filesize == '0')
     ) {
-     //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
+      //ToastMessage('This audio file is corrupted', Colors.ErrorColor);
     } else {
-      this.props.navigation.navigate('commonAudioRecorder', {
+      props.navigation.navigate('commonAudioRecorder', {
         mindPopID: 0,
         selectedItem: selectedItem ? selectedItem : null,
         hideDelete: true,
+        doNotReload: val => {
+          setDoNotReload(val)
+        },
         editRefresh: (file: any[]) => {
           Keyboard.dismiss();
           let fid = GenerateRandomID();
           let tempFile: TempFile[] = file.map(obj => ({ ...obj, fid }));
-          this.fileCallback(tempFile);
+          fileCallback(tempFile);
         },
         reset: () => { },
-        deleteItem: () => { },
+        deleteItem: () => {
+          deleteFile(selectedItem?.fid, selectedItem?.isLocal);
+        },
       });
     }
   };
 
-  inviteCollaboratorFlow = () => {
-    let collaborators = this.props.memoryObject.collaborators;
+  const inviteCollaboratorFlow = () => {
+    let collaborators = props.memoryObject.collaborators;
     let keyForPreference =
       Account.selectedData().instanceURL +
       Account.selectedData().userID +
       '-doNotShowAgain';
     // DefaultPreference.get(`${keyForPreference}`).then((value: any) => {
     //   if (value != 'true' || collaborators.length > 0) {
-    //     this.props.navigation.navigate('inviteCollaborators', {
-    //       showLeaveConversation: !this.state.isCreatedByUser,
-    //       owner: this.state.ownerDetails
-    //         ? this.state.ownerDetails
-    //           ? this.state.collaboratorOwner
+    //     props.navigation.navigate('inviteCollaborators', {
+    //       showLeaveConversation: !isCreatedByUser,
+    //       owner: ownerDetails
+    //         ? ownerDetails
+    //           ? collaboratorOwner
     //           : {}
     //         : {},
     //     });
     //   } else {
-    //     this.props.navigation.navigate('commonFriendsSearchView', {
+    //     props.navigation.navigate('commonFriendsSearchView', {
     //       title: 'Invite Collaborators',
     //       refListFriends: [],
     //       refListFriendCircles: [],
@@ -1146,36 +1206,38 @@ class CreateMemory extends React.Component<Props> {
     //   }
     // });
   };
-  toolbar = () => {
+
+  const toolbar = () => {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
+        enableOnAndroid={true}
         keyboardShouldPersistTaps="always"
         style={styles.toolBarKeyboardAwareScrollViewStyle}>
         <View style={styles.toolBarKeyboardAwareScrollViewContainerStyle}>
           <View style={styles.buttonContainerStyle}>
             <TouchableOpacity
               onPress={() => {
-                CaptureImage(this.fileCallback);
+                CaptureImage(fileCallback);
               }}
               style={styles.toolbarIcons}>
               <Image source={camera} resizeMode="contain" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.audioAttachmentPress();
+                audioAttachmentPress();
               }}
               style={styles.toolbarIcons}>
               <Image source={record} resizeMode="contain" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.uploadOption()}
+              onPress={() => uploadOption()}
               style={styles.toolbarIcons}>
               <Image source={icon_upload_file} resizeMode="contain" />
             </TouchableOpacity>
           </View>
-          {this.props.route.params.editPublsihedMemory ? null : (
+          {props.route.params.editPublsihedMemory ? null : (
             <TouchableOpacity
-              onPress={() => this.inviteCollaboratorFlow()}
+              onPress={() => inviteCollaboratorFlow()}
               style={[styles.toolbarIcons, { flexDirection: 'row' }]}>
               <Text style={styles.collaborateTextStyle}>Collaborate</Text>
               <Image source={icon_collaborators} resizeMode="contain" />
@@ -1189,27 +1251,27 @@ class CreateMemory extends React.Component<Props> {
           <View style={styles.buttonContainerStyle}>
             <TouchableOpacity
               onPress={() => {
-                CaptureImage(this.fileCallback);
+                CaptureImage(fileCallback);
               }}
               style={styles.toolbarIcons}>
               <Image source={camera} resizeMode="contain" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.audioAttachmentPress();
+                audioAttachmentPress();
               }}
               style={styles.toolbarIcons}>
               <Image source={record} resizeMode="contain" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.uploadOption()}
+              onPress={() => uploadOption()}
               style={styles.toolbarIcons}>
               <Image source={icon_upload_file} resizeMode="contain" />
             </TouchableOpacity>
           </View>
-          {this.props.route.params.editPublsihedMemory ? null : (
+          {props.route.params.editPublsihedMemory ? null : (
             <TouchableOpacity
-              onPress={() => this.inviteCollaboratorFlow()}
+              onPress={() => inviteCollaboratorFlow()}
               style={[styles.toolbarIcons, { flexDirection: 'row' }]}>
               <Text style={styles.collaborateTextStyle}>Collaborate</Text>
               <Image source={icon_collaborators} resizeMode="contain" />
@@ -1221,7 +1283,7 @@ class CreateMemory extends React.Component<Props> {
     // <AccessoryView
     // 	style={{
     // 		width: "100%",
-    // 		bottom: this.state.bottomToolbar,
+    // 		bottom: bottomToolbar,
     // 		position: "absolute",
     // 		height: 60,
     // 		flexDirection: "row",
@@ -1236,27 +1298,27 @@ class CreateMemory extends React.Component<Props> {
     // 	<View style={{ justifyContent: "space-between", flexDirection: "row", width: "100%" }}>
     // 		<View style={{ justifyContent: "flex-start", flexDirection: "row" }}>
     // 			<TouchableOpacity
-    // 				onPress={() => {CaptureImage(this.fileCallback)}}
+    // 				onPress={() => {CaptureImage(fileCallback)}}
     // 				style={styles.toolbarIcons}>
     // 	    		<Image source={camera} resizeMode="contain" />
     // 			</TouchableOpacity>
     // 			<TouchableOpacity
-    // 				onPress={() => {this.audioAttachmentPress()}}
+    // 				onPress={() => {audioAttachmentPress()}}
     // 				style={styles.toolbarIcons}>
     // 				<Image source={record} resizeMode="contain" />
     // 			</TouchableOpacity>
     // 			<TouchableOpacity
-    // 				onPress={() => this.uploadOption()}
+    // 				onPress={() => uploadOption()}
     // 				style={styles.toolbarIcons}>
     // 				<Image source={icon_upload_file} resizeMode="contain" />
     // 			</TouchableOpacity>
     // 		</View>
     // 		{
-    // 				this.props.editPublsihedMemory?
+    // 				props.editPublsihedMemory?
     // 					null
     // 				:
     // 					<TouchableOpacity
-    // 					onPress={() => this.inviteCollaboratorFlow()}
+    // 					onPress={() => inviteCollaboratorFlow()}
     // 					style={[styles.toolbarIcons, {flexDirection: "row"}]}>
     // 					<Text style={{...fontSize(16), fontWeight:"500", color : Colors.ThemeColor, marginRight: 5}}>Collaborate</Text>
     // 					<Image source={icon_collaborators} resizeMode="contain" />
@@ -1267,15 +1329,18 @@ class CreateMemory extends React.Component<Props> {
     // </AccessoryView>
   };
 
-  fileDescriptionClicked = (file: any) => {
-    this.hideToolTip();
-    this.props.navigation.navigate('fileDescription', {
+  const fileDescriptionClicked = (file: any) => {
+    hideToolTip();
+    props.navigation.navigate('fileDescription', {
       file: file,
-      done: this.updateFileContent,
+      doNotReload: val => {
+        setDoNotReload(val)
+      },
+      done: updateFileContent,
     });
   };
 
-  renderRow = (data: any, index: number) => {
+  const renderRow = (data: any, index: number) => {
     // let index = data.index;
     // data = data.item;
     data.by = data.file_owner ? getUserName(data) : 'You';
@@ -1286,28 +1351,28 @@ class CreateMemory extends React.Component<Props> {
     let fileDescription = data.file_description ? data.file_description : '';
     return (
       <View key={`key-${index}`} style={styles.fullWidth}>
-        {/* {index == 0 && this.viewBeforList()} */}
+        {/* {index == 0 && viewBeforList()} */}
         <View style={styles.rowConatiner}>
           <View style={styles.textContainer}>
             <Text style={styles.TextStyle}>
               By <Text style={{ fontWeight: '500' }}>{data.by}</Text> on{' '}
               <Text>{date}</Text>
             </Text>
-            {(this.state.isCreatedByUser || data.by == 'You') && (
+            {(isCreatedByUser || data.by == 'You') && (
               <TouchableOpacity
                 onPress={() => {
-                  this.deleteFile(data.fid, data.isLocal);
+                  deleteFile(data.fid, data.isLocal);
                 }}>
                 <Image source={delete_icon}></Image>
               </TouchableOpacity>
             )}
           </View>
-          <View>{this.fileHolderView(data)}</View>
+          <View>{fileHolderView(data)}</View>
           <View style={[styles.fullWidth, styles.fileContainerSTyle]}>
             <TouchableHighlight
               disabled={data.by != 'You'}
               underlayColor={'#cccccc11'}
-              onPress={() => this.fileDescriptionClicked(data)}>
+              onPress={() => fileDescriptionClicked(data)}>
               <View>
                 {(fileTitle ? fileTitle.length == 0 : true) &&
                   (fileDescription ? fileDescription.length == 0 : true) &&
@@ -1347,18 +1412,23 @@ class CreateMemory extends React.Component<Props> {
     );
   };
 
-  deleteFile = (fid: any, isTempFile: boolean) => {
+  const deleteFile = (fid: any, isTempFile: boolean) => {
     if (!isTempFile) {
-      this.filesToUpdate.push({ fid: fid, action: 'delete' });
+      setFilesToUpdate([...filesToUpdate,{ fid: fid, action: 'delete' }]);
+      // filesToUpdate.push({ fid: fid, action: 'delete' });
     }
-    let tempFileArray = this.state.itemList;
+    let tempFileArray = itemList;
+    console.log("tempFileArray > ",JSON.stringify(isTempFile),fid)
     let index = tempFileArray.findIndex((element: any) => element.fid === fid);
     tempFileArray.splice(index, 1);
-    this.setState({ itemList: tempFileArray });
+    props.saveFiles(tempFileArray);
+    setTimeout(() => {
+      setItemList(tempFileArray)
+    }, 500);
   };
 
-  updateFileContent = (file: any, title: any, description: any) => {
-    let updatelist = this.state.itemList;
+  const updateFileContent = (file: any, title: any, description: any) => {
+    let updatelist: any = itemList;
     updatelist.forEach((element: any, index: any) => {
       if (element.fid == file.fid) {
         updatelist[index] = {
@@ -1369,23 +1439,31 @@ class CreateMemory extends React.Component<Props> {
       }
     });
     if (!file.isLocal) {
-      this.filesToUpdate.push({
+      setFilesToUpdate([...filesToUpdate,{
         fid: file.fid,
         file_title: title,
         file_description: description,
-      });
+      }]);
+
+      // filesToUpdate.push({
+      //   fid: file.fid,
+      //   file_title: title,
+      //   file_description: description,
+      // });
     }
-    this.setState({ itemList: updatelist });
+    setItemList(updatelist)
+    props.saveFiles(updatelist);
+
   };
 
-  fileHolderView = (file: any) => {
+  const fileHolderView = (file: any) => {
     switch (file.type) {
       case 'images':
         return (
           <TouchableHighlight
             underlayColor={'#ffffff33'}
             onPress={() =>
-              this.props.navigation.navigate('imageViewer', {
+              props.navigation.navigate('imageViewer', {
                 files: [
                   {
                     url: file.thumbnail_large_url
@@ -1395,6 +1473,9 @@ class CreateMemory extends React.Component<Props> {
                         : file.thumb_uri,
                   },
                 ],
+                doNotReload: val => {
+                  setDoNotReload(val)
+                },
                 hideDescription: true,
               })
             }
@@ -1413,7 +1494,12 @@ class CreateMemory extends React.Component<Props> {
           <TouchableHighlight
             underlayColor={'#ffffff33'}
             onPress={() =>
-              this.props.navigation.navigate('pdfViewer', { file: file })
+              props.navigation.navigate('pdfViewer', {
+                file: file,
+                doNotReload: val => {
+                  setDoNotReload(val)
+                },
+              })
             }
             style={styles.fileHolderContainer}>
             <View
@@ -1440,7 +1526,7 @@ class CreateMemory extends React.Component<Props> {
         return (
           <TouchableHighlight
             underlayColor={'#ffffff33'}
-            onPress={() => this.audioAttachmentPress(file)}
+            onPress={() => audioAttachmentPress(file)}
             style={styles.audioContainer}>
             <View style={styles.flexRow}>
               <View style={styles.playButtonContainer}>
@@ -1462,85 +1548,110 @@ class CreateMemory extends React.Component<Props> {
     }
   };
 
-  hideToolTip = () => {
-    if (this.state.toolTipVisibility) {
-      this.setState({
-        toolTipVisibility: false,
-      });
+  const hideToolTip = () => {
+    if (toolTipVisibility) {
+      setToolTilvisibility(false)
     }
   };
 
-  onActionItemClicked = (index: number): void => {
-    this.saveIntitals();
+  const onActionItemClicked = (index: number): void => {
+    saveIntitals();
 
     switch (index) {
       case 0:
-        this.deleteDraft();
+        deleteDraft();
         break;
       case 1:
         //loaderHandler.showLoader('Saving...');
-        this.props.showLoader(true);
-        this.props.loaderText('Saving...');
-        // if (this.state.padDetails?.padId) {
-        //   this.setEtherPadContent('get', '', this.state.padDetails.padId);
-        // }
-        // setTimeout(() => {
-        this.saveORPublish('save');
+        props.showLoader(true);
+        props.loaderText('Saving...');
+        saveORPublish('save');
         // }, 2500);
         break;
       case 2:
-        this._actionSheet &&
-          this._actionSheet.current &&
-          this._actionSheet.current.hideSheet();
+        if (Platform.OS == 'ios') {
+          _actionSheet &&
+            _actionSheet &&
+            _actionSheet.hideSheet();
+        } else {
+          setShowActionAndroid(false)
+        }
         break;
       case 3:
-        this.props.showLoader(true);
-        this.props.loaderText('Publishing...');
+        props.showLoader(true);
+        props.loaderText('Publishing...');
         //loaderHandler.showLoader('Publishing...');
         // setTimeout(() => {
-        this.saveORPublish(kPublish);
+        saveORPublish(kPublish);
         // }, 2500);
         break;
     }
     // switch (index) {
     //   case 0:
-    //     file = PickImage(this.fileCallback);
+    //     file = PickImage(fileCallback);
     //     break;
     //   case 1:
-    //     file = PickAudio(this.fileCallback);
+    //     file = PickAudio(fileCallback);
     //     break;
     //   case 2:
-    //     file = PickPDF(this.fileCallback);
+    //     file = PickPDF(fileCallback);
     //     break;
     //   case 4:
-    //     if (this.validateDateAndLocation(false)) {
-    //       this.saveORPublish('');
+    //     if (validateDateAndLocation(false)) {
+    //       saveORPublish('');
     //     }
     //     break;
     //   case 5:
-    //     this.saveIntitals();
-    //     if (this.validateDateAndLocation(true)) {
-    //       this.props.navigation.navigate('publishMemoryDraft', {
-    //         publishMemoryDraft: this.saveORPublish,
-    //         preview: this.preview,
-    //         delete: this.deleteDraft,
+    //     saveIntitals();
+    //     if (validateDateAndLocation(true)) {
+    //       props.navigation.navigate('publishMemoryDraft', {
+    //         publishMemoryDraft: saveORPublish,
+    //         preview: preview,
+    //         delete: deleteDraft,
     //       });
     //     }
     //     break;
     // }
   };
 
-  fileCallback = (file: any) => {
-    let tempfiles = this.state.itemList;
+  const fileCallback = (file: any) => {
+    let tempfiles = itemList;
     file.forEach((element: any) => {
       tempfiles.push(element);
     });
-    this.setState({
-      itemList: tempfiles,
-    });
+    props.saveFiles(tempfiles);
+    setItemList(tempfiles);
+    optionsActionSheetRef?.current?.hide();
   };
 
-  createLabelSelector = (
+  const validateDateField = (text) => {
+    let limit = 31;
+    if (text) {
+      switch (parseInt(month.value)) {
+        case 2:
+          limit = 28;
+          if (year.value != 'Year*') {
+            if (parseInt(year.value) % 4 == 0) {
+              limit = 29;
+            }
+          }
+          break;
+        case 4 || 6 || 9 || 11:
+          limit = 30;
+          break;
+        default:
+      }
+    }
+    console.error("valid >", text);
+    if (parseInt(text) <= limit) {
+      setDay({ ...day, value: text, error: false })
+    }
+    else {
+      setDay({ ...day, value: text, error: true })
+    }
+  };
+
+  const createLabelSelector = (
     selectedValue: any,
     marginEnd: any,
     flex: any,
@@ -1550,7 +1661,7 @@ class CreateMemory extends React.Component<Props> {
       <TouchableOpacity
         style={[
           styles.labelSelectorContainer,
-          styles.inputView,
+          styles.commonFriendSerachStyleView,
           {
             flex: flex,
             marginEnd: marginEnd,
@@ -1559,7 +1670,7 @@ class CreateMemory extends React.Component<Props> {
               : Colors.TextColor,
           },
         ]}
-        onPress={() => this.onOptionSelection(fieldName, selectedValue.value)}>
+        onPress={() => onOptionSelection(fieldName, selectedValue.value)}>
         <Text style={styles.selectedValueTextStyle}>
           {fieldName == 'month'
             ? selectedValue.value.name
@@ -1570,32 +1681,27 @@ class CreateMemory extends React.Component<Props> {
     );
   };
 
-  onOptionSelection = (fieldName: any, value: any) => {
+  const onOptionSelection = (fieldName: any, value: any) => {
     Keyboard.dismiss();
-    let actions = this.createMemoryHelper.getDateOptions(
+    let actions = createMemoryHelper.getDateOptions(
       fieldName,
-      this.state.year.value,
+      year.value,
     );
-    this.setState(
-      {
-        selectionData: {
-          actions,
-          selectionValue: value,
-          fieldName: fieldName,
-          title: fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
-        },
-      },
-      () => {
-        this.bottomPicker.current &&
-          this.bottomPicker.current.showPicker &&
-          this.bottomPicker.current.showPicker();
-      },
-    );
+    setSelectionData({
+      actions,
+      selectionValue: value,
+      fieldName: fieldName,
+      title: fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
+    })
+    // bottomPicker.current &&
+    //   bottomPicker.current.showPicker &&
+    //   bottomPicker.current.showPicker();
+
   };
 
-  dateSelected = (selectedItem: any) => {
+  const dateSelected = (selectedItem: any) => {
     let currentDate = new Date();
-    if (this.state.selectionData.fieldName == 'month') {
+    if (selectionData.fieldName == 'month') {
       selectedItem = { name: selectedItem.text, tid: selectedItem.key };
       MonthObj.month.forEach((element: any, index: any) => {
         if (element.name == selectedItem.name) {
@@ -1603,208 +1709,129 @@ class CreateMemory extends React.Component<Props> {
         }
       });
     }
-    switch (this.state.selectionData.fieldName) {
+    switch (selectionData.fieldName) {
       case 'year':
         if (
-          this.state.month.value.tid > 0 &&
+          month.value.tid > 0 &&
           selectedItem.text == currentDate.getFullYear()
         ) {
           let currentMonth = currentDate.getMonth();
           let selectedMonth =
             MonthObj.selectedIndex - MonthObj.serverMonthsCount;
           if (currentMonth < selectedMonth) {
-            this.setState(
-              {
-                month: { ...this.state.selectionData, value: MonthObj.month[0] },
-              },
-              () => {
-                this.setState({
-                  day: { ...this.state.selectionData, value: 'Day' },
-                });
-              },
-            );
+            setMonth({ ...selectionData, value: MonthObj.month[0] })
+            setDay({ ...selectionData, value: 'Day' })
+
           } else if (
             currentMonth == selectedMonth &&
-            this.state.day.value != 'Day'
+            day.value != 'Day'
           ) {
             let currentDay = currentDate.getDate();
-            let selectedDay = parseInt(this.state.day.value);
+            let selectedDay = parseInt(day.value);
             if (currentDay < selectedDay) {
-              this.setState({ day: { ...this.state.selectionData, value: 'Day' } });
+              setDay({ ...selectionData, value: 'Day' })
             }
           }
         }
-        this.state.year.error = false;
+        year.error = false;
         break;
       case 'month':
         if (
           MonthObj.selectedIndex > 0 &&
           MonthObj.selectedIndex < MonthObj.serverMonthsCount
         ) {
-          this.setState({
-            day: { ...this.state.selectionData, value: 'Day' },
-            showDay: false,
-          });
-        } else if (this.state.day.value != 'Day') {
-          this.setState({ showDay: true }, () => {
-            let currentDay = parseInt(this.state.day.value);
-            if (currentDay >= 28) {
-              let maxDay = 28;
-              switch (selectedItem.text) {
-                case 'Feb':
-                  maxDay = 28;
-                  if (this.state.year.value != 'Year*') {
-                    if (parseInt(this.state.year.value) % 4 == 0) {
-                      maxDay = 29;
-                    }
+          setDay({ ...selectionData, value: 'Day' })
+          setShowDay(false)
+
+        } else if (day.value != 'Day') {
+          setShowDay(true)
+          let currentDay = parseInt(day.value);
+          if (currentDay >= 28) {
+            let maxDay = 28;
+            switch (selectedItem.text) {
+              case 'Feb':
+                maxDay = 28;
+                if (year.value != 'Year*') {
+                  if (parseInt(year.value) % 4 == 0) {
+                    maxDay = 29;
                   }
-                  break;
-                case 'Apr' || 'Jun' || 'Sep' || 'Nov':
-                  maxDay = 30;
-                  break;
-                default:
-              }
-              if (maxDay < currentDay) {
-                this.setState({
-                  day: { ...this.state.selectionData, value: 'Day' },
-                  showDay: true,
-                });
-              }
+                }
+                break;
+              case 'Apr' || 'Jun' || 'Sep' || 'Nov':
+                maxDay = 30;
+                break;
+              default:
             }
-          });
+            if (maxDay < currentDay) {
+              setDay({ ...selectionData, value: 'Day' })
+              setShowDay(true)
+
+            }
+          }
         } else {
-          this.setState({
-            day: { ...this.state.selectionData, value: 'Day' },
-            showDay: true,
-          });
+          setDay({ ...selectionData, value: 'Day' })
+          setShowDay(true)
         }
-        this.state.month.error = false;
+        month.error = false;
         break;
       case 'day':
         break;
     }
-    if (this.state.selectionData.fieldName == 'month') {
-      this.setState({
-        [this.state.selectionData.fieldName]: {
-          ...this.state.selectionData,
-          value: selectedItem,
-        },
-      });
+    if (selectionData.fieldName == 'month') {
+      // setState(prevState => ({
+      //   ...prevState,
+      //   [selectionData.fieldName]: {
+      //     ...selectionData,
+      //     value: selectedItem,
+      //   },
+      // }));
+
     } else {
-      this.setState({
-        [this.state.selectionData.fieldName]: {
-          ...this.state.selectionData,
-          value: selectedItem.text,
-        },
-      });
+      // setState(prevState => ({
+      //   ...prevState,
+      //   [selectionData.fieldName]: {
+      //     ...selectionData,
+      //     value: selectedItem.text,
+      //   },
+      // }));
+
     }
-    if (!this.state.month.error && !this.state.year.error) {
-      this.state.dateError = '';
+    if (!month.error && !year.error) {
+      setDateError('')
     }
   };
 
-  // _renderLocation = (locationRow: any) => {
-  //   //showConsoleLog(ConsoleType.LOG,locationRow)
-  //   return (
-  //     <TouchableOpacity
-  //       style={styles.locationContainer}
-  //       onPress={() => {
-  //         this.setState({
-  //           location: locationRow.item,
-  //           locationText: locationRow.item.description,
-  //           locationList: [],
-  //         });
-  //         this.props.resetLocation();
-  //       }}>
-  //       <Text
-  //         style={styles.locationDescTextStyle}
-  //         ellipsizeMode="tail"
-  //         numberOfLines={2}>
-  //         {locationRow.item.description}
-  //       </Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
+  const _renderLocation = ({ item, index }: any) => {
 
-  viewBeforList = () => {
+    return (
+      <TouchableOpacity
+        style={styles.locationContainer}
+        onPress={() => {
+          setLocation(item)
+          setLocationText(item.description)
+          // setLocationList([])
+          setLocationError('')
+          props.userSelectedLocation(item)
+          props.resetLocation();
+        }}>
+        <Text
+          style={styles.locationDescTextStyle}
+          ellipsizeMode="tail"
+          numberOfLines={2}>
+          {item.description}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const viewBeforList = () => {
     return (
       // onStartShouldSetResponder={() => true}
       <View style={Styles.viewBeforListContainerStyle}>
         <View>
-          {this.state.isCreatedByUser ? (
+          {isCreatedByUser ? (
             <View style={styles.ViewBeforeStyle}>
-              {/* <Text
-              style={styles.whenHappenTextStyle}>
-              {'When did it happen? (Approximate)'}
-              <Text style={{ color: Colors.ErrorColor }}>{' *'}</Text>
-            </Text> */}
-              {/* <View
-              style={styles.createLableSelectorContainerStyle}
-              onStartShouldSetResponder={() => true}>
-              {this.createLabelSelector(this.state.year, 10, 2, 'year')}
-              {this.createLabelSelector(this.state.month, 10, 3, 'month')}
-              {this.state.showDay ? (
-                this.createLabelSelector(this.state.day, 0, 2, 'day')
-              ) : (
-                <View style={styles.flex2Padding} />
-              )}
-            </View>
 
-            <Text
-              style={styles.dateErrorTextStyle}>
-              {this.state.dateError}
-            </Text> */}
-
-              {/* <Text
-              style={styles.whereHappenTextStyle}>
-              {'Where did it happen?'}
-              <Text style={{ color: Colors.ErrorColor }}>{' *'}</Text>
-            </Text>
-            <SearchBar
-              style={[styles.searchBarStyle,{
-                borderBottomColor: this.state.locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
-              }]}
-              placeholder="Enter location here"
-              onBlur={() => {
-                this.setState({ locationList: [] });
-              }}
-              onSearchButtonPress={(keyword: string) => {
-                this.setState({ showLocationLoader: true });
-                this.props.onLocationUpdate(keyword);
-              }}
-              onClearField={() => {
-                this.props.resetLocation();
-                this.setState({ locationList: [] });
-              }}
-              onChangeText={(text: any) => {
-                this.props.onLocationUpdate(text);
-                this.setState({ locationError: '', locationText: text });
-              }}
-              // onFocus={()=> this._mainItemList.scrollToOffset({ animated: true, offset: 100})}
-              showCancelClearButton={false}
-              value={this.state.locationText}
-            /> */}
-              {/* {this.props.locationList.length > 0 && (
-              <FlatList
-                keyExtractor={(_, index: number) => `${index}`}
-                keyboardShouldPersistTaps={'handled'}
-                onScroll={() => {
-                  Keyboard.dismiss();
-                }}
-                style={styles.flatListStyle}
-                keyExtractor={(_: any, index: number) => `${index}`}
-                data={this.props.locationList}
-                renderItem={this._renderLocation}
-                ItemSeparatorComponent={() => (
-                  <View
-                    style={styles.separator}></View>
-                )}
-              />
-            )}
-
-            <Text style={styles.locationErrorTextStyle}>
-              {this.state.locationError}
-            </Text> */}
               {
                 <>
                   <TextInput
@@ -1812,27 +1839,28 @@ class CreateMemory extends React.Component<Props> {
                       styles.memoryDescriptionInput,
                       {
                         borderBottomColor:
-                          this.state.titleError.length > 0
+                          titleError.length > 0
                             ? Colors.ErrorColor
                             : Colors.white,
                         borderBottomWidth:
-                          this.state.titleError.length > 0 ? 0.5 : 0,
+                          titleError.length > 0 ? 0.5 : 0,
                       },
                     ]}
                     // selection={{start:0}}//, end:0
-                    value={this.state.title}
+                    value={title}
                     maxLength={250}
                     multiline={false}
                     onChangeText={(text: any) => {
-                      this.setState({ title: text, titleError: '' });
+                      setTitle(text)
+                      setTitleError('')
                     }}
-                    placeholder={this.state.placeholder}
+                    placeholder={placeholder}
                     placeholderTextColor={
                       Colors.memoryTitlePlaceholderColor
                     }></TextInput>
 
                   <Text style={Styles.errortextStyle}>
-                    {this.state.titleError}
+                    {titleError}
                   </Text>
                 </>
               }
@@ -1840,48 +1868,35 @@ class CreateMemory extends React.Component<Props> {
           ) : (
             <View style={styles.ViewBeforeStyle}>
               <Text style={styles.memoryDescriptionInput}>
-                {this.state.title}
+                {title}
               </Text>
             </View>
-            // this.ownersViewForCollaborators()
+            // ownersViewForCollaborators()
           )}
           <View style={Styles.etherPadStyle}>
-            {/* styles.createdByUserContainer */}
-            {/* {!this.state.isCreatedByUser && (
-            <View>
-              <Text
-                style={styles.titletextContainer}>
-                {this.state.title}
-              </Text>
-              <Border />
-            </View>
-          )} */}
-            {/* <Text
-            style={styles.memoryDescriptionTextStyle}
-            numberOfLines={3}
-            ellipsizeMode={'tail'}>
-            {this.props.memoryDescription}
-          </Text> */}
-            {/* <View style={styles.ViewBeforeStyle}> */}
-            {this.props.route.params.editMode || this.state.showEtherPad ? (
+
+            {props.route.params.editMode || showEtherPad ? (
               <>
                 <Text
                   style={styles.memoryDescriptionTextStyle}
                   numberOfLines={15}
                   ellipsizeMode={'tail'}>
-                  {this.props.memoryDescription}
+                  {props.memoryDescription}
                 </Text>
 
                 {
-                  this.state.padDetails?.padUrl &&
+                  padDetails?.padUrl &&
                   <TouchableOpacity
                     onPress={() => {
-                      if (this.state.padDetails?.padUrl) {
-                        this.props.navigation.navigate('etherPadEditing', {
-                          title: this.state.title.trim(),
-                          padDetails: this.state.padDetails,
-                          updateContent: this.setEtherPadContent.bind(this),
-                          inviteCollaboratorFlow: this.inviteCollaboratorFlow.bind(this),
+                      if (padDetails?.padUrl) {
+                        props.navigation.navigate('etherPadEditing', {
+                          title: title.trim(),
+                          padDetails: padDetails,
+                          doNotReload: val => {
+                            setDoNotReload(val)
+                          },
+                          updateContent: setEtherPadContent,
+                          inviteCollaboratorFlow: inviteCollaboratorFlow,
                         })
                       }
                     }}>
@@ -1895,19 +1910,14 @@ class CreateMemory extends React.Component<Props> {
               </>
 
               // <EtherPadEditing
-              //   editMode={this.props.route.params.editMode}
-              //   title={this.state.title.trim()}
-              //   padDetails={this.state.padDetails}
-              //   updateContent={this.setEtherPadContent.bind(this)}
-              //   inviteCollaboratorFlow={this.inviteCollaboratorFlow.bind(this)}
+              //   editMode={props.route.params.editMode}
+              //   title={title.trim()}
+              //   padDetails={padDetails}
+              //   inviteCollaboratorFlow={inviteCollaboratorFlow.bind(this)}
               // />
             ) : (
               <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    showEtherPad: true,
-                  })
-                }>
+                onPress={() => setShowEtherPad(true)}>
                 <Text style={Styles.etherpadTextInputStyle}>
                   {'|Tap to start writing...'}
                 </Text>
@@ -1917,9 +1927,8 @@ class CreateMemory extends React.Component<Props> {
             {/* <TouchableOpacity
             onPress={() =>
               this.props.navigation.navigate('etherPadEditing', {
-                title: this.state.title.trim(),
-                padDetails: this.state.padDetails,
-                updateContent: this.setEtherPadContent.bind(this),
+                title: this.title.trim(),
+                padDetails: this.padDetails,
                 inviteCollaboratorFlow: this.inviteCollaboratorFlow.bind(this),
               })
             }>
@@ -1930,105 +1939,129 @@ class CreateMemory extends React.Component<Props> {
           </TouchableOpacity> */}
           </View>
 
-          {Platform.OS === 'android' && this.state.showCalender && (
+          {/* {Platform.OS === 'android' && showCalender && (
             <DateTimePicker
-              isVisible={this.state.showCalender}
+              isVisible={showCalender}
               onCancel={() => {
-                this.setState({ showCalender: false });
-                //showConsoleLog(ConsoleType.LOG,"cancelled")
+                setShowCalendar(false)
               }}
               onDateSelection={(date: any) => {
-                this.setState({
-                  showCalender: false,
-                  memory_date: moment(date).format('DD/MM/YYYY'),
-                });
+                setShowCalendar(false)
+                setMemoryDate(moment(date).format('DD/MM/YYYY'))
+
               }}
             />
-          )}
+          )} */}
         </View>
 
         {/* {
-          this.state.bottomToolbar ?
+          bottomToolbar ?
             null
             : */}
         <View style={Styles.buttonsContainerStyle}>
-          {this.props.memoryDescription &&
-            this.props.memoryDescription != '' ? (
-            <>
-              <TouchableOpacity
-                style={Styles.buttonsStyle}
-                onPress={() => {
-                  // if (Platform.OS === 'android') {
-                  //   DateTimePickerAndroid.open(this.dateOptions);
-                  // } else {
-                  this.setState({
-                    showCalender: true,
-                  });
-                  // }
-                }}>
-                <Image source={calendarWrite} />
-                <Text style={styles.buttonsTextStyle}>Date</Text>
-              </TouchableOpacity>
-              <View style={{ width: 8 }} />
-            </>
-          ) : null}
+          {/* {props.memoryDescription &&
+            props.memoryDescription != '' ? ( */}
+          <>
+            <TouchableOpacity
+              style={Styles.buttonsStyle}
+              onPress={() => {
+                setOptionToShow('date')
+                optionsActionSheetRef?.current?.show();
+                // if (Platform.OS === 'android') {
+                //   DateTimePickerAndroid.open(this.dateOptions);
+                // } else {
+                // this.setState({
+                //   showCalender: true,
+                // });
+                // }
+              }}>
+              <Image style={styles.imageStyles} source={calendarWrite} />
+              <Text style={styles.buttonsTextStyle}>Date</Text>
+            </TouchableOpacity>
+            <View style={{ width: 8 }} />
+          </>
+          {/* ) : null} */}
+
           <TouchableOpacity
             style={Styles.buttonsStyle}
             onPress={() => {
-              // CaptureImage(this.fileCallback);
-              PickImage(this.fileCallback);
+              optionsActionSheetRef?.current?.show();
+              setOptionToShow('location')
             }}>
-            <Image source={image} />
-            <Text style={styles.buttonsTextStyle}>Image</Text>
+            <Image style={styles.imageStyles} source={map_pin} />
+            <Text style={styles.buttonsTextStyle}>Location</Text>
+          </TouchableOpacity>
+          <View style={{ width: 8 }} />
+
+          <TouchableOpacity
+            style={Styles.buttonsStyle}
+            onPress={() => {
+              optionsActionSheetRef?.current?.show();
+              setOptionToShow('upload')
+            }}>
+            <Image style={styles.imageStyles} source={upload} />
+            <Text style={styles.buttonsTextStyle}>Upload</Text>
           </TouchableOpacity>
 
           <View style={{ width: 8 }} />
           <TouchableOpacity
             style={[
               Styles.buttonsStyle,
-              { backgroundColor: Colors.decadeFilterBorder },
+              { backgroundColor: Colors.bordercolor },
             ]}
             onPress={() => {
-              // if (this.props.padDetails?.padId) {
-              this.setEtherPadContent('get', '', this.state.padDetails.padId);
-              // }
               if (
-                this.state.description != '' &&
-                this.state.memory_date == ''
+                memory_date == '' || year.value == '' || month.value == ''
               ) {
-               //ToastMessage('Please select Date first', Colors.ErrorColor);
+                setShowCustomValidationAlert(true)
+              }
+              else if (
+                location.description == '' || location.description == null || location.description == undefined
+              ) {
+                setShowCustomValidationAlert(true)
+              }
+              else {
+                // preview
+                props.navigation.navigate('publishMemoryDraft', {
+                  publishMemoryDraft: val => saveORPublish(val.key, true, val.data),
+                  doNotReload: val => {
+                    setDoNotReload(val)
+                  },
+                  preview: () => { },
+                  delete: deleteDraft,
+                });
               }
 
-              if (
-                this.state.title != '' &&
-                this.state.memory_date != '' &&
-                this.state.description != ''
-              ) {
-                Keyboard.dismiss();
-                this.hideMenu();
-                this.setState(
-                  {
-                    actionSheet: {
-                      title: 'Memory Draft',
-                      type: this.kSaveAction,
-                      list: publishActions,
-                    },
-                  },
-                  () => {
-                    if (Platform.OS == 'ios') {
-                      this._actionSheet &&
-                        this._actionSheet.current &&
-                        this._actionSheet.current.showSheet();
-                    } else {
-                      this.setState({
-                        showActionAndroid: true,
-                      });
-                    }
-                  },
-                );
-              }
+              // if (
+              //   title != '' &&
+              //   memory_date != '' &&
+              //   description != '' &&
+              //   location.description != ''
+              // ) {
+              //   Keyboard.dismiss();
+              //   hideMenu();
+              //   setState(prev => ({
+              //     ...prev,
+              //     actionSheet: {
+              //       title: 'Memory Draft',
+              //       type: kSaveAction,
+              //       list: publishActions,
+              //     },
+              //   }));
+
+              //   if (Platform.OS == 'ios') {
+              //     _actionSheet &&
+              //       _actionSheet &&
+              //       _actionSheet.showSheet();
+              //   } else {
+              //     setState(prev => ({
+              //       ...prev,
+              //       showActionAndroid: true,
+              //     }));
+              //   }
+              // }
             }}>
-            <Image source={arrowRight} />
+            <Image style={styles.imageStyles} source={arrowRight} />
             <Text
               style={[styles.buttonsTextStyle, { color: Colors.white }]}>
               Next
@@ -2038,13 +2071,13 @@ class CreateMemory extends React.Component<Props> {
         </View>
         {/* } */}
 
-        {/* {this.state.itemList.length > 0 && (
+        {/* {this.itemList.length > 0 && (
           <View style={{ marginTop: 15 }}>
             <Border />
             <Text
               style={[styles.memoryDescriptionTextStyle, styles.paddingVerticalStyle]}>
               {'Attachments ('}
-              {this.state.itemList.length}
+              {this.itemList.length}
               {')'}
             </Text>
           </View>
@@ -2053,13 +2086,13 @@ class CreateMemory extends React.Component<Props> {
     );
   };
 
-  ownersViewForCollaborators = () => {
+  const ownersViewForCollaborators = () => {
     return (
       <View style={styles.collabratorMainContainer}>
         <View style={styles.fullFexDirectionRowStyle}>
           <View style={styles.placeHolderContainerStyle}>
             <PlaceholderImageView
-              uri={Utility.getFileURLFromPublicURL(this.state.ownerDetails.uri)}
+              uri={Utility.getFileURLFromPublicURL(ownerDetails.uri)}
               borderRadius={Platform.OS === 'android' ? 48 : 24}
               style={styles.placeHolderImageStyle}
               profilePic={true}
@@ -2068,8 +2101,8 @@ class CreateMemory extends React.Component<Props> {
           <View style={styles.flexMarginLeftStyle}>
             <View style={styles.directionFlex}>
               <Text style={styles.ownerNameTextStyle}>
-                {this.state.ownerDetails.field_first_name_value}{' '}
-                {this.state.ownerDetails.field_last_name_value}
+                {ownerDetails.field_first_name_value}{' '}
+                {ownerDetails.field_last_name_value}
                 <Text
                   style={[
                     styles.ownerNameTextStyle,
@@ -2077,21 +2110,21 @@ class CreateMemory extends React.Component<Props> {
                       fontWeight: 'normal',
                     },
                   ]}>
-                  {this.state.youWhereThere
-                    ? this.state.taggedCount == 0
+                  {youWhereThere
+                    ? taggedCount == 0
                       ? ' and You'
                       : ', You and '
-                    : this.state.taggedCount == 0
+                    : taggedCount == 0
                       ? ''
                       : ' and '}
                 </Text>
               </Text>
-              {this.state.taggedCount > 0 && (
+              {/* {taggedCount > 0 && (
                 <TouchableOpacity
                   onPress={() =>
-                    this.props.navigation.navigate('customListMemoryDetails', {
+                    props.navigation.navigate('customListMemoryDetails', {
                       heading: 'Who else where there',
-                      itemList: this.props.whoElseWhereThereList,
+                      itemList: props.whoElseWhereThereList,
                     })
                   }>
                   <Text
@@ -2102,19 +2135,19 @@ class CreateMemory extends React.Component<Props> {
                         color: Colors.NewTitleColor,
                       },
                     ]}>
-                    {this.state.taggedCount}
-                    {this.state.taggedCount > 1 ? ' others' : ' other'}
+                    {taggedCount}
+                    {taggedCount > 1 ? ' others' : ' other'}
                   </Text>
                 </TouchableOpacity>
-              )}
+              )} */}
             </View>
             <Text style={[styles.ownerNameTextStyle, { paddingTop: 5 }]}>
-              {this.state.month.value.name}{' '}
-              {this.state.showDay && this.state.day.value},{' '}
-              {this.state.year.value}{' '}
-              <Text style={{ color: Colors.darkGray }}>
+              {month.value.name}{' '}
+              {showDay && day.value},{' '}
+              {year.value}{' '}
+              <Text style={{ color: Colors.newDescTextColor }}>
                 {' '}
-                {this.state.locationText}{' '}
+                {locationText}{' '}
               </Text>
             </Text>
           </View>
@@ -2122,285 +2155,360 @@ class CreateMemory extends React.Component<Props> {
       </View>
     );
   };
-  renderForCollaborator = () => { };
 
-  cancelAction = () => {
-    // Alert.alert('', `Are you sure you want to exit?`, [
-    //   {
-    //     text: 'No',
-    //     style: 'cancel',
-    //     onPress: () => { },
-    //   },
-    //   {
-    //     text: 'Yes',
-    //     style: 'default',
-    //     onPress: () => {
-    //       EventManager.callBack(kReloadDraft);
-    //       this.setState({ showMenu: false }, () => {
-    //         Keyboard.dismiss();
-    //         if (this.props.deepLinkBackClick) {
-    //           this.props.navigation.dashBoard();
-    //         } else {
-    //           this.props.navigation.goBack();
-    //         }
-    //       });
-    //     },
-    //   },
-    // ]);
-    // return ();
-  };
+  const validateDate = (yearNew, monthNew, dayNew) => {
 
-  onChange = (date: any) => {
-    showConsoleLog(ConsoleType.LOG, 'date');
-  };
+    let yearactions = createMemoryHelper.getDateOptions(
+      'year',
+      yearNew.value,
+    ), isValidYear = false;
+    let monthactions = createMemoryHelper.getDateOptions(
+      'month',
+      yearNew.value,
+    ), isValidMonth = false;
+    let isValidDate = false;
 
-  render() {
-    return (
-      <View style={styles.fullFlex}>
-        {
-          this.props.showLoaderValue ?
-            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
-            :
-            null
-        }
-        <SafeAreaView style={styles.emptySafeAreaStyle} />
-        {/* <SafeAreaView style={styles.SafeAreaViewContainerStyle}> */}
-          {Platform.OS === 'ios' && this.state.showCalender && (
-            <View style={Styles.calendarViewStyle}>
-              <DatePicker
-                options={{
-                  backgroundColor: Colors.white,
-                  textHeaderColor: Colors.black,
-                  textDefaultColor: Colors.systemRed,
-                  selectedTextColor: Colors.white,
-                  mainColor: Colors.systemRed,
-                  textSecondaryColor: Colors.systemRed,
-                  borderColor: 'rgba(122, 146, 165, 0.1)',
-                }}
-                newMemoryYears={this.newMemoryYears}
-                mode="datepicker"
-                selected={this.state.memory_date}
-                current={this.state.memory_date}
-                selectorEndingYear={new Date().getUTCFullYear()}
-                selectorStartingYear={1917}
-                onSelectedChange={date => {
-                  this.setState({
-                    showCalender: false,
-                    memory_date: date,
-                  });
-                }}
-                style={styles.calendar}
-              />
-            </View>
-          )}
-          <CustomAlert
-            modalVisible={this.state.showCustomAlert}
-            // setModalVisible={setModalVisible}
-            title={'Save your memory'}
-            message={
-              'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'
+    if (yearactions && yearactions.length && yearactions.filter(item => (item.text.toLowerCase() === yearNew.value) || (item.key.toString().toLowerCase() === yearNew.value)).length) {
+      isValidYear = true;
+    }
+
+    let validNumberReg = /^[0-9]+$/;
+    let validAlphabatesReg = /^[a-zA-Z]*$/;
+    if (validNumberReg.test(monthNew?.value) || validAlphabatesReg.test(monthNew?.value)) {
+      let val = monthNew?.value?.toLowerCase();
+      let getMonthIsValid = monthactions.filter(item => (item.text.toLowerCase() === val) || (item.key && (item.key <= 9 ? ('0' + item.key.toString().toLowerCase() === val) : item.key.toString().toLowerCase() === val)));
+      let monthData = monthactions.filter(item => (item.key <= 9 ? (('0' + item.key.toString().toLowerCase()) === monthNew.value.toString().toLowerCase()) : item.key.toString().toLowerCase() == monthNew.value.toString().toLowerCase()));
+      if (monthNew?.value?.length > 2) {
+        if (monthactions && monthactions.length && getMonthIsValid.length && getMonthIsValid[0]?.disabled != true) {
+          if (parseInt(yearNew.value) == new Date().getFullYear()) {
+
+            let seasonArray = MonthObj?.month?.filter(itm => itm.name == monthNew.value)
+            // seasonArray = seasonArray.length ? seasonArray.sort(function (a, b) { return a - b }) :[]
+            // && itm.months.filter(monthitm => monthitm.id == new Date().getMonth()+1).length
+            let monthsInSeason = seasonArray.length ? seasonArray[0].months.map(ii => ii.id).sort(function (a, b) { return a - b }) : []
+            if (parseInt(yearNew.value) <= new Date().getFullYear() && monthsInSeason.length && (monthsInSeason.indexOf(new Date().getUTCMonth() + 1) != -1)) {
+              if (!isNaN(parseInt(monthNew.value)) && (parseInt(monthNew.value) <= (new Date().getMonth() + 1))) {
+
+                isValidMonth = true;
+                isValidDate = true;
+                setDayNew({ ...dayNew, value: '' })
+              }
+              else if (validAlphabatesReg.test(monthNew?.value)) {
+                setDayNew({ ...dayNew, value: '' })
+                isValidMonth = true;
+                isValidDate = true;
+              }
             }
-            buttons={[
-              {
-                text: 'Close and save as draft',
-                func: () => {
-                  this.setState({ showCustomAlert: false }, () => {
-                    // if (this.props.padDetails?.padId) {
-                    //   this.setEtherPadContent('get', '', this.state.padDetails.padId);
-                    // }
-                    // setTimeout(() => {
-                    this.saveORPublish('save');
-                    // }, 1000);
-                  });
+          }
+          else {
+            if (parseInt(yearNew.value) < new Date().getFullYear()) {
+              if (!isNaN(parseInt(monthNew.value)) && (parseInt(monthNew.value) <= (new Date().getMonth() + 1))) {
+                isValidMonth = true;
+                isValidDate = true;
+                setDayNew({ ...dayNew, value: '' })
+              }
+              else if (validAlphabatesReg.test(monthNew?.value)) {
+                setDayNew({ ...dayNew, value: '' })
+                isValidMonth = true;
+                isValidDate = true;
+              }
+            }
+          }
+        }
+      }
+      else if ((monthNew?.value?.length == 2) && (parseInt(yearNew.value) <= new Date().getFullYear()) && monthactions && monthactions.length && monthData.length && monthData[0]?.disabled != true) {
+        isValidMonth = true;
+      }
+    }
 
-                  // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                },
-              },
-              {
-                text: 'Continue editing',
-                func: () => {
-                  this.setState({ showCustomAlert: false });
-                  // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                },
-                styles: { fontWeight: '400' },
-              },
-              {
-                text: 'Cancel',
-                func: () => {
-                  this.setState({ showCustomAlert: false }, () => {
-                    this.props.fetchMemoryList({
-                      type: ListType.Recent,
-                      isLoading: true,
-                    });
-                    this.props.fetchMemoryList({
-                      type: ListType.Timeline,
-                      isLoading: true,
-                    });
-                    //loaderHandler.showLoader();
-                    this.props.showLoader(true);
-                    this.props.loaderText('Loading...');
-                    this.props.navigation.goBack();
-                  });
-                  // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                },
-                styles: { fontWeight: '400' },
-              },
-            ]}
+    if (dayNew.value != '') {
+      let dayactions = createMemoryHelper.getDateOptions(
+        'day',
+        yearNew.value,
+        monthNew.value,
+      );
+      let dayArray = dayactions.filter(item => item.text.toString() === dayNew.value.toString());
+      // console.log("sssss >>",JSON.stringify(dayactions),JSON.stringify(dayArray))
+      if (dayArray.length && (dayArray[0]?.disabled != true)) {
+        isValidDate = true;
+      }
+      else if (validAlphabatesReg.test(monthNew?.value)) {
+        isValidDate = true;
+      }
+
+    }
+
+    setYearNew({ ...yearNew, error: !isValidYear })
+    setMonthNew({ ...monthNew, error: !isValidMonth })
+    setDayNew({ ...dayNew, error: !isValidDate })
+    console.log(isValidMonth, isValidYear, isValidDate)
+
+    if (isValidMonth && isValidYear && isValidDate) {
+      optionsActionSheetRef?.current?.hide();
+      setMemoryDate(`${yearNew.value}/${monthNew.value}/${yearNew.value}`)
+
+      setYear({ ...yearNew, error: !isValidYear })
+      setMonth({ ...monthNew, error: !isValidMonth })
+      setDay({ ...dayNew, error: !isValidDate })
+      saveIntitalsForDate(yearNew, monthNew, dayNew)
+    };
+
+  };
+
+  // render() {
+  return (
+    <View style={styles.fullFlex}>
+      {
+        props.showLoaderValue ?
+          <BusyIndicator startVisible={props.showLoaderValue} text={props.loaderTextValue != '' ? props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+          :
+          null
+      }
+      <SafeAreaView style={styles.emptySafeAreaStyle} />
+      {/* <SafeAreaView style={styles.SafeAreaViewContainerStyle}> */}
+      {/* {Platform.OS === 'ios' && showCalender && (
+        <View style={Styles.calendarViewStyle}>
+          <DatePicker
+            options={{
+              backgroundColor: Colors.white,
+              textHeaderColor: Colors.black,
+              textDefaultColor: Colors.systemRed,
+              selectedTextColor: Colors.white,
+              mainColor: Colors.systemRed,
+              textSecondaryColor: Colors.systemRed,
+              borderColor: 'rgba(122, 146, 165, 0.1)',
+            }}
+            newMemoryYears={newMemoryYears}
+            mode="datepicker"
+            selected={memory_date}
+            current={memory_date}
+            selectorEndingYear={new Date().getUTCFullYear()}
+            selectorStartingYear={1917}
+            onSelectedChange={date => {
+              setShowCalendar(false)
+              setMemoryDate(date)
+
+            }}
+            style={styles.calendar}
           />
-          <View
-            style={styles.navigationHeaderContainer}
-          // onStartShouldSetResponder={() => true}
-          // onResponderStart={this.hideToolTip}
-          >
-            <NavigationHeaderSafeArea
-              // heading={'Memory Draft'}
-              showCommunity={false}
-              cancelAction={() => this.saveDraft()} //this.setState({ showCustomAlert: true }) //this.cancelAction}
-              showRightText={true}
-              rightText={
-                this.props.route.params.editPublsihedMemory
-                  ? 'Save'
-                  : // : this.state.isCreatedByUser
-                  //   ? 'Done'
-                  'Save'
-              }
-              backIcon={action_close}
-              saveValues={() => {
-                this.setState({ showCustomAlert: true });
-              }} //this.saveDraft
-            // rightIcon={this.state.isCreatedByUser}
-            // showHideMenu={() => this.showMenu(!this.state.menuVisibility)}
-            />
-            <View style={styles.borderStyle}></View>
-            <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
-              }
-              backgroundColor={Colors.NewThemeColor}
-            />
-            <View style={styles.height22} />
+        </View>
+      )} */}
+      <CustomAlert
+        modalVisible={showCustomAlert}
+        title={'Save your memory'}
+        message={
+          'We always save your work, but you can choose to save writing this memory for later, or continue writing now.'
+        }
+        buttons={[
+          {
+            text: 'Close and save as draft',
+            func: () => {
+              setShowCustomAlert(false)
+              saveORPublish('save');
 
-            <CustomAlert
-              modalVisible={this.state.showActionAndroid}
-              setModalVisible={
-                this.state.actionSheet?.list?.actions &&
-                  this.state.actionSheet?.list?.actions.length &&
-                  this.state.actionSheet?.list?.actions[0] &&
-                  this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
-                  ? `Are you done writing this memory?`
-                  : `Save for later?`
-              }
-              title={this.state.actionSheet.title}
-              message={
-                this.state.actionSheet?.list?.actions &&
-                  this.state.actionSheet?.list?.actions.length &&
-                  this.state.actionSheet?.list?.actions[0] &&
-                  this.state.actionSheet?.list?.actions[0]?.text?.includes('Yes,')
-                  ? ``
-                  : 'Choose to completely discard your work, or save writing this memory for later.'
-              }
-              buttons={
-                (this.state.actionSheet.list = this.state.actionSheet.list.map(
-                  (item: any) => {
-                    return {
-                      text: item.text,
-                      index: item.index,
-                      func: () => {
-                        this.setState(
-                          {
-                            showActionAndroid: false,
-                          },
-                          () => {
-                            this.onActionItemClicked(item.index);
-                          },
-                        );
-                      },
-                    };
+              // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            },
+          },
+          {
+            text: 'Continue editing',
+            func: () => {
+              setShowCustomAlert(false)
+              // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            },
+            styles: { fontWeight: '400' },
+          },
+          {
+            text: 'Cancel',
+            func: () => {
+              setShowCustomAlert(false)
+              props.fetchMemoryList({
+                type: ListType.Recent,
+                isLoading: true,
+              });
+              props.fetchMemoryList({
+                type: ListType.Timeline,
+                isLoading: true,
+              });
+              //loaderHandler.showLoader();
+              props.showLoader(true);
+              props.loaderText('Loading...');
+              props.navigation.goBack();
+              // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            },
+            styles: { fontWeight: '400' },
+          },
+        ]}
+      />
+
+      <CustomAlert
+        modalVisible={showCustomValidationAlert}
+        // setModalVisible={setModalVisible}
+        title={`${memory_date == '' ? 'Date' : 'Location'} needed`}
+        message={
+          `To prepare to publish, please input the ${memory_date == '' ? 'date' : 'location'} of this memory.`
+        }
+        buttons={[
+          {
+            text: 'Ok',
+            func: () => {
+              setShowCustomValidationAlert(false)
+            },
+          }
+        ]}
+      />
+
+      <View
+        style={styles.navigationHeaderContainer}
+      // onStartShouldSetResponder={() => true}
+      // onResponderStart={this.hideToolTip}
+      >
+        <NavigationHeaderSafeArea
+          // heading={'Memory Draft'}
+          showCommunity={false}
+          cancelAction={() => saveDraft()} //this.setState({ showCustomAlert: true }) //this.cancelAction}
+          showRightText={true}
+          createMemoryPage={true}
+          rightText={
+            props.route.params.editPublsihedMemory
+              ? 'Save'
+              : // : isCreatedByUser
+              //   ? 'Done'
+              'Save'
+          }
+          backIcon={action_close}
+          saveValues={() => {
+            setShowCustomAlert(true)
+          }} //saveDraft
+        // rightIcon={isCreatedByUser}
+        // showHideMenu={() => showMenu(!menuVisibility)}
+        />
+        <View style={styles.borderStyle}></View>
+        <StatusBar
+          barStyle={
+            Utility.currentTheme == 'light'
+              ? 'dark-content'
+              : 'light-content'
+          }
+          backgroundColor={Colors.NewThemeColor}
+        />
+        <View style={styles.height22} />
+
+        <CustomAlert
+          modalVisible={showActionAndroid}
+          setModalVisible={
+            actionSheet?.list?.actions &&
+              actionSheet?.list?.actions.length &&
+              actionSheet?.list?.actions[0] &&
+              actionSheet?.list?.actions[0]?.text?.includes('Yes,')
+              ? `Are you done writing this memory?`
+              : `Save for later?`
+          }
+          title={actionSheet.title}
+          message={
+            actionSheet?.list?.actions &&
+              actionSheet?.list?.actions.length &&
+              actionSheet?.list?.actions[0] &&
+              actionSheet?.list?.actions[0]?.text?.includes('Yes,')
+              ? ``
+              : 'Choose to completely discard your work, or save writing this memory for later.'
+          }
+          buttons={
+            (actionSheet.list = actionSheet.list.map(
+              (item: any) => {
+                return {
+                  text: item.text,
+                  index: item.index,
+                  func: () => {
+                    setShowActionAndroid(false)
+                    onActionItemClicked(item.index);
                   },
-                ))
-                //   [{
-                //   text: 'Close and save as draft',
-                //   func: () => {
-                //     this.setState({ showCustomAlert: false }, () => {
-                //         this.saveORPublish('save');
-                //     })
+                };
+              },
+            ))
+            //   [{
+            //   text: 'Close and save as draft',
+            //   func: () => {
+            //     this.setState({ showCustomAlert: false }, () => {
+            //         this.saveORPublish('save');
+            //     })
 
-                //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                //   },
-                // },
-                // {
-                //   text: 'Continue editing',
-                //   func: () => {
-                //     this.setState({ showCustomAlert: false })
-                //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                //   },
-                // },
-                // {
-                //   text: 'Cancel',
-                //   func: () => {
-                //     this.setState({ showActionAndroid: false }, () => {
+            //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            //   },
+            // },
+            // {
+            //   text: 'Continue editing',
+            //   func: () => {
+            //     this.setState({ showCustomAlert: false })
+            //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            //   },
+            // },
+            // {
+            //   text: 'Cancel',
+            //   func: () => {
+            //     this.setState({ showActionAndroid: false }, () => {
 
-                //     })
-                //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
-                //   },
-                // }
-                // ]
-              }
-            />
+            //     })
+            //     // ReactNativeHapticFeedback.trigger('impactMedium', options);
+            //   },
+            // }
+            // ]
+          }
+        />
+
+        {
+          // this.itemList.length ?
+
+          <ScrollView
+            contentContainerStyle={
+              Styles.viewBeforListContentContainerStyle
+            }
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            nestedScrollEnabled={true}
+            overScrollMode='always'
+            style={[styles.fullWidth, { flex: 1 }]}
+            scrollEnabled={itemList.length ? true : false}>
+            {/* {itemList.length == 0 ? ( */}
+            {viewBeforList()}
+            {/* ) : ( */}
 
             {
-              // this.state.itemList.length ?
-
-              <ScrollView
-                contentContainerStyle={
-                  Styles.viewBeforListContentContainerStyle
-                }
-                nestedScrollEnabled={true} overScrollMode='always'
-                style={[styles.fullWidth, { flex: 1 }]}
-                scrollEnabled={this.state.itemList.length ? true : false}>
-                {/* {this.state.itemList.length == 0 ? ( */}
-                {this.viewBeforList()}
-                {/* ) : ( */}
-
-                {
-                  // this.state.bottomToolbar ?
-                  //   null
-                  //   :
-                  // <FlatList
-                  //   ref={ref => (this._mainItemList = ref)}
-                  //   extraData={this.state}
-                  //   nestedScrollEnabled={true}
-                  //   keyExtractor={(_, index: number) => `${index}`}
-                  //   style={[styles.fullWidth, { marginBottom: 100 }]}
-                  //   onScroll={() => Keyboard.dismiss()}
-                  //   // keyboardShouldPersistTaps={'handled'}
-                  //   showsHorizontalScrollIndicator={false}
-                  //   // showsVerticalScrollIndicator={false}
-                  //   data={this.state.itemList}
-                  //   renderItem={(item: any) => this.renderRow(item)}
-                  // />
-                  this.state.itemList?.length
-                    ? this.state.itemList.map((item, index) =>
-                      this.renderRow(item, index)
-                    )
-                    : null
-                }
-                {/* )} */}
-              </ScrollView>
-              // :
-              // <View style={styles.fullWidth} >
-              //   {this.viewBeforList()}
-              // </View>
+              // bottomToolbar ?
+              //   null
+              //   :
+              // <FlatList
+              //   ref={ref => (_mainItemList = ref)}
+              //   extraData={state}
+              //   nestedScrollEnabled={true}
+              //   keyExtractor={(_, index: number) => `${index}`}
+              //   style={[styles.fullWidth, { marginBottom: 100 }]}
+              //   onScroll={() => Keyboard.dismiss()}
+              //   // keyboardShouldPersistTaps={'handled'}
+              //   showsHorizontalScrollIndicator={false}
+              //   // showsVerticalScrollIndicator={false}
+              //   data={itemList}
+              //   renderItem={(item: any) => renderRow(item)}
+              // />
+              props.files?.length
+                ? props.files.map((item, index) =>
+                  renderRow(item, index)
+                )
+                : null
             }
-            {/* {this.state.menuVisibility && (
+            {/* )} */}
+          </ScrollView>
+          // :
+          // <View style={styles.fullWidth} >
+          //   {viewBeforList()}
+          // </View>
+        }
+        {/* {menuVisibility && (
               <View
                 style={styles.menuVisibleContainer}
                 onStartShouldSetResponder={() => true}
-                onResponderStart={this.hideMenu}>
+                onResponderStart={hideMenu}>
                 <View style={styles.sideMenu}>
-                  {this.menuOptions.map((data: any) => {
+                  {menuOptions.map((data: any) => {
                     return (
                       <TouchableOpacity
                         key={data.key}
@@ -2417,15 +2525,362 @@ class CreateMemory extends React.Component<Props> {
               </View>
             )} */}
 
-            {/* {this.toolbar()} */}
-            <ActionSheet
-              ref={this._actionSheet}
-              width={DeviceInfo.isTablet() ? '65%' : '100%'}
-              title={this.state.actionSheet.title}
-              actions={this.state.actionSheet.list}
-              onActionClick={this.onActionItemClicked.bind(this)}
-            />
-            {/* {this.state.toolTipVisibility && (
+        {/* {toolbar()} */}
+        {
+          Platform.OS === 'ios' &&
+          <CustomActionSheet
+            ref={ref => _actionSheet = ref}
+            width={DeviceInfo.isTablet() ? '65%' : '100%'}
+            title={actionSheet.title}
+            actions={actionSheet.list}
+            onActionClick={onActionItemClicked}
+          />
+        }
+
+        <ActionSheet
+          closeOnTouchBackdrop={false}
+          closeOnPressBack={false}
+          ref={optionsActionSheetRef}>
+          <>
+            <View style={Styles.actionSheetContainer}>
+              <View style={Styles.actionSheetHeaderContainer}>
+                <TouchableHighlight
+                  underlayColor={Colors.transparent}
+                  style={Styles.jumptoCancelSubContainerStyle}
+                  onPress={() => {
+                    if (optionToShow == 'date') {
+                      setYearNew({ ...year })
+                      setMonthNew({ ...month })
+                      setDayNew({ ...day })
+                      if (month.value.length < 3) {
+                        setShowDay(true)
+                      }
+                    }
+                    optionsActionSheetRef?.current?.hide()
+                  }}>
+                  <>
+                    <Image style={Styles.cancelImageStyle} source={x} />
+                    <Text style={Styles.cancelTextStyle}>Close</Text>
+                  </>
+                </TouchableHighlight>
+              </View>
+
+              {
+                optionToShow == 'date' ?
+                  <View >
+                    <Text
+                      style={styles.colabratiesTextStyle}>
+                      {'When did this memory happen?'}
+                    </Text>
+                    <View style={styles.textInputContainer}>
+                      <Text
+                        style={styles.labelStyle}>
+                        {'YEAR'}
+                        <Text
+                          style={{ color: Colors.newErrorColor }}>
+                          {'*'}
+                        </Text>
+                      </Text>
+                      <TextInput
+                        style={styles.textInputBoxStyle}
+                        onChangeText={(text: any) => {
+                          setYearNew({ ...yearNew, value: text, error: false })
+                        }}
+                        placeholderTextColor={Colors.newTextColor}
+                        value={yearNew.value}
+                        maxLength={4}
+                        placeholder="YYYY"
+                        returnKeyType="next"
+                        keyboardType="number-pad"
+                      />
+
+                      {
+                        yearNew.error &&
+                        <Text style={styles.errorMessageStyle}>
+                          {`Please enter valid year`}
+                        </Text>
+                      }
+                    </View>
+
+                    <View style={styles.textInputContainer}>
+                      <Text
+                        style={styles.labelStyle}>
+                        {'MONTH'}
+                        <Text
+                          style={{ color: Colors.newErrorColor }}>
+                          {'*'}
+                        </Text>
+                      </Text>
+                      <TextInput
+                        style={styles.textInputBoxStyle}
+                        onChangeText={(text: any) => {
+                          let validAlphabatesReg = /^[a-zA-Z]{0,6}$/;
+                          let validNumberReg = /^[0-9]{1,2}$/;
+
+                          if (validAlphabatesReg.test(text)) {
+                            setDayNew({ value: '', error: false })
+                            setShowDay(false)
+                            setMonthNew({ ...monthNew, value: text, error: false })
+                          }
+                          else if (validNumberReg.test(text)) {
+                            setShowDay(true)
+                            if (parseInt(text) <= 12) {
+                              setMonthNew({ ...monthNew, value: text, error: false })
+                            }
+                          }
+                          else {
+                            // setShowDay(true)
+                          }
+                        }}
+                        value={monthNew.value}
+                        placeholderTextColor={Colors.newTextColor}
+                        // maxLength={12}
+                        placeholder="Month(MM) or Season"
+                        returnKeyType="done"
+                      // keyboardType="number-pad"
+                      />
+                      {
+                        monthNew.error &&
+                        <Text style={styles.errorMessageStyle}>
+                          {`Please enter valid month or season`}
+                        </Text>
+                      }
+
+                    </View>
+
+                    {
+                      showDay &&
+                      <View style={styles.textInputContainer}>
+                        <Text
+                          style={styles.labelStyle}>
+                          {'DAY'}
+                          <Text
+                            style={{ color: Colors.newErrorColor }}>
+                            {'*'}
+                          </Text>
+                        </Text>
+                        <TextInput
+                          style={styles.textInputBoxStyle}
+                          onChangeText={(text: any) => {
+                            setDayNew({ ...dayNew, value: text, error: false })
+                          }}
+                          value={dayNew.value}
+                          maxLength={2}
+                          placeholder="DD"
+                          placeholderTextColor={Colors.newTextColor}
+                          returnKeyType="done"
+                          keyboardType="number-pad"
+                        />
+                        {
+                          dayNew.error &&
+                          <Text style={styles.errorMessageStyle}>
+                            {`Please enter valid date`}
+                          </Text>
+                        }
+
+                      </View>
+                    }
+
+
+                    <TouchableWithoutFeedback
+                      // disabled={(this.username != '' && this.password != '') ? false : true}
+                      onPress={() => {
+                        validateDate(yearNew, monthNew, dayNew);
+                      }}>
+                      <View
+                        style={Styles.loginSSOButtonStyle}>
+                        <Text
+                          style={[
+                            CommonTextStyles.fontWeight500Size17Inter,
+                            Styles.loginTextStyle,
+                          ]}>
+                          Done
+                        </Text>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                  :
+                  optionToShow == 'location' ?
+                    <View >
+                      <Text
+                        style={styles.colabratiesTextStyle}>
+                        {'Where did this memory happen?'}
+                      </Text>
+                      <Text
+                        style={[styles.labelStyle, { marginLeft: 24, }]}>
+                        {'LOCATION'}
+                        <Text
+                          style={{ color: Colors.newErrorColor }}>
+                          {'*'}
+                        </Text>
+                      </Text>
+                      <SearchBar
+                        style={[styles.searchBarStyle, {
+                          borderBottomColor: locationError.length > 0 ? Colors.ErrorColor : Colors.TextColor,
+                        }]}
+                        placeholder="Add location..."
+                        onBlur={() => {
+                          // setState(prev => ({
+                          //   ...prev,
+                          //   locationList: []
+                          // }));
+                        }}
+                        onSearchButtonPress={(keyword: string) => {
+                          // setState(prev => ({
+                          //   ...prev,
+                          //   showLocationLoader: true
+                          // }));
+                          props.onLocationUpdate(keyword);
+                        }}
+                        onClearField={() => {
+                          props.resetLocation();
+                          // setState(prev => ({
+                          //   ...prev,
+                          //   locationList: []
+                          // }));
+                        }}
+                        onChangeText={(text: any) => {
+                          props.onLocationUpdate(text);
+                          // setState(prev => ({
+                          //   ...prev,
+                          //   locationError: '',
+                          //   locationText: text
+                          // }));
+                        }}
+                        // onFocus={()=> this._mainItemList.scrollToOffset({ animated: true, offset: 100})}
+                        showCancelClearButton={false}
+                        value={locationText}
+                      />
+                      {props.locationList.length > 0 && (
+                        <FlatList
+                          keyExtractor={(_, index: number) => `${index}`}
+                          keyboardShouldPersistTaps={'never'}
+                          // onScroll={() => {
+                          //   Keyboard.dismiss();
+                          // }}
+                          nestedScrollEnabled={true}
+                          showsHorizontalScrollIndicator={false}
+                          showsVerticalScrollIndicator={false}
+                          style={styles.locationFlatListStyle}
+                          data={props.locationList}
+                          renderItem={_renderLocation}
+                          ItemSeparatorComponent={() => (
+                            <View
+                              style={styles.locationListSeparator}></View>
+                          )}
+                        />
+                      )}
+
+                      <Text style={styles.locationErrorTextStyle}>
+                        {locationError}
+                      </Text>
+
+                      <TouchableWithoutFeedback
+                        // disabled={(this.username != '' && this.password != '') ? false : true}
+                        onPress={() => {
+                          if (location.description != '') {
+                            optionsActionSheetRef?.current?.hide();
+                            setTimeout(() => {
+                              saveIntitals();
+                            }, 1000);
+                          }
+                          else {
+                            setLocationError('* Please enter a location to publish your memory')
+                          }
+                        }}>
+                        <View
+                          style={Styles.loginSSOButtonStyle}>
+                          <Text
+                            style={[
+                              CommonTextStyles.fontWeight500Size17Inter,
+                              Styles.loginTextStyle,
+                            ]}>
+                            Done
+                          </Text>
+                        </View>
+                      </TouchableWithoutFeedback>
+                    </View>
+                    :
+                    <View >
+                      <Text
+                        style={styles.colabratiesTextStyle}>
+                        {'What would you like to upload?'}
+                      </Text>
+
+                      <View style={{ flexDirection: 'row' }}>
+                        <TouchableWithoutFeedback
+                          // disabled={(this.username != '' && this.password != '') ? false : true}
+                          onPress={() => {
+                            PickImage(fileCallback);
+                          }}>
+                          <View style={styles.newFilterItem}>
+                            <View style={styles.iconContainer}>
+                              <Image source={images} />
+                            </View>
+
+                            <View style={styles.iconSeparator}></View>
+
+                            <View style={styles.jumptoYearContainer}>
+                              <Text style={[styles.filterTextJumpto]}>
+                                {'Photo'}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableWithoutFeedback>
+
+                        <TouchableWithoutFeedback
+                          // disabled={(this.username != '' && this.password != '') ? false : true}
+                          onPress={() => {
+                            PickPDF(fileCallback);
+                          }}>
+                          <View style={styles.newFilterItem}>
+                            <View style={styles.iconContainer}>
+                              <Image source={pdf} />
+                            </View>
+
+                            <View style={styles.iconSeparator}></View>
+
+                            <View style={styles.jumptoYearContainer}>
+                              <Text style={[styles.filterTextJumpto]}>
+                                {'PDF'}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableWithoutFeedback>
+
+                        <TouchableWithoutFeedback
+                          // disabled={(this.username != '' && this.password != '') ? false : true}
+                          onPress={() => {
+                            PickAudio(fileCallback)
+                          }}>
+                          <View style={styles.newFilterItem}>
+                            <View style={styles.iconContainer}>
+                              <Image source={audio} />
+                            </View>
+
+                            <View style={styles.iconSeparator}></View>
+
+                            <View style={styles.jumptoYearContainer}>
+                              <Text style={[styles.filterTextJumpto]}>
+                                {'Audio'}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableWithoutFeedback>
+
+                      </View>
+                    </View>
+              }
+
+            </View>
+            {Platform.OS == 'android' &&
+              <View style={{ height: bottomToolbar }}></View>
+            }
+          </>
+        </ActionSheet>
+
+
+        {/* {toolTipVisibility && (
               <View style={styles.tooltipVisibleStyle}>
                 <View style={styles.tooltipStyle}>
                   <Text
@@ -2436,38 +2891,40 @@ class CreateMemory extends React.Component<Props> {
                 <View style={styles.toolTipArrow}></View>
               </View>
             )} */}
-            {/* <BottomPicker
-              ref={this.bottomPicker}
+        {/* <BottomPicker
+              ref={bottomPicker}
               onItemSelect={(selectedItem: any) => {
-                this.dateSelected(selectedItem);
+                dateSelected(selectedItem);
               }}
-              title={this.state.selectionData.title}
-              actions={this.state.selectionData.actions}
-              value={this.state.selectionData.selectionValue}
-              selectedValues={[this.state.selectionData.selectionValue]}
+              title={selectionData.title}
+              actions={selectionData.actions}
+              value={selectionData.selectionValue}
+              selectedValues={[selectionData.selectionValue]}
             /> */}
-          </View>
-          {/* {this.state.memoryDraftVisibility && (
+      </View>
+      {/* {memoryDraftVisibility && (
             <MemoryDraftIntro
               cancelMemoryDraftTour={() => {
-                this.setState({ memoryDraftVisibility: false });
+                setState({ memoryDraftVisibility: false });
                 DefaultPreference.set('hide_memory_draft', 'true').then(
                   function () { },
                 );
               }}></MemoryDraftIntro>
           )} */}
-        {/* </SafeAreaView> */}
-      </View>
-    );
-  }
+      {/* </SafeAreaView> */}
+    </View>
+  );
+  // }
 }
 
 const mapState = (state: { [x: string]: any }) => {
   return {
     locationList: state.MemoryInitials.locationList,
+    files: state.MemoryInitials.files,
     tagsList: state.MemoryInitials.tags,
     whoElseWhereThereList: state.MemoryInitials.whoElseWhereThere,
-    collection: state.MemoryInitials.collection,
+    // collection: state.MemoryInitials.collection,
+    collection: state.MemoryInitials.collections,
     nid: state.MemoryInitials.nid,
     shareOption: state.MemoryInitials.shareOption,
     whoCanSeeMemoryUids: state.MemoryInitials.whoCanSeeMemoryUids,
@@ -2476,7 +2933,7 @@ const mapState = (state: { [x: string]: any }) => {
     memoryObject: state.MemoryInitials,
     goToDashboard: state.MemoryInitials.goToDashboard,
     showLoaderValue: state.dashboardReducer.showLoader,
-    loaderTextValue: state.dashboardReducer.loaderText,
+    loaderTextValue: state.dashboardReducer.loaderText
   };
 };
 
@@ -2491,6 +2948,8 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: MemoryInitialsUpdate, payload: payload }),
     recentTags: (payload: any) =>
       dispatch({ type: MemoryTagsAPI, payload: payload }),
+    userSelectedLocation: (payload: any) =>
+      dispatch({ type: SelectedLocation, payload: payload }),
     collectionAPI: () => dispatch({ type: CollectinAPI }),
     saveNid: (payload: any) => dispatch({ type: SaveNid, payload: payload }),
     saveFiles: (payload: any) =>

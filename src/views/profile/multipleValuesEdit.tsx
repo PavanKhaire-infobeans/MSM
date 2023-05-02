@@ -23,7 +23,7 @@ import ActionSheet, {
 import BottomPicker, {
   ActionSheetItem,
 } from '../../common/component/bottomPicker';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import {
   Colors,
   ConsoleType,
@@ -127,7 +127,7 @@ const MutilpleValueEdit = (props: Props) => {
       }));
     });
 
-    profileUpdated = EventManager.addListener(kSetUserProfileData, () => {
+    profileUpdated = EventManager.addListener(kSetUserProfileData, async () => {
       showConsoleLog(ConsoleType.INFO, "Profile response in listener: ");
       setState(prevState => ({
         ...prevState,
@@ -139,9 +139,9 @@ const MutilpleValueEdit = (props: Props) => {
       //   setAllFormSections,
       // } = useUserProfileData({});
       // setAllFormSections([]);
-
-        props.navigation.goBack();
-        // props.navigation.replace('profile');
+      await analytics().logEvent('user_profile_updated');
+      props.navigation.goBack();
+      // props.navigation.replace('profile');
     });
 
     if (props.basicInfo) {
@@ -153,13 +153,14 @@ const MutilpleValueEdit = (props: Props) => {
 
       profileUpdated = EventManager.addListener(
         kSetUserProfileData,
-        () => {
+        async () => {
           showConsoleLog(ConsoleType.INFO, "Profile response in listenerssss: ");
           setState(prevState => ({
             ...prevState,
             showLoaderValue: false,
             loaderTextValue: 'Loading...'
           }));
+          await analytics().logEvent('user_profile_updated');
           Keyboard.dismiss();
           props.navigation.goBack();
           // props.navigation.replace('profile');
@@ -259,9 +260,9 @@ const MutilpleValueEdit = (props: Props) => {
     }));
     // console.log("actionsss ?",JSON.stringify(actions),field.multipleSelection)
 
-      bottomPicker.current &&
+    bottomPicker.current &&
       bottomPicker.current.showPicker &&
-      bottomPicker.current.showPicker();  
+      bottomPicker.current.showPicker();
 
   }
 
@@ -418,7 +419,7 @@ const MutilpleValueEdit = (props: Props) => {
                   onOptionSelected={() => onOptionSelection(field)}
                 />
               );
-              
+
             } else if (type == 'text_textfield') {
               let val = getValue(field, ['default_value']);
               if (val) {
@@ -466,6 +467,7 @@ const MutilpleValueEdit = (props: Props) => {
                         ? ''
                         : default_value
                   }
+                  style={{ marginBottom: 16, }}
                   keyboardType={keyboardBoardType}
                   onSubmitEditing={() => {
                     let nextRef = `${index + 1}`;
@@ -1007,6 +1009,9 @@ const MutilpleValueEdit = (props: Props) => {
         <NavigationHeaderSafeArea
           isWhite={true}
           rightText="Save"
+          showRightText={true}
+          multiValuesPage={true}
+          noMarginLeft={true}
           saveValues={() => saveProfileData()}
           heading={props.route.params.sectionHeading}
           cancelAction={() => {
@@ -1026,6 +1031,7 @@ const MutilpleValueEdit = (props: Props) => {
         }
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps="always"
+          enableOnAndroid={true}
           keyboardDismissMode="on-drag"
           style={Styles.KeyboardAwareScrollViewStyle}
           contentContainerStyle={{ alignItems: 'center' }}
@@ -1060,68 +1066,69 @@ const MutilpleValueEdit = (props: Props) => {
           actions={state.actionSheet.list}
           onActionClick={onActionItemClicked.bind(this)}
         />
-      </SafeAreaView>
-      <BottomPicker
-        ref={bottomPicker}
-        onItemSelect={(selectedItem: ActionSheetItem) => {
-          let fieldName = state.selectionData.fieldName;
-          if (state.selectionData.isFromMultipleDropDown) {
-            let date: Date = new Date();
-            date.setFullYear(parseInt(selectedItem.text));
-            setState(prevState => ({
-              ...prevState,
-              [fieldName]: {
-                ...state[fieldName],
-                [selectedItem.key]: Utility.dateObjectToDefaultFormat(date),
-              },
-              error: {
-                ...state.error,
-                [fieldName]: { error: false, message: '' },
-              }
-            }));
+        <BottomPicker
+          ref={bottomPicker}
+          onItemSelect={(selectedItem: ActionSheetItem) => {
+            let fieldName = state.selectionData.fieldName;
+            if (state.selectionData.isFromMultipleDropDown) {
+              let date: Date = new Date();
+              date.setFullYear(parseInt(selectedItem.text));
+              setState(prevState => ({
+                ...prevState,
+                [fieldName]: {
+                  ...state[fieldName],
+                  [selectedItem.key]: Utility.dateObjectToDefaultFormat(date),
+                },
+                error: {
+                  ...state.error,
+                  [fieldName]: { error: false, message: '' },
+                }
+              }));
 
-          } else {
-            setState(prevState => ({
-              ...prevState,
-              [fieldName]: { [selectedItem.key]: selectedItem.text },
-              error: {
-                ...state.error,
-                [fieldName]: { error: false, message: '' },
-              },
-            }));
+            } else {
+              setState(prevState => ({
+                ...prevState,
+                [fieldName]: { [selectedItem.key]: selectedItem.text },
+                error: {
+                  ...state.error,
+                  [fieldName]: { error: false, message: '' },
+                },
+              }));
 
+            }
+
+          }}
+          actions={state.selectionData.actions}
+          value={state.selectionData.selectionValue}
+          selectedValues={state.selectionData.selectedValues}
+          selectionType={state.selectionData.selectionType}
+          fieldName={state.selectionData.fieldName}
+          fullscreen={true}
+          label={state.selectionData.label}
+          maxLimit={state.selectionData.maxLimit}
+          isFromMultipleDropDown={
+            state.selectionData.isFromMultipleDropDown
           }
+          fieldNameOfMultipleDropDown={
+            state.selectionData.fieldNameOfMultipleDropDown
+          }
+          saveSelectedValues={(selectedValueObjects: any) => {
+            let fieldName = state.selectionData.fieldName;
+            setState(prevState => ({
+              ...prevState,
+              [fieldName]: selectedValueObjects,
+              error: {
+                ...state.error,
+                [fieldName]: { error: false, message: '' },
+              },
+            }));
+            StateData = state;
+            //showConsoleLog(ConsoleType.LOG,state)
+          }}
+          multipleValuesComponent={true}
+        />
+      </SafeAreaView>
 
-        }}
-        actions={state.selectionData.actions}
-        value={state.selectionData.selectionValue}
-        selectedValues={state.selectionData.selectedValues}
-        selectionType={state.selectionData.selectionType}
-        fieldName={state.selectionData.fieldName}
-        fullscreen={true}
-        label={state.selectionData.label}
-        maxLimit={state.selectionData.maxLimit}
-        isFromMultipleDropDown={
-          state.selectionData.isFromMultipleDropDown
-        }
-        fieldNameOfMultipleDropDown={
-          state.selectionData.fieldNameOfMultipleDropDown
-        }
-        saveSelectedValues={(selectedValueObjects: any) => {
-          let fieldName = state.selectionData.fieldName;
-          setState(prevState => ({
-            ...prevState,
-            [fieldName]: selectedValueObjects,
-            error: {
-              ...state.error,
-              [fieldName]: { error: false, message: '' },
-            },
-          }));
-          StateData = state;
-          //showConsoleLog(ConsoleType.LOG,state)
-        }}
-        multipleValuesComponent={true}
-      />
     </View>
   );
 

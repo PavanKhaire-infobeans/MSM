@@ -253,6 +253,7 @@ export const MemoryAction = async (
       response=>{
         if (response != undefined && response != null) {
           if (response.ResponseCode == 200) {
+
             if (listner == kMemoryMoveToDrafts) {
               return response;
             }
@@ -263,6 +264,8 @@ export const MemoryAction = async (
               showConsoleLog(
                 ConsoleType.ERROR,
                 "response no listner> ", listner)
+
+              CB(response)
               EventManager.callBack(
                 kMemoryActionPerformedPublished,
                 true,
@@ -295,6 +298,8 @@ export const MemoryAction = async (
             else if (listner) {
               EventManager.callBack(listner, false, response['ResponseMessage']);
             } else {
+              CB(response)
+
               EventManager.callBack(
                 kMemoryActionPerformedPublished,
                 false,

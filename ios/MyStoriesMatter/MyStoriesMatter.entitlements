@@ -8,6 +8,12 @@
 	<array>
 		<string>Default</string>
 	</array>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:cuebackqa.com</string>
+		<string>applinks:www.cuebackqa.com</string>
+		<string>applinks:mystoriesmatter.com</string>
+	</array>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
 		<string>iCloud.com.cueback.mobileapp</string>

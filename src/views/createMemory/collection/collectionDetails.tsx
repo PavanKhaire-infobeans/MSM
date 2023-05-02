@@ -57,8 +57,8 @@ export default class CollectionDetails extends React.Component<Props, State> {
       kSequenceUpdated,
       this.collectionUpdate,
     );
-    this.setState({collectionName: this.props.collectionName}, () => {
-      GetCollectionDetails(this.props.tid);
+    this.setState({collectionName: this.props.route.params.collectionName}, () => {
+      GetCollectionDetails(this.props.route.params.tid);
     });
   }
 
@@ -97,6 +97,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
   };
 
   renameCollection = (name: any) => {
+    console.log("Xccc >",JSON.stringify(name))
     this.setState({collectionName: name});
   };
 
@@ -112,7 +113,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
       let commaSeparatedValue = this.state.finalSequence.join(',');
       UpdateMemoryCollection(
         {
-          collection_tid: this.props.tid,
+          collection_tid: this.props.route.params.tid,
           memories_sequence: commaSeparatedValue,
         },
         true,
@@ -196,7 +197,7 @@ export default class CollectionDetails extends React.Component<Props, State> {
             <TouchableOpacity
               style={styles.visiblityImageContainer}
               onPress={() =>
-                this.props.navigation.navigate('memoryDetails', {
+                this.props.navigation.navigate('newmemoryDetails', {
                   nid: item.id,
                   type: 'my_stories',
                 })
@@ -217,7 +218,9 @@ export default class CollectionDetails extends React.Component<Props, State> {
           <View style={styles.container}>
             <NavigationHeaderSafeArea
               heading={'Manage Collection'}
+              multiValuesPage={true}
               cancelAction={() => this.cancelAction()}
+              createMemoryPage={true}
               showRightText={true}
               rightText={'Done'}
               saveValues={this.saveValue}
@@ -238,9 +241,9 @@ export default class CollectionDetails extends React.Component<Props, State> {
               <TouchableOpacity
                 onPress={() =>
                   this.props.navigation.navigate('createRenameCollection', {
-                    tid: this.props.tid,
+                    tid: this.props.route.params.tid,
                     isRename: true,
-                    collectionName: this.props.collectionName,
+                    collectionName: this.props.route.params.collectionName,
                     callback: this.renameCollection,
                   })
                 }>

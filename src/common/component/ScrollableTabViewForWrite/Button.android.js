@@ -5,13 +5,13 @@ const {
 } = ReactNative;
 
 const Button = (props) => {
-  return <TouchableNativeFeedback
+  return <ReactNative.TouchableOpacity activeOpacity={1}
     delayPressIn={0}
     background={TouchableNativeFeedback.SelectableBackground()} // eslint-disable-line new-cap
     {...props}
   >
     {props.children}
-  </TouchableNativeFeedback>;
+  </ReactNative.TouchableOpacity>;
 };
 
 module.exports = Button;

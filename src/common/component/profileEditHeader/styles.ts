@@ -6,7 +6,7 @@ const Styles = EStyleSheet.create({
   $size: Size.byWidth(43),
   container: {
     padding: Size.byWidth(10),
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: Colors.bordercolor,
     flexDirection: 'row',
     backgroundColor: Colors.white,
@@ -17,6 +17,7 @@ const Styles = EStyleSheet.create({
   mainContainer: {
     flexDirection: 'row',
     width: '100%',
+    // paddingLeft: 16,
     height: 68,
     justifyContent: 'center',
     alignItems: 'center',
@@ -155,13 +156,13 @@ const Styles = EStyleSheet.create({
     // marginBottom: 4,
     height: 24,
     width: 24,
-    marginLeft: 30
+    // marginLeft: 30
   },
   cancelImageConditional: {
     marginBottom: 4,
     height: 24,
     width: 24,
-    marginLeft: 30
+    // marginLeft: 16
   },
   cancleTextContainer: {
     justifyContent: 'center',
@@ -179,7 +180,7 @@ const Styles = EStyleSheet.create({
   },
   emptyView: {
     height: 10,
-    width: 15
+    width: 16, 
   },
   titleText: {
     color: Colors.newTextColor,
@@ -191,11 +192,25 @@ const Styles = EStyleSheet.create({
   },
   leftButtonTouchableContainer: {
     justifyContent: 'center',
+    alignItems: 'center',
     height: '100%',
-    // padding: 15,
+    width: 72,
+    marginLeft: 8,
     // marginTop: 5,
   },
-
+  leftButtonAddtoCollectionTouchableContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    marginLeft: 8,
+    // marginTop: 5,
+  },
+  leftButtonNoMarginTouchableContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    // marginTop: 5,
+  },
   leftButtonContainer: {
     backgroundColor: 'transparent',
     borderColor: Colors.white,

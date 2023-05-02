@@ -9,14 +9,40 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
-  labelStyle:{ 
-    marginBottom: 4, 
-    marginLeft: 8, 
-    color: Colors.newTextColor 
+  labelStyle: {
+    marginBottom: 4,
+    marginLeft: 8,
+    color: Colors.newTextColor
+  },
+  buttonContainer: {
+    width: Utility.getDeviceWidth() - 48,
+    height:44,
+    // justifyContent: "flex-end",
+    alignSelf: 'center',
+    marginBottom: 24,
+  },
+  backButtonContainerStyle:{ 
+    flexDirection: 'row', 
+    width: 120, 
+    borderRadius: 1000, 
+    height: 44, 
+    marginTop: 24, 
+    marginLeft: 24, 
+    marginBottom: 32, 
+    borderColor: Colors.bottomTabColor, 
+    borderWidth: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: Colors.white 
+  },
+  backIconStyle:{ 
+    tintColor: Colors.newTextColor, 
+    marginRight: 12, 
+    transform: [{ rotate: '180deg' }] 
   },
   loginSSOButtonStyle: {
     width: '100%',
-    height: 48,
+    height: 44,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: 'center',
@@ -29,24 +55,23 @@ export const styles = StyleSheet.create({
     marginHorizontal: 12,
     color: Colors.newTextColor
   },
-  hederText:{ 
-    fontWeight: '500', 
-    ...fontSize(36), 
-    lineHeight: 45, 
-    fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium, 
-    color: Colors.black, 
-    textAlign: 'left' 
+  hederText: {
+    fontWeight: '500',
+    ...fontSize(36),
+    lineHeight: 45,
+    fontFamily: Platform.OS === 'ios' ? fontFamily.Lora : fontFamily.LoraMedium,
+    color: Colors.black,
+    textAlign: 'left'
   },
   innerContainer: {
     width: '100%',
     height: '100%',
     flexDirection: 'column',
   },
-  LoginHeader:{ 
-    width: Utility.getDeviceWidth() - 48, 
-    alignSelf:'center',
-    flexDirection: 'row', 
-    marginTop: 24
+  LoginHeader: {
+    width: Utility.getDeviceWidth() - 48,
+    alignSelf: 'center',
+    flexDirection: 'row',
   },
   titleText: {
     ...fontSize(Size.byWidth(24)),
@@ -59,20 +84,25 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    height: '100%',
+    // height: '100%',
     marginTop: Size.byHeight(12),
   },
 
   communityBanner: {
-    width: Utility.getDeviceWidth()-48,
-    alignSelf:'center',
-    height: '100%',
+    width: Utility.getDeviceWidth() - 48,
+    alignSelf: 'center',
+    // height: '100%',
+    flex: 1,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
-  subcommunityBanner: { width: '100%' },
-  doneContainer:{flex: 1, height: 100},
-  textFieldStyle:{width: '100%', height: 75},
+  subcommunityBanner: { 
+    width: '100%',
+    //  height: '100%', 
+     flex: 1 
+    },
+  doneContainer: { flex: 1, height: 100 },
+  textFieldStyle: { width: '100%', height: 75 },
   enterEmailText: {
     paddingBottom: 15,
     textAlign: 'left',
@@ -82,11 +112,12 @@ export const styles = StyleSheet.create({
   },
   keyboardAvoiding: {
     width: '100%',
-    flex:1,
-    height:Utility.getDeviceHeight()*0.6, 
+    flex: 1,
+    // height:Utility.getDeviceHeight()*0.6, 
     // height: '100%',//Size.byHeight(180),
     justifyContent: 'space-between',
     // alignItems: 'center', 
+    marginBottom: 50
   },
 
   forgotPasswordContainer: {
@@ -104,30 +135,30 @@ export const styles = StyleSheet.create({
   },
   scrollViewStyles: {
     width: '100%',
-    flex:1,
+    flex: 1,
     // height: '83%',
-    height:Utility.getDeviceHeight()*0.7, 
+    // height:Utility.getDeviceHeight()*0.7, 
   },
-  resendContainer:{width: '100%', alignItems: 'center'},
-  resendSubContainer:{paddingBottom: 40},
-  dintReceivedText:{
+  resendContainer: { width: '100%', alignItems: 'center' },
+  resendSubContainer: { paddingBottom: 40 },
+  dintReceivedText: {
     paddingTop: 0,
     textAlign: 'center',
     fontWeight: '400',
     ...fontSize(Size.byWidth(16)),
   },
-  spamTextStyle:{
+  spamTextStyle: {
     color: Colors.newTextColor,
     paddingTop: 25,
     textAlign: 'center',
     fontWeight: '300',
     ...fontSize(Size.byWidth(16)),
   },
-  resendButtonStyle:{
-    paddingTop: 3, 
+  resendButtonStyle: {
+    paddingTop: 3,
     paddingBottom: 40
   },
-  resendTextStyle:{
+  resendTextStyle: {
     color: Colors.NewTitleColor,
     textAlign: 'center',
     fontWeight: '400',

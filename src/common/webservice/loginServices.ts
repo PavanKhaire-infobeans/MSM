@@ -65,12 +65,13 @@ function configurations(url: string, userAuthToken: string,CB:any) {
   );
 }
 
-function SSOLoginFetch(url: string, param: any) {
-  return Webservice.postRequest(url, {checksum: 'Q3VlQmFjazIwMTgh'}, param);
+async function SSOLoginFetch(url: string, param: any) {
+  return await Webservice.postRequest(url, {checksum: 'Q3VlQmFjazIwMTgh'}, param);
 }
 
 export const SSOLogin = async (params: any) => {
   try {
+    
     let response = await SSOLoginFetch(
       `https://${CueBackInsatance.InstanceURL}/api/alumni/ssologin`,
       params,
@@ -84,7 +85,8 @@ export const SSOLogin = async (params: any) => {
           'Unable to process your login request',
         );
       });
-    if (response != undefined && response != null) {
+
+    if (response) {
       showConsoleLog(ConsoleType.LOG,response);
       if (response.ResponseCode == 200) {
         EventManager.callBack(kSSOLogin, true, response);

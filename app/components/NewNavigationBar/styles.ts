@@ -92,8 +92,8 @@ const Styles = EStyleSheet.create({
     },
     closeButton: {
         // height: '80%',
-        width: '100%',
-        marginLeft: 16,
+        width: 72,//'100%',
+        marginLeft: 8,
         marginBottom: 8,
         alignItems: 'center',
         justifyContent: 'space-evenly',

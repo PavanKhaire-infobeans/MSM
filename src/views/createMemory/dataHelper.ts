@@ -22,6 +22,7 @@ export const DefaultDetailsMemory = (title: any) => {
       description: '',
       reference: '',
     },
+    share_option: 'only_me'
   };
   return draftDetails;
 };
@@ -38,21 +39,25 @@ export const DefaultDetailsWithoutTitleMemory = (title: any) => {
     description: description,
     memory_date: {
       year: new Date().getFullYear(),
-      month:
-        MonthObj.month[new Date().getMonth() + MonthObj.serverMonthsCount].tid,
+      month: MonthObj.month[new Date().getMonth() + MonthObj.serverMonthsCount].tid,
       day: new Date().getDate(),
     },
     location: {
       description: '',
       reference: '',
     },
+    share_option: 'only_me'
   };
   return draftDetails;
 };
 
 export class CreateMemoryHelper {
-  getDateOptions(fieldName: any, year: any) {
+  getDateOptions(fieldName: any, yearData: any, monthData?: any) {
     let actions: Array<any> = [];
+    let year = parseInt(yearData), month;
+    if(monthData){
+      month = parseInt(monthData)
+    }
     if (fieldName == 'year') {
       // actions.push({ key: 'Year*', text: 'Year*' });
       let minYear = 1917;
@@ -93,9 +98,26 @@ export class CreateMemoryHelper {
       let min = 1;
       let max = 31;
       let limit = 31;
-      if (MonthObj.selectedIndex > MonthObj.serverMonthsCount - 1) {
-        switch (MonthObj.month[MonthObj.selectedIndex].name) {
-          case 'Feb':
+      // if (MonthObj.selectedIndex > MonthObj.serverMonthsCount - 1) {
+      //   switch (MonthObj.month[MonthObj.selectedIndex].name) {
+      //     case 'Feb':
+      //       limit = 28;
+      //       if (year != 'Year*') {
+      //         if (parseInt(year) % 4 == 0) {
+      //           limit = 29;
+      //         }
+      //       }
+      //       break;
+      //     case 'Apr' || 'Jun' || 'Sep' || 'Nov':
+      //       limit = 30;
+      //       break;
+      //     default:
+      //   }
+      // }
+
+      if (month != '') {
+        switch (month) {
+          case '02':
             limit = 28;
             if (year != 'Year*') {
               if (parseInt(year) % 4 == 0) {
@@ -103,25 +125,46 @@ export class CreateMemoryHelper {
               }
             }
             break;
-          case 'Apr' || 'Jun' || 'Sep' || 'Nov':
+          case '04':
+            limit = 30;
+            break;
+          case '06':
+            limit = 30;
+            break;
+          case '08':
+            limit = 30;
+            break;
+          case '11':
             limit = 30;
             break;
           default:
         }
       }
+
+      console.log('sssss', month, limit)
       if (
-        year == new Date().getFullYear() &&
-        MonthObj.selectedIndex ==
-        new Date().getMonth() + MonthObj.serverMonthsCount
+        parseInt(year) >= new Date().getFullYear()
+        && parseInt(month) == (new Date().getMonth() + 1)
+        // && MonthObj.selectedIndex == new Date().getMonth() + MonthObj.serverMonthsCount
       ) {
         limit = new Date().getDate();
       }
+
       for (let i = min; i <= max; i++) {
-        if (i > limit) {
-          actions.push({ key: i, text: i.toString(), disabled: true });
+        if (i <= 9) {
+          if (i > limit) {
+            actions.push({ key: i, text: '0' + i.toString(), disabled: true });
+          } else {
+            actions.push({ key: i, text: '0' + i.toString() });
+          }
         } else {
-          actions.push({ key: i, text: i.toString() });
+          if (i > limit) {
+            actions.push({ key: i, text: i.toString(), disabled: true });
+          } else {
+            actions.push({ key: i, text: i.toString() });
+          }
         }
+
       }
     }
     return actions;
@@ -139,23 +182,35 @@ export const DefaultCreateMemoryObj = (
   isOwner: boolean,
 ) => {
   let details: any = {};
+  let validAlphabatesReg = /^[a-zA-Z]*$/;
+
   let description = "";//initialState.description.replace(/\n/g, '<br>');
   if (isOwner) {
+
+    let monthArray = MonthObj?.month;
+    if (validAlphabatesReg.test(initialState.date.month)) {
+      monthArray = monthArray?.filter(item => item.name.toLowerCase() === initialState.date.month.toLowerCase());
+    }
     details = {
       title: decode_utf8(initialState.title.trim()),
-      memory_date: initialState.date && initialState.date.year ? {
-        year: initialState.date.year,
-        month: initialState.date.month,
-        day: initialState.date.day != 'Day' ? !isNaN(parseInt(initialState.date.day)) ? parseInt(initialState.date.day).toString() : undefined : undefined,
-      } : undefined,
-      // {
+      memory_date: initialState.date && initialState.date.year ?
+        validAlphabatesReg.test(initialState.date.month) ? {
+          year: initialState.date.year,
+          season: monthArray&&monthArray[0]?.tid,
+          // day: initialState.date.day != 'Day' ? !isNaN(parseInt(initialState.date.day)) ? parseInt(initialState.date.day).toString() : undefined : undefined,
+        } :
+          {
+            year: initialState.date.year,
+            month: parseInt(initialState.date.month),
+            day: initialState.date.day != 'Day' ? !isNaN(parseInt(initialState.date.day)) ? parseInt(initialState.date.day).toString() : undefined : undefined,
+          } : undefined,  // {
       //   year: initialState.date.year,
       //   month: initialState.date.month,
       //   day: initialState.date.day != 'Day' ? initialState.date.day : undefined,
       // },
       location: initialState.location,
       nid: initialState.nid,
-      share_option: 'only_me',//"'allfriends'",// initialState.shareOption,
+      share_option: initialState.shareOption,//'only_me',//"'allfriends'",// 
       description: description,
     };
     if (

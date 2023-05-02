@@ -5,7 +5,7 @@ import {
   isCueBackInstance
 } from '../views/registration/getInstancesSaga';
 import loaderHandler from './component/busyindicator/LoaderHandler';
-const Permissions = require('react-native-permissions').default;
+import RNPermissions,{ check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import Upload from 'react-native-background-upload';
 
 //const punycode = require('punycode');
@@ -27,7 +27,7 @@ export const fontFamily = {
   RobotoMedium: 'Roboto-Medium',
   RobotoBold: 'Roboto-Bold',
   // RobotoSemiBold: 'Roboto-SemiBold',
-  SFPro:"SFPro-Regular"
+  SFPro: "SFPro-Regular"
 };
 
 export function testEmail(email: string) {
@@ -69,6 +69,7 @@ export const Colors = {
   blue: '#0077B2',
   // darkGray:'#595959',
   lightSkyBlue: '#C0E7EA',
+  flatlistSeparatorColor: '#C1C3CA',
   green: '#50B660',
   blacknew: '#222222',
   blacknewrgb: 'rgba(34,34,34,0.7)',
@@ -109,6 +110,7 @@ export const Colors = {
   iosShadowColor: 'rgba(46, 49, 62, 0.05)',
   colorBlackOpacity5: 'rgba(0,0,0,0.5)',
   backrgba: 'rgba(0, 0, 0, 0.25)',
+  selecedBorderColor: '#C1C3CA',
   backColorWith75OPacity: "rgba(0.216, 0.22, 0.322, 0.75)",
   selectedFilter: '#BCDDE0',
   white: '#ffffff',
@@ -130,7 +132,7 @@ export const Colors = {
   actionlistSeparater: 'rgba(0.35, 0.35, 0.35, 0.2)',
   black: '#000000',
   darkGray: '#909090',
-  cardShadowColor:'#073562',
+  cardShadowColor: '#073562',
   c3c3c3: '#3c3c3c',
   a5a5a7: '#a5a5a7',
   underlayColor: '#00000000',
@@ -140,8 +142,9 @@ export const Colors = {
   moreViewBg: 'rgba(11, 12, 15, 0.6)',
   blackOpacity60: 'rgba(0, 0, 0, 0.6)',
   transparent: 'transparent',
-  loginTextColor:'#0A4D8F',
-  authBackgroundColor:'#1E1E1E'
+  loginTextColor: '#0A4D8F',
+  authBackgroundColor: '#1E1E1E',
+  newErrorColor: '#99192E'
 };
 export const MyMemoriesTapBarOptions = {
   published: 'Published',
@@ -265,19 +268,88 @@ export const ShareOptions: any = {
   allfriends: 'All friends',
   cueback: 'All members',
 };
+// export function uploadTask(
+//   success: (data: { [x: string]: any }) => void,
+//   failure: (error: any) => void,
+// ): (options: object) => void {
+//   // const UploadManager = require('react-native-background-upload').default;
+//   // const loaderHandler =
+//   //   require('../common/component/busyindicator/LoaderHandler').default;
+//   return function (options: any): void {
+//     try {
+//       asyncGen(function* () {
+
+//         // showConsoleLog(ConsoleType.LOG,"File Upload payload:",JSON.stringify(options));
+//         //loaderHandler.showLoader('Uploading..');
+//         try {
+//           let uploadId = yield Upload.startUpload(options);
+//           if (typeof uploadId == 'string') {
+//             Upload.addListener('error', uploadId, (data: any) => {
+//               // hideLoaderWithTimeOut();
+//               failure(data);
+//             });
+//             Upload.addListener(
+//               'cancelled',
+//               uploadId,
+//               (...data: any[]) => {
+//                 // hideLoaderWithTimeOut();
+//                 failure({ message: 'Upload cancelled', uploadId, data });
+//               },
+//             );
+//             Upload.addListener('completed', uploadId, (data: any) => {
+//               // hideLoaderWithTimeOut();
+//               success(data);
+//             });
+//           } else {
+//             // hideLoaderWithTimeOut();
+//             failure(uploadId);
+//           }
+
+//           // Upload.startUpload(options).then((uploadId) => {
+//           //   showConsoleLog(ConsoleType.LOG,'Upload started')
+//           //   Upload.addListener('progress', uploadId, (data) => {
+//           //     showConsoleLog(ConsoleType.LOG,`Progress: ${data.progress}%`)
+//           //   })
+//           //   Upload.addListener('error', uploadId, (data) => {
+//           //     showConsoleLog(ConsoleType.LOG,`Error: ${data.error}%`)
+//           //     failure(data);
+//           //   })
+//           //   Upload.addListener('cancelled', uploadId, (data) => {
+//           //     showConsoleLog(ConsoleType.LOG,`Cancelled!`)
+//           //     failure({ message: 'Upload cancelled', uploadId, data });
+//           //   })
+//           //   Upload.addListener('completed', uploadId, (data) => {
+//           //     // data includes responseCode: number and responseBody: Object
+//           //     success(data);
+//           //     showConsoleLog(ConsoleType.LOG,'Completed!')
+//           //   })
+//           // }).catch((err) => {
+//           //   showConsoleLog(ConsoleType.LOG,'Upload error!', err)
+//           //   failure(err);
+//           // })
+//         } catch (err) {
+//           showConsoleLog(ConsoleType.LOG,'Upload error!', err)
+//           // hideLoaderWithTimeOut();
+//           failure(err);
+//         }
+//       });
+//     } catch (error) {
+//       showConsoleLog(ConsoleType.LOG,'Upload errordadasdasdas!', error)
+//         // hideLoaderWithTimeOut();
+//       failure(error);
+//     }
+//   };
+// }
+
 export function uploadTask(
-  success: (data: { [x: string]: any }) => void,
+  success: (data: {[x: string]: any}) => void,
   failure: (error: any) => void,
 ): (options: object) => void {
   // const UploadManager = require('react-native-background-upload').default;
-  const loaderHandler =
-    require('../common/component/busyindicator/LoaderHandler').default;
+  
   return function (options: any): void {
     try {
       asyncGen(function* () {
-
-        // showConsoleLog(ConsoleType.LOG,"File Upload payload:",JSON.stringify(options));
-        //loaderHandler.showLoader('Uploading..');
         try {
           let uploadId = yield Upload.startUpload(options);
           if (typeof uploadId == 'string') {
@@ -290,7 +362,7 @@ export function uploadTask(
               uploadId,
               (...data: any[]) => {
                 // hideLoaderWithTimeOut();
-                failure({ message: 'Upload cancelled', uploadId, data });
+                failure({message: 'Upload cancelled', uploadId, data});
               },
             );
             Upload.addListener('completed', uploadId, (data: any) => {
@@ -301,29 +373,6 @@ export function uploadTask(
             // hideLoaderWithTimeOut();
             failure(uploadId);
           }
-
-          // Upload.startUpload(options).then((uploadId) => {
-          //   showConsoleLog(ConsoleType.LOG,'Upload started')
-          //   Upload.addListener('progress', uploadId, (data) => {
-          //     showConsoleLog(ConsoleType.LOG,`Progress: ${data.progress}%`)
-          //   })
-          //   Upload.addListener('error', uploadId, (data) => {
-          //     showConsoleLog(ConsoleType.LOG,`Error: ${data.error}%`)
-          //     failure(data);
-          //   })
-          //   Upload.addListener('cancelled', uploadId, (data) => {
-          //     showConsoleLog(ConsoleType.LOG,`Cancelled!`)
-          //     failure({ message: 'Upload cancelled', uploadId, data });
-          //   })
-          //   Upload.addListener('completed', uploadId, (data) => {
-          //     // data includes responseCode: number and responseBody: Object
-          //     success(data);
-          //     showConsoleLog(ConsoleType.LOG,'Completed!')
-          //   })
-          // }).catch((err) => {
-          //   showConsoleLog(ConsoleType.LOG,'Upload error!', err)
-          //   failure(err);
-          // })
         } catch (err) {
           // hideLoaderWithTimeOut();
           failure(err);
@@ -428,7 +477,8 @@ export const CueBackInsatance = isCueBackInstance
     InstanceID: '2002',
     InstanceName: 'QA Public',
     //InstanceURL: "qa-public.cueback.com",
-    InstanceURL: 'public.cuebackqa.com',
+    InstanceURL: 'cuebackqa.com',
+    // InstanceURL: 'public.cuebackqa.com',
     InstanceImageURL: null,
     is_fake: 0,
   };
@@ -501,7 +551,7 @@ export const CommonTextStyles = {
     fontFamily: fontFamily.Inter
   },
   fontWeight500Size17Inter: {
-    fontWeight: '400',
+    fontWeight: '500',
     ...fontSize(17),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     lineHeight: 18.7
@@ -521,7 +571,7 @@ export const CommonTextStyles = {
 };
 /*export const requestPermission = async (type: string): Promise<boolean> => {
   type PermissionState = "authorized" | "denied" | "restricted" | "undetermined";
-  const Permissions = require('react-native-permissions').default;
+  
   const { Alert } = require('react-native');
   var permission: PermissionState = "undetermined";
   try {
@@ -552,32 +602,32 @@ export const CommonTextStyles = {
     return false;
   }
 }; */
-import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
-const checkPermissionFor = (data) => {
-  check(data)
+const checkPermissionFor = async(data) => {
+  await RNPermissions.check(data)
     .then((result) => {
       switch (result) {
-        // case RESULTS.UNAVAILABLE:
-        //   showConsoleLog(ConsoleType.LOG,'This feature is not available (on this device / in this context)');
-        //   break;
+        case RNPermissions.RESULTS.UNAVAILABLE:
+          //   showConsoleLog(ConsoleType.LOG,'This feature is not available (on this device / in this context)');
+          // RNPermissions.openSettings();
+          break;
         case RESULTS.DENIED:
-          Permissions.openSettings();
+          RNPermissions.openSettings();
           // showConsoleLog(ConsoleType.LOG,'The permission has not been requested / is denied but requestable');
           // return false;
           break;
         case RESULTS.LIMITED:
-          // Permissions.openSettings();
+          RNPermissions.openSettings();
           // return false;
-          showConsoleLog(ConsoleType.LOG,'The permission is limited: some actions are possible');
+          showConsoleLog(ConsoleType.LOG, 'The permission is limited: some actions are possible');
           break;
         case RESULTS.GRANTED:
-          showConsoleLog(ConsoleType.LOG,'The permission is granted');
+          showConsoleLog(ConsoleType.LOG, 'The permission is granted');
           break;
         case RESULTS.BLOCKED:
-          Permissions.openSettings();
+          RNPermissions.openSettings();
           return false;
-          showConsoleLog(ConsoleType.LOG,'The permission is denied and not requestable anymore');
+          showConsoleLog(ConsoleType.LOG, 'The permission is denied and not requestable anymore');
           break;
       }
     })
@@ -602,12 +652,7 @@ const checkPermissionFor = (data) => {
 }*/
 
 export const requestPermission = async (type: string): Promise<boolean> => {
-  type PermissionState =
-    | 'authorized'
-    | 'denied'
-    | 'restricted'
-    | 'undetermined';
-  const { Alert } = require('react-native');
+
   //var permission: PermissionState = "undetermined";
   try {
     var permissionType;
@@ -630,17 +675,17 @@ export const requestPermission = async (type: string): Promise<boolean> => {
         permissionType = PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
     }
 
-    var test = await request(
-      Platform.select({
-        android: permissionType,
-        ios: permissionType,
-      }),
+    var test = await RNPermissions.request(PERMISSIONS.IOS.MEDIA_LIBRARY
+      // Platform.select({
+      //   android: permissionType,
+      //   ios: permissionType,
+      // }),
     ).then(result => {
       // …
-      if (result === 'granted' || result === 'limited') return true;
+      console.log(result)
+      if (result === 'granted' || result === 'limited'|| result === 'unavailable') return true;
       else return false;
     });
-
     if (!test) {
       checkPermissionFor(Platform.select({
         android: permissionType,
@@ -679,14 +724,14 @@ export const requestPermission = async (type: string): Promise<boolean> => {
   }
 };
 
-export enum ConsoleType{
+export enum ConsoleType {
   ERROR,
   WARN,
   LOG,
   INFO
 }
 
-export const showConsoleLog = (type:ConsoleType, ...optionalParams: any)=>{
+export const showConsoleLog = (type: ConsoleType, ...optionalParams: any) => {
   switch (type) {
     case ConsoleType.ERROR:
       console.error(...optionalParams)

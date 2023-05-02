@@ -1,14 +1,15 @@
 import React from 'react';
-import {Dimensions, Keyboard, SafeAreaView, StatusBar} from 'react-native';
+import { Dimensions, Image, Keyboard, SafeAreaView, StatusBar, TouchableOpacity, View } from 'react-native';
 
-import {ToastMessage} from '../../../common/component/Toast';
+import { ToastMessage } from '../../../common/component/Toast';
 //@ts-ignore
 import Pdf from 'react-native-pdf';
-import {Colors, decode_utf8} from '../../../common/constants';
+import { Colors, decode_utf8 } from '../../../common/constants';
 import Utility from '../../../common/utility';
 import Styles from './styles';
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+import { close_white_ } from '../../../images';
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 export default class PDFViewer extends React.Component<Props> {
   state: State = {
     loading: true,
@@ -19,22 +20,26 @@ export default class PDFViewer extends React.Component<Props> {
 
   cancelAction = () => {
     Keyboard.dismiss();
+    if (this.props.route.params.doNotReload) {
+      this.props.route.params.doNotReload(true);
+    }
     this.props.navigation.goBack();
   };
 
   render() {
     let filePath = this.props?.route?.params?.file.url
-      ? unescape(this.props?.route?.params?.file.url)
+      ? this.props?.route?.params?.file.url
+      // ? unescape(this.props?.route?.params?.file.url)
       : this.props?.route?.params?.file.filePath;
     if (filePath.indexOf('file://') > -1) {
       filePath = decode_utf8(filePath);
+      console.log("source >>",JSON.stringify(filePath))
     }
-    let source = {uri: filePath, cache: false};
+    let source = { uri: filePath, cache: false };
 
     // if(this.props?.route?.params?.file.isLocal){
     //     source = {uri:filePath,cache:true};
     // }
-
     return (
       <SafeAreaView style={Styles.container}>
         <StatusBar
@@ -66,7 +71,7 @@ export default class PDFViewer extends React.Component<Props> {
           }}
           style={Styles.pdfStyle}
         />
-        {/* <View
+        <View
           style={{
             backgroundColor: '#595959',
             height: 40,
@@ -74,14 +79,14 @@ export default class PDFViewer extends React.Component<Props> {
             top: 30,
             borderRadius: 20,
             position: 'absolute',
-            marginLeft: 20,
+            right: 20,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <TouchableOpacity onPress={() => this.cancelAction()}>
-            <Image source={close_white_} style={{padding: 15}} />
+          <TouchableOpacity activeOpacity={1} onPress={this.cancelAction}>
+            <Image source={close_white_} style={{ padding: 16 }} />
           </TouchableOpacity>
-        </View> */}
+        </View>
       </SafeAreaView>
     );
   }

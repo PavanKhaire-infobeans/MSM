@@ -1,4 +1,4 @@
-import Upload from 'react-native-background-upload';
+import Upload, { UploadOptions } from 'react-native-background-upload';
 // import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
 import {
   asyncGen,
@@ -10,6 +10,9 @@ import { Account } from '../../common/loginStore';
 import { MemoryService, newMemoryService } from '../../common/webservice/memoryServices';
 import { TempFile } from '../mindPop/edit';
 import { CollaboratorsAction } from './inviteCollaborators';
+import analytics from '@react-native-firebase/analytics';
+import { Platform } from 'react-native';
+import { FileType } from '../../common/database/mindPopStore/mindPopStore';
 
 export const kCollectionMemories = 'CollectionMemories';
 export const kCollectionUpdated = 'CollectionUpdated';
@@ -58,31 +61,43 @@ export const CreateUpdateMemory = async (
 
 
           if (filesToUpload.length > 0) {
-            await uploadFile(id, filesToUpload,
-              datareturn => {
-                // console.log("file upload response : ", JSON.stringify(datareturn))
-                if (listener == "mindpopEditMemoryListener") {
-                  CB({ status: true, id, padDetails, key, prompt_id });
-                  // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
-                }
-                else if (listener == 'addContentCreateMemory') {
+            // await uploadFile(id, filesToUpload,
+            //   datareturn => {
+            //     // console.log("file upload response : ", JSON.stringify(datareturn))
+            //     if (listener == "mindpopEditMemoryListener") {
+            //       CB({ status: true, id, padDetails, key, prompt_id });
+            //       // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
+            //     }
+            //     else if (listener == 'addContentCreateMemory') {
 
-                  // EventManager.callBack(listener, true, id, padDetails, key);
-                  CB({ status: true, id, padDetails, key });
-                }
-                else if (listener == promptIdListener) {
+            //       // EventManager.callBack(listener, true, id, padDetails, key);
+            //       CB({ status: true, id, padDetails, key });
+            //     }
+            //     else if (listener == promptIdListener) {
 
-                  CB({ status: true, id });
-                }
-                else {
-                  CB(response);
-                }
-              });
+            //       CB({ status: true, id });
+            //     }
+            //     else {
+            //       CB(response);
+            //     }
+            //   });
+            await uploadAttachments(id, filesToUpload);
 
-
+            if (listener == "mindpopEditMemoryListener") {
+              CB({ status: true, id, padDetails, key, prompt_id });
+            }
+            else if (listener == 'addContentCreateMemory') {
+              CB({ status: true, id, padDetails, key });
+            }
+            else if (listener == promptIdListener) {
+              CB({ status: true, id });
+            }
+            else {
+              CB(response);
+            }
           }
           else {
-            
+
             if (listener == "mindpopEditMemoryListener") {
               CB({ status: true, id, padDetails, key, prompt_id });
               // EventManager.callBack(listener, true, id, padDetails, key, prompt_id);
@@ -133,6 +148,24 @@ export const CreateUpdateMemory = async (
     // EventManager.callBack(listener, false, 'Unable to create memory!!');
   }
 };
+
+async function uploadAttachments(memoryId: number, files: TempFile[]) {
+  return new Promise((resolve, reject) => {
+    asyncGen(function* () {
+      try {
+        var resp: any[] = [];
+        for (let fl of files) {
+          let rsp = yield uploadFile(memoryId, fl);
+          resp.push(rsp);
+        }
+        resolve(resp);
+      } catch (err) {
+        //console.log("Error in uploading files: ", err)
+        reject(err);
+      }
+    });
+  });
+}
 
 export const GetDraftsDetails = async (nid: any, CB?: any) => {
   try {
@@ -410,108 +443,166 @@ export const CollaboratorActionAPI = async (params: any) => {
   }
 };
 
-async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
+// async function uploadFile(memoryId: number, files: TempFile[], CB: any) {
 
-  let respArray: any[] = [];
-  // const loaderHandler = require('../../common/component/busyindicator/LoaderHandler').default;
-  // //loaderHandler.showLoader('Uploading..');
+//   let respArray: any[] = [];
+//   // const loaderHandler = require('../../common/component/busyindicator/LoaderHandler').default;
+//   // //loaderHandler.showLoader('Uploading..');
 
-  Promise.all(
-    files.map(file => {
-      return new Promise(async (resolve) => {
+//   Promise.all(
+//     files.map(file => {
+//       return new Promise(async (resolve) => {
 
-        var filePath = file.filePath;
-        // if (Platform.OS == "android") {
-        filePath = filePath.replace('file://', '');
-        // }
-        let options: { [x: string]: any } = {
-          url: `https://${Account.selectedData().instanceURL
-            }/api/mystory/file_upload`,
-          path: filePath,
-          method: 'POST',
-          ...(file.type == 'audios' ? { name: file.filename } : {}),
-          field: file.type == 'images' ? 'image' : file.type,
-          type: 'multipart',
-          headers: {
-            'content-type': 'multipart/form-data',
-            'X-CSRF-TOKEN': Account.selectedData().userAuthToken,
-          },
-        };
-        if (memoryId) {
-          options['parameters'] = {
-            nid: `${memoryId}`,
-            file_title: `${file.file_title}`,
-            file_description: `${file.file_description}`,
-          };
+//         var filePath = file.filePath;
+//         if (Platform.OS === "android") {
+//           filePath = filePath.replace('file://', '');
+//         };
+
+//         let options: UploadOptions = {
+//           url: `https://${Account.selectedData().instanceURL}/api/mystory/file_upload`,
+//           path: Platform.OS == 'ios' && FileType[FileType.audio] ? unescape(filePath) : Platform.OS === "android" ? filePath.replace('file://', ''):filePath,
+//           method: 'POST',
+//           ...(file.type == 'audios' ? { name: file.filename } : {}),
+//           field: file.type == 'images' ? 'image' : file.type,
+//           type: 'multipart',
+//           headers: {
+//             'content-type': 'multipart/form-data',
+//             'X-CSRF-TOKEN': Account.selectedData().userAuthToken,
+//           },
+//         };
+//         if (memoryId) {
+//           options['parameters'] = {
+//             nid: `${memoryId}`,
+//             file_title: `${file.file_title}`,
+//             file_description: `${file.file_description}`,
+//           };
+//         }
+
+//         if (getValue(file, ['filename'])) {
+//           options['parameters'] = {
+//             ...options['parameters'],
+//             title: getValue(file, ['filename']),
+//           };
+//         }
+
+//         try {
+
+//           console.log("options payload > ", JSON.stringify(options))
+//           try {
+//             let uploadId = await Upload.startUpload(options);
+//             if (typeof uploadId == 'string') {
+//               Upload.addListener('error', uploadId, (data: any) => {
+//                 respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
+//                 resolve(data);
+//               });
+//               Upload.addListener(
+//                 'cancelled',
+//                 uploadId,
+//                 (...data: any[]) => {
+//                   respArray.push(data)
+//                   resolve({ message: 'Upload cancelled', uploadId, data });
+//                 },
+//               );
+//               Upload.addListener('completed', uploadId, async (data: any) => {
+//                 await analytics().logEvent(`new_${options['field']}_file_attached`);
+//                 respArray.push(data)
+//                 resolve(data);
+//               });
+//             } else {
+//               respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
+//               resolve(uploadId);
+//             }
+
+//           } catch (err) {
+//             respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
+//             resolve(err);
+//           }
+//           // });
+//         } catch (error) {
+//           respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
+//         }
+//       })
+//     })
+//   )
+//     .then((res) => {
+//       CB(res);
+//     })
+//   // //loaderHandler.showLoader('Uploading..');
+
+
+
+//   // return new Promise((resolve, reject) => {
+//   // uploadTask(
+//   //   (data: any) => {
+//   //     let response = JSON.parse(data.responseBody);
+//   //     showConsoleLog(ConsoleType.LOG, "After upload", JSON.stringify(response));
+
+//   //     if (response.ResponseCode == '200') {
+//   //       resolve(response);
+//   //     } else {
+//   //       reject(response);
+//   //     }
+//   //   },
+//   //   (err: Error) => {
+//   //     //showConsoleLog(ConsoleType.LOG,"Upload error!", err);
+//   //     reject(err);
+//   //   },
+//   // )(options);
+//   // });
+// }
+async function uploadFile(memoryId: number, file: TempFile) {
+  
+  var filePath = file.filePath;
+  if (Platform.OS == "android") {
+    filePath = filePath.replace('file://', '');
+  }
+  if (Platform.OS == "ios") {
+    filePath = (file.type == `${FileType[FileType.audio]}s`) ? unescape(filePath):filePath;
+  }
+  let options: { [x: string]: any } = {
+    url: `https://${Account.selectedData().instanceURL
+      }/api/mystory/file_upload`,
+    path: Platform.OS === 'ios' && (filePath.indexOf('file://') === -1) ? `file://${filePath}`:filePath,
+    method: 'POST',
+    ...(file.type == 'audios' ? { name: file.filename } : {}),
+    field: file.type == 'images' ? 'image' : file.type,
+    type: 'multipart',
+    headers: {
+      'content-type': 'multipart/form-data',
+      'X-CSRF-TOKEN': Account.selectedData().userAuthToken,
+    },
+  };
+  if (memoryId) {
+    options['parameters'] = {
+      nid: `${memoryId}`,
+      file_title: `${file.file_title}`,
+      file_description: `${file.file_description}`,
+    };
+  }
+
+  if (getValue(file, ['filename'])) {
+    options['parameters'] = {
+      ...options['parameters'],
+      title: getValue(file, ['filename']),
+    };
+  }
+  console.log("options After upload", options);
+
+  return new Promise((resolve, reject) => {
+    uploadTask(
+      (data: any) => {
+        //console.log("After upload", data);
+        let response = JSON.parse(data.responseBody);
+        if (response.ResponseCode == '200') {
+          resolve(response);
+        } else {
+          reject(response);
         }
-
-        if (getValue(file, ['filename'])) {
-          options['parameters'] = {
-            ...options['parameters'],
-            title: getValue(file, ['filename']),
-          };
-        }
-
-        try {
-
-          try {
-            let uploadId = await Upload.startUpload(options);
-            if (typeof uploadId == 'string') {
-              Upload.addListener('error', uploadId, (data: any) => {
-                respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
-                resolve(data);
-              });
-              Upload.addListener(
-                'cancelled',
-                uploadId,
-                (...data: any[]) => {
-                  respArray.push(data)
-                  resolve({ message: 'Upload cancelled', uploadId, data });
-                },
-              );
-              Upload.addListener('completed', uploadId, (data: any) => {
-                respArray.push(data)
-                resolve(data);
-              });
-            } else {
-              respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
-              resolve(uploadId);
-            }
-
-          } catch (err) {
-            respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
-            resolve(err);
-          }
-          // });
-        } catch (error) {
-          respArray.push({ "ResponseCode": 400, "ResponseMessage": "Unable to upload", "ResultData": false })
-        }
-      })
-    })
-  )
-    .then((res) => {
-      CB(res);
-    })
-  // //loaderHandler.showLoader('Uploading..');
-
-
-
-  // return new Promise((resolve, reject) => {
-  // uploadTask(
-  //   (data: any) => {
-  //     let response = JSON.parse(data.responseBody);
-  //     showConsoleLog(ConsoleType.LOG, "After upload", JSON.stringify(response));
-
-  //     if (response.ResponseCode == '200') {
-  //       resolve(response);
-  //     } else {
-  //       reject(response);
-  //     }
-  //   },
-  //   (err: Error) => {
-  //     //showConsoleLog(ConsoleType.LOG,"Upload error!", err);
-  //     reject(err);
-  //   },
-  // )(options);
-  // });
+      },
+      (err: Error) => {
+        //console.log("Upload error!", err);
+        reject(err);
+      },
+    )(options);
+  });
 }

@@ -133,6 +133,8 @@ class NotificationView extends React.Component<Props> {
               data={this.props.notificationList && this.props.notificationList.length ? this.props.notificationList : []}
               keyExtractor={(_, index: number) => `${index}`}
               style={Styles.flatListStyle}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               initialNumToRender={10}
               maxToRenderPerBatch={10}
               windowSize={10}

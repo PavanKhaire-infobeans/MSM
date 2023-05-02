@@ -4,6 +4,7 @@ import {
   AppStateStatus,
   Image,
   Modal,
+  PermissionsAndroid,
   Platform,
   SafeAreaView,
   Slider,
@@ -106,18 +107,22 @@ export default class CommonAudioRecorder extends React.Component<
       changedName: '',
       error: { errMsg: '', show: false },
     };
-    if (this.props?.route?.params?.selectedItem) {
-      this.state = {
-        ...this.state,
-        audioState: 'recorded',
-        path: this.props?.route?.params?.selectedItem.uri || this.props?.route?.params?.selectedItem.filePath,
-      };
-    } else {
-      this.state = { ...this.state, audioState: 'none', path: '' };
-    }
   }
 
-  componentDidMount = () => { };
+  componentDidMount = () => {
+    if (this.props?.route?.params?.selectedItem) {
+      console.log(JSON.stringify(this.props?.route?.params?.selectedItem?.url))
+      this.setState({
+        audioState: 'recorded',
+        path: this.props?.route?.params?.selectedItem?.uri || this.props?.route?.params?.selectedItem?.url || this.props?.route?.params?.selectedItem?.filePath,
+      })
+    } else {
+      this.setState({
+        audioState: 'none',
+        path: ''
+      })
+    }
+  };
 
   isBackground = (state: AppStateStatus) => {
     if (state == 'background') {
@@ -134,6 +139,13 @@ export default class CommonAudioRecorder extends React.Component<
   };
 
   back = () => {
+    if (this.props.route.params.doNotReload) {
+      this.props.route.params.doNotReload(true);
+      this.props.navigation.goBack();
+      return;
+    }
+
+
     this.isRecordingFromAddContent
       ? this.navigateBackOrReset()
       : this.props.navigation.goBack();
@@ -224,7 +236,7 @@ export default class CommonAudioRecorder extends React.Component<
    * According to state of player
    */
   audioActions = () => {
-    showConsoleLog(ConsoleType.LOG, 'this.state.audioState >', this.state.audioState );
+    showConsoleLog(ConsoleType.LOG, 'this.state.audioState >', this.state.audioState,this.state.path);
     if (this.state.audioState == 'none') {
       let today = new Date();
       this.recording = `Rec${today.getMonth() +
@@ -240,7 +252,7 @@ export default class CommonAudioRecorder extends React.Component<
         today.getSeconds()
         }.m4a`;
 
-      requestPermission('microphone').then(success => {
+      requestPermission('microphone').then(async (success) => {
         if (success) {
           let path = SoundRecorder.PATH_CACHE + `/${this.recording}`;
           var options: { [key: string]: any } = {
@@ -249,16 +261,43 @@ export default class CommonAudioRecorder extends React.Component<
           if (Platform.OS == 'android') {
             options = { ...options, encoder: ENCODER_AAC };
           }
-          SoundRecorder.start(path, options)
-            .then(() => {
-              this.processing = true;
-              this.setState({ path, audioState: 'recording' }, () => {
-                this.time();
+
+          if (Platform.OS === 'android') {
+            const grants = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+            );
+            console.log('record audio', grants);
+
+            if (grants === PermissionsAndroid.RESULTS.GRANTED) {
+              SoundRecorder.start(path, options)
+                .then(() => {
+                  this.processing = true;
+                  this.setState({ path, audioState: 'recording' }, () => {
+                    this.time();
+                  });
+                })
+                .catch((err: Error) => {
+                  showConsoleLog(ConsoleType.LOG, 'Error SoundRecorder', err, path, options);
+                });
+
+            } else {
+              console.log('All required permissions not granted')
+              return;
+            }
+          }
+          else {
+
+            SoundRecorder.start(path, options)
+              .then(() => {
+                this.processing = true;
+                this.setState({ path, audioState: 'recording' }, () => {
+                  this.time();
+                });
+              })
+              .catch((err: Error) => {
+                showConsoleLog(ConsoleType.LOG, 'Error SoundRecorder', err, path, options);
               });
-            })
-            .catch((err: Error) => {
-              showConsoleLog(ConsoleType.LOG, 'Error SoundRecorder', err, path, options);
-            });
+          }
           // this.recorder = new Recorder(this.recording);
           // this.recorder.prepare((error: any, path: string) => {
           // 	if (error && error.err) {
@@ -308,6 +347,8 @@ export default class CommonAudioRecorder extends React.Component<
           if (path.indexOf('https://') == -1 && path.indexOf('file://') == -1) {
             path = 'file://' + path;
           }
+          // path = path.replace("file://","");
+          console.log(path)
           this.player = new Player(path);
           this.player.volume = 0.5;
 
@@ -470,7 +511,12 @@ export default class CommonAudioRecorder extends React.Component<
             }${secInt}`,
         },
       ]);
-      this.props.navigation.goBack();
+      if (this.props.route.params.doNotReload) {
+        this.props.route.params.doNotReload(true);
+        this.props.navigation.goBack();
+      }
+      else
+        this.props.navigation.goBack();
     });
   };
 
@@ -636,8 +682,15 @@ export default class CommonAudioRecorder extends React.Component<
             {!getValue(this.props?.route?.params?.selectedItem, ['isLocal']) ? (
               <TouchableOpacity
                 onPress={() => {
-                  this.props.deleteItem();
-                  this.props.navigation.goBack();
+                  if (this.props.route?.params.deleteItem) {
+                    this.props.route?.params?.deleteItem();
+                  }
+                  if (this.props.route.params.doNotReload) {
+                    this.props.route.params.doNotReload(true);
+                    this.props.navigation.goBack();
+                  }
+                  else
+                    this.props.navigation.goBack();
                 }}
                 style={Styles.selectedRecordItemButton}>
                 <Image source={rubbish} resizeMode="contain" />
@@ -645,8 +698,15 @@ export default class CommonAudioRecorder extends React.Component<
             ) : null}
             <TouchableOpacity
               onPress={() => {
-                this.props.navigation.goBack();
-                this.props.reset();
+                if (this.props.route?.params.reset) {
+                  this.props.route?.params?.reset();
+                }
+                if (this.props.route.params.doNotReload) {
+                  this.props.route.params.doNotReload(true);
+                  this.props.navigation.goBack();
+                }
+                else
+                  this.props.navigation.goBack();
               }}
               style={Styles.closeContainer}>
               <Text style={Styles.cancelText}>Close</Text>

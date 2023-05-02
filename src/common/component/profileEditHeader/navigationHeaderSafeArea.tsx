@@ -9,7 +9,7 @@ import {
 //@ts-ignore
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
-import { penEdit } from '../../../../app/images';
+import { add_new_collection, arrowleft, penEdit, trash } from '../../../../app/images';
 import { black_arrow, close_white } from '../../../images';
 import { Colors } from '../../constants';
 import { Account } from '../../loginStore';
@@ -33,7 +33,9 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
       <View>
         {!this.props.hideClose ? (
           <TouchableWithoutFeedback onPress={() => this.props.cancelAction()}>
-            <View style={styles.leftButtonTouchableContainer}>
+            <View style={[this.props.addToCollectionOption ? styles.leftButtonAddtoCollectionTouchableContainer : this.props.noMarginLeft ? styles.leftButtonNoMarginTouchableContainer:styles.leftButtonTouchableContainer,
+              // { marginLeft: this.props.multiValuesPage ? 0 : 0 }
+            ]}>
               <Image
                 style={
                   this.props.showRightText
@@ -42,14 +44,17 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
                 }
                 resizeMode="center"
                 source={
-                  this.props.backIcon
-                    ? this.props.backIcon
-                    : this.props.isWhite
-                      ? black_arrow
-                      : close_white
+                  this.props.publishScreen ?
+                    arrowleft
+                    :
+                    this.props.backIcon
+                      ? this.props.backIcon
+                      : this.props.isWhite
+                        ? black_arrow
+                        : close_white
                 }
               />
-              {this.props.backIcon ? (
+              {this.props.backIcon || this.props.publishScreen ? (
                 <View style={styles.cancleTextContainer}>
                   <Text style={styles.cancleText}>
                     {this.props.cancleText ? this.props.cancleText : 'Cancel'}
@@ -58,9 +63,13 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
               ) : null}
             </View>
           </TouchableWithoutFeedback>
-        ) : (
-          <View style={styles.emptyView}></View>
-        )}
+        ) :
+          this.props.etherpadScreen ?
+            null
+            :
+            (
+              <View style={styles.emptyView}></View>
+            )}
       </View>
     );
   }
@@ -74,7 +83,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
         <Text
           style={[
             styles.titleText,
-            { color: this.props.isWhite ? Colors.black : Colors.TextColor },
+            { color: this.props.isWhite ? Colors.newDescTextColor : Colors.TextColor },
           ]}
           numberOfLines={1}
           ellipsizeMode="tail">
@@ -92,7 +101,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
             this.props.saveValues();
           }}>
           <View style={styles.rightButtonsTouchableStyle}>
-            <Image source={penEdit} resizeMode="contain" />
+            <Image source={this.props.publishScreen ? trash : this.props.showNewCollection ? add_new_collection : penEdit} resizeMode="contain" />
             <View style={styles.height4} />
             <Text style={styles.cancleText}>{this.props.rightText}</Text>
           </View>
@@ -156,7 +165,7 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
     let url = accData.instanceURL == '192.168.2.6' ? 'calpoly.cueback.com' : accData.instanceURL;
 
     return (
-      <View>
+      <View style={{ width: '100%' }}>
         {
           this.props.isRegisteration ? (
             <View style={styles.registrationContainerStyle}>
@@ -181,26 +190,50 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
                 <TextNew style={styles.url}>{url}</TextNew>
               </View>
             </View>
-          ) : (
-            <View
-              style={[
-                styles.mainContainer,
-                {
-                  borderBottomWidth: this.props.isWhite ? 2 : 0,
-                  // borderTopLeftRadius: 12,
-                  // borderTopRightRadius: 12,
-                },
-              ]}>
-              <View style={styles.subContainer}>
-                {this._renderLeft()}
-                {this._renderMiddle()}
+          )
+            :
+            this.props.publishScreen || this.props.showNewCollection ? (
+              <View
+                style={[
+                  styles.mainContainer,
+                  {
+                    borderBottomWidth: this.props.isWhite ? 2 : 0,
+                    paddingLeft: this.props.cancleText || this.props.createMemoryPage ? 0 : 16
+                    // borderTopLeftRadius: 12,
+                    // borderTopRightRadius: 12,
+                  },
+                ]}>
+                <View style={styles.subContainer}>
+                  {this._renderLeft()}
+                  {this._renderMiddle()}
+                </View>
+                {(this.props.showRightText || this.props.rightIcon) ?
+                  this._renderRight()
+                  :
+                  null}
               </View>
-              {(this.props.showRightText || this.props.rightIcon) ?
-                this._renderRight()
-              :
-              null}
-            </View>
-          )}
+            )
+              : (
+                <View
+                  style={[
+                    styles.mainContainer,
+                    {
+                      borderBottomWidth: this.props.isWhite ? 2 : 0,
+                      paddingLeft: this.props.cancleText || this.props.createMemoryPage ? 0 : 16
+                      // borderTopLeftRadius: 12,
+                      // borderTopRightRadius: 12,
+                    },
+                  ]}>
+                  <View style={styles.subContainer}>
+                    {this._renderLeft()}
+                    {this._renderMiddle()}
+                  </View>
+                  {(this.props.showRightText || this.props.rightIcon) ?
+                    this._renderRight()
+                    :
+                    null}
+                </View>
+              )}
         <MessageDialogue ref={ref => (this.messageRef = ref)} />
         {this.props.isWhite && (
           <StatusBar

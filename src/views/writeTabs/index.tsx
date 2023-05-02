@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  AppState,
   Dimensions,
   FlatList,
   Platform,
@@ -59,14 +60,12 @@ const WriteTabs = props => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
   const [onOptionClick, setOnOptionClick] = useState(false);
+  const [showTopicFilters, setShowTopicFilters] = useState(false);
   let flatListRef = useRef(null);
 
   useEffect(() => {
     notificationModel = new NotificationDataModel();
-    // const notificationListener = EventManager.addListener(
-    //   kGetInvidualNotification,
-    //   notificationCallback,
-    // );
+
     const foregroundNotification = EventManager.addListener(
       kForegroundNotice,
       foregroundNotificationCallback,
@@ -79,40 +78,35 @@ const WriteTabs = props => {
       kNotificationIndicator,
       changeNotification,
     );
-    const memoryActionsListener = EventManager.addListener(
-      kMemoryActionPerformedOnDashboard,
-      memoryActionCallBack,
-    );
-    // const memoryFromPrompt = EventManager.addListener(
-    //   promptIdListener,
-    //   promptToMemoryCallBack,
-    // );
+
     if (props.showPublishedPopup) {
       setShowCustomAlert(true);
     }
-    // if (props.setTimer == 'false') {
-    //   setAppTourVisibility(true);
-    // } else {
-    //   setTimeout(() => {
-    //     DefaultPreference.get('hide_guide_tour').then((value: any) => {
-    //       if (value == 'true') {
-    //         setAppTourVisibility(false);
-    //       } else {
-    //         setAppTourVisibility(true);
-    //       }
-    //     });
-    //   }, 2000);
-    // }
+
+    AppState.addEventListener('change', () => {
+      if (AppState.currentState === 'background') {
+        props.showLoader(false)
+      }
+    })
     return () => {
       props.showAlertCall(false);
-      // notificationListener.removeListener();
       foregroundNotification.removeListener();
       backgroundNotification.removeListener();
-      memoryActionsListener.removeListener();
       eventListener.removeListener();
-      // memoryFromPrompt.removeListener();
     };
   }, []);
+
+  useEffect(() => {
+    if (props.route?.params?.showPromptView && props.route?.params?.showPromptView != undefined) {
+      setCurrentIndex(props.route?.params?.showPromptView)
+      setOnOptionClick(true);
+      flatListRef?.current?.scrollToIndex({
+        animated: true,
+        index: props.route?.params?.showPromptView,
+      });
+    }
+    // console.log( flatListRef?.current)
+  }, [flatListRef?.current && props.route?.params?.showPromptView])
 
   useEffect(() => {
     if (currentIndex === 1 && !onOptionClick) {
@@ -314,7 +308,7 @@ const WriteTabs = props => {
       ) :
         index === 2 && currentIndex === 2 ? (
           <View style={{ width: Dimensions.get('window').width }}>
-            <Prompts tabLabel={'Prompts'} navigation={props.navigation} />
+            <Prompts tabLabel={'Prompts'} showTopicFilters={showTopicFilters} hideFilters={() => setShowTopicFilters(false)} navigation={props.navigation} />
           </View>
         ) :
           null
@@ -352,10 +346,12 @@ const WriteTabs = props => {
             title={props.filterName ? props.filterName : TabItems.AllMemories}
             showRight={currentIndex === 2 ? true : false}
             showRightText={'Topics'}
-            showJumpto={()=>{
-              props.navigation.navigate('topicsFilter', {
-                // categories: state.categoriesArray,
-              })
+            showJumpto={() => {
+              setShowTopicFilters(true)
+
+              // props.navigation.navigate('topicsFilter', {
+              //   // categories: state.categoriesArray,
+              // })
             }}
           />
 
@@ -372,8 +368,13 @@ const WriteTabs = props => {
             style={Styles.fullWidth}
             initialNumToRender={3}
             removeClippedSubviews={true}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             renderItem={_renderItem}
             horizontal={true}
+            getItemLayout={(data, index) => {
+              return { length: 136, index, offset: 136 * index };
+            }}
             pagingEnabled={true}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(_item, index) => index + ''}

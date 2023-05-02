@@ -52,6 +52,7 @@ import { chevronleftfilter, leftgradient } from '../../../../app/images';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import EventManager from '../../../common/eventManager';
 import JumpToScreen from '../jumpToScreen';
+import analytics from '@react-native-firebase/analytics';
 type State = { [x: string]: any };
 type Props = { [x: string]: any };
 var MemoryActions: Array<MemoryActionsSheetItem> = [];
@@ -89,6 +90,14 @@ const Timeline = (props: Props) => {
   const [timelineBarNextPrevClick, setTimelineBarNextPrevClick] =
     useState(false);
   let memoryTimelineUpdateListener: EventManager;
+
+
+  const _onCloseAudios = () => {
+    try {
+      audioPlayer?.current?.hidePlayer();
+    } catch (error) { }
+  };
+
 
   useEffect(() => {
     let allYearsTemp = [...allYears];
@@ -170,6 +179,14 @@ const Timeline = (props: Props) => {
   }, [currentItemYear]);
 
   useEffect(() => {
+    const screenLog = async () => {
+      await analytics().logScreenView({
+        screen_name: "Timeline",
+        screen_class: "Timeline",
+      });
+    };
+    screenLog();
+
     memoryTimelineUpdateListener = EventManager.addListener(
       'memoryUpdateTimelineListener',
       () => {
@@ -199,6 +216,7 @@ const Timeline = (props: Props) => {
     });
 
     return () => {
+      _onCloseAudios();
       memoryTimelineUpdateListener.removeListener();
     };
   }, []);
@@ -380,12 +398,6 @@ const Timeline = (props: Props) => {
     }
   };
 
-  const _onCloseAudios = (event: Event) => {
-    try {
-      audioPlayer.current.hidePlayer();
-    } catch (error) { }
-  };
-
   const like = (item: any) => {
     setState(prevState => ({
       ...prevState,
@@ -502,6 +514,11 @@ const Timeline = (props: Props) => {
           jumpToDate: memory_date,
         }))
       }
+      showLoader={(loader) => {
+        if (loader) {
+          props.showLoader(true)
+        }
+      }}
       openMemoryActions={itm => openMemoryActions(itm)}
       navigation={props.navigation}
     />
@@ -732,6 +749,8 @@ const Timeline = (props: Props) => {
                       inverted={true}
                       horizontal={true}
                       nestedScrollEnabled={true}
+                      showsHorizontalScrollIndicator={false}
+                      showsVerticalScrollIndicator={false}
                       maxToRenderPerBatch={5}
                       windowSize={5}
                       removeClippedSubviews={true}
@@ -842,6 +861,8 @@ const Timeline = (props: Props) => {
             nestedScrollEnabled={true}
             initialNumToRender={10}
             removeClippedSubviews={true}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             maxToRenderPerBatch={5}
             windowSize={5}
             keyExtractor={keyExtractor}

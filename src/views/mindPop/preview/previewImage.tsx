@@ -34,7 +34,9 @@ export default class ImagePreview extends React.Component<Props, State> {
   back = () => {
     Keyboard.dismiss();
     this.props.navigation.goBack();
-    this.props.reset();
+    if (this.props.route?.params.reset) {
+      this.props.route?.params?.reset();
+    }
   };
 
   componentWillUnmount() {
@@ -61,17 +63,18 @@ export default class ImagePreview extends React.Component<Props, State> {
   );
 
   render() {
-    if (getValue(this.props.selectedItem, ['isLocal'])) {
+    if (getValue(this.props.route?.params?.selectedItem, ['isLocal'])) {
       //showConsoleLog(ConsoleType.LOG,"local")
     } else {
       //showConsoleLog(ConsoleType.LOG,"uploaded")
     }
-    if (this.props.selectedItem.thumb_uri) {
-      this.props.selectedItem.uri = this.props.selectedItem.thumb_uri;
+    let selectedItemProps = this.props.route?.params?.selectedItem
+    if (selectedItemProps?.thumb_uri) {
+      selectedItemProps.uri = selectedItemProps.thumb_uri;
     }
-    let uri = !getValue(this.props.selectedItem, ['isLocal'])
-      ? this.props.selectedItem.uri
-      : this.props.selectedItem.filePath;
+    let uri = !getValue(selectedItemProps, ['isLocal'])
+      ? selectedItemProps.uri
+      : selectedItemProps.filePath;
     return (
       <SafeAreaView style={Styles.safeAreaContainer}>
         <View style={Styles.subContainer}>
@@ -95,20 +98,20 @@ export default class ImagePreview extends React.Component<Props, State> {
           style={[
             Styles.buttonContainer,
             {
-              justifyContent: this.props.selectedItem.isLocal
+              justifyContent: selectedItemProps.isLocal
                 ? 'flex-end'
                 : 'space-between',
             },
           ]}>
-          {this.props.selectedItem.isLocal ? null : (
+          {selectedItemProps?.isLocal ? null : (
             <TouchableOpacity
               onPress={() => {
-                this.props.deleteItem();
+                this.props.route?.params?.deleteItem();
                 Keyboard.dismiss();
                 this.props.navigation.goBack();
               }}
               style={Styles.buttonStyle}>
-              {this.props.isEditMode ? (
+              {this.props.route?.params?.isEditMode ? (
                 <Image source={rubbish} resizeMode="contain" />
               ) : null}
             </TouchableOpacity>
@@ -118,7 +121,9 @@ export default class ImagePreview extends React.Component<Props, State> {
             onPress={() => {
               Keyboard.dismiss();
               this.props.navigation.goBack();
-              this.props.reset();
+              if (this.props.route?.params.reset) {
+                this.props.route?.params?.reset();
+              }
             }}
             style={Styles.closeButton}>
             <Text style={Styles.closeStyle}>Close</Text>

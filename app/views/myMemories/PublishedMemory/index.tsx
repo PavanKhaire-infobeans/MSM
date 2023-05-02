@@ -43,7 +43,7 @@ import AudioPlayer, {
   kPlaying,
   kPrevious,
 } from './../../../../src/common/component/audio_player/audio_player';
-import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import PlaceholderImageView from './../../../../src/common/component/placeHolderImageView';
 import Text from './../../../../src/common/component/Text';
 import {
@@ -412,6 +412,8 @@ export default class PublishedMemory extends React.Component<Props, State> {
               extraData={this.state}
               initialNumToRender={10}
               removeClippedSubviews={true}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(_, index: number) => `${index}`}
               onScroll={() => {
                 Keyboard.dismiss();
@@ -691,8 +693,9 @@ const _addToCollection = (nid: any, navigation: any) => {
   }
 };
 
-const _onEditMemory = (nid: any, navigation: any) => {
+const _onEditMemory = async(nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
+    await analytics().logEvent('edit_published_memory');
     //loaderHandler.showLoader();
     navigation.navigate('createMemory', {
       editMode: true,
@@ -734,15 +737,18 @@ export const onActionItemClicked = async (
   index: number,
   data: any,
   navigation: any,
+  CB?: any,
 ) => {
+  console.log("CB : ", CB)
   // showConsoleLog(ConsoleType.ERROR,JSON.stringify(data));
+  await analytics().logEvent(`${data.actionType}_action_on_memory`);
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
       _addToCollection(data.nid, navigation);
       break;
     case MemoryActionKeys.editMemoryKey:
       //loaderHandler.showLoader();
-
+      CB(true);
       let details: any = {
         action_type: MemoryActionKeys.moveToDraftKey,
         type: data.memoryType,
@@ -787,15 +793,58 @@ export const onActionItemClicked = async (
             {
               text: 'Yes',
               style: 'default',
-              onPress: () => {
+              onPress: async () => {
                 if (Utility.isInternetConnected) {
                   //loaderHandler.showLoader();
-                  MemoryAction(
-                    data.memoryType,
-                    data.nid,
-                    data.actionType,
-                    data.uid,
-                  );
+                  CB(true);
+                  let details: any = {
+                    action_type: data.actionType,
+                    type: data.uid ? 'user' : data.memoryType,
+                    id: data.uid ? data.uid : data.nid,
+                  };
+
+                  if (data.actionType == MemoryActionKeys.blockAndReportKey) {
+                    details = { ...details, memory_id: data.nid };
+                  }
+
+                  let userdata = await Storage.get('userData');
+
+                  let response = await newMemoryService(
+                    `https://${Account.selectedData().instanceURL}/api/actions/memory`,
+                    [
+                      {
+                        'X-CSRF-TOKEN': userdata.userAuthToken,
+                        'Content-Type': 'application/json',
+                      },
+                      { configurationTimestamp: '0', details },
+                    ],
+                    response => {
+                      // console.log("response >",JSON.stringify(details),JSON.stringify(response))
+                      if (response.ResponseCode == 200) {
+                        if (response.Status) {
+                          navigation.replace('dashBoard');
+                        }
+                        // _onEditMemory(data.nid, navigation);
+                      } else {
+                        //loaderHandler.hideLoader();
+                      }
+                    }
+                  )
+                  // MemoryAction(
+                  //   data.memoryType,
+                  //   data.nid,
+                  //   data.actionType,
+                  //   data.uid,
+                  //   undefined,
+                  //   undefined,
+                  //   resp => {
+                  //     console.log(JSON.stringify(navigation))
+                  //     if (resp.Status) {
+                  //       navigation.replace('dashboard')
+                  //     }
+                  //       // CB(resp)
+                  //   }
+                  // );
                 } else {
                   No_Internet_Warning();
                 }
@@ -845,6 +894,7 @@ export const MemoryActionsList = (item: any) => {
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.deleteMemoryKey,
+          destructive:true
         });
         break;
       case MemoryActionKeys.moveToDraftKey:
@@ -914,7 +964,25 @@ export const MemoryActionsList = (item: any) => {
         break;
     }
   }
-  return memoryActions;
+
+  let temp = [...memoryActions];
+  let tempmemoryActions: any = [];
+
+  let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
+  let deleteObj = temp.filter(item => item.text.toLowerCase() == 'delete')
+  temp = temp.filter(item => item.text.toLowerCase() != 'hide')
+  temp = temp.filter(item => item.text.toLowerCase() != 'delete')
+  if (hideObj.length) {
+    tempmemoryActions = [...hideObj, ...temp,...deleteObj]
+  }
+  else {
+    tempmemoryActions = [...temp]
+    if (deleteObj.length) {
+      tempmemoryActions = [...tempmemoryActions,...deleteObj]
+    }
+  }
+
+  return tempmemoryActions;
 };
 
 export const renderSeparator = () => {
@@ -1191,6 +1259,7 @@ const MemoryActionsListArray = (item: any) => {
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.deleteMemoryKey,
+          destructive:true
         });
         break;
       case MemoryActionKeys.moveToDraftKey:
@@ -1267,7 +1336,23 @@ const MemoryActionsListArray = (item: any) => {
     }
   }
 
-  return memoryActions;
+  let temp = [...memoryActions];
+  let tempmemoryActions: any = [];
+  
+  let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
+  let deleteObj = temp.filter(item => item.text.toLowerCase() == 'delete')
+  temp = temp.filter(item => item.text.toLowerCase() != 'hide')
+  temp = temp.filter(item => item.text.toLowerCase() != 'delete')
+  if (hideObj.length) {
+    tempmemoryActions = [...hideObj, ...temp,...deleteObj]
+  }
+  else {
+    tempmemoryActions = [...temp]
+    if (deleteObj.length) {
+      tempmemoryActions = [...tempmemoryActions,...deleteObj]
+    }
+  }
+  return tempmemoryActions;
 };
 
 export const MemoryBasicDetails = (
@@ -1276,6 +1361,7 @@ export const MemoryBasicDetails = (
   openMemoryActions?: any,
   listType?: any,
   navigation?: any,
+  CB?: any
 ) => {
   let memoryActions = MemoryActionsListArray(item);
   return (
@@ -1335,7 +1421,7 @@ export const MemoryBasicDetails = (
                 itm => itm.title === e.nativeEvent.name,
               );
               if (data && data[0]) {
-                onActionItemClicked(e.nativeEvent.index, data[0], navigation);
+                onActionItemClicked(e.nativeEvent.index, data[0], navigation, loader => CB(loader));
               }
             }}>
             <Image source={moreoptions} />

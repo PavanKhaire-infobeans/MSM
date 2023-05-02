@@ -79,7 +79,7 @@ export default class Prompts extends React.Component<Props, State> {
   }
 
   onScroll(e: any) {
-    let page = Math.ceil(e.nativeEvent.contentOffset.x / (Dimensions.get('window').width-48));
+    let page = Math.ceil(e.nativeEvent.contentOffset.x / (Dimensions.get('window').width - 48));
     if (page !== this.state.activeIndex) {
       if (page >= this.props.data.length) {
         page = this.props.data.length - 1;
@@ -94,20 +94,21 @@ export default class Prompts extends React.Component<Props, State> {
     return (
       <View>
         <FlatList
-              data={this.props.data}
-              initialNumToRender={this.props.data.length}
-              renderItem={this.renderAppIntro}
-              horizontal={true}
-              pagingEnabled={true}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(_item, index) => index + ''}
-              onScroll={(e) => this.onScroll(e)}
-            />
+          data={this.props.data}
+          initialNumToRender={this.props.data.length}
+          renderItem={this.renderAppIntro}
+          horizontal={true}
+          pagingEnabled={true}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(_item, index) => index + ''}
+          onScroll={(e) => this.onScroll(e)}
+        />
         {this.pagination}
         <TouchableHighlight
           underlayColor={'none'}
           onPress={() => {
-            const {activeIndex} = this.state
+            const { activeIndex } = this.state
             this.props.onAddToMemory(activeIndex);
             if (
               activeIndex == this.props.data.length - 1 &&

@@ -230,7 +230,8 @@ export default class Activities extends React.Component<Props, State> {
             Keyboard.dismiss();
           }}
           renderItem={this.renderActivityView}
-          // maxToRenderPerBatch={50}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           removeClippedSubviews={true}
           initialNumToRender={10}
           refreshControl={

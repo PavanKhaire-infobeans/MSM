@@ -10,6 +10,7 @@ import EventManager from '../../common/eventManager';
 import { Account } from '../../common/loginStore';
 import { MemoryService, newMemoryService } from '../../common/webservice/memoryServices';
 import { DashboardDataModel } from './dashboardDataModel';
+import store from '../../common/reducer/reducers';
 
 export const SET_FILTERS_NAME = 'SET_FILTERS_NAME';
 export const SHOW_LOADER_READ = 'SHOW_LOADER_READ';
@@ -32,6 +33,8 @@ export const JUMP_TO_VIEW_SHOW = 'JUMP_TO_VIEW_SHOW';
 export const JUMP_TO_FROM_DATE = 'JUMP_TO_FROM_DATE';
 export const JUMP_TO_TO_DATE = 'JUMP_TO_TO_DATE';
 export const SET_KEYBOARD_HEIGHT = 'SET_KEYBOARD_HEIGHT';
+export const DATA_BIND_TO_STATE_RECENT = "DATA_BIND_TO_STATE_RECENT";
+export const SET_TIMELINE_FILTER_YEAR = "SET_TIMELINE_FILTER_YEAR";
 export const CreateAMemory = 'CreateAMemory';
 
 export enum ListType {
@@ -66,6 +69,8 @@ type StateType = {
   keyBoardHeight: number;
   showLoader: boolean;
   loaderText: string;
+  isRecentDataUpdated: boolean;
+  timelineFilterYear: any;
 };
 
 export type DashboardState = object | StateType;
@@ -89,6 +94,8 @@ export const dashboardReducer = (
     case SET_RECENT_FILTERS:
       newState = { ...newState, filterDataRecent: action.payload };
       break;
+    case SET_TIMELINE_FILTER_YEAR: 
+      newState = { ...newState, timelineFilterYear: action.payload }
     case SET_FILTERS_NAME:
       newState = { ...newState, filterName: action.payload };
       break;
@@ -129,6 +136,7 @@ export const dashboardReducer = (
         loadMoreRecent: false,
         refreshRecent: false,
         loadingRecent: false,
+        isRecentDataUpdated: true,
         showLoader: false,
         loaderText: 'Loading...'
       };
@@ -212,6 +220,8 @@ export const dashboardReducer = (
         newState.timelineList,
       );
       break;
+    case DATA_BIND_TO_STATE_RECENT: newState = { ...newState, isRecentDataUpdated: action.payload };
+      break;
   }
   return newState;
 };
@@ -265,7 +275,7 @@ function* getFiltersTimeLine(action: any) {
     let data = yield call(async function () {
       return Storage.get('userData');
     });
-    let dataset = {};
+    let dataset: any = {};
     let request = yield call(fetchFilters,
       [{ "X-CSRF-TOKEN": data.userAuthToken, "Content-Type": "application/json" },
       {
@@ -283,6 +293,7 @@ function* getFiltersTimeLine(action: any) {
           if (responseBody.Details && responseBody.Details.timeline_years) {
 
             DefaultPreference.set('timeline_years', JSON.stringify(responseBody.Details.timeline_years)).then(function () {
+              console.log("filters >>", JSON.stringify(responseBody.Details.timeline_years))
             });
             Account.selectedData().start_year = responseBody.Details.timeline_years.start_year;
             Account.selectedData().end_year = responseBody.Details.timeline_years.end_year;
@@ -297,6 +308,7 @@ function* getFiltersTimeLine(action: any) {
       return await request;
     });
 
+    yield put({ type: SET_TIMELINE_FILTER_YEAR, payload: yield dataset?.timeline_years })
     yield put({ type: SET_TIMELINE_FILTERS, payload: yield dataset })
 
   } catch (err) {
@@ -343,6 +355,7 @@ function* getFiltersRecent(action: any) {
 function* getMemoryList(action: any) {
   try {
     let obj = getCallerObject(action);
+    yield put({ type: DATA_BIND_TO_STATE_RECENT, payload: false });
     yield put({
       type:
         action.payload.type === ListType.Recent
@@ -391,10 +404,12 @@ function* getMemoryList(action: any) {
       yield put({ type: SET_RECENT_LIST, payload: yield dataSet });
     }
     else {
+      yield put({ type: DATA_BIND_TO_STATE_RECENT, payload: false });
       yield put({ type: SHOW_LOADER_READ, payload: false });
     }
 
   } catch (err) {
+    yield put({ type: DATA_BIND_TO_STATE_RECENT, payload: false });
     showConsoleLog(ConsoleType.LOG, err);
   }
 }
@@ -470,6 +485,7 @@ function* getTimelineList(action: any) {
 
 const getCallerObject = (action: any) => {
   // showConsoleLog(ConsoleType.WARN, 'action >', JSON.stringify(action));
+  let s = store.getState();
   if (action.payload.type == ListType.Recent) {
     if (action.payload.isLoading) {
       promptPagination = 0;
@@ -480,13 +496,13 @@ const getCallerObject = (action: any) => {
   promptPagination;
 
   let start_Year =
-    Account.selectedData().start_year != ''
-      ? Account.selectedData().start_year
-      : '';
+      Account.selectedData().start_year != ''
+        ? Account.selectedData().start_year
+        : '';
   let end_year =
-    Account.selectedData().end_year != ''
-      ? Account.selectedData().end_year
-      : new Date().getFullYear();
+      Account.selectedData().end_year != ''
+        ? Account.selectedData().end_year
+        : new Date().getFullYear();
   DefaultPreference.get('timeline_years').then((value: any) => {
     if (value) {
       value = JSON.parse(value);
@@ -502,8 +518,8 @@ const getCallerObject = (action: any) => {
       prompt_pagination: promptPagination,
       length: action.payload.isLoading ? 5 : 10,
       searchString: '',
-      timeline_start_year: start_Year,
-      timeline_end_year: end_year,
+      timeline_start_year: s.dashboardReducer && s.dashboardReducer.timelineFilterYear && s.dashboardReducer.timelineFilterYear.start_year ? s.dashboardReducer?.timelineFilterYear?.start_year : start_Year,
+      timeline_end_year:  s.dashboardReducer && s.dashboardReducer.timelineFilterYear && s.dashboardReducer.timelineFilterYear.end_year ? s.dashboardReducer?.timelineFilterYear?.end_year : end_year,
       year_option: 'my_years',
     },
     randomPrompts:

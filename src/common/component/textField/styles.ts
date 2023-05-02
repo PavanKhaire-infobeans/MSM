@@ -136,14 +136,14 @@ export const styles = StyleSheet.create({
   },
   animatedViewStyle:{
     width: '100%',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',//flex-end
   },
   minWidth:{ 
     // minWidth: 180 
   },
   errorTextStyle:{
     ...fontSize(13),
-    color: Colors.newTextColor,//ErrorColor,
+    color: Colors.ErrorColor,//ErrorColor,
     marginTop: 3,
     lineHeight: 16,
     textAlign:'right',

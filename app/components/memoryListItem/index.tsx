@@ -22,7 +22,6 @@ import {
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import WebView from 'react-native-webview';
 // import { calendar } from './../../../src/images';
-// import SelectDropdown from 'react-native-select-dropdown'
 import Prompts from './../../../src/common/component/prompts/prompts';
 import {calendarsmall, globesmall, moreoptions} from './../../images';
 import styles from './styles';
@@ -40,6 +39,7 @@ type Props = {
   MemoryActions?: any;
   onLayout?: any;
   navigation?: any;
+  showLoader?:any
 };
 
 type State = {activeIndex: any};
@@ -86,7 +86,6 @@ export default class MemoryListItem extends React.Component<Props, State> {
       actionType: MemoryActionKeys.shareActionKey,
       uid: item?.user_details?.uid,
     });
-    
     for (var value in item?.actions_on_memory) {
       i += 1;
       switch (value) {
@@ -162,6 +161,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
             nid: item?.nid,
             memoryType: item?.type,
             actionType: MemoryActionKeys.deleteMemoryKey,
+            destructive:true
           });
           break;
         case MemoryActionKeys.moveToDraftKey:
@@ -201,7 +201,25 @@ export default class MemoryListItem extends React.Component<Props, State> {
       }
     }
    
-    return memoryActions;
+    let temp = [...memoryActions];
+    let tempmemoryActions:any = [];
+
+    let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide');
+    let deleteObj = temp.filter(item => item.text.toLowerCase() == 'delete');
+    temp = temp.filter(item => item.text.toLowerCase() != 'hide');
+    temp = temp.filter(item => item.text.toLowerCase() != 'delete');
+    
+    if (hideObj.length) {
+      tempmemoryActions = [...hideObj, ...temp,...deleteObj];
+    }
+    else {
+      tempmemoryActions = [...temp];
+      if (deleteObj.length) {
+        tempmemoryActions = [...tempmemoryActions,...deleteObj];
+      }
+    }
+   
+    return tempmemoryActions;
   };
 
   render() {
@@ -262,6 +280,11 @@ export default class MemoryListItem extends React.Component<Props, State> {
                               e.nativeEvent.index,
                               data[0],
                               this.props.navigation,
+                              loader =>{
+                                if (loader) {
+                                  this.props.showLoader();
+                                }
+                              }
                             );
                           }
                         }}>
@@ -329,6 +352,7 @@ export default class MemoryListItem extends React.Component<Props, State> {
                     this.setItem,
                     this.props.listType,
                     this.props.navigation,
+                    this.props.showLoader
                     // this.props.openMemoryActions,
                     // _onShowMemoryDetails(this.props.item.item,"Recent")
                   )}
@@ -391,9 +415,9 @@ export default class MemoryListItem extends React.Component<Props, State> {
                       }
                       {this.props.item.item.description &&
                       this.props.item.item.description.length != 0 ? (
-                        <Text numberOfLines={5} style={styles.descriptionText}>
+                        <TextNew numberOfLines={5} style={styles.descriptionText}>
                           {this.props.item.item.description}
-                        </Text>
+                        </TextNew>
                       ) : // <RenderHtml
                       //   tagsStyles={{ p: Styles.descriptionText, li: Styles.descriptionText, span: Styles.descriptionText }}
                       //   source={{ html: this.props.item.item.memoryDescription }}

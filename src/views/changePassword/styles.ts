@@ -15,7 +15,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
   },
-
+  separatorstyle:{
+    marginBottom: 16
+  },
   titleText: {
     ...fontSize(Size.byWidth(24)),
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.IntersemiBold,

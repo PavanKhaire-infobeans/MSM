@@ -18,6 +18,7 @@ export type MemoryActionsSheetItem = {
   memoryType?: any;
   actionType?: any;
   uid?: any;
+  destructive?:boolean
 };
 
 type Props = {
@@ -137,6 +138,8 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                 <FlatList
                   data={this.props.actions}
                   keyExtractor={(_, index: number) => `${index}`}
+                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
                   onScroll={() => {
                     Keyboard.dismiss();
                   }}

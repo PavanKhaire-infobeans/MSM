@@ -8,12 +8,16 @@ import {
   StatusBar,
   Text,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import { create_checkbox, create_checkbox_tick } from '../../../../app/images';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
+import { No_Internet_Warning } from '../../../common/component/Toast';
 import {
   Colors,
+  CommonTextStyles,
   ConsoleType,
   decode_utf8,
   fontFamily,
@@ -22,17 +26,20 @@ import {
 } from '../../../common/constants';
 import Utility from '../../../common/utility';
 import {
+  action_close,
   add_icon,
   checkbox,
   checkbox_active,
   settings_icon,
 } from '../../../images';
-import {SaveCollection} from '../reducer';
-import {CollectinAPI} from '../saga';
+import { MemoryAction } from '../../myMemories/myMemoriesWebService';
+import { SaveCollection } from '../reducer';
+import { CollectinAPI } from '../saga';
 import Styles from './styles';
+import analytics from '@react-native-firebase/analytics';
 
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 
 class CollectionList extends React.Component<Props, State> {
   _listRef: any;
@@ -71,30 +78,46 @@ class CollectionList extends React.Component<Props, State> {
     }
   }
 
+  UNSAFE_componentWillReceiveProps=(nextProps: Readonly<Props>, nextContext: any): void =>{
+    if(nextProps != this.props){
+      this.setState({
+        collections: this.props.collections,
+      });
+    }    
+  };
+
   cancelAction = () => {
     Keyboard.dismiss();
     this.props.navigation.goBack();
   };
 
+  goToNewCollection = ()=>{
+    this.props.navigation.navigate('createRenameCollection', {
+      isRename: false,
+      callback: this.newCollectionCreated,
+    })
+  };
+
   saveValue = () => {
-    // let collections_nids : any = [];
-    // this.state.collections.forEach((element) => {
-    //     collections_nids.push(element.tid);
-    // })
-    // if(this.props.isFromMemoryAction){
-    //     if(Utility.isInternetConnected){
-    //         //loaderHandler.showLoader();
-    //         MemoryAction("my_stories", this.props.nid, "add_to_collection",'', collections_nids);
-    //         Keyboard.dismiss();
-    //         this.props.navigation.goBack();
-    //     } else{
-    //          No_Internet_Warning();
-    //      }
-    // } else{
+    let collections_nids : any = [];
+    this.state.collections.forEach((element) => {
+        collections_nids.push(element.tid);
+    })
+    if(this.props.route?.params?.isFromMemoryAction){
+        if(Utility.isInternetConnected){
+            //loaderHandler.showLoader();
+            MemoryAction("my_stories", this.props.nid, "add_to_collection",'', collections_nids);
+            Keyboard.dismiss();
+            this.props.navigation.goBack();
+        } else{
+             No_Internet_Warning();
+         }
+    } 
+    else{
     this.props.setCollection(this.state.collections);
     Keyboard.dismiss();
     this.props.navigation.goBack();
-    // }
+    }
   };
 
   checkIfLastItemRendered = (item: any) => {
@@ -120,11 +143,12 @@ class CollectionList extends React.Component<Props, State> {
       if (!found) {
         collections.push(item);
       }
-      this.setState({collections: collections});
+      this.setState({ collections: collections });
     } catch (error) {
       showConsoleLog(ConsoleType.LOG, error);
     }
   };
+
   renderRow = (item: any) => {
     let isSelected = false;
     if (this.state && this.state.collections && this.state.collections.length) {
@@ -146,19 +170,15 @@ class CollectionList extends React.Component<Props, State> {
               <Image
                 style={Styles.moveImage}
                 resizeMode="contain"
-                source={isSelected ? checkbox_active : checkbox}></Image>
+                source={isSelected ? create_checkbox_tick : create_checkbox}></Image>
               <View style={Styles.titleContainer}>
                 <Text style={Styles.titleText}>
-                  {decode_utf8(item.item.name)}
+                  {`${decode_utf8(item.item.name)} (${item.item.memory_count} memories)`}
                 </Text>
-                <Text style={Styles.titleText}>
-                  {'('}
-                  {item.item.memory_count}
-                  {' memories)'}
-                </Text>
+               
               </View>
             </View>
-            <TouchableHighlight
+            {/* <TouchableHighlight
               style={Styles.nameContainer}
               underlayColor={'#ffffff44'}
               onPress={() =>
@@ -168,7 +188,7 @@ class CollectionList extends React.Component<Props, State> {
                 })
               }>
               <Image source={settings_icon}></Image>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
           </View>
         </TouchableHighlight>
       </View>
@@ -176,7 +196,7 @@ class CollectionList extends React.Component<Props, State> {
   };
 
   newCollectionCreated = (collection: any) => {
-    this.setState({collection: collection});
+    this.setState({ collection: collection });
   };
 
   render() {
@@ -186,11 +206,15 @@ class CollectionList extends React.Component<Props, State> {
         <SafeAreaView style={Styles.safeAreaContainer}>
           <View style={Styles.container}>
             <NavigationHeaderSafeArea
-              heading={'Add to Collections'}
+              // heading={''}
               cancelAction={() => this.cancelAction()}
               showRightText={true}
-              rightText={'Done'}
-              saveValues={this.saveValue}
+              showNewCollection={true}
+              createMemoryPage={true}
+              rightIcon={true}
+              backIcon={action_close}
+              rightText={'New\nCollection'}
+              saveValues={this.goToNewCollection}
             />
             <StatusBar
               barStyle={
@@ -200,7 +224,9 @@ class CollectionList extends React.Component<Props, State> {
               }
               backgroundColor={Colors.NewThemeColor}
             />
-            <TouchableHighlight
+            <View style={Styles.borderStyle}></View>
+
+            {/* <TouchableHighlight
               underlayColor={'#ffffff55'}
               style={Styles.addNewCollectionContainer}
               onPress={() =>
@@ -215,20 +241,43 @@ class CollectionList extends React.Component<Props, State> {
                   Create New Collection
                 </Text>
               </View>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
+
+            <Text style={Styles.collectionTextStyle}>
+              Collections are a great way to organize your memories based on a common theme or trait. It also helps readers find your related memories.
+            </Text>
+
+
             <FlatList
               extraData={this.state}
               ref={ref => (this._listRef = ref)}
-              style={Styles.safeAreaContainer}
+              style={Styles.collectionListStyle}
               onScroll={() => {
                 Keyboard.dismiss();
               }}
               keyboardShouldPersistTaps={'handled'}
               showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               data={this.props.collectionList}
               keyExtractor={(_, index: number) => `${index}`}
+              ItemSeparatorComponent={()=><View style={{height:24}}/>}
               renderItem={(item: any) => this.renderRow(item)}
             />
+             <TouchableWithoutFeedback
+                // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+                onPress={this.saveValue}
+                >
+                <View
+                  style={Styles.loginSSOButtonStyle}>
+                  <Text
+                    style={[
+                      CommonTextStyles.fontWeight500Size17Inter,
+                      Styles.loginTextStyle,
+                    ]}>
+                    Done
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
           </View>
         </SafeAreaView>
       </View>
@@ -236,7 +285,7 @@ class CollectionList extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: {[x: string]: any}) => {
+const mapState = (state: { [x: string]: any }) => {
   return {
     collections: state.MemoryInitials.collections,
     collectionList: state.MemoryInitials.collectionList,
@@ -246,10 +295,10 @@ const mapState = (state: {[x: string]: any}) => {
 
 const mapDispatch = (dispatch: Function) => {
   return {
-    collectionAPI: () => dispatch({type: CollectinAPI}),
+    collectionAPI: () => dispatch({ type: CollectinAPI }),
     //   MemoryCollectionsAPI : (payload: any) => dispatch({type: MemoryCollectionsAPI, payload : payload}),
     setCollection: (payload: any) =>
-      dispatch({type: SaveCollection, payload: payload}),
+      dispatch({ type: SaveCollection, payload: payload }),
   };
 };
 

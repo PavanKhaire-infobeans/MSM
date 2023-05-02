@@ -48,6 +48,21 @@ const FileDescription = props => {
     };
   }, []);
 
+  const saveValue = () => {
+    if (file_title != fileTitle || description != fileDesc) {
+      props?.route.params.done(
+        props.route.params.file,
+        file_title.trim(),
+        description.trim(),
+      );
+    }
+    Keyboard.dismiss();
+    if (props.route.params.doNotReload) {
+      props.route.params.doNotReload(true);
+    }
+    props.navigation.goBack();
+  };
+
   const _keyboardDidShow = (e: any) => {
     setSupportView(e.endCoordinates.height - 30);
   };
@@ -59,7 +74,10 @@ const FileDescription = props => {
   const cancelAction = () => {
     if (file_title == fileTitle && description == fileDesc) {
       Keyboard.dismiss();
-      props.navigation.goBack();
+    if (props.route.params.doNotReload) {
+      props.route.params.doNotReload(true);
+    }
+    props.navigation.goBack();
     } else {
       Alert.alert('Save changes?', `Do you want to save your changes?`, [
         {
@@ -132,18 +150,6 @@ const FileDescription = props => {
     }
   };
 
-  const saveValue = () => {
-    if (file_title != fileTitle || description != fileDesc) {
-      props?.route.params.done(
-        props.route.params.file,
-        file_title.trim(),
-        description.trim(),
-      );
-    }
-    Keyboard.dismiss();
-    props.navigation.goBack();
-  };
-
   return (
     <View style={Styles.fullFlex}>
       <SafeAreaView style={Styles.emptySafeAreaStyle} />
@@ -153,6 +159,7 @@ const FileDescription = props => {
             heading={'Add Details'}
             cancelAction={() => cancelAction()}
             showRightText={true}
+            createMemoryPage={true}
             rightText={'Done'}
             saveValues={saveValue}
           />

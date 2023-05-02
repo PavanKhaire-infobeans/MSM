@@ -15,7 +15,7 @@ import {
   View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import {useNavigation} from '@react-navigation/native';
+import analytics from '@react-native-firebase/analytics';
 import Text from '../../../common/component/Text';
 import {
   Colors,
@@ -24,7 +24,7 @@ import {
   fontSize,
   MemoryActionKeys,
 } from '../../../common/constants';
-import {GetAllLikes, Like, Unlike} from '../../memoryDetails/detailsWebService';
+import { GetAllLikes, Like, Unlike } from '../../memoryDetails/detailsWebService';
 import {
   GetPublishedMemories,
   kAllLikes,
@@ -77,17 +77,17 @@ import {
   move_to_draft,
   remove_me_from_this_post,
 } from '../../../images';
-import {ListType} from '../../dashboard/dashboardReducer';
+import { ListType } from '../../dashboard/dashboardReducer';
 import {
   Border,
   LikeCommentShare,
 } from '../../memoryDetails/componentsMemoryDetails';
-import {PublishedMemoryDataModel} from './publishedMemoryDataModel';
+import { PublishedMemoryDataModel } from './publishedMemoryDataModel';
 var MemoryActions: Array<MemoryActionsSheetItem> = [
   // { index: 0, text: "Image", image: action_camera }
 ];
-type State = {[x: string]: any};
-type Props = {[x: string]: any};
+type State = { [x: string]: any };
+type Props = { [x: string]: any };
 var publishedMemoriesArray: any[] = [];
 var page: 0;
 var loadingDataFromServer = true;
@@ -250,7 +250,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       //     page--;
       // }
       if (publishedMemoriesArray.length == 0) {
-       //ToastMessage(publishedMemories, Colors.ErrorColor);
+        //ToastMessage(publishedMemories, Colors.ErrorColor);
       }
     }
     this.setState(
@@ -296,7 +296,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       this.showList(getAllLikes);
       // this.setState({});
     } else {
-     //ToastMessage(getAllLikes, Colors.ErrorColor);
+      //ToastMessage(getAllLikes, Colors.ErrorColor);
     }
   };
   likeCallback = (fetched: boolean, responseMessage: any, nid?: any) => {
@@ -352,7 +352,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       );
       // this.setState({});
     } else {
-     //ToastMessage(responseMessage, Colors.ErrorColor);
+      //ToastMessage(responseMessage, Colors.ErrorColor);
     }
   };
 
@@ -394,7 +394,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <SafeAreaView
           style={{
             flex: 1,
@@ -402,13 +402,15 @@ export default class PublishedMemory extends React.Component<Props, State> {
             justifyContent: 'center',
             height: '100%',
           }}>
-          <View style={{height: '100%', width: '100%'}}>
+          <View style={{ height: '100%', width: '100%' }}>
             <FlatList
               data={publishedMemoriesArray}
-              style={{width: '100%', backgroundColor: Colors.NewThemeColor}}
+              style={{ width: '100%', backgroundColor: Colors.NewThemeColor }}
               extraData={this.state}
               initialNumToRender={10}
-            removeClippedSubviews={true}
+              removeClippedSubviews={true}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(_, index: number) => `${index}`}
               onScroll={() => {
                 Keyboard.dismiss();
@@ -425,13 +427,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     Platform.OS === 'android' ? Colors.NewThemeColor : '#fff'
                   }
                   refreshing={this.state.isRefreshing}
-                  onRefresh={()=>this.onRefresh()}
+                  onRefresh={() => this.onRefresh()}
                 />
               }
               keyExtractor={(item, index) => index.toString()}
-              ListFooterComponent={()=>this.renderFooter()}
+              ListFooterComponent={() => this.renderFooter()}
               onEndReachedThreshold={0.4}
-              onEndReached={()=>this.handleLoadMore()}
+              onEndReached={() => this.handleLoadMore()}
             />
             {publishedMemoriesArray.length == 0 && (
               <View
@@ -448,7 +450,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                   <ActivityIndicator
                     color={Colors.ThemeColor}
                     size="large"
-                    style={{flex: 1, justifyContent: 'center'}}
+                    style={{ flex: 1, justifyContent: 'center' }}
                   />
                 ) : (
                   <Text
@@ -476,7 +478,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
           width={DeviceInfo.isTablet() ? '65%' : '100%'}
           actions={MemoryActions}
           memoryActions={true}
-          onActionClick={onActionItemClicked}
+          onActionClick={(index, data?)=>onActionItemClicked(index, data, this.props.navigation)}
         />
       </View>
     );
@@ -497,8 +499,8 @@ export default class PublishedMemory extends React.Component<Props, State> {
     //it will show indicator at the bottom of the list when data is loading otherwise it returns null
     if (!this.state.loading) return null;
     return (
-      <View style={{width: '100%', height: 50}}>
-        <ActivityIndicator style={{color: '#000'}} />
+      <View style={{ width: '100%', height: 50 }}>
+        <ActivityIndicator style={{ color: '#000' }} />
       </View>
     );
   };
@@ -526,7 +528,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
       actionType: MemoryActionKeys.cancelActionKey,
     });
     this._actionSheet && this._actionSheet.showSheet();
-    this.setState({showMemoryActions: true});
+    this.setState({ showMemoryActions: true });
   };
 
   audioView = (item: any) => {
@@ -576,7 +578,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     alignItems: 'center',
                   }}>
                   {this.state.audioFile.fid == item.audios[0].fid &&
-                  this.state.audioFile.isPlaying ? (
+                    this.state.audioFile.isPlaying ? (
                     <View
                       style={{
                         height: 20,
@@ -622,21 +624,21 @@ export default class PublishedMemory extends React.Component<Props, State> {
                     />
                   )}
                 </View>
-                <View style={{marginLeft: 10}}>
+                <View style={{ marginLeft: 10 }}>
                   <Text
                     style={[
                       styles.normalText,
-                      {color: '#000', marginBottom: 5, paddingRight: 80},
+                      { color: '#000', marginBottom: 5, paddingRight: 80 },
                     ]}
                     numberOfLines={1}
                     ellipsizeMode="tail">
                     {item.audios[0].title
                       ? item.audios[0].title
                       : item.audios[0].filename
-                      ? item.audios[0].filename
-                      : ''}
+                        ? item.audios[0].filename
+                        : ''}
                   </Text>
-                  <Text style={[styles.normalText, {color: '#000'}]}>
+                  <Text style={[styles.normalText, { color: '#000' }]}>
                     {item.audios[0].duration}
                   </Text>
                 </View>
@@ -659,7 +661,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
               ]}>
               <TouchableHighlight
                 underlayColor={Colors.touchableunderlayColor}
-                style={{flex: 1, justifyContent: 'center'}}
+                style={{ flex: 1, justifyContent: 'center' }}
                 onPress={() => {
                   _onShowMemoryDetails(item, this.props.navigation);
                 }}>
@@ -706,7 +708,7 @@ export default class PublishedMemory extends React.Component<Props, State> {
         audioFile.index = audioFile.index - 1;
         break;
     }
-    this.setState({audioFile: audioFile});
+    this.setState({ audioFile: audioFile });
   };
 
   togglePlayPause = (item: any) => {
@@ -754,13 +756,13 @@ export default class PublishedMemory extends React.Component<Props, State> {
   _onCloseAudios(event: Event) {
     try {
       this.audioPlayer.current.hidePlayer();
-    } catch (error) {}
+    } catch (error) { }
   }
 }
 
-const _addToCollection = (nid: any) => {
+const _addToCollection = (nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
-    this.props.navigation.navigate('memoryCollectionList', {
+    navigation.navigate('memoryCollectionList', {
       isFromMemoryAction: true,
       nid: nid,
     });
@@ -768,10 +770,10 @@ const _addToCollection = (nid: any) => {
     No_Internet_Warning();
   }
 };
-const _onEditMemory = (nid: any) => {
+const _onEditMemory = (nid: any, navigation: any) => {
   if (Utility.isInternetConnected) {
     //loaderHandler.showLoader();
-    this.props.navigation.navigate('createMemory', {
+    navigation.navigate('createMemory', {
       editMode: true,
       draftNid: nid,
       editPublsihedMemory: true,
@@ -781,14 +783,15 @@ const _onEditMemory = (nid: any) => {
   }
 };
 
-export const onActionItemClicked = (index: number, data: any): void => {
+export const onActionItemClicked = async(index: number, data?: any, navigation?: any): void => {
   //showConsoleLog(ConsoleType.LOG,data);
+  await analytics().logEvent(`${data.actionType}_action_on_memory`);
   switch (data.actionType) {
     case MemoryActionKeys.addToCollection:
-      _addToCollection(data.nid);
+      _addToCollection(data.nid,navigation);
       break;
     case MemoryActionKeys.editMemoryKey:
-      _onEditMemory(data.nid);
+      _onEditMemory(data.nid, navigation);
       break;
     case MemoryActionKeys.cancelActionKey:
       break;
@@ -800,7 +803,7 @@ export const onActionItemClicked = (index: number, data: any): void => {
             {
               text: 'No',
               style: 'cancel',
-              onPress: () => {},
+              onPress: () => { },
             },
             {
               text: 'Yes',
@@ -898,6 +901,7 @@ export const MemoryActionsList = (item: any) => {
           nid: item.nid,
           memoryType: item.type,
           actionType: MemoryActionKeys.deleteMemoryKey,
+          destructive:true
         });
         break;
       case MemoryActionKeys.moveToDraftKey:
@@ -932,7 +936,25 @@ export const MemoryActionsList = (item: any) => {
         break;
     }
   }
-  return memoryActions;
+
+  let temp = [...memoryActions];
+  let tempmemoryActions: any = [];
+
+  let hideObj = temp.filter(item => item.text.toLowerCase() == 'hide')
+  let deleteObj = temp.filter(item => item.text.toLowerCase() == 'delete')
+  temp = temp.filter(item => item.text.toLowerCase() != 'hide')
+  temp = temp.filter(item => item.text.toLowerCase() != 'delete')
+  if (hideObj.length) {
+    tempmemoryActions = [...hideObj, ...temp,...deleteObj]
+  }
+  else {
+    tempmemoryActions = [...temp]
+    if (deleteObj.length) {
+      tempmemoryActions = [...tempmemoryActions,...deleteObj]
+    }
+  }
+  
+  return tempmemoryActions;
 };
 
 export const renderSeparator = () => {
@@ -997,7 +1019,7 @@ export const CommentBox = (item: any) => {
         </Text>
 
         <TouchableOpacity
-          style={{alignItems: 'center', justifyContent: 'center'}}>
+          style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Image source={icon_send} />
           <Text
             style={{
@@ -1035,7 +1057,7 @@ export const RenderLikeAndCommentSection = (
     }
   }
   return (
-    <View style={{paddingRight: 15, paddingLeft: 15}} key={item.index}>
+    <View style={{ paddingRight: 15, paddingLeft: 15 }} key={item.index}>
       {(memoryDetail.noOfComments > 0 || memoryDetail.showLikeCount) && (
         <Border />
       )}
@@ -1110,7 +1132,7 @@ export const _onShowMemoryDetails = (item: any, navigation?: any) => {
 
 export const _onOpenPdfs = (pdfUrl: any) => {
   if (Utility.isInternetConnected) {
-    this.props.navigation.jump('pdfViewer', {file: {url: encode_utf8(pdfUrl)}});
+    this.props.navigation.jump('pdfViewer', { file: { url: encode_utf8(pdfUrl) } });
   } else {
     No_Internet_Warning();
   }
@@ -1169,8 +1191,8 @@ export const MemoryBasicDetails = (
         justifyContent: 'space-between',
         flexDirection: 'row',
       }}>
-      <View style={{flexDirection: 'row', paddingLeft: 14}}>
-        <View style={{padding: 5, flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ flexDirection: 'row', paddingLeft: 14 }}>
+        <View style={{ padding: 5, flexDirection: 'row', alignItems: 'center' }}>
           <View>
             <Text
               style={{
@@ -1246,7 +1268,7 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
           }}>
           <TouchableHighlight
             underlayColor={'#ffffff00'}
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             onPress={() => {
               _onOpenImages(memoryDetail.images, 0, navigation);
             }}>
@@ -1264,7 +1286,7 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
           </TouchableHighlight>
 
           {memoryDetail.images.length > 1 && (
-            <View style={{flex: 1, backgroundColor: Colors.NewLightThemeColor}}>
+            <View style={{ flex: 1, backgroundColor: Colors.NewLightThemeColor }}>
               {/* <TouchableHighlight underlayColor={"#ffffff00"}
                                     style={{ flex: 1 }}
                                     onPress={
@@ -1281,15 +1303,15 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
                                 </TouchableHighlight>         */}
               <TouchableHighlight
                 underlayColor={'#ffffff00'}
-                style={{flex: 1}}
+                style={{ flex: 1 }}
                 onPress={() => {
                   memoryDetail.images.length > 2
                     ? _onShowMemoryDetails(memoryDetail, navigation)
                     : _onOpenImages(memoryDetail.images, 1, navigation);
                 }}>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <PlaceholderImageView
-                    style={{flex: 1, marginLeft: 2}}
+                    style={{ flex: 1, marginLeft: 2 }}
                     uri={Utility.getFileURLFromPublicURL(
                       memoryDetail.images[1].thumbnail_url,
                     )}
@@ -1347,7 +1369,7 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
               _onOpenPdfs(memoryDetail.pdf[0].url);
             }}>
             <PlaceholderImageView
-              style={{height: '100%', width: '100%'}}
+              style={{ height: '100%', width: '100%' }}
               //   style={{backgroundColor : "#F3F3F3", flex: 1, marginRight: 2, height: "100%"}}
               openPDF={true}
               uri={Utility.getFileURLFromPublicURL(
@@ -1357,10 +1379,10 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
             />
           </TouchableHighlight>
           {memoryDetail.pdf.length > 1 && (
-            <View style={{flex: 1, backgroundColor: Colors.NewLightThemeColor}}>
+            <View style={{ flex: 1, backgroundColor: Colors.NewLightThemeColor }}>
               <TouchableHighlight
                 underlayColor={'#ffffff00'}
-                style={{flex: 1}}
+                style={{ flex: 1 }}
                 onPress={() => {
                   memoryDetail.pdf.length > 2
                     ? _onShowMemoryDetails(memoryDetail, navigation)
@@ -1368,7 +1390,7 @@ export const MediaView = (item: any, audioView: any, navigation: any) => {
                 }}>
                 <View>
                   <PlaceholderImageView
-                    style={{flex: 1, marginLeft: 2, height: '100%'}}
+                    style={{ flex: 1, marginLeft: 2, height: '100%' }}
                     openPDF={true}
                     uri={Utility.getFileURLFromPublicURL(
                       memoryDetail.pdf[1].pdf_image_url,
@@ -1425,7 +1447,7 @@ const styles = StyleSheet.create({
     shadowColor: '#D9D9D9',
     shadowRadius: 2,
     elevation: 3,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
   },
   sideMenu: {
     paddingTop: 15,
@@ -1442,6 +1464,6 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0, 0.5)',
     shadowColor: '#CACACA',
     shadowRadius: 2,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
   },
 });

@@ -25,7 +25,7 @@ function* getListFlow(requestData: any) {
     ],
     async(responseBody) =>{
       // PARSE MINDPOP HERE
-      responseBody.Details.mindPopList.forEach((_element: any, index: any) => {
+      responseBody?.Details?.mindPopList?.forEach((_element: any, index: any) => {
         responseBody.Details.mindPopList[index].message = encode_utf8(
           responseBody.Details.mindPopList[index].message,
         );

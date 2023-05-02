@@ -52,7 +52,7 @@ import {
   promptIdListener,
 } from '../../createMemory/createMemoryWebService';
 import { DefaultDetailsMemory } from '../../createMemory/dataHelper';
-import Busyindicator from './../../../common/component/busyindicator';
+import analytics from '@react-native-firebase/analytics';
 
 import styles from './styles';
 type State = { [x: string]: any };
@@ -88,6 +88,13 @@ const Recent = (props: Props) => {
 
   useEffect(() => {
 
+    const screenLog = async () => {
+      await analytics().logScreenView({
+        screen_name: "Recent",
+        screen_class: "Recent",
+      });
+    };
+    screenLog();
     memoryUpdateListener = EventManager.addListener(
       'memoryUpdateRecentListener',
       () => {
@@ -96,11 +103,12 @@ const Recent = (props: Props) => {
     );
     props.showLoader(true)
     props.loaderText('Loading...');
-    
+
     props.fetchMemoryList({ type: ListType.Recent, isLoading: true });
 
     return () => {
-      memoryUpdateListener.removeListener();
+      _onCloseAudios();
+       memoryUpdateListener.removeListener();
       // memoryFromPrompt.removeListener();
     };
   }, []);
@@ -123,12 +131,14 @@ const Recent = (props: Props) => {
           memoryDetails = props.recentList[props.recentList.length - 1];
         }
         // if(props.totalCount > 5)
-        props.fetchMemoryList({
-          type: ListType.Recent,
-          isLoadMore: true,
-          lastMemoryDate: memoryDetails.updated,
-          filters: props.filters,
-        });
+        if (props.isRecentDataUpdated) {
+          props.fetchMemoryList({
+            type: ListType.Recent,
+            isLoadMore: true,
+            lastMemoryDate: memoryDetails.updated,
+            filters: props.filters,
+          });
+        }
       }
     }
   };
@@ -260,9 +270,9 @@ const Recent = (props: Props) => {
     }
   };
 
-  const _onCloseAudios = (event: Event) => {
+  const _onCloseAudios = () => {
     try {
-      audioPlayer.current.hidePlayer();
+      audioPlayer.current && audioPlayer.current.hidePlayer && audioPlayer.current.hidePlayer();
     } catch (error) { }
   };
 
@@ -339,11 +349,12 @@ const Recent = (props: Props) => {
         //   promptToMemoryCallBack,
         // );
         CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
-          res => {
-            
+          async (res) => {
+
             if (res.status) {
               props.removePrompt(selectedPrompt);
               // //loaderHandler.hideLoader();
+              await analytics().logEvent('memory_created_from_prompt');
               props.navigation.navigate('createMemory', {
                 editMode: true,
                 draftNid: res.id,
@@ -351,7 +362,7 @@ const Recent = (props: Props) => {
               });
             } else {
               // //loaderHandler.hideLoader();
-             // ToastMessage(draftDetails.ResponseMessage);
+              // ToastMessage(draftDetails.ResponseMessage);
             }
             props.showLoader(false);
             props.loaderText('Loading...');
@@ -382,6 +393,11 @@ const Recent = (props: Props) => {
           _onAddProptToMemoryAction(firstIndex, secondIndex)
         }
         }
+        showLoader={(loader) => {
+          if (loader) {
+            props.showLoader(true)
+          }
+        }}
         navigation={props.navigation}
       />
     </>
@@ -389,7 +405,7 @@ const Recent = (props: Props) => {
 
   return (
     <View style={styles.mainContainer}>
-   
+
       <SafeAreaView style={styles.container}>
         <View style={styles.subcontainer}>
           <FlatList
@@ -399,6 +415,8 @@ const Recent = (props: Props) => {
             initialNumToRender={10}
             removeClippedSubviews={true}
             maxToRenderPerBatch={5}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             windowSize={5}
             renderItem={renderList}
             indicatorStyle="white"
@@ -480,6 +498,7 @@ const mapState = (state: any) => {
     totalCount: state.dashboardReducer.recentCount,
     filters: state.dashboardReducer.filterDataRecent,
     active_prompts: state.dashboardReducer.active_prompts,
+    isRecentDataUpdated: state.dashboardReducer.isRecentDataUpdated,
   };
 };
 
@@ -493,7 +512,7 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: SHOW_LOADER_READ, payload: payload }),
     loaderText: (payload: any) =>
       dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
-      
+
   };
 };
 

@@ -145,6 +145,8 @@ const AppIntro = props => {
             data={images}
             initialNumToRender={images.length}
             removeClippedSubviews={true}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             renderItem={renderAppIntro}
             horizontal={true}
             pagingEnabled={true}

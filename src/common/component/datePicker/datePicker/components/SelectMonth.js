@@ -163,6 +163,8 @@ const SelectMonth = () => {
               data={newMemoryYears}
               numColumns={3}
               scrollEnabled={true}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               renderItem={(item) => {
                 item = item.item;
                 return (

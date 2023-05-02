@@ -108,6 +108,8 @@ export default class CustomListView extends React.Component<Props> {
             data={this.props.itemList}
             keyExtractor={(_, index: number) => `${index}`}
             ListEmptyComponent={() => this.ListEmptyComponent()}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             style={styles.customlistviewMainContainerFlatlistStyle}
             renderItem={this.renderCommentView}
           />

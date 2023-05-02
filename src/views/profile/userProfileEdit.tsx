@@ -11,7 +11,7 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import DropDown from '../../common/component/dropDown';
 import TextField from '../../common/component/textField';
-import {profile_placeholder} from '../../images';
+import { profile_placeholder } from '../../images';
 
 import ImageCropPicker, {
   Image as PickerImage,
@@ -33,7 +33,7 @@ import {
   testPhone,
 } from '../../common/constants';
 import Utility from '../../common/utility';
-import {action_camera, action_close, action_picture} from '../../images';
+import { action_camera, action_close, action_picture } from '../../images';
 import {
   RemoveProfilePic,
   UpdateFormValues,
@@ -41,15 +41,15 @@ import {
   UserProfile,
 } from './userProfileWebService';
 //@ts-ignore
-import {KeyboardAwareScrollView} from '../../common/component/keyboardaware-scrollview';
+import { KeyboardAwareScrollView } from '../../common/component/keyboardaware-scrollview';
 // import DatePickerView from "../../common/component/DatePicker";
 import ActivityIndicatorView from '../../common/component/ActivityIndicatorView';
 import DateTimePicker from '../../common/component/DateTimePicker';
 import NavigationBarForEdit from '../../common/component/navigationBarForEdit';
 import TextNew from '../../common/component/Text';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import EventManager from '../../common/eventManager';
-import {kSetUserProfileData} from './userProfileWebService';
+import { kSetUserProfileData } from './userProfileWebService';
 import Styles from './styles';
 type State = {
   actionSheet: {
@@ -58,14 +58,14 @@ type State = {
   };
   hasLoaded: boolean;
   [key: string]: any | string;
-  error: {[x: string]: {error: boolean; message: string}};
+  error: { [x: string]: { error: boolean; message: string } };
 };
-type Props = {basicInfo: any; profilePicUri: any};
+type Props = { basicInfo: any; profilePicUri: any };
 export default class UserProfileEdit extends React.Component<Props> {
   _actionSheet: any | ActionSheet = null;
   bottomPicker: React.RefObject<BottomPicker> = React.createRef<BottomPicker>();
   profileUpdated: EventManager;
-  textFieldArray: {[key: string]: TextInput} = {};
+  textFieldArray: { [key: string]: TextInput } = {};
   lastFieldName: string = '';
   isProfilePicAvailable: boolean;
   state: State = {
@@ -91,7 +91,7 @@ export default class UserProfileEdit extends React.Component<Props> {
   };
 
   _closeAction = () => {
-    this.setState({modalVisible: false}, () => {
+    this.setState({ modalVisible: false }, () => {
       Keyboard.dismiss();
       this.props.navigation.goBack();
     });
@@ -100,7 +100,7 @@ export default class UserProfileEdit extends React.Component<Props> {
   constructor(prop: Props) {
     super(prop);
     this.isProfilePicAvailable = false;
-    this.setState({basicInfo: prop.basicInfo}, () => {
+    this.setState({ basicInfo: prop.basicInfo }, () => {
       this.profileUpdated = EventManager.addListener(
         kSetUserProfileData,
         () => {
@@ -122,7 +122,7 @@ export default class UserProfileEdit extends React.Component<Props> {
     if (field.type == 'date_select') {
       this.setState({
         isDatePickerVisible: true,
-        selectionData: {fieldName: field.field_name},
+        selectionData: { fieldName: field.field_name },
       });
       return;
     }
@@ -130,7 +130,7 @@ export default class UserProfileEdit extends React.Component<Props> {
     let values = getValue(field, ['values']) || [];
     var actions: ActionSheetItem[] = [];
     for (let key in values) {
-      actions.push({key: key, text: values[key]});
+      actions.push({ key: key, text: values[key] });
     }
 
     this.setState(
@@ -172,7 +172,7 @@ export default class UserProfileEdit extends React.Component<Props> {
             showError = this.state.error[field.field_name].error;
             errorMessage = this.state.error[field.field_name].message;
           }
-          var extra: {[x: string]: any} = {
+          var extra: { [x: string]: any } = {
             showError,
             errorMessage,
             isRequired: field.required,
@@ -208,8 +208,8 @@ export default class UserProfileEdit extends React.Component<Props> {
               field.field_name && field.field_name.indexOf('phone') >= 0
                 ? 'phone-pad'
                 : field.field_name.indexOf('email') >= 0
-                ? 'email-address'
-                : 'ascii-capable';
+                  ? 'email-address'
+                  : 'ascii-capable';
             let val = getValue(field, ['default_value']);
             if (val) {
               default_value = val;
@@ -229,7 +229,7 @@ export default class UserProfileEdit extends React.Component<Props> {
                     [field.field_name]: text,
                     error: {
                       ...this.state.error,
-                      [field.field_name]: {error: false, message: ''},
+                      [field.field_name]: { error: false, message: '' },
                     },
                   });
                 }}
@@ -240,8 +240,8 @@ export default class UserProfileEdit extends React.Component<Props> {
                   this.state[field.field_name]
                     ? this.state[field.field_name]
                     : this.state[field.field_name] == ''
-                    ? ''
-                    : default_value
+                      ? ''
+                      : default_value
                 }
                 keyboardType={keyboardBoardType}
                 onSubmitEditing={() => {
@@ -259,9 +259,9 @@ export default class UserProfileEdit extends React.Component<Props> {
             field_date =
               field_date.length > 0
                 ? Utility.dateAccordingToFormat(
-                    field_date,
-                    field.granularity.date_format,
-                  )
+                  field_date,
+                  field.granularity.date_format,
+                )
                 : '';
             return (
               <DropDown
@@ -279,7 +279,7 @@ export default class UserProfileEdit extends React.Component<Props> {
         <DateTimePicker
           isVisible={this.state.isDatePickerVisible}
           onCancel={() => {
-            this.setState({isDatePickerVisible: false});
+            this.setState({ isDatePickerVisible: false });
             //showConsoleLog(ConsoleType.LOG,"cancelled")
           }}
           onDateSelection={(date: any) => {
@@ -318,13 +318,13 @@ export default class UserProfileEdit extends React.Component<Props> {
       let type = currentField?.type;
       //check if given field has existing or value is updated
       let isUpdated = false;
-      
+
       let updatedValue: any = this.state[currentField?.field_name];
       if (this.state[currentField] != null && this.state[currentField?.field_name] != null) {
-        console.warn("key <",currentField,currentField?.field_name,this.state[currentField?.field_name])
+        console.warn("key <", currentField, currentField?.field_name, this.state[currentField?.field_name])
         if (updatedValue != null && updatedValue != 'undefined') {
           isUpdated = true;
-        }   
+        }
       }
       hasChangedAnyValue = hasChangedAnyValue || isUpdated;
 
@@ -399,11 +399,11 @@ export default class UserProfileEdit extends React.Component<Props> {
       }
     }
     if (Object.keys(error).length > 0) {
-     //ToastMessage('Please check the highlighted fields', Colors.ErrorColor);
-      this.setState({error});
+      //ToastMessage('Please check the highlighted fields', Colors.ErrorColor);
+      this.setState({ error });
       return false;
     } else if (hasChangedAnyValue == false) {
-     //ToastMessage('No changes found', Colors.NewTitleColor);
+      //ToastMessage('No changes found', Colors.NewTitleColor);
       Keyboard.dismiss();
       this.props.navigation.popTo('profile');
     }
@@ -445,7 +445,7 @@ export default class UserProfileEdit extends React.Component<Props> {
             ? this.state[field.field_name].value2
             : field.default_value.value2
           : field.default_value.value2;
-        return {value: default_value_from, value2: default_value_to};
+        return { value: default_value_from, value2: default_value_to };
       } else {
         let val = getValue(field, ['default_value', 'value']);
         if (val) {
@@ -477,13 +477,14 @@ export default class UserProfileEdit extends React.Component<Props> {
         <SafeAreaView
           style={[
             Styles.basicInfoSubContainer,
-            {backgroundColor: Colors.white},
+            { backgroundColor: Colors.white },
           ]}>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="always"
+            enableOnAndroid={true}
             keyboardDismissMode="on-drag"
             style={Styles.KeyboardAwareScrollViewStyle}
-            contentContainerStyle={{alignItems: 'center'}}
+            contentContainerStyle={{ alignItems: 'center' }}
             bounces={false}>
             {/* <ScrollView contentContainerStyle={{ width: deviceWidth }}> */}
 
@@ -493,12 +494,12 @@ export default class UserProfileEdit extends React.Component<Props> {
                   defaultSource={profile_placeholder}
                   source={
                     isProfilePicAvailable
-                      ? {uri: profilePicURL}
+                      ? { uri: profilePicURL }
                       : profile_placeholder
                   }
                   style={Styles.profileImage}
-                  onLoad={() => this.setState({hasLoaded: true})}
-                  onLoadStart={() => this.setState({hasLoaded: false})}
+                  onLoad={() => this.setState({ hasLoaded: true })}
+                  onLoadStart={() => this.setState({ hasLoaded: false })}
                 />
                 {!this.state.hasLoaded ? (
                   <ActivityIndicatorView size="small" />
@@ -555,7 +556,7 @@ export default class UserProfileEdit extends React.Component<Props> {
           onItemSelect={(selectedItem: ActionSheetItem) => {
             let fieldName = this.state.selectionData.fieldName;
             this.setState({
-              [fieldName]: {[selectedItem.key]: selectedItem.text},
+              [fieldName]: { [selectedItem.key]: selectedItem.text },
             });
             //showConsoleLog(ConsoleType.LOG,this.state)
           }}
@@ -568,7 +569,7 @@ export default class UserProfileEdit extends React.Component<Props> {
           label={this.state.selectionData.label}
           saveSelectedValues={(selectedValueObjects: any) => {
             let fieldName = this.state.selectionData.fieldName;
-            this.setState({[fieldName]: selectedValueObjects});
+            this.setState({ [fieldName]: selectedValueObjects });
             //showConsoleLog(ConsoleType.LOG,this.state)
           }}
         />
@@ -650,7 +651,7 @@ export default class UserProfileEdit extends React.Component<Props> {
                   //this.saveTempFiles(tempfilesArr);
                   //this.props.setValue(false);
                 })
-                .catch(e => {});
+                .catch(e => { });
             }
           });
 
@@ -690,7 +691,7 @@ export default class UserProfileEdit extends React.Component<Props> {
                   // this.saveTempFiles(tempfiles);
                   // this.props.setValue(false);
                 })
-                .catch(e => {});
+                .catch(e => { });
             }
           });
           break;
@@ -702,19 +703,19 @@ export default class UserProfileEdit extends React.Component<Props> {
     //loaderHandler.showLoader();
     UploadProfilePic(imageFile)
       .then((response: any) => {
-       //ToastMessage('Profile photo updated successfully');
+        //ToastMessage('Profile photo updated successfully');
         UserProfile();
         //loaderHandler.hideLoader();
         this.isProfilePicAvailable = true;
-        this.setState({hasLoaded: true}, () => {
+        this.setState({ hasLoaded: true }, () => {
           //loaderHandler.hideLoader()
         });
       })
       .catch((error: any) => {
         //loaderHandler.hideLoader();
         this.isProfilePicAvailable = false;
-        this.setState({hasLoaded: true}, () =>{
-           //loaderHandler.hideLoader()
+        this.setState({ hasLoaded: true }, () => {
+          //loaderHandler.hideLoader()
         });
       });
   };
@@ -727,7 +728,7 @@ export default class UserProfileEdit extends React.Component<Props> {
         {
           text: 'No',
           style: 'cancel',
-          onPress: () => {},
+          onPress: () => { },
         },
         {
           text: 'Yes',
@@ -737,7 +738,7 @@ export default class UserProfileEdit extends React.Component<Props> {
             RemoveProfilePic()
               .then((response: any) => {
                 //loaderHandler.hideLoader();
-               //ToastMessage('Profile photo removed successfully');
+                //ToastMessage('Profile photo removed successfully');
                 UserProfile();
                 this.isProfilePicAvailable = false;
                 this.setState({
@@ -748,7 +749,7 @@ export default class UserProfileEdit extends React.Component<Props> {
                 });
               })
               .catch((error: any) => {
-               //ToastMessage(error.message, Colors.ErrorColor);
+                //ToastMessage(error.message, Colors.ErrorColor);
                 //loaderHandler.hideLoader();
               });
           },
@@ -759,9 +760,9 @@ export default class UserProfileEdit extends React.Component<Props> {
 }
 
 const ImageActions: Array<ImageSelectionSheetItem> = [
-  {index: 0, text: 'Capture from Camera', image: action_camera},
-  {index: 1, text: 'Upload from Gallery', image: action_picture},
-  {index: 2, text: 'Cancel', image: action_close},
+  { index: 0, text: 'Capture from Camera', image: action_camera },
+  { index: 1, text: 'Upload from Gallery', image: action_picture },
+  { index: 2, text: 'Cancel', image: action_close },
 ];
 
 export type TempFile = {

@@ -9,6 +9,22 @@ const Styles = EStyleSheet.create({
   flexContainer: {
     flex: 1
   },
+  renderThemeContainerStyle: {
+    // height: 108,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    backgroundColor: Colors.timeLinebackground,
+    // borderWidth: 1.5,
+    // borderColor: Colors.timeLinebackground,
+    width: Utility.getDeviceWidth() - 32,
+    alignSelf: 'center',
+    borderRadius: 12
+  },
+  filterThemeImageStyle: {
+    marginRight: 8,
+    width: 28,
+    height: 35
+  },
   scrollViewStyle: {
     flex: 1,
     marginBottom: 30
@@ -274,7 +290,7 @@ const Styles = EStyleSheet.create({
   newBackContainer: {
     alignItems: 'flex-start',
     width: "100%",
-    bottom: Platform.OS == 'ios' ? 20 : 50,
+    bottom: Platform.OS == 'ios' ? 50 : 50,
     zIndex: 99999
   },
   newBackbuttonStyle: { marginLeft: 16 },
@@ -404,14 +420,24 @@ const Styles = EStyleSheet.create({
     alignItems: 'center'
   },
   iconContainer: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 12
   },
-  jumptoYearContainer: {
-    justifyContent: 'center',
+  filterIconContainer: {
+    flexDirection: 'row',
+    // justifyContent: 'center',
     alignItems: 'center',
+  },
+  jumptoYearContainer: {
+    // justifyContent: 'center',
+    // alignItems: 'center',
     height: 52
+  },
+  filterDescContainer: {
+    justifyContent: 'center',
+    // alignItems: 'center',
   },
   flexWrapFlexRow: {
     flexDirection: 'row',
@@ -454,6 +480,7 @@ const Styles = EStyleSheet.create({
     textAlign: 'center',
     ...fontSize(14),
     lineHeight: 17.5,
+    color:Colors.newDescTextColor,
     fontFamily: Platform.OS === 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
     fontWeight: '500'
   },
@@ -481,6 +508,20 @@ const Styles = EStyleSheet.create({
     fontFamily: fontFamily.Inter,
     fontWeight: '400',
     lineHeight: 23,
+    color: Colors.bordercolor,
+  },
+  filterThemeText: {
+    ...fontSize(17),
+    fontFamily: fontFamily.Inter,
+    fontWeight: '400',
+    lineHeight: 21.25,
+    color: Colors.bordercolor
+  },
+  filterDescThemeText: {
+    ...fontSize(15),
+    fontFamily:  Platform.OS == 'ios' ? fontFamily.Inter : fontFamily.InterMedium,
+    fontWeight: '500',
+    lineHeight: 18.75,
     color: Colors.bordercolor
   },
   backTextJumpto: {
@@ -514,13 +555,13 @@ const Styles = EStyleSheet.create({
   },
   ScrollToendView: { height: 140 },
   imageBackgrounStyle: { borderRadius: 15 },
-  bottomBarContainer:{ 
-    height: 48, 
-    backgroundColor: Colors.white, 
-    justifyContent: 'center', 
-    alignItems: 'center' 
+  bottomBarContainer: {
+    height: 48,
+    backgroundColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  bottomBarSubContainer:{
+  bottomBarSubContainer: {
     height: 40,
     backgroundColor: Colors.white,
     borderWidth: 1,

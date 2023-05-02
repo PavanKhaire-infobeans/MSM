@@ -194,6 +194,8 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
                     Keyboard.dismiss();
                   }}
                   style={styles.flatListStyle}
+                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
                   // ItemSeparatorComponent={({ leadingItem }: { highlighted: boolean, leadingItem: MemoryActionsSheetItem }) => {
                   //     return (<View style={{ height: 1, backgroundColor: (leadingItem.index == (this.props.actions.length - 1)) ? 'rgba(0.35, 0.35, 0.35, 0.2)' : 'white' }} />)
                   // }}

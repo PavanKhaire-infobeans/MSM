@@ -80,10 +80,17 @@ export default class EtherPadEditing extends React.Component<Props, State> {
       this.props.updateContent('get', '');
     }
     Keyboard.dismiss();
+    if (this.props.route.params.doNotReload) {
+      this.props.route.params.doNotReload(true);
+    }
     this.props.navigation.goBack();
   };
+  
   saveValue = () => {
     if (this.props.route.params.updateContent) {
+      if (this.props.route.params.doNotReload) {
+        this.props.route.params.doNotReload(true);
+      }
       this.props.route.params.updateContent('get', '');
     }
     else if (this.props.updateContent) {
@@ -104,6 +111,7 @@ export default class EtherPadEditing extends React.Component<Props, State> {
   toolbar = () => {
     return Platform.OS == 'android' ? (
       <KeyboardAwareScrollView
+        enableOnAndroid={true}
         keyboardShouldPersistTaps="always"
         style={Styles.toolBarKeyboardAwareScrollViewStyle}>
         <View
@@ -200,6 +208,7 @@ export default class EtherPadEditing extends React.Component<Props, State> {
           <View style={Styles.etherpadNavHeaderCOntainerStyle}>
             <NavigationHeaderSafeArea
               hideClose={true}
+              etherpadScreen={true}
               heading={this.props.route.params.title}
               cancelAction={() => this.cancelAction()}
               showRightText={true}

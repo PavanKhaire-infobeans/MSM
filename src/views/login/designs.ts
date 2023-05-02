@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
-    marginLeft: 8
+    // marginLeft: 8
   },
 
   forgotPassword: {

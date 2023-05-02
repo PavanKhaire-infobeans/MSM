@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 // @ts-ignore
 import {connect} from 'react-redux';
+import BusyIndicator from '../../../common/component/busyindicator';
 import loaderHandler from '../../../common/component/busyindicator/LoaderHandler';
 import NavigationHeaderSafeArea from '../../../common/component/profileEditHeader/navigationHeaderSafeArea';
 import {No_Internet_Warning} from '../../../common/component/Toast';
@@ -47,8 +48,11 @@ class MemoryCollectionList extends React.Component<Props, State> {
   checkForScroll: any = true;
   selectedIndex: any = {};
   publishedMemoryCollectionsListener: EventManager;
+  MemoryCollectionsAddedListener: EventManager;
   state = {
     collections: [],
+    showLoaderValue:false,
+    loaderTextValue:'Loading...'
   };
   constructor(props: Props) {
     super(props);
@@ -56,27 +60,64 @@ class MemoryCollectionList extends React.Component<Props, State> {
       kPublishedMemoryCollections,
       this.fetchPublishedMemoryCollections,
     );
+    this.MemoryCollectionsAddedListener = EventManager.addListener(
+      'memoryAddedTocollection',
+      this.fetchPublishedMemoryAddedToCollections,
+    );
   }
 
   componentDidMount() {
     //loaderHandler.showLoader();
-    this.props.collectionAPI();
-    GetPublishedMemoryCollections(this.props.nid);
-    this.checkForScroll = true;
+    this.setState({
+      showLoaderValue:true
+    },()=>{
+      this.props.collectionAPI();
+      GetPublishedMemoryCollections(this.props.route.params.nid);
+      this.checkForScroll = true;
+    })
+    
   }
 
   componentWillUnmount() {
     this.publishedMemoryCollectionsListener.removeListener();
+    this.MemoryCollectionsAddedListener.removeListener();
   }
 
   fetchPublishedMemoryCollections = (
     fetched?: boolean,
     publishedMemoryCollectionsData?: any,
   ) => {
+    console.log(fetched,publishedMemoryCollectionsData)
     if (fetched) {
       //loaderHandler.hideLoader();
-      this.setState({collections: publishedMemoryCollectionsData});
+      this.setState({
+        collections: publishedMemoryCollectionsData,
+        showLoaderValue:false
+      });
     } else {
+      this.setState({
+        showLoaderValue:false
+      })
+      //loaderHandler.hideLoader();
+      // ToastMessage(getAllLikes, Colors.ErrorColor);
+    }
+  };
+
+  fetchPublishedMemoryAddedToCollections = (
+    fetched?: boolean,
+    publishedMemoryCollectionsData?: any,
+  ) => {
+    if (fetched) {
+      //loaderHandler.hideLoader();
+      this.setState({
+        showLoaderValue:false
+      },()=>{
+        this.props.navigation.goBack();
+      });
+    } else {
+      this.setState({
+        showLoaderValue:false
+      })
       //loaderHandler.hideLoader();
       // ToastMessage(getAllLikes, Colors.ErrorColor);
     }
@@ -94,15 +135,20 @@ class MemoryCollectionList extends React.Component<Props, State> {
     });
     if (Utility.isInternetConnected) {
       //loaderHandler.showLoader();
-      MemoryAction(
-        'my_stories',
-        this.props.nid,
-        'add_to_collection',
-        '',
-        collections_nids,
-      );
-      Keyboard.dismiss();
-      this.props.navigation.goBack();
+      this.setState({
+        showLoaderValue:true
+      },()=>{
+        MemoryAction(
+          'my_stories',
+          this.props.route.params.nid,
+          'add_to_collection',
+          '',
+          collections_nids,
+          'memoryAddedTocollection'
+        );
+        Keyboard.dismiss();
+      })
+      
     } else {
       No_Internet_Warning();
     }
@@ -184,13 +230,21 @@ class MemoryCollectionList extends React.Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
+         {
+          this.state.showLoaderValue ?
+            <BusyIndicator startVisible={this.state.showLoaderValue} text={this.state.loaderTextValue != '' ? this.state.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
+            :
+            null
+        }
         <SafeAreaView style={styles.invisibleContainer} />
         <SafeAreaView style={styles.safeAreaContainer}>
           <View style={styles.container}>
             <NavigationHeaderSafeArea
               heading={'Add to Collections'}
               cancelAction={() => this.cancelAction()}
+              addToCollectionOption={true}
               showRightText={true}
+              multiValuesPage={true}
               rightText={'Done'}
               saveValues={this.saveValue}
             />
@@ -221,12 +275,13 @@ class MemoryCollectionList extends React.Component<Props, State> {
             <FlatList
               extraData={this.state}
               ref={ref => (this._listRef = ref)}
-              style={styles.safeAreaContainer}
+              style={[styles.safeAreaContainer,{paddingHorizontal:16}]}
               onScroll={() => {
                 Keyboard.dismiss();
               }}
               keyboardShouldPersistTaps={'handled'}
               showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               data={this.props.collectionList}
               keyExtractor={(_, index: number) => `${index}`}
               renderItem={this.renderRow}

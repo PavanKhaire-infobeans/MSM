@@ -66,7 +66,7 @@ export default class UserRegistrationStatus extends Component<{
                 <Text
                   style={Styles.loginAccountButton}
                   onPress={() => {
-                    loginDrawerRef.refDrawer.expand();
+                    // loginDrawerRef.refDrawer.expand();
                     this.props.navigation.goBack();
                   }}>
                   Login to your account
@@ -92,7 +92,7 @@ export default class UserRegistrationStatus extends Component<{
               <SubmitButton
                 text={'Done'}
                 onPress={() => {
-                  loginDrawerRef.refDrawer.expand();
+                  // loginDrawerRef.refDrawer.expand();
                   this.props.navigation.goBack();
                 }}
               />

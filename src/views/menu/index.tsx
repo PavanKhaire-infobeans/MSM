@@ -79,6 +79,8 @@ class Menu extends React.Component<MenuProps> {
         <FlatList
           data={[...this.state.list, {type: 'AddCommunity'}]}
           keyExtractor={(_: any, index: number) => `${index}`}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(_, index: number) => `${index}`}
           renderItem={this.renderRow}
         />
@@ -100,6 +102,22 @@ class Menu extends React.Component<MenuProps> {
     });
   };
 
+  logoutWorkFlow = (selectedAccounts: any) => {
+    logoutMultiple(selectedAccounts)
+      .then((resp: any) => {
+        let list = resp.rows.raw();
+        var accounts = list.filter((it: UserData) => it.userAuthToken != '');
+        if (accounts.length > 0) {
+          EventManager.callBack(kOnLogout, accounts);
+        } else {
+          this.props.navigation.reset({index: 0, routes: [{name: 'prologue'}]});
+        }
+      })
+      .catch(() => {
+        this.props.navigation.reset({index: 0, routes: [{name: 'prologue'}]});
+      });
+  };
+
   _logout = () => {
     LoginStore.listAllAccounts()
       .then((resp: any) => {
@@ -110,7 +128,7 @@ class Menu extends React.Component<MenuProps> {
             listAccounts: list,
             title: 'Logout',
             type: 'logout',
-            onClick: logoutWorkFlow,
+            onClick: this.logoutWorkFlow,
           });
         } else {
           Alert.alert('', `Are you sure you want to log out ?`, [

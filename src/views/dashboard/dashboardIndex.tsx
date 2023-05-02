@@ -1,5 +1,6 @@
 import React, { createRef } from 'react';
 import {
+  AppState,
   DeviceEventEmitter,
   Image,
   Platform,
@@ -34,6 +35,7 @@ import {
   GET_MEMORY_LIST,
   ListType,
   MEMORY_ACTIONS_DASHBOARD,
+  SHOW_LOADER_READ,
   SHOW_LOADER_TEXT,
 } from './dashboardReducer';
 // @ts-ignore
@@ -102,34 +104,11 @@ class DashboardIndex extends React.Component<Props> {
     super(props);
     this.FetchConfigurations();
     this.notificationModel = new NotificationDataModel();
-    // this.eventManager = EventManager.addListener(
-    //   'addContentTabPressed',
-    //   this.navigateToAddContent,
-    // );
-    // this.notificationListener = EventManager.addListener(
-    //   kGetInvidualNotification,
-    //   this.notificationCallback,
-    // );
-    // this.foregroundNotification = EventManager.addListener(
-    //   kForegroundNotice,
-    //   this.foregroundNotificationCallback,
-    // );
-    // this.backgroundNotification = EventManager.addListener(
-    //   kBackgroundNotice,
-    //   this.checkNotificationAvailiability,
-    // );
-    // this.eventListener = EventManager.addListener(
-    //   kNotificationIndicator,
-    //   this.changeNotification,
-    // );
-    // this.memoryActionsListener = EventManager.addListener(
-    //   kMemoryActionPerformedOnDashboard,
-    //   this.memoryActionCallBack,
-    // );
-    // this.memoryFromPrompt = EventManager.addListener(
-    //   promptIdListener,
-    //   this.promptToMemoryCallBack,
-    // );
+    AppState.addEventListener('change',()=>{
+      if (AppState.currentState === 'background') {
+        this.props.showLoader(false)
+      }
+    })
   }
 
   navigateToAddContent = () => {
@@ -139,8 +118,6 @@ class DashboardIndex extends React.Component<Props> {
 
   componentDidMount = () => {
     // //loaderHandler.showLoader();
-
-    
     this.props.setCreateMemory(false);
     if (this.props.setTimer == 'false') {
       this.state.appTourVisibility = true;
@@ -198,24 +175,24 @@ class DashboardIndex extends React.Component<Props> {
         Utility.notificationObject.hasNotification = false;
         Utility.notificationObject.isBackgroundNotification = true;
         // //loaderHandler.showLoader();
-        
-          GetActivities(
-            {
-              notification_params: {
-                nid: Utility.notificationObject.data.nid,
-                notification_id: Utility.notificationObject.data.notification_id,
-              },
+
+        GetActivities(
+          {
+            notification_params: {
+              nid: Utility.notificationObject.data.nid,
+              notification_id: Utility.notificationObject.data.notification_id,
             },
-            kGetInvidualNotification,
-            response => {
-              if (response.ResponseCode == 200) {
-                this.notificationCallback(true, response['Details']);
-              } else {
-                this.notificationCallback(false, response['ResponseMessage']);
-              }
+          },
+          kGetInvidualNotification,
+          response => {
+            if (response.ResponseCode == 200) {
+              this.notificationCallback(true, response['Details']);
+            } else {
+              this.notificationCallback(false, response['ResponseMessage']);
             }
-          );
-        
+          }
+        );
+
       } else {
         No_Internet_Warning();
       }
@@ -264,7 +241,7 @@ class DashboardIndex extends React.Component<Props> {
     } else if (!Utility.isInternetConnected) {
       No_Internet_Warning();
     }
-    
+
     // //loaderHandler.hideLoader();
 
   };
@@ -273,14 +250,14 @@ class DashboardIndex extends React.Component<Props> {
     if (Utility.isInternetConnected) {
       // //loaderHandler.showLoader('Creating Memory...');
       this.props.loaderText('Creating Memory...');
-     
+
       let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
       draftDetails.prompt_id = parseInt(id);
       CreateUpdateMemory(draftDetails, [], promptIdListener, 'save',
         res => {
           this.promptToMemoryCallBack(res.status, res.id)
         });
-    
+
     } else {
       No_Internet_Warning();
     }
@@ -289,14 +266,14 @@ class DashboardIndex extends React.Component<Props> {
   promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
     if (success) {
       // //loaderHandler.hideLoader();
-     
+
       this.props.navigation.navigate("createMemory", { editMode: true, draftNid: draftDetails, isFromPrompt: true })
-     
+
     } else {
       // //loaderHandler.hideLoader();
-     
+
       //ToastMessage(draftDetails);
-     
+
     }
   };
 
@@ -318,7 +295,7 @@ class DashboardIndex extends React.Component<Props> {
     type?: any,
     uid?: any,
   ) => {
-   
+
     if (fetched) {
       // if (type == MemoryActionKeys.removeMeFromThisPostKey){
       //     publishedMemoriesArray.forEach((element: any, index: any) => {
@@ -353,7 +330,7 @@ class DashboardIndex extends React.Component<Props> {
       <View style={Styles.fullFlex}>
         {
           this.props.showLoaderValue ?
-            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue !=''? this.props.loaderTextValue :'Loading...'} overlayColor={Colors.ThemeColor} />
+            <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
             :
             null
         }
@@ -446,19 +423,25 @@ class DashboardIndex extends React.Component<Props> {
               <TabIcon focused={false} navigation={this.props.navigation} title={NewTabItems.Write} />
             </View>
           </View>
-
+          {this.state.appTourVisibility && (
+            <AppGuidedTour
+              navigation={this.props.navigation}
+              cancelAppTour={(navigate,goToPage) => {
+                this.setState({ appTourVisibility: false }, () =>
+                  DefaultPreference.set('hide_guide_tour', 'true').then(
+                    () => {
+                      if (navigate) {
+                        console.log("goToPage ",goToPage)
+                        this.props.navigation.replace('writeTabs', { showPromptView: goToPage })
+                      }
+                    },
+                  ),
+                );
+              }}
+            />
+          )}
         </SafeAreaView>
-        {this.state.appTourVisibility && (
-          <AppGuidedTour
-            cancelAppTour={() => {
-              this.setState({ appTourVisibility: false }, () =>
-                DefaultPreference.set('hide_guide_tour', 'true').then(
-                  function () { },
-                ),
-              );
-            }}
-          />
-        )}
+
       </View>
     );
   }
@@ -614,6 +597,8 @@ const mapDispatch = (dispatch: Function) => {
       dispatch({ type: ACTIVE_TAB_ON_DASHBOARD, payload: payload }),
     loaderText: (payload: any) =>
       dispatch({ type: SHOW_LOADER_TEXT, payload: payload }),
+    showLoader: (payload: any) =>
+      dispatch({ type: SHOW_LOADER_READ, payload: payload }),
   };
 };
 

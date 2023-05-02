@@ -5,6 +5,7 @@ export const ResetLocation = 'resetLocation';
 export const LocationListUpdated = 'locationListUpdated';
 export const MemoryInitialsUpdate = 'memoryInitialsUpdate';
 export const RecentTags = 'recentTags';
+export const SelectedLocation = 'selectedLocation';
 export const ResetALL = 'resetAll';
 export const SaveMemoryTagsList = 'saveList';
 export const SaveWhoElseWhereThere = 'saveWhoElseWhereThere';
@@ -21,6 +22,7 @@ export const SaveWhoCanSeeIds = 'saveWhoCanSeeIds';
 export const SaveCollaboratorNotes = 'saveCollaboratorsNotes';
 export const SaveDescription = 'saveDescription';
 export const EditContent = 'editContent';
+export const FileAttachmentData = 'fileAttachmentData';
 export const NavigateToDashboard = 'navigateToDashboard';
 
 type Payload = { type: string; payload: any };
@@ -76,11 +78,6 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
           action.payload.memory_date = {"day": new Date().getUTCDate().toString(), "month": new Date().getUTCMonth()+1, "year": new Date().getUTCFullYear()?.toString()};
         }
       }
-      else if ((parseInt(action.payload?.memory_date?.year) <= new Date().getUTCFullYear())) {
-        if ((parseInt(action.payload?.memory_date?.month) == (new Date().getUTCMonth()+1))&&(parseInt(action.payload?.memory_date?.day) > new Date().getUTCDate())) {
-          action.payload.memory_date = {"day": new Date().getUTCDate().toString(), "month": new Date().getUTCMonth()+1, "year": new Date().getUTCFullYear()?.toString()};
-        }
-      }
 
       newState.date = action.payload.memory_date;
       // {
@@ -88,11 +85,15 @@ export const MemoryInitials = (state = initialState, action: Payload) => {
       //   month: action.payload.memory_date.month,
       //   day: action.payload.memory_date.day,
       // };
+      console.error("action.payload.location :",action.payload.location)
       newState.location = action.payload.location;
       newState.files = action.payload.files;
       break;
     case RecentTags:
       newState.recentTags = action.payload;
+      break;
+    case SelectedLocation:
+      newState.location = action.payload;
       break;
     case SaveSearchList:
       newState.searchList = action.payload;

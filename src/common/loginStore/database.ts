@@ -39,7 +39,7 @@ const LoginStore = (() => {
         [],
         async (_: any, results: any) => {
           let result = await results;
-          showConsoleLog(ConsoleType.LOG, 'Query completed', result);
+          // showConsoleLog(ConsoleType.LOG, 'Query completed', result);
           if (result) {
             return result;
             // resolve(result);

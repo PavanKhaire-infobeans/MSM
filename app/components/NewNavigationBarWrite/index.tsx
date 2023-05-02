@@ -6,13 +6,13 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Text from '../../../src/common/component/Text';
-import {close_white} from '../../../src/images';
+import { close_white } from '../../../src/images';
 
 import { jumptocalendar, user, grid } from '../../images';
 //@ts-ignore
-import {connect} from 'react-redux';
-import {kNotificationIndicator} from '../../../src/common/component/TabBarIcons';
-import {Colors} from '../../../src/common/constants';
+import { connect } from 'react-redux';
+import { kNotificationIndicator } from '../../../src/common/component/TabBarIcons';
+import { Colors } from '../../../src/common/constants';
 import EventManager from '../../../src/common/eventManager';
 import { Account } from '../../../src/common/loginStore';
 import Utility from '../../../src/common/utility';
@@ -21,8 +21,10 @@ import { kForegroundNotificationListener } from '../../../src/views/notification
 import { AddNewNotification } from '../../../src/views/notificationView/reducer';
 import { kProfilePicUpdated } from '../../../src/views/profile/profileDataModel';
 import styles from './styles';
+import NetInfo from '@react-native-community/netinfo';
 
 import { JUMP_TO_VIEW_SHOW } from '../../../src/views/dashboard/dashboardReducer';
+import { OfflineNotice } from '../../../src/Router';
 const testID = {
   dashboardNavBar: 'dashboard_navigation_bar',
   leftButtons: { menu: 'navbar_leftbtn_menu' },
@@ -44,10 +46,14 @@ const NavigationBar = (props: Props) => {
   let notificationReceivedForeground: EventManager;
   let notificationReceived;
   const [state, setState] = useState({ showBadge: false });
+  const [isNetAvailable, setIsNetAvailable] = useState(true);
   const navigation = useNavigation();
 
   useEffect(() => {
-
+    const unsubscribe = NetInfo.addEventListener((state:any) => {
+      console.log("Net ", state?.isConnected)
+      setIsNetAvailable(state?.isConnected)
+    });
     if (Utility.unreadNotification[key] > 0) {
       setState(prevState => ({ ...prevState, showBadge: true }));
     } else {
@@ -82,7 +88,7 @@ const NavigationBar = (props: Props) => {
     }, 2000);
   };
 
-  const updateProfilePic = () => {};
+  const updateProfilePic = () => { };
 
   const _renderMiddle = () => {
     // let isPublicInstance: any = Account.selectedData().is_public_site;
@@ -113,7 +119,7 @@ const NavigationBar = (props: Props) => {
           props.showRight ?
             <TouchableWithoutFeedback
               onPress={() => {
-                props.showJumpto(true);
+                props.showJumpto();
                 // _mindPopAction();
               }}
 
@@ -124,7 +130,7 @@ const NavigationBar = (props: Props) => {
                   resizeMode="contain"
                 />
                 <View style={styles.height4} />
-                <Text style={styles.cancleText}>{props.showRightText }</Text>
+                <Text style={styles.cancleText}>{props.showRightText}</Text>
               </View>
             </TouchableWithoutFeedback>
             :
@@ -151,44 +157,47 @@ const NavigationBar = (props: Props) => {
   let isPublicInstance: any = Account.selectedData().is_public_site;
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
-      <TouchableWithoutFeedback
-        testID={testID.leftButtons.menu}
-        onPress={() => {
-          navigation.navigate('myAccount');
-          // showClose ? _closeAction() : navigation.drawerOpen();
-        }}>
-        <View style={styles.leftButtonTouchableContainer}>
-        {showClose ? (
-            <View style={styles.closeButton}>
-              <View style={styles.imageContainer}  >
-                <Image source={close_white} />
-              </View>
-              <View style={styles.imageSeparator} />
-              <View style={[styles.textContainer,{ justifyContent: 'center' }]}>
-                <Text style={styles.JumptoText}>Cancle</Text>
-              </View>
-            </View>
-          )
-            :
-            (
+    <>
+      <View
+        style={[styles.container, { backgroundColor: props.isWhite ? Colors.white : Colors.NewThemeColor }]}>
+        <TouchableWithoutFeedback
+          testID={testID.leftButtons.menu}
+          onPress={() => {
+            navigation.navigate('myAccount');
+            // showClose ? _closeAction() : navigation.drawerOpen();
+          }}>
+          <View style={styles.leftButtonTouchableContainer}>
+            {showClose ? (
               <View style={styles.closeButton}>
-                <View style={styles.imageContainer} >
-                  <Image source={user} />
+                <View style={styles.imageContainer}  >
+                  <Image source={close_white} />
                 </View>
                 <View style={styles.imageSeparator} />
-                <View style={styles.profileImgSeparator}>
-                  <Text style={styles.JumptoText}>Profile</Text>
+                <View style={[styles.textContainer, { justifyContent: 'center' }]}>
+                  <Text style={styles.JumptoText}>Cancle</Text>
                 </View>
               </View>
-            )}
-        </View>
+            )
+              :
+              (
+                <View style={styles.closeButton}>
+                  <View style={styles.imageContainer} >
+                    <Image source={user} />
+                  </View>
+                  <View style={styles.imageSeparator} />
+                  <View style={styles.profileImgSeparator}>
+                    <Text style={styles.JumptoText}>Profile</Text>
+                  </View>
+                </View>
+              )}
+          </View>
 
-      </TouchableWithoutFeedback>
-      {_renderMiddle()}
-      {_renderRight()}
-    </View>
+        </TouchableWithoutFeedback>
+        {_renderMiddle()}
+        {_renderRight()}
+      </View>
+      {!isNetAvailable && <OfflineNotice />}
+    </>
   );
 
 }

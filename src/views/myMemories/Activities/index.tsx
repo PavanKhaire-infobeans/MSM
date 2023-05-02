@@ -319,6 +319,8 @@ export default class Activities extends React.Component<Props, State> {
             Keyboard.dismiss();
           }}
           renderItem={this.renderActivityView}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           maxToRenderPerBatch={5}
           windowSize={5}
           removeClippedSubviews={true}

@@ -4,12 +4,10 @@ import { Colors, fontFamily, fontSize } from '../../../common/constants';
 
 const Styles = EStyleSheet.create({
     parent: {
-        height: 48,
-        paddingRight: 5,
-        paddingLeft: 5,
-        paddingTop: 4,
-        paddingBottom: 4,
-        shadowColor: Colors.black,
+        height: 56,
+        paddingHorizontal: 24,
+        // paddingBottom: 4,
+        // shadowColor: Colors.black,
         backgroundColor: Colors.white,
         borderBottomWidth: 0.3,
         borderBottomColor: 'transparent',
@@ -24,7 +22,7 @@ const Styles = EStyleSheet.create({
       inputView: {
         width: '100%',
         height: '100%',
-        paddingLeft: 15,
+        paddingLeft: 16,
         flexDirection: 'row',
       },
       clearButton: {
@@ -32,16 +30,18 @@ const Styles = EStyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        opacity: 0.5,
+        marginRight:24
+        // opacity: 0.5,
       },
       inputStyle: {
         flex: 9,
-        height: 38,
-        marginLeft: 28,
-        ...fontSize(16),
-        lineHeight: 20,
+        height: 56,
+        // marginLeft: 28,
+        ...fontSize(19),
+        lineHeight: 23.75,
+        fontWeight:'400',
         fontFamily:fontFamily.Inter,
-        color: Colors.black,
+        color: Colors.newTextColor,
         backgroundColor: 'transparent',
       },
       placeholder: {

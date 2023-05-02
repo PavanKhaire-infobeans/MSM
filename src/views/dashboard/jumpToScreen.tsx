@@ -339,6 +339,8 @@ const JumpToScreen = (props: Props) => {
                   initialNumToRender={years.length}
                   // removeClippedSubviews={true}
                   style={styles.fullWidth}
+                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
                   ItemSeparatorComponent={() => {
                     return <View style={styles.separatorStyle} />;
                   }}
@@ -352,6 +354,8 @@ const JumpToScreen = (props: Props) => {
                   nestedScrollEnabled={true}
                   initialNumToRender={10}
                   removeClippedSubviews={true}
+                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
                   style={styles.fullWidth}
                   renderItem={renderYears}
                 />

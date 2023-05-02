@@ -47,7 +47,7 @@ import {
 import CustomAlert from '../../../common/component/customeAlert';
 import SelectionStatusBar from '../../../common/component/inputAccessoryViews/itemSelectionStatusBar';
 import SearchBar from '../../../common/component/SearchBar';
-import { ToastMessage } from '../../../common/component/Toast';
+import analytics from '@react-native-firebase/analytics';
 import MindPopStore, {
   FileType,
 } from '../../../common/database/mindPopStore/mindPopStore';
@@ -259,7 +259,7 @@ class MindPopList extends React.Component<{
     reloadList(updatedSectionListData);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: { [x: string]: any }) {
+  async UNSAFE_componentWillReceiveProps(nextProps: { [x: string]: any }) {
     if (this.props !== nextProps) {
       if (nextProps.list.completed) {
         // LoaderHandler.hideLoader();
@@ -403,7 +403,9 @@ class MindPopList extends React.Component<{
           }
           if (this.convertToMemoryObject.callForCreateMemory) {
             this.convertToMemoryObject.callForCreateMemory = false;
+            await analytics().logEvent('memory_created_from_mindpop');
             this.props.navigation.navigate('createMemory', {
+              editMode: true,
               attachments: this.convertToMemoryObject.attachments,
               id: this.convertToMemoryObject.nid,
               textTitle: this.convertToMemoryObject.details.title,
@@ -420,7 +422,7 @@ class MindPopList extends React.Component<{
             'message',
           ]);
           let message: string = errorMsg || ERROR_MESSAGE;
-         //ToastMessage(message,message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor);
+          //ToastMessage(message,message == NO_INTERNET ? Colors.WarningColor : Colors.ErrorColor);
         }
       }
     }
@@ -591,7 +593,7 @@ class MindPopList extends React.Component<{
     }
   };
 
-  _editAction(rowMap: any, data: any, edit: boolean = false) {
+  _editAction = (rowMap: any, data: any, edit: boolean = false) => {
     this.closeRow(rowMap, data.item.id);
     if (edit) {
       this.props.editMode(data.item);
@@ -689,14 +691,14 @@ class MindPopList extends React.Component<{
     </View>
   );
 
-  _doApiCall = ()=>{
+  _doApiCall = () => {
     this.updateList();
   }
 
   render() {
     return (
       <View style={Styles.container}>
-         {
+        {
           this.props.showLoaderValue ?
             <BusyIndicator startVisible={this.props.showLoaderValue} text={this.props.loaderTextValue != '' ? this.props.loaderTextValue : 'Loading...'} overlayColor={Colors.ThemeColor} />
             :
@@ -704,7 +706,7 @@ class MindPopList extends React.Component<{
         }
         <SafeAreaView style={Styles.noflexContainer} />
         <SafeAreaView style={Styles.mainContainer}>
-          
+
           <View style={Styles.container}>
             {this.props.showAlert && this.props.showAlertData?.title ? (
               <CustomAlert
@@ -754,7 +756,7 @@ class MindPopList extends React.Component<{
             ) : null}
           </View>
         </SafeAreaView>
-        {this.state.mindPopIntroVisibility && (
+        {/* {this.state.mindPopIntroVisibility && (
           <MindPopIntro
             cancelMindPopIntro={() => {
               this.setState({ mindPopIntroVisibility: false }, () => {
@@ -763,7 +765,7 @@ class MindPopList extends React.Component<{
                 );
               });
             }}></MindPopIntro>
-        )}
+        )} */}
       </View>
     );
   }
@@ -781,8 +783,9 @@ class MindPopList extends React.Component<{
         filesToUpload,
         'mindpopEditMemoryListener',
         'save',
-        resp => {
+        async(resp) => {
           if (resp.status) {
+            await analytics().logEvent('memory_created_from_mindpop')
             this.props.navigation.replace('createMemory', {
               editMode: true,
               draftNid: resp.id,
@@ -792,12 +795,12 @@ class MindPopList extends React.Component<{
             //loaderHandler.hideLoader();
             this.props.showLoader(false);
             this.props.loaderText('Loading...');
-           //ToastMessage(resp.message);
+            //ToastMessage(resp.message);
           }
         },
       );
     } else {
-     //ToastMessage(NO_INTERNET);
+      //ToastMessage(NO_INTERNET);
     }
   };
 
@@ -1131,17 +1134,51 @@ class MindPopList extends React.Component<{
     });
   };
 
+  searchFunction = (search: string) => {
+    let mindPopArray = [...this.state.listSectionItems], resultArray: any = [];
+
+    if (mindPopArray && mindPopArray.length && mindPopArray[1] && mindPopArray[1].data && mindPopArray[1].data.length) {
+      resultArray = mindPopArray[1].data.filter(item => item.message.toLowerCase().includes(search.toLowerCase()));
+      resultArray = [mindPopArray[0], {
+        "title": "1",
+        "data": [...resultArray]
+      }];
+    }
+    else if (mindPopArray && mindPopArray.length && mindPopArray[0] && mindPopArray[0].data && mindPopArray[0].data.length) {
+      resultArray = mindPopArray[0].data.filter(item => item.message.toLowerCase().includes(search.toLowerCase()));
+      resultArray = [{
+        "title": "1",
+        "data": [...resultArray]
+      }];
+    }
+
+    this.setState({
+      listSectionItems: resultArray,
+      searchMode: true
+    });
+  };
+
   getListView(): JSX.Element {
+    let { listSectionItems } = this.state;
+    if (listSectionItems && listSectionItems[0] && listSectionItems[0].title && listSectionItems[0].title === '1') {
+
+      let unique = [...new Map(listSectionItems[0].data.map(item =>
+        [item['id'], item])).values()]
+      // const unique:any = [...new Set(listSectionItems[0].data.map(item => item.instanceID))];
+      listSectionItems[0].data = unique;
+    }
     return (
       <View style={styles.container}>
         {this.props.isSelectingItem ||
           (this.state.totalItems < 1 && !this.state.searchMode) ? null : (
           <SearchBar
+            showCancelClearButton={false}
             style={styles.containerSearch}
             value={this.searchKeyword.trim()}
             placeholder="Search"
             onSearchButtonPress={(keyword: string) => {
-              this.performSearch(keyword.trim());
+              // this.performSearch(keyword.trim());
+              this.searchFunction(keyword);
             }}
             onClearField={() => {
               this.clearSearch();
@@ -1155,7 +1192,7 @@ class MindPopList extends React.Component<{
           />
         )}
         {
-          this.state.listSectionItems.length == 0 ? (
+          listSectionItems.length == 0 ? (
             this.state.searchMode ? (
               this._empty()
             ) : this.state.webserviceBeingCalled ? (
@@ -1175,9 +1212,11 @@ class MindPopList extends React.Component<{
                 }}
                 style={{ backgroundColor: Colors.NewThemeColor }}
                 useSectionList={true}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 maxToRenderPerBatch={8}
                 removeClippedSubviews={true}
-                sections={this.state.listSectionItems}
+                sections={listSectionItems}
                 renderItem={this._renderFrontCell}
                 renderHiddenItem={
                   this.props.isSelectingItem ? null : this._renderBackHiddenCell
@@ -1223,7 +1262,6 @@ const styles = EStyleSheet.create({
   emptyViewStyle: {
     height: 30,
     width: '100%',
-    backgroundColor: 'red',
   },
   containerSearch: {
     backgroundColor: Colors.white,

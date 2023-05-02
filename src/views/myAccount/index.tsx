@@ -118,6 +118,7 @@ const MyAccount = props => {
             onPress: () => {
               logoutMethod()
                 .then(() => {
+                  props.getUserData({});
                   props.navigation.reset({
                     index: 0,
                     routes: [{ name: 'prologue' }],
@@ -125,6 +126,7 @@ const MyAccount = props => {
                   // }
                 })
                 .catch(() => {
+                  props.getUserData({});
                   props.navigation.reset({
                     index: 0,
                     routes: [{ name: 'prologue' }],

@@ -3,12 +3,15 @@ import {
   Alert,
   Animated,
   DeviceEventEmitter,
+  Easing,
   Image,
   Keyboard,
+  Platform,
   SafeAreaView,
   StatusBar,
   TextInput,
   TouchableHighlight,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -38,7 +41,6 @@ import {
 } from './loginReducer';
 //@ts-ignore
 import NavigationHeaderSafeArea from '../../common/component/profileEditHeader/navigationHeaderSafeArea';
-import { ToastMessage } from '../../common/component/Toast';
 // @ts-ignore
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore
@@ -54,6 +56,9 @@ import {
 import Styles from './styles';
 import Utility from '../../common/utility';
 import BusyIndicator from '../../common/component/busyindicator';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import NetInfo from '@react-native-community/netinfo';
+import { OfflineNotice } from '../../Router';
 export const kRegSignUp = 'Registration SignUp';
 export enum loginType {
   googleLogin = 'Google',
@@ -68,6 +73,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   //Registration screen login callBacks
   appleLoginCallBack: EventManager;
   googleLoginCallBack: EventManager;
+  regScroll: any;
 
   //Login Controller
   controller: LoginControllerProtocol;
@@ -76,44 +82,23 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   dataWasStored?: string = null;
   keyheightsKey: number;
 
-  //User state
-  state = {
-    _isRemeberMe: false,
-    username: '',
-    password: '',
-    userNameError: {
-      error: false,
-      text: '',
-    },
-    passwordError: {
-      error: false,
-      text: '',
-    },
-    errorViewHeight: 0,
-    errorMessage: '',
-    isVisible: false,
-    instanceData: [],
-    isDisabledAccount: false,
-    keyboardHeight: 0,
-    showLoaderValue: false,
-    loaderTextValue: 'Loading...'
-  };
-
   moveOnYAxis = new Animated.Value(0);
 
   startMoveOnYAxis = () => {
     Animated.timing(this.moveOnYAxis, {
       toValue: 1,
-      duration: 5,
+      duration: 500,
       useNativeDriver: true,
+      easing: Easing.out(Easing.poly(5))
     }).start();
   };
 
   startMoveDownYAxis = () => {
     Animated.timing(this.moveOnYAxis, {
       toValue: 0,
-      duration: 5,
+      duration: 500,
       useNativeDriver: true,
+      easing: Easing.out(Easing.poly(5))
     }).start();
   };
 
@@ -126,6 +111,31 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   constructor(props: Props) {
     super(props);
     this.navBar = this.props.navBar;
+    //User state
+    this.state = {
+      _isRemeberMe: true,
+      username: '',
+      password: '',
+      userNameError: {
+        error: false,
+        text: '',
+      },
+      passwordError: {
+        error: false,
+        text: '',
+      },
+      errorViewHeight: 0,
+      errorMessage: '',
+      isVisible: false,
+      instanceData: [],
+      isDisabledAccount: false,
+      keyboardHeight: 0,
+      passwordFocus: false,
+      showLoaderValue: false,
+      loaderTextValue: 'Loading...',
+      isConnected: true
+    };
+
     this.controller = new LoginController(this);
     DeviceEventEmitter.addListener(
       'AppleLoginResult',
@@ -139,6 +149,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       kRegSignUp,
       this.regSignUpListener.bind(this),
     );
+    this.regScroll = React.createRef();
+
   }
 
   regSignUpListener = (type: any) => {
@@ -195,6 +207,13 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       'showMessage',
       this._show,
     );
+
+    const unsubscribe = NetInfo.addEventListener((state: any) => {
+      console.log("Net ", state?.isConnected)
+      this.setState({
+        isConnected: state?.isConnected
+      })
+    });
 
     LoginStore.listAllAccounts()
       .then((resp: any) => {
@@ -285,10 +304,12 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
   };
 
   showErrorMessage = (show: boolean, message?: string) => {
-    debugger;
     let height = 0;
     if (show) {
       // height = 70;
+      if (this.props.showErr) {
+        this.props.showErr(message)
+      }
       this.messageRef._show({ message, color: Colors.ErrorColor });
       setTimeout(() => {
         this.messageRef && this.messageRef._hide();
@@ -308,12 +329,34 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       this.showErrorMessage(false);
       this.keyboardDidShowListener.remove();
       this.keyboardDidHideListener.remove();
-      this.appleLoginCallBack.removeListener();
-      DeviceEventEmitter.removeAllListeners('AppleLoginResult');
+      // this.appleLoginCallBack.removeListener();
+      // DeviceEventEmitter.removeAllListeners('AppleLoginResult');
     });
   }
 
+  showLoaderData = () => {
+    this.setState({
+      showLoaderValue: true,
+      loaderTextValue: 'Logging In...'
+    })
+  }
+
   selectedCommunity: Account = new Account();
+
+  moveTopasswordField = () => {
+    this.setState({
+      passwordFocus: true
+    }, () => {
+      debugger
+      console.log(this.regScroll)
+      this.regScroll.scrollToPosition(
+        0,
+        100,
+        true,
+      );
+      this._passwordField && this._passwordField.focus();
+    })
+  };
 
   render() {
     // let keyboardHeight = this.state.keyboardHeight
@@ -321,8 +364,8 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       inputRange: [0, 0.5, 1],
       outputRange: [
         0,
-        -(this.state.keyboardHeight * 0.55),
-        -(this.state.keyboardHeight * 0.85),
+        -(this.state.keyboardHeight),
+        -(this.state.keyboardHeight),
       ],
     });
 
@@ -338,7 +381,7 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
       <View
         style={styles.container}
         onTouchStart={() => {
-          Keyboard.dismiss();
+          // Keyboard.dismiss();
         }}>
         <StatusBar
           barStyle={
@@ -353,224 +396,202 @@ class Login extends React.Component<Props> implements LoginViewProtocol {
             null
         }
         <SafeAreaView style={{ width: '100%' }}>
+          {this.state.isConnected ?
+            null :
+            <OfflineNotice />
+          }
           <MessageDialogue
             ref={(ref: any) => (this.messageRef = ref)}
           />
         </SafeAreaView>
         <SafeAreaView style={Styles.flexContainer}>
-          <View style={Styles.LoginHeader}>
-            <Text style={Styles.hederText}>Login</Text>
-          </View>
 
-          <View style={Styles.separatorHeightStyle16} />
-          <View style={Styles.separatorHeightStyle16} />
+          <TouchableOpacity activeOpacity={1}
+            onPress={() => {
+              this.props.navigation.goBack()
+            }}
+            style={Styles.backButtonContainerStyle} >
+            <Image style={Styles.backIconStyle} source={arrowRightCircle} />
+            <Text style={[CommonTextStyles.fontWeight500Size17Inter, { color: Colors.newTextColor }]}>Back</Text>
+          </TouchableOpacity>
 
-          <View style={Styles.inputsContainer}>
-            <View>
-              <Text
-                style={[
-                  CommonTextStyles.fontWeight500Size13Inter,
-                  Styles.labelStyle,
-                ]}>
-                EMAIL
-              </Text>
-
-              <TextField
-                errorMessage={this.state.userNameError.text}
-                showError={this.state.userNameError.error}
-                reference={ref => (this._usernameField = ref)}
-                onSubmitEditing={() => {
-                  this._passwordField && this._passwordField.focus();
-                }}
-                value={this.state.username}
-                placeholder="Enter email..."
-                keyboardType="email-address"
-                returnKeyType="next"
-                onChange={(text: any) =>
-                  this.controller.onTextChange('username', text)
-                }
-              />
-              <View style={Styles.separatorHeightStyle24} />
-              <Text
-                style={[
-                  CommonTextStyles.fontWeight500Size13Inter,
-                  Styles.labelStyle,
-                ]}>
-                PASSWORD
-              </Text>
-
-              <TextField
-                passwordToggle={true}
-                errorMessage={this.state.passwordError.text}
-                showError={this.state.passwordError.error}
-                reference={ref => (this._passwordField = ref)}
-                value={this.state.password}
-                placeholder="Enter password..."
-                secureTextEntry={true}
-                onSubmitEditing={this.controller.onClick.bind(this.controller)}
-                returnKeyType="go"
-                onChange={(text: any) =>
-                  this.controller.onTextChange('password', text)
-                }
-              />
-              {/* <View style={{ height: 10 }} /> */}
-              <TouchableHighlight
-                underlayColor={Colors.white}
-                onPress={() => {
-                  this.showErrorMessage(false);
-                  this.props.navigation.navigate('forgotPassword');
-                }}>
-                <View style={styles.forgotPassword}>
-                  <Text
-                    style={Styles.forwardTextStyle}>
-                    Forgot Password?
-                  </Text>
-
-                </View>
-              </TouchableHighlight>
-            </View>
-
-            {/* <View
-                  // behavior={Platform.OS === "ios" ? "padding" : "height"}
-                  // keyboardVerticalOffset={60}
-                  style={{
-                    width: Utility.getDeviceWidth() - 48,
-                    marginLeft: 24,
-                    height: 380 - this.state.keyboardHeight
-                  }}> */}
-            <Animated.View style={[Styles.buttonContainer, animStyle]}>
-              <TouchableHighlight
-                underlayColor={'#ffffffff'}
-                style={styles.forgotPassword}
-                onPress={() =>
-                  this.setState({ _isRemeberMe: !this.state._isRemeberMe })
-                }>
-                <View
-                  style={[
-                    styles.forgotPasswordContainer,
-                    {
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: 32
-                    },
-                  ]}>
-                  <Image source={this.state._isRemeberMe ? checkbox_tick : checkbox} />
-                 <View style={{width:8}}/>
-                  <Text
-                    style={styles.forgotPasswordText}>
-                    Remember Me
-                  </Text>
-
-                </View>
-              </TouchableHighlight>
-
-              <TouchableWithoutFeedback
-                // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
-                onPress={() => {
-                  this.setState({
-                    showLoaderValue: true,
-                    loaderTextValue: 'Loging In...'
-                  }, () => {
-                    this.controller.onClick()
-                  })
-                }}>
-                <View
-                  style={[
-                    Styles.loginSSOButtonStyle,
-                    {
-                      height: 44,
-                      backgroundColor:
-                        this.state.username != '' && this.state.password != ''
-                          ? Colors.bordercolor
-                          : Colors.bordercolor,
-                      opacity:
-                        this.state.username != '' && this.state.password != ''
-                          ? 1
-                          : 1,
-                      flexDirection: 'row',
-                      // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      CommonTextStyles.fontWeight500Size17Inter,
-                      Styles.loginTextStyle,
-                    ]}>
-                    Login
-                  </Text>
-                  <Image source={arrowRightCircle} />
-                </View>
-              </TouchableWithoutFeedback>
-            </Animated.View>
-          </View>
-          {/** Sign In section */}
-          {/* <TouchableHighlight
-                  underlayColor={'#ffffffff'}
-                  style={styles.forgotPassword}
-                  onPress={() =>
-                    this.setState({ _isRemeberMe: !this.state._isRemeberMe })
-                  }>
-                  <View
-                    style={[
-                      styles.forgotPasswordContainer,
-                      {
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      },
-                    ]}>
-                    <Text
-                      style={{
-                        fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
-                        color: Colors.TextColor,
-                        ...fontSize(Size.byWidth(16)),
-                      }}>
-                      Remember Me
-                    </Text>
-                    <ToggleSwitch
-                      isOn={this.state._isRemeberMe}
-                      onColor={Colors.NewTitleColor}
-                      offColor="#E5E5E5"
-                      labelStyle={{
-                        color: 'black',
-                        fontWeight: Platform.OS === 'ios' ? '900' : 'bold',
-                      }}
-                      size="medium"
-                      onToggle={(isOn: any) => {
-                        this.setState({ _isRemeberMe: isOn });
-                      }}
-                    />
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="always"
+            showsVerticalScrollIndicator={false}
+            ref={ref => (this.regScroll = ref)}
+            // style={{ width: "100%", paddingHorizontal: 24 }}
+            bounces={false}
+            extraScrollHeight={100}
+            enableOnAndroid={true}
+          >
+            {
+              this.state.keyboardHeight ?
+                Platform.OS == 'ios' ?
+                  <>
+                    <View style={Styles.separatorHeightStyle16} />
+                  </>
+                  :
+                  null
+                :
+                <>
+                  <View style={Styles.LoginHeader}>
+                    <Text style={Styles.hederText}>Login</Text>
                   </View>
-                </TouchableHighlight>
-                */}
+                  <View style={Styles.separatorHeightStyle16} />
+                  <View style={Styles.separatorHeightStyle16} />
+                </>
 
-          {/** Forgot Passwrod button */}
-          {/* <View style={styles.forgotPasswordContainer}>
-                  <TouchableOpacity
-                    style={styles.forgotPassword}
-                    onPress={() => {
-                      this.showErrorMessage(false);
-                      this.props.navigation.navigate('forgotPassword');
-                    }}>
+            }
+
+            <View style={Styles.inputsContainer}>
+
+              <View>
+                <Text
+                  style={[
+                    CommonTextStyles.fontWeight500Size13Inter,
+                    Styles.labelStyle,
+                  ]}>
+                  EMAIL
+                </Text>
+
+                <TextField
+                  errorMessage={this.state.userNameError.text}
+                  showError={this.state.userNameError.error}
+                  reference={ref => (this._usernameField = ref)}
+                  onSubmitEditing={this.moveTopasswordField}
+                  value={this.state.username}
+                  onFocus={() => {
+                    this.setState({
+                      passwordFocus: false
+                    })
+                    //   this.regScroll.scrollToPosition(
+                    //     0,
+                    //     100,
+                    //     true,
+                    //   );
+                  }}
+                  placeholder="Enter email..."
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  onChange={(text: any) =>
+                    this.controller.onTextChange('username', text)
+                  }
+                />
+                <View style={Styles.separatorHeightStyle24} />
+                <Text
+                  style={[
+                    CommonTextStyles.fontWeight500Size13Inter,
+                    Styles.labelStyle,
+                  ]}>
+                  PASSWORD
+                </Text>
+
+                <TextField
+                  passwordToggle={true}
+                  errorMessage={this.state.passwordError.text}
+                  showError={this.state.passwordError.error}
+                  reference={ref => (this._passwordField = ref)}
+                  value={this.state.password}
+                  placeholder="Enter password..."
+                  secureTextEntry={true}
+                  onSubmitEditing={this.controller.onClick.bind(this.controller)}
+                  returnKeyType="go"
+                  onFocus={() => {
+                    this.setState({
+                      passwordFocus: true
+                    })
+                    //   this.regScroll.scrollToPosition(
+                    //     0,
+                    //     this.state.keyboardHeight/2,
+                    //     true,
+                    //   );
+                  }}
+                  onChange={(text: any) =>
+                    this.controller.onTextChange('password', text)
+                  }
+                />
+                {/* <View style={{ height: 10 }} /> */}
+                <TouchableHighlight
+                  underlayColor={Colors.white}
+                  onPress={() => {
+                    this.showErrorMessage(false);
+                    Keyboard.dismiss()
+                    this.props.navigation.navigate('forgotPassword');
+                  }}>
+                  <View style={styles.forgotPassword}>
                     <Text
-                      style={{
-                        fontWeight: '600',
-                        color: Colors.NewTitleColor,
-                        ...fontSize(Size.byWidth(16)),
-                      }}>
+                      style={Styles.forwardTextStyle}>
                       Forgot Password?
                     </Text>
-                  </TouchableOpacity>
-                </View> */}
 
-          {/* </View> */}
-          {/* </View> */}
-          {/* </View> */}
+                  </View>
+                </TouchableHighlight>
+              </View>
+
+            </View>
+          </KeyboardAwareScrollView>
+          <Animated.View style={[Styles.buttonContainer, animStyle,]}>
+            <TouchableHighlight
+              underlayColor={'#ffffffff'}
+              style={styles.forgotPassword}
+              onPress={() =>
+                this.setState({ _isRemeberMe: !this.state._isRemeberMe },()=>Keyboard.dismiss())
+              }>
+              <View
+                style={[
+                  styles.forgotPasswordContainer,
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 32
+                  },
+                ]}>
+                <Image source={this.state._isRemeberMe ? checkbox_tick : checkbox} />
+                <View style={{ width: 8 }} />
+                <Text
+                  style={styles.forgotPasswordText}>
+                  Remember Me
+                </Text>
+
+              </View>
+            </TouchableHighlight>
+
+            <TouchableWithoutFeedback
+              // disabled={(this.state.username != '' && this.state.password != '') ? false : true}
+              onPress={() => {
+                this.controller.onClick();
+              }}>
+              <View
+                style={[
+                  Styles.loginSSOButtonStyle,
+                  {
+                    height: 44,
+                    backgroundColor:
+                      this.state.username != '' && this.state.password != ''
+                        ? Colors.bordercolor
+                        : Colors.bordercolor,
+                    opacity:
+                      this.state.username != '' && this.state.password != ''
+                        ? 1
+                        : 1,
+                    flexDirection: 'row',
+                    // backgroundColor: (this.state.username != '' && this.state.password != '') ? Colors.decadeFilterBorder : Colors.bordercolor, opacity: (this.state.username != '' && this.state.password != '') ? 1 : 1, flexDirection: 'row'
+                  },
+                ]}>
+                <Text
+                  style={[
+                    CommonTextStyles.fontWeight500Size17Inter,
+                    Styles.loginTextStyle,
+                  ]}>
+                  Login
+                </Text>
+                <Image source={arrowRightCircle} />
+              </View>
+            </TouchableWithoutFeedback>
+          </Animated.View>
         </SafeAreaView>
-        {/* </LinearGradient> */}
-        {/* </TouchableWithoutFeedback> */}
-        {/* </ImageBackground> */}
+
       </View>
     );
   }

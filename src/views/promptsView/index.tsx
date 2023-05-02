@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -13,12 +13,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import ActionSheet from 'react-native-actions-sheet';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
-import {plus, sampleimage} from '../../../app/images';
-import loaderHandler from '../../common/component/busyindicator/LoaderHandler';
+import { plus, sampleimage } from '../../../app/images';
+import analytics from '@react-native-firebase/analytics';
 import TextNew from '../../common/component/Text';
-import {No_Internet_Warning, ToastMessage} from '../../common/component/Toast';
+import { No_Internet_Warning, ToastMessage } from '../../common/component/Toast';
 import {
   Colors,
   ConsoleType,
@@ -33,7 +34,7 @@ import {
   CreateUpdateMemory,
   promptIdListener,
 } from '../createMemory/createMemoryWebService';
-import {DefaultDetailsMemory} from '../createMemory/dataHelper';
+import { DefaultDetailsMemory } from '../createMemory/dataHelper';
 import { SHOW_LOADER_READ, SHOW_LOADER_TEXT } from '../dashboard/dashboardReducer';
 import {
   GetPrompts,
@@ -42,51 +43,180 @@ import {
   kPromptsList,
 } from '../myMemories/myMemoriesWebService';
 import Styles from './styles';
-type Props = {[x: string]: any};
-type State = {[x: string]: any};
+import TopicsFilter from './topicsFilter';
+type Props = { [x: string]: any };
+type State = { [x: string]: any };
 var promptList: any[] = [];
 var promptCategoriesArray: any[] = [];
 
 var selectedIndex = '';
-class PromptsView extends React.Component<State, Props> {
-  state: State = {
+const PromptsView = (props: Props) => {
+  const actionSheetRef = useRef(null);
+
+  const [state, setState] = useState({
     offsetVal: 0,
     categoriesArray: {},
     loadMore: 0,
     items: [],
     loading: false,
     prompt_count: 0,
-  };
-  memoryFromPrompt: EventManager;
-  promptsListListener: EventManager;
-  flatListRef: FlatList<unknown>;
-  scrollFlatlistListener: EventManager;
-  promptHideListener: EventManager;
+  })
+  let flatListRef: FlatList<unknown>;
+  let scrollFlatlistListener: EventManager;
 
-  constructor(props: Props) {
-    super(props);
-    this.scrollFlatlistListener = EventManager.addListener(
+
+  useEffect(() => {
+    const screenLog = async () => {
+      await analytics().logScreenView({
+        screen_name: "Prompts",
+        screen_class: "Prompts",
+      });
+    };
+    screenLog();
+    scrollFlatlistListener = EventManager.addListener(
       'scrollFlatlist',
       () => {
-        this.flatListRef.scrollToOffset({offset: 0, animated: false});
+        flatListRef.scrollToOffset({ offset: 0, animated: false });
       },
     );
-    this.promptsListListener = EventManager.addListener(
-      kPromptsList,
-      (fetched?: boolean, ifLoadMore?: boolean, fetchPromptsList?: any) => {
+
+    if (props.fromDeepLinking) {
+      convertToMemory(props.nid, props.title);
+    }
+    else {
+      setState(prevState => ({
+        ...prevState,
+        loading: true
+      }));
+
+      GetPrompts(state.categoriesArray, false, state.offsetVal,
+        response => {
+          let fetched = response.fetched, ifLoadMore = response.ifLoadMore, fetchPromptsList = response.fetchPromptsList;
+          if (fetched) {
+
+            let values: {
+              id: string;
+              desc: any;
+              prompt_category?: any;
+              prompt_image?: any;
+            }[] = [];
+            if (
+              fetchPromptsList.prompt_categories &&
+              Object.keys(fetchPromptsList.prompt_categories).length
+            ) {
+              promptCategoriesArray = Object.values(
+                fetchPromptsList.prompt_categories,
+              );
+            }
+
+            promptList = fetchPromptsList.memory_prompt_data;
+            let promptWithCategory: any[] = fetchPromptsList.memory_prompt_data_detail,
+              promptWithCategoryValues: any = [];
+
+            if (promptWithCategory && promptWithCategory.length) {
+
+              promptWithCategory.forEach((element, index) => {
+                let categoriesArray: any = [];
+
+                for (var key in element) {
+                  if (
+                    element[key]['prompt_category'] &&
+                    element[key]['prompt_category'].length
+                  ) {
+                    element[key]['prompt_category'].forEach(promptCategory => {
+                      let selectedCategory = promptCategoriesArray.filter(
+                        item => item.value == promptCategory,
+                      );
+                      if (selectedCategory.length) {
+                        categoriesArray = [
+                          ...categoriesArray,
+                          ...selectedCategory,
+                        ];
+                      }
+                    });
+                  }
+                  values.push({
+                    id: key,
+                    desc: element[key]['title'],
+                    prompt_category: categoriesArray,
+                    prompt_image: element[key]['prompt_image'],
+                  });
+                }
+              });
+            }
+
+            if (ifLoadMore) {
+              setState(prevState => ({
+                ...prevState,
+                items: state.items.concat(values),
+                loadMore: fetchPromptsList.load_more,
+                categoriesArray: fetchPromptsList.prompt_categories,
+                offsetVal: fetchPromptsList.prompt_offset,
+                prompt_count: fetchPromptsList.prompt_count,
+              }));
+
+            } else {
+              setState(prevState => ({
+                ...prevState,
+                items: values,
+                loadMore: fetchPromptsList.load_more,
+                categoriesArray: fetchPromptsList.prompt_categories,
+                offsetVal: fetchPromptsList.prompt_offset,
+                prompt_count: fetchPromptsList.prompt_count,
+              }));
+
+            }
+            setState(prevState => ({
+              ...prevState,
+              loading: false
+            }));
+            props.showLoader(false);
+            props.loaderText('Loading...');
+          }
+          else {
+            setState(prevState => ({
+              ...prevState,
+              loading: false
+            }));
+            props.showLoader(false);
+            props.loaderText('Loading...');
+          }
+        });
+    }
+
+    return () => {
+      scrollFlatlistListener.removeListener();
+    }
+  }, [])
+
+  useEffect(() => {
+    if (props.showTopicFilters) {
+      if (state.categoriesArray && Object.values(state.categoriesArray).length) {
+        actionSheetRef.current?.show();
+      }
+    } else {
+      actionSheetRef.current?.hide();
+    }
+  }, [props.showTopicFilters, state.categoriesArray]);
+
+  const applyFilters = (filteredTopics) => {
+    props.hideFilters();
+    setState(prevState => ({
+      ...prevState,
+      loading: true,
+      items: []
+    }));
+    GetPrompts(filteredTopics, false, 0,
+      response => {
+        let fetched = response.fetched, ifLoadMore = response.ifLoadMore, fetchPromptsList = response.fetchPromptsList;
         if (fetched) {
-         
-          debugger;
+
           let values: {
             id: string;
             desc: any;
             prompt_category?: any;
             prompt_image?: any;
           }[] = [];
-          // this.setState({
-          //   loadMore: fetchPromptsList.load_more,
-          //   categoriesArray: fetchPromptsList.prompt_categories
-          // });
           if (
             fetchPromptsList.prompt_categories &&
             Object.keys(fetchPromptsList.prompt_categories).length
@@ -97,13 +227,10 @@ class PromptsView extends React.Component<State, Props> {
           }
 
           promptList = fetchPromptsList.memory_prompt_data;
-          // this.setState({ offsetVal: fetchPromptsList.prompt_offset, prompt_count: fetchPromptsList.prompt_count });
-          let promptWithCategory: any[] =
-              fetchPromptsList.memory_prompt_data_detail,
+          let promptWithCategory: any[] = fetchPromptsList.memory_prompt_data_detail,
             promptWithCategoryValues: any = [];
 
           if (promptWithCategory && promptWithCategory.length) {
-            // promptWithCategoryValues = Object.values(fetchPromptsList.memory_prompt_data_detail);
 
             promptWithCategory.forEach((element, index) => {
               let categoriesArray: any = [];
@@ -134,285 +261,144 @@ class PromptsView extends React.Component<State, Props> {
               }
             });
           }
-          // showConsoleLog(ConsoleType.LOG,"data >> ", JSON.stringify(values));
-
-          // promptList.forEach(element => {
-          //   for (var key in element) {
-          //     values.push({ id: key, desc: element[key] });
-          //   }
-          // });
+          // showConsoleLog(ConsoleType.LOG, "data >> ", JSON.stringify(values));
 
           if (ifLoadMore) {
-            this.setState({
-              items: this.state.items.concat(values),
+            setState(prevState => ({
+              ...prevState,
+              items: state.items.concat(values),
               loadMore: fetchPromptsList.load_more,
               categoriesArray: fetchPromptsList.prompt_categories,
               offsetVal: fetchPromptsList.prompt_offset,
               prompt_count: fetchPromptsList.prompt_count,
-            });
+            }));
+
           } else {
-            this.setState({
+            setState(prevState => ({
+              ...prevState,
               items: values,
               loadMore: fetchPromptsList.load_more,
               categoriesArray: fetchPromptsList.prompt_categories,
               offsetVal: fetchPromptsList.prompt_offset,
               prompt_count: fetchPromptsList.prompt_count,
-            });
-          }
-          this.setState({loading: false}, () => {
-            //loaderHandler.hideLoader()
-            this.props.showLoader(false);
-            this.props.loaderText('Loading...');
-          });
-        } else {
-          this.setState({loading: false}, () => {
-            //loaderHandler.hideLoader()
-            this.props.showLoader(false);
-            this.props.loaderText('Loading...');
-          });
-        }
-      },
-    );
+            }));
 
-    this.promptHideListener = EventManager.addListener(
-      kHidePrompt,
-      (fetched?: boolean, promptId?: any) => {
-        if (fetched) {
-          var array = [...this.state.items]; // make a separate copy of the array
-          const filteredItems = array.filter(item => item.id !== promptId);
-          this.setState({items: filteredItems}, () =>{
-            //loaderHandler.hideLoader()
-            this.props.showLoader(false);
-            this.props.loaderText('Loading...');
           }
-          );
-        } else {
-          //loaderHandler.hideLoader();
-          this.props.showLoader(false);
-          this.props.loaderText('Loading...');
+          setState(prevState => ({
+            ...prevState,
+            loading: false
+          }));
+          props.showLoader(false);
+          props.loaderText('Loading...');
         }
-      },
-    );
+        else {
+          setState(prevState => ({
+            ...prevState,
+            loading: false
+          }));
+          props.showLoader(false);
+          props.loaderText('Loading...');
+        }
+      });
   }
 
-  componentDidMount() {
-    if (this.props.fromDeepLinking) {
-      this.convertToMemory(this.props.nid, this.props.title);
-    } else {
-      this.setState({loading: true}, () =>
-        GetPrompts(this.state.categoriesArray, false, this.state.offsetVal,
-          response =>{
-            let fetched = response.fetched, ifLoadMore = response.ifLoadMore, fetchPromptsList = response.fetchPromptsList;
-              if (fetched) {
-      
-                let values: {
-                  id: string;
-                  desc: any;
-                  prompt_category?: any;
-                  prompt_image?: any;
-                }[] = [];
-                // this.setState({
-                //   loadMore: fetchPromptsList.load_more,
-                //   categoriesArray: fetchPromptsList.prompt_categories
-                // });
-                if (
-                  fetchPromptsList.prompt_categories &&
-                  Object.keys(fetchPromptsList.prompt_categories).length
-                ) {
-                  promptCategoriesArray = Object.values(
-                    fetchPromptsList.prompt_categories,
-                  );
-                }
-      
-                promptList = fetchPromptsList.memory_prompt_data;
-                // this.setState({ offsetVal: fetchPromptsList.prompt_offset, prompt_count: fetchPromptsList.prompt_count });
-                let promptWithCategory: any[] =
-                    fetchPromptsList.memory_prompt_data_detail,
-                  promptWithCategoryValues: any = [];
-      
-                if (promptWithCategory && promptWithCategory.length) {
-                  // promptWithCategoryValues = Object.values(fetchPromptsList.memory_prompt_data_detail);
-      
-                  promptWithCategory.forEach((element, index) => {
-                    let categoriesArray: any = [];
-      
-                    for (var key in element) {
-                      if (
-                        element[key]['prompt_category'] &&
-                        element[key]['prompt_category'].length
-                      ) {
-                        element[key]['prompt_category'].forEach(promptCategory => {
-                          let selectedCategory = promptCategoriesArray.filter(
-                            item => item.value == promptCategory,
-                          );
-                          if (selectedCategory.length) {
-                            categoriesArray = [
-                              ...categoriesArray,
-                              ...selectedCategory,
-                            ];
-                          }
-                        });
-                      }
-                      values.push({
-                        id: key,
-                        desc: element[key]['title'],
-                        prompt_category: categoriesArray,
-                        prompt_image: element[key]['prompt_image'],
-                      });
-                    }
-                  });
-                }
-                // showConsoleLog(ConsoleType.LOG,"data >> ", JSON.stringify(values));
-      
-                // promptList.forEach(element => {
-                //   for (var key in element) {
-                //     values.push({ id: key, desc: element[key] });
-                //   }
-                // });
-      
-                if (ifLoadMore) {
-                  this.setState({
-                    items: this.state.items.concat(values),
-                    loadMore: fetchPromptsList.load_more,
-                    categoriesArray: fetchPromptsList.prompt_categories,
-                    offsetVal: fetchPromptsList.prompt_offset,
-                    prompt_count: fetchPromptsList.prompt_count,
-                  });
-                } else {
-                  this.setState({
-                    items: values,
-                    loadMore: fetchPromptsList.load_more,
-                    categoriesArray: fetchPromptsList.prompt_categories,
-                    offsetVal: fetchPromptsList.prompt_offset,
-                    prompt_count: fetchPromptsList.prompt_count,
-                  });
-                }
-                this.setState({loading: false}, () => {
-                  //loaderHandler.hideLoader()
-                  this.props.showLoader(false);
-                  this.props.loaderText('Loading...');
-                });
-              } else {
-                this.setState({loading: false}, () => {
-                  //loaderHandler.hideLoader()
-                  this.props.showLoader(false);
-                  this.props.loaderText('Loading...');
-                });
-              }
-          }),
-      );
-    }
-  }
-
-  componentWillUnmount = () => {
-    this.promptHideListener.removeListener();
-    this.scrollFlatlistListener.removeListener();
-    // this.memoryFromPrompt.removeListener()
-    this.promptsListListener.removeListener();
-  };
-
-  loadMorePrompts() {
-    if (this.state.loadMore == 1) {
+  const loadMorePrompts = () => {
+    if (state.loadMore == 1) {
       if (Utility.isInternetConnected) {
-        GetPrompts(this.state.categoriesArray, true, this.state.offsetVal,
-          response =>{
+        GetPrompts(state.categoriesArray, true, state.offsetVal,
+          response => {
             let fetched = response.fetched, ifLoadMore = response.ifLoadMore, fetchPromptsList = response.fetchPromptsList;
-              if (fetched) {
-      
-                let values: {
-                  id: string;
-                  desc: any;
-                  prompt_category?: any;
-                  prompt_image?: any;
-                }[] = [];
-                // this.setState({
-                //   loadMore: fetchPromptsList.load_more,
-                //   categoriesArray: fetchPromptsList.prompt_categories
-                // });
-                if (
-                  fetchPromptsList.prompt_categories &&
-                  Object.keys(fetchPromptsList.prompt_categories).length
-                ) {
-                  promptCategoriesArray = Object.values(
-                    fetchPromptsList.prompt_categories,
-                  );
-                }
-      
-                promptList = fetchPromptsList.memory_prompt_data;
-                // this.setState({ offsetVal: fetchPromptsList.prompt_offset, prompt_count: fetchPromptsList.prompt_count });
-                let promptWithCategory: any[] =
-                    fetchPromptsList.memory_prompt_data_detail,
-                  promptWithCategoryValues: any = [];
-      
-                if (promptWithCategory && promptWithCategory.length) {
-                  // promptWithCategoryValues = Object.values(fetchPromptsList.memory_prompt_data_detail);
-      
-                  promptWithCategory.forEach((element, index) => {
-                    let categoriesArray: any = [];
-      
-                    for (var key in element) {
-                      if (
-                        element[key]['prompt_category'] &&
-                        element[key]['prompt_category'].length
-                      ) {
-                        element[key]['prompt_category'].forEach(promptCategory => {
-                          let selectedCategory = promptCategoriesArray.filter(
-                            item => item.value == promptCategory,
-                          );
-                          if (selectedCategory.length) {
-                            categoriesArray = [
-                              ...categoriesArray,
-                              ...selectedCategory,
-                            ];
-                          }
-                        });
-                      }
-                      values.push({
-                        id: key,
-                        desc: element[key]['title'],
-                        prompt_category: categoriesArray,
-                        prompt_image: element[key]['prompt_image'],
+            if (fetched) {
+
+              let values: {
+                id: string;
+                desc: any;
+                prompt_category?: any;
+                prompt_image?: any;
+              }[] = [];
+
+              if (
+                fetchPromptsList.prompt_categories &&
+                Object.keys(fetchPromptsList.prompt_categories).length
+              ) {
+                promptCategoriesArray = Object.values(
+                  fetchPromptsList.prompt_categories,
+                );
+              }
+
+              promptList = fetchPromptsList.memory_prompt_data;
+              let promptWithCategory: any[] =
+                fetchPromptsList.memory_prompt_data_detail,
+                promptWithCategoryValues: any = [];
+
+              if (promptWithCategory && promptWithCategory.length) {
+
+                promptWithCategory.forEach((element, index) => {
+                  let categoriesArray: any = [];
+
+                  for (var key in element) {
+                    if (
+                      element[key]['prompt_category'] &&
+                      element[key]['prompt_category'].length
+                    ) {
+                      element[key]['prompt_category'].forEach(promptCategory => {
+                        let selectedCategory = promptCategoriesArray.filter(
+                          item => item.value == promptCategory,
+                        );
+                        if (selectedCategory.length) {
+                          categoriesArray = [
+                            ...categoriesArray,
+                            ...selectedCategory,
+                          ];
+                        }
                       });
                     }
-                  });
-                }
-                // showConsoleLog(ConsoleType.LOG,"data >> ", JSON.stringify(values));
-      
-                // promptList.forEach(element => {
-                //   for (var key in element) {
-                //     values.push({ id: key, desc: element[key] });
-                //   }
-                // });
-      
-                if (ifLoadMore) {
-                  this.setState({
-                    items: this.state.items.concat(values),
-                    loadMore: fetchPromptsList.load_more,
-                    categoriesArray: fetchPromptsList.prompt_categories,
-                    offsetVal: fetchPromptsList.prompt_offset,
-                    prompt_count: fetchPromptsList.prompt_count,
-                  });
-                } else {
-                  this.setState({
-                    items: values,
-                    loadMore: fetchPromptsList.load_more,
-                    categoriesArray: fetchPromptsList.prompt_categories,
-                    offsetVal: fetchPromptsList.prompt_offset,
-                    prompt_count: fetchPromptsList.prompt_count,
-                  });
-                }
-                this.setState({loading: false}, () => {
-                  //loaderHandler.hideLoader()
-                  this.props.showLoader(false);
-                  this.props.loaderText('Loading...');
-                });
-              } else {
-                this.setState({loading: false}, () => {
-                  //loaderHandler.hideLoader()
-                  this.props.showLoader(false);
-                  this.props.loaderText('Loading...');
+                    values.push({
+                      id: key,
+                      desc: element[key]['title'],
+                      prompt_category: categoriesArray,
+                      prompt_image: element[key]['prompt_image'],
+                    });
+                  }
                 });
               }
+
+              if (ifLoadMore) {
+                setState(prevState => ({
+                  ...prevState,
+                  items: state.items.concat(values),
+                  loadMore: fetchPromptsList.load_more,
+                  categoriesArray: fetchPromptsList.prompt_categories,
+                  offsetVal: fetchPromptsList.prompt_offset,
+                  prompt_count: fetchPromptsList.prompt_count,
+                }));
+
+              } else {
+                setState(prevState => ({
+                  ...prevState,
+                  items: values,
+                  loadMore: fetchPromptsList.load_more,
+                  categoriesArray: fetchPromptsList.prompt_categories,
+                  offsetVal: fetchPromptsList.prompt_offset,
+                  prompt_count: fetchPromptsList.prompt_count,
+                }));
+
+              }
+              setState(prevState => ({
+                ...prevState,
+                loading: false
+              }));
+              props.showLoader(false);
+              props.loaderText('Loading...');
+            }
+            else {
+              setState(prevState => ({
+                ...prevState,
+                loading: false
+              }));
+              props.showLoader(false);
+              props.loaderText('Loading...');
+            }
           });
       } else {
         No_Internet_Warning();
@@ -420,9 +406,9 @@ class PromptsView extends React.Component<State, Props> {
     }
   }
 
-  renderFooter = () => {
+  const renderFooter = () => {
     //it will show indicator at the bottom of the list when data is loading otherwise it returns null
-    if (this.state.loadMore == 0) return null;
+    if (state.loadMore == 0) return null;
     return (
       <View style={Styles.footerStyle}>
         <ActivityIndicator color={Colors.newTextColor} />
@@ -430,10 +416,10 @@ class PromptsView extends React.Component<State, Props> {
     );
   };
 
-  renderItem=(item: any) => {
+  const renderItem = (item: any) => {
     return (
       <View key={item.index}>
-        <View style={{height: item?.index == 0 ? 16 : 0}} />
+        <View style={{ height: item?.index == 0 ? 16 : 0 }} />
         <View style={Styles.promptContainer}>
           {/* <View>
           <TouchableOpacity
@@ -453,7 +439,7 @@ class PromptsView extends React.Component<State, Props> {
               borderTopRightRadius={24}
               source={
                 item.item.prompt_image
-                  ? {uri: item.item.prompt_image}
+                  ? { uri: item.item.prompt_image }
                   : sampleimage
               }
               resizeMode="cover"
@@ -470,7 +456,7 @@ class PromptsView extends React.Component<State, Props> {
           </View>
           <View style={Styles.propmptCategoryContainer}>
             {item.item.prompt_category &&
-            item.item.prompt_category.length ? (
+              item.item.prompt_category.length ? (
               item.item.prompt_category.length === 1 ? (
                 <Text style={Styles.promptLable}>
                   {item.item.prompt_category[0].label}
@@ -481,7 +467,7 @@ class PromptsView extends React.Component<State, Props> {
                     <Text style={Styles.promptCtegory}>
                       {category.label}{' '}
                       {categoryIndex + 1 !=
-                      item.item.prompt_category.length
+                        item.item.prompt_category.length
                         ? ','
                         : null}
                     </Text>
@@ -496,7 +482,7 @@ class PromptsView extends React.Component<State, Props> {
             <View>
               <TouchableOpacity
                 onPress={() =>
-                  this.convertToMemory(item.item.id, item.item.desc)
+                  convertToMemory(item.item.id, item.item.desc)
                 }>
                 <View style={Styles.addmemoryContainer}>
                   <Image source={plus}></Image>
@@ -512,22 +498,108 @@ class PromptsView extends React.Component<State, Props> {
     );
   };
 
-  render() {
-    return (
-      <View style={Styles.container}>
-        <SafeAreaView style={Styles.noViewStyle} />
-        <SafeAreaView style={Styles.safeAreaContextStyle}>
-          <View style={Styles.subContainer}>
-            {/* <NavigationBar title={TabItems.Prompts} /> */}
-            <StatusBar
-              barStyle={
-                Utility.currentTheme == 'light'
-                  ? 'dark-content'
-                  : 'light-content'
-              }
-              backgroundColor={Colors.NewThemeColor}
-            />
-            {/* {!this.state.loading && (
+  const convertToMemory = async (id: any, title: any) => {
+    if (Utility.isInternetConnected) {
+      setState(prevState => ({
+        ...prevState,
+        selectedPrompt: parseInt(id)
+      }));
+
+      {
+        selectedIndex = id;
+        //loaderHandler.showLoader('Creating Memory...');
+        let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
+        draftDetails.prompt_id = parseInt(id);
+        props.showLoader(true);
+        props.loaderText('Creating Memory...');
+        let response: any = await CreateUpdateMemory(
+          draftDetails,
+          [],
+          promptIdListener,
+          'save',
+          response => {
+            promptToMemoryCallBack(
+              response.status,
+              response.id ? response.id : null,
+            );
+          },
+        );
+
+        Keyboard.dismiss();
+      };
+    } else {
+      No_Internet_Warning();
+    }
+  }
+
+  const promptToMemoryCallBack = async(success: boolean, draftDetails: any) => {
+    if (success) {
+      removeSelectedPrompt();
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      await analytics().logEvent('memory_created_from_prompt');
+       props.navigation.navigate('createMemory', {
+        editMode: true,
+        draftNid: draftDetails,
+        isFromPrompt: true,
+      });
+    } else {
+      //loaderHandler.hideLoader();
+      props.showLoader(false);
+      props.loaderText('Loading...');
+      //ToastMessage(draftDetails);
+    }
+  };
+
+  const removeSelectedPrompt = () => {
+    var array = [...state.items]; // make a separate copy of the array
+    const filteredItems = array.filter(item => item.id !== selectedIndex);
+    setState(prevState => ({
+      ...prevState,
+      items: filteredItems
+    }));
+  }
+
+  const hidePrompt = (promptId: any) => {
+    Alert.alert('Hide Prompt', `Are you sure you want to hide this prompt?`, [
+      {
+        text: 'Yes',
+        style: 'destructive',
+        onPress: () => {
+          if (Utility.isInternetConnected) {
+            //loaderHandler.showLoader();
+
+            props.showLoader(true);
+            props.loaderText('Loading...');
+            HidePrompt(promptId);
+          } else {
+            No_Internet_Warning();
+          }
+        },
+      },
+      {
+        text: 'Cancel',
+        style: 'cancel',
+        onPress: () => { },
+      },
+    ]);
+  }
+
+  return (
+    <View style={Styles.container}>
+      <SafeAreaView style={Styles.noViewStyle} />
+      <SafeAreaView style={Styles.safeAreaContextStyle}>
+        <View style={Styles.subContainer}>
+          {/* <NavigationBar title={TabItems.Prompts} /> */}
+          <StatusBar
+            barStyle={
+              Utility.currentTheme == 'light'
+                ? 'dark-content'
+                : 'light-content'
+            }
+            backgroundColor={Colors.NewThemeColor}
+          />
+          {/* {!this.state.loading && (
               <View
                 style={{
                   borderTopColor: '#fff',
@@ -574,128 +646,73 @@ class PromptsView extends React.Component<State, Props> {
                 </TouchableOpacity>
               </View>
             )} */}
-            <FlatList
-              ref={ref => {
-                this.flatListRef = ref;
-              }}
-              data={this.state.items}
-              // extraData={this.state}
-              onScroll={() => {
-                Keyboard.dismiss();
-              }}
-              maxToRenderPerBatch={5}
-              windowSize={5}
-              initialNumToRender={10}
-              removeClippedSubviews={true}
-              ItemSeparatorComponent={() => <View style={Styles.separator} />}
-              keyExtractor={(_, index: number) => `${index}`}
-              style={Styles.flatlistStyle}
-              renderItem={this.renderItem}
-              ListFooterComponent={()=>this.renderFooter()}
-              onEndReachedThreshold={0.4}
-              onEndReached={()=>this.loadMorePrompts()}
-            />
-            {this.state.items.length == 0 && (
-              <View style={Styles.noPromptContainer}>
-                {this.state.loading ? (
-                  <ActivityIndicator
-                    color={Colors.newTextColor}
-                    size="large"
-                    style={Styles.activityStyle}
-                  />
-                ) : (
-                  <Text style={Styles.noPrompt}>
-                    There are no prompts to display at this moment
-                  </Text>
-                )}
-              </View>
-            )}
-          </View>
-        </SafeAreaView>
-      </View>
-    );
-  }
+          <FlatList
+            ref={ref => {
+              flatListRef = ref;
+            }}
+            data={state.items}
+            // extraData={state}
+            onScroll={() => {
+              Keyboard.dismiss();
+            }}
+            maxToRenderPerBatch={5}
+            windowSize={5}
+            initialNumToRender={10}
+            removeClippedSubviews={true}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View style={Styles.separator} />}
+            keyExtractor={(_, index: number) => `${index}`}
+            style={Styles.flatlistStyle}
+            renderItem={renderItem}
+            ListFooterComponent={() => renderFooter()}
+            onEndReachedThreshold={0.4}
+            onEndReached={() => loadMorePrompts()}
+          />
+          {state.items.length == 0 && (
+            <View style={Styles.noPromptContainer}>
+              {state.loading ? (
+                <ActivityIndicator
+                  color={Colors.newTextColor}
+                  size="large"
+                  style={Styles.activityStyle}
+                />
+              ) : (
+                <Text style={Styles.noPrompt}>
+                  There are no prompts to display at this moment
+                </Text>
+              )}
+            </View>
+          )}
+        </View>
 
-  convertToMemory(id: any, title: any) {
-    if (Utility.isInternetConnected) {
-      this.setState({selectedPrompt: parseInt(id)}, async () => {
-        selectedIndex = id;
-        //loaderHandler.showLoader('Creating Memory...');
-        this.props.showLoader(true);
-        this.props.loaderText('Creating Memory...');
-        let draftDetails: any = DefaultDetailsMemory(decode_utf8(title.trim()));
-        draftDetails.prompt_id = parseInt(id);
-        // this.memoryFromPrompt = EventManager.addListener(
-        //   promptIdListener,
-        //   this.promptToMemoryCallBack,
-        // );
+        <ActionSheet
+          closeOnTouchBackdrop={false}
+          closeOnPressBack={false}
+          ref={actionSheetRef}>
+          <TopicsFilter
+            categories={state.categoriesArray}
+            closeAction={() => {
+              props.hideFilters();
+            }}
+            applyFilters={applyFilters}
+          />
+          <LinearGradient
+            colors={[
+              'rgba(255, 255, 255, 0)',
+              'rgba(255, 255, 255, 0.9)',
+              'rgba(255, 255, 255, 1)',
+            ]}
+            style={Styles.linearGardStyle}></LinearGradient>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)']}
+            style={Styles.linearGardBottomStyle}></LinearGradient>
+        </ActionSheet>
 
-        let response: any = await CreateUpdateMemory(
-          draftDetails,
-          [],
-          promptIdListener,
-          'save',
-          response => {
-            this.promptToMemoryCallBack(
-              response.status,
-              response.id ? response.id : null,
-            );
-          },
-        );
+      </SafeAreaView>
+    </View>
+  );
 
-        Keyboard.dismiss();
-      });
-    } else {
-      No_Internet_Warning();
-    }
-  }
-
-  promptToMemoryCallBack = (success: boolean, draftDetails: any) => {
-    if (success) {
-      this.removeSelectedPrompt();
-      this.props.navigation.navigate('createMemory', {
-        editMode: true,
-        draftNid: draftDetails,
-        isFromPrompt: true,
-      });
-    } else {
-      //loaderHandler.hideLoader();
-      this.props.showLoader(false);
-      this.props.loaderText('Loading...');
-     //ToastMessage(draftDetails);
-    }
-  };
-
-  removeSelectedPrompt() {
-    var array = [...this.state.items]; // make a separate copy of the array
-    const filteredItems = array.filter(item => item.id !== selectedIndex);
-    this.setState({items: filteredItems});
-  }
-
-  hidePrompt(promptId: any) {
-    Alert.alert('Hide Prompt', `Are you sure you want to hide this prompt?`, [
-      {
-        text: 'Yes',
-        style: 'destructive',
-        onPress: () => {
-          if (Utility.isInternetConnected) {
-            //loaderHandler.showLoader();
-
-            this.props.showLoader(true);
-            this.props.loaderText('Loading...');
-            HidePrompt(promptId);
-          } else {
-            No_Internet_Warning();
-          }
-        },
-      },
-      {
-        text: 'Cancel',
-        style: 'cancel',
-        onPress: () => {},
-      },
-    ]);
-  }
 }
 
 const mapState = (state: any) => {

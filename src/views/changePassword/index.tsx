@@ -195,6 +195,7 @@ const ChangePassword = props => {
         cancelAction={cancelAction}
         showRightText={false}
         isWhite={true}
+        noMarginLeft={true}
       />
       <StatusBar
         barStyle={
@@ -204,6 +205,7 @@ const ChangePassword = props => {
       />
       <KeyboardAwareScrollView
         showsHorizontalScrollIndicator={false}
+        enableOnAndroid={true}
         showsVerticalScrollIndicator={false}
         style={styles.scrollViewContainerStyle}>
         <TextField
@@ -221,6 +223,8 @@ const ChangePassword = props => {
           onChange={(text: any) => onTextChange('currentPassword', text)}
         />
 
+        <View style={styles.separatorstyle}/>
+
         <TextField
           passwordToggle={true}
           errorMessage={newPasswordError.text}
@@ -237,6 +241,8 @@ const ChangePassword = props => {
           returnKeyType="next"
           onChange={(text: any) => onTextChange('newPassword', text)}
         />
+        
+        <View style={styles.separatorstyle}/>
 
         <TextField
           passwordToggle={true}

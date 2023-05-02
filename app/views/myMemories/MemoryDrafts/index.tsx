@@ -6,7 +6,7 @@ import {
 import { DeleteDraftService, kDeleteDraft } from '../../../../src/views/createMemory/createMemoryWebService';
 import { Border } from '../../memoryDetails/componentsMemoryDetails';
 import { GetMemoryDrafts, kMemoryDraftsFetched } from '../myMemoriesWebService';
-import loaderHandler from './../../../../src/common/component/busyindicator/LoaderHandler';
+import analytics from '@react-native-firebase/analytics';
 import Text from './../../../../src/common/component/Text';
 import {
   No_Internet_Warning, ToastMessage
@@ -376,6 +376,8 @@ export default class MemoryDrafts extends React.Component<Props, State> {
           // maxToRenderPerBatch={50}
           initialNumToRender={10}
           removeClippedSubviews={true}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
               colors={[
@@ -436,9 +438,10 @@ export default class MemoryDrafts extends React.Component<Props, State> {
     );
   }
 
-  getDraftDetails = (item: any) => {
+  getDraftDetails = async(item: any) => {
     if (Utility.isInternetConnected) {
       //loaderHandler.showLoader();
+      await analytics().logEvent('edit_published_memory');
       this.props.navigation.navigate('createMemory', { editMode: true, draftNid: item.item.nid });
     } else {
       No_Internet_Warning();

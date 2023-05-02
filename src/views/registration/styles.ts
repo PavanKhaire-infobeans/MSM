@@ -1,6 +1,5 @@
 import { Dimensions, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import { Colors, fontFamily, fontSize, Size } from '../../common/constants';
 import Utility from '../../common/utility';
 
@@ -20,9 +19,26 @@ const Styles = EStyleSheet.create({
   },
   LoginHeader:{ 
     width: Utility.getDeviceWidth() - 48, 
-    flexDirection: 'row', 
     alignSelf: 'center',
-    marginTop: 24
+    // marginTop: 24
+  },
+  backButtonContainerStyle:{ 
+    flexDirection: 'row', 
+    width: 120, 
+    borderRadius: 1000, 
+    height: 44, 
+    marginTop: 24, 
+    // marginBottom: 32, 
+    borderColor: Colors.bottomTabColor, 
+    borderWidth: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: Colors.white 
+  },
+  backIconStyle:{ 
+    tintColor: Colors.newTextColor, 
+    marginRight: 12, 
+    transform: [{ rotate: '180deg' }] 
   },
   termHeader:{ 
     width: Utility.getDeviceWidth() - 48, 
@@ -82,11 +98,10 @@ const Styles = EStyleSheet.create({
     width: '100%'
   },
   regFirstStepSubContainer: {
-    height: Dimensions.get('window').height - 100,
+    flex:1,
     paddingHorizontal: 24,
-    paddingBottom: 20 + (Platform.OS == "ios" && StaticSafeAreaInsets.safeAreaInsetsBottom ? StaticSafeAreaInsets.safeAreaInsetsBottom + 50 : 0)
   },
-  formContainer: { width: '100%' },
+  formContainer: {  },
   inputLableStyle: {
     marginLeft: 8,
     marginBottom: 4,
@@ -363,7 +378,7 @@ const Styles = EStyleSheet.create({
     justifyContent: "center",
     alignSelf: 'center',
     flexDirection: "row",
-    paddingHorizontal: 24,
+    // paddingHorizontal: 24,
     borderRadius: 1000,
     backgroundColor: Colors.white
   },

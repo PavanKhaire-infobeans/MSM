@@ -106,19 +106,19 @@ export class MemoryDraftsDataModel {
     const regex = /(<([^>]+)>)/gi;
     let description = getDetails(draftDetails, ['description']);
     description = description.replace(regex, '');
-    let date: any = { year: 'Year*', month: 'Month*', day: 'Day' }; // memory_date, season
+    let date: any = { year: '', month: '', day: '' }; // memory_date, season
     let season = getDetails(draftDetails, ['season']).trim();
     let memoryDate = new Date(
       parseInt(getDetails(draftDetails, ['memory_date'])) * 1000,
     );
     if (season && season.trim().length > 0) {
-      date.year = memoryDate.getFullYear();
+      date.year = memoryDate.getUTCFullYear().toString();
       date.month = season.charAt(0).toUpperCase() + season.slice(1);
     } else {
-      date.year = memoryDate.getFullYear();
-      date.month = memoryDate.getMonth()+1;
+      date.year = memoryDate.getUTCFullYear().toString();
+      date.month = (memoryDate.getUTCMonth()+1) <= 9 ? '0'+(memoryDate.getUTCMonth()+1) : (memoryDate.getUTCMonth()+1).toString();
       // date.month = months[memoryDate.getMonth()].name;
-      date.day = memoryDate.getDate();
+      date.day = memoryDate.getUTCDate() <= 9 ? '0'+memoryDate.getUTCDate() : (memoryDate.getUTCDate()).toString();
     }
     let tags = getDetails(draftDetails, ['memory_tags']).map(
       (element: any, index: any) => {
@@ -128,7 +128,7 @@ export class MemoryDraftsDataModel {
     let shareOption =
       getDetails(draftDetails, ['share_option_value']).length > 0
         ? getDetails(draftDetails, ['share_option_value'])
-        : 'allfriends';
+        : 'only_me';
     let images: any = [];
     getDetails(draftDetails, ['images'], keyArray).forEach((element: any) => {
       images.push({ ...element, type: 'images' });
