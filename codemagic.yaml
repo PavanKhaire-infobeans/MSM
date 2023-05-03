@@ -57,7 +57,6 @@ workflows:
       - name: Install dependencies
         script: |
           npm install --legacy-peer-deps
-    scripts:
       - name: Install CocoaPods dependencies
         script: | 
           cd ios && pod install
