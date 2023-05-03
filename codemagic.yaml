@@ -5,6 +5,7 @@ workflows:
       node: 16.8.0
       groups:
         - firebase_credentials
+      ndk: 21.4.7075529
     triggering:
       events:
         - push
@@ -14,9 +15,6 @@ workflows:
           source: true
       cancel_previous_builds: false
     scripts:
-      - name: Install Missing dependencies
-        script: |
-          ndk_version: 21.4.7075529
       - name: Set Android SDK location
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
