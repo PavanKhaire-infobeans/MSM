@@ -54,6 +54,9 @@ workflows:
           source: true
       cancel_previous_builds: false
     scripts:
+      - name: Install Missing dependencies
+        inputs:
+        - ndk_version: 21.4.7075529
       - name: Install dependencies
         script: |
           npm install --legacy-peer-deps
