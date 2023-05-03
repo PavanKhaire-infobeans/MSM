@@ -69,6 +69,6 @@ workflows:
       firebase:
         firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
         ios:
-          app_id: $IOS_APP_ID
+          app_id: 1:1011028359687:ios:519c9c7c0700ea33e2c8a2
           groups:
             - android-testers
