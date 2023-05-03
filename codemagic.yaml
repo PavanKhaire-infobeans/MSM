@@ -15,7 +15,8 @@ workflows:
       cancel_previous_builds: false
     scripts:
       - name: Install Missing dependencies
-        ndk_version: 21.4.7075529
+        script: |
+          ndk_version: 21.4.7075529
       - name: Set Android SDK location
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
