@@ -45,6 +45,18 @@ workflows:
         BUNDLE_ID: 'com.cueback'
         XCODE_WORKSPACE: 'MyStoriesMatter.xcworkspace'
         XCODE_SCHEME: 'MyStoriesMatter'
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'master'
+          include: true
+          source: true
+      cancel_previous_builds: false
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm install --legacy-peer-deps
     scripts:
       - name: Install CocoaPods dependencies
         script: | 
