@@ -5,7 +5,7 @@ workflows:
       node: 16.8.0
       groups:
         - firebase_credentials
-      ndk: 24.0.8215888
+      ndk: 25.2.9519653
     triggering:
       events:
         - push
