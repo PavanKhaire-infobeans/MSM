@@ -3,7 +3,7 @@ import {
   Dimensions, Image
 } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
-const {height} = Dimensions.get('screen');
+const { height } = Dimensions.get('screen');
 //@ts-ignore
 import Carousel from 'react-native-snap-carousel';
 import styles from './styles';
@@ -15,14 +15,11 @@ export type ActionSheetItem = {
   url: string;
 };
 
-type Props = {actions: Array<ActionSheetItem>};
+type Props = { actions: Array<ActionSheetItem> };
 
-export default class ImageViewer extends React.Component<Props> {
-  static defaultProps: Props = {
-    actions: [],
-  };
+const ImageViewer = (props: Props) => {
 
-  renderItem = () => {
+  const renderItem = () => {
     <ImageZoom
       cropWidth={Dimensions.get('window').width}
       cropHeight={Dimensions.get('window').height}
@@ -37,15 +34,18 @@ export default class ImageViewer extends React.Component<Props> {
     </ImageZoom>;
   };
 
-  render() {
-    let deviceWidth = Dimensions.get('window').width;
-    return (
-      <Carousel
-        data={this.props.actions}
-        renderItem={this.renderItem}
-        sliderWidth={deviceWidth}
-        itemWidth={deviceWidth}
-      />
-    );
-  }
+  let deviceWidth = Dimensions.get('window').width;
+  return (
+    <Carousel
+      data={props.actions}
+      renderItem={renderItem}
+      sliderWidth={deviceWidth}
+      itemWidth={deviceWidth}
+    />
+  );
 }
+ImageViewer.defaultProps = {
+  actions: [],
+};
+
+export default ImageViewer;

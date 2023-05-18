@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Image,
   Keyboard,
@@ -23,48 +23,46 @@ const options = {
   ignoreAndroidSystemSettings: false,
 };
 
-class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
-  messageRef: any | MessageDialogue = null;
-  static defaultProps = {
-    showRightText: false,
-  };
-  _renderLeft() {
+const NavigationHeaderSafeArea = (props: any) => {
+  let messageRef: any | MessageDialogue = useRef(null);
+
+  const _renderLeft = () => {
     return (
       <View>
-        {!this.props.hideClose ? (
-          <TouchableWithoutFeedback onPress={() => this.props.cancelAction()}>
-            <View style={[this.props.addToCollectionOption ? styles.leftButtonAddtoCollectionTouchableContainer : this.props.noMarginLeft ? styles.leftButtonNoMarginTouchableContainer:styles.leftButtonTouchableContainer,
-              // { marginLeft: this.props.multiValuesPage ? 0 : 0 }
+        {!props.hideClose ? (
+          <TouchableWithoutFeedback onPress={() => props.cancelAction()}>
+            <View style={[props.addToCollectionOption ? styles.leftButtonAddtoCollectionTouchableContainer : props.noMarginLeft ? styles.leftButtonNoMarginTouchableContainer : styles.leftButtonTouchableContainer,
+              // { marginLeft: props.multiValuesPage ? 0 : 0 }
             ]}>
               <Image
                 style={
-                  this.props.showRightText
+                  props.showRightText
                     ? styles.cancelImage
                     : styles.cancelImageConditional
                 }
                 resizeMode="center"
                 source={
-                  this.props.publishScreen ?
+                  props.publishScreen ?
                     arrowleft
                     :
-                    this.props.backIcon
-                      ? this.props.backIcon
-                      : this.props.isWhite
+                    props.backIcon
+                      ? props.backIcon
+                      : props.isWhite
                         ? black_arrow
                         : close_white
                 }
               />
-              {this.props.backIcon || this.props.publishScreen ? (
+              {props.backIcon || props.publishScreen ? (
                 <View style={styles.cancleTextContainer}>
                   <Text style={styles.cancleText}>
-                    {this.props.cancleText ? this.props.cancleText : 'Cancel'}
+                    {props.cancleText ? props.cancleText : 'Cancel'}
                   </Text>
                 </View>
               ) : null}
             </View>
           </TouchableWithoutFeedback>
         ) :
-          this.props.etherpadScreen ?
+          props.etherpadScreen ?
             null
             :
             (
@@ -74,51 +72,51 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
     );
   }
 
-  _renderMiddle() {
+  const _renderMiddle = () => {
     return (
       <View style={styles.titleContainer}>
-        {this.props.showCommunity && (
+        {props.showCommunity && (
           <Text style={styles.name}>{Account.selectedData().name}</Text>
         )}
         <Text
           style={[
             styles.titleText,
-            { color: this.props.isWhite ? Colors.newDescTextColor : Colors.TextColor },
+            { color: props.isWhite ? Colors.newDescTextColor : Colors.TextColor },
           ]}
           numberOfLines={1}
           ellipsizeMode="tail">
-          {this.props.heading}
+          {props.heading}
         </Text>
       </View>
     );
   }
 
-  _renderRight() {
-    return this.props.rightIcon ? (
+  const _renderRight = () => {
+    return props.rightIcon ? (
       <View style={styles.rightContainer}>
         <TouchableWithoutFeedback
           onPress={() => {
-            this.props.saveValues();
+            props.saveValues();
           }}>
           <View style={styles.rightButtonsTouchableStyle}>
-            <Image source={this.props.publishScreen ? trash : this.props.showNewCollection ? add_new_collection : penEdit} resizeMode="contain" />
+            <Image source={props.publishScreen ? trash : props.showNewCollection ? add_new_collection : penEdit} resizeMode="contain" />
             <View style={styles.height4} />
-            <Text style={styles.cancleText}>{this.props.rightText}</Text>
+            <Text style={styles.cancleText}>{props.rightText}</Text>
           </View>
         </TouchableWithoutFeedback>
       </View>
     ) : (
       <View style={styles.rightButtonsContainer}>
-        {this.props.showRightText && (
+        {props.showRightText && (
           <TouchableWithoutFeedback
             onPress={() => {
-              if (this.props.showRightText == 'Publish') {
+              if (props.showRightText == 'Publish') {
                 ReactNativeHapticFeedback.trigger('impactMedium', options);
               }
-              this.props.saveValues();
+              props.saveValues();
             }}
             style={
-              this.props.rightText === 'Save'
+              props.rightText === 'Save'
                 ? styles.rightButtonSaveTouchable
                 : styles.rightButtonsTouchable
             }>
@@ -126,17 +124,17 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
               style={[
                 styles.rightTextStyle,
                 {
-                  color: this.props.isWhite
+                  color: props.isWhite
                     ? Colors.newDescTextColor
                     : Colors.newDescTextColor,
                 },
               ]}>
-              {this.props.rightText}
+              {props.rightText}
             </Text>
           </TouchableWithoutFeedback>
         )}
-        {/* {this.props.rightIcon && (
-          <TouchableWithoutFeedback onPress={() => this.props.showHideMenu()}>
+        {/* {props.rightIcon && (
+          <TouchableWithoutFeedback onPress={() => props.showHideMenu()}>
             <View
               style={styles.moreOptionContainer}>
               <Image source={moreoptions} />
@@ -147,104 +145,105 @@ class NavigationHeaderSafeArea extends React.Component<{ [x: string]: any }> {
     );
   }
 
-  _showWithOutClose = (message: any, color: any) => {
-    this.messageRef &&
-      this.messageRef._showWithOutClose({ message: message, color: color });
+  const _showWithOutClose = (message: any, color: any) => {
+    messageRef &&
+      messageRef._showWithOutClose({ message: message, color: color });
   };
 
-  _show = (message: any, color: any) => {
-    this.messageRef && this.messageRef._show({ message: message, color: color });
+  const _show = (message: any, color: any) => {
+    messageRef && messageRef._show({ message: message, color: color });
   };
 
-  _hide = () => {
-    this.messageRef && this.messageRef._hide();
+  const _hide = () => {
+    messageRef && messageRef._hide();
   };
-  render() {
 
-    let accData = Account.tempData();
-    let url = accData.instanceURL == '192.168.2.6' ? 'calpoly.cueback.com' : accData.instanceURL;
+  let accData = Account.tempData();
+  let url = accData.instanceURL == '192.168.2.6' ? 'calpoly.cueback.com' : accData.instanceURL;
 
-    return (
-      <View style={{ width: '100%' }}>
-        {
-          this.props.isRegisteration ? (
-            <View style={styles.registrationContainerStyle}>
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  Keyboard.dismiss();
-                  this.props.navigation.goBack();
-                }}>
-                <View style={styles.backArrowContainerSTyle}>
-                  <Image source={black_arrow} />
-                </View>
-              </TouchableWithoutFeedback>
-              <View style={styles.imageContainer}>
-                <Image
-                  source={{ uri: accData.instanceImage }}
-                  style={styles.image}
-                />
+  return (
+    <View style={{ width: '100%' }}>
+      {
+        props.isRegisteration ? (
+          <View style={styles.registrationContainerStyle}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                Keyboard.dismiss();
+                props.navigation.goBack();
+              }}>
+              <View style={styles.backArrowContainerSTyle}>
+                <Image source={black_arrow} />
               </View>
-              <View style={styles.innerContainer}>
-                <TextNew style={styles.communityName}>{accData.name}</TextNew>
+            </TouchableWithoutFeedback>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: accData.instanceImage }}
+                style={styles.image}
+              />
+            </View>
+            <View style={styles.innerContainer}>
+              <TextNew style={styles.communityName}>{accData.name}</TextNew>
 
-                <TextNew style={styles.url}>{url}</TextNew>
+              <TextNew style={styles.url}>{url}</TextNew>
+            </View>
+          </View>
+        )
+          :
+          props.publishScreen || props.showNewCollection ? (
+            <View
+              style={[
+                styles.mainContainer,
+                {
+                  borderBottomWidth: props.isWhite ? 2 : 0,
+                  paddingLeft: props.cancleText || props.createMemoryPage ? 0 : 16
+                  // borderTopLeftRadius: 12,
+                  // borderTopRightRadius: 12,
+                },
+              ]}>
+              <View style={styles.subContainer}>
+                {_renderLeft()}
+                {_renderMiddle()}
               </View>
+              {(props.showRightText || props.rightIcon) ?
+                _renderRight()
+                :
+                null}
             </View>
           )
-            :
-            this.props.publishScreen || this.props.showNewCollection ? (
+            : (
               <View
                 style={[
                   styles.mainContainer,
                   {
-                    borderBottomWidth: this.props.isWhite ? 2 : 0,
-                    paddingLeft: this.props.cancleText || this.props.createMemoryPage ? 0 : 16
+                    borderBottomWidth: props.isWhite ? 2 : 0,
+                    paddingLeft: props.cancleText || props.createMemoryPage ? 0 : 16
                     // borderTopLeftRadius: 12,
                     // borderTopRightRadius: 12,
                   },
                 ]}>
                 <View style={styles.subContainer}>
-                  {this._renderLeft()}
-                  {this._renderMiddle()}
+                  {_renderLeft()}
+                  {_renderMiddle()}
                 </View>
-                {(this.props.showRightText || this.props.rightIcon) ?
-                  this._renderRight()
+                {(props.showRightText || props.rightIcon) ?
+                  _renderRight()
                   :
                   null}
               </View>
-            )
-              : (
-                <View
-                  style={[
-                    styles.mainContainer,
-                    {
-                      borderBottomWidth: this.props.isWhite ? 2 : 0,
-                      paddingLeft: this.props.cancleText || this.props.createMemoryPage ? 0 : 16
-                      // borderTopLeftRadius: 12,
-                      // borderTopRightRadius: 12,
-                    },
-                  ]}>
-                  <View style={styles.subContainer}>
-                    {this._renderLeft()}
-                    {this._renderMiddle()}
-                  </View>
-                  {(this.props.showRightText || this.props.rightIcon) ?
-                    this._renderRight()
-                    :
-                    null}
-                </View>
-              )}
-        <MessageDialogue ref={ref => (this.messageRef = ref)} />
-        {this.props.isWhite && (
-          <StatusBar
-            barStyle={
-              Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
-            }
-          />
-        )}
-      </View>
-    );
-  }
-}
+            )}
+      <MessageDialogue ref={ref => (messageRef = ref)} />
+      {props.isWhite && (
+        <StatusBar
+          barStyle={
+            Utility.currentTheme == 'light' ? 'dark-content' : 'light-content'
+          }
+        />
+      )}
+    </View>
+  );
+};
 
+NavigationHeaderSafeArea.defaultProps = {
+  showRightText: false,
+};
 export default NavigationHeaderSafeArea;

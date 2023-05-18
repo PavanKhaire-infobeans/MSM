@@ -8,10 +8,12 @@ import styles from './styles';
 import Styles from './styles';
 
 type Props = {items: any};
-export default class GroupPicHolder extends Component<Props> {
-  renderItem = (index: any) => {
-    if (this.props.items[index]) {
-      let uri = Utility.getFileURLFromPublicURL(this.props.items[index].uri);
+
+const GroupPicHolder =(props:Props)=> {
+
+  const renderItem = (index: any) => {
+    if (props.items[index]) {
+      let uri = Utility.getFileURLFromPublicURL(props.items[index].uri);
       return (
         <View
           style={styles.mainContainer}>
@@ -31,19 +33,18 @@ export default class GroupPicHolder extends Component<Props> {
     }
   };
 
-  render() {
     return (
       <View
         style={Styles.container}>
         <View style={Styles.rowSpaceBetween}>
-          {this.renderItem(0)}
-          {this.renderItem(1)}
+          {renderItem(0)}
+          {renderItem(1)}
         </View>
         <View style={Styles.rowSpaceBetween}>
-          {this.renderItem(2)}
-          {this.renderItem(3)}
+          {renderItem(2)}
+          {renderItem(3)}
         </View>
       </View>
     );
-  }
 }
+export default GroupPicHolder;

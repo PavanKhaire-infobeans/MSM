@@ -557,7 +557,7 @@ async function uploadFile(memoryId: number, file: TempFile) {
     filePath = filePath.replace('file://', '');
   }
   if (Platform.OS == "ios") {
-    filePath = (file.type == `${FileType[FileType.audio]}s`) ? unescape(filePath):filePath;
+    filePath = (file.type == `${FileType[FileType.audio]}s`) || (file.type == `${FileType[FileType.file]}s`) ? unescape(filePath):filePath;
   }
   let options: { [x: string]: any } = {
     url: `https://${Account.selectedData().instanceURL

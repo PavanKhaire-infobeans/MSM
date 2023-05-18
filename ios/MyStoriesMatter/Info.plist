@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>My Stories Matter Dev</string>
+	<string>My Stories Matter</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -41,7 +41,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.cueback</string>
+			<string>com.mystoriesmatter.mobileapp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>mystoriesmatter</string>

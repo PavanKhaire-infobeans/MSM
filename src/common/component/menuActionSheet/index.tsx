@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -30,77 +30,77 @@ type Props = {
   onActionClick?: (index: number, data?: any) => void;
   width: string | number;
   popToAddContent?: boolean;
+  navigation?: any;
 };
 type State = { bottom: any; hidden: boolean };
 
-export default class MemoryActionsSheet extends React.Component<Props, State> {
-  static defaultProps: Props = {
-    actions: [],
-    width: '100%',
-  };
+const MemoryActionsSheet = (props: Props) => {
 
-  state: State = {
+  const [state, setState] = useState({
     bottom: new Animated.Value(-height),
     hidden: true,
-  };
-  firstpart = false;
-  showSheet = () => {
+  });
+  const [firstpart,setfirstpart] = useState(false);
+  const showSheet = () => {
     if (Utility.isInternetConnected) {
-      this.setState({ hidden: false }, () => {
-        Animated.timing(this.state.bottom, {
+      setState({ ...state, hidden: false })
+      setTimeout(() => {
+        Animated.timing(state.bottom, {
           toValue: 0,
           duration: 200,
           useNativeDriver: true,
         }).start();
-      });
+      }, 100);
+
     } else {
       No_Internet_Warning();
     }
   };
 
-  hideSheet = () => {
-    Animated.timing(this.state.bottom, {
+  const hideSheet = () => {
+    Animated.timing(state.bottom, {
       toValue: -height,
       duration: 50,
       useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
-        this.setState({ hidden: true }, () => this.firstpart = false);
+        setState({ ...state, hidden: true })
+        setfirstpart(false);
       }, 20);
     });
   };
 
-  doSome() {
-    this.firstpart = true;
+  const doSome = () => {
+    setfirstpart(true);
     return (
       <View style={{ height: 8, backgroundColor: 'linear-gradient(0deg, rgba(20, 20, 20, 0.15), rgba(20, 20, 20, 0.15)), rgba(255, 255, 255, 0.7)' }}></View>
     )
   }
 
-  renderItem = ({
+  const renderItem = ({
     item: data,
   }: {
     item: MemoryActionsSheetItem;
   }) => {
     return (
       <>
-        {this.firstpart == false && data.isDestructive == 1
-          ? this.doSome()
+        {firstpart == false && data.isDestructive == 1
+          ? doSome()
           : null}
 
         <TouchableOpacity
           onPress={() => {
-            this.props.memoryActions
-              ? this.props.onActionClick &&
-              this.props.onActionClick(data.index, data)
-              : this.props.onActionClick &&
-              this.props.onActionClick(data.index);
-            this.hideSheet();
+            props.memoryActions
+              ? props.onActionClick &&
+              props.onActionClick(data.index, data)
+              : props.onActionClick &&
+              props.onActionClick(data.index);
+            hideSheet();
             Keyboard.dismiss();
 
             {
-              this.props.popToAddContent &&
-                this.props.navigation.popTo('addContent');
+              props.popToAddContent &&
+                props.navigation.popTo('addContent');
             }
           }}>
           <View
@@ -151,63 +151,51 @@ export default class MemoryActionsSheet extends React.Component<Props, State> {
     );
   };
 
-  render() {
-    if (this.state.hidden || this.props.actions.length == 0) {
-      return <View style={styles.hiddenView} />;
-    } else {
-      let actions = this.props.actions.sort((a: any, b: any) => (b.isDestructive - a.isDestructive)).reverse();
+  if (state.hidden || props.actions.length == 0) {
+    return <View style={styles.hiddenView} />;
+  } else {
+    let actions = props.actions.sort((a: any, b: any) => (b.isDestructive - a.isDestructive)).reverse();
 
-      return (
-        <Modal transparent >
-          <View
-            style={styles.container}
-            onStartShouldSetResponder={() => true}
-            onResponderStart={() => this.hideSheet()}>
-            <TouchableOpacity style={styles.ActionView}
-              onPress={() => this.hideSheet()}
-            >
-            </TouchableOpacity>
+    return (
+      <Modal transparent >
+        <View
+          style={styles.container}
+          onStartShouldSetResponder={() => true}
+          onResponderStart={() => hideSheet()}>
+          <TouchableOpacity style={styles.ActionView}
+            onPress={() => hideSheet()}
+          >
+          </TouchableOpacity>
 
-            <Animated.View
+          <Animated.View
 
-              style={[styles.AnimatedContainer, { bottom: this.state.bottom, }]}>
-              <View>
-                {/* <TextNew
-                  style={{
-                    color: Colors.TextColor,
-                    paddingTop: 15,
-                    paddingStart: 24,
-                    height: 56,
-                    ...fontSize(18),
-                    fontWeight: 'bold',
-                  }}>
-                  Memory Actions
-                </TextNew> */}
-                {/* {this.props.title && this.props.title.length > 0 ?                          
-                        <View></View>
-                        } */}
+            style={[styles.AnimatedContainer, { bottom: state.bottom, }]}>
+            <View>
 
-                <FlatList
-                  data={actions}
-                  keyExtractor={(_, index: number) => `${index}`}
-                  onScroll={() => {
-                    Keyboard.dismiss();
-                  }}
-                  style={styles.flatListStyle}
-                  showsHorizontalScrollIndicator={false}
-                  showsVerticalScrollIndicator={false}
-                  // ItemSeparatorComponent={({ leadingItem }: { highlighted: boolean, leadingItem: MemoryActionsSheetItem }) => {
-                  //     return (<View style={{ height: 1, backgroundColor: (leadingItem.index == (this.props.actions.length - 1)) ? 'rgba(0.35, 0.35, 0.35, 0.2)' : 'white' }} />)
-                  // }}
-                  renderItem={this.renderItem}
-                />
-              </View>
-            </Animated.View>
+              <FlatList
+                data={actions}
+                keyExtractor={(_, index: number) => `${index}`}
+                onScroll={() => {
+                  Keyboard.dismiss();
+                }}
+                style={styles.flatListStyle}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                // ItemSeparatorComponent={({ leadingItem }: { highlighted: boolean, leadingItem: MemoryActionsSheetItem }) => {
+                //     return (<View style={{ height: 1, backgroundColor: (leadingItem.index == (props.actions.length - 1)) ? 'rgba(0.35, 0.35, 0.35, 0.2)' : 'white' }} />)
+                // }}
+                renderItem={renderItem}
+              />
+            </View>
+          </Animated.View>
 
-            {/* <View style={{height: 50, width:"100%", backgroundColor: "#fff", bottom: -50, position:"absolute"}}></View> */}
-          </View>
-        </Modal>
-      );
-    }
+        </View>
+      </Modal>
+    );
   }
 }
+MemoryActionsSheet.defaultProps = {
+  actions: [],
+  width: '100%',
+};
+export default MemoryActionsSheet;

@@ -354,14 +354,14 @@ export function uploadTask(
           let uploadId = yield Upload.startUpload(options);
           if (typeof uploadId == 'string') {
             Upload.addListener('error', uploadId, (data: any) => {
-              // hideLoaderWithTimeOut();
+              hideLoaderWithTimeOut();
               failure(data);
             });
             Upload.addListener(
               'cancelled',
               uploadId,
               (...data: any[]) => {
-                // hideLoaderWithTimeOut();
+                hideLoaderWithTimeOut();
                 failure({message: 'Upload cancelled', uploadId, data});
               },
             );
@@ -370,16 +370,16 @@ export function uploadTask(
               success(data);
             });
           } else {
-            // hideLoaderWithTimeOut();
+            hideLoaderWithTimeOut();
             failure(uploadId);
           }
         } catch (err) {
-          // hideLoaderWithTimeOut();
+          hideLoaderWithTimeOut();
           failure(err);
         }
       });
     } catch (error) {
-      // hideLoaderWithTimeOut();
+      hideLoaderWithTimeOut();
       failure(error);
     }
   };
